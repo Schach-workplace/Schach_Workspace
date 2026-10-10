@@ -47,6 +47,18 @@ export default function Connect({ onTask }: { onTask?: (id: string) => void } = 
     workspace.mode === 'api',
   );
   const [target, setTarget] = useState<{ conversationId: string; messageId: string } | null>(null);
+  const navigationApplied = useRef(false);
+  useEffect(() => {
+    if (navigationApplied.current || workspace.mode !== 'api') return;
+    const params = new URLSearchParams(window.location.hash.split('?')[1] ?? '');
+    const conversation = params.get('conversation');
+    if (conversation) {
+      navigationApplied.current = true;
+      chat.select(conversation);
+      const message = params.get('message');
+      if (message) setTarget({ conversationId: conversation, messageId: message });
+    }
+  }, [workspace.companyId, workspace.mode, chat]);
   const member = chat.members.find((m) => m.userId === workspace.session?.user.id);
   const privacyKey =
     workspace.companyId +

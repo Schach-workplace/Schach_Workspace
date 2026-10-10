@@ -15,9 +15,21 @@ it('reads bounded pages until exhaustion with cancellation propagated', async ()
   expect(read.mock.calls[0][0]).toBe('/companies/c/tasks?limit=100');
 });
 it('invalidates task records/list/reports without refreshing finance', () => {
-  expect(affectedScopes('/tasks/t/comments')).toEqual(['tasks', 'task:t', 'reports', 'bootstrap']);
-  expect(affectedScopes('/expenses/e/transition')).toEqual(['finance', 'expense:e', 'bootstrap']);
+  expect(affectedScopes('/tasks/t/comments')).toEqual([
+    'tasks',
+    'attention',
+    'task:t',
+    'reports',
+    'bootstrap',
+  ]);
+  expect(affectedScopes('/expenses/e/transition')).toEqual([
+    'attention',
+    'finance',
+    'expense:e',
+    'bootstrap',
+  ]);
   expect(affectedScopes('/people/p')).toEqual([
+    'attention',
     'bootstrap',
     'tasks',
     'finance',
@@ -27,8 +39,19 @@ it('invalidates task records/list/reports without refreshing finance', () => {
 });
 it('maps work outbox hints to only their affected business scopes', async () => {
   const { eventScopes } = await import('./readScopes');
-  expect(eventScopes('work_linked')).toEqual(['bootstrap', 'tasks', 'reports', 'task-details']);
-  expect(eventScopes('expense_linked')).toEqual(['bootstrap', 'finance', 'expense-details']);
+  expect(eventScopes('work_linked')).toEqual([
+    'attention',
+    'bootstrap',
+    'tasks',
+    'reports',
+    'task-details',
+  ]);
+  expect(eventScopes('expense_linked')).toEqual([
+    'attention',
+    'bootstrap',
+    'finance',
+    'expense-details',
+  ]);
   expect(eventScopes('message_created')).toEqual([]);
 });
 it('loads only selected-record evidence tails without losing the first page', async () => {

@@ -2,6 +2,7 @@ package platform
 
 import (
 	"gorm.io/gorm"
+	"net/http"
 	"net/url"
 )
 
@@ -62,7 +63,7 @@ func attentionSource(tx *gorm.DB, a *access, item AttentionItem) (AttentionView,
 		v.SourceVersion = t.Version
 		v.OwnerName = a.Users[t.OwnerID].Name
 		v.CanDecide = taskAttentionReviewer(a, t)
-		v.Link = "/work?task=" + url.QueryEscape(t.ID)
+		v.Link = "#tasks?task=" + url.QueryEscape(t.ID)
 		v.CanRoute = item.Kind == "task_review" && v.CanDecide || item.Kind != "task_review" && (t.OwnerID == a.User.ID || t.CreatedBy == a.User.ID || a.canStructure(t))
 	case "expense":
 		e, err := scopedExpense(tx, a, item.SourceID)
@@ -77,7 +78,7 @@ func attentionSource(tx *gorm.DB, a *access, item AttentionItem) (AttentionView,
 		v.OwnerName = a.Users[e.CreatedBy].Name
 		v.CanDecide = e.Status == "submitted" && a.canApproveExpense(e)
 		v.CanRoute = v.CanDecide
-		v.Link = "/finance?expense=" + url.QueryEscape(e.ID)
+		v.Link = "#finance?expense=" + url.QueryEscape(e.ID)
 	case "intake":
 		var i CommunicationRequest
 		if e := tx.First(&i, "company_id=? AND id=?", a.Company.ID, item.SourceID).Error; e != nil {
@@ -91,7 +92,7 @@ func attentionSource(tx *gorm.DB, a *access, item AttentionItem) (AttentionView,
 		v.SourceVersion = i.Version
 		v.CanDecide = i.State == "open" && a.canTriageIntake(i)
 		v.CanRoute = v.CanDecide
-		v.Link = "/connect?intake=" + url.QueryEscape(i.ID)
+		v.Link = "#connect?intake=" + url.QueryEscape(i.ID)
 	case "record", "bookmark":
 		var c Conversation
 		if e := lockCommunicationRow(tx, "SHARE").Where("company_id=? AND id=?", a.Company.ID, item.ConversationID).First(&c).Error; e != nil {
@@ -108,7 +109,7 @@ func attentionSource(tx *gorm.DB, a *access, item AttentionItem) (AttentionView,
 		if e != nil || m.Removed || m.Revision != item.SourceRevision || m.Sequence != item.MessageSequence {
 			return v, missing()
 		}
-		v.Link = "/connect?conversation=" + url.QueryEscape(c.ID) + "&message=" + url.QueryEscape(m.ID)
+		v.Link = "#connect?conversation=" + url.QueryEscape(c.ID) + "&message=" + url.QueryEscape(m.ID)
 		if item.SourceKind == "bookmark" {
 			var b CommunicationBookmark
 			if e := tx.First(&b, "company_id=? AND user_id=? AND message_id=?", a.Company.ID, a.User.ID, item.SourceID).Error; e != nil || b.RemindAt == "" || item.OccurrenceKey != payloadHash(b.RemindAt) {
@@ -136,6 +137,7 @@ func attentionSource(tx *gorm.DB, a *access, item AttentionItem) (AttentionView,
 			if rec.Kind == "decision" && (a.User.ID != rec.ReviewerID || a.User.ID == rec.CreatedBy) {
 				return v, missing()
 			}
+			v.Link += "&record=" + url.QueryEscape(rec.ID)
 			v.Title = rec.Title
 			v.Summary = rec.Body
 			v.SourceVersion = rec.Revision
@@ -196,4 +198,58 @@ func attentionCanRoute(tx *gorm.DB, actor *access, item AttentionItem, targetID 
 		}
 	}
 	return nil
+}
+
+// Published intake detail is independent of the private source conversation.
+func (s *Server) getPublishedIntake(w http.ResponseWriter, r *http.Request) error {
+	a, e := s.access(r)
+	if e != nil {
+		return e
+	}
+	var item CommunicationRequest
+	e = s.withAccessTransaction(r, a, func(tx *gorm.DB) error {
+		if e := tx.First(&item, "company_id=? AND id=?", a.Company.ID, r.PathValue("request")).Error; e != nil {
+			return missing()
+		}
+		if !a.canReadIntake(item) {
+			return missing()
+		}
+		if item.TaskID != "" {
+			if _, e := scopedTask(tx, a, item.TaskID); e != nil {
+				item.TaskID = ""
+			}
+		}
+		return nil
+	})
+	if e != nil {
+		return e
+	}
+	return respond(w, 200, map[string]any{"request": item})
+}
+func (s *Server) getAttentionRecord(w http.ResponseWriter, r *http.Request) error {
+	var record CommunicationRecord
+	responses := []CommunicationRecipient{}
+	e := s.withCommunicationTransaction(r, nil, func(tx *gorm.DB, a *conversationScope) error {
+		var err error
+		record, err = s.record(tx, a, r.PathValue("record"))
+		if err != nil {
+			return err
+		}
+		var recipient CommunicationRecipient
+		err = tx.First(&recipient, "company_id=? AND record_id=? AND revision=? AND user_id=?", a.CompanyID, record.ID, record.Revision, a.UserID).Error
+		if err != nil && record.CreatedBy != a.UserID {
+			return missing()
+		}
+		if err != nil && err != gorm.ErrRecordNotFound {
+			return err
+		}
+		if err == nil {
+			responses = append(responses, recipient)
+		}
+		return nil
+	})
+	if e != nil {
+		return e
+	}
+	return respond(w, 200, map[string]any{"record": record, "responses": responses})
 }

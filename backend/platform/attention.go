@@ -8,6 +8,8 @@ import (
 )
 
 func (s *Server) attentionRoutes() {
+	s.route("GET /api/companies/{cid}/communication/requests/{request}", s.getPublishedIntake)
+	s.route("GET /api/companies/{cid}/conversations/{id}/records/{record}", s.getAttentionRecord)
 	s.route("GET /api/companies/{cid}/attention", s.listAttention)
 	s.route("GET /api/companies/{cid}/attention/preferences", s.getAttentionPreferences)
 	s.route("PATCH /api/companies/{cid}/attention/preferences", s.patchAttentionPreferences)

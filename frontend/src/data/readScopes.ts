@@ -23,27 +23,43 @@ export async function readPages<T>(
 }
 export function affectedScopes(path: string): string[] {
   const parts = path.split('/').filter(Boolean);
+  if (parts[0] === 'attention') return ['attention'];
   if (parts[0] === 'tasks') {
     return [
       'tasks',
+      'attention',
       ...(parts[1] && !['import'].includes(parts[1]) ? ['task:' + parts[1]] : []),
       'reports',
       'bootstrap',
     ];
   }
   if (parts[0] === 'expenses') {
-    return ['finance', ...(parts[1] ? ['expense:' + parts[1]] : []), 'bootstrap'];
+    return ['attention', 'finance', ...(parts[1] ? ['expense:' + parts[1]] : []), 'bootstrap'];
   }
   if (['budgets', 'expense-categories'].includes(parts[0])) return ['finance', 'bootstrap'];
   if (parts[0] === 'notifications') return ['bootstrap'];
-  return ['bootstrap', 'tasks', 'finance', 'reports', 'details'];
+  return ['attention', 'bootstrap', 'tasks', 'finance', 'reports', 'details'];
 }
 export function eventScopes(kind: string): string[] {
+  if (
+    [
+      'record_created',
+      'record_revised',
+      'record_response',
+      'message_edited',
+      'message_removed',
+      'request_published',
+      'policy_changed',
+      'membership_changed',
+      'refetch_required',
+    ].includes(kind)
+  )
+    return ['attention', 'bootstrap', 'tasks', 'finance', 'reports', 'details'];
   if (['work_linked', 'work_actions_declared', 'request_published'].includes(kind))
-    return ['bootstrap', 'tasks', 'reports', 'task-details'];
-  if (kind === 'expense_linked') return ['bootstrap', 'finance', 'expense-details'];
+    return ['attention', 'bootstrap', 'tasks', 'reports', 'task-details'];
+  if (kind === 'expense_linked') return ['attention', 'bootstrap', 'finance', 'expense-details'];
   if (['policy_changed', 'membership_changed', 'refetch_required'].includes(kind))
-    return ['bootstrap', 'tasks', 'finance', 'reports', 'details'];
+    return ['attention', 'bootstrap', 'tasks', 'finance', 'reports', 'details'];
   return [];
 }
 export async function readDetail<T>(

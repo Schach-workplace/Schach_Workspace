@@ -711,6 +711,7 @@ export default function App() {
           )}
           {view === 'overview' && (
             <Overview
+              onExpense={openExpense}
               onTask={openTask}
               onNavigate={navigate}
               onProject={(id) => {

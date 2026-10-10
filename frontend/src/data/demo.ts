@@ -1,3 +1,10 @@
+import { ApiError } from './api';
+import {
+  defaultAttentionPreference,
+  type AttentionView,
+  type AttentionTransitionInput,
+  type AttentionPreference,
+} from '../../../shared/attention/types';
 import { validateDeadline, deadlineChanged } from './deadlines';
 // Explicit local demonstration adapter. Real company security is enforced by the Go API.
 import fixture from './sample.json';
@@ -30,7 +37,26 @@ import {
   validateFinanceSettings,
 } from './demo-finance';
 
+interface DemoAttentionRow {
+  id: string;
+  companyId: string;
+  recipientId: string;
+  sourceKind: 'task' | 'expense';
+  sourceId: string;
+  sourceRevision: number;
+  occurrenceKey: string;
+  kind: AttentionView['kind'];
+  state: AttentionView['state'];
+  version: number;
+  snoozedUntil: string | null;
+}
 interface DemoDatabase {
+  attention?: DemoAttentionRow[];
+  attentionRetries?: Record<
+    string,
+    { hash: string; itemId: string; resultItemId: string; resultVersion: number }
+  >;
+  attentionPreferences?: Record<string, AttentionPreference>;
   schema: 1;
   sessions: Session[];
   workspaces: WorkspaceData[];
@@ -480,7 +506,12 @@ function createTask(w: WorkspaceData, me: Person, body: Record<string, unknown>)
     priority: input.priority ?? 'medium',
     dueDate: input.dueDate ?? '',
     originalDueDate: input.dueDate ?? '',
-    deadlineMode:input.deadlineMode??'all_day',dueAt:input.dueAt??'',dueTimezone:input.dueTimezone??'',originalDeadlineMode:input.deadlineMode??'all_day',originalDueAt:input.dueAt??'',originalDueTimezone:input.dueTimezone??'',
+    deadlineMode: input.deadlineMode ?? 'all_day',
+    dueAt: input.dueAt ?? '',
+    dueTimezone: input.dueTimezone ?? '',
+    originalDeadlineMode: input.deadlineMode ?? 'all_day',
+    originalDueAt: input.dueAt ?? '',
+    originalDueTimezone: input.dueTimezone ?? '',
     startDate: input.startDate ?? '',
     progress: 0,
     estimatedHours: input.estimatedHours ?? 1,
@@ -516,6 +547,7 @@ export async function demoMutate(
   body: unknown = {},
   method: 'POST' | 'PATCH' = 'POST',
 ): Promise<MutationResult> {
+  if (path.startsWith('/attention/')) return demoAttentionMutation(companyId, userId, path, body);
   const db = readDB();
   const session = db.sessions.find((s) => s.user.id === userId);
   if (!session) fail('Please sign in.');
@@ -677,12 +709,15 @@ export async function demoMutate(
         'requiresApproval',
         'progress',
         'blockerReason',
-        'deadlineChangeReason', 'deadlineMode', 'dueAt', 'dueTimezone',
+        'deadlineChangeReason',
+        'deadlineMode',
+        'dueAt',
+        'dueTimezone',
       ];
       const next = { ...t };
       for (const key of allowed)
         if (b[key] !== undefined) (next as unknown as Record<string, unknown>)[key] = clone(b[key]);
-      if (deadlineChanged(next,t) && !String(b.deadlineChangeReason ?? '').trim())
+      if (deadlineChanged(next, t) && !String(b.deadlineChangeReason ?? '').trim())
         fail('Explain why the deadline is changing.');
       if (t.status === 'done' && next.status === 'done')
         fail('Reopen an accepted task before changing its content.');
@@ -698,10 +733,9 @@ export async function demoMutate(
         next.progress = 100;
         next.completedAt = stamp();
       } else if (t.status === 'done') next.completedAt = '';
-      const dueDetail =
-        deadlineChanged(next,t)
-          ? `Deadline changed from ${t.dueDate} to ${next.dueDate}. ${b.deadlineChangeReason}`
-          : `${t.status} → ${next.status} · ${next.progress}% progress`;
+      const dueDetail = deadlineChanged(next, t)
+        ? `Deadline changed from ${t.dueDate} to ${next.dueDate}. ${b.deadlineChangeReason}`
+        : `${t.status} → ${next.status} · ${next.progress}% progress`;
       if (next.ownerId !== t.ownerId)
         ping(w, next.ownerId, t.id, 'A task has been assigned to you', next.title, 'assignment');
       Object.assign(t, next, { version: t.version + 1, updatedAt: stamp() });
@@ -1120,7 +1154,7 @@ export async function demoUpload(companyId: string, userId: string, taskId: stri
   const { w, me } = context(db, companyId, userId);
   const t = taskBy(w, me, taskId);
   if (me.role === 'viewer') fail('This company membership is read-only.');
-  if(t.status==='done')fail('Reopen accepted work before adding evidence.');
+  if (t.status === 'done') fail('Reopen accepted work before adding evidence.');
   if (!file.size || file.size > 10 * 1024 * 1024) fail('Choose a file between 1 byte and 10 MB.');
   if (!/\.(pdf|png|jpg|jpeg|webp|txt|csv)$/i.test(file.name))
     fail('Supported evidence: PDF, PNG/JPG/WebP, TXT and CSV. Export Office documents as PDF.');
@@ -1197,4 +1231,303 @@ export async function demoDownloadExpenseReceipt(
   if (content) return new Blob([content], { type: 'text/plain; charset=utf-8' });
   fail('This demo receipt is not available in this browser. Append it again.');
   throw new Error('Receipt unavailable.');
+}
+
+function demoTaskReviewer(p: Person, t: Task) {
+  return (
+    p.active &&
+    p.role !== 'viewer' &&
+    t.status === 'in_review' &&
+    t.ownerId !== p.id &&
+    (t.reviewerId === p.id || leadership(p))
+  );
+}
+function demoExpenseReviewer(p: Person, e: WorkspaceData['expenses'][number]) {
+  return (
+    p.active &&
+    p.id !== e.createdBy &&
+    e.status === 'submitted' &&
+    (managesFinance(p) ||
+      (p.role === 'head' && !!p.departmentId && p.departmentId === e.departmentId))
+  );
+}
+function syncDemoAttention(db: DemoDatabase, w: WorkspaceData) {
+  db.attention ??= [];
+  for (const p of w.people.filter((p) => p.active)) {
+    for (const t of w.tasks) {
+      const kind = demoTaskReviewer(p, t)
+        ? 'task_review'
+        : t.ownerId === p.id && !['done', 'cancelled'].includes(t.status)
+          ? t.status === 'blocked'
+            ? 'blocker'
+            : 'update'
+          : null;
+      if (!kind) continue;
+      const key = kind === 'update' ? `owner:${p.id}` : `task:${t.version}`;
+      const aid = [w.company.id, 'task', t.id, p.id, key, kind].join(':');
+      if (!db.attention.some((a) => a.id === aid))
+        db.attention.push({
+          id: aid,
+          companyId: w.company.id,
+          recipientId: p.id,
+          sourceKind: 'task',
+          sourceId: t.id,
+          sourceRevision: t.version,
+          occurrenceKey: key,
+          kind,
+          state: 'open',
+          version: 1,
+          snoozedUntil: null,
+        });
+    }
+    for (const e of w.expenses) {
+      if (!demoExpenseReviewer(p, e)) continue;
+      const aid = [w.company.id, 'expense', e.id, p.id, e.version].join(':');
+      if (!db.attention.some((a) => a.id === aid))
+        db.attention.push({
+          id: aid,
+          companyId: w.company.id,
+          recipientId: p.id,
+          sourceKind: 'expense',
+          sourceId: e.id,
+          sourceRevision: e.version,
+          occurrenceKey: `expense:${e.version}`,
+          kind: 'expense_review',
+          state: 'open',
+          version: 1,
+          snoozedUntil: null,
+        });
+    }
+  }
+}
+function demoAttentionView(
+  db: DemoDatabase,
+  w: WorkspaceData,
+  p: Person,
+  a: DemoAttentionRow,
+): AttentionView | null {
+  if (
+    a.companyId !== w.company.id ||
+    a.recipientId !== p.id ||
+    !p.active ||
+    a.state === 'superseded'
+  )
+    return null;
+  const view: AttentionView = {
+    id: a.id,
+    companyId: a.companyId,
+    recipientId: a.recipientId,
+    sourceKind: a.sourceKind,
+    sourceId: a.sourceId,
+    kind: a.kind,
+    state: a.state,
+    version: a.version,
+    sourceVersion: 0,
+    title: '',
+    summary: '',
+    link: '',
+    ownerName: '',
+    canDecide: false,
+    canRoute: false,
+    actions: [],
+    routePeople: [],
+    snoozedUntil: a.snoozedUntil,
+    dueAt: null,
+    reminderState: 'pending',
+  };
+  if (a.sourceKind === 'task') {
+    const t = w.tasks.find((t) => t.id === a.sourceId);
+    if (
+      !t ||
+      !canReadDemoTask(w, p, t) ||
+      (a.kind === 'task_review' && (!demoTaskReviewer(p, t) || a.sourceRevision !== t.version)) ||
+      (a.kind === 'blocker' && t.status !== 'blocked') ||
+      (a.kind === 'update' && (t.ownerId !== p.id || ['done', 'cancelled'].includes(t.status)))
+    )
+      return null;
+    Object.assign(view, {
+      title: t.title,
+      summary: t.description,
+      sourceVersion: t.version,
+      ownerName: w.people.find((p) => p.id === t.ownerId)?.name ?? '',
+      canDecide: demoTaskReviewer(p, t),
+      canRoute:
+        a.kind === 'task_review'
+          ? demoTaskReviewer(p, t)
+          : p.id === t.ownerId || p.id === t.createdBy || canStructure(w, p, t),
+      link: '/work?task=' + t.id,
+    });
+    view.routePeople = w.people.filter(
+      (target) =>
+        target.id !== p.id &&
+        target.active &&
+        canReadDemoTask(w, target, t) &&
+        (a.kind === 'task_review'
+          ? demoTaskReviewer(target, t)
+          : target.id === t.ownerId ||
+            target.id === t.reviewerId ||
+            t.collaborators.includes(target.id) ||
+            canStructure(w, target, t)),
+    );
+  } else {
+    const e = w.expenses.find((e) => e.id === a.sourceId);
+    if (!e || !canReadExpense(p, e) || !demoExpenseReviewer(p, e) || a.sourceRevision !== e.version)
+      return null;
+    Object.assign(view, {
+      title: e.title,
+      summary: e.description,
+      sourceVersion: e.version,
+      ownerName: w.people.find((p) => p.id === e.createdBy)?.name ?? '',
+      canDecide: true,
+      canRoute: true,
+      link: '/finance?expense=' + e.id,
+    });
+    view.routePeople = w.people.filter(
+      (target) => target.id !== p.id && demoExpenseReviewer(target, e),
+    );
+  }
+  if (a.state === 'open') {
+    view.actions = ['resolve', 'snooze', 'unsnooze'];
+    if (view.canRoute && view.routePeople.length) view.actions.push('route');
+  } else view.canRoute = false;
+  return view;
+}
+export async function demoAttentionRead(
+  company: string,
+  user: string,
+  state = 'open',
+  decisionsOnly = false,
+) {
+  const db = readDB();
+  const { w, me } = context(db, company, user);
+  syncDemoAttention(db, w);
+  saveDB(db);
+  return db
+    .attention!.map((a) => demoAttentionView(db, w, me, a))
+    .filter(
+      (v): v is AttentionView =>
+        !!v && (decisionsOnly ? v.canDecide : state === 'all' || v.state === state),
+    );
+}
+export async function demoAttentionDetail(company: string, user: string, itemId: string) {
+  const db = readDB();
+  const { w, me } = context(db, company, user);
+  syncDemoAttention(db, w);
+  const row = db.attention!.find((a) => a.id === itemId);
+  const view = row && demoAttentionView(db, w, me, row);
+  if (!view) throw new ApiError('This source is no longer available.', 404, 'not_found');
+  saveDB(db);
+  return view;
+}
+export async function demoAttentionPreferences(company: string, user: string) {
+  const db = readDB();
+  context(db, company, user);
+  return db.attentionPreferences?.[company + ':' + user] ?? defaultAttentionPreference();
+}
+async function demoAttentionMutation(
+  company: string,
+  user: string,
+  path: string,
+  body: unknown,
+): Promise<MutationResult> {
+  const db = readDB();
+  const { w, me } = context(db, company, user);
+  if (path === '/attention/preferences') {
+    const p = body as AttentionPreference;
+    const old = db.attentionPreferences?.[company + ':' + user] ?? defaultAttentionPreference();
+    if (p.version !== old.version)
+      throw new ApiError('Preferences changed. Refresh first.', 409, 'version_conflict');
+    if (
+      (p.quietStart === p.quietEnd && p.quietStart) ||
+      (p.workingHoursEnabled && (!p.workingDays.length || p.workingStart === p.workingEnd))
+    )
+      throw new ApiError('Choose a nonempty delivery window.', 422, 'validation');
+    if (
+      p.escalationEnabled &&
+      (!w.people.some((v) => v.id === p.escalationUserId && v.active) ||
+        p.escalationUserId === user ||
+        p.escalationAfterMinutes < 1)
+    )
+      throw new ApiError('Choose an active independent escalation recipient.', 422, 'validation');
+    db.attentionPreferences ??= {};
+    db.attentionPreferences[company + ':' + user] = { ...p, version: p.version + 1 };
+    saveDB(db);
+    return { ok: true };
+  }
+  const itemId = decodeURIComponent(path.split('/')[2]);
+  const input = body as AttentionTransitionInput;
+  syncDemoAttention(db, w);
+  const row = db.attention!.find((a) => a.id === itemId);
+  const view = row && demoAttentionView(db, w, me, row);
+  if (!row || !view) throw new ApiError('This source is no longer available.', 404, 'not_found');
+  const key = [company, user, input.retryKey].join(':');
+  const hash = JSON.stringify([itemId, input]);
+  const old = db.attentionRetries?.[key];
+  if (old) {
+    if (old.hash !== hash)
+      throw new ApiError('Retry key belongs to another action.', 409, 'version_conflict');
+    return { ok: true, id: old.resultItemId };
+  }
+  if (row.version !== input.expectedVersion || row.state !== 'open')
+    throw new ApiError('This Inbox item changed. Refresh first.', 409, 'version_conflict');
+  if (!input.retryKey || !['resolve', 'route', 'snooze', 'unsnooze'].includes(input.action))
+    throw new ApiError('Choose an attention action.', 422, 'validation');
+  if (
+    ['resolve', 'route'].includes(input.action) &&
+    (!input.reason?.trim() || input.reason.length > 4000)
+  )
+    throw new ApiError('A reason is required.', 422, 'validation');
+  let resultId = row.id;
+  switch (input.action) {
+    case 'resolve':
+      row.state = 'resolved';
+      break;
+    case 'snooze': {
+      const instant = Date.parse(input.snoozedUntil ?? '');
+      if (
+        !Number.isFinite(instant) ||
+        instant <= Date.now() ||
+        instant > Date.now() + 90 * 86400000
+      )
+        throw new ApiError('Choose a future time within 90 days.', 422, 'validation');
+      row.snoozedUntil = input.snoozedUntil!;
+      break;
+    }
+    case 'unsnooze':
+      row.snoozedUntil = null;
+      break;
+    case 'route': {
+      if (!view.canRoute || !view.routePeople.some((p) => p.id === input.recipientId))
+        throw new ApiError('This recipient is not eligible.', 403, 'forbidden');
+      let target = db.attention!.find(
+        (a) =>
+          a.companyId === company &&
+          a.recipientId === input.recipientId &&
+          a.sourceKind === row.sourceKind &&
+          a.sourceId === row.sourceId &&
+          a.kind === row.kind &&
+          a.state === 'open',
+      );
+      if (!target) {
+        target = {
+          ...row,
+          id: id(),
+          recipientId: input.recipientId!,
+          occurrenceKey: 'route:' + row.id + ':' + input.retryKey,
+          state: 'open',
+          version: 1,
+          snoozedUntil: null,
+        };
+        db.attention!.push(target);
+      }
+      row.state = 'routed';
+      resultId = target.id;
+      break;
+    }
+  }
+  row.version++;
+  db.attentionRetries ??= {};
+  db.attentionRetries[key] = { hash, itemId, resultItemId: resultId, resultVersion: row.version };
+  saveDB(db);
+  return { ok: true, id: resultId };
 }

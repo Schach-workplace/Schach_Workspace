@@ -1,4 +1,6 @@
 import { useState, type FormEvent } from 'react';
+import AttentionPreferences from '../components/AttentionPreferences';
+import AttentionInbox from '../components/AttentionInbox';
 import AuthenticatorSettings from '../components/AuthenticatorSettings';
 import {
   ArrowRight,
@@ -58,6 +60,11 @@ export function InboxPage({
   }
   return (
     <div className="page-content inbox-page">
+      <AttentionInbox
+        key={store.companyId + ':' + store.session?.user.id}
+        onTask={onTask}
+        onExpense={onExpense}
+      />
       <div className="task-toolbar">
         <div className="segmented">
           <button className={filter === 'all' ? 'active' : ''} onClick={() => setFilter('all')}>
@@ -190,6 +197,7 @@ export function SettingsPage() {
   }
   return (
     <div className="page-content settings-page">
+      <AttentionPreferences key={store.companyId + ':' + store.session?.user.id} />
       <div className="settings-tabs">
         <button className={tab === 'company' ? 'active' : ''} onClick={() => setTab('company')}>
           <Building2 size={16} />
@@ -372,7 +380,7 @@ export function SettingsPage() {
               </div>
               <LockKeyhole size={19} />
             </div>
-            {store.mode==='api'&&<AuthenticatorSettings/>}
+            {store.mode === 'api' && <AuthenticatorSettings />}
             <form className="password-form" onSubmit={password}>
               <Field label="Current password">
                 <input

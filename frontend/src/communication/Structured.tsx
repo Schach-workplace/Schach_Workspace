@@ -26,8 +26,10 @@ export default function Structured({
   data,
   command,
   onClose,
+  recordId,
 }: {
   conversation: Conversation;
+  recordId?: string;
   source: Message | null;
   data: WorkspaceData;
   command: <T>(path: string, body: unknown, method?: string) => Promise<T>;
@@ -50,17 +52,19 @@ export default function Structured({
   const [reason, setReason] = useState('');
   const root = `/conversations/${conversation.id}/records`;
   async function refresh() {
-    const v = await command<{ records: RecordItem[]; responses: Recipient[] }>(
-      root,
-      undefined,
-      'GET',
-    );
+    const v = recordId
+      ? await command<{ record: RecordItem; responses: Recipient[] }>(
+          root + '/' + recordId,
+          undefined,
+          'GET',
+        ).then((r) => ({ records: [r.record], responses: r.responses }))
+      : await command<{ records: RecordItem[]; responses: Recipient[] }>(root, undefined, 'GET');
     setRecords(v.records);
     setRecipients(v.responses);
   }
   useEffect(() => {
     void refresh().catch((e) => setError(e.message));
-  }, [conversation.id]);
+  }, [conversation.id, recordId]);
   async function create() {
     if (!source) return;
     setBusy(true);

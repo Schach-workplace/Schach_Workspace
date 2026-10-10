@@ -53,7 +53,7 @@ func decodeAttentionTransition(w http.ResponseWriter, r *http.Request) (Attentio
 		return input, invalid("A reason is required.")
 	}
 	if input.Action == "snooze" {
-		if input.SnoozedUntil == nil || !input.SnoozedUntil.After(time.Now()) || input.SnoozedUntil.After(time.Now().Add(90*24*time.Hour)) {
+		if input.SnoozedUntil == nil {
 			return input, invalid("Snooze must be in the next 90 days.")
 		}
 	} else if _, ok := raw["snoozedUntil"]; ok {
@@ -119,6 +119,9 @@ func (s *Server) transitionAttention(w http.ResponseWriter, r *http.Request) err
 		}
 		if err != gorm.ErrRecordNotFound {
 			return err
+		}
+		if input.Action == "snooze" && (!input.SnoozedUntil.After(time.Now()) || input.SnoozedUntil.After(time.Now().Add(90*24*time.Hour))) {
+			return invalid("Snooze must be in the next 90 days.")
 		}
 		if item.State != "open" || item.Version != input.ExpectedVersion {
 			return conflict()

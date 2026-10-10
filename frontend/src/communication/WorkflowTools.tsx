@@ -26,8 +26,10 @@ export default function WorkflowTools({
   onClose,
   onTask,
   onSource,
+  requestId,
 }: {
-  conversation: Conversation;
+  conversation: Conversation | null;
+  requestId?: string;
   source: Message | null;
   data: WorkspaceData;
   command: <T>(path: string, body: unknown, method?: string) => Promise<T>;
@@ -74,13 +76,27 @@ export default function WorkflowTools({
     setRequests([]);
     setExpenseLinks([]);
     const [r, t, e] = await Promise.all([
-      command<{ requests: Intake[] }>('/communication/requests', undefined, 'GET'),
-      command<{ tasks: Task[] }>(`/conversations/${conversation.id}/work-links`, undefined, 'GET'),
-      command<{ expenses: ExpenseLink[] }>(
-        `/conversations/${conversation.id}/expense-links`,
-        undefined,
-        'GET',
-      ),
+      requestId
+        ? command<{ request: Intake }>(
+            `/communication/requests/${requestId}`,
+            undefined,
+            'GET',
+          ).then((r) => ({ requests: [r.request] }))
+        : command<{ requests: Intake[] }>('/communication/requests', undefined, 'GET'),
+      conversation
+        ? command<{ tasks: Task[] }>(
+            `/conversations/${conversation.id}/work-links`,
+            undefined,
+            'GET',
+          )
+        : Promise.resolve({ tasks: [] as Task[] }),
+      conversation
+        ? command<{ expenses: ExpenseLink[] }>(
+            `/conversations/${conversation.id}/expense-links`,
+            undefined,
+            'GET',
+          )
+        : Promise.resolve({ expenses: [] as ExpenseLink[] }),
     ]);
     if (!alive.current || revision.current !== current) return;
     const checked = await Promise.all(
@@ -93,7 +109,7 @@ export default function WorkflowTools({
               currentRevision: number;
               outOfDate: boolean;
             }[];
-          }>(`/conversations/${conversation.id}/work-links/${task.id}/sources`, undefined, 'GET');
+          }>(`/conversations/${conversation?.id}/work-links/${task.id}/sources`, undefined, 'GET');
           return [task.id, v.sources] as const;
         } catch {
           return [task.id, null] as const;
@@ -115,7 +131,7 @@ export default function WorkflowTools({
   useEffect(() => {
     alive.current = true;
     refreshEvent();
-    const timer = setInterval(() => refreshEvent(), 15000);
+    const timer = conversation ? setInterval(() => refreshEvent(), 15000) : undefined;
     const event = () => refreshEvent();
     window.addEventListener('schach-work-event', event);
     return () => {
@@ -124,7 +140,7 @@ export default function WorkflowTools({
       clearInterval(timer);
       window.removeEventListener('schach-work-event', event);
     };
-  }, [conversation.id]);
+  }, [conversation?.id, requestId]);
   const change = () => {
     setPreview(null);
     setConfirmed(false);
@@ -133,7 +149,7 @@ export default function WorkflowTools({
     retryKey: key,
     anchorMessageId: source?.id,
     sources: source ? [{ messageId: source.id, revision: source.revision }] : [],
-    expectedPolicyVersion: conversation.version,
+    expectedPolicyVersion: conversation?.version,
     publication: { excerpt: summary, attachmentIds: [] },
     expense: {
       departmentId: department,
@@ -150,14 +166,14 @@ export default function WorkflowTools({
     },
   };
   async function publish(create: boolean) {
-    if (!source) return;
+    if (!source || !conversation) return;
     setBusy(true);
     try {
       if (mode === 'expense') {
         if (!/^\d+$/.test(amount) || !Number.isSafeInteger(Number(amount)))
           throw new Error('Enter an exact integer amount in minor units.');
         const result = await command<{ audienceUserIds: string[]; notice: string }>(
-          `/conversations/${conversation.id}/expense-conversions${create ? '' : '/preview'}`,
+          `/conversations/${conversation?.id}/expense-conversions${create ? '' : '/preview'}`,
           conversion,
         );
         if (!create) {
@@ -168,12 +184,12 @@ export default function WorkflowTools({
         if (!create) {
           setPreview(
             await command<{ audienceUserIds: string[]; notice: string }>(
-              `/conversations/${conversation.id}/requests/preview`,
+              `/conversations/${conversation?.id}/requests/preview`,
               {
                 retryKey: key,
                 anchorMessageId: source.id,
                 sourceRevision: source.revision,
-                expectedPolicyVersion: conversation.version,
+                expectedPolicyVersion: conversation?.version,
                 departmentId: department,
                 title,
                 summary,
@@ -182,11 +198,11 @@ export default function WorkflowTools({
           );
           return;
         }
-        await command(`/conversations/${conversation.id}/requests`, {
+        await command(`/conversations/${conversation?.id}/requests`, {
           retryKey: key,
           anchorMessageId: source.id,
           sourceRevision: source.revision,
-          expectedPolicyVersion: conversation.version,
+          expectedPolicyVersion: conversation?.version,
           departmentId: department,
           title,
           summary,
@@ -231,24 +247,34 @@ export default function WorkflowTools({
       setError((e as Error).message);
     }
   }
-  async function close(item: Intake, state: string) {
-    const reason = window.prompt('Explain the outcome');
-    if (!reason) return;
+  const [closing, setClosing] = useState<{ item: Intake; state: string } | null>(null);
+  const [outcomeReason, setOutcomeReason] = useState('');
+  async function close(item: Intake, state: string, reason: string) {
+    if (busy || !reason.trim()) return;
+    setBusy(true);
     try {
       await command(
         `/communication/requests/${item.id}`,
         { expectedVersion: item.version, state, reason },
         'PATCH',
       );
+      setClosing(null);
+      setOutcomeReason('');
       await refresh();
     } catch (e) {
       setError((e as Error).message);
+    } finally {
+      setBusy(false);
     }
   }
   return (
     <section aria-label="Published work and finance">
       <h3>Published work and finance</h3>
-      <p>Links are shown only when you can read both the source and the destination record.</p>
+      <p>
+        {conversation
+          ? 'Links are shown only when you can read both the source and the destination record.'
+          : 'This intake contains independently published content. Triage does not grant private conversation access.'}
+      </p>
       {links.map((t) => (
         <article key={t.id}>
           <p>
@@ -271,7 +297,7 @@ export default function WorkflowTools({
           {e.title} · {e.status} · {e.currency} {e.amountMinor / 100}
         </p>
       ))}
-      {source && conversation.forwarding === 'selected' && (
+      {source && conversation?.forwarding === 'selected' && (
         <div>
           <label>
             Publish as
@@ -425,12 +451,12 @@ export default function WorkflowTools({
             disabled={busy || split.split('\n').filter(Boolean).length < 2}
             onClick={() =>
               void command<{ actionIds: string[] }>(
-                `/conversations/${conversation.id}/work-actions`,
+                `/conversations/${conversation?.id}/work-actions`,
                 {
                   retryKey: key,
                   anchorMessageId: source.id,
                   sourceRevision: source.revision,
-                  expectedPolicyVersion: conversation.version,
+                  expectedPolicyVersion: conversation?.version,
                   titles: split.split('\n').filter(Boolean),
                 },
               )
@@ -496,14 +522,46 @@ export default function WorkflowTools({
             )}
           {!['resolved', 'cancelled'].includes(item.state) && data.me.role !== 'viewer' && (
             <>
-              <button onClick={() => void close(item, 'resolved')}>
+              <button
+                onClick={() => {
+                  setClosing({ item, state: 'resolved' });
+                  setOutcomeReason('');
+                }}
+              >
                 Resolve after task acceptance
               </button>
-              <button onClick={() => void close(item, 'cancelled')}>Cancel with reason</button>
+              <button
+                onClick={() => {
+                  setClosing({ item, state: 'cancelled' });
+                  setOutcomeReason('');
+                }}
+              >
+                Cancel with reason
+              </button>
             </>
           )}
         </article>
       ))}
+      {closing && (
+        <div>
+          <label>
+            Intake outcome reason
+            <textarea
+              aria-label="Intake outcome reason"
+              value={outcomeReason}
+              maxLength={4000}
+              disabled={busy}
+              onChange={(e) => setOutcomeReason(e.target.value)}
+            />
+          </label>
+          <button
+            disabled={busy || !outcomeReason.trim()}
+            onClick={() => void close(closing.item, closing.state, outcomeReason)}
+          >
+            Confirm intake {closing.state}
+          </button>
+        </div>
+      )}
       {error && <p role="alert">{error}</p>}
     </section>
   );

@@ -12,7 +12,7 @@ func attentionForMember(a *access, uid string) *access {
 func supersedeAttention(tx *gorm.DB, cid, kind, source, action, keep string) error {
 	q := tx.Model(&AttentionItem{}).Where("company_id=? AND source_kind=? AND source_id=? AND kind=? AND state IN ?", cid, kind, source, action, []string{"open", "resolved", "routed"})
 	if keep != "" {
-		q = q.Where("occurrence_key<>?", keep)
+		q = q.Where("occurrence_key<>? AND occurrence_key NOT LIKE ?", keep, "route:"+keep+":%")
 	}
 	return q.Updates(map[string]any{"state": "superseded", "updated_at": time.Now().UTC(), "version": gorm.Expr("version+1")}).Error
 }

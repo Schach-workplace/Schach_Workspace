@@ -8505,9 +8505,38 @@ small,
 }
 
 /* Report date shortcuts remain touch-friendly without widening phone layouts. */
-.report-presets { display: flex; flex-wrap: wrap; gap: 8px; }
-.report-presets .button { min-height: 44px; }
+.report-presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.report-presets .button {
+  min-height: 44px;
+}
 @media (max-width: 600px) {
-  .report-presets { width: 100%; }
-  .report-filter-row select { min-height: 44px; }
+  .report-presets {
+    width: 100%;
+  }
+  .report-filter-row select {
+    min-height: 44px;
+  }
+}
+
+.attention-inbox {
+  padding: 20px;
+  margin-bottom: 20px;
+}
+.attention-card {
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border);
+  overflow-wrap: anywhere;
+}
+.attention-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.attention-inbox button,
+.attention-inbox select {
+  min-height: 44px;
 }

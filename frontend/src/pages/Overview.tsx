@@ -1,3 +1,4 @@
+import AttentionInbox from '../components/AttentionInbox';
 import { useState } from 'react';
 import {
   ArrowRight,
@@ -37,10 +38,12 @@ import { financeSummary, fiscalYearStart, fiscalYearRange, formatMoney } from '.
 
 export default function Overview({
   onTask,
+  onExpense,
   onNavigate,
   onProject,
 }: {
   onTask: (id: string) => void;
+  onExpense?: (id: string) => void;
   onNavigate: (view: View, filters?: Partial<TaskFilters>) => void;
   onProject: (id: string) => void;
 }) {
@@ -147,6 +150,12 @@ export default function Overview({
   ];
   return (
     <div className="page-content overview-page">
+      <AttentionInbox
+        key={data.company.id + ':' + data.me.id}
+        decisionsOnly
+        onTask={onTask}
+        onExpense={onExpense ?? (() => onNavigate('finance'))}
+      />
       <div className="overview-context">
         <div className="live-label">
           <span />

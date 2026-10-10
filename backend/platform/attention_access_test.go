@@ -84,3 +84,40 @@ func TestAttentionPaginationScopesBeforeLimit(t *testing.T) {
 		t.Fatalf("reachable %d %s", st, w.Body.String())
 	}
 }
+func TestAttentionPublishedIntakeDetailIndependentOfPrivateSource(t *testing.T) {
+	s, c, cid, uid, _ := attentionFixture(t)
+	member := addPerson(t, s, c, cid, "published-private@example.com", "member")
+	conv := newConversation(t, s, c, cid, []string{uid, member}, "group")
+	msg := sendMessage(t, s, c, cid, conv, "text", "Private source")
+	dep := Department{ID: "published-dep", CompanyID: cid, Name: "Published"}
+	if e := s.db.Create(&dep).Error; e != nil {
+		t.Fatal(e)
+	}
+	item := CommunicationRequest{ID: "published-detail", CompanyID: cid, DepartmentID: dep.ID, ConversationID: conv, AnchorMessageID: msg["id"].(string), SourceRevision: 1, CreatedBy: member, RetryKey: "published-detail", RequestHash: "test", Title: "Published title", Summary: "Published only", State: "open", Version: 2}
+	if e := s.db.Create(&item).Error; e != nil {
+		t.Fatal(e)
+	}
+	leader := addPerson(t, s, c, cid, "published-leader@example.com", "admin")
+	lc := login(t, s, "published-leader@example.com")
+	st, _, w := req(t, s, "GET", "/api/companies/"+cid+"/communication/requests/"+item.ID, nil, lc)
+	if st != 200 {
+		t.Fatalf("published detail %d %s", st, w.Body.String())
+	}
+	for _, secret := range []string{conv, msg["id"].(string), "sourceRevision", "conversationId", "anchorMessageId"} {
+		if strings.Contains(w.Body.String(), secret) {
+			t.Fatalf("intake detail leak %s", secret)
+		}
+	}
+	if e := s.db.Create(&AttentionItem{ID: "leader-intake", CompanyID: cid, RecipientID: leader, SourceKind: "intake", SourceID: item.ID, SourceRevision: 99, ConversationID: conv, AnchorMessageID: item.AnchorMessageID, MessageSequence: 1, OccurrenceKey: "published", Kind: "intake_triage", State: "open", Version: 1}).Error; e != nil {
+		t.Fatal(e)
+	}
+	st, _, w = req(t, s, "GET", "/api/companies/"+cid+"/attention/leader-intake", nil, lc)
+	if st != 200 {
+		t.Fatal(st, w.Body.String())
+	}
+	for _, secret := range []string{conv, msg["id"].(string), "sourceRevision", "conversationId", "anchorMessageId"} {
+		if strings.Contains(w.Body.String(), secret) {
+			t.Fatal("attention intake leak", secret)
+		}
+	}
+}

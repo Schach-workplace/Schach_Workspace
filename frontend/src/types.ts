@@ -332,3 +332,9 @@ export interface WorkspaceStore {
   clearError: () => void;
   resetDemo: () => Promise<void>;
 }
+
+export type {
+  AttentionView,
+  AttentionTransitionInput,
+  AttentionPreference,
+} from '../../shared/attention/types';
