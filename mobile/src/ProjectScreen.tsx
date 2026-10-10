@@ -17,6 +17,7 @@ import {
   ExecutionAttempt,
 } from "./Execution";
 import {
+  useExecutionGuard,
   useExecutionBasis,
   useAuthoredRetirement,
   useExecutionRead,
@@ -57,7 +58,6 @@ export default function ProjectScreen({ id }: { id: string }) {
               onPress={() => setDefaults(true)}
             />
           )}
-          <NativeMilestones project={q.data.project} canEdit={q.data.canEdit} />
           <Action
             title="Review project schedule"
             onPress={() => setSchedule(true)}
@@ -94,6 +94,15 @@ export default function ProjectScreen({ id }: { id: string }) {
             </Sheet>
           )}
         </View>
+      )}
+      {w.foreground && !!w.work && !q.denied && (
+        <NativeMilestones
+          key={id}
+          project={{ id, version: q.data?.project.version ?? 0 }}
+          currentProject={q.data?.project}
+          sourceReady={q.ready}
+          canEdit={!!q.data?.canEdit}
+        />
       )}
     </Page>
   );
@@ -240,20 +249,29 @@ function ProjectDefaults({
 }
 function NativeMilestones({
   project,
+  currentProject,
+  sourceReady,
   canEdit,
 }: {
-  project: ExecutionProject;
+  project: Pick<ExecutionProject, "id" | "version">;
+  currentProject?: ExecutionProject;
+  sourceReady: boolean;
   canEdit: boolean;
 }) {
   const q = useExecutionRead<{ milestones: MilestoneView[] }>(
     `/projects/${project.id}/milestones`,
+    sourceReady,
   );
   const [selected, setSelected] = useRamInput(
     "$project:" + project.id,
     "selectedMilestone",
     "",
   );
-  const [creating, setCreating] = useState(false);
+  const [creating, setCreating] = useRamInput(
+    "$project:" + project.id,
+    "creatingMilestone",
+    false,
+  );
   return (
     <View>
       <Text style={ui.title}>Human project milestones</Text>
@@ -283,6 +301,7 @@ function NativeMilestones({
         >
           <MilestoneForm
             project={project}
+            sourceReady={sourceReady && canEdit}
             onDone={() => {
               setCreating(false);
               q.retry();
@@ -296,7 +315,9 @@ function NativeMilestones({
           title="Milestone review"
           onClose={() => setSelected("")}
         >
-          <MilestoneDetail project={project} id={selected} />
+          {currentProject && (
+            <MilestoneDetail project={currentProject} id={selected} />
+          )}
         </Sheet>
       )}
     </View>
@@ -304,10 +325,12 @@ function NativeMilestones({
 }
 function MilestoneForm({
   project,
+  sourceReady = true,
   milestone,
   onDone,
 }: {
-  project: ExecutionProject;
+  project: Pick<ExecutionProject, "id" | "version">;
+  sourceReady?: boolean;
   milestone?: MilestoneView;
   onDone: () => void;
 }) {
@@ -371,6 +394,12 @@ function MilestoneForm({
   const locked = action.busy || !!action.attempt;
   return (
     <View>
+      {!sourceReady && (
+        <Text>
+          Checking current project access. Save becomes available after the
+          check.
+        </Text>
+      )}
       <ExecutionField
         label="Milestone title"
         value={title}
@@ -390,7 +419,7 @@ function MilestoneForm({
         disabled={locked}
         multiline
       />
-      {!milestone && (
+      {sourceReady && !milestone && (
         <>
           <PersonPicker
             label="Milestone owner"
@@ -461,23 +490,25 @@ function MilestoneForm({
         />
       )}
       <Text>Select independently visible tasks in this project.</Text>
-      {w.work?.tasks
-        .filter((t) => t.projectId === project.id)
-        .map((t) => (
-          <Action
-            key={t.id}
-            title={(ids.includes(t.id) ? "Selected: " : "Select: ") + t.title}
-            selected={ids.includes(t.id)}
-            disabled={locked}
-            onPress={() =>
-              setIds((ids) =>
-                ids.includes(t.id)
-                  ? ids.filter((id) => id !== t.id)
-                  : [...ids, t.id],
-              )
-            }
-          />
-        ))}
+      {sourceReady &&
+        w.work?.tasks
+          .filter((t) => t.projectId === project.id)
+          .map((t) => (
+            <Action
+              key={t.id}
+              title={(ids.includes(t.id) ? "Selected: " : "Select: ") + t.title}
+              selected={ids.includes(t.id)}
+              disabled={locked}
+              onPress={() => {
+                freezeBasis();
+                setIds((ids) =>
+                  ids.includes(t.id)
+                    ? ids.filter((id) => id !== t.id)
+                    : [...ids, t.id],
+                );
+              }}
+            />
+          ))}
       <Action
         title={
           action.attempt
@@ -486,6 +517,7 @@ function MilestoneForm({
         }
         primary
         disabled={
+          !sourceReady ||
           action.busy ||
           !title.trim() ||
           !criteria.trim() ||
@@ -493,6 +525,7 @@ function MilestoneForm({
           (!milestone && !reviewer)
         }
         onPress={() => {
+          if (!sourceReady) return;
           let deadline;
           try {
             deadline = workDeadline(date, time, timezone, instant);
@@ -560,6 +593,7 @@ function MilestoneDetail({
     `/project-milestones/${id}`,
   );
   const m = q.data?.milestone;
+  const capture = useExecutionGuard("milestone-basis:" + id);
   const retire = useAuthoredRetirement("$milestone:" + id);
   const action = useExecutionMutation("milestone-transition:" + id);
   const [assertions, setAssertions] = useRamInput<Record<string, string>>(
@@ -574,7 +608,11 @@ function MilestoneDetail({
     "",
   );
   const [note, setNote] = useRamInput("$milestone:" + id, "note", "");
-  const [editing, setEditing] = useState(false);
+  const [editing, setEditing] = useRamInput(
+    "$milestone:" + id,
+    "editing",
+    false,
+  );
   const [error, setError] = useState("");
   const scrubBasis = useEffectEvent(() => {
     action.abandon();
@@ -588,6 +626,28 @@ function MilestoneDetail({
   useEffect(() => {
     if (q.denied) void Promise.resolve().then(() => scrubBasis());
   }, [q.denied]);
+  async function inspectBasis() {
+    if (!m) return;
+    const isCurrent = capture();
+    try {
+      const rows = await Promise.all(
+        m.taskIds.map((task) =>
+          client.request<{ task: WorkTask }>(
+            `/companies/${w.company}/tasks/${task}`,
+          ),
+        ),
+      );
+      if (!isCurrent()) return;
+      if (rows.some((r) => r.task.status !== "done"))
+        throw Error("Every selected task must be accepted as done.");
+      setBasis(
+        rows.map((r) => ({ taskId: r.task.id, version: r.task.version })),
+      );
+      setError("");
+    } catch (e) {
+      if (isCurrent()) setError((e as Error).message);
+    }
+  }
   async function transition(kind: string) {
     if (!m) return;
     await action.execute(
@@ -674,29 +734,7 @@ function MilestoneDetail({
               <Action
                 title="Inspect current submission basis"
                 disabled={action.busy || !!action.attempt}
-                onPress={() =>
-                  void Promise.all(
-                    m.taskIds.map((task) =>
-                      client.request<{ task: WorkTask }>(
-                        `/companies/${w.company}/tasks/${task}`,
-                      ),
-                    ),
-                  )
-                    .then((rows) => {
-                      if (rows.some((r) => r.task.status !== "done"))
-                        throw Error(
-                          "Every selected task must be accepted as done.",
-                        );
-                      setBasis(
-                        rows.map((r) => ({
-                          taskId: r.task.id,
-                          version: r.task.version,
-                        })),
-                      );
-                      setError("");
-                    })
-                    .catch((e) => setError(e.message))
-                }
+                onPress={() => void inspectBasis()}
               />
               {basis && (
                 <Text>Inspected {basis.length} currently accepted tasks.</Text>

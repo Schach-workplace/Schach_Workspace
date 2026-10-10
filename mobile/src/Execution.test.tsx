@@ -622,3 +622,148 @@ it("keeps exact milestone decision retry reachable after committed workflow stat
     body,
   );
 });
+it("management preserves and exposes every permitted typed task default while renaming", async () => {
+  const existing = {
+    ...template,
+    kind: "task",
+    scopeOwnerId: "actor",
+    scopeDepartmentId: "",
+    defaults: {
+      title: "Delivery",
+      description: "Review evidence",
+      priority: "high",
+      estimatedHours: 3.5,
+      tags: ["delivery"],
+      status: "backlog",
+      ownerPolicy: "actor",
+      relativeDueDays: 2,
+      checklist: ["Inspect"],
+    },
+  };
+  s.request.mockImplementation(async (path: string, method?: string) =>
+    method
+      ? { id: "t" }
+      : path.endsWith("/t")
+        ? { template: existing }
+        : path.includes("task-templates?")
+          ? { templates: [existing] }
+          : { projects: [] },
+  );
+  await render(createElement(NativeTemplates));
+  await click("Delivery template");
+  await click("Manage task templates");
+  await fill("Template name", "Renamed delivery");
+  await click("Save template");
+  expect(s.request.mock.calls.find((v) => v[1] === "PATCH")?.[2]).toMatchObject(
+    {
+      version: 3,
+      name: "Renamed delivery",
+      defaults: {
+        title: "Delivery",
+        description: "Review evidence",
+        priority: "high",
+        estimatedHours: 3.5,
+        tags: ["delivery"],
+        status: "backlog",
+        relativeDueDays: 2,
+      },
+    },
+  );
+});
+it("keeps the authored milestone input mounted and focused while same-source reauthorization hides fetched values and disables submission", async () => {
+  let pause = false,
+    release!: (v: any) => void;
+  const detail = {
+    project: { ...project, ownerId: "actor" },
+    canEdit: true,
+    summary: { total: 1, accepted: 0 },
+  };
+  s.request.mockImplementation(async (path: string) =>
+    path.endsWith("/deep")
+      ? pause
+        ? new Promise((r) => (release = r))
+        : detail
+      : { milestones: [] },
+  );
+  s.w.work.tasks = [
+    { id: "poll-task", projectId: "deep", title: "Current project task" },
+  ];
+  await render(createElement(ProjectScreen, { id: "deep" }));
+  await click("New project milestone");
+  await fill("Milestone title", "Preserved explicit title");
+  await fill("Acceptance criteria, one per line", "Inspect signed evidence");
+  await click("Select: Current project task");
+  await click("Independent milestone reviewer: Choose person");
+  await click("Independent reviewer · head");
+  expect(
+    [...c.querySelectorAll("button")].find(
+      (b) => b.textContent === "Save milestone criteria",
+    )?.disabled,
+  ).toBe(false);
+  const input = c.querySelector<HTMLInputElement>(
+    'input[aria-label="Milestone title"]',
+  )!;
+  input.focus();
+  pause = true;
+  s.w.executionEpoch = 1;
+  await render(createElement(ProjectScreen, { id: "deep" }));
+  expect(c.querySelector('input[aria-label="Milestone title"]')).toBe(input);
+  expect(document.activeElement).toBe(input);
+  expect(
+    [...c.querySelectorAll("button")].find(
+      (b) => b.textContent === "Save milestone criteria",
+    )?.disabled,
+  ).toBe(true);
+  expect(c.textContent).not.toContain("Authorized tasks:");
+  pause = false;
+  await act(async () => {
+    release(detail);
+    await new Promise((r) => setTimeout(r, 10));
+  });
+  expect(
+    c.querySelector<HTMLInputElement>('input[aria-label="Milestone title"]')
+      ?.value,
+  ).toBe("Preserved explicit title");
+  expect(c.querySelector('input[aria-label="Milestone title"]')).toBe(input);
+  expect(document.activeElement).toBe(input);
+  expect(
+    [...c.querySelectorAll("button")].find(
+      (b) => b.textContent === "Save milestone criteria",
+    )?.disabled,
+  ).toBe(false);
+  expect(c.textContent).toContain(
+    "Independent milestone reviewer: Independent reviewer",
+  );
+  expect(c.textContent).toContain("Selected: Current project task");
+});
+it("confirmed project denial purges preserved milestone modal and authored fields before access is restored", async () => {
+  let denied = false;
+  const detail = {
+    project: { ...project, ownerId: "actor" },
+    canEdit: true,
+    summary: { total: 0, accepted: 0 },
+  };
+  s.request.mockImplementation(async (path: string) => {
+    if (path.endsWith("/deep")) {
+      if (denied) throw new NativeApiError(404, "not_found", "Unavailable");
+      return detail;
+    }
+    return { milestones: [] };
+  });
+  await render(createElement(ProjectScreen, { id: "deep" }));
+  await click("New project milestone");
+  await fill("Milestone title", "Private denied title");
+  denied = true;
+  s.w.executionEpoch = 1;
+  await render(createElement(ProjectScreen, { id: "deep" }));
+  expect(c.textContent).not.toContain("Private denied title");
+  denied = false;
+  s.w.executionEpoch = 2;
+  await render(createElement(ProjectScreen, { id: "deep" }));
+  expect(c.querySelector('input[aria-label="Milestone title"]')).toBeNull();
+  await click("New project milestone");
+  expect(
+    c.querySelector<HTMLInputElement>('input[aria-label="Milestone title"]')
+      ?.value,
+  ).toBe("");
+});

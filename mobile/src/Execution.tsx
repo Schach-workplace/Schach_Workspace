@@ -16,6 +16,7 @@ import {
   deadlineLocalTime,
 } from "./workDates";
 import {
+  useExecutionBasis,
   useExecutionGuard,
   useAuthoredRetirement,
   useExecutionMutation,
@@ -642,7 +643,11 @@ export function NativeTemplates({
   const [error, setError] = useState("");
   const capture = useExecutionGuard(selected + ":" + project);
   const action = useExecutionMutation("template-apply:" + (task?.id ?? "new"));
-  const [managing, setManaging] = useState(false);
+  const [managing, setManaging] = useRamInput(
+    "$template:" + kind,
+    "managing",
+    false,
+  );
   const reviewedFields =
     (action.attempt?.payload.fields as Record<string, unknown>) ?? fields;
   const locked = action.busy || !!action.attempt;
@@ -651,6 +656,11 @@ export function NativeTemplates({
     setPreview(undefined);
     setFields({});
     setManaging(false);
+    clearConversationDrafts(
+      w.company,
+      w.session?.user.id ?? "",
+      "$template-manage:" + (selected || kind),
+    );
     clearConversationDrafts(
       w.company,
       w.session?.user.id ?? "",
@@ -864,7 +874,7 @@ export function NativeTemplates({
         title={"Manage " + kind + " templates"}
         onPress={() => setManaging(true)}
       />
-      {managing && (
+      {managing && (!selected || source.ready) && (
         <Sheet
           keyboard
           title="Template management"
@@ -894,33 +904,92 @@ function NativeTemplateForm({
   onDone: () => void;
 }) {
   const w = useWorkspace();
+  const form = "$template-manage:" + (template?.id ?? kind);
+  const { basis: version, freeze: freezeBasis } = useExecutionBasis(
+    form,
+    template?.version ?? 0,
+  );
+  const retire = useAuthoredRetirement(form);
   const action = useExecutionMutation(
     "template-form:" + (template?.id ?? kind),
   );
-  const [name, setName] = useState(template?.name ?? "");
-  const [description, setDescription] = useState(template?.description ?? "");
-  const [owner, setOwner] = useState(
+  const [name, setName] = useRamInput(form, "name", template?.name ?? "");
+  const [description, setDescription] = useRamInput(
+    form,
+    "description",
+    template?.description ?? "",
+  );
+  const [owner, setOwner] = useRamInput(
+    form,
+    "owner",
     template?.scopeOwnerId ?? w.session!.user.id,
   );
-  const [department, setDepartment] = useState(
+  const [department, setDepartment] = useRamInput(
+    form,
+    "department",
     template?.scopeDepartmentId ?? "",
   );
-  const [lines, setLines] = useState(
+  const [lines, setLines] = useRamInput(
+    form,
+    "lines",
     template?.defaults.checklist.join("\n") ?? "",
   );
-  const [title, setTitle] = useState(template?.defaults.title ?? "");
-  const [policy, setPolicy] = useState(
+  const [title, setTitle] = useRamInput(
+    form,
+    "title",
+    template?.defaults.title ?? "",
+  );
+  const [taskDescription, setTaskDescription] = useRamInput(
+    form,
+    "taskDescription",
+    template?.defaults.description ?? "",
+  );
+  const [priority, setPriority] = useRamInput(
+    form,
+    "priority",
+    template?.defaults.priority || "medium",
+  );
+  const [estimate, setEstimate] = useRamInput(
+    form,
+    "estimate",
+    String(template?.defaults.estimatedHours ?? 0),
+  );
+  const [tags, setTags] = useRamInput(
+    form,
+    "tags",
+    (template?.defaults.tags ?? []).join(", "),
+  );
+  const [status, setStatus] = useRamInput(
+    form,
+    "status",
+    template?.defaults.status ?? "todo",
+  );
+  const [policy, setPolicy] = useRamInput(
+    form,
+    "policy",
     template?.defaults.ownerPolicy ?? "actor",
   );
-  const [fixed, setFixed] = useState(template?.defaults.fixedOwnerId ?? "");
-  const [reviewer, setReviewer] = useState(template?.defaults.reviewerId ?? "");
-  const [required, setRequired] = useState(
+  const [fixed, setFixed] = useRamInput(
+    form,
+    "fixed",
+    template?.defaults.fixedOwnerId ?? "",
+  );
+  const [reviewer, setReviewer] = useRamInput(
+    form,
+    "reviewer",
+    template?.defaults.reviewerId ?? "",
+  );
+  const [required, setRequired] = useRamInput(
+    form,
+    "required",
     template?.defaults.requiresApproval ?? false,
   );
-  const [days, setDays] = useState(
+  const [days, setDays] = useRamInput(
+    form,
+    "days",
     String(template?.defaults.relativeDueDays ?? 0),
   );
-  const [version] = useState(template?.version);
+
   const locked = action.busy || !!action.attempt;
   const payload = (archived = false) => ({
     name,
@@ -938,6 +1007,13 @@ function NativeTemplateForm({
           }
         : {
             title,
+            description: taskDescription,
+            priority,
+            estimatedHours: Number(estimate),
+            tags: tags
+              .split(",")
+              .map((s) => s.trim())
+              .filter(Boolean),
             ownerPolicy: policy,
             fixedOwnerId: fixed,
             reviewerId: reviewer,
@@ -947,7 +1023,7 @@ function NativeTemplateForm({
               .split("\n")
               .map((s) => s.trim())
               .filter(Boolean),
-            status: "todo",
+            status,
           },
   });
   return (
@@ -960,26 +1036,38 @@ function NativeTemplateForm({
       <ExecutionField
         label="Template name"
         value={name}
-        onChange={setName}
+        onChange={(v) => {
+          freezeBasis();
+          setName(v);
+        }}
         disabled={locked}
       />
       <ExecutionField
         label="Template description"
         value={description}
-        onChange={setDescription}
+        onChange={(v) => {
+          freezeBasis();
+          setDescription(v);
+        }}
         disabled={locked}
       />
       <PersonPicker
         label="Template scope owner"
         people={w.work?.people ?? []}
         value={owner}
-        onChange={setOwner}
+        onChange={(v) => {
+          freezeBasis();
+          setOwner(v);
+        }}
         disabled={locked}
       />
       <Action
         title="No department scope"
         disabled={locked}
-        onPress={() => setDepartment("")}
+        onPress={() => {
+          freezeBasis();
+          setDepartment("");
+        }}
       />
       {w.work?.departments.map((d) => (
         <Action
@@ -987,13 +1075,19 @@ function NativeTemplateForm({
           title={"Scope department: " + d.name}
           selected={department === d.id}
           disabled={locked}
-          onPress={() => setDepartment(d.id)}
+          onPress={() => {
+            freezeBasis();
+            setDepartment(d.id);
+          }}
         />
       ))}
       <ExecutionField
         label="Checklist labels, one per line"
         value={lines}
-        onChange={setLines}
+        onChange={(v) => {
+          freezeBasis();
+          setLines(v);
+        }}
         disabled={locked}
         multiline
       />
@@ -1002,9 +1096,64 @@ function NativeTemplateForm({
           <ExecutionField
             label="Default task title"
             value={title}
-            onChange={setTitle}
+            onChange={(v) => {
+              freezeBasis();
+              setTitle(v);
+            }}
             disabled={locked}
           />
+          <ExecutionField
+            label="Default task description"
+            value={taskDescription}
+            onChange={(v) => {
+              freezeBasis();
+              setTaskDescription(v);
+            }}
+            disabled={locked}
+            multiline
+          />
+          {["critical", "high", "medium", "low"].map((p) => (
+            <Action
+              key={p}
+              title={"Default priority: " + p}
+              selected={priority === p}
+              disabled={locked}
+              onPress={() => {
+                freezeBasis();
+                setPriority(p);
+              }}
+            />
+          ))}
+          <ExecutionField
+            label="Default estimated hours"
+            value={estimate}
+            onChange={(v) => {
+              freezeBasis();
+              setEstimate(v);
+            }}
+            disabled={locked}
+          />
+          <ExecutionField
+            label="Default tags, comma separated"
+            value={tags}
+            onChange={(v) => {
+              freezeBasis();
+              setTags(v);
+            }}
+            disabled={locked}
+          />
+          {(["todo", "backlog"] as const).map((v) => (
+            <Action
+              key={v}
+              title={"Initial status: " + v}
+              selected={status === v}
+              disabled={locked}
+              onPress={() => {
+                freezeBasis();
+                setStatus(v);
+              }}
+            />
+          ))}
           {(
             ["actor", "fixed", "project_owner", "project_default"] as const
           ).map((p) => (
@@ -1013,7 +1162,10 @@ function NativeTemplateForm({
               title={"Owner policy: " + p}
               selected={p === policy}
               disabled={locked}
-              onPress={() => setPolicy(p)}
+              onPress={() => {
+                freezeBasis();
+                setPolicy(p);
+              }}
             />
           ))}
           {policy === "fixed" && (
@@ -1021,7 +1173,10 @@ function NativeTemplateForm({
               label="Fixed task owner"
               people={w.work?.people ?? []}
               value={fixed}
-              onChange={setFixed}
+              onChange={(v) => {
+                freezeBasis();
+                setFixed(v);
+              }}
               disabled={locked}
             />
           )}
@@ -1031,7 +1186,10 @@ function NativeTemplateForm({
             value={reviewer}
             excludeIds={[fixed]}
             allowNone
-            onChange={setReviewer}
+            onChange={(v) => {
+              freezeBasis();
+              setReviewer(v);
+            }}
             disabled={locked}
           />
           <Action
@@ -1042,12 +1200,18 @@ function NativeTemplateForm({
             }
             selected={required}
             disabled={locked}
-            onPress={() => setRequired((v) => !v)}
+            onPress={() => {
+              freezeBasis();
+              setRequired((v) => !v);
+            }}
           />
           <ExecutionField
             label="Relative due days"
             value={days}
-            onChange={setDays}
+            onChange={(v) => {
+              freezeBasis();
+              setDays(v);
+            }}
             disabled={locked}
           />
         </>
@@ -1062,6 +1226,26 @@ function NativeTemplateForm({
               template ? `/task-templates/${template.id}` : "/task-templates",
               payload(),
               template ? "PATCH" : "POST",
+              () =>
+                retire({
+                  name,
+                  description,
+                  owner,
+                  department,
+                  lines,
+                  title,
+                  taskDescription,
+                  priority,
+                  estimate,
+                  tags,
+                  status,
+                  policy,
+                  fixed,
+                  reviewer,
+                  required,
+                  days,
+                  expectedBasis: version,
+                }),
             )
             .then(onDone)
             .catch(() => {})
@@ -1095,6 +1279,7 @@ export function NativeProjectChoice({
   const w = useWorkspace();
   const q = useExecutionRead<{ projects: ExecutionProject[] }>("/projects");
   const [error, setError] = useState("");
+  const capture = useExecutionGuard("project-choice");
   return (
     <View>
       <Text>Selected project</Text>
@@ -1113,19 +1298,21 @@ export function NativeProjectChoice({
           disabled={disabled}
           onPress={() => {
             const generation = client.generation;
+            const isCurrent = capture();
             void client
               .request<ProjectDetail>(
                 `/companies/${w.company}/projects/${p.id}`,
               )
               .then((r) => {
-                if (generation === client.generation) {
+                if (generation === client.generation && isCurrent()) {
                   onSelect(r.project);
                   setError("");
                 }
               })
-              .catch(() =>
-                setError("Inspect current project access before choosing."),
-              );
+              .catch(() => {
+                if (isCurrent())
+                  setError("Inspect current project access before choosing.");
+              });
           }}
         />
       ))}

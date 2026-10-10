@@ -48,6 +48,11 @@ export default function TaskTemplates({
   const [required, setRequired] = useState(false);
   const [relative, setRelative] = useState('');
   const [taskTitle, setTaskTitle] = useState('');
+  const [taskDescription, setTaskDescription] = useState('');
+  const [priority, setPriority] = useState('medium');
+  const [estimate, setEstimate] = useState('0');
+  const [tags, setTags] = useState('');
+  const [initialStatus, setInitialStatus] = useState('todo');
   const currentProject = data.projects.find((p) => p.id === project);
   const projectDetail = useExecutionRead<{ project: { version: number } }>(
     `/projects/${project}`,
@@ -109,6 +114,11 @@ export default function TaskTemplates({
       setScopeDepartment(source.scopeDepartmentId);
       setChecklist(source.defaults.checklist.join('\n'));
       setTaskTitle(source.defaults.title ?? '');
+      setTaskDescription(source.defaults.description ?? '');
+      setPriority(source.defaults.priority || 'medium');
+      setEstimate(String(source.defaults.estimatedHours ?? 0));
+      setTags((source.defaults.tags ?? []).join(', '));
+      setInitialStatus(source.defaults.status ?? 'todo');
       setOwnerPolicy(source.defaults.ownerPolicy ?? 'actor');
       setFixedOwner(source.defaults.fixedOwnerId ?? '');
       setReviewer(source.defaults.reviewerId ?? '');
@@ -358,6 +368,38 @@ export default function TaskTemplates({
               <Field label="Default task title">
                 <input value={taskTitle} onChange={(e) => setTaskTitle(e.target.value)} />
               </Field>
+              <Field label="Default task description">
+                <textarea
+                  value={taskDescription}
+                  onChange={(e) => setTaskDescription(e.target.value)}
+                />
+              </Field>
+              <Field label="Default task priority">
+                <select value={priority} onChange={(e) => setPriority(e.target.value)}>
+                  {['critical', 'high', 'medium', 'low'].map((v) => (
+                    <option key={v} value={v}>
+                      {v}
+                    </option>
+                  ))}
+                </select>
+              </Field>
+              <Field label="Default task estimated hours">
+                <input
+                  type="number"
+                  min="0"
+                  value={estimate}
+                  onChange={(e) => setEstimate(e.target.value)}
+                />
+              </Field>
+              <Field label="Default task tags, comma separated">
+                <input value={tags} onChange={(e) => setTags(e.target.value)} />
+              </Field>
+              <Field label="Default task initial status">
+                <select value={initialStatus} onChange={(e) => setInitialStatus(e.target.value)}>
+                  <option value="todo">To do</option>
+                  <option value="backlog">Backlog</option>
+                </select>
+              </Field>
               <Field label="Template owner policy">
                 <select value={ownerPolicy} onChange={(e) => setOwnerPolicy(e.target.value)}>
                   {['actor', 'fixed', 'project_owner', 'project_default'].map((p) => (
@@ -430,11 +472,18 @@ export default function TaskTemplates({
                   ...(!task
                     ? {
                         title: taskTitle,
+                        description: taskDescription,
+                        priority,
+                        estimatedHours: Number(estimate),
+                        tags: tags
+                          .split(',')
+                          .map((s) => s.trim())
+                          .filter(Boolean),
                         ownerPolicy,
                         fixedOwnerId: fixedOwner,
                         reviewerId: reviewer,
                         requiresApproval: required,
-                        status: 'todo',
+                        status: initialStatus,
                         ...(relative !== '' ? { relativeDueDays: Number(relative) } : {}),
                       }
                     : {}),

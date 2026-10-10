@@ -54,3 +54,52 @@ it('previews a scoped template and confirms one reviewed owner/reviewer task', a
     fields: { requiresApproval: true, ownerId: 'u-founder' },
   });
 });
+it('renames a captured template without losing typed defaults or silently advancing its version', async () => {
+  let template = {
+    id: 'tpl',
+    version: 4,
+    name: 'Delivery',
+    kind: 'task',
+    scopeOwnerId: 'u-founder',
+    scopeDepartmentId: '',
+    defaults: {
+      title: 'Deliver',
+      description: 'Inspect evidence',
+      priority: 'high',
+      estimatedHours: 3.5,
+      tags: ['delivery'],
+      status: 'backlog',
+      ownerPolicy: 'actor',
+      relativeDueDays: 2,
+      checklist: ['Verify'],
+    },
+  };
+  state.execute.mockClear();
+  state.query.mockImplementation((p: string) => ({
+    data: p.includes('/tpl') ? { template } : { templates: [template] },
+    ready: true,
+    retry: vi.fn(),
+  }));
+  state.execute.mockResolvedValue({ id: 'tpl' });
+  const v = render(<TaskTemplates />);
+  fireEvent.change(screen.getByLabelText('Template'), { target: { value: 'tpl' } });
+  fireEvent.click(screen.getByRole('button', { name: 'Edit template' }));
+  template = { ...template, version: 5 };
+  v.rerender(<TaskTemplates />);
+  fireEvent.change(screen.getByLabelText('Template name'), { target: { value: 'Renamed' } });
+  fireEvent.click(screen.getByRole('button', { name: 'Save scoped template' }));
+  await waitFor(() => expect(state.execute).toHaveBeenCalledTimes(1));
+  expect(state.execute.mock.calls[0][1]).toMatchObject({
+    version: 4,
+    name: 'Renamed',
+    defaults: {
+      title: 'Deliver',
+      description: 'Inspect evidence',
+      priority: 'high',
+      estimatedHours: 3.5,
+      tags: ['delivery'],
+      status: 'backlog',
+      relativeDueDays: 2,
+    },
+  });
+});

@@ -83,12 +83,18 @@ export function useExecutionRead<T>(path: string, enabled = true) {
         ) {
           const project = path.match(/^\/projects\/([^/?]+)$/);
           const milestone = path.match(/^\/project-milestones\/([^/?]+)$/);
-          if (project)
+          if (project) {
+            clearConversationDrafts(
+              w.company,
+              w.session?.user.id ?? "",
+              "$milestone:" + project[1],
+            );
             clearConversationDrafts(
               w.company,
               w.session?.user.id ?? "",
               "$project:" + project[1],
             );
+          }
           if (milestone)
             clearConversationDrafts(
               w.company,
