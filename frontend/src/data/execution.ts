@@ -1,4 +1,5 @@
 import { clearExecutionForm } from './executionInput';
+import { readDraft } from '../communication/drafts';
 import { mergeExecutionPage } from '../../../shared/business/pagination';
 import { useEffect, useRef, useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
@@ -127,6 +128,16 @@ export function useExecutionRead<T>(path: string, enabled = true) {
       milestone = path.match(/^\/project-milestones\/([^/?]+)$/),
       template = path.match(/^\/task-templates\/([^/?]+)$/);
     if (project) {
+      const body = readDraft({
+        serverOrigin: (import.meta.env.VITE_API_URL ?? window.location.origin) + ':' + store.mode,
+        companyId: company,
+        userId: user,
+        conversationId: '$project:' + project[1],
+        threadRootId: 'input:selected',
+      }).body;
+      const selected = body ? JSON.parse(body) : '';
+      if (typeof selected === 'string' && selected)
+        clearExecutionForm(company, user, '$milestone:' + selected);
       clearExecutionForm(company, user, '$project:' + project[1]);
       clearExecutionForm(company, user, '$milestone:' + project[1]);
     }
@@ -142,7 +153,7 @@ export function useExecutionRead<T>(path: string, enabled = true) {
     retry: query.refetch,
   };
 }
-export function useExecutionMutation(formId: string) {
+export function useExecutionMutation(formId: string, sources: string[] = []) {
   const store = useWorkspace();
   const business = useBusinessAttempt<Record<string, unknown>>(formId);
   const pending = useRef(false);
@@ -166,7 +177,17 @@ export function useExecutionMutation(formId: string) {
     const captured = owner;
     let committedResult: T | undefined;
     try {
-      const attempt = beginAttempt(business.scope, payload, businessKey(), { path, method });
+      const dependencies = [
+        ...sources,
+        ...(typeof payload.projectId === 'string' && payload.projectId
+          ? ['/projects/' + payload.projectId]
+          : []),
+      ];
+      const attempt = beginAttempt(business.scope, payload, businessKey(), {
+        path,
+        method,
+        ...(dependencies.length ? { sources: dependencies } : {}),
+      });
       const committed = (r: Record<string, unknown>) => {
         committedResult = r as T;
         const matching = markAttemptCommitted(business.scope, attempt.retryKey, {

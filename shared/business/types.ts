@@ -75,6 +75,22 @@ export interface MilestoneAcceptance {
   createdAt: string;
   note: string;
 }
+export interface MilestoneEventView {
+  id: string;
+  companyId: string;
+  milestoneId: string;
+  actorId: string;
+  action: string;
+  reason: string;
+  version: number;
+  createdAt: string;
+  submittedBy: string;
+  submittedAt: string;
+  criteriaVersion: number;
+  projectVersion: number;
+  tasks: TaskBasis[] | null;
+  assertions: Assertion[] | null;
+}
 export interface MilestoneView extends Commitment {
   id: string;
   projectId: string;
@@ -92,6 +108,7 @@ export interface MilestoneView extends Commitment {
   basisCurrent: boolean;
   basisNotice?: string;
   acceptances: MilestoneAcceptance[];
+  events?: MilestoneEventView[];
   canEdit: boolean;
   canSubmit: boolean;
   canReview: boolean;

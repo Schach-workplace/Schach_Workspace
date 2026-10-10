@@ -68,3 +68,12 @@ it('purges only attempts bound to a denied source in the current principal', () 
   expect(readAttempt(scope)?.retryKey).toBe('unrelated');
   clearAttemptScope(other);
 });
+it('purges a milestone decision when its parent project source is denied', () => {
+  beginAttempt(scope, { version: 2 }, 'decision', {
+    path: '/project-milestones/m/transition',
+    method: 'POST',
+    sources: ['/projects/p'],
+  });
+  clearAttemptsForSource(scope.serverOrigin, scope.companyId, scope.userId, '/projects/p');
+  expect(readAttempt(scope)).toBeUndefined();
+});

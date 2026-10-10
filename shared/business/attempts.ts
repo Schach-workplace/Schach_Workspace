@@ -7,6 +7,7 @@ export interface BusinessAttemptScope {
 export interface BusinessAttemptTarget {
   path: string;
   method: "POST" | "PATCH";
+  sources?: string[];
 }
 export interface FrozenBusinessAttempt<T = unknown> {
   retryKey: string;
@@ -76,7 +77,14 @@ export function beginAttempt<T>(
   if (!key.trim() || key.length > 100) throw Error("Choose a valid retry key.");
   const attempt = freeze({
     retryKey: key,
-    ...(target ? { target: { ...target } } : {}),
+    ...(target
+      ? {
+          target: {
+            ...target,
+            ...(target.sources ? { sources: [...target.sources] } : {}),
+          },
+        }
+      : {}),
     payload: JSON.parse(JSON.stringify(payload)) as T,
     state: "unknown" as const,
   });
@@ -142,8 +150,8 @@ export function clearAttemptsForSource(
       s === serverOrigin &&
       c === companyId &&
       u === userId &&
-      path &&
-      (path === sourcePath || path.startsWith(sourcePath + "/"))
+      ((path && (path === sourcePath || path.startsWith(sourcePath + "/"))) ||
+        attempt.target?.sources?.includes(sourcePath))
     )
       attempts.delete(key);
   }

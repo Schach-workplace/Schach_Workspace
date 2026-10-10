@@ -16,8 +16,11 @@ vi.mock('../store', () => ({
 }));
 import { clearAllBusinessAttempts } from '../../../shared/business/attempts';
 import { ApiError } from './api';
+import { useExecutionInput } from './executionInput';
+import { clearAllDrafts } from '../communication/drafts';
 beforeEach(() => {
   clearAllBusinessAttempts();
+  clearAllDrafts();
   state.mutate.mockReset();
 });
 afterEach(() => {
@@ -229,4 +232,63 @@ it('retires a known successful canonical result before a later refresh failure',
   fireEvent.click(screen.getByText('Save'));
   await screen.findByText('known');
   expect(screen.getByText('retired')).toBeTruthy();
+});
+it('purges authored existing milestone RAM and its frozen decision when the parent project is denied', async () => {
+  let denied = false;
+  state.mutate.mockRejectedValue(Error('Lost response'));
+  vi.stubGlobal(
+    'fetch',
+    vi.fn(
+      async () =>
+        new Response(
+          JSON.stringify(
+            denied
+              ? { error: { message: 'Project unavailable', code: 'not_found' } }
+              : { project: { id: 'p' } },
+          ),
+          { status: denied ? 404 : 200 },
+        ),
+    ),
+  );
+  function Probe() {
+    const q = useExecutionRead('/projects/p');
+    const [, setSelected] = useExecutionInput('$project:p', 'selected', '');
+    const [title, setTitle] = useExecutionInput('$milestone:m', 'title', '');
+    const a = useExecutionMutation('milestone-transition:m', ['/projects/p']);
+    return (
+      <>
+        <button
+          onClick={() => {
+            setSelected('m');
+            setTitle('Authored milestone');
+            void a
+              .execute('/project-milestones/m/transition', {
+                action: 'request_changes',
+                version: 2,
+              })
+              .catch(() => {});
+          }}
+        >
+          Submit
+        </button>
+        <p>{title || 'empty authored form'}</p>
+        <p>{a.attempt ? 'frozen' : 'retired'}</p>
+        <p>{q.denied ? 'denied' : 'authorized'}</p>
+      </>
+    );
+  }
+  render(
+    <QueryClientProvider client={new QueryClient()}>
+      <Probe />
+    </QueryClientProvider>,
+  );
+  fireEvent.click(screen.getByText('Submit'));
+  await screen.findByText('frozen');
+  denied = true;
+  window.dispatchEvent(
+    new CustomEvent('schach-work-event', { detail: { company: 'c', user: 'u' } }),
+  );
+  await screen.findByText('denied');
+  await screen.findByText('retired');
+  expect(screen.getByText('empty authored form')).toBeTruthy();
 });

@@ -89,7 +89,9 @@ function MilestoneForm({
 }) {
   const store = useWorkspace();
   const data = store.data!;
-  const action = useExecutionMutation('milestone-form:' + (milestone?.id ?? project.id));
+  const action = useExecutionMutation('milestone-form:' + (milestone?.id ?? project.id), [
+    '/projects/' + project.id,
+  ]);
   const form = '$milestone:' + (milestone?.id ?? project.id);
   const { basis, freeze: freezeBasis } = useExecutionBasis(form, {
     projectVersion: project.version,
@@ -367,7 +369,7 @@ function MilestoneDetail({
 }) {
   const store = useWorkspace();
   const q = useExecutionRead<{ milestone: MilestoneView }>(`/project-milestones/${id}`);
-  const action = useExecutionMutation('milestone-transition:' + id);
+  const action = useExecutionMutation('milestone-transition:' + id, ['/projects/' + project.id]);
   const [assertions, setAssertions] = useExecutionInput<Record<string, string>>(
     '$milestone:' + id,
     'assertions',
