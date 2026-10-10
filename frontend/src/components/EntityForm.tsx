@@ -28,6 +28,10 @@ export default function EntityForm({
     dueDate: '',
     color: '#f97316',
     status: 'active',
+    taskOwnerPolicy: 'actor',
+    defaultTaskOwnerId: '',
+    defaultReviewerId: '',
+    defaultRequiresApproval: false,
     title: '',
     email: '',
     password: '',
@@ -67,7 +71,19 @@ export default function EntityForm({
     event.preventDefault();
     setError('');
     const fields: Record<EntityKind, string[]> = {
-      project: ['name', 'description', 'departmentId', 'ownerId', 'dueDate', 'color', 'status'],
+      project: [
+        'name',
+        'description',
+        'departmentId',
+        'ownerId',
+        'dueDate',
+        'color',
+        'status',
+        'taskOwnerPolicy',
+        'defaultTaskOwnerId',
+        'defaultReviewerId',
+        'defaultRequiresApproval',
+      ],
       goal: [
         'name',
         'description',
@@ -104,6 +120,7 @@ export default function EntityForm({
       ],
     };
     const body = Object.fromEntries(fields[kind].map((k) => [k, values[k]]));
+    if (kind === 'project' && item) body.version = (item as Project).version;
     try {
       await mutate(
         item ? (kind === 'company' ? '' : `${paths[kind]}/${item.id}`) : paths[kind],
@@ -188,6 +205,60 @@ export default function EntityForm({
               onChange={(e) => set('description', e.target.value)}
             />
           </Field>
+        )}
+        {kind === 'project' && (
+          <>
+            <Field label="Task owner default">
+              <select
+                value={get('taskOwnerPolicy')}
+                onChange={(e) => set('taskOwnerPolicy', e.target.value)}
+              >
+                <option value="actor">Person creating the task</option>
+                <option value="project_owner">Project owner</option>
+                <option value="fixed">Selected person</option>
+              </select>
+            </Field>
+            {get('taskOwnerPolicy') === 'fixed' && (
+              <Field label="Default task owner">
+                <select
+                  value={get('defaultTaskOwnerId')}
+                  onChange={(e) => set('defaultTaskOwnerId', e.target.value)}
+                >
+                  <option value="">Choose a person</option>
+                  {data.people
+                    .filter((p) => p.active && ownsScope(data, p.id))
+                    .map((p) => (
+                      <option key={p.id} value={p.id}>
+                        {p.name}
+                      </option>
+                    ))}
+                </select>
+              </Field>
+            )}
+            <Field label="Default independent reviewer">
+              <select
+                value={get('defaultReviewerId')}
+                onChange={(e) => set('defaultReviewerId', e.target.value)}
+              >
+                <option value="">No default reviewer</option>
+                {data.people
+                  .filter((p) => p.active && p.role !== 'viewer')
+                  .map((p) => (
+                    <option key={p.id} value={p.id}>
+                      {p.name}
+                    </option>
+                  ))}
+              </select>
+            </Field>
+            <label>
+              <input
+                type="checkbox"
+                checked={!!values.defaultRequiresApproval}
+                onChange={(e) => set('defaultRequiresApproval', e.target.checked)}
+              />{' '}
+              Require independent task review
+            </label>
+          </>
         )}
         {(kind === 'project' || kind === 'goal') && (
           <div className="form-grid">

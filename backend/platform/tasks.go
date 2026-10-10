@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"net/http"
 	"reflect"
-	"sort"
 	"strings"
 
 	"gorm.io/gorm"
@@ -31,7 +30,8 @@ func makeTask(a *access, f map[string]json.RawMessage) (Task, error) {
 	t.OriginalDueDate = t.DueDate
 	return t, nil
 }
-func validateTask(tx *gorm.DB, a *access, t *Task) error {
+func validateTask(tx *gorm.DB, a *access, t *Task) error { return validateTaskWithGraph(tx, a, t, nil) }
+func validateTaskWithGraph(tx *gorm.DB, a *access, t *Task, override map[string]Task) error {
 	if e := validateDeadline(t); e != nil {
 		return e
 	}
@@ -151,6 +151,9 @@ func validateTask(tx *gorm.DB, a *access, t *Task) error {
 	if t.Checklist == nil {
 		t.Checklist = []ChecklistItem{}
 	}
+	if override != nil {
+		return validateTaskGraph(a, *t, override)
+	}
 	var all []Task
 	if e := tx.Where("company_id = ?", a.Company.ID).Select("id", "company_id", "owner_id", "created_by", "reviewer_id", "department_id", "collaborators", "dependencies", "parent_id", "status").Find(&all).Error; e != nil {
 		return e
@@ -159,8 +162,11 @@ func validateTask(tx *gorm.DB, a *access, t *Task) error {
 	for _, v := range all {
 		graph[v.ID] = v
 	}
-	graph[t.ID] = *t
-	seen = map[string]bool{}
+	return validateTaskGraph(a, *t, graph)
+}
+func validateTaskGraph(a *access, t Task, graph map[string]Task) error {
+	graph[t.ID] = t
+	seen := map[string]bool{}
 	for _, id := range t.Dependencies {
 		dep, ok := graph[id]
 		if id == t.ID || !ok || !a.canRead(dep) || seen[id] {
@@ -366,77 +372,11 @@ func (s *Server) patchTask(w http.ResponseWriter, r *http.Request) error {
 		if e != nil {
 			return e
 		}
-		if !a.canWrite(old) {
-			return denied()
-		}
-		if old.Version != version {
-			return conflict()
-		}
-		t := old
-		if e = applyFields(f, &t); e != nil {
+		next, e := prepareTaskPatch(tx, a, old, version, f, nil)
+		if e != nil {
 			return e
 		}
-		if old.Status == "done" && t.Status == "done" {
-			return invalid("Reopen accepted work before editing task fields. Comments and time can still be added; reopen before adding evidence.")
-		}
-		if old.RequiresApproval && (!t.RequiresApproval || (a.User.ID == old.OwnerID && t.ReviewerID != old.ReviewerID)) {
-			return denied()
-		}
-		if !a.canStructure(old) && structuralChanged(old, t) {
-			return denied()
-		}
-		if (old.OwnerID != t.OwnerID || old.DepartmentID != t.DepartmentID) && !a.canCreate(t.OwnerID, t.DepartmentID) {
-			return denied()
-		}
-		if e := validateDeadline(&t); e != nil {
-			return e
-		}
-		if deadlineChanged(old, t) {
-			if _, present := f["deadlineChangeReason"]; !present || !clean(t.DeadlineChangeReason, 4000) {
-				return invalid("Explain why the deadline is changing. The original commitment is preserved.")
-			}
-		}
-		if e = validateTask(tx, a, &t); e != nil {
-			return e
-		}
-		if e = setWorkflow(tx, &t, old.Status, false); e != nil {
-			return e
-		}
-		t.Version = old.Version + 1
-		t.UpdatedAt = nowString()
-		res := tx.Model(&Task{}).Where("id = ? AND company_id = ? AND version = ?", t.ID, t.CompanyID, old.Version).Select(taskColumns).Updates(&t)
-		if res.Error != nil {
-			return res.Error
-		}
-		if res.RowsAffected != 1 {
-			return conflict()
-		}
-		keys := []string{}
-		for k := range f {
-			keys = append(keys, k)
-		}
-		sort.Strings(keys)
-		detail := "Changed " + strings.Join(keys, ", ") + "."
-		if old.Status != t.Status {
-			detail += " Status: " + old.Status + " → " + t.Status + "."
-		}
-		if deadlineChanged(old, t) {
-			detail += " Deadline: " + old.DueDate + " → " + t.DueDate + ". Reason: " + t.DeadlineChangeReason
-		}
-		if e = audit(tx, t.CompanyID, t.ID, a.User.ID, "task_updated", detail); e != nil {
-			return e
-		}
-		if old.OwnerID != t.OwnerID {
-			if e = notification(tx, t.CompanyID, t.ID, t.OwnerID, "Task assigned", t.Code+" · "+t.Title, "assignment"); e != nil {
-				return e
-			}
-		}
-		if t.Status == "in_review" && (old.Status != "in_review" || old.ReviewerID != t.ReviewerID) {
-			if e = notification(tx, t.CompanyID, t.ID, t.ReviewerID, "Review requested", t.Code+" · "+t.Title, "review"); e != nil {
-				return e
-			}
-		}
-		return syncTaskAttention(tx, a, &old, t)
+		return commitTaskPatch(tx, a, old, next, f)
 	})
 	if e != nil {
 		return e

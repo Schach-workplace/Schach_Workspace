@@ -396,7 +396,7 @@ func (s *Server) saveProject(w http.ResponseWriter, r *http.Request) error {
 	if e != nil {
 		return e
 	}
-	f, e := readFields(w, r, "name", "description", "departmentId", "ownerId", "dueDate", "color", "status")
+	f, e := readFields(w, r, "name", "description", "departmentId", "ownerId", "dueDate", "color", "status", "version", "taskOwnerPolicy", "defaultTaskOwnerId", "defaultReviewerId", "defaultRequiresApproval")
 	if e != nil {
 		return e
 	}
@@ -408,13 +408,23 @@ func (s *Server) saveProject(w http.ResponseWriter, r *http.Request) error {
 		if !in(a.Member.Role, "founder", "ceo", "admin", "head", "manager") {
 			return denied()
 		}
-		p := Project{ID: id, CompanyID: a.Company.ID, Color: "#F97316", Status: "active"}
+		p := Project{ID: id, CompanyID: a.Company.ID, Color: "#F97316", Status: "active", Version: 1, TaskOwnerPolicy: "actor"}
+		var expected int64
+		if r.Method == "PATCH" {
+			if json.Unmarshal(f["version"], &expected) != nil || expected < 1 {
+				return invalid("A positive project version is required.")
+			}
+		}
+		delete(f, "version")
 		if r.Method == "PATCH" {
 			if e := tx.Where("id = ? AND company_id = ?", id, a.Company.ID).First(&p).Error; e != nil {
 				return missing()
 			}
 			if !a.canCreate(p.OwnerID, p.DepartmentID) {
 				return denied()
+			}
+			if p.Version != expected {
+				return conflict()
 			}
 		}
 		if e := applyFields(f, &p); e != nil {
@@ -432,8 +442,35 @@ func (s *Server) saveProject(w http.ResponseWriter, r *http.Request) error {
 		if !a.canCreate(p.OwnerID, p.DepartmentID) {
 			return denied()
 		}
-		if e := tx.Save(&p).Error; e != nil {
-			return e
+		if !in(p.TaskOwnerPolicy, "actor", "project_owner", "fixed") {
+			return invalid("Choose a project task owner policy.")
+		}
+		if p.TaskOwnerPolicy == "fixed" && (!a.activeUser(p.DefaultTaskOwnerID) || !a.canCreate(p.DefaultTaskOwnerID, p.DepartmentID)) {
+			return invalid("Choose an active permitted default owner.")
+		}
+		resolvedOwner := p.OwnerID
+		if p.TaskOwnerPolicy == "fixed" {
+			resolvedOwner = p.DefaultTaskOwnerID
+		}
+		if p.DefaultReviewerID != "" && (!a.activeUser(p.DefaultReviewerID) || a.Members[p.DefaultReviewerID].Role == "viewer" || p.DefaultReviewerID == resolvedOwner) {
+			return invalid("Choose an active independent default reviewer.")
+		}
+		if p.DefaultRequiresApproval && p.DefaultReviewerID == "" {
+			return invalid("Choose a default reviewer for required review.")
+		}
+		if r.Method == "PATCH" {
+			p.Version = expected + 1
+			res := tx.Model(&Project{}).Where("id = ? AND company_id = ? AND version = ?", p.ID, p.CompanyID, expected).Select("*").Updates(&p)
+			if res.Error != nil {
+				return res.Error
+			}
+			if res.RowsAffected != 1 {
+				return conflict()
+			}
+		} else {
+			if e := tx.Create(&p).Error; e != nil {
+				return e
+			}
 		}
 		return audit(tx, a.Company.ID, "", a.User.ID, "project_updated", p.Name+" saved.")
 	})

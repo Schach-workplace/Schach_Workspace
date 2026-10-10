@@ -627,6 +627,13 @@ export async function demoMutate(
     return { ok: true, id: c.id };
   }
   const { w, me } = context(db, companyId, userId);
+  for (const p of w.projects) {
+    p.version ??= 1;
+    p.taskOwnerPolicy ??= 'actor';
+    p.defaultTaskOwnerId ??= '';
+    p.defaultReviewerId ??= '';
+    p.defaultRequiresApproval ??= false;
+  }
   const parts = path.replace(/^\//, '').split('/').filter(Boolean);
   const keyed = (path === '/tasks' || path === '/tasks/import') && Object.hasOwn(b, 'retryKey');
   const retryIdentity = JSON.stringify([companyId, userId, path, b.retryKey]);
@@ -968,7 +975,14 @@ export async function demoMutate(
       fail('A manager must create or change a project.');
     const previous = parts[1] ? w.projects.find((p) => p.id === parts[1]) : undefined;
     if (parts[1] && !previous) fail('Project not found.');
+    if (previous && (!b.version || b.version !== (previous.version ?? 1)))
+      fail('Project changed. Refresh and intentionally reconcile your edits.');
     const p = {
+      version: 1,
+      taskOwnerPolicy: 'actor',
+      defaultTaskOwnerId: '',
+      defaultReviewerId: '',
+      defaultRequiresApproval: false,
       id: id(),
       companyId: w.company.id,
       name: '',
@@ -981,6 +995,7 @@ export async function demoMutate(
       ...previous,
       ...b,
     } as Project;
+    p.version = previous ? (previous.version ?? 1) + 1 : 1;
     p.companyId = w.company.id;
     p.id = previous?.id ?? p.id;
     if (!p.name.trim() || !validDate(p.dueDate))

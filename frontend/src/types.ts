@@ -57,6 +57,11 @@ export interface Department {
   description: string;
 }
 export interface Project {
+  version?: number;
+  taskOwnerPolicy?: 'actor' | 'project_owner' | 'fixed';
+  defaultTaskOwnerId?: string;
+  defaultReviewerId?: string;
+  defaultRequiresApproval?: boolean;
   id: string;
   companyId: string;
   name: string;

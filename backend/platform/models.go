@@ -57,15 +57,20 @@ type Department struct {
 	Description string `json:"description"`
 }
 type Project struct {
-	ID           string `json:"id" gorm:"primaryKey;size:80"`
-	CompanyID    string `json:"companyId" gorm:"index"`
-	Name         string `json:"name"`
-	Description  string `json:"description"`
-	DepartmentID string `json:"departmentId"`
-	OwnerID      string `json:"ownerId"`
-	DueDate      string `json:"dueDate"`
-	Color        string `json:"color"`
-	Status       string `json:"status"`
+	Version                 int64  `json:"version" gorm:"default:1"`
+	TaskOwnerPolicy         string `json:"taskOwnerPolicy" gorm:"default:actor"`
+	DefaultTaskOwnerID      string `json:"defaultTaskOwnerId"`
+	DefaultReviewerID       string `json:"defaultReviewerId"`
+	DefaultRequiresApproval bool   `json:"defaultRequiresApproval"`
+	ID                      string `json:"id" gorm:"primaryKey;size:80"`
+	CompanyID               string `json:"companyId" gorm:"index"`
+	Name                    string `json:"name"`
+	Description             string `json:"description"`
+	DepartmentID            string `json:"departmentId"`
+	OwnerID                 string `json:"ownerId"`
+	DueDate                 string `json:"dueDate"`
+	Color                   string `json:"color"`
+	Status                  string `json:"status"`
 }
 type ChecklistItem struct {
 	ID   string `json:"id"`
