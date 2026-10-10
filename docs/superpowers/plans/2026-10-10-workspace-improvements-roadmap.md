@@ -50,8 +50,8 @@
 - Reviewed code evidence: `verification/workspace-improvements-roadmap/milestone-3.md`. Physical-device checkbox remains unchecked.
 
 ### Milestone 4: Unified attention and decisions
-- [ ] Add typed action items in `communication_notifications.go`, `automations.go` and `workspace.go`; project them into web/native Inbox and leadership overview.
-- [ ] Implement explicit resolve/snooze/owner routing and deduplicated working-hours-aware escalation.
+- [x] Add typed action items in `communication_notifications.go`, `automations.go` and `workspace.go`; project them into web/native Inbox and leadership overview.
+- [x] Implement explicit resolve/snooze/owner routing and deduplicated working-hours-aware escalation.
 - Acceptance: one actionable item per event; read does not imply resolved; failed/retried delivery does not duplicate; no private-source preview after revocation.
 
 ### Milestone 5: Tasks and project execution

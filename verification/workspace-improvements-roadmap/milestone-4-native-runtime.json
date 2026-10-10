@@ -1,0 +1,60 @@
+{
+  "acceptedSourceCommit": "b21386f904eb39d725b4401b72acadb628b8a159",
+  "kind": "owned virtual Android and explicit fictional reconciliation, not device certification",
+  "native": {
+    "nativeSourceCommit": "dcce5c6963b546e1a7b5fc6e1dd2e7b52cd986d8",
+    "backendSourceCommit": "9f0e28706a88f23e5d298b985ab42123aca27cde",
+    "threadRemainsOpen": true,
+    "newReplyVisible": true,
+    "canonicalReplyCount": 1,
+    "authoredInputCleared": true,
+    "virtualAndroidAPI": 36,
+    "physicalDevice": false,
+    "sameNativeDependenciesAndConfig": true,
+    "userDatabaseTouched": false
+  },
+  "nativeCodeUnchangedThroughAcceptedCommit": true,
+  "inboxFiveStateChecks": [
+    {
+      "label": "Pending business decisions",
+      "rawTextErrorVisible": false
+    },
+    {
+      "label": "Resolved items",
+      "rawTextErrorVisible": false
+    },
+    {
+      "label": "All items",
+      "rawTextErrorVisible": false
+    },
+    {
+      "label": "Open items",
+      "rawTextErrorVisible": false
+    },
+    {
+      "label": "Updates",
+      "rawTextErrorVisible": false
+    }
+  ],
+  "earlierInboxStateSourceCommit": "1776f82da4d3173632aece822191f5da7716e6d9",
+  "reconciliation": {
+    "sourceCommit": "b21386f904eb39d725b4401b72acadb628b8a159",
+    "batchLimit": 100,
+    "batches": 5,
+    "complete": true,
+    "before": 59,
+    "after": 59,
+    "repeatedPassAddsNoDuplicate": true,
+    "ownedFixtureOnly": true,
+    "userDatabaseTouched": false
+  },
+  "finalOwnedBackendHealth": {
+    "sourceCommit": "b21386f904eb39d725b4401b72acadb628b8a159",
+    "status": 200
+  },
+  "userDatabaseTouched": false,
+  "physicalDevice": false,
+  "iosRuntime": false,
+  "providerDelivery": false,
+  "organizationSigning": false
+}

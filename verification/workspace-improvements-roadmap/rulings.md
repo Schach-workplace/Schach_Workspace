@@ -1,6 +1,6 @@
 # Implementation decisions and costs
 
-These controller decisions reconcile the product specification and implementation plans. Physical and production rollout gates remain explicit. This record is extended at each reviewed checkpoint.
+These controller decisions reconcile the product specification and plans. Physical and production gates remain separate. Extended at each reviewed checkpoint.
 
 Ruling: Execute all code milestones with explicit separate rollout gates for physical devices, signing and production providers — user asked all implementation and the spec explicitly separates these checks — cost if wrong: rollout delayed until those resources exist.
 
@@ -25,3 +25,11 @@ Ruling: saved exports initially deliver IDs-only in-app per-recipient outputs, b
 Ruling: isolate long OCR/inference/artifact work in bounded local worker loops with short claims and final source/lease checks, preserving prompt communication revocation/call processing — existing communication runtime is serial under30s tick and must not wait on a model — cost if wrong: additional worker lifecycle/configuration to verify in both runtime adapters.
 
 Ruling: attention resolve/routing closes that attention episode; new actions require open item while pending business decisions remain separately navigable. Explicit routing reuses an applicable open target or creates one fresh deduplicated route episode after earlier target resolution — otherwise a successful route could silently land in a closed item — cost if wrong: no direct undo-resolve action in first version, extra routed episode history. M4 plan includes canonical replay/current-source checks and regression.
+
+Ruling: use one composite milestone brief pointing to its full detailed task plan when the roadmap uses Milestone headings — the supplied task-brief extractor matches only Task headings and returned exit3 for milestone4; its failed scratch output is not requirements — cost if wrong: manual mapping could omit a slice, mitigated by explicit six-slice requirements and independent case review.
+
+Ruling: repair a controller-reproduced native container raw-text error during the current mobile integration slice — it blocks clean actual Connect rendering and current worker owns adjacent native integration, so no duplicate implementation worker or broad M3 redo — cost if wrong: M4 diff includes a small pre-existing Connect fix requiring explicit review/evidence.
+
+Ruling: ordinary goal measurements select current only at a nonfuture effective instant equal to or later than the current observation; corrections append an immutable chain inheriting target time/unit, changing Current only when correcting the current leaf — this makes current outcomes deliberate without silently rewriting historical meaning — cost if wrong: late older observations need a correction of an existing entry or a future reviewed historical-import capability. Legacy values remain unknown-time until a first real observation.
+
+Ruling: capacity uses recorded weekly hours and exposes recorded_zero with utilization unavailable rather than guessing whether zero means configured absence or unset; remaining estimated effort is counted in each overlapping week with the method disclosed — existing nonnullable data has no configuration provenance — cost if wrong: users must explicitly update recorded capacity to obtain utilization, and this projection remains an advisory estimate rather than actual availability.
