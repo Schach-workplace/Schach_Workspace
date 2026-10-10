@@ -21,6 +21,8 @@ import (
 )
 
 type Options struct {
+	ReportArtifactStore    ReportArtifactStore
+	ReportArtifactTTL      time.Duration
 	MetricSink             func(RequestMetric)
 	MediaLimitBytes        int64
 	MediaUserQuotaBytes    int64
@@ -110,6 +112,12 @@ func New(db *gorm.DB, opts Options) (*Server, error) {
 	if opts.MediaLimitBytes < 1 || opts.MediaLimitBytes > 100<<20 || opts.MediaUserQuotaBytes < opts.MediaLimitBytes || opts.MediaCompanyQuotaBytes < opts.MediaUserQuotaBytes || opts.MediaRetentionDays < 1 || opts.UnusedUploadHours < 1 || opts.MessageRetentionDays < 1 {
 		return nil, errors.New("Invalid communication capacity or retention limits")
 	}
+	if opts.ReportArtifactTTL == 0 {
+		opts.ReportArtifactTTL = 7 * 24 * time.Hour
+	}
+	if opts.ReportArtifactTTL < time.Hour || opts.ReportArtifactTTL > 365*24*time.Hour {
+		return nil, errors.New("ReportArtifactTTL must be 1 hour–365 days")
+	}
 	if opts.SessionHours == 0 {
 		opts.SessionHours = 72
 	}
@@ -157,6 +165,7 @@ func (s *Server) route(pattern string, fn endpoint) {
 	})
 }
 func (s *Server) routes() {
+	s.reportExportRoutes()
 	s.savedReportRoutes()
 	s.historicalReportRoutes()
 	s.communicationRoutes()
