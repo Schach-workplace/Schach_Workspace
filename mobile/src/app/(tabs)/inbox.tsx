@@ -1,36 +1,10 @@
-import { router } from "expo-router";
-import { Button, Text } from "react-native";
 import { Page, useWorkspace } from "../../Workspace";
-import { client } from "../../client";
+import AttentionInbox from "../../AttentionInbox";
 export default function Inbox() {
   const w = useWorkspace();
   return (
     <Page>
-      <Text>Your authorized updates</Text>
-      {w.inbox.map((i) => (
-        <Button
-          key={i.eventId}
-          title={
-            i.read ? "Conversation update · read" : "New conversation update"
-          }
-          onPress={() => {
-            void client
-              .request(
-                `/companies/${w.company}/communication/inbox/${i.eventId}/ack`,
-                "POST",
-                {},
-              )
-              .then(() => {
-                w.select(i.conversationId);
-                router.push({
-                  pathname: "/chat/[id]",
-                  params: { id: i.conversationId, company: w.company },
-                });
-              })
-              .catch((e) => w.setError(e.message));
-          }}
-        />
-      ))}
+      <AttentionInbox key={w.company + ":" + w.session?.user.id} />
     </Page>
   );
 }

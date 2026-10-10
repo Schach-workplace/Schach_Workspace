@@ -1,8 +1,7 @@
+import KeyboardFrame from "./KeyboardFrame";
 import type { ReactNode } from "react";
 import {
   Modal,
-  KeyboardAvoidingView,
-  Platform,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -89,11 +88,7 @@ export function Sheet({
       }}
     >
       <SafeAreaView style={ui.sheet}>
-        <KeyboardAvoidingView
-          style={{ flex: 1 }}
-          enabled={keyboard}
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
-        >
+        <KeyboardFrame enabled={keyboard}>
           <View style={ui.header}>
             <Text style={ui.title}>{title}</Text>
             <Action title="Close" disabled={busy} onPress={onClose} />
@@ -108,7 +103,7 @@ export function Sheet({
           ) : (
             <View style={[ui.sheetBody, { flex: 1 }]}>{children}</View>
           )}
-        </KeyboardAvoidingView>
+        </KeyboardFrame>
       </SafeAreaView>
     </Modal>
   );

@@ -17,6 +17,9 @@ import {
   writeDraft,
 } from "./conversationDrafts";
 import NativeConversation from "./NativeConversation";
+vi.mock("./KeyboardFrame", () => ({
+  default: ({ children }: any) => createElement("div", {}, children),
+}));
 const state = vi.hoisted(() => ({
   events: [] as any[],
   target: "",

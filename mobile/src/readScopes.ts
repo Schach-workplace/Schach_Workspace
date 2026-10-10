@@ -51,11 +51,12 @@ export async function readWorkPages<T>(
 }
 export function nativeEventScope(
   kind: string,
-): "tasks" | "finance" | "all" | "" {
+): "tasks" | "finance" | "attention" | "all" | "" {
   if (
     ["work_linked", "work_actions_declared", "request_published"].includes(kind)
   )
     return "tasks";
+  if (["record_created", "record_response", "record_revised", "message_edited", "message_removed"].includes(kind)) return "attention";
   if (kind === "expense_linked") return "finance";
   if (
     ["membership_changed", "policy_changed", "refetch_required"].includes(kind)

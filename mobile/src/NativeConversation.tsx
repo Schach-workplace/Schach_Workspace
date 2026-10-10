@@ -1,3 +1,4 @@
+import KeyboardFrame from "./KeyboardFrame";
 import {
   createContext,
   useContext,
@@ -11,14 +12,7 @@ import {
 } from "react";
 import type { CellRendererProps } from "@react-native/virtualized-lists";
 import { ConversationViewport } from "./conversationViewport";
-import {
-  KeyboardAvoidingView,
-  Platform,
-  Pressable,
-  FlatList,
-  Text,
-  View,
-} from "react-native";
+import { Platform, Pressable, FlatList, Text, View } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 import { client, NativeApiError } from "./client";
 import {
@@ -109,7 +103,19 @@ export default function NativeConversation() {
   const lastSequence = useRef(0);
   const viewed = useRef(0);
   const readSent = useRef(0);
-  const { messageId: target } = useLocalSearchParams<{ messageId?: string }>();
+  const { messageId: target, recordId } = useLocalSearchParams<{
+    messageId?: string;
+    recordId?: string;
+  }>();
+  useEffect(() => {
+    let active = true;
+    void Promise.resolve().then(() => {
+      if (active && recordId) setRecords(true);
+    });
+    return () => {
+      active = false;
+    };
+  }, [recordId]);
   const draftScope = useMemo(
     () => ({
       serverOrigin: client.endpoint,
@@ -535,10 +541,7 @@ export default function NativeConversation() {
   }
   return (
     <Page scroll={false} safeBottom>
-      <KeyboardAvoidingView
-        style={{ flex: 1 }}
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-      >
+      <KeyboardFrame>
         <View style={ui.header}>
           <Action title="‹ Back" onPress={() => router.back()} />
           <View style={{ flex: 1 }}>
@@ -646,7 +649,6 @@ export default function NativeConversation() {
             }}
             ListHeaderComponent={
               <View>
-                {" "}
                 {hasMore && (
                   <Action
                     title={
@@ -659,7 +661,7 @@ export default function NativeConversation() {
                       void older().catch((e) => setError(e.message))
                     }
                   />
-                )}{" "}
+                )}
                 {!messages.length && conversation && (
                   <View style={ui.empty}>
                     <Text style={ui.title}>Start the conversation</Text>
@@ -804,7 +806,7 @@ export default function NativeConversation() {
               }}
             />
           ))}
-      </KeyboardAvoidingView>
+      </KeyboardFrame>
       {showMentions && (
         <Sheet
           title="Mentions in loaded history"
@@ -892,6 +894,7 @@ export default function NativeConversation() {
         >
           <Structured
             source={recordSource}
+            recordId={recordId}
             onClose={() => {
               setRecords(false);
               setRecordSource(null);

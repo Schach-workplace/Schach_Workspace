@@ -285,14 +285,14 @@ function NewChat({
           value={title}
           onChangeText={setTitle}
         />
-      )}{" "}
+      )}
       {kind === "channel" && (
         <Action
           title={publicChannel ? "Company channel ✓" : "Private channel"}
           disabled={busy}
           onPress={() => setPublic((v) => !v)}
         />
-      )}{" "}
+      )}
       {kind === "channel" && publicChannel && (
         <Text style={ui.subtitle}>
           Every active company member can read retained history.

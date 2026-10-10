@@ -114,6 +114,7 @@ export interface CallConnection {
 }
 function useController() {
   const [recordEpoch, setRecordEpoch] = useState(0);
+  const [attentionEpoch, setAttentionEpoch] = useState(0);
   const seenWorkEvents = useRef(new Set<string>());
   const [policyEpoch, setPolicyEpoch] = useState(0);
   const [session, setSession] = useState<Session | null>(null);
@@ -227,7 +228,7 @@ function useController() {
     }
     return { conversations: rows, hasMore: more };
   }
-  async function refresh(scope: "all" | "tasks" | "finance" = "all") {
+  async function refresh(scope: "all" | "tasks" | "finance" | "attention" = "all") {
     if (
       !company ||
       !sessionAuthorized.current ||
@@ -272,14 +273,14 @@ function useController() {
     setWork(confirmedNativeWork(work, bootstrap));
     const [chat, tasks, expenses, attention] = await Promise.all([
       conversationPages(),
-      scope === "finance" && sameRole
+      (scope === "finance" || scope === "attention") && sameRole
         ? Promise.resolve(work!.tasks)
         : readWorkPages<WorkTask>(
             (path) => client.request(path),
             company,
             "tasks",
           ),
-      scope === "tasks" && sameRole
+      (scope === "tasks" || scope === "attention") && sameRole
         ? Promise.resolve(work!.expenses)
         : readWorkPages<NativeExpense>(
             (path) => client.request(path),
@@ -301,6 +302,7 @@ function useController() {
     setListMore(chat.hasMore);
     setWork({ ...bootstrap, tasks, expenses });
     setAuthorized(true);
+    setAttentionEpoch((old) => old + 1);
     let businessChanged = false,
       otherScope = false;
     for (const event of attention.events) {
@@ -508,6 +510,7 @@ function useController() {
     device,
     policyEpoch,
     recordEpoch,
+    attentionEpoch,
     invalidatePrivateViews,
     conversations,
     listMore,

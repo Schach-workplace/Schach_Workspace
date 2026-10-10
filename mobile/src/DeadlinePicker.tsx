@@ -101,7 +101,7 @@ export default function DeadlinePicker({
       )}
       {mode && Platform.OS === "ios" && (
         <Action title="Done with picker" onPress={() => setMode(null)} />
-      )}{" "}
+      )}
       {!!error && <Text accessibilityRole="alert">{error}</Text>}
     </View>
   );

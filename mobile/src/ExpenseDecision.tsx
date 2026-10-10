@@ -16,6 +16,9 @@ export default function ExpenseDecision(props: {
     evidenceEpoch,
     w.company,
     w.recordEpoch,
+    w.attentionEpoch,
+    w.foreground,
+    client.generation,
     w.work?.readBasis,
     w.work?.me.role,
     props.expense.id,
@@ -28,13 +31,21 @@ export default function ExpenseDecision(props: {
   const [error, setError] = useState("");
   useEffect(() => {
     let active = true;
+    const generation = client.generation;
+    void Promise.resolve().then(() => {
+      if (active) {
+        setLoaded(null);
+        setError("");
+      }
+    });
     readNativeDetail<{ expense: NativeExpense }>(
       (path) => client.request(path),
       `/companies/${w.company}/expenses/${props.expense.id}`,
       "expense",
     )
       .then((v) => {
-        if (active) setLoaded({ scope, expense: v.expense });
+        if (active && generation === client.generation)
+          setLoaded({ scope, expense: v.expense });
       })
       .catch((e) => {
         if (active) setError(e.message);

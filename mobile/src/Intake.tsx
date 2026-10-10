@@ -21,13 +21,15 @@ interface Intake {
   version: number;
   departmentId: string;
 }
-export default function IntakeQueue() {
+export default function IntakeQueue({initialId=""}:{initialId?:string}={}) {
   const w = useWorkspace();
-  const [items, setItems] = useState<Intake[]>([]);
+  const [loaded, setLoaded] = useState<{scope:string;items:Intake[]}|null>(null);
+  const scope=[w.company,w.session?.user.id,w.work?.readBasis,w.recordEpoch,w.attentionEpoch,initialId].join(":");
+  const items=loaded?.scope===scope?loaded.items:[];
   const [selectedId, setSelectedId, retireSelected] = useRamInput(
-    "$intake",
+    "$intake:"+initialId,
     "selectedId",
-    "",
+    initialId,
   );
   const selected = items.find((i) => i.id === selectedId) ?? null;
   const form = "$intake:" + selectedId;
@@ -89,20 +91,20 @@ export default function IntakeQueue() {
   }, [due, time, instant, w.work?.company.timezone]);
   async function refresh() {
     const generation = client.generation;
-    const v = await client.request<{ requests: Intake[] }>(root);
+    const v = initialId ? {requests:[(await client.request<{request:Intake}>(root+"/"+initialId)).request]} : await client.request<{ requests: Intake[] }>(root);
     if (
       alive.current &&
       current.current.root === root &&
       generation === client.generation
     )
-      setItems(v.requests);
+      setLoaded({scope,items:v.requests});
   }
   const load = useEffectEvent(() =>
     refresh().catch((e) => w.setError(e.message)),
   );
   useEffect(() => {
     void Promise.resolve().then(() => load());
-  }, [root]);
+  }, [root,scope]);
   async function assign() {
     if (!selected || busy.current || !deadline.value) return;
     busy.current = true;
