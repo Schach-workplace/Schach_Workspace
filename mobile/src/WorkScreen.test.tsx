@@ -87,7 +87,11 @@ beforeEach(() => {
   vi.useFakeTimers({ toFake: ["Date"] });
   vi.setSystemTime(new Date("2026-10-10T20:00:00Z"));
   state.request.mockReset();
-  state.request.mockResolvedValue({ id: "new-task" });
+  state.request.mockImplementation(async (path: string) =>
+    path.includes("/tasks/")
+      ? { task: state.w.work.tasks[0] }
+      : { id: "new-task" },
+  );
   state.w = {
     company: "company",
     policyEpoch: 0,
@@ -197,13 +201,14 @@ it("clears a company-specific form and denies viewer creation", async () => {
   expect(container.textContent).not.toContain("New task");
 });
 it("requires reviewing changed task details before a versioned write", async () => {
-  state.request.mockResolvedValue({
-    tasks: [{ ...state.w.work.tasks[0], version: 2 }],
-  });
+  state.request
+    .mockResolvedValueOnce({ task: state.w.work.tasks[0] })
+    .mockResolvedValue({ task: { ...state.w.work.tasks[0], version: 2 } });
   await act(async () => root.render(createElement(WorkScreen)));
   await click("Open: Prepare handover");
   await click("Submit for review / complete");
-  expect(state.request).toHaveBeenCalledTimes(1);
+  expect(state.request).toHaveBeenCalledTimes(2);
+  expect(state.request.mock.calls[0][0]).toContain("/tasks/");
   expect(state.request.mock.calls[0][1]).toBeUndefined();
   expect(state.w.refresh).toHaveBeenCalled();
   expect(container.textContent).toContain("Task changed or access changed");

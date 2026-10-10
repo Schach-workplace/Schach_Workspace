@@ -1,0 +1,1 @@
+DROP INDEX tasks_company_created_page;

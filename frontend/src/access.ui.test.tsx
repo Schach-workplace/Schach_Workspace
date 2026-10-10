@@ -39,7 +39,7 @@ describe('revoked company access', () => {
               companies: revoked ? (hasOtherCompany ? [meridian.company] : []) : founder.companies,
             } as Session);
           }
-          if (url.endsWith('/companies/c-schach/workspace'))
+          if (url.endsWith('/companies/c-schach/bootstrap'))
             return revoked
               ? reply(
                   {
@@ -51,7 +51,13 @@ describe('revoked company access', () => {
                   403,
                 )
               : reply(schach);
-          if (url.endsWith('/companies/c-meridian/workspace')) return reply(meridian);
+          if (url.endsWith('/companies/c-meridian/bootstrap')) return reply(meridian);
+          const data = url.includes('/companies/c-schach/') ? schach : meridian;
+          if (url.includes('/tasks?'))
+            return reply({ tasks: data.tasks, cursor: '', hasMore: false });
+          if (url.includes('/expenses?'))
+            return reply({ expenses: data.expenses, cursor: '', hasMore: false });
+          if (url.endsWith('/finance/events')) return reply({ financeEvents: data.financeEvents });
           throw new Error(`Unexpected test request: ${url}`);
         }),
       );

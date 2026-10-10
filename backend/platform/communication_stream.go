@@ -84,7 +84,7 @@ func (s *Server) streamCommunication(w http.ResponseWriter, r *http.Request) err
 				// Enqueue/write while current membership locks are held. Removal ordered after
 				// these authorized bytes may finish after them; bytes in transit are irrevocable.
 				for _, event := range events {
-					if e := write(map[string]any{"kind": "changed", "conversationId": event.ConversationID, "eventId": event.ID, "eventSequence": event.Sequence}); e != nil {
+					if e := write(map[string]any{"kind": "changed", "conversationId": event.ConversationID, "eventId": event.ID, "eventSequence": event.Sequence, "eventKind": event.Kind}); e != nil {
 						return e
 					}
 					after = event.Sequence

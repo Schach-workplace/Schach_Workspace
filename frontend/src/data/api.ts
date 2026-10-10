@@ -76,3 +76,20 @@ export async function fetchExpenseReceipt(companyId: string, receiptId: string):
     );
   return response.blob();
 }
+
+export async function fetchReportCSV(path: string): Promise<Blob> {
+  const response = await fetch(`${base}/api${path}`, {
+    credentials: 'include',
+    headers: { Accept: 'text/csv' },
+  });
+  if (!response.ok) {
+    let message = 'Report export is unavailable. Refresh the report and retry.';
+    try {
+      message = (await response.json()).error?.message || message;
+    } catch {
+      /* proxy response */
+    }
+    throw new ApiError(message, response.status, 'report_export_failed');
+  }
+  return response.blob();
+}

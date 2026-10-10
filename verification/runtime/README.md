@@ -41,3 +41,11 @@ SCHACH_SMOKE_URL=http://127.0.0.1:8083 SCHACH_SMOKE_RESULT=/tmp/schach-report-re
 ```
 
 Optional SCHACH_SCREENSHOT_DESKTOP and SCHACH_SCREENSHOT_MOBILE paths capture desktop/390px results. This verifies exact original/current rates, a same-date time revision, project filtering, presets, CSV deadline fields and phone overflow/touch targets. It does not certify native devices.
+
+Data-read performance uses a random owned PostgreSQL schema, 5,000 tasks across ten companies, and 5,000 comments on the selected company's 500 tasks. It compares the complete identical task selection, records p50/p95/bytes/statement count/returned query rows, and captures an actual EXPLAIN ANALYZE before/after the task pagination index. Run with an owned test instance:
+
+```sh
+TEST_DATABASE_URL='postgres://...owned-test-instance...' verification/runtime/data_read_load.sh /tmp/data-read-performance.json
+```
+
+The committed `data-read-performance.json` is a local handler/PostgreSQL measurement, not a production capacity claim. `platform.Options.MetricSink` receives sanitized route-template, status, byte and request/query timing measurements; without a sink the same fields use `slog.Debug`. SQL, raw URLs, IDs, message text and error details are excluded. Report summary/rows/export share a five-minute bounded process-local snapshot; access changes, process restarts or eviction require a new summary. Reports initially load 100 rows, with explicit further pages. Workspace boards currently combine bounded list pages to preserve existing aggregate views, while evidence is loaded only for the selected record in bounded pages.

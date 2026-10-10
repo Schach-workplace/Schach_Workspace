@@ -21,8 +21,8 @@ import {
   Upload,
   X,
 } from 'lucide-react';
-import { useWorkspace } from '../store';
-import type { CreateTaskInput, Task } from '../types';
+import { useTaskDetail, useWorkspace } from '../store';
+import type { CreateTaskInput, Task, Person } from '../types';
 import {
   Avatar,
   canAdmin,
@@ -48,18 +48,42 @@ type Draft = CreateTaskInput & {
   blockerReason: string;
   deadlineChangeReason: string;
 };
-export default function TaskDrawer({
+export default function TaskDrawer(props: {
+  taskId: string;
+  onClose: () => void;
+  initialProject?: string;
+}) {
+  const detail = useTaskDetail(props.taskId);
+  if (props.taskId !== 'new' && !detail.task)
+    return (
+      <div role="dialog" aria-label="Task details">
+        <button onClick={props.onClose}>Close</button>
+        <p role={detail.error ? 'alert' : 'status'}>{detail.error || 'Loading task details…'}</p>
+      </div>
+    );
+  return <TaskDrawerBody {...props} resolvedTask={detail.task} resolvedPeople={detail.people} />;
+}
+function TaskDrawerBody({
+  resolvedTask,
+  resolvedPeople,
   taskId,
   onClose,
   initialProject = '',
 }: {
+  resolvedTask?: Task;
+  resolvedPeople?: Person[];
   taskId: string;
   onClose: () => void;
   initialProject?: string;
 }) {
   const store = useWorkspace();
-  const data = store.data!;
-  const task = taskId === 'new' ? undefined : data.tasks.find((t) => t.id === taskId);
+  const data = {
+    ...store.data!,
+    people: Array.from(
+      new Map([...store.data!.people, ...(resolvedPeople ?? [])].map((p) => [p.id, p])).values(),
+    ),
+  };
+  const task = resolvedTask;
   const makeDraft = (t?: Task): Draft =>
     t
       ? {
@@ -72,7 +96,10 @@ export default function TaskDrawer({
           parentId: t.parentId,
           priority: t.priority,
           status: t.status,
-          dueDate: t.dueDate, deadlineMode:t.deadlineMode??'all_day', dueAt:t.dueAt??'', dueTimezone:t.dueTimezone??'',
+          dueDate: t.dueDate,
+          deadlineMode: t.deadlineMode ?? 'all_day',
+          dueAt: t.dueAt ?? '',
+          dueTimezone: t.dueTimezone ?? '',
           startDate: t.startDate,
           estimatedHours: t.estimatedHours,
           tags: [...t.tags],
@@ -95,7 +122,10 @@ export default function TaskDrawer({
           parentId: '',
           priority: 'medium',
           status: 'todo',
-          dueDate: '', deadlineMode:'all_day', dueAt:'', dueTimezone:'',
+          dueDate: '',
+          deadlineMode: 'all_day',
+          dueAt: '',
+          dueTimezone: '',
           startDate: today(data.company.timezone),
           estimatedHours: 0,
           tags: [],
@@ -109,9 +139,21 @@ export default function TaskDrawer({
           deadlineChangeReason: '',
         };
   const [draft, setDraft] = useState<Draft>(() => makeDraft(task));
-  const [wallTime,setWallTime]=useState(task?.dueAt ? localDeadline(task.dueAt,task.dueTimezone||data.company.timezone).slice(11) : '16:00');
-  const [foldChoice,setFoldChoice]=useState(task?.dueAt ? new Date(task.dueAt).toISOString() : '');
-  const candidates=draft.deadlineMode==='timed' && draft.dueDate ? deadlineCandidates(draft.dueDate+'T'+wallTime,draft.dueTimezone||data.company.timezone) : [];
+  const [wallTime, setWallTime] = useState(
+    task?.dueAt
+      ? localDeadline(task.dueAt, task.dueTimezone || data.company.timezone).slice(11)
+      : '16:00',
+  );
+  const [foldChoice, setFoldChoice] = useState(
+    task?.dueAt ? new Date(task.dueAt).toISOString() : '',
+  );
+  const candidates =
+    draft.deadlineMode === 'timed' && draft.dueDate
+      ? deadlineCandidates(
+          draft.dueDate + 'T' + wallTime,
+          draft.dueTimezone || data.company.timezone,
+        )
+      : [];
   const [version, setVersion] = useState(task?.version || 0);
   const [dirty, setDirty] = useState(false);
   const [tab, setTab] = useState('details');
@@ -159,10 +201,19 @@ export default function TaskDrawer({
   async function save(event: FormEvent) {
     event.preventDefault();
     await perform(async () => {
-      let dueAt='';
-      if(draft.deadlineMode==='timed'){if(candidates.length===0)throw new Error('This local time does not exist. Choose another time.'); if(candidates.length>1&&!candidates.includes(foldChoice))throw new Error('Choose an offset for this repeated local time.');dueAt=candidates.length===1?candidates[0]:foldChoice;}
+      let dueAt = '';
+      if (draft.deadlineMode === 'timed') {
+        if (candidates.length === 0)
+          throw new Error('This local time does not exist. Choose another time.');
+        if (candidates.length > 1 && !candidates.includes(foldChoice))
+          throw new Error('Choose an offset for this repeated local time.');
+        dueAt = candidates.length === 1 ? candidates[0] : foldChoice;
+      }
       const cleaned = {
-        ...draft, dueAt, dueTimezone:draft.deadlineMode==='timed'?(draft.dueTimezone||data.company.timezone):'',
+        ...draft,
+        dueAt,
+        dueTimezone:
+          draft.deadlineMode === 'timed' ? draft.dueTimezone || data.company.timezone : '',
         tags: [
           ...new Set(
             tagText
@@ -178,7 +229,7 @@ export default function TaskDrawer({
           `/tasks/${task.id}`,
           {
             ...patch,
-            ...(deadlineChanged(cleaned,task) ? { deadlineChangeReason } : {}),
+            ...(deadlineChanged(cleaned, task) ? { deadlineChangeReason } : {}),
             version,
           },
           'PATCH',
@@ -482,36 +533,106 @@ export default function TaskDrawer({
                     </Field>
                   </div>
                   <div className="form-grid">
-                    <Field label="Deadline type"><select value={draft.deadlineMode??'all_day'} onChange={e=>{set('deadlineMode',e.target.value as 'all_day'|'timed');set('dueTimezone',e.target.value==='timed'?data.company.timezone:'');set('dueAt','');setFoldChoice('');}}><option value="all_day">All day</option><option value="timed">At a specific time</option></select></Field>
-                    {draft.deadlineMode==='timed' && <>
-                      <Field label="Commitment time"><input type="time" required value={wallTime} onChange={e=>{setWallTime(e.target.value);setFoldChoice('');setDirty(true);}} /></Field>
-                      <Field label="Commitment timezone"><input required value={draft.dueTimezone||data.company.timezone} onChange={e=>{set('dueTimezone',e.target.value);setFoldChoice('');}} /></Field>
-                      {candidates.length>1 && <Field label="Repeated time — choose offset"><select required value={foldChoice} onChange={e=>setFoldChoice(e.target.value)}><option value="">Select occurrence</option>{candidates.map(value=><option key={value} value={value}>{value} (UTC instant)</option>)}</select></Field>}
-                    </>}
+                    <Field label="Deadline type">
+                      <select
+                        value={draft.deadlineMode ?? 'all_day'}
+                        onChange={(e) => {
+                          set('deadlineMode', e.target.value as 'all_day' | 'timed');
+                          set(
+                            'dueTimezone',
+                            e.target.value === 'timed' ? data.company.timezone : '',
+                          );
+                          set('dueAt', '');
+                          setFoldChoice('');
+                        }}
+                      >
+                        <option value="all_day">All day</option>
+                        <option value="timed">At a specific time</option>
+                      </select>
+                    </Field>
+                    {draft.deadlineMode === 'timed' && (
+                      <>
+                        <Field label="Commitment time">
+                          <input
+                            type="time"
+                            required
+                            value={wallTime}
+                            onChange={(e) => {
+                              setWallTime(e.target.value);
+                              setFoldChoice('');
+                              setDirty(true);
+                            }}
+                          />
+                        </Field>
+                        <Field label="Commitment timezone">
+                          <input
+                            required
+                            value={draft.dueTimezone || data.company.timezone}
+                            onChange={(e) => {
+                              set('dueTimezone', e.target.value);
+                              setFoldChoice('');
+                            }}
+                          />
+                        </Field>
+                        {candidates.length > 1 && (
+                          <Field label="Repeated time — choose offset">
+                            <select
+                              required
+                              value={foldChoice}
+                              onChange={(e) => setFoldChoice(e.target.value)}
+                            >
+                              <option value="">Select occurrence</option>
+                              {candidates.map((value) => (
+                                <option key={value} value={value}>
+                                  {value} (UTC instant)
+                                </option>
+                              ))}
+                            </select>
+                          </Field>
+                        )}
+                      </>
+                    )}
                   </div>
                   {task?.originalDueDate && (
                     <div className="detail-note">
                       <CalendarDays size={14} />
-                      Original commitment: <strong>{task.originalDeadlineMode==='timed' ? `${task.originalDueAt} (${task.originalDueTimezone})` : dateLabel(task.originalDueDate)}</strong>
+                      Original commitment:{' '}
+                      <strong>
+                        {task.originalDeadlineMode === 'timed'
+                          ? `${task.originalDueAt} (${task.originalDueTimezone})`
+                          : dateLabel(task.originalDueDate)}
+                      </strong>
                       {task.dueDate !== task.originalDueDate && (
                         <span>· Current deadline changed</span>
                       )}
                     </div>
                   )}
-                  {task && deadlineChanged({...draft,dueAt:draft.deadlineMode==='timed'?(candidates.length===1?candidates[0]:foldChoice):''},task) && (
-                    <Field
-                      label="Why is the deadline changing?"
-                      hint="The original commitment stays in the audit history."
-                    >
-                      <textarea
-                        required
-                        value={draft.deadlineChangeReason}
-                        onChange={(e) => set('deadlineChangeReason', e.target.value)}
-                        placeholder="Explain the change in circumstances…"
-                        rows={2}
-                      />
-                    </Field>
-                  )}
+                  {task &&
+                    deadlineChanged(
+                      {
+                        ...draft,
+                        dueAt:
+                          draft.deadlineMode === 'timed'
+                            ? candidates.length === 1
+                              ? candidates[0]
+                              : foldChoice
+                            : '',
+                      },
+                      task,
+                    ) && (
+                      <Field
+                        label="Why is the deadline changing?"
+                        hint="The original commitment stays in the audit history."
+                      >
+                        <textarea
+                          required
+                          value={draft.deadlineChangeReason}
+                          onChange={(e) => set('deadlineChangeReason', e.target.value)}
+                          placeholder="Explain the change in circumstances…"
+                          rows={2}
+                        />
+                      </Field>
+                    )}
                   {draft.status === 'blocked' && (
                     <Field label="What is blocking this task?">
                       <textarea

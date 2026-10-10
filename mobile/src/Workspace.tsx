@@ -19,6 +19,12 @@ import {
 } from "react-native";
 import * as SecureStore from "expo-secure-store";
 import * as Notifications from "expo-notifications";
+import {
+  readWorkPages,
+  nativeEventScope,
+  sameNativeReadBasis,
+  confirmedNativeWork,
+} from "./readScopes";
 import { client, type Session } from "./client";
 export interface Conversation {
   peerId?: string;
@@ -83,6 +89,7 @@ export interface WorkTask {
   originalDueDate: string;
 }
 export interface WorkData {
+  readBasis?: string;
   tasks: WorkTask[];
   people: Person[];
   departments: { id: string; name: string }[];
@@ -97,6 +104,8 @@ export interface CallConnection {
   call: { id: string; kind: string; version: number };
 }
 function useController() {
+  const [recordEpoch, setRecordEpoch] = useState(0);
+  const seenWorkEvents = useRef(new Set<string>());
   const [policyEpoch, setPolicyEpoch] = useState(0);
   const [session, setSession] = useState<Session | null>(null);
   const [company, setCompany] = useState("");
@@ -108,7 +117,7 @@ function useController() {
   const [selected, setSelected] = useState("");
   const [work, setWork] = useState<WorkData | null>(null);
   const [inbox, setInbox] = useState<
-    { eventId: string; conversationId: string; read: boolean }[]
+    { eventId: string; conversationId: string; read: boolean; kind?: string }[]
   >([]);
   const [foreground, setForeground] = useState(
     AppState.currentState === "active",
@@ -130,6 +139,7 @@ function useController() {
     setSelected("");
     setWork(null);
     setInbox([]);
+    seenWorkEvents.current.clear();
   }
   async function restore() {
     const sequence = ++restoreSequence.current;
@@ -172,7 +182,7 @@ function useController() {
     }
     return { conversations: rows, hasMore: more };
   }
-  async function refresh() {
+  async function refresh(scope: "all" | "tasks" | "finance" = "all") {
     if (
       !company ||
       !session ||
@@ -183,9 +193,38 @@ function useController() {
     )
       return;
     const generation = client.generation;
-    const [chat, data, attention] = await Promise.all([
+    // Reauthorize directory/role before displaying scoped lists. A changed role
+    // cannot reuse the previous list projection.
+    const bootstrap = await client.request<WorkData>(
+      `/companies/${company}/bootstrap`,
+    );
+    if (
+      generation !== client.generation ||
+      currentScope.current.company !== company ||
+      currentScope.current.sessionId !== session.user.id ||
+      !currentScope.current.foreground
+    )
+      return;
+    const sameRole = sameNativeReadBasis(work, bootstrap);
+    // Confirmed membership changes take effect before subsequent pages arrive.
+    // A transport error before bootstrap confirmation preserves the last work.
+    setWork(confirmedNativeWork(work, bootstrap));
+    const [chat, tasks, expenses, attention] = await Promise.all([
       conversationPages(),
-      client.request<WorkData>(`/companies/${company}/workspace`),
+      scope === "finance" && sameRole
+        ? Promise.resolve(work!.tasks)
+        : readWorkPages<WorkTask>(
+            (path) => client.request(path),
+            company,
+            "tasks",
+          ),
+      scope === "tasks" && sameRole
+        ? Promise.resolve(work!.expenses)
+        : readWorkPages<NativeExpense>(
+            (path) => client.request(path),
+            company,
+            "expenses",
+          ),
       client.request<{ events: typeof inbox }>(
         `/companies/${company}/communication/inbox`,
       ),
@@ -199,8 +238,21 @@ function useController() {
       return;
     setConversations(chat.conversations);
     setListMore(chat.hasMore);
-    setWork(data);
+    setWork({ ...bootstrap, tasks, expenses });
+    let businessChanged = false,
+      otherScope = false;
+    for (const event of attention.events) {
+      if (seenWorkEvents.current.has(event.eventId)) continue;
+      seenWorkEvents.current.add(event.eventId);
+      const changed = nativeEventScope(event.kind ?? "");
+      if (changed) {
+        businessChanged = true;
+        if (scope !== "all" && changed !== scope) otherScope = true;
+      }
+    }
+    if (businessChanged) setRecordEpoch((old) => old + 1);
     setInbox(attention.events);
+    if (otherScope) await refresh("all");
   }
   async function registerDevice(push = false) {
     let pushProvider = "",
@@ -287,7 +339,6 @@ function useController() {
     const timer = setInterval(
       () =>
         void refreshEvent().catch((e) => {
-          clearEvent();
           setError(e.message);
         }),
       15000,
@@ -335,6 +386,7 @@ function useController() {
     company,
     device,
     policyEpoch,
+    recordEpoch,
     invalidatePrivateViews,
     conversations,
     listMore,

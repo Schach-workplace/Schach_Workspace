@@ -16,15 +16,25 @@ func (s *Server) companies(w http.ResponseWriter, r *http.Request) error {
 	}
 	return respond(w, 200, map[string]any{"companies": v.Companies})
 }
+func (s *Server) bootstrap(w http.ResponseWriter, r *http.Request) error {
+	return s.readWorkspace(w, r, true)
+}
 func (s *Server) workspace(w http.ResponseWriter, r *http.Request) error {
+	return s.readWorkspace(w, r, false)
+}
+func (s *Server) readWorkspace(w http.ResponseWriter, r *http.Request, lean bool) error {
 	a, e := s.access(r)
 	if e != nil {
 		return e
 	}
-	d := WorkspaceData{Company: a.Company, Me: person(a.User, a.Member), Departments: []Department{}, People: []Person{}, Projects: []Project{}, Tasks: []Task{}, Goals: []Goal{}, Activities: []Activity{}, Notifications: []Notification{}}
+	d := WorkspaceData{ReadBasis: accessBasis(a), Company: a.Company, Me: person(a.User, a.Member), Departments: []Department{}, People: []Person{}, Projects: []Project{}, Tasks: []Task{}, Goals: []Goal{}, Activities: []Activity{}, Notifications: []Notification{}}
 	db := s.db.WithContext(r.Context())
 	var tasks []Task
-	if e = db.Where("company_id = ?", a.Company.ID).Order("created_at DESC").Find(&tasks).Error; e != nil {
+	taskQuery := db.Where("company_id = ?", a.Company.ID)
+	if lean {
+		taskQuery = taskReadQuery(db, a).Select("id", "owner_id", "created_by", "reviewer_id", "department_id", "project_id", "collaborators")
+	}
+	if e = taskQuery.Order("created_at DESC").Find(&tasks).Error; e != nil {
 		return e
 	}
 	visible := map[string]bool{}
@@ -52,7 +62,7 @@ func (s *Server) workspace(w http.ResponseWriter, r *http.Request) error {
 	comments := map[string][]Comment{}
 	times := map[string][]TimeEntry{}
 	files := map[string][]Attachment{}
-	if len(ids) > 0 {
+	if len(ids) > 0 && !lean {
 		var cs []Comment
 		if e = db.Where("company_id = ? AND task_id IN ?", a.Company.ID, ids).Order("created_at ASC").Find(&cs).Error; e != nil {
 			return e
@@ -157,7 +167,7 @@ func (s *Server) workspace(w http.ResponseWriter, r *http.Request) error {
 			d.Goals = append(d.Goals, v)
 		}
 	}
-	visibleExpenses, e := loadFinanceWorkspace(db, a, &d, visible)
+	visibleExpenses, e := loadFinanceProjection(db, a, &d, visible, lean)
 	if e != nil {
 		return e
 	}
@@ -190,6 +200,11 @@ func (s *Server) workspace(w http.ResponseWriter, r *http.Request) error {
 		if (v.ExpenseID != "" && visibleExpenses[v.ExpenseID]) || (v.ExpenseID == "" && (v.TaskID == "" || visible[v.TaskID])) {
 			d.Notifications = append(d.Notifications, v)
 		}
+	}
+	if lean {
+		d.Tasks = []Task{}
+		d.Expenses = []Expense{}
+		d.FinanceEvents = []FinanceEvent{}
 	}
 	return respond(w, 200, d)
 }

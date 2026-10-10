@@ -1242,9 +1242,9 @@ export function FinancePage({
           key={selected.id}
           expense={selected}
           onClose={() => setSelectedId('')}
-          onEdit={() => {
+          onEdit={(detail) => {
             setSelectedId('');
-            setEditingExpense(selected);
+            setEditingExpense(detail);
           }}
           onOpenTask={onOpenTask}
         />

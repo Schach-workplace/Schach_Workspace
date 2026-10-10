@@ -50,11 +50,11 @@ func (s *Server) access(r *http.Request) (*access, error) {
 		}
 		return nil, err
 	}
-	if err = s.db.First(&a.Company, "id = ?", cid).Error; err != nil {
+	if err = s.db.WithContext(r.Context()).First(&a.Company, "id = ?", cid).Error; err != nil {
 		return nil, err
 	}
 	var ms []Membership
-	if err = s.db.Where("company_id = ?", cid).Find(&ms).Error; err != nil {
+	if err = s.db.WithContext(r.Context()).Where("company_id = ?", cid).Find(&ms).Error; err != nil {
 		return nil, err
 	}
 	ids := []string{}
@@ -63,7 +63,7 @@ func (s *Server) access(r *http.Request) (*access, error) {
 		ids = append(ids, m.UserID)
 	}
 	var us []User
-	if err = s.db.Where("id IN ?", ids).Find(&us).Error; err != nil {
+	if err = s.db.WithContext(r.Context()).Where("id IN ?", ids).Find(&us).Error; err != nil {
 		return nil, err
 	}
 	for _, v := range us {

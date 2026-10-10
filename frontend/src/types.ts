@@ -176,6 +176,7 @@ export interface Session {
   companies: Company[];
 }
 export interface WorkspaceData {
+  readBasis?: string;
   company: Company;
   me: Person;
   departments: Department[];
@@ -318,7 +319,7 @@ export interface WorkspaceStore {
   saving: boolean;
   error: string;
   toast: string;
-  login: (email: string, password: string, code?:string, recoveryCode?:string) => Promise<void>;
+  login: (email: string, password: string, code?: string, recoveryCode?: string) => Promise<void>;
   logout: () => Promise<void>;
   switchCompany: (id: string) => Promise<void>;
   refresh: () => Promise<void>;

@@ -2,6 +2,7 @@ package platform
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"github.com/coder/websocket"
 	"gorm.io/gorm"
@@ -91,6 +92,15 @@ func TestStreamRevocationAndOrigin(t *testing.T) {
 	if _, _, e = conn.Read(ctx); e != nil {
 		t.Fatal(e)
 	}
+	sendMessage(t, s, c, cid, id, "metric-stream-hint", "Scoped event hint")
+	_, hint, err := conn.Read(ctx)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var event map[string]any
+	if err = json.Unmarshal(hint, &event); err != nil || event["eventKind"] != "message_created" {
+		t.Fatal("sanitized outbox kind", string(hint), err)
+	}
 	st, _, _ := req(t, s, "POST", "/api/companies/"+cid+"/conversations/"+id+"/members", map[string]any{"expectedVersion": 1, "userId": uid, "role": "member", "active": false}, c)
 	if st != 200 {
 		t.Fatal(st)
@@ -128,5 +138,21 @@ func TestChatDoesNotWaitForBusinessCompanyLock(t *testing.T) {
 		}
 		s.db.Raw("SELECT query, wait_event FROM pg_stat_activity WHERE datname = current_database() AND wait_event_type = 'Lock'").Scan(&blockers)
 		t.Fatalf("Chat waited for company business lock: %+v", blockers)
+	}
+}
+func TestInboxProjectsSanitizedEventKind(t *testing.T) {
+	s, c, cid, owner, uid, member := conversationFixture(t)
+	id := newConversation(t, s, c, cid, []string{owner, uid}, "group")
+	sendMessage(t, s, c, cid, id, "hint-inbox", "private body")
+	if _, e := s.RunCommunicationOutbox(t.Context(), 100); e != nil {
+		t.Fatal(e)
+	}
+	status, b, _ := req(t, s, "GET", "/api/companies/"+cid+"/communication/inbox", nil, member)
+	if status != 200 {
+		t.Fatal(status, b)
+	}
+	rows := b["events"].([]any)
+	if len(rows) != 1 || rows[0].(map[string]any)["kind"] != "message_created" {
+		t.Fatal(rows)
 	}
 }

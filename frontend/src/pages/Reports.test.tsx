@@ -93,7 +93,7 @@ it('uses the dedicated API and cannot export failed or pending report results', 
     (screen.getByRole('button', { name: 'Export report' }) as HTMLButtonElement).disabled,
   ).toBe(true);
   await screen.findByRole('alert');
-  expect(state.request.mock.calls[0][0]).toContain('/reports/tasks?');
+  expect(state.request.mock.calls[0][0]).toContain('/reports/tasks/summary?');
   expect(screen.getByRole('alert').textContent).toContain('Report service unavailable');
   expect(screen.queryByText('Timed report delivery')).toBeNull();
   expect(
@@ -104,6 +104,7 @@ it('renders successful authorized API inputs with current-state wording', async 
   state.mode = 'api';
   state.request.mockResolvedValue({
     tasks: state.data!.tasks,
+    snapshot: 'test-snapshot',
     generatedAt: '2026-10-10T10:40:00Z',
     timezone: 'Asia/Kolkata',
     basis: 'current_state',
@@ -127,6 +128,7 @@ it('discards a delayed old company response on switching company', async () => {
     )
     .mockResolvedValue({
       tasks: [],
+      snapshot: 'test-snapshot',
       generatedAt: '2026-10-10T10:40:00Z',
       basis: 'current_state',
       timezone: 'Asia/Kolkata',
@@ -141,7 +143,11 @@ it('discards a delayed old company response on switching company', async () => {
   };
   view.change();
   await waitFor(() => expect(state.request).toHaveBeenCalledTimes(2));
-  oldResolve({ tasks: originalTasks, generatedAt: '2026-10-10T10:40:00Z' });
+  oldResolve({
+    tasks: originalTasks,
+    snapshot: 'test-snapshot',
+    generatedAt: '2026-10-10T10:40:00Z',
+  });
   await waitFor(() =>
     expect(
       (screen.getByRole('button', { name: 'Export report' }) as HTMLButtonElement).disabled,
@@ -154,6 +160,7 @@ it('never releases a cached sibling report after authorization denial', async ()
   state.mode = 'api';
   const response = {
     tasks: state.data!.tasks,
+    snapshot: 'test-snapshot',
     generatedAt: '2026-10-10T10:40:00Z',
     timezone: 'Asia/Kolkata',
     basis: 'current_state',
@@ -162,14 +169,14 @@ it('never releases a cached sibling report after authorization denial', async ()
   const view = mount();
   await screen.findByText('Timed report delivery');
   fireEvent.click(screen.getByRole('button', { name: 'Last 7 days' }));
-  await waitFor(() => expect(state.request).toHaveBeenCalledTimes(2));
+  await waitFor(() => expect(state.request).toHaveBeenCalledTimes(4));
   await screen.findByText('Timed report delivery');
   state.request.mockRejectedValue(new ApiError('Company access removed', 403, 'forbidden'));
   await view.client.refetchQueries({ queryKey: ['task-report'], type: 'active' });
   await screen.findByRole('alert');
   state.request.mockImplementation(() => new Promise(() => {}));
   fireEvent.click(screen.getByRole('button', { name: 'This month' }));
-  await waitFor(() => expect(state.request).toHaveBeenCalledTimes(4));
+  await waitFor(() => expect(state.request).toHaveBeenCalledTimes(7));
   expect(screen.queryByText('Timed report delivery')).toBeNull();
   expect(
     (screen.getByRole('button', { name: 'Export report' }) as HTMLButtonElement).disabled,
@@ -179,13 +186,31 @@ it('reauthorizes before releasing a previously cached company report', async () 
   state.mode = 'api';
   const original = state.data!;
   state.request
-    .mockResolvedValueOnce({ tasks: original.tasks, generatedAt: '2026-10-10T10:40:00Z' })
-    .mockResolvedValueOnce({ tasks: [], generatedAt: '2026-10-10T10:40:00Z' });
+    .mockResolvedValueOnce({
+      tasks: original.tasks,
+      snapshot: 'test-snapshot',
+      generatedAt: '2026-10-10T10:40:00Z',
+    })
+    .mockResolvedValueOnce({
+      tasks: original.tasks,
+      snapshot: 'test-snapshot',
+      generatedAt: '2026-10-10T10:40:00Z',
+    })
+    .mockResolvedValueOnce({
+      tasks: [],
+      snapshot: 'test-snapshot',
+      generatedAt: '2026-10-10T10:40:00Z',
+    })
+    .mockResolvedValueOnce({
+      tasks: [],
+      snapshot: 'test-snapshot',
+      generatedAt: '2026-10-10T10:40:00Z',
+    });
   const view = mount();
   await screen.findByText('Timed report delivery');
   state.data = { ...original, company: { ...original.company, id: 'another-company' }, tasks: [] };
   view.change();
-  await waitFor(() => expect(state.request).toHaveBeenCalledTimes(2));
+  await waitFor(() => expect(state.request).toHaveBeenCalledTimes(4));
   await waitFor(() =>
     expect(
       (screen.getByRole('button', { name: 'Export report' }) as HTMLButtonElement).disabled,
@@ -194,9 +219,59 @@ it('reauthorizes before releasing a previously cached company report', async () 
   state.request.mockImplementation(() => new Promise(() => {}));
   state.data = original;
   view.change();
-  await waitFor(() => expect(state.request).toHaveBeenCalledTimes(3));
+  await waitFor(() => expect(state.request).toHaveBeenCalledTimes(5));
   expect(screen.queryByText('Timed report delivery')).toBeNull();
   expect(
     (screen.getByRole('button', { name: 'Export report' }) as HTMLButtonElement).disabled,
   ).toBe(true);
+});
+it('shows full summary totals with only the first page until Load more is requested', async () => {
+  state.mode = 'api';
+  const tasks = Array.from({ length: 100 }, (_, i) =>
+    late({ id: 'row-' + i, title: 'Page row ' + i, status: 'blocked', completedAt: '' }),
+  );
+  state.request.mockImplementation(async (path: string) =>
+    path.includes('/summary?')
+      ? {
+          snapshot: 'large',
+          generatedAt: '2026-10-10T10:40:00Z',
+          timezone: 'Asia/Kolkata',
+          basis: 'snapshot_current_state',
+          summary: {
+            rows: 201,
+            cohort: 201,
+            accepted: 0,
+            originals: 0,
+            ontime: 0,
+            currents: 0,
+            currentOnTime: 0,
+            overdue: 0,
+            changed: 0,
+            done: 0,
+            blocked: 201,
+            pending: 0,
+            needsAttention: 201,
+            buckets: [],
+            departments: {},
+          },
+        }
+      : path.includes('cursor=next')
+        ? {
+            tasks: [
+              late({ id: 'last', title: 'Explicit next page', status: 'blocked', completedAt: '' }),
+            ],
+            cursor: '',
+            hasMore: false,
+          }
+        : { tasks, cursor: 'next', hasMore: true },
+  );
+  mount();
+  await screen.findByText('Page row 0');
+  expect(screen.queryByText('Explicit next page')).toBeNull();
+  expect(screen.getByText('201 tasks due in range', { exact: false })).toBeTruthy();
+  expect(state.request.mock.calls.filter(([path]) => path.includes('/rows?'))).toHaveLength(1);
+  fireEvent.click(screen.getByRole('button', { name: 'Load more report rows' }));
+  await screen.findByText('Explicit next page');
+  expect(state.request.mock.calls[2][0]).toContain('snapshot=large');
+  expect(state.request.mock.calls[2][0]).toContain('cursor=next');
 });

@@ -9,7 +9,18 @@ import {
 } from 'react';
 import type { ReactNode } from 'react';
 import { QueryClient, QueryClientProvider, useQuery, useQueryClient } from '@tanstack/react-query';
-import type { Attachment, MutationResult, Session, WorkspaceData, WorkspaceStore } from './types';
+import { readPages, affectedScopes, eventScopes, readDetail } from './data/readScopes';
+import type {
+  Person,
+  Expense,
+  Task,
+  FinanceEvent,
+  Attachment,
+  MutationResult,
+  Session,
+  WorkspaceData,
+  WorkspaceStore,
+} from './types';
 import { ApiError, fetchAttachment, fetchExpenseReceipt, request } from './data/api';
 import {
   currentDemoSession,
@@ -93,19 +104,101 @@ function Store({ children }: { children: ReactNode }) {
     return () => clearTimeout(timer);
   }, [toast]);
   const key = ['workspace', MODE, session?.user.id ?? '', companyId];
+  const scopeEnabled = !!session && !!companyId && !deniedCompanies.includes(companyId);
   const workspace = useQuery({
-    queryKey: key,
-    enabled: !!session && !!companyId && !deniedCompanies.includes(companyId),
+    queryKey: [...key, 'bootstrap'],
+    enabled: scopeEnabled,
     retry: (count, error) =>
       !(error instanceof ApiError && [401, 403].includes(error.status)) && count < 1,
     queryFn: ({ signal }) =>
       MODE === 'demo'
         ? readDemoWorkspace(companyId, session!.user.id)
-        : request<WorkspaceData>(`/companies/${encodeURIComponent(companyId)}/workspace`, {
+        : request<WorkspaceData>(`/companies/${encodeURIComponent(companyId)}/bootstrap`, {
             signal,
           }),
     refetchInterval: MODE === 'api' ? 30_000 : false,
   });
+  const authorized =
+    scopeEnabled &&
+    workspace.isFetchedAfterMount &&
+    !!workspace.data &&
+    !(workspace.error instanceof ApiError && [401, 403].includes(workspace.error.status));
+  const roleBasis = workspace.data
+    ? [
+        workspace.data.readBasis,
+        workspace.data.me.role,
+        workspace.data.me.departmentId,
+        workspace.data.me.managerId,
+      ].join(':')
+    : '';
+  const tasks = useQuery({
+    queryKey: [...key, 'tasks', roleBasis],
+    enabled: MODE === 'api' && authorized,
+    queryFn: ({ signal }) =>
+      readPages<Task>(`/companies/${encodeURIComponent(companyId)}/tasks`, 'tasks', signal),
+    refetchInterval: 30000,
+  });
+  const finance = useQuery({
+    queryKey: [...key, 'finance', roleBasis],
+    enabled: MODE === 'api' && authorized,
+    queryFn: async ({ signal }) => ({
+      expenses: await readPages<Expense>(
+        `/companies/${encodeURIComponent(companyId)}/expenses`,
+        'expenses',
+        signal,
+      ),
+      ...(await request<{ financeEvents: FinanceEvent[]; people?: Person[] }>(
+        `/companies/${encodeURIComponent(companyId)}/finance/events`,
+        { signal },
+      )),
+    }),
+    refetchInterval: 30000,
+  });
+  const readError = tasks.error ?? finance.error;
+  useEffect(() => {
+    if (readError) {
+      setError(readError.message);
+      if (readError instanceof ApiError && [401, 403].includes(readError.status)) {
+        setDeniedCompanies((old) => (old.includes(companyId) ? old : [...old, companyId]));
+        client.removeQueries({ queryKey: key });
+      }
+    }
+  }, [readError, companyId, client]);
+  const scopedData =
+    authorized && workspace.data
+      ? MODE === 'demo'
+        ? workspace.data
+        : tasks.isFetchedAfterMount && finance.isFetchedAfterMount && tasks.data && finance.data
+          ? {
+              ...workspace.data,
+              tasks: tasks.data,
+              expenses: finance.data.expenses,
+              financeEvents: finance.data.financeEvents,
+              people: Array.from(
+                new Map(
+                  [...workspace.data.people, ...(finance.data.people ?? [])].map((p) => [p.id, p]),
+                ).values(),
+              ),
+            }
+          : null
+      : null;
+  const invalidate = useCallback(
+    async (path: string, user: string, company: string) => {
+      const scopes = affectedScopes(path);
+      await Promise.all([
+        client.invalidateQueries({
+          queryKey: ['workspace', MODE, user, company],
+          predicate: (q) =>
+            scopes.includes(String(q.queryKey[4])) ||
+            (scopes.includes('details') && String(q.queryKey[4]).includes(':')),
+        }),
+        ...(scopes.includes('reports')
+          ? [client.invalidateQueries({ queryKey: ['task-report', company, user] })]
+          : []),
+      ]);
+    },
+    [client],
+  );
   const accessDenied =
     deniedCompanies.includes(companyId) ||
     (workspace.error instanceof ApiError && [401, 403].includes(workspace.error.status));
@@ -124,8 +217,8 @@ function Store({ children }: { children: ReactNode }) {
       setDeniedCompanies((previous) => [...previous, denied]);
       // Discard the denied company's stale snapshot before any asynchronous session refresh.
       applySession({ ...session, companies: session.companies.filter((c) => c.id !== denied) });
-      void client.cancelQueries({ queryKey: ['workspace', MODE, userId, denied], exact: true });
-      client.removeQueries({ queryKey: ['workspace', MODE, userId, denied], exact: true });
+      void client.cancelQueries({ queryKey: ['workspace', MODE, userId, denied] });
+      client.removeQueries({ queryKey: ['workspace', MODE, userId, denied] });
       void request<Session>('/auth/session')
         .then((next) => {
           if (authGeneration.current !== generation || next.user.id !== userId) return;
@@ -149,6 +242,26 @@ function Store({ children }: { children: ReactNode }) {
     window.addEventListener('storage', handler);
     return () => window.removeEventListener('storage', handler);
   }, [client]);
+  useEffect(() => {
+    const listener = (event: Event) => {
+      const hint = (event as CustomEvent<{ company: string; user: string; kind: string }>).detail;
+      if (hint.company !== companyId || hint.user !== session?.user.id) return;
+      const scopes = eventScopes(hint.kind);
+      if (!scopes.length) return;
+      void client.invalidateQueries({
+        queryKey: ['workspace', MODE, hint.user, hint.company],
+        predicate: (q) =>
+          scopes.includes(String(q.queryKey[4])) ||
+          scopes.includes('details') ||
+          (scopes.includes('task-details') && String(q.queryKey[4]).startsWith('task:')) ||
+          (scopes.includes('expense-details') && String(q.queryKey[4]).startsWith('expense:')),
+      });
+      if (scopes.includes('reports'))
+        void client.invalidateQueries({ queryKey: ['task-report', hint.company, hint.user] });
+    };
+    window.addEventListener('schach-work-event', listener);
+    return () => window.removeEventListener('schach-work-event', listener);
+  }, [companyId, session?.user.id, client]);
   const notify = useCallback((message: string) => setToast(message), []);
   const clearError = useCallback(() => setError(''), []);
   const refresh = useCallback(async () => {
@@ -175,7 +288,10 @@ function Store({ children }: { children: ReactNode }) {
         const next =
           MODE === 'demo'
             ? await demoLogin(email, password)
-            : await request<Session>('/auth/login', { method: 'POST', body: { email, password, code, recoveryCode } });
+            : await request<Session>('/auth/login', {
+                method: 'POST',
+                body: { email, password, code, recoveryCode },
+              });
         client.clear();
         setDeniedCompanies([]);
         applySession(next);
@@ -231,9 +347,7 @@ function Store({ children }: { children: ReactNode }) {
           MODE === 'demo'
             ? await demoMutate(targetCompany, targetUser, path, body, method)
             : await request<MutationResult>(endpoint, { method, body });
-        await client.invalidateQueries({
-          queryKey: ['workspace', MODE, targetUser, targetCompany],
-        });
+        await invalidate(path, targetUser, targetCompany);
         if (path === '/companies') {
           const next = await refreshSession();
           if (result.id && next?.companies.some((c) => c.id === result.id)) {
@@ -258,7 +372,7 @@ function Store({ children }: { children: ReactNode }) {
         setPending((p) => p - 1);
       }
     },
-    [session, companyId, client, refreshSession, notify],
+    [session, companyId, client, refreshSession, notify, invalidate],
   );
   const upload = useCallback(
     async (taskId: string, file: File) => {
@@ -276,7 +390,7 @@ function Store({ children }: { children: ReactNode }) {
             { method: 'POST', body: form },
           );
         }
-        await client.invalidateQueries({ queryKey: ['workspace', MODE, session.user.id, target] });
+        await invalidate(`/tasks/${taskId}/attachments`, session.user.id, target);
         notify('Evidence attached.');
       } catch (e) {
         setError((e as Error).message);
@@ -285,7 +399,7 @@ function Store({ children }: { children: ReactNode }) {
         setPending((p) => p - 1);
       }
     },
-    [session, companyId, client, notify],
+    [session, companyId, client, notify, invalidate],
   );
   const downloadAttachment = useCallback(
     async (attachment: Attachment) => {
@@ -325,7 +439,7 @@ function Store({ children }: { children: ReactNode }) {
             { method: 'POST', body: form },
           );
         }
-        await client.invalidateQueries({ queryKey: ['workspace', MODE, session.user.id, target] });
+        await invalidate(`/expenses/${expenseId}/receipts`, session.user.id, target);
         notify('Receipt attached.');
       } catch (e) {
         setError((e as Error).message);
@@ -334,7 +448,7 @@ function Store({ children }: { children: ReactNode }) {
         setPending((p) => p - 1);
       }
     },
-    [session, companyId, client, notify],
+    [session, companyId, client, notify, invalidate],
   );
   const downloadExpenseReceipt = useCallback(
     async (attachment: Attachment) => {
@@ -370,9 +484,9 @@ function Store({ children }: { children: ReactNode }) {
     () => ({
       mode: MODE,
       session,
-      data: accessDenied ? null : (workspace.data ?? null),
+      data: accessDenied ? null : scopedData,
       companyId,
-      loading: authLoading || workspace.isLoading,
+      loading: authLoading || workspace.isLoading || (MODE === 'api' && authorized && !scopedData),
       saving: pending > 0,
       error,
       toast,
@@ -391,6 +505,8 @@ function Store({ children }: { children: ReactNode }) {
     }),
     [
       session,
+      scopedData,
+      authorized,
       workspace.data,
       accessDenied,
       workspace.isLoading,
@@ -426,4 +542,80 @@ export function useWorkspace(): WorkspaceStore {
   const value = useContext(Ctx);
   if (!value) throw new Error('useWorkspace must be used inside WorkspaceProvider.');
   return value;
+}
+
+// Details are independent read scopes. Mounting must reauthorize before a cached
+// record can be displayed, including when returning to the same company/role.
+export function useTaskDetail(id: string) {
+  const store = useWorkspace();
+  const data = store.data;
+  const result = useQuery({
+    queryKey: [
+      'workspace',
+      store.mode,
+      store.session?.user.id ?? '',
+      store.companyId,
+      'task:' + id,
+      data?.readBasis,
+      data?.me.role,
+      data?.me.departmentId,
+    ],
+    enabled: store.mode === 'api' && !!data && id !== '' && id !== 'new',
+    staleTime: 0,
+    retry: false,
+    queryFn: ({ signal }) =>
+      readDetail<{ task: Task; people?: Person[] }>(
+        `/companies/${encodeURIComponent(store.companyId)}/tasks/${encodeURIComponent(id)}`,
+        'task',
+        signal,
+      ),
+  });
+  return {
+    task:
+      store.mode === 'demo'
+        ? data?.tasks.find((t) => t.id === id)
+        : result.isFetchedAfterMount && !result.isError
+          ? result.data?.task
+          : undefined,
+    loading:
+      store.mode === 'api' && id !== 'new' && (!result.isFetchedAfterMount || result.isPending),
+    people: result.isFetchedAfterMount && !result.isError ? (result.data?.people ?? []) : [],
+    error: result.error?.message ?? '',
+  };
+}
+export function useExpenseDetail(id: string) {
+  const store = useWorkspace();
+  const data = store.data;
+  const result = useQuery({
+    queryKey: [
+      'workspace',
+      store.mode,
+      store.session?.user.id ?? '',
+      store.companyId,
+      'expense:' + id,
+      data?.readBasis,
+      data?.me.role,
+      data?.me.departmentId,
+    ],
+    enabled: store.mode === 'api' && !!data && !!id,
+    staleTime: 0,
+    retry: false,
+    queryFn: ({ signal }) =>
+      readDetail<{ expense: Expense; people?: Person[]; financeEvents: FinanceEvent[] }>(
+        `/companies/${encodeURIComponent(store.companyId)}/expenses/${encodeURIComponent(id)}`,
+        'expense',
+        signal,
+      ),
+  });
+  return {
+    expense:
+      store.mode === 'demo'
+        ? data?.expenses.find((t) => t.id === id)
+        : result.isFetchedAfterMount && !result.isError
+          ? result.data?.expense
+          : undefined,
+    loading: store.mode === 'api' && (!result.isFetchedAfterMount || result.isPending),
+    people: result.isFetchedAfterMount && !result.isError ? (result.data?.people ?? []) : [],
+    error: result.error?.message ?? '',
+  };
 }

@@ -197,6 +197,7 @@ type Session struct {
 	Companies []Company `json:"companies"`
 }
 type WorkspaceData struct {
+	ReadBasis         string            `json:"readBasis"`
 	Company           Company           `json:"company"`
 	Me                Person            `json:"me"`
 	Departments       []Department      `json:"departments"`

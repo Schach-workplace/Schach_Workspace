@@ -2,6 +2,7 @@
 package platform
 
 import (
+	"context"
 	"crypto/rand"
 	"encoding/hex"
 	"encoding/json"
@@ -20,6 +21,7 @@ import (
 )
 
 type Options struct {
+	MetricSink             func(RequestMetric)
 	MediaLimitBytes        int64
 	MediaUserQuotaBytes    int64
 	MediaCompanyQuotaBytes int64
@@ -38,11 +40,13 @@ type Options struct {
 	SessionHours           int
 }
 type Server struct {
-	db         *gorm.DB
-	opts       Options
-	mux        *http.ServeMux
-	throttleMu sync.Mutex
-	throttles  map[string]loginAttempt
+	db              *gorm.DB
+	opts            Options
+	mux             *http.ServeMux
+	reportMu        sync.Mutex
+	reportSnapshots map[string]*reportSnapshot
+	throttleMu      sync.Mutex
+	throttles       map[string]loginAttempt
 }
 type loginAttempt struct {
 	Count int
@@ -118,7 +122,7 @@ func New(db *gorm.DB, opts Options) (*Server, error) {
 			return nil, fmt.Errorf("invalid allowed origin %q; use scheme://host[:port]", origin)
 		}
 	}
-	s := &Server{db: db, opts: opts, mux: http.NewServeMux(), throttles: map[string]loginAttempt{}}
+	s := &Server{db: db.Session(&gorm.Session{Logger: measuredLogger{}}), opts: opts, mux: http.NewServeMux(), throttles: map[string]loginAttempt{}}
 	s.routes()
 	return s, nil
 }
@@ -127,8 +131,28 @@ type endpoint func(http.ResponseWriter, *http.Request) error
 
 func (s *Server) route(pattern string, fn endpoint) {
 	s.mux.HandleFunc(pattern, func(w http.ResponseWriter, r *http.Request) {
+		begin := time.Now()
+		queries := &queryMeasurement{}
+		measured := &measuredResponse{ResponseWriter: w}
+		r = r.WithContext(context.WithValue(r.Context(), measurementKey{}, queries))
+		defer func() {
+			queries.mu.Lock()
+			count, duration, rows := queries.count, queries.duration, queries.rows
+			queries.mu.Unlock()
+			metric := RequestMetric{Endpoint: pattern, Status: measured.status, Bytes: measured.bytes, Duration: time.Since(begin), Queries: count, QueryDuration: duration, QueryRows: rows}
+			if s.opts.MetricSink != nil {
+				s.opts.MetricSink(metric)
+			} else {
+				slog.Debug("endpoint metrics", "endpoint", metric.Endpoint, "status", metric.Status, "bytes", metric.Bytes, "duration_ms", float64(metric.Duration.Microseconds())/1000, "queries", metric.Queries, "query_rows", metric.QueryRows, "query_ms", float64(metric.QueryDuration.Microseconds())/1000)
+			}
+		}()
+		w = measured
 		if err := fn(w, r); err != nil {
-			s.writeError(w, err)
+			if measured.status == 0 {
+				s.writeError(w, err)
+			} else {
+				slog.Error("response interrupted", "endpoint", pattern)
+			}
 		}
 	})
 }
@@ -152,6 +176,17 @@ func (s *Server) routes() {
 	s.route("POST /api/companies", s.createCompany)
 	s.route("PATCH /api/companies/{cid}", s.patchCompany)
 	s.route("GET /api/companies/{cid}/workspace", s.workspace)
+	s.route("GET /api/companies/{cid}/bootstrap", s.bootstrap)
+	s.route("GET /api/companies/{cid}/tasks", s.taskList)
+	s.route("GET /api/companies/{cid}/tasks/{id}", s.taskDetail)
+	s.route("GET /api/companies/{cid}/tasks/{id}/{kind}", s.taskEvidence)
+	s.route("GET /api/companies/{cid}/finance/events", s.financeEvents)
+	s.route("GET /api/companies/{cid}/expenses", s.expenseList)
+	s.route("GET /api/companies/{cid}/expenses/{id}", s.expenseDetail)
+	s.route("GET /api/companies/{cid}/expenses/{id}/receipts", s.expenseEvidence)
+	s.route("GET /api/companies/{cid}/reports/tasks/summary", s.reportSummary)
+	s.route("GET /api/companies/{cid}/reports/tasks/rows", s.reportRows)
+	s.route("GET /api/companies/{cid}/reports/tasks/export", s.reportExport)
 	s.route("GET /api/companies/{cid}/reports/tasks", s.taskReport)
 	s.route("POST /api/companies/{cid}/departments", s.saveDepartment)
 	s.route("PATCH /api/companies/{cid}/departments/{id}", s.saveDepartment)
@@ -216,7 +251,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 	defer func() {
 		if v := recover(); v != nil {
-			slog.Error("request panic", "path", r.URL.Path, "error", v)
+			slog.Error("request panic")
 			s.writeError(w, errors.New("internal error"))
 		}
 	}()
@@ -228,7 +263,7 @@ func (s *Server) writeError(w http.ResponseWriter, err error) {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			a = &apiError{404, "not_found", "Resource not found.", nil}
 		} else {
-			slog.Error("request failed", "error", err)
+			slog.Error("request failed", "code", "internal_error")
 			a = &apiError{500, "internal_error", "The operation could not be completed. Please try again.", nil}
 		}
 	}

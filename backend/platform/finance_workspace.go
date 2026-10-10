@@ -7,6 +7,9 @@ import (
 )
 
 func loadFinanceWorkspace(db *gorm.DB, a *access, d *WorkspaceData, visibleTasks map[string]bool) (map[string]bool, error) {
+	return loadFinanceProjection(db, a, d, visibleTasks, false)
+}
+func loadFinanceProjection(db *gorm.DB, a *access, d *WorkspaceData, visibleTasks map[string]bool, lean bool) (map[string]bool, error) {
 	d.FinanceScope = a.financeScope()
 	d.ExpenseCategories = []ExpenseCategory{}
 	d.Budgets = []Budget{}
@@ -34,6 +37,9 @@ func loadFinanceWorkspace(db *gorm.DB, a *access, d *WorkspaceData, visibleTasks
 	}
 	if d.FinanceScope == "department" {
 		expenseQuery = expenseQuery.Where("(created_by = ? OR (department_id = ? AND department_id <> ''))", a.User.ID, a.Member.DepartmentID)
+	}
+	if lean {
+		expenseQuery = expenseQuery.Select("id", "department_id", "created_by", "reviewed_by", "paid_by", "task_id", "project_id")
 	}
 	if err := expenseQuery.Order("created_at DESC, id DESC").Find(&d.Expenses).Error; err != nil {
 		return nil, err
@@ -66,7 +72,7 @@ func loadFinanceWorkspace(db *gorm.DB, a *access, d *WorkspaceData, visibleTasks
 		people[b.CreatedBy] = true
 	}
 	receipts := map[string][]ExpenseReceipt{}
-	if len(ids) > 0 {
+	if len(ids) > 0 && !lean {
 		var rows []ExpenseReceipt
 		if err := db.Omit("Data").Where("company_id = ? AND expense_id IN ?", a.Company.ID, ids).Order("created_at ASC, id ASC").Find(&rows).Error; err != nil {
 			return nil, err
@@ -98,6 +104,9 @@ func loadFinanceWorkspace(db *gorm.DB, a *access, d *WorkspaceData, visibleTasks
 	}
 	// Restrict the query before LIMIT so unrelated company events cannot crowd out
 	// the latest thousand events a department head or expense creator can read.
+	if lean {
+		events = events.Where("1 = 0")
+	}
 	if err := events.Order("created_at DESC, id DESC").Limit(1000).Find(&d.FinanceEvents).Error; err != nil {
 		return nil, err
 	}

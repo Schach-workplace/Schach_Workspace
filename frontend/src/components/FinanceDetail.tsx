@@ -15,8 +15,8 @@ import {
   Upload,
   X,
 } from 'lucide-react';
-import { useWorkspace } from '../store';
-import type { Expense } from '../types';
+import { useExpenseDetail, useWorkspace } from '../store';
+import type { Expense, Person } from '../types';
 import { budgetUsage, formatMoney } from '../data/finance';
 import { validDate } from '../data/imports';
 import {
@@ -40,19 +40,49 @@ const paymentNames: Record<string, string> = {
   other: 'Other',
 };
 
-export default function FinanceDetail({
+export default function FinanceDetail(props: {
+  expense: Expense;
+  onClose: () => void;
+  onEdit: (expense: Expense) => void;
+  onOpenTask: (id: string) => void;
+}) {
+  const detail = useExpenseDetail(props.expense.id);
+  if (!detail.expense)
+    return (
+      <div role="dialog" aria-label="Expense details">
+        <button onClick={props.onClose}>Close</button>
+        <p role={detail.error ? 'alert' : 'status'}>{detail.error || 'Loading expense details…'}</p>
+      </div>
+    );
+  return (
+    <FinanceDetailBody
+      {...props}
+      expense={detail.expense}
+      resolvedPeople={detail.people}
+      onEdit={() => props.onEdit(detail.expense!)}
+    />
+  );
+}
+function FinanceDetailBody({
+  resolvedPeople,
   expense,
   onClose,
   onEdit,
   onOpenTask,
 }: {
+  resolvedPeople?: Person[];
   expense: Expense;
   onClose: () => void;
   onEdit: () => void;
   onOpenTask: (id: string) => void;
 }) {
   const store = useWorkspace();
-  const data = store.data!;
+  const data = {
+    ...store.data!,
+    people: Array.from(
+      new Map([...store.data!.people, ...(resolvedPeople ?? [])].map((p) => [p.id, p])).values(),
+    ),
+  };
   const [error, setError] = useState('');
   const [action, setAction] = useState<Decision | null>(null);
   const [actionVersion, setActionVersion] = useState(expense.version);

@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Text, TextInput, View } from "react-native";
-import { Page, useWorkspace, type WorkTask, type WorkData } from "./Workspace";
+import { Page, useWorkspace, type WorkTask } from "./Workspace";
 import { Action, Sheet, ui } from "./ConnectUI";
 import NativeMedia from "./Media";
 import { client } from "./client";
+import { readNativeDetail } from "./readScopes";
 import {
   companyDate,
   DeadlineChoiceError,
@@ -18,7 +19,7 @@ export default function WorkScreen() {
   if (role && role !== lastRole) setLastRole(role);
   return (
     <WorkView
-      key={`${w.company}:${w.session?.user.id}:${w.policyEpoch}:${lastRole}`}
+      key={`${w.company}:${w.session?.user.id}:${w.policyEpoch}:${w.work?.readBasis}:${lastRole}`}
       w={w}
     />
   );
@@ -54,7 +55,38 @@ function WorkView({ w }: { w: ReturnType<typeof useWorkspace> }) {
           : t.status === "in_review")) &&
       (!query || t.title.toLowerCase().includes(query.toLowerCase())),
   );
-  const task = w.work?.tasks.find((t) => t.id === selected);
+  const selectedVersion = w.work?.tasks.find((t) => t.id === selected)?.version;
+  const taskScope = [
+    w.company,
+    w.recordEpoch,
+    w.work?.readBasis,
+    w.work?.me.role,
+    selected,
+    selectedVersion,
+  ].join(":");
+  const [detail, setDetail] = useState<{
+    scope: string;
+    task: WorkTask;
+  } | null>(null);
+  useEffect(() => {
+    let active = true;
+    if (selected)
+      readNativeDetail<{ task: WorkTask }>(
+        (path) => client.request(path),
+        `/companies/${w.company}/tasks/${selected}`,
+        "task",
+      )
+        .then((v) => {
+          if (active) setDetail({ scope: taskScope, task: v.task });
+        })
+        .catch((e) => {
+          if (active) setError(e.message);
+        });
+    return () => {
+      active = false;
+    };
+  }, [selected, w.company, taskScope]);
+  const task = detail?.scope === taskScope ? detail.task : null;
   const deadline = useMemo(() => {
     try {
       return {
@@ -118,17 +150,17 @@ function WorkView({ w }: { w: ReturnType<typeof useWorkspace> }) {
         collaborators: [],
       });
       if (alive.current) setCreating(false);
-      await w.refresh();
+      await w.refresh("tasks");
     });
   }
   function actOnTask(current: WorkTask, status: string, review = false) {
     void run(async () => {
-      const fresh = await client.request<WorkData>(
-        `/companies/${w.company}/workspace`,
+      const fresh = await client.request<{ task: WorkTask }>(
+        `/companies/${w.company}/tasks/${current.id}`,
       );
-      const found = fresh.tasks.find((t) => t.id === current.id);
+      const found = fresh.task;
       if (!found || found.version !== current.version) {
-        await w.refresh();
+        await w.refresh("tasks");
         throw Error(
           "Task changed or access changed. Review the current details before trying again.",
         );
@@ -146,7 +178,7 @@ function WorkView({ w }: { w: ReturnType<typeof useWorkspace> }) {
           { version: current.version, status },
         );
       if (alive.current) setSelected("");
-      await w.refresh();
+      await w.refresh("tasks");
     });
   }
   function dateLabel(t: WorkTask) {

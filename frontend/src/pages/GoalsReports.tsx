@@ -215,7 +215,7 @@ export function ReportsPage({ onTask }: { onTask: (id: string) => void }) {
   const [tab, setTab] = useState('commitments');
   const [project, setProject] = useState('');
   const filters = { from, to, departmentId: department, ownerId: owner, projectId: project };
-  const input = useTaskReport(data, mode, filters);
+  const input = useTaskReport(data, mode, filters, tab);
   const report = buildTaskReport(
     input.tasks,
     filters,
@@ -235,14 +235,36 @@ export function ReportsPage({ onTask }: { onTask: (id: string) => void }) {
     overdue,
     blocked,
     pending,
-    buckets,
   } = report;
+  const counts = input.summary ?? {
+    cohort: cohort.length,
+    accepted: accepted.length,
+    originals: originals.length,
+    ontime: ontime.length,
+    currents: currents.length,
+    currentOnTime: currentOnTime.length,
+    done: done.length,
+    overdue: overdue.length,
+    blocked: blocked.length,
+    pending: pending.length,
+    changed: changed.length,
+    needsAttention: 0,
+  };
+  const buckets = input.summary?.buckets ?? report.buckets;
   const overdueIDs = new Set(overdue.map((t) => t.id));
   const needsAttention = cohort.filter(
     (t) => overdueIDs.has(t.id) || t.status === 'blocked' || t.status === 'in_review',
   );
   const max = Math.max(1, ...buckets.map((b) => b.count));
-  const tableTasks = tab === 'accepted' ? accepted : tab === 'exceptions' ? needsAttention : cohort;
+  const tableTasks =
+    mode === 'api'
+      ? input.tasks
+      : tab === 'accepted'
+        ? accepted
+        : tab === 'exceptions'
+          ? needsAttention
+          : cohort;
+  const attentionCount = input.summary?.needsAttention ?? needsAttention.length;
   return (
     <div className="page-content">
       <p className="field-help">
@@ -352,8 +374,26 @@ export function ReportsPage({ onTask }: { onTask: (id: string) => void }) {
             className="button button-dark"
             disabled={!valid || !input.available}
             onClick={() => {
-              downloadText(`schach-report-${from}-to-${to}.csv`, exportTasksCSV(tableTasks, data));
-              notify(`Exported ${tableTasks.length} tasks from the selected report tab.`);
+              if (mode === 'demo') {
+                downloadText(
+                  `schach-report-${from}-to-${to}.csv`,
+                  exportTasksCSV(tableTasks, data),
+                );
+                notify(`Exported ${tableTasks.length} tasks from the selected report tab.`);
+                return;
+              }
+              void input
+                .exportCSV()
+                .then((blob) => {
+                  const url = URL.createObjectURL(blob);
+                  const link = document.createElement('a');
+                  link.href = url;
+                  link.download = `schach-report-${from}-to-${to}.csv`;
+                  link.click();
+                  setTimeout(() => URL.revokeObjectURL(url), 1000);
+                  notify('Report exported.');
+                })
+                .catch((error) => notify(error.message));
             }}
           >
             <ArrowDownToLine size={15} />
@@ -369,30 +409,30 @@ export function ReportsPage({ onTask }: { onTask: (id: string) => void }) {
       <div className="report-metrics">
         <div className="panel">
           <span>Tasks accepted in period</span>
-          <strong>{accepted.length}</strong>
+          <strong>{counts.accepted}</strong>
           <p>Completion date within range</p>
         </div>
         <div className="panel">
           <span>Original commitment met</span>
-          <strong>{originals.length ? `${percent(ontime.length, originals.length)}%` : '—'}</strong>
+          <strong>{counts.originals ? `${percent(counts.ontime, counts.originals)}%` : '—'}</strong>
           <p>
-            {ontime.length} of {originals.length} with an original deadline
+            {counts.ontime} of {counts.originals} with an original deadline
           </p>
         </div>
         <div className="panel">
           <span>Current deadline met</span>
           <strong>
-            {currents.length ? `${percent(currentOnTime.length, currents.length)}%` : '—'}
+            {counts.currents ? `${percent(counts.currentOnTime, counts.currents)}%` : '—'}
           </strong>
           <p>
-            {currentOnTime.length} of {currents.length} with a current deadline
+            {counts.currentOnTime} of {counts.currents} with a current deadline
           </p>
         </div>
         <div className="panel">
           <span>Commitment completion</span>
-          <strong>{cohort.length ? `${percent(done.length, cohort.length)}%` : '—'}</strong>
+          <strong>{counts.cohort ? `${percent(counts.done, counts.cohort)}%` : '—'}</strong>
           <p>
-            {done.length} accepted / {cohort.length} tasks due in range
+            {counts.done} accepted / {counts.cohort} tasks due in range
           </p>
         </div>
       </div>
@@ -405,14 +445,14 @@ export function ReportsPage({ onTask }: { onTask: (id: string) => void }) {
             </div>
             <TrendingUp size={19} />
           </div>
-          {valid && accepted.length === 0 && (
+          {valid && counts.accepted === 0 && (
             <p className="chart-empty-note">No work was accepted in this period.</p>
           )}
           {buckets.length > 0 ? (
             <div
               className="report-chart"
               role="img"
-              aria-label={`${accepted.length} tasks accepted from ${from} through ${to}`}
+              aria-label={`${counts.accepted} tasks accepted from ${from} through ${to}`}
             >
               {buckets.map((b) => (
                 <div className="report-chart-column" key={b.start}>
@@ -442,10 +482,10 @@ export function ReportsPage({ onTask }: { onTask: (id: string) => void }) {
             </div>
           </div>
           {[
-            { label: 'Currently overdue', count: overdue.length, color: 'red' },
-            { label: 'Blocked', count: blocked.length, color: 'orange' },
-            { label: 'Awaiting review', count: pending.length, color: 'purple' },
-            { label: 'Deadline changed', count: changed.length, color: 'slate' },
+            { label: 'Currently overdue', count: counts.overdue, color: 'red' },
+            { label: 'Blocked', count: counts.blocked, color: 'orange' },
+            { label: 'Awaiting review', count: counts.pending, color: 'purple' },
+            { label: 'Deadline changed', count: counts.changed, color: 'slate' },
           ].map((r) => (
             <div key={r.label}>
               <span>
@@ -493,19 +533,27 @@ export function ReportsPage({ onTask }: { onTask: (id: string) => void }) {
                   const onTime = dated.filter((t) =>
                     reportDeadlineMet(t, data.company.timezone, true),
                   );
+                  const summary = input.summary?.departments[d.id];
+                  const totals = summary ?? {
+                    cohort: due.length,
+                    accepted: done.length,
+                    originals: dated.length,
+                    ontime: onTime.length,
+                    overdue: due.filter((t) => overdueIDs.has(t.id)).length,
+                  };
                   return (
                     <tr key={d.id}>
                       <td>
                         <strong>{d.name}</strong>
                       </td>
-                      <td>{due.length}</td>
-                      <td>{done.length}</td>
+                      <td>{totals.cohort}</td>
+                      <td>{totals.accepted}</td>
                       <td>
-                        {dated.length
-                          ? `${percent(onTime.length, dated.length)}% (${onTime.length}/${dated.length})`
+                        {totals.originals
+                          ? `${percent(totals.ontime, totals.originals)}% (${totals.ontime}/${totals.originals})`
                           : 'No data'}
                       </td>
-                      <td>{due.filter((t) => overdueIDs.has(t.id)).length}</td>
+                      <td>{totals.overdue}</td>
                     </tr>
                   );
                 })}
@@ -516,12 +564,12 @@ export function ReportsPage({ onTask }: { onTask: (id: string) => void }) {
       <section className="panel">
         <div className="attention-tabs" role="group" aria-label="Report task cohort">
           {[
-            { id: 'commitments', name: 'Due in period', count: cohort.length },
-            { id: 'accepted', name: 'Accepted in period', count: accepted.length },
+            { id: 'commitments', name: 'Due in period', count: counts.cohort },
+            { id: 'accepted', name: 'Accepted in period', count: counts.accepted },
             {
               id: 'exceptions',
               name: 'Needs attention',
-              count: needsAttention.length,
+              count: attentionCount,
             },
           ].map((t) => (
             <button
@@ -535,7 +583,17 @@ export function ReportsPage({ onTask }: { onTask: (id: string) => void }) {
             </button>
           ))}
         </div>
+        {input.rowsLoading && <p role="status">Loading report rows…</p>}
         <TaskTable tasks={tableTasks} data={data} onTask={onTask} compact />
+        {input.hasMore && (
+          <button
+            className="button button-secondary"
+            disabled={input.loadingMore}
+            onClick={input.loadMore}
+          >
+            Load more report rows
+          </button>
+        )}
       </section>
       <div className="method-note">
         <CircleHelp size={18} />
