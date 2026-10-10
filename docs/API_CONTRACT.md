@@ -143,3 +143,11 @@ Adding task acceptance evidence bumps its optimistic version. A review inspected
 ## Connect direct messages (10 October 2026)
 
 For `POST /api/companies/{cid}/conversations` with `kind: "dm"`, omit `title` and supply the other participant in `participantIds`. The server ignores DM titles and returns the existing company-scoped pair when present. Group/channel names remain required. Authorized DM list/detail projections include optional `peerId` for the other participant; the internal pair key stays private. This is an additive response field with no SQL migration. See [Connect UX](CONNECT_UX.md).
+
+### Current-state task report input
+
+`GET /api/companies/{cid}/reports/tasks?from=YYYY-MM-DD&to=YYYY-MM-DD&departmentId=&ownerId=&projectId=` authenticates active company membership and applies exactly the existing task read scope. Dates are inclusive; invalid/missing/reversed dates return the standard 422 validation error. Optional identifiers only narrow results and never grant access.
+
+Returns `tasks`, `generatedAt`, `timezone`, and `basis: "current_state"`. Results contain non-cancelled authorized tasks whose current due date or accepted company-calendar date falls in the period. Nested comments, attachments, checklist and time entries are empty and are not loaded; finance and communication records are excluded. Inaccessible parent/dependency IDs are removed. Business fields support the existing report CSV and drilldown.
+
+This is an intermediate lean read model, not a historical snapshot or paginated/aggregated report API. The query scans current company task rows before applying task scope and period filters. Server aggregation, bounded rows and historical facts are the subsequent roadmap milestones. The broad workspace endpoint remains compatible.

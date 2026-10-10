@@ -152,6 +152,7 @@ func (s *Server) routes() {
 	s.route("POST /api/companies", s.createCompany)
 	s.route("PATCH /api/companies/{cid}", s.patchCompany)
 	s.route("GET /api/companies/{cid}/workspace", s.workspace)
+	s.route("GET /api/companies/{cid}/reports/tasks", s.taskReport)
 	s.route("POST /api/companies/{cid}/departments", s.saveDepartment)
 	s.route("PATCH /api/companies/{cid}/departments/{id}", s.saveDepartment)
 	s.route("POST /api/companies/{cid}/people", s.addPerson)
