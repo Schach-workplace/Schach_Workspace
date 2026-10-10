@@ -11,7 +11,7 @@ import (
 // or inventing historical episode timestamps. Empty result means pass complete.
 func (s *Server) ReconcileAttention(ctx context.Context, cid, cursor string, limit int) (string, error) {
 	if limit < 1 || limit > 100 {
-		limit = 100
+		return "", invalid("Reconciliation limit must be 1–100.")
 	}
 	kind, last := "task", ""
 	if cursor != "" {
@@ -63,7 +63,11 @@ func (s *Server) ReconcileAttention(ctx context.Context, cid, cursor string, lim
 			table = "communication_bookmarks"
 			col = "message_id"
 		}
-		if e := tx.Table(table).Where("company_id=? AND "+col+">?", cid, last).Order(col).Limit(limit).Pluck(col, &ids).Error; e != nil {
+		q := tx.Table(table)
+		if kind == "bookmark" {
+			q = q.Distinct(col)
+		}
+		if e := q.Where("company_id=? AND "+col+">?", cid, last).Order(col).Limit(limit).Pluck(col, &ids).Error; e != nil {
 			return e
 		}
 		for _, id := range ids {
@@ -101,8 +105,30 @@ func (s *Server) ReconcileAttention(ctx context.Context, cid, cursor string, lim
 				if e := lockCommunicationRow(tx, "SHARE").Where("company_id=? AND id=?", cid, record.ConversationID).First(&c).Error; e != nil {
 					return e
 				}
-				scope, e := conversationAccess(tx, record.CreatedBy, cid, c.ID)
-				if e != nil {
+				var recipients []CommunicationRecipient
+				if e := tx.Where("company_id=? AND record_id=? AND revision=?", cid, record.ID, record.Revision).Order("user_id").Find(&recipients).Error; e != nil {
+					return e
+				}
+				candidates := []string{record.CreatedBy}
+				for _, r := range recipients {
+					candidates = append(candidates, r.UserID)
+				}
+				var scope *conversationScope
+				for _, uid := range candidates {
+					if !a.Members[uid].Active || a.Users[uid].ID == "" || a.Users[uid].Suspended {
+						continue
+					}
+					candidate, e := conversationAccess(tx, uid, cid, c.ID)
+					if e != nil {
+						continue
+					}
+					message, e := scopedMessage(tx, candidate, record.AnchorMessageID)
+					if e == nil && !message.Removed && message.Revision == record.SourceRevision {
+						scope = candidate
+						break
+					}
+				}
+				if scope == nil {
 					continue
 				}
 				if e = syncRecordAttention(tx, scope, record); e != nil {
@@ -117,6 +143,13 @@ func (s *Server) ReconcileAttention(ctx context.Context, cid, cursor string, lim
 					return e
 				}
 				for _, b := range rows {
+					if !a.Members[b.UserID].Active || a.Users[b.UserID].ID == "" || a.Users[b.UserID].Suspended {
+						continue
+					}
+					var c Conversation
+					if e := lockCommunicationRow(tx, "SHARE").Where("company_id=? AND id=?", cid, b.ConversationID).First(&c).Error; e != nil {
+						return e
+					}
 					scope, e := conversationAccess(tx, b.UserID, cid, b.ConversationID)
 					if e != nil {
 						continue

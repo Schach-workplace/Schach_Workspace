@@ -167,3 +167,58 @@ func TestAttentionRouteClosedTargetAndConcurrentRetry(t *testing.T) {
 		t.Fatal("reconciliation superseded current route", routed.State)
 	}
 }
+func TestAttentionCanonicalReplayAfterBusinessSupersedes(t *testing.T) {
+	s, c, cid, uid, _ := attentionFixture(t)
+	member := addPerson(t, s, c, cid, "attention-completion-owner@example.com", "member")
+	body := taskBody(member)
+	body["reviewerId"] = uid
+	body["requiresApproval"] = true
+	body["status"] = "in_review"
+	tid := createTask(t, s, c, cid, body)
+	var item AttentionItem
+	s.db.First(&item, "source_id=? AND recipient_id=? AND kind='task_review'", tid, uid)
+	root := "/api/companies/" + cid + "/attention/" + item.ID + "/transition"
+	input := map[string]any{"expectedVersion": 1, "retryKey": "superseded-replay", "action": "resolve", "reason": "Review tracked separately"}
+	st, b, w := req(t, s, "POST", root, input, c)
+	if st != 200 {
+		t.Fatal(st, w.Body.String())
+	}
+	canonical := b["resultVersion"]
+	st, _, w = req(t, s, "POST", "/api/companies/"+cid+"/tasks/"+tid+"/review", map[string]any{"version": 1, "decision": "approve", "comment": "Accepted"}, c)
+	if st != 200 {
+		t.Fatal(st, w.Body.String())
+	}
+	st, b, w = req(t, s, "POST", root, input, c)
+	if st != 200 || b["resultVersion"] != canonical {
+		t.Fatal("authorized superseded retry", st, w.Body.String())
+	}
+	input["retryKey"] = "new-after-completion"
+	input["expectedVersion"] = 3
+	st, _, _ = req(t, s, "POST", root, input, c)
+	if st != 409 {
+		t.Fatal("new completed action", st)
+	}
+	s.db.Model(&Membership{}).Where("company_id=? AND user_id=?", cid, uid).Update("role", "viewer")
+	input["retryKey"] = "superseded-replay"
+	input["expectedVersion"] = 1
+	st, _, _ = req(t, s, "POST", root, input, c)
+	if st != 404 && st != 403 {
+		t.Fatal("revoked review authority replay", st)
+	}
+}
+func TestAttentionRecordRoutingDoesNotAddCreatorToFixedRecipients(t *testing.T) {
+	s, c, cid, owner, uid, mc := conversationFixture(t)
+	conv := newConversation(t, s, c, cid, []string{owner, uid}, "group")
+	m := sendMessage(t, s, c, cid, conv, "fixed-route", "Fixed route audience")
+	root := "/api/companies/" + cid + "/conversations/" + conv + "/records"
+	st, b, w := req(t, s, "POST", root, map[string]any{"retryKey": "fixed-route-record", "kind": "ack", "anchorMessageId": m["id"], "sourceRevision": 1, "title": "Fixed notice", "body": "Respond", "recipientIds": []string{uid}}, c)
+	if st != 200 {
+		t.Fatal(st, w.Body.String())
+	}
+	var item AttentionItem
+	s.db.First(&item, "source_id=? AND recipient_id=?", b["id"], uid)
+	st, _, w = req(t, s, "POST", "/api/companies/"+cid+"/attention/"+item.ID+"/transition", map[string]any{"expectedVersion": 1, "retryKey": "fixed-route", "action": "route", "reason": "Creator already reads source", "recipientId": owner}, mc)
+	if st != 403 {
+		t.Fatal("nonrecipient route", st, w.Body.String())
+	}
+}

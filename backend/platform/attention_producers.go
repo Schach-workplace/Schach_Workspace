@@ -3,16 +3,20 @@ package platform
 import (
 	"fmt"
 	"gorm.io/gorm"
+	"strings"
 	"time"
 )
 
 func attentionForMember(a *access, uid string) *access {
 	return &access{Company: a.Company, User: a.Users[uid], Member: a.Members[uid], Members: a.Members, Users: a.Users}
 }
-func supersedeAttention(tx *gorm.DB, cid, kind, source, action, keep string) error {
+func supersedeAttention(tx *gorm.DB, cid, kind, source, action, keep string, recipients ...string) error {
 	q := tx.Model(&AttentionItem{}).Where("company_id=? AND source_kind=? AND source_id=? AND kind=? AND state IN ?", cid, kind, source, action, []string{"open", "resolved", "routed"})
+	if len(recipients) > 0 {
+		q = q.Where("recipient_id IN ?", recipients)
+	}
 	if keep != "" {
-		q = q.Where("occurrence_key<>? AND occurrence_key NOT LIKE ?", keep, "route:"+keep+":%")
+		q = q.Where("occurrence_key<>? AND occurrence_key NOT LIKE ?", keep, "%:"+keep+":%")
 	}
 	return q.Updates(map[string]any{"state": "superseded", "updated_at": time.Now().UTC(), "version": gorm.Expr("version+1")}).Error
 }
@@ -45,6 +49,11 @@ func syncTaskAttention(tx *gorm.DB, a *access, before *Task, after Task) error {
 			if e := ensureAttentionItem(tx, AttentionItem{CompanyID: after.CompanyID, RecipientID: uid, SourceKind: "task", SourceID: after.ID, SourceRevision: after.Version, OccurrenceKey: episode, Kind: kind}); e != nil {
 				return e
 			}
+		}
+	}
+	if before != nil && deadlineFingerprint(*before) != deadlineFingerprint(after) || in(after.Status, "done", "cancelled") {
+		if e := supersedeAttention(tx, after.CompanyID, "task", after.ID, "deadline", ""); e != nil {
+			return e
 		}
 	}
 	if before == nil || before.OwnerID != after.OwnerID {
@@ -110,7 +119,7 @@ func syncRecordAttention(tx *gorm.DB, scope *conversationScope, record Communica
 	}
 	for _, r := range recipients {
 		if r.Response != "" {
-			if e := tx.Model(&AttentionItem{}).Where("company_id=? AND source_kind=? AND source_id=? AND recipient_id=? AND occurrence_key=? AND state=?", record.CompanyID, "record", record.ID, r.UserID, episode, "open").Updates(map[string]any{"state": "superseded", "version": gorm.Expr("version+1")}).Error; e != nil {
+			if e := tx.Model(&AttentionItem{}).Where("company_id=? AND source_kind=? AND source_id=? AND recipient_id=? AND record_revision=? AND state=?", record.CompanyID, "record", record.ID, r.UserID, record.Revision, "open").Updates(map[string]any{"state": "superseded", "version": gorm.Expr("version+1")}).Error; e != nil {
 				return e
 			}
 			continue
@@ -160,20 +169,28 @@ func syncIntakeAttention(tx *gorm.DB, a *access, item CommunicationRequest) erro
 	}
 	return nil
 }
+func bookmarkOccurrence(at string, epoch, revision int64) string {
+	return payloadHash([]any{at, epoch, revision})
+}
 func syncBookmarkAttention(tx *gorm.DB, scope *conversationScope, b CommunicationBookmark) error {
 	episode := ""
+	var m Message
 	if b.RemindAt != "" {
-		episode = payloadHash(b.RemindAt)
+		var e error
+		m, e = scopedMessage(tx, scope, b.MessageID)
+		if e != nil {
+			return e
+		}
+		if m.Removed {
+			return missing()
+		}
+		episode = bookmarkOccurrence(b.RemindAt, scope.Epoch, m.Revision)
 	}
-	if e := supersedeAttention(tx, b.CompanyID, "bookmark", b.MessageID, "saved_reminder", episode); e != nil {
+	if e := supersedeAttention(tx, b.CompanyID, "bookmark", b.MessageID, "saved_reminder", episode, b.UserID); e != nil {
 		return e
 	}
 	if b.RemindAt == "" {
 		return nil
-	}
-	m, e := scopedMessage(tx, scope, b.MessageID)
-	if e != nil {
-		return e
 	}
 	due, e := time.Parse(time.RFC3339, b.RemindAt)
 	if e != nil {
@@ -181,6 +198,22 @@ func syncBookmarkAttention(tx *gorm.DB, scope *conversationScope, b Communicatio
 	}
 	return ensureAttentionItem(tx, AttentionItem{CompanyID: b.CompanyID, RecipientID: b.UserID, SourceKind: "bookmark", SourceID: b.MessageID, SourceRevision: m.Revision, OccurrenceKey: episode, Kind: "saved_reminder", ConversationID: m.ConversationID, AnchorMessageID: m.ID, MessageSequence: m.Sequence, RecipientEpoch: scope.Epoch, DueAt: &due})
 }
+func deadlineFingerprint(t Task) string {
+	return payloadHash([]any{t.DeadlineMode, t.DueDate, t.DueAt, t.DueTimezone})
+}
 func ensureDeadlineAttention(tx *gorm.DB, t Task, stage string, now time.Time) error {
-	return ensureAttentionItem(tx, AttentionItem{CompanyID: t.CompanyID, RecipientID: t.OwnerID, SourceKind: "task", SourceID: t.ID, SourceRevision: t.Version, OccurrenceKey: "deadline:" + payloadHash([]any{t.DeadlineMode, t.DueDate, t.DueAt, t.DueTimezone, stage}), Kind: "deadline", DueAt: &now})
+	return ensureAttentionItem(tx, AttentionItem{CompanyID: t.CompanyID, RecipientID: t.OwnerID, SourceKind: "task", SourceID: t.ID, SourceRevision: t.Version, OccurrenceKey: "deadline:" + deadlineFingerprint(t) + ":" + stage, Kind: "deadline", DueAt: &now})
+}
+
+// Routing/escalation retain the natural source obligation across repeated handoffs.
+func rootAttentionOccurrence(key string) string {
+	for strings.HasPrefix(key, "route:") || strings.HasPrefix(key, "escalation:") {
+		start := strings.IndexByte(key, ':')
+		end := strings.LastIndexByte(key, ':')
+		if end <= start {
+			break
+		}
+		key = key[start+1 : end]
+	}
+	return key
 }

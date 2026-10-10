@@ -95,7 +95,7 @@ func (s *Server) transitionAttention(w http.ResponseWriter, r *http.Request) err
 		if err = tx.First(&item, "company_id=? AND recipient_id=? AND id=?", a.Company.ID, a.User.ID, r.PathValue("item")).Error; err != nil {
 			return missing()
 		}
-		view, err = attentionSource(tx, a, item)
+		view, err = attentionSourceForReplay(tx, a, item)
 		if err != nil {
 			return err
 		}
@@ -126,6 +126,9 @@ func (s *Server) transitionAttention(w http.ResponseWriter, r *http.Request) err
 		if item.State != "open" || item.Version != input.ExpectedVersion {
 			return conflict()
 		}
+		if _, err = attentionSource(tx, a, item); err != nil {
+			return err
+		}
 		now := time.Now().UTC()
 		result = AttentionRetry{CompanyID: a.Company.ID, ActorID: a.User.ID, Operation: "transition", RetryKey: input.RetryKey, RequestHash: hash, ItemID: item.ID, ResultItemID: item.ID, ResultVersion: item.Version + 1, CreatedAt: now}
 		switch input.Action {
@@ -143,7 +146,7 @@ func (s *Server) transitionAttention(w http.ResponseWriter, r *http.Request) err
 				return err
 			}
 			var target AttentionItem
-			err := tx.Where("company_id=? AND recipient_id=? AND source_kind=? AND source_id=? AND kind=? AND state=? AND (occurrence_key=? OR occurrence_key LIKE ?)", item.CompanyID, input.RecipientID, item.SourceKind, item.SourceID, item.Kind, "open", item.OccurrenceKey, "route:"+item.OccurrenceKey+":%").Order("created_at,id").First(&target).Error
+			err := tx.Where("company_id=? AND recipient_id=? AND source_kind=? AND source_id=? AND kind=? AND state=? AND (occurrence_key=? OR occurrence_key LIKE ?)", item.CompanyID, input.RecipientID, item.SourceKind, item.SourceID, item.Kind, "open", rootAttentionOccurrence(item.OccurrenceKey), "%:"+rootAttentionOccurrence(item.OccurrenceKey)+":%").Order("created_at,id").First(&target).Error
 			if err != nil && err != gorm.ErrRecordNotFound {
 				return err
 			}
@@ -160,7 +163,7 @@ func (s *Server) transitionAttention(w http.ResponseWriter, r *http.Request) err
 				target = item
 				target.ID = newID("attention")
 				target.RecipientID = input.RecipientID
-				target.OccurrenceKey = "route:" + item.OccurrenceKey + ":" + payloadHash([]string{item.ID, input.RetryKey})
+				target.OccurrenceKey = "route:" + rootAttentionOccurrence(item.OccurrenceKey) + ":" + payloadHash([]string{item.ID, input.RetryKey})
 				target.Version = 1
 				target.CreatedAt = now
 				target.UpdatedAt = now
@@ -200,5 +203,5 @@ func (s *Server) transitionAttention(w http.ResponseWriter, r *http.Request) err
 func attentionCanRouteReplay(tx *gorm.DB, a *access, item AttentionItem, target string) error {
 	copy := item
 	copy.State = "open"
-	return attentionCanRoute(tx, a, copy, target)
+	return checkAttentionRoute(tx, a, copy, target, true)
 }

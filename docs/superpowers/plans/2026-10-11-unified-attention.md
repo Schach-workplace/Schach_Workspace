@@ -144,3 +144,21 @@ Use the accepted milestone3 interfaces recorded in `verification/workspace-impro
 `AttentionView` must be an explicit DTO, not serialization of a raw persistence `AttentionItem`. Published intake authorization intentionally permits triage without source conversation membership; omit its internal conversation ID, anchor message ID, sequence and private source revision even for an authorized leader. Expose the independently published request version. Private edit/removal does not retract or reveal the independently published intake. Add exact JSON non-disclosure assertions.
 
 Existing `withAccessTransaction` is HTTP/session-bound. Extract/add a narrow independently current active actor constructor for jobs/target checks using company→active-user/member locks and a fresh scoped directory, without a fabricated request/session. Record its actual reviewed signature for later workers. Respect conversation/dependent lock ordering and job final-check ordering company→session→sorted members→conversation→dependents; producers already holding chat transactions never reacquire company locks. No source accessibility is inferred from readBasis alone.
+
+### Bounded operator reconciliation
+
+After applying the attention migrations, an operator can project existing current
+work with `go run ./cmd/reconcile-attention --company COMPANY_ID --limit 100`
+from `backend/`, using its explicit `DATABASE_URL`. For an owned SQLite evaluation
+file, unset `DATABASE_URL` and supply `--db /absolute/path/evaluation.db` instead.
+The command never migrates, seeds, creates a default database, starts a worker, or
+loops over a full company. Each invocation processes at most 100 source IDs in
+one transaction and prints `{"nextCursor":"...","complete":false}`. Invoke it
+again with `--cursor` set to that exact returned value. Persist progress only after
+a successful invocation; repeating the preceding cursor after interruption is
+idempotent. `complete:true` and an empty cursor finish this pass. Restart from an
+empty cursor for a later explicit pass if source work changed during traversal.
+Current source eligibility is checked under company → sorted member → conversation
+→ dependent locks; a revoked private creator does not block a current fixed
+recipient, and inaccessible sources do not generate attention. This entry point
+performs local IDs-only projection and sends no external delivery.

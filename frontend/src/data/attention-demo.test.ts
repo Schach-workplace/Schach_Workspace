@@ -38,3 +38,28 @@ it('persists separate local resolution and canonical retries while the business 
     }),
   ).rejects.toMatchObject({ status: 409 });
 });
+it('replays an authorized resolved task action after the business decision completes', async () => {
+  const company = sample.workspaces[0].company.id;
+  const user = sample.sessions[0].user.id;
+  const item = (await demoAttentionRead(company, user)).find(
+    (i) => i.sourceKind === 'task' && i.canDecide,
+  )!;
+  const input = {
+    expectedVersion: item.version,
+    retryKey: 'after-approval',
+    action: 'resolve',
+    reason: 'Handled independently',
+  };
+  await demoMutate(company, user, `/attention/${encodeURIComponent(item.id)}/transition`, input);
+  await demoMutate(company, user, `/tasks/${item.sourceId}/review`, {
+    version: item.sourceVersion,
+    decision: 'approve',
+    comment: 'Accepted current work',
+  });
+  await expect(
+    demoMutate(company, user, `/attention/${encodeURIComponent(item.id)}/transition`, input),
+  ).resolves.toMatchObject({ ok: true });
+  expect((await demoAttentionRead(company, user, 'all', true)).some((i) => i.id === item.id)).toBe(
+    false,
+  );
+});

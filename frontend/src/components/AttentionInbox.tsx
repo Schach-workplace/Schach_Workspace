@@ -1,4 +1,4 @@
-import { useAttentionInput } from '../data/attentionInput';
+import { useAttentionInput, purgeAttentionInput } from '../data/attentionInput';
 import AttentionSource from './AttentionSource';
 import { useState, useRef, useEffect } from 'react';
 import { useWorkspace } from '../store';
@@ -25,17 +25,21 @@ export default function AttentionInbox({
     id: string;
     action: AttentionTransitionInput['action'];
   } | null>(null);
+  const company = store.companyId ?? store.data?.company.id ?? '';
+  const user = store.session?.user.id ?? store.data?.me.id ?? '';
   useEffect(() => {
     if (query.denied) {
+      if (selected) purgeAttentionInput(company, user, selected.id, selected.action);
       setSelected(null);
       setBusiness(null);
     } else if (query.ready) {
-      if (selected && !query.items.some((i) => i.id === selected.id)) setSelected(null);
+      if (selected && !query.items.some((i) => i.id === selected.id)) {
+        purgeAttentionInput(company, user, selected.id, selected.action);
+        setSelected(null);
+      }
       if (business && !query.items.some((i) => i.id === business)) setBusiness(null);
     }
-  }, [query.denied, query.ready, query.items, selected, business]);
-  const company = store.companyId ?? store.data?.company.id ?? '';
-  const user = store.session?.user.id ?? store.data?.me.id ?? '';
+  }, [query.denied, query.ready, query.items, selected, business, company, user]);
   return (
     <section
       className="panel attention-inbox"

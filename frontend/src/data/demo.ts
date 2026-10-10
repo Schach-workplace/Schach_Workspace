@@ -1,6 +1,7 @@
 import { ApiError } from './api';
 import {
   defaultAttentionPreference,
+  attentionIntent,
   type AttentionView,
   type AttentionTransitionInput,
   type AttentionPreference,
@@ -1233,20 +1234,20 @@ export async function demoDownloadExpenseReceipt(
   throw new Error('Receipt unavailable.');
 }
 
-function demoTaskReviewer(p: Person, t: Task) {
+function demoTaskReviewer(p: Person, t: Task, replay = false) {
   return (
     p.active &&
     p.role !== 'viewer' &&
-    t.status === 'in_review' &&
+    (replay || t.status === 'in_review') &&
     t.ownerId !== p.id &&
     (t.reviewerId === p.id || leadership(p))
   );
 }
-function demoExpenseReviewer(p: Person, e: WorkspaceData['expenses'][number]) {
+function demoExpenseReviewer(p: Person, e: WorkspaceData['expenses'][number], replay = false) {
   return (
     p.active &&
     p.id !== e.createdBy &&
-    e.status === 'submitted' &&
+    (replay || e.status === 'submitted') &&
     (managesFinance(p) ||
       (p.role === 'head' && !!p.departmentId && p.departmentId === e.departmentId))
   );
@@ -1305,12 +1306,13 @@ function demoAttentionView(
   w: WorkspaceData,
   p: Person,
   a: DemoAttentionRow,
+  replay = false,
 ): AttentionView | null {
   if (
     a.companyId !== w.company.id ||
     a.recipientId !== p.id ||
     !p.active ||
-    a.state === 'superseded'
+    (!replay && a.state === 'superseded')
   )
     return null;
   const view: AttentionView = {
@@ -1340,9 +1342,12 @@ function demoAttentionView(
     if (
       !t ||
       !canReadDemoTask(w, p, t) ||
-      (a.kind === 'task_review' && (!demoTaskReviewer(p, t) || a.sourceRevision !== t.version)) ||
-      (a.kind === 'blocker' && t.status !== 'blocked') ||
-      (a.kind === 'update' && (t.ownerId !== p.id || ['done', 'cancelled'].includes(t.status)))
+      (a.kind === 'task_review' &&
+        (!demoTaskReviewer(p, t, replay) || (!replay && a.sourceRevision !== t.version))) ||
+      (!replay && a.kind === 'blocker' && t.status !== 'blocked') ||
+      (!replay &&
+        a.kind === 'update' &&
+        (t.ownerId !== p.id || ['done', 'cancelled'].includes(t.status)))
     )
       return null;
     Object.assign(view, {
@@ -1353,7 +1358,7 @@ function demoAttentionView(
       canDecide: demoTaskReviewer(p, t),
       canRoute:
         a.kind === 'task_review'
-          ? demoTaskReviewer(p, t)
+          ? demoTaskReviewer(p, t, replay)
           : p.id === t.ownerId || p.id === t.createdBy || canStructure(w, p, t),
       link: '/work?task=' + t.id,
     });
@@ -1363,7 +1368,7 @@ function demoAttentionView(
         target.active &&
         canReadDemoTask(w, target, t) &&
         (a.kind === 'task_review'
-          ? demoTaskReviewer(target, t)
+          ? demoTaskReviewer(target, t, replay)
           : target.id === t.ownerId ||
             target.id === t.reviewerId ||
             t.collaborators.includes(target.id) ||
@@ -1371,7 +1376,12 @@ function demoAttentionView(
     );
   } else {
     const e = w.expenses.find((e) => e.id === a.sourceId);
-    if (!e || !canReadExpense(p, e) || !demoExpenseReviewer(p, e) || a.sourceRevision !== e.version)
+    if (
+      !e ||
+      !canReadExpense(p, e) ||
+      !demoExpenseReviewer(p, e, replay) ||
+      (!replay && a.sourceRevision !== e.version)
+    )
       return null;
     Object.assign(view, {
       title: e.title,
@@ -1383,7 +1393,7 @@ function demoAttentionView(
       link: '/finance?expense=' + e.id,
     });
     view.routePeople = w.people.filter(
-      (target) => target.id !== p.id && demoExpenseReviewer(target, e),
+      (target) => target.id !== p.id && demoExpenseReviewer(target, e, replay),
     );
   }
   if (a.state === 'open') {
@@ -1458,18 +1468,33 @@ async function demoAttentionMutation(
   const input = body as AttentionTransitionInput;
   syncDemoAttention(db, w);
   const row = db.attention!.find((a) => a.id === itemId);
-  const view = row && demoAttentionView(db, w, me, row);
+  const view = row && demoAttentionView(db, w, me, row, true);
   if (!row || !view) throw new ApiError('This source is no longer available.', 404, 'not_found');
   const key = [company, user, input.retryKey].join(':');
-  const hash = JSON.stringify([itemId, input]);
+  const hash = JSON.stringify([
+    itemId,
+    attentionIntent(
+      { version: input.expectedVersion },
+      input.action,
+      { reason: input.reason, recipientId: input.recipientId, snoozedUntil: input.snoozedUntil },
+      input.retryKey,
+    ),
+  ]);
   const old = db.attentionRetries?.[key];
   if (old) {
     if (old.hash !== hash)
       throw new ApiError('Retry key belongs to another action.', 409, 'version_conflict');
+    if (input.action === 'route') {
+      const authority = demoAttentionView(db, w, me, { ...row, state: 'open' }, true);
+      if (!authority?.canRoute || !authority.routePeople.some((p) => p.id === input.recipientId))
+        throw new ApiError('Routing authority changed.', 404, 'not_found');
+    }
     return { ok: true, id: old.resultItemId };
   }
   if (row.version !== input.expectedVersion || row.state !== 'open')
     throw new ApiError('This Inbox item changed. Refresh first.', 409, 'version_conflict');
+  if (!demoAttentionView(db, w, me, row))
+    throw new ApiError('This obligation is no longer current.', 404, 'not_found');
   if (!input.retryKey || !['resolve', 'route', 'snooze', 'unsnooze'].includes(input.action))
     throw new ApiError('Choose an attention action.', 422, 'validation');
   if (

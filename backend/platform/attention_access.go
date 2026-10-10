@@ -4,6 +4,7 @@ import (
 	"gorm.io/gorm"
 	"net/http"
 	"net/url"
+	"strings"
 )
 
 // currentAttentionActorLocked refreshes current actor/directory after the caller
@@ -38,12 +39,23 @@ func currentAttentionActorLocked(tx *gorm.DB, cid, uid string) (*access, error) 
 	}
 	return a, nil
 }
+func taskAttentionReviewAuthority(a *access, t Task) bool {
+	return a.Member.Role != "viewer" && t.OwnerID != a.User.ID && (t.ReviewerID == a.User.ID || leadership(a.Member.Role))
+}
 func taskAttentionReviewer(a *access, t Task) bool {
-	return t.Status == "in_review" && a.Member.Role != "viewer" && t.OwnerID != a.User.ID && (t.ReviewerID == a.User.ID || leadership(a.Member.Role))
+	return t.Status == "in_review" && taskAttentionReviewAuthority(a, t)
 }
 func attentionSource(tx *gorm.DB, a *access, item AttentionItem) (AttentionView, error) {
+	return projectAttentionSource(tx, a, item, false)
+}
+
+// Replay preserves a committed outcome after obligation completion, with fresh source authority.
+func attentionSourceForReplay(tx *gorm.DB, a *access, item AttentionItem) (AttentionView, error) {
+	return projectAttentionSource(tx, a, item, true)
+}
+func projectAttentionSource(tx *gorm.DB, a *access, item AttentionItem, replay bool) (AttentionView, error) {
 	v := AttentionView{ID: item.ID, CompanyID: item.CompanyID, RecipientID: item.RecipientID, SourceKind: item.SourceKind, SourceID: item.SourceID, Kind: item.Kind, State: item.State, Version: item.Version, SnoozedUntil: item.SnoozedUntil, DueAt: item.DueAt, Actions: []string{}, RoutePeople: []Person{}, ReminderState: "pending"}
-	if item.CompanyID != a.Company.ID || item.RecipientID != a.User.ID || item.State == "superseded" || a.User.Suspended {
+	if item.CompanyID != a.Company.ID || item.RecipientID != a.User.ID || (!replay && item.State == "superseded") || a.User.Suspended {
 		return v, missing()
 	}
 	switch item.SourceKind {
@@ -52,10 +64,13 @@ func attentionSource(tx *gorm.DB, a *access, item AttentionItem) (AttentionView,
 		if e != nil {
 			return v, e
 		}
-		if item.Kind == "task_review" && !taskAttentionReviewer(a, t) {
+		if item.Kind == "task_review" && (!taskAttentionReviewAuthority(a, t) || (!replay && t.Status != "in_review")) {
 			return v, missing()
 		}
-		if item.Kind == "blocker" && t.Status != "blocked" {
+		if !replay && item.Kind == "blocker" && t.Status != "blocked" {
+			return v, missing()
+		}
+		if !replay && item.Kind == "deadline" && (in(t.Status, "done", "cancelled") || !strings.HasPrefix(rootAttentionOccurrence(item.OccurrenceKey), "deadline:"+deadlineFingerprint(t)+":")) {
 			return v, missing()
 		}
 		v.Title = t.Title
@@ -64,34 +79,34 @@ func attentionSource(tx *gorm.DB, a *access, item AttentionItem) (AttentionView,
 		v.OwnerName = a.Users[t.OwnerID].Name
 		v.CanDecide = taskAttentionReviewer(a, t)
 		v.Link = "#tasks?task=" + url.QueryEscape(t.ID)
-		v.CanRoute = item.Kind == "task_review" && v.CanDecide || item.Kind != "task_review" && (t.OwnerID == a.User.ID || t.CreatedBy == a.User.ID || a.canStructure(t))
+		v.CanRoute = item.Kind == "task_review" && (v.CanDecide || replay && taskAttentionReviewAuthority(a, t)) || item.Kind != "task_review" && (t.OwnerID == a.User.ID || t.CreatedBy == a.User.ID || a.canStructure(t))
 	case "expense":
 		e, err := scopedExpense(tx, a, item.SourceID)
 		if err != nil {
 			return v, err
 		}
-		if item.Kind == "expense_review" && (e.Status != "submitted" || !a.canApproveExpense(e)) {
+		if item.Kind == "expense_review" && ((!replay && e.Status != "submitted") || !a.canApproveExpense(e)) {
 			return v, missing()
 		}
 		v.Title = e.Title
 		v.SourceVersion = e.Version
 		v.OwnerName = a.Users[e.CreatedBy].Name
 		v.CanDecide = e.Status == "submitted" && a.canApproveExpense(e)
-		v.CanRoute = v.CanDecide
+		v.CanRoute = v.CanDecide || replay && a.canApproveExpense(e)
 		v.Link = "#finance?expense=" + url.QueryEscape(e.ID)
 	case "intake":
 		var i CommunicationRequest
 		if e := tx.First(&i, "company_id=? AND id=?", a.Company.ID, item.SourceID).Error; e != nil {
 			return v, missing()
 		}
-		if !a.canReadIntake(i) || item.Kind == "intake_triage" && (!a.canTriageIntake(i) || i.State != "open") {
+		if !a.canReadIntake(i) || item.Kind == "intake_triage" && (!a.canTriageIntake(i) || !replay && i.State != "open") {
 			return v, missing()
 		}
 		v.Title = i.Title
 		v.Summary = i.Summary
 		v.SourceVersion = i.Version
 		v.CanDecide = i.State == "open" && a.canTriageIntake(i)
-		v.CanRoute = v.CanDecide
+		v.CanRoute = v.CanDecide || replay && a.canTriageIntake(i)
 		v.Link = "#connect?intake=" + url.QueryEscape(i.ID)
 	case "record", "bookmark":
 		var c Conversation
@@ -112,7 +127,7 @@ func attentionSource(tx *gorm.DB, a *access, item AttentionItem) (AttentionView,
 		v.Link = "#connect?conversation=" + url.QueryEscape(c.ID) + "&message=" + url.QueryEscape(m.ID)
 		if item.SourceKind == "bookmark" {
 			var b CommunicationBookmark
-			if e := tx.First(&b, "company_id=? AND user_id=? AND message_id=?", a.Company.ID, a.User.ID, item.SourceID).Error; e != nil || b.RemindAt == "" || item.OccurrenceKey != payloadHash(b.RemindAt) {
+			if e := tx.First(&b, "company_id=? AND user_id=? AND message_id=?", a.Company.ID, a.User.ID, item.SourceID).Error; e != nil || b.RemindAt == "" || item.OccurrenceKey != bookmarkOccurrence(b.RemindAt, scope.Epoch, m.Revision) {
 				return v, missing()
 			}
 			v.Title = "Saved reminder"
@@ -131,7 +146,7 @@ func attentionSource(tx *gorm.DB, a *access, item AttentionItem) (AttentionView,
 			if e != nil && rec.CreatedBy != a.User.ID {
 				return v, missing()
 			}
-			if rec.State != "open" || recipient.Response != "" {
+			if !replay && (rec.State != "open" || recipient.Response != "") {
 				return v, missing()
 			}
 			if rec.Kind == "decision" && (a.User.ID != rec.ReviewerID || a.User.ID == rec.CreatedBy) {
@@ -141,7 +156,7 @@ func attentionSource(tx *gorm.DB, a *access, item AttentionItem) (AttentionView,
 			v.Title = rec.Title
 			v.Summary = rec.Body
 			v.SourceVersion = rec.Revision
-			v.CanDecide = scope.canPost() && rec.Kind == "decision" && rec.ReviewerID == a.User.ID && rec.CreatedBy != a.User.ID
+			v.CanDecide = rec.State == "open" && recipient.Response == "" && scope.canPost() && rec.Kind == "decision" && rec.ReviewerID == a.User.ID && rec.CreatedBy != a.User.ID
 			v.CanRoute = scope.canPost() && rec.Kind != "decision" && (rec.CreatedBy == a.User.ID || e == nil)
 		}
 	default:
@@ -165,7 +180,10 @@ func attentionSource(tx *gorm.DB, a *access, item AttentionItem) (AttentionView,
 	return v, nil
 }
 func attentionCanRoute(tx *gorm.DB, actor *access, item AttentionItem, targetID string) error {
-	v, e := attentionSource(tx, actor, item)
+	return checkAttentionRoute(tx, actor, item, targetID, false)
+}
+func checkAttentionRoute(tx *gorm.DB, actor *access, item AttentionItem, targetID string, replay bool) error {
+	v, e := projectAttentionSource(tx, actor, item, replay)
 	if e != nil {
 		return e
 	}
@@ -185,7 +203,13 @@ func attentionCanRoute(tx *gorm.DB, actor *access, item AttentionItem, targetID 
 		}
 		copy.RecipientEpoch = scope.Epoch
 	}
-	if _, e := attentionSource(tx, target, copy); e != nil {
+	if item.SourceKind == "record" {
+		var recipient CommunicationRecipient
+		if e := tx.First(&recipient, "company_id=? AND record_id=? AND revision=? AND user_id=?", item.CompanyID, item.SourceID, item.RecordRevision, targetID).Error; e != nil {
+			return denied()
+		}
+	}
+	if _, e := projectAttentionSource(tx, target, copy, replay); e != nil {
 		return denied()
 	}
 	if item.SourceKind == "task" && item.Kind != "task_review" {
@@ -234,6 +258,10 @@ func (s *Server) getAttentionRecord(w http.ResponseWriter, r *http.Request) erro
 		record, err = s.record(tx, a, r.PathValue("record"))
 		if err != nil {
 			return err
+		}
+		source, err := scopedMessage(tx, a, record.AnchorMessageID)
+		if err != nil || source.Removed || source.Revision != record.SourceRevision {
+			return missing()
 		}
 		var recipient CommunicationRecipient
 		err = tx.First(&recipient, "company_id=? AND record_id=? AND revision=? AND user_id=?", a.CompanyID, record.ID, record.Revision, a.UserID).Error

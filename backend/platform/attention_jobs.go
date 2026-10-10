@@ -129,7 +129,7 @@ func (s *Server) RunAttention(ctx context.Context, now time.Time, limit int) (in
 	now = now.UTC()
 	var items []AttentionItem
 	q := s.db.WithContext(ctx).Where("state=? AND NOT EXISTS (SELECT 1 FROM attention_reminders r WHERE r.company_id=attention_items.company_id AND r.item_id=attention_items.id AND r.stage='initial' AND r.window_key=CAST(attention_items.version AS TEXT))", "open")
-	if e := q.Order("created_at,id").Limit(limit).Find(&items).Error; e != nil {
+	if e := q.Order("updated_at,id").Limit(limit).Find(&items).Error; e != nil {
 		return 0, e
 	}
 	for _, item := range items {
@@ -140,13 +140,13 @@ func (s *Server) RunAttention(ctx context.Context, now time.Time, limit int) (in
 			a, e := currentAttentionActorLocked(tx, item.CompanyID, item.RecipientID)
 			if e != nil {
 				if attentionMissing(e) {
-					return nil
+					return deferAttentionAttempt(tx, item)
 				}
 				return e
 			}
 			if _, e = attentionSource(tx, a, item); e != nil {
 				if attentionMissing(e) {
-					return nil
+					return deferAttentionAttempt(tx, item)
 				}
 				return e
 			}
@@ -169,7 +169,7 @@ func (s *Server) RunAttention(ctx context.Context, now time.Time, limit int) (in
 			}
 			at, e = nextAttentionWindow(pref, a.Company.Timezone, at)
 			if e != nil {
-				return nil
+				return deferAttentionAttempt(tx, item)
 			}
 			key := strconv.FormatInt(item.Version, 10)
 			if e = scheduleAttentionReminder(tx, item, "initial", key, at); e != nil {
@@ -298,7 +298,7 @@ func (s *Server) RunAttention(ctx context.Context, now time.Time, limit int) (in
 				target := item
 				target.ID = newID("attention")
 				target.RecipientID = recipient
-				target.OccurrenceKey = "escalation:" + item.ID + ":" + job.WindowKey
+				target.OccurrenceKey = "escalation:" + rootAttentionOccurrence(item.OccurrenceKey) + ":" + payloadHash([]string{item.ID, job.WindowKey})
 				target.Version = 1
 				target.SnoozedUntil = nil
 				target.CreatedAt = now
@@ -337,4 +337,10 @@ func scheduleAttentionReminder(tx *gorm.DB, item AttentionItem, stage, key strin
 		return e
 	}
 	return tx.Clauses(clause.OnConflict{DoNothing: true}).Create(&AttentionReminder{ID: newID("reminder"), CompanyID: item.CompanyID, ItemID: item.ID, RecipientID: item.RecipientID, Stage: stage, WindowKey: key, AvailableAt: at}).Error
+}
+
+// Inaccessible/invalid-policy candidates remain retryable without claiming a stage.
+// Advance their scan position so a bounded revoked prefix cannot starve later work.
+func deferAttentionAttempt(tx *gorm.DB, item AttentionItem) error {
+	return tx.Model(&AttentionItem{}).Where("id=? AND version=?", item.ID, item.Version).Update("updated_at", time.Now().UTC()).Error
 }

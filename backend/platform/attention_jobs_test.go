@@ -2,6 +2,8 @@ package platform
 
 import (
 	"context"
+	"fmt"
+	"gorm.io/gorm"
 	"sync"
 	"testing"
 	"time"
@@ -130,5 +132,97 @@ func TestAttentionReminderDeferralCancellationAndEligibility(t *testing.T) {
 	s.db.First(&revoked, "item_id=?", "revoked-reminder")
 	if revoked.CancelledAt == nil || revoked.DeliveredAt != nil {
 		t.Fatal("revoked source delivered")
+	}
+}
+
+func TestAttentionReminderExpiredLeaseRetriesSameIntent(t *testing.T) {
+	s, _, cid, uid, _ := attentionFixture(t)
+	now := time.Now().UTC().Truncate(time.Microsecond)
+	lease := now.Add(time.Minute)
+	s.db.Where("company_id=? AND id<>?", cid, "attention-test").Delete(&AttentionItem{})
+	job := AttentionReminder{ID: "held-attention-job", CompanyID: cid, ItemID: "attention-test", RecipientID: uid, Stage: "initial", WindowKey: "1", AvailableAt: now, LeaseToken: "abandoned", LeaseUntil: &lease, Attempts: 1}
+	if e := s.db.Create(&job).Error; e != nil {
+		t.Fatal(e)
+	}
+	n, e := s.RunAttention(context.Background(), now, 100)
+	if e != nil || n != 0 {
+		t.Fatal(n, e)
+	}
+	if e := s.db.Callback().Create().Before("gorm:create").Register("attention-test-fail", func(tx *gorm.DB) {
+		if tx.Statement.Table == "attention_deliveries" {
+			tx.AddError(fmt.Errorf("owned delivery failure"))
+		}
+	}); e != nil {
+		t.Fatal(e)
+	}
+	if _, e = s.RunAttention(context.Background(), lease.Add(time.Second), 100); e == nil {
+		t.Fatal("failure not exercised")
+	}
+	s.db.Callback().Create().Remove("attention-test-fail")
+	n, e = s.RunAttention(context.Background(), lease.Add(2*time.Minute), 100)
+	if e != nil || n != 1 {
+		t.Fatal(n, e)
+	}
+	var rows []AttentionReminder
+	s.db.Where("item_id=?", "attention-test").Find(&rows)
+	if len(rows) != 1 || rows[0].ID != job.ID || rows[0].Attempts != 3 || rows[0].DeliveredAt == nil {
+		t.Fatal(rows)
+	}
+	var count int64
+	s.db.Model(&AttentionDelivery{}).Where("item_id=?", "attention-test").Count(&count)
+	if count != 1 {
+		t.Fatal(count)
+	}
+}
+func TestAttentionReminderEligibleEscalation(t *testing.T) {
+	s, c, cid, uid, _ := attentionFixture(t)
+	target := addPerson(t, s, c, cid, "attention-escalation-admin@example.com", "admin")
+	now := time.Now().UTC().Truncate(time.Microsecond)
+	s.db.Model(&AttentionItem{}).Where("id=?", "attention-test").Update("created_at", now.Add(-2*time.Hour))
+	if e := s.db.Create(&AttentionPreference{CompanyID: cid, UserID: uid, Version: 1, EscalationEnabled: true, EscalationAfterMinutes: 1, EscalationUserID: target, WorkingDays: []int{}}).Error; e != nil {
+		t.Fatal(e)
+	}
+	var wg sync.WaitGroup
+	errs := make(chan error, 2)
+	for n := 0; n < 2; n++ {
+		wg.Add(1)
+		go func() { defer wg.Done(); _, e := s.RunAttention(context.Background(), now, 100); errs <- e }()
+	}
+	wg.Wait()
+	close(errs)
+	for e := range errs {
+		if e != nil {
+			t.Fatal(e)
+		}
+	}
+	var count int64
+	s.db.Model(&AttentionItem{}).Where("recipient_id=? AND occurrence_key LIKE ?", target, "escalation:%").Count(&count)
+	if count != 1 {
+		t.Fatal("escalation duplicate/missing", count)
+	}
+	s.db.Model(&AttentionDelivery{}).Where("item_id=? AND stage='escalation'", "attention-test").Count(&count)
+	if count != 1 {
+		t.Fatal("delivery duplicate", count)
+	}
+}
+func TestAttentionReminderRevokedBatchDoesNotStarveCurrentItems(t *testing.T) {
+	s, _, cid, uid, _ := attentionFixture(t)
+	s.db.Where("company_id=? AND id<>?", cid, "attention-test").Delete(&AttentionItem{})
+	now := time.Now().UTC()
+	for n := 0; n < 12; n++ {
+		item := AttentionItem{ID: fmt.Sprintf("revoked-batch-%02d", n), CompanyID: cid, RecipientID: uid, SourceKind: "task", SourceID: fmt.Sprintf("missing-source-%02d", n), Kind: "update", OccurrenceKey: "test", State: "open", Version: 1, CreatedAt: now.Add(-time.Hour), UpdatedAt: now.Add(-time.Hour)}
+		if e := s.db.Create(&item).Error; e != nil {
+			t.Fatal(e)
+		}
+	}
+	for n := 0; n < 4; n++ {
+		if _, e := s.RunAttention(context.Background(), time.Now().UTC(), 5); e != nil {
+			t.Fatal(e)
+		}
+	}
+	var count int64
+	s.db.Model(&AttentionDelivery{}).Where("item_id=?", "attention-test").Count(&count)
+	if count != 1 {
+		t.Fatal("revoked prefix starved current item", count)
 	}
 }

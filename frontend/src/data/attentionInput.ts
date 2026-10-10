@@ -42,3 +42,18 @@ export function useAttentionInput(
   };
   return [value, set, () => clearDraft(scope)] as const;
 }
+
+export function purgeAttentionInput(
+  companyId: string,
+  userId: string,
+  itemId: string,
+  action: string,
+) {
+  clearDraft({
+    serverOrigin: import.meta.env.VITE_API_URL || window.location.origin,
+    companyId,
+    userId,
+    conversationId: '$attention:' + itemId,
+    threadRootId: action,
+  });
+}
