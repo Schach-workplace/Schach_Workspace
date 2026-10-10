@@ -1,5 +1,5 @@
 // @vitest-environment happy-dom
-import { act, createElement } from "react";
+import { act, createElement, Children } from "react";
 import { createRoot } from "react-dom/client";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import AttentionInbox from "./AttentionInbox";
@@ -74,7 +74,15 @@ vi.mock("./DeadlinePicker", () => ({ default: () => null }));
 vi.mock("react-native", () => ({
   Text: ({ children, accessibilityRole }: any) =>
     createElement("span", { role: accessibilityRole }, children),
-  View: ({ children }: any) => createElement("div", {}, children),
+  View: ({ children }: any) => {
+    for (const child of Children.toArray(children))
+      if (
+        (typeof child === "string" && child !== "") ||
+        typeof child === "number"
+      )
+        throw Error("Raw native Inbox text: " + JSON.stringify(child));
+    return createElement("div", {}, children);
+  },
   TextInput: ({ value, onChangeText, accessibilityLabel, editable }: any) =>
     createElement("input", {
       "aria-label": accessibilityLabel,

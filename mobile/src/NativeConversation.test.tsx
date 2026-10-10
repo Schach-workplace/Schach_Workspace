@@ -517,3 +517,51 @@ it("allows a current pending thread through unrelated source invalidation", asyn
   expect(container.textContent).toContain("Reply to Current unrelated thread");
   expect(readDraft(dependencyScope).body).toBe("Unrelated authored draft");
 });
+
+it("hydrates a confirmed thread reply and retires send despite a later thread GET outage", async () => {
+  state.rows = [dependencyRoot];
+  state.posts = [{}]; // Existing provider lost-response fixture is past its first POST.
+  state.thread = vi
+    .fn()
+    .mockResolvedValueOnce({ root: dependencyRoot, messages: [] })
+    .mockResolvedValueOnce({
+      root: dependencyRoot,
+      messages: [{ ...dependencyReply, body: "Confirmed thread text" }],
+    })
+    .mockRejectedValueOnce(Error("Thread GET unavailable"));
+  await act(async () => root.render(<NativeConversation />));
+  await act(async () => openReplyThread());
+  async function send(body: string) {
+    const input = [
+      ...container.querySelectorAll<HTMLTextAreaElement>(
+        'textarea[aria-label="Message"]',
+      ),
+    ].at(-1)!;
+    await act(async () => {
+      Object.getOwnPropertyDescriptor(
+        HTMLTextAreaElement.prototype,
+        "value",
+      )!.set!.call(input, body);
+      input.dispatchEvent(new Event("input", { bubbles: true }));
+    });
+    await act(async () =>
+      [...container.querySelectorAll("button")]
+        .filter((b) => b.textContent === "Send")
+        .at(-1)!
+        .click(),
+    );
+  }
+  await send("Confirmed thread text");
+  expect(container.textContent).toContain("Confirmed thread text");
+  expect(state.thread).toHaveBeenCalledTimes(2);
+  await send("Second confirmed thread text");
+  expect(state.posts).toHaveLength(3);
+  expect(
+    [
+      ...container.querySelectorAll<HTMLTextAreaElement>(
+        'textarea[aria-label="Message"]',
+      ),
+    ].at(-1)?.value,
+  ).toBe("");
+  expect(container.textContent).not.toContain("Retry same message");
+});

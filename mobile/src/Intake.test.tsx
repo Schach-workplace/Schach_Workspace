@@ -145,3 +145,30 @@ it("refuses an intake commitment in a company DST gap", async () => {
     await act(async () => root.unmount());
   }
 });
+it("loads an exact published intake outside the first list page", async () => {
+  Object.assign(globalThis, { IS_REACT_ACT_ENVIRONMENT: true });
+  env.request.mockResolvedValue({
+    request: {
+      id: "outside-first-100",
+      title: "Exact published request",
+      summary: "Published only",
+      state: "open",
+      version: 7,
+      departmentId: "",
+    },
+  });
+  const host = document.createElement("div");
+  const root = createRoot(host);
+  try {
+    await act(async () =>
+      root.render(<Intake initialId="outside-first-100" />),
+    );
+    expect(env.request).toHaveBeenCalledWith(
+      "/companies/c/communication/requests/outside-first-100",
+    );
+    expect(host.textContent).toContain("Exact published request");
+    expect(host.textContent).toContain("version 7");
+  } finally {
+    await act(async () => root.unmount());
+  }
+});

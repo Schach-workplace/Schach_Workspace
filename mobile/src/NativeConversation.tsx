@@ -934,7 +934,11 @@ export default function NativeConversation() {
           keyboard
           scroll={false}
           title="Thread"
-          onClose={() => setThread(null)}
+          onClose={() => {
+            sourceRequest.current++;
+            pendingSources.current.clear();
+            setThread(null);
+          }}
         >
           <Text style={ui.quote}>{thread.root.body}</Text>
           <FlatList
@@ -962,8 +966,25 @@ export default function NativeConversation() {
             names={names}
             canMentionAll={["owner", "moderator"].includes(mine?.role ?? "")}
             onSend={async (input) => {
+              const source = thread.root;
+              const valid = beginSource(source.id);
               await client.request(root + "/messages", "POST", input);
-              await history();
+              // POST is canonical now; a subsequent read outage must not retain a
+              // pending send or create a second message attempt.
+              if (valid()) {
+                try {
+                  const result = await client.requestThread<{
+                    root: Message;
+                    messages: Message[];
+                  }>(root + "/messages/" + source.id + "/thread");
+                  if (valid(result) && !result.root.removed) setThread(result);
+                } catch (e) {
+                  if (valid()) clear(e as Error);
+                }
+              }
+              await history().catch((e) => {
+                if (current()) clear(e as Error);
+              });
             }}
           />
         </Sheet>

@@ -60,6 +60,15 @@ export default function AttentionInbox() {
     items: AttentionView[];
   } | null>(null);
   const [error, setError] = useState("");
+  const [cached, , purgeSelected] = useRamInput(
+    "$attention:" + (selected?.id ?? ""),
+    selected?.action ?? "",
+    empty,
+  );
+  const purgeGone = useEffectEvent(() => {
+    purgeSelected(cached);
+    setSelected(null);
+  });
   useEffect(() => {
     let active = true;
     const generation = client.generation;
@@ -97,7 +106,7 @@ export default function AttentionInbox() {
         setError(e.message);
         setLoaded(null);
         if (e instanceof NativeApiError && [401, 403, 404].includes(e.status))
-          setSelected(null);
+          purgeGone();
       }
     });
     return () => {
@@ -105,21 +114,16 @@ export default function AttentionInbox() {
     };
   }, [scope, w.foreground, w.company, state, decisions]);
   const items = loaded?.scope === scope && w.foreground ? loaded.items : null;
-  const [cached, , purgeSelected] = useRamInput(
-    "$attention:" + (selected?.id ?? ""),
-    selected?.action ?? "",
-    empty,
-  );
-  const purgeGone = useEffectEvent(() => {
-    purgeSelected(cached);
-    setSelected(null);
-  });
   useEffect(() => {
+    let active = true;
     if (items && selected && !items.some((i) => i.id === selected.id)) {
       void Promise.resolve().then(() => {
-        purgeGone();
+        if (active) purgeGone();
       });
     }
+    return () => {
+      active = false;
+    };
   }, [items, selected]);
   const item = items?.find((i) => i.id === selected?.id);
   function open(i: AttentionView) {
@@ -243,7 +247,7 @@ export default function AttentionInbox() {
               title="Retry current attention"
               onPress={() => setEpoch((e) => e + 1)}
             />
-          )}{" "}
+          )}
           {items?.map((i) => (
             <View key={i.id} style={styles.message}>
               <Text>{i.title}</Text>
@@ -483,7 +487,7 @@ function AttentionAction({
               editable={!locked}
               onChangeText={(reason) => change({ reason })}
             />
-          )}{" "}
+          )}
           {action === "route" && (
             <PersonPicker
               label="Route to"
@@ -492,7 +496,7 @@ function AttentionAction({
               onChange={(recipientId) => change({ recipientId })}
               disabled={locked}
             />
-          )}{" "}
+          )}
           {action === "snooze" && (
             <>
               <DeadlinePicker
@@ -533,7 +537,7 @@ function AttentionAction({
                 }))
               }
             />
-          )}{" "}
+          )}
           {(draft.reviewed || draft.attempt) && (
             <>
               <Text>
