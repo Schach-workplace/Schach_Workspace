@@ -1,0 +1,11 @@
+# Milestone 2: reviewed data efficiency
+
+Implementation commits `21c5f5d`, `0457053` and `4dcfb82` add scoped bootstrap/list/detail reads, consistent report summary/rows/CSV, membership-graph cache keys, targeted invalidation and sanitized request/query metrics. Legacy endpoints and task/finance controls remain compatible. Canonical contracts are in [API_CONTRACT.md](../../docs/API_CONTRACT.md).
+
+Independent review found stale mounted detail access and scalar search/export regressions. Both were fixed with RED/GREEN tests. A scoped follow-up caught same-key pending source disclosure; its fix also passed review. See [review record](milestone-2-review.md) and [verification results](milestone-2.json).
+
+The matched owned PostgreSQL fixture contains 5,000 tasks across ten companies, with 500 selected tasks and 5,000 comments. Initial response bytes fell from 1,602,392 to 449,918 and p95 from 25.683 to 15.416 ms. Returned query rows fell from 5,514 to 1,060, while statements increased from 20 to 66 because each bounded page reauthorizes. The report summary uses 1,762 bytes instead of the legacy report's 446,490; it still scans the authorized cohort. This sequential httptest measurement excludes network/TLS and does not establish capacity. [Measured plans and results](../runtime/data-read-performance.json) are reproducible with the runtime load script.
+
+Available checks passed: full SQLite/PostgreSQL Go suites, Encore test, 120 web tests and API/demo builds, 24 unchanged native tests plus lint/typecheck, and Chromium reports 6/6, Connect 11/11 and scoped details 4/4. The original app/data on 8080 were untouched; runtime probes used a fictional isolated 8084 database.
+
+Five-minute report snapshots are process-local and bounded; multi-instance routing needs affinity or a new summary. Existing task/finance boards combine bounded pages, while reports have explicit Load more. Tiny reports may have greater protocol overhead. Selected detail reauthorization briefly withholds fetched source content and can remove focus; authored edits survive in scoped RAM with their original inspected version. Confirmed exclusion/denial clears them. Physical devices, signed delivery, production capacity/TLS/TURN/push and India provider rollout remain unverified.

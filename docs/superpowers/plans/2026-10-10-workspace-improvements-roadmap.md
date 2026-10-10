@@ -1,6 +1,6 @@
 # Workspace Improvements Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement each milestone's detailed plan task-by-task. This roadmap tracks independently releasable milestones; unchecked work is not complete.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development to implement each milestone's detailed plan task-by-task, with independent read-only preparation and review. This roadmap tracks independently releasable milestones; unchecked work is not complete.
 
 **Goal:** Make Connect and every business module faster to use, more dependable and supported by permission-aware assistance.
 
@@ -34,10 +34,10 @@
 - Acceptance: exact timed/all-day metrics, same-date revision detection, project filtering, API/demo parity, no private/finance payload, source permissions, company-switch cancellation, due shortcuts, local time ambiguity handling and guarded mobile submission.
 
 ### Milestone 2: Measured data efficiency
-- [ ] Add server request/query timing and sanitized endpoint metrics in `backend/platform/server.go`; add a repeatable load fixture under `verification/runtime/`.
-- [ ] Separate bootstrap, task list/detail and finance list/detail APIs in `workspace.go`, `tasks.go`, `finance_workspace.go`; introduce report summaries plus cursor-paginated rows and streamed safe CSV export in `reports.go`.
-- [ ] Split `frontend/src/store.tsx` and `mobile/src/Workspace.tsx` query scopes; invalidate affected record/list/summary keys from existing outbox events.
-- [ ] Analyze representative PostgreSQL plans; add only measured company/filter indexes through matching backend/Encore migrations.
+- [x] Add server request/query timing and sanitized endpoint metrics in `backend/platform/server.go`; add a repeatable load fixture under `verification/runtime/`.
+- [x] Separate bootstrap, task list/detail and finance list/detail APIs in `workspace.go`, `tasks.go`, `finance_workspace.go`; introduce report summaries plus cursor-paginated rows and streamed safe CSV export in `reports.go`.
+- [x] Split `frontend/src/store.tsx` and `mobile/src/Workspace.tsx` query scopes; invalidate affected record/list/summary keys from existing outbox events.
+- [x] Analyze representative PostgreSQL plans; add only measured company/filter indexes through matching backend/Encore migrations.
 - Acceptance: summary/row/export totals agree under a consistent read; scoped rows before pagination; bounded payloads; no cross-role cache reuse; reduced bytes/query work compared with recorded baseline. Report p95 results, not assumed capacity.
 
 ### Milestone 3: Connect and native usability

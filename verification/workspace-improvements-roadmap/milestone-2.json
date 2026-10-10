@@ -1,0 +1,76 @@
+{
+  "milestone": 2,
+  "status": "reviewed",
+  "base": "4e40289163bb6ecbdd7b10691ad19924e1fdc9af",
+  "implementationHead": "4dcfb8288ac9b4d13db3ba2e76c844f3db97d562",
+  "checks": {
+    "backendSQLite": "passed",
+    "backendPostgreSQL": "passed; owned isolated schemas, migrations 1\u201325",
+    "encore": "encore test ./... passed; adapter has no unit tests",
+    "web": "120 tests/21 files; API and demo builds passed",
+    "native": "24 tests/7 files, lint and typecheck passed; unchanged during web fix rounds"
+  },
+  "runtime": {
+    "reports": {
+      "status": "passed",
+      "checks": [
+        "Sign-in succeeds against the current API build",
+        "Same-day timed acceptance is late against original, on time against revised; time-only revision counted",
+        "Rendered report uses the lean authorized API",
+        "Selected report export contains the matching task and exact deadline fields",
+        "One-tap date preset retains intersecting project filter",
+        "390px report page has no horizontal overflow and date preset targets are at least 44px"
+      ],
+      "responseBytes": {
+        "legacyReport": 1186,
+        "summary": 723,
+        "firstRows": 1159,
+        "initialReport": 1882,
+        "scope": "Same fictional project/day selection; uncompressed JSON; no capacity or wire-latency claim"
+      },
+      "browser": "Chrome/152.0.7977.82",
+      "scope": "Real Chromium desktop/390px browser and disposable fictional API. Not physical native keyboard/accessibility verification."
+    },
+    "connect": {
+      "status": "passed",
+      "checks": [
+        "Current API build mounts sign-in in native Chromium",
+        "Rendered founder sign-in succeeds with explicitly fictional accounts",
+        "Existing department finance view renders through the live API",
+        "Person picker opens a nameless DM, peer label resolves and composer sends through the real API",
+        "Selecting the same person reopens the canonical DM without adding a duplicate",
+        "Desktop message history scrolls independently with a visible fixed composer",
+        "Thread reply is submitted and rendered within its authorized thread",
+        "Message actions save privately and saved results reopen through current authorization",
+        "Selected publication retains audience preview and acknowledgement before task creation",
+        "390px phone layout switches between conversation list and chat, with no horizontal overflow",
+        "Voice capture and playable private preview still work in the phone layout"
+      ],
+      "browser": "Chrome/152.0.7977.82",
+      "scope": "Actual fictional demo API and Chromium desktop/390px browser. Fake microphone. Not physical Android/iOS or OS keyboard verification."
+    },
+    "scopedDetails": {
+      "status": "passed",
+      "checks": [
+        "Current API description search and task CSV preserve business fields",
+        "Same-key pending event reauthorization hides source and authored inputs, restores edits at inspected version after unchanged-version evidence update",
+        "Pending fresh detail hides source content, preserves authored edits and retains inspected optimistic version until deliberate reconciliation",
+        "Reassignment with unchanged membership basis removes mounted private details and authored drafts"
+      ],
+      "browser": "Chrome/152.0.7977.82",
+      "scope": "Current real Chromium/API on owned fictional8084; synthetic authorized-kind event dispatch exercises client invalidation; backend reads and mutations are real. No physical native certification."
+    }
+  },
+  "performanceArtifact": "verification/runtime/data-read-performance.json",
+  "unverified": [
+    "Physical Android/iOS keyboard, accessibility, camera, push and real-device calls/TURN",
+    "Production deployment, capacity, India provider processing and signed distribution"
+  ],
+  "limitations": [
+    "Process-local, five-minute report snapshots require sticky routing or a fresh summary on instance change",
+    "Task/finance boards still combine bounded pages client-side; reports use explicit Load more",
+    "SQL statements increase because every page reauthorizes",
+    "Selected detail polling briefly withholds fetched content and can remove focus; user-authored RAM edits survive",
+    "Tiny reports can have higher summary-plus-page protocol overhead"
+  ]
+}
