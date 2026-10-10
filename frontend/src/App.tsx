@@ -111,6 +111,7 @@ const headings: Record<View, { title: string; description: string }> = {
 };
 function hashView(): View {
   const value = window.location.hash.replace(/^#\/?/, '').split('?')[0];
+  if (value === 'report') return 'reports';
   return navigation.some((n) => n.id === value) ? (value as View) : 'overview';
 }
 

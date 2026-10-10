@@ -9,7 +9,8 @@ export interface AttentionView {
   id: string;
   companyId: string;
   recipientId: string;
-  sourceKind: "task" | "expense" | "record" | "intake" | "bookmark";
+  sourceKind:
+    "task" | "expense" | "record" | "intake" | "bookmark" | "report_export";
   sourceId: string;
   kind:
     | "task_review"
@@ -19,7 +20,8 @@ export interface AttentionView {
     | "deadline"
     | "saved_reminder"
     | "blocker"
-    | "update";
+    | "update"
+    | "report_ready";
   state: "open" | "resolved" | "routed" | "superseded";
   version: number;
   sourceVersion: number;

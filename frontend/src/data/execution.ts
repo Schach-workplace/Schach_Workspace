@@ -115,14 +115,17 @@ export function useExecutionRead<T>(path: string, enabled = true) {
     !!store.data &&
     !query.isFetching &&
     query.error instanceof ApiError &&
-    [401, 403, 404].includes(query.error.status);
+    ([401, 403, 404].includes(query.error.status) ||
+      (path.startsWith('/reports/') &&
+        query.error.status === 409 &&
+        query.error.code === 'access_changed'));
   useEffect(() => {
     if (!denied) return;
     clearAttemptsForSource(
       (import.meta.env.VITE_API_URL ?? window.location.origin) + ':' + store.mode,
       company,
       user,
-      path,
+      path.startsWith('/reports/') ? path.split('/rows')[0] : path,
     );
     const project = path.match(/^\/projects\/([^/?]+)$/),
       milestone = path.match(/^\/project-milestones\/([^/?]+)$/),

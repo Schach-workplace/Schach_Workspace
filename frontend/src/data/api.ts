@@ -93,3 +93,32 @@ export async function fetchReportCSV(path: string): Promise<Blob> {
   }
   return response.blob();
 }
+
+// A private report has an exact length. Abort, revocation or a truncated stream
+// discards the partial body before a cooperative client creates a download URL.
+export async function fetchHistoricalCSV(
+  path: string,
+  signal: AbortSignal,
+  expectedLength: number,
+): Promise<Blob> {
+  const response = await fetch(`${base}/api${path}`, {
+    credentials: 'include',
+    headers: { Accept: 'text/csv' },
+    signal,
+  });
+  if (!response.ok)
+    throw new ApiError(
+      'Report access changed or the export expired. Recheck the report.',
+      response.status,
+      'report_download_failed',
+    );
+  const blob = await response.blob();
+  if (signal.aborted) throw new DOMException('Download cancelled', 'AbortError');
+  if (blob.size !== expectedLength || expectedLength > 16 * 1024 * 1024)
+    throw new ApiError(
+      'The report download was incomplete. Retry after checking access.',
+      0,
+      'incomplete_download',
+    );
+  return blob;
+}

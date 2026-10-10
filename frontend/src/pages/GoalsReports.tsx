@@ -1,4 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import HistoricalReports from '../components/HistoricalReports';
+import SavedReports from '../components/SavedReports';
 import {
   ArrowDownToLine,
   ArrowRight,
@@ -204,7 +206,7 @@ export function GoalsPage({ onTask }: { onTask: (id: string) => void }) {
   );
 }
 
-export function ReportsPage({ onTask }: { onTask: (id: string) => void }) {
+function CurrentReportsPage({ onTask }: { onTask: (id: string) => void }) {
   const { data: workspace, notify, mode } = useWorkspace();
   const data = workspace!;
   const date = today(data.company.timezone);
@@ -609,6 +611,56 @@ export function ReportsPage({ onTask }: { onTask: (id: string) => void }) {
           </p>
         </div>
       </div>
+    </div>
+  );
+}
+
+export function ReportsPage({ onTask }: { onTask: (id: string) => void }) {
+  const store = useWorkspace();
+  const [hash, setHash] = useState(window.location.hash);
+  useEffect(() => {
+    const update = () => setHash(window.location.hash);
+    window.addEventListener('hashchange', update);
+    return () => window.removeEventListener('hashchange', update);
+  }, []);
+  const direct = hash.startsWith('#report?');
+  const params = new URLSearchParams(hash.split('?')[1] ?? '');
+  const [basis, setBasis] = useState(direct ? 'history' : 'current');
+  useEffect(() => {
+    if (hash.startsWith('#report?')) setBasis('history');
+  }, [hash]);
+  if (direct && params.get('company') !== store.companyId)
+    return <p className="panel">Switch to the report company before opening this report.</p>;
+  return (
+    <div>
+      <div className="tabs" role="group" aria-label="Report basis">
+        <button className="button button-secondary" onClick={() => setBasis('current')}>
+          Current state
+        </button>
+        <button className="button button-secondary" onClick={() => setBasis('history')}>
+          Historical reports
+        </button>
+        <button className="button button-secondary" onClick={() => setBasis('saved')}>
+          Saved reports
+        </button>
+      </div>
+      {basis === 'current' ? (
+        <CurrentReportsPage onTask={onTask} />
+      ) : basis === 'history' ? (
+        <HistoricalReports
+          key={direct ? hash : 'manual'}
+          onTask={onTask}
+          initialJob={direct ? (params.get('job') ?? '') : ''}
+          initialSnapshot={direct ? (params.get('snapshot') ?? '') : ''}
+        />
+      ) : (
+        <SavedReports
+          onOpen={(id) => {
+            window.location.hash = `#report?company=${encodeURIComponent(store.companyId)}&snapshot=${encodeURIComponent(id)}`;
+            setBasis('history');
+          }}
+        />
+      )}
     </div>
   );
 }
