@@ -29,7 +29,7 @@
 ## Dependency-ordered milestones
 
 ### Milestone 1: Report correctness and mobile Work basics
-- [ ] Execute `2026-10-10-reporting-mobile-foundation.md` (four detailed tasks).
+- [x] Execute `2026-10-10-reporting-mobile-foundation.md` (four detailed tasks).
 - Files: `backend/platform/reports.go`, `frontend/src/data/reports.ts`, `frontend/src/pages/GoalsReports.tsx`, `mobile/src/WorkScreen.tsx`, associated tests.
 - Acceptance: exact timed/all-day metrics, same-date revision detection, project filtering, API/demo parity, no private/finance payload, source permissions, company-switch cancellation, due shortcuts, local time ambiguity handling and guarded mobile submission.
 

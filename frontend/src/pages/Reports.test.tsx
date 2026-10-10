@@ -149,3 +149,54 @@ it('discards a delayed old company response on switching company', async () => {
   );
   expect(screen.queryByText('Timed report delivery')).toBeNull();
 });
+it('never releases a cached sibling report after authorization denial', async () => {
+  const { ApiError } = await import('../data/api');
+  state.mode = 'api';
+  const response = {
+    tasks: state.data!.tasks,
+    generatedAt: '2026-10-10T10:40:00Z',
+    timezone: 'Asia/Kolkata',
+    basis: 'current_state',
+  };
+  state.request.mockResolvedValue(response);
+  const view = mount();
+  await screen.findByText('Timed report delivery');
+  fireEvent.click(screen.getByRole('button', { name: 'Last 7 days' }));
+  await waitFor(() => expect(state.request).toHaveBeenCalledTimes(2));
+  await screen.findByText('Timed report delivery');
+  state.request.mockRejectedValue(new ApiError('Company access removed', 403, 'forbidden'));
+  await view.client.refetchQueries({ queryKey: ['task-report'], type: 'active' });
+  await screen.findByRole('alert');
+  state.request.mockImplementation(() => new Promise(() => {}));
+  fireEvent.click(screen.getByRole('button', { name: 'This month' }));
+  await waitFor(() => expect(state.request).toHaveBeenCalledTimes(4));
+  expect(screen.queryByText('Timed report delivery')).toBeNull();
+  expect(
+    (screen.getByRole('button', { name: 'Export report' }) as HTMLButtonElement).disabled,
+  ).toBe(true);
+});
+it('reauthorizes before releasing a previously cached company report', async () => {
+  state.mode = 'api';
+  const original = state.data!;
+  state.request
+    .mockResolvedValueOnce({ tasks: original.tasks, generatedAt: '2026-10-10T10:40:00Z' })
+    .mockResolvedValueOnce({ tasks: [], generatedAt: '2026-10-10T10:40:00Z' });
+  const view = mount();
+  await screen.findByText('Timed report delivery');
+  state.data = { ...original, company: { ...original.company, id: 'another-company' }, tasks: [] };
+  view.change();
+  await waitFor(() => expect(state.request).toHaveBeenCalledTimes(2));
+  await waitFor(() =>
+    expect(
+      (screen.getByRole('button', { name: 'Export report' }) as HTMLButtonElement).disabled,
+    ).toBe(false),
+  );
+  state.request.mockImplementation(() => new Promise(() => {}));
+  state.data = original;
+  view.change();
+  await waitFor(() => expect(state.request).toHaveBeenCalledTimes(3));
+  expect(screen.queryByText('Timed report delivery')).toBeNull();
+  expect(
+    (screen.getByRole('button', { name: 'Export report' }) as HTMLButtonElement).disabled,
+  ).toBe(true);
+});

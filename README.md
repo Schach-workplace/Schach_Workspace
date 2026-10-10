@@ -201,3 +201,7 @@ Read [implementation evidence and remaining gates](docs/COMMUNICATION_IMPLEMENTA
 ### Connect interaction update
 
 Connect now separates the conversation list from the chat history and composer on desktop, phone browser and native clients. To send a direct message, choose a person: no conversation name is needed, and the server reopens the same private company-scoped chat. Group and channel creation retain names and explicit audience selection. Details, message actions, threads and selected work publication use contextual dialogs/sheets. See [the interaction and verification record](docs/CONNECT_UX.md).
+
+## Workspace improvement roadmap
+
+The next [dependency-ordered roadmap](docs/superpowers/plans/2026-10-10-workspace-improvements-roadmap.md) covers reporting, data efficiency, Connect/mobile usability, attention, project execution, finance assistance, planning, administration and grounded intelligence. Its [first milestone](docs/superpowers/plans/2026-10-10-reporting-mobile-foundation.md) adds exact timed report metrics and native Work usability. Remaining milestones and physical-device rollout gates stay explicit; see the [foundation verification](verification/workspace-improvements-2026-10-10/result.json).

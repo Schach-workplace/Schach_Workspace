@@ -1,0 +1,18 @@
+{
+  "status": "passed",
+  "checks": [
+    "Sign-in succeeds against the current API build",
+    "Same-day timed acceptance is late against original, on time against revised; time-only revision counted",
+    "Rendered report uses the lean authorized API",
+    "Selected report export contains the matching task and exact deadline fields",
+    "One-tap date preset retains intersecting project filter",
+    "390px report page has no horizontal overflow and date preset targets are at least 44px"
+  ],
+  "responseBytes": {
+    "fullWorkspace": 108551,
+    "oneProjectOneDayReport": 1188,
+    "scope": "Uncompressed JSON in this fictional fixture; different selections, not overall traffic or latency reduction"
+  },
+  "browser": "Chrome/152.0.7977.82",
+  "scope": "Real Chromium desktop/390px browser and disposable fictional API. Not physical native keyboard/accessibility verification."
+}

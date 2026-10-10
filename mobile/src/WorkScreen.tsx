@@ -12,9 +12,13 @@ import {
 } from "./workDates";
 export default function WorkScreen() {
   const w = useWorkspace();
+  // Missing work can mean an outage/background clear, not a confirmed role change.
+  const role = w.work?.me.role;
+  const [lastRole, setLastRole] = useState(role);
+  if (role && role !== lastRole) setLastRole(role);
   return (
     <WorkView
-      key={`${w.company}:${w.session?.user.id}:${w.work?.me.role}`}
+      key={`${w.company}:${w.session?.user.id}:${w.policyEpoch}:${lastRole}`}
       w={w}
     />
   );

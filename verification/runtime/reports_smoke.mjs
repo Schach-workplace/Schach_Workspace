@@ -1,0 +1,54 @@
+// Actual rendered report acceptance on owned disposable fictional loopback data.
+import assert from 'node:assert/strict';
+import { spawn } from 'node:child_process';
+import { mkdtemp, rm, writeFile } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+const base=process.env.SCHACH_SMOKE_URL||'http://127.0.0.1:8083';
+assert(process.argv.includes('--allow-demo-mutations'),'Explicit --allow-demo-mutations required');
+assert(['localhost','127.0.0.1','[::1]'].includes(new URL(base).hostname));
+const output=process.env.SCHACH_SMOKE_RESULT;assert(output,'Set SCHACH_SMOKE_RESULT');
+const profile=await mkdtemp(join(tmpdir(),'schach-report-browser-'));
+const browser=spawn('chromium',['--headless=new','--no-sandbox','--disable-dev-shm-usage','--remote-debugging-port=0',`--user-data-dir=${profile}`,'about:blank'],{stdio:['ignore','ignore','pipe']});
+let endpoint='',socket,run;browser.stderr.on('data',b=>{const m=String(b).match(/DevTools listening on (ws:\/\/\S+)/);if(m)endpoint=m[1]});
+const delay=ms=>new Promise(r=>setTimeout(r,ms));
+async function wait(fn){const end=Date.now()+20000;while(Date.now()<end){if(await fn())return;await delay(100)}throw Error('Rendered report check timed out')}
+const result={status:'failed',checks:[]};const errors=[];
+try{
+ await wait(()=>endpoint);const targets=await(await fetch(`http://127.0.0.1:${new URL(endpoint).port}/json/list`)).json();socket=new WebSocket(targets.find(t=>t.type==='page').webSocketDebuggerUrl);await new Promise((r,j)=>{socket.onopen=r;socket.onerror=j});
+ let next=0;const pending=new Map();socket.onmessage=({data})=>{const v=JSON.parse(data);if(v.id){const p=pending.get(v.id);pending.delete(v.id);v.error?p.reject(Error(v.error.message)):p.resolve(v.result)}if(v.method==='Runtime.exceptionThrown')errors.push(v.params.exceptionDetails.text)};
+ const call=(method,params={})=>new Promise((resolve,reject)=>{const id=++next;pending.set(id,{resolve,reject});socket.send(JSON.stringify({id,method,params}))});
+ run=async expression=>{const r=await call('Runtime.evaluate',{expression,returnByValue:true,awaitPromise:true});if(r.exceptionDetails)throw Error(r.exceptionDetails.exception?.description||r.exceptionDetails.text);return r.result.value};
+ const click=async title=>run(`Array.from(document.querySelectorAll('button')).find(b=>b.textContent.trim()===${JSON.stringify(title)}).click()`);
+ await call('Runtime.enable');await call('Emulation.setDeviceMetricsOverride',{width:1440,height:1000,deviceScaleFactor:1,mobile:false});await call('Page.navigate',{url:base});
+ await wait(()=>run('!!document.querySelector("input[type=password]")'));
+ await run(`(()=>{const set=Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set;for(const [selector,value] of [['input[type=email]','founder@schach.demo'],['input[type=password]','SchachDemo!2026']]){const el=document.querySelector(selector);set.call(el,value);el.dispatchEvent(new Event('input',{bubbles:true}))}document.querySelector('form').requestSubmit()})()`);
+ await wait(()=>run('!document.querySelector("input[type=password]")&&document.body.innerText.includes("Reports")'));
+ result.checks.push('Sign-in succeeds against the current API build');
+ const fixture=await run(`(async()=>{const api=async(path,method='GET',body)=>{const r=await fetch('/api'+path,{method,credentials:'include',headers:{'Content-Type':'application/json'},body:body?JSON.stringify(body):undefined});if(!r.ok)throw Error('Fixture API failed '+r.status);return r.json()};const session=await api('/auth/session');const company=session.companies[0];const root='/companies/'+company.id;const project=await api(root+'/projects','POST',{name:'Fictional timed report acceptance',ownerId:session.user.id,departmentId:'',description:'Runtime verification only',color:'#F97316',status:'active',dueDate:''});const now=Date.now(),due=new Date(now-300000).toISOString(),revised=new Date(now+300000).toISOString();const parts=new Intl.DateTimeFormat('en-CA',{timeZone:company.timezone,year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date(now));const get=t=>parts.find(p=>p.type===t).value;const date=get('year')+'-'+get('month')+'-'+get('day');const created=await api(root+'/tasks','POST',{title:'Timed acceptance probe',description:'A fictional delivery used for report checks.',ownerId:session.user.id,reviewerId:'',departmentId:'',projectId:project.id,parentId:'',priority:'medium',status:'todo',dueDate:date,deadlineMode:'timed',dueAt:due,dueTimezone:company.timezone,startDate:'',estimatedHours:0,tags:[],checklist:[],dependencies:[],collaborators:[],recurrence:'none',requiresApproval:false});let task=(await api(root+'/workspace')).tasks.find(t=>t.id===created.id);await api(root+'/tasks/'+task.id,'PATCH',{version:task.version,dueDate:date,deadlineMode:'timed',dueAt:revised,dueTimezone:company.timezone,deadlineChangeReason:'Fictional same-day revision for report verification'});task=(await api(root+'/workspace')).tasks.find(t=>t.id===created.id);await api(root+'/tasks/'+task.id,'PATCH',{version:task.version,status:'done'});return {project:project.id,date,company:company.id}})()`);
+ await call('Page.reload');await wait(()=>run('document.body.innerText.includes("Reports")&&!document.querySelector("input[type=password]")'));await click('Reports');
+ await wait(()=>run(`!!document.querySelector('select[aria-label="Report project"]')`));
+ await run(`(()=>{const el=document.querySelector('select[aria-label="Report project"]');Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype,'value').set.call(el,${JSON.stringify(fixture.project)});el.dispatchEvent(new Event('change',{bubbles:true}))})()`);
+ await wait(()=>run(`document.body.innerText.includes('Timed acceptance probe')&&!document.querySelector('[aria-busy=true]')`));
+ const metric=async label=>run(`Array.from(document.querySelectorAll('.report-metrics > div')).find(e=>e.innerText.includes(${JSON.stringify(label)})).querySelector('strong').textContent`);
+ assert.equal(await metric('Original commitment met'),'0%');assert.equal(await metric('Current deadline met'),'100%');
+ assert.equal(await run(`Array.from(document.querySelectorAll('.report-exceptions > div')).find(e=>e.innerText.includes('Deadline changed')).querySelector('strong').textContent`),'1');
+ result.checks.push('Same-day timed acceptance is late against original, on time against revised; time-only revision counted');
+ assert(await run(`performance.getEntriesByType('resource').some(e=>e.name.includes('/reports/tasks?'))`));
+ result.checks.push('Rendered report uses the lean authorized API');
+ result.responseBytes=await run(`(async()=>{const root='/api/companies/'+${JSON.stringify(fixture.company)};const paths=[root+'/workspace',root+'/reports/tasks?from='+${JSON.stringify(fixture.date)}+'&to='+${JSON.stringify(fixture.date)}+'&projectId='+${JSON.stringify(fixture.project)}];const sizes=await Promise.all(paths.map(async path=>new TextEncoder().encode(await(await fetch(path,{credentials:'include'})).text()).length));return {fullWorkspace:sizes[0],oneProjectOneDayReport:sizes[1],scope:'Uncompressed JSON in this fictional fixture; different selections, not overall traffic or latency reduction'}})()`);
+ await run(`window.reportDownload=null;const original=URL.createObjectURL;URL.createObjectURL=function(blob){window.reportDownload=blob;return original.call(this,blob)}`);await click('Export report');
+ const csv=await run('window.reportDownload.text()');assert(csv.includes('Timed acceptance probe')&&csv.includes('Original due at')&&csv.includes('Due timezone'));
+ result.checks.push('Selected report export contains the matching task and exact deadline fields');
+ await click('Last 7 days');await wait(()=>run(`document.body.innerText.includes('Timed acceptance probe')&&!document.querySelector('[aria-busy=true]')`));
+ assert.equal(await run(`document.querySelector('input[aria-label="Report start date"]').value`),new Date(Date.parse(fixture.date+'T12:00:00Z')-6*86400000).toISOString().slice(0,10));
+ result.checks.push('One-tap date preset retains intersecting project filter');
+ if(process.env.SCHACH_SCREENSHOT_DESKTOP)await writeFile(process.env.SCHACH_SCREENSHOT_DESKTOP,Buffer.from((await call('Page.captureScreenshot',{format:'png'})).data,'base64'));
+ await call('Emulation.setDeviceMetricsOverride',{width:390,height:844,deviceScaleFactor:1,mobile:true});await delay(200);
+ assert(await run('document.documentElement.scrollWidth<=innerWidth'),'Phone reports must not widen the page');
+ assert(await run(`Array.from(document.querySelectorAll('.report-presets button')).every(b=>b.getBoundingClientRect().height>=44)`));
+ if(process.env.SCHACH_SCREENSHOT_MOBILE)await writeFile(process.env.SCHACH_SCREENSHOT_MOBILE,Buffer.from((await call('Page.captureScreenshot',{format:'png'})).data,'base64'));
+ result.checks.push('390px report page has no horizontal overflow and date preset targets are at least 44px');
+ assert.deepEqual(errors,[]);result.status='passed';result.browser=(await call('Browser.getVersion')).product;result.scope='Real Chromium desktop/390px browser and disposable fictional API. Not physical native keyboard/accessibility verification.';
+ console.log(JSON.stringify({status:result.status,checks:result.checks.length}));
+}catch(e){result.error=e.message;process.exitCode=1;console.error(e.message)}finally{await writeFile(output,JSON.stringify(result,null,2)+'\n');socket?.close();browser.kill('SIGTERM');await delay(200);await rm(profile,{recursive:true,force:true})}

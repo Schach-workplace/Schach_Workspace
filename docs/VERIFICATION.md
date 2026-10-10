@@ -187,3 +187,11 @@ The original finance/M0 evidence above is historical. Current communication capa
 ## Connect UX follow-up — 10 October 2026
 
 The bounded browser/native redesign and nameless direct-message reuse have fresh evidence in [the Connect verification record](../verification/connect-ux-2026-10-10/result.json) and [independent review](../verification/connect-ux-2026-10-10/review.md). The implementation, acceptance cases, API compatibility and device limits are in [CONNECT_UX.md](CONNECT_UX.md). These results supersede older frontend/native test counts for this follow-up, without rewriting the historical communication/provider evidence.
+
+## Workspace improvement foundation — 10 October 2026
+
+The first milestone of the new [workspace roadmap](superpowers/plans/2026-10-10-workspace-improvements-roadmap.md) is implemented in `improve/workspace-improvements`: exact current-state report deadline metrics, project/date controls, a lean authorized task report input API and native Work search/sheets/company-time deadline capture. This is not completion of the ten-milestone roadmap.
+
+Fresh checks: 96 web tests, 20 native tests, 108 top-level SQLite backend tests passing (6 environment/provider-specific skips), 3 report integration tests against owned PostgreSQL schemas using all existing migrations, both web builds, native typecheck/lint and Android/iOS Hermes exports. Encore initialized successfully with explicit local SEED_DEMO=true; no custom check commands configured (0/0). Chromium desktop/390px acceptance passed six checks. No updated Android APK/iOS signed build or physical-device certification is claimed for these new native changes.
+
+Independent review found two lifecycle problems; regression tests reproduced and corrected cached-report access revalidation and native draft loss during temporary workspace absence. See [results](../verification/workspace-improvements-2026-10-10/result.json) and [review/fix record](../verification/workspace-improvements-2026-10-10/review.md). The report API remains an intermediate current-state projection; aggregation, pagination, historical facts and removal of broad workspace polling are explicitly pending.

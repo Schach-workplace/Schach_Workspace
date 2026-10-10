@@ -208,3 +208,44 @@ it("requires reviewing changed task details before a versioned write", async () 
   expect(state.w.refresh).toHaveBeenCalled();
   expect(container.textContent).toContain("Task changed or access changed");
 });
+it("retains the draft across temporary workspace absence and recovery", async () => {
+  await act(async () => root.render(createElement(WorkScreen)));
+  await click("New task");
+  await fill("Task title", "Recover after outage");
+  await click("Tomorrow");
+  await fill("Deadline time", "16:00");
+  const work = state.w.work;
+  state.w = { ...state.w, work: null };
+  await act(async () => root.render(createElement(WorkScreen)));
+  state.w = { ...state.w, work };
+  await act(async () => root.render(createElement(WorkScreen)));
+  expect(
+    (
+      container.querySelector(
+        'input[aria-label="Task title"]',
+      ) as HTMLInputElement
+    )?.value,
+  ).toBe("Recover after outage");
+  expect(
+    (
+      container.querySelector(
+        'input[aria-label="Due date"]',
+      ) as HTMLInputElement
+    )?.value,
+  ).toBe("2026-10-12");
+  expect(
+    (
+      container.querySelector(
+        'input[aria-label="Deadline time"]',
+      ) as HTMLInputElement
+    )?.value,
+  ).toBe("16:00");
+});
+it("clears retained draft after a confirmed authorization epoch change", async () => {
+  await act(async () => root.render(createElement(WorkScreen)));
+  await click("New task");
+  await fill("Task title", "Clear on confirmed access change");
+  state.w = { ...state.w, policyEpoch: state.w.policyEpoch + 1 };
+  await act(async () => root.render(createElement(WorkScreen)));
+  expect(container.querySelector('input[aria-label="Task title"]')).toBeNull();
+});

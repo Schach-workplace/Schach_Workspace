@@ -1,0 +1,79 @@
+{
+  "scope": "Roadmap milestone 1 only; current-state reporting and native Work usability",
+  "codeBase": "d20063b",
+  "backendSQLite": {
+    "passed": 108,
+    "skipped": 6
+  },
+  "postgresReportTests": {
+    "passed": 3,
+    "ownedRandomSchemas": true,
+    "existingMigrationsApplied": 24
+  },
+  "web": {
+    "passed": 96,
+    "files": 17,
+    "apiBuild": "passed",
+    "demoBuild": "passed"
+  },
+  "mobile": {
+    "passed": 20,
+    "files": 6,
+    "typecheck": "passed",
+    "lint": "passed with zero warnings",
+    "androidIOSHermesExport": "passed",
+    "physicalDevices": "unverified",
+    "updatedNativeBinary": "not built"
+  },
+  "encore": "Service initialized and existing migrations ran with explicit SEED_DEMO=true; no custom checks configured (0/0).",
+  "realBrowser": {
+    "status": "passed",
+    "checks": [
+      "Sign-in succeeds against the current API build",
+      "Same-day timed acceptance is late against original, on time against revised; time-only revision counted",
+      "Rendered report uses the lean authorized API",
+      "Selected report export contains the matching task and exact deadline fields",
+      "One-tap date preset retains intersecting project filter",
+      "390px report page has no horizontal overflow and date preset targets are at least 44px"
+    ],
+    "responseBytes": {
+      "fullWorkspace": 108551,
+      "oneProjectOneDayReport": 1188,
+      "scope": "Uncompressed JSON in this fictional fixture; different selections, not overall traffic or latency reduction"
+    },
+    "browser": "Chrome/152.0.7977.82",
+    "scope": "Real Chromium desktop/390px browser and disposable fictional API. Not physical native keyboard/accessibility verification."
+  },
+  "review": {
+    "importantFound": 2,
+    "findings": [
+      "Cached report reauthorization",
+      "Mobile draft survives temporary missing workspace"
+    ],
+    "fixes": "Both Important findings reproduced RED and verified GREEN; cached-company reentry and explicit authorization-epoch coverage added. Full web96/native20 suites passed; no second reviewer pass claimed."
+  },
+  "limitations": [
+    "Global workspace polling remains; lean report input is an intermediate unpaginated company-task scan.",
+    "Reports show current state, not immutable historical snapshots.",
+    "Milestones 2\u201310 remain pending.",
+    "Native physical keyboard, large text, screen readers, background calls and distribution remain device/rollout gates."
+  ],
+  "failureClassification": [
+    {
+      "kind": "verification fixture",
+      "description": "Initial browser selector quoting caused a JS syntax error; corrected fixture passed all six checks."
+    },
+    {
+      "kind": "verification fixture",
+      "description": "API fixture collaborator update needed JSON encoding; standard validation status is 422."
+    },
+    {
+      "kind": "application",
+      "description": "Review found stale cached report release and native draft loss on work=null; fixed with regression tests."
+    },
+    {
+      "kind": "implementation lint",
+      "description": "Initial retained-role ref was accessed during render; replaced with guarded state, verified lint."
+    }
+  ]
+}
