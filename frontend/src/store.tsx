@@ -579,13 +579,17 @@ export function useTaskDetail(id: string) {
     task:
       store.mode === 'demo'
         ? data?.tasks.find((t) => t.id === id)
-        : record && result.isFetchedAfterMount && !result.isError
+        : record && result.isFetchedAfterMount && !result.isError && !result.isFetching
           ? result.data?.task
           : undefined,
     loading:
-      store.mode === 'api' && id !== 'new' && (!result.isFetchedAfterMount || result.isPending),
+      store.mode === 'api' &&
+      id !== 'new' &&
+      (!result.isFetchedAfterMount || result.isPending || result.isFetching),
     people:
-      record && result.isFetchedAfterMount && !result.isError ? (result.data?.people ?? []) : [],
+      record && result.isFetchedAfterMount && !result.isError && !result.isFetching
+        ? (result.data?.people ?? [])
+        : [],
     accessRevoked:
       result.error instanceof ApiError && [401, 403, 404].includes(result.error.status),
     error:
@@ -625,12 +629,16 @@ export function useExpenseDetail(id: string) {
     expense:
       store.mode === 'demo'
         ? data?.expenses.find((t) => t.id === id)
-        : record && result.isFetchedAfterMount && !result.isError
+        : record && result.isFetchedAfterMount && !result.isError && !result.isFetching
           ? result.data?.expense
           : undefined,
-    loading: store.mode === 'api' && (!result.isFetchedAfterMount || result.isPending),
+    loading:
+      store.mode === 'api' &&
+      (!result.isFetchedAfterMount || result.isPending || result.isFetching),
     people:
-      record && result.isFetchedAfterMount && !result.isError ? (result.data?.people ?? []) : [],
+      record && result.isFetchedAfterMount && !result.isError && !result.isFetching
+        ? (result.data?.people ?? [])
+        : [],
     accessRevoked:
       result.error instanceof ApiError && [401, 403, 404].includes(result.error.status),
     error:

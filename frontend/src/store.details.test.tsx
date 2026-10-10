@@ -114,18 +114,21 @@ async function setup(kind: 'task' | 'expense', afterFirstPage = false) {
       if (path.endsWith('/finance/events')) return reply({ financeEvents: [] });
       if (path.endsWith(`/tasks/${task.id}`) || path.endsWith(`/expenses/${expense.id}`)) {
         state.detailCalls++;
+        if (state.pause)
+          await new Promise<void>((resolve) => {
+            state.resolve = resolve;
+          });
         if (state.accessRevoked)
           return new Response(
             JSON.stringify({ error: { code: 'not_found', message: 'Task access removed.' } }),
             { status: 404, headers: { 'Content-Type': 'application/json' } },
           );
-        if (state.pause)
-          await new Promise<void>((resolve) => {
-            state.resolve = resolve;
-          });
         return reply(
           kind === 'task'
             ? {
+                people: [
+                  { ...data.people[0], id: 'detail-person', name: 'Private resolved person' },
+                ],
                 task: {
                   ...task,
                   comments: task.comments.map((c) => ({ ...c, body: state.polledComment })),
@@ -134,6 +137,9 @@ async function setup(kind: 'task' | 'expense', afterFirstPage = false) {
                 },
               }
             : {
+                people: [
+                  { ...data.people[0], id: 'detail-person', name: 'Private resolved person' },
+                ],
                 expense: {
                   ...expense,
                   version: state.version,
@@ -147,10 +153,21 @@ async function setup(kind: 'task' | 'expense', afterFirstPage = false) {
       throw Error('Unexpected test request: ' + path);
     }),
   );
-  const { WorkspaceProvider, useWorkspace } = await import('./store');
+  const { WorkspaceProvider, useWorkspace, useTaskDetail, useExpenseDetail } =
+    await import('./store');
   const { useQueryClient } = await import('@tanstack/react-query');
   const { default: TaskDrawer } = await import('./components/TaskDrawer');
   const { default: FinanceDetail } = await import('./components/FinanceDetail');
+  function SelectedReadProbe() {
+    const detail = kind === 'task' ? useTaskDetail(task.id) : useExpenseDetail(expense.id);
+    const source = 'task' in detail ? detail.task : detail.expense;
+    return (
+      <>
+        <output aria-label="Selected source" data-description={source?.description} />
+        <output aria-label="Selected people">{detail.people.map((p) => p.name).join(', ')}</output>
+      </>
+    );
+  }
   function Probe() {
     const store = useWorkspace();
     const client = useQueryClient();
@@ -158,6 +175,7 @@ async function setup(kind: 'task' | 'expense', afterFirstPage = false) {
     const rows = kind === 'task' ? store.data.tasks : store.data.expenses;
     return (
       <>
+        <SelectedReadProbe />
         <span>List version {rows[0]?.version ?? 'absent'}</span>
         <button
           onClick={() =>
@@ -339,3 +357,107 @@ it('clears draft RAM after detail reauthorization denies access even before the 
   await screen.findByDisplayValue('Private task context');
   expect(screen.queryByDisplayValue('Sensitive unsaved input')).toBeNull();
 });
+
+it.each(['task', 'expense'] as const)(
+  'withholds same-key pending %s source and people, then restores authored input with its original inspected version',
+  async (kind) => {
+    const state = await setup(kind);
+    expect(screen.getByLabelText('Selected people').textContent).toBe('Private resolved person');
+    if (kind === 'task') {
+      fireEvent.change(screen.getByDisplayValue('Private task context'), {
+        target: { value: 'Same-key authored task edit' },
+      });
+      fireEvent.click(screen.getByRole('button', { name: /^Activity/ }));
+      await screen.findByText('Private task comment');
+    } else {
+      fireEvent.click(screen.getByRole('button', { name: 'Request changes' }));
+      fireEvent.change(await screen.findByLabelText(/^Changes required/), {
+        target: { value: 'Same-key authored finance note' },
+      });
+    }
+    state.pause = true;
+    // A detail read can observe an updated source before the list refreshes.
+    state.version = 2;
+    fireEvent.click(screen.getByText('Poll detail'));
+    await waitFor(() => expect(state.resolve).toBeDefined());
+    expect(screen.getByLabelText('Selected source').getAttribute('data-description')).toBeNull();
+    expect(screen.getByLabelText('Selected people').textContent).toBe('');
+    expect(screen.queryByText('Private task comment')).toBeNull();
+    expect(screen.queryByText('Private expense context')).toBeNull();
+    expect(screen.queryByDisplayValue('Same-key authored finance note')).toBeNull();
+    expect(screen.getByText('List version 1')).toBeTruthy();
+    state.pause = false;
+    state.resolve!();
+    await waitFor(() =>
+      expect(screen.getByLabelText('Selected source').getAttribute('data-description')).toBe(
+        'Updated by another user',
+      ),
+    );
+    expect(screen.getByLabelText('Selected people').textContent).toBe('Private resolved person');
+    if (kind === 'task') {
+      fireEvent.click(await screen.findByRole('button', { name: 'Details' }));
+      await screen.findByDisplayValue('Same-key authored task edit');
+      expect(screen.getByText('Editing version 1')).toBeTruthy();
+      fireEvent.click(screen.getByRole('button', { name: 'Save changes' }));
+      await screen.findByText('Version conflict. Refresh task before retrying.');
+      expect(state.patches).toEqual([
+        expect.objectContaining({ version: 1, description: 'Same-key authored task edit' }),
+      ]);
+    } else {
+      await screen.findByDisplayValue('Same-key authored finance note');
+      expect(screen.getByText('This expense changed while you were reviewing it.')).toBeTruthy();
+      expect(
+        (screen.getByRole('button', { name: 'Request changes' }) as HTMLButtonElement).disabled,
+      ).toBe(true);
+      expect(state.patches).toHaveLength(0);
+    }
+  },
+);
+
+it.each(['task', 'expense'] as const)(
+  'clears %s authored input after delayed same-key denial, without restoring it when access returns',
+  async (kind) => {
+    const state = await setup(kind);
+    if (kind === 'task') {
+      fireEvent.change(screen.getByDisplayValue('Private task context'), {
+        target: { value: 'Revoked same-key task edit' },
+      });
+    } else {
+      fireEvent.click(screen.getByRole('button', { name: 'Request changes' }));
+      fireEvent.change(await screen.findByLabelText(/^Changes required/), {
+        target: { value: 'Revoked same-key finance note' },
+      });
+    }
+    state.pause = true;
+    fireEvent.click(screen.getByText('Poll detail'));
+    await waitFor(() => expect(state.resolve).toBeDefined());
+    expect(screen.getByLabelText('Selected source').getAttribute('data-description')).toBeNull();
+    expect(screen.getByLabelText('Selected people').textContent).toBe('');
+    expect(screen.queryByDisplayValue('Revoked same-key task edit')).toBeNull();
+    expect(screen.queryByDisplayValue('Revoked same-key finance note')).toBeNull();
+    state.accessRevoked = true;
+    state.pause = false;
+    state.resolve!();
+    await screen.findByText('Task access removed.');
+    expect(screen.getByLabelText('Selected people').textContent).toBe('');
+    expect(screen.getByText('List version 1')).toBeTruthy();
+    state.accessRevoked = false;
+    fireEvent.click(screen.getByText('Poll detail'));
+    await waitFor(() =>
+      expect(screen.getByLabelText('Selected source').getAttribute('data-description')).toBe(
+        kind === 'task' ? 'Private task context' : 'Private expense context',
+      ),
+    );
+    expect(screen.queryByDisplayValue('Revoked same-key task edit')).toBeNull();
+    expect(screen.queryByDisplayValue('Revoked same-key finance note')).toBeNull();
+    if (kind === 'task') {
+      expect(screen.getByDisplayValue('Private task context')).toBeTruthy();
+      expect(screen.getByText('Editing version 1')).toBeTruthy();
+    } else {
+      fireEvent.click(screen.getByRole('button', { name: 'Request changes' }));
+      expect(
+        ((await screen.findByLabelText(/^Changes required/)) as HTMLTextAreaElement).value,
+      ).toBe('');
+    }
+  },
+);
