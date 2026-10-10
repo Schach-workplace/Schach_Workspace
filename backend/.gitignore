@@ -1,0 +1,7 @@
+*.db
+*.db-shm
+*.db-wal
+*.test
+/server
+/reset-password
+.env

@@ -1,0 +1,10 @@
+{
+  "status": "passed",
+  "checks": [
+    "Compose built the supplied Dockerfile",
+    "Database and application healthchecks passed",
+    "Fresh bootstrap account signs in",
+    "Empty company workspace reads through container API"
+  ],
+  "note": "Random local bootstrap/database credentials are stored only in a temporary file and removed during cleanup; no demo seeding."
+}

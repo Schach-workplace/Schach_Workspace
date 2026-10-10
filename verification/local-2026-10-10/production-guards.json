@@ -1,0 +1,20 @@
+[
+  {
+    "name": "production refuses demo",
+    "exitCode": 1,
+    "passed": true,
+    "message": "2026/10/10 14:37:38 ERROR startup failed error=\"demo seeding is disabled in production\""
+  },
+  {
+    "name": "production refuses insecure cookies",
+    "exitCode": 1,
+    "passed": true,
+    "message": "2026/10/10 14:37:38 ERROR startup failed error=\"production requires SECURE_COOKIES=true and HTTPS at your reverse proxy\""
+  },
+  {
+    "name": "production refuses SQLite",
+    "exitCode": 1,
+    "passed": true,
+    "message": "2026/10/10 14:37:38 ERROR startup failed error=\"production requires a persistent PostgreSQL DATABASE_URL\""
+  }
+]

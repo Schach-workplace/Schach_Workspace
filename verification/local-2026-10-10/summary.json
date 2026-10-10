@@ -1,0 +1,37 @@
+{
+  "date": "2026-10-10",
+  "timezone": "Asia/Kolkata",
+  "productSourceUnchanged": true,
+  "encoreUnmodified": "failed: E1371, E1288, E1796",
+  "encoreCorrectedDisposableProbe": "passed: boot + 38 workspace + 53 finance checks",
+  "frontendTests": 63,
+  "pgliteChecks": 100,
+  "previewChecks": 11,
+  "nativeTCPWorkspaceChecks": 39,
+  "nativeTCPFinanceChecks": 53,
+  "browserSmokeChecks": 4,
+  "compose": "passed",
+  "nativeLocalRestore": "passed",
+  "goSuites": {
+    "backend-tests": {
+      "topLevelPassed": 45,
+      "passedIncludingSubtests": 49,
+      "failures": 0
+    },
+    "postgres-tests": {
+      "topLevelPassed": 45,
+      "passedIncludingSubtests": 49,
+      "failures": 0
+    },
+    "backend-race": {
+      "topLevelPassed": 45,
+      "passedIncludingSubtests": 49,
+      "failures": 0
+    },
+    "postgres-race": {
+      "topLevelPassed": 45,
+      "passedIncludingSubtests": 49,
+      "failures": 0
+    }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "name": "schach-postgres-compat",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Isolated PGlite migration compatibility probe, not native PostgreSQL integration",
+  "scripts": {
+    "test": "node check.mjs"
+  },
+  "dependencies": {
+    "@electric-sql/pglite": "0.5.8"
+  }
+}

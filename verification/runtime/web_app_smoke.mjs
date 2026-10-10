@@ -1,0 +1,61 @@
+// Rendered current application check on an explicitly fictional loopback demo.
+import assert from 'node:assert/strict';
+import {spawn} from 'node:child_process';
+import {mkdtemp,rm,writeFile} from 'node:fs/promises';
+import {tmpdir} from 'node:os';
+import {join} from 'node:path';
+const base=process.env.SCHACH_SMOKE_URL||'http://127.0.0.1:8080';
+assert(process.argv.includes('--allow-demo-mutations'),'Explicit --allow-demo-mutations required');
+assert(['127.0.0.1','localhost','[::1]'].includes(new URL(base).hostname),'Only fictional loopback demos allowed');
+const output=process.env.SCHACH_SMOKE_RESULT;
+assert(output,'Set SCHACH_SMOKE_RESULT to a private evidence file');
+const profile=await mkdtemp(join(tmpdir(),'schach-web-check-'));
+const browser=spawn('chromium',['--headless=new','--no-sandbox','--disable-dev-shm-usage','--remote-debugging-port=0',`--user-data-dir=${profile}`,'--use-fake-device-for-media-stream','--use-fake-ui-for-media-stream','about:blank'],{stdio:['ignore','ignore','pipe']});
+let endpoint='';browser.stderr.on('data',b=>{const m=String(b).match(/DevTools listening on (ws:\/\/\S+)/);if(m)endpoint=m[1]});
+const delay=ms=>new Promise(r=>setTimeout(r,ms));
+async function wait(fn){const end=Date.now()+20000;while(Date.now()<end){if(await fn())return;await delay(100)}throw Error('Rendered application check timed out')}
+let socket;const errors=[],checks=[];const result={status:'failed',checks};
+try{
+ await wait(()=>endpoint);
+ const targets=await(await fetch(`http://127.0.0.1:${new URL(endpoint).port}/json/list`)).json();
+ socket=new WebSocket(targets.find(t=>t.type==='page').webSocketDebuggerUrl);
+ await new Promise((r,j)=>{socket.onopen=r;socket.onerror=j});
+ let next=0;const pending=new Map();
+ socket.onmessage=({data})=>{const v=JSON.parse(data);if(v.id){const p=pending.get(v.id);pending.delete(v.id);v.error?p.reject(Error(v.error.message)):p.resolve(v.result)}if(v.method==='Runtime.exceptionThrown')errors.push(v.params.exceptionDetails.text)};
+ const call=(method,params={})=>new Promise((resolve,reject)=>{const id=++next;pending.set(id,{resolve,reject});socket.send(JSON.stringify({id,method,params}))});
+ const evaluate=async expression=>{const r=await call('Runtime.evaluate',{expression,returnByValue:true,awaitPromise:true});if(r.exceptionDetails)throw Error('Browser operation failed: '+r.exceptionDetails.text);return r.result.value};
+ await call('Runtime.enable');await call('Page.navigate',{url:base});
+ await wait(()=>evaluate('!!document.querySelector("input[type=password]")'));
+ checks.push('Current API build mounts sign-in in native Chromium');
+ await evaluate(`(()=>{const set=Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set;for(const [selector,value] of [['input[type=email]','founder@schach.demo'],['input[type=password]','SchachDemo!2026']]){const input=document.querySelector(selector);set.call(input,value);input.dispatchEvent(new Event('input',{bubbles:true}))}document.querySelector('form').requestSubmit()})()`);
+ await wait(()=>evaluate('!document.querySelector("input[type=password]")&&document.body.innerText.includes("Finance")'));
+ checks.push('Rendered founder sign-in succeeds with explicitly fictional accounts');
+ await evaluate(`Array.from(document.querySelectorAll('button')).find(b=>b.textContent.trim()==='Finance').click()`);
+ await wait(()=>evaluate(`!!document.querySelector('[aria-label="Department budgets"]')`));
+ checks.push('Existing department finance view renders through the live API');
+ await evaluate(`Array.from(document.querySelectorAll('button')).find(b=>b.textContent.trim()==='Connect').click()`);
+ await wait(()=>evaluate('!!document.querySelector(".connect-layout")'));
+ await evaluate(`Array.from(document.querySelectorAll('button')).find(b=>b.textContent.trim()==='New conversation').click()`);
+ await wait(()=>evaluate('!!document.querySelector(".connect-layout aside form input")'));
+ await evaluate(`(()=>{const form=document.querySelector('.connect-layout aside form');const input=form.querySelector('input');Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set.call(input,'Local browser validation');input.dispatchEvent(new Event('input',{bubbles:true}))})()`);
+ await evaluate(`document.querySelector('.connect-layout aside form').requestSubmit()`);
+ await wait(()=>evaluate(`Array.from(document.querySelectorAll('button')).some(b=>b.textContent.trim()==='Record voice note'&&!b.disabled)`));
+ checks.push('Rendered Connect creates a private group and resolves current history');
+ await evaluate(`window.mediaViolations=[];document.addEventListener('securitypolicyviolation',e=>{if(e.effectiveDirective==='media-src')window.mediaViolations.push(e.blockedURI)});Array.from(document.querySelectorAll('button')).find(b=>b.textContent.trim()==='Record voice note').click()`);
+ await wait(()=>evaluate(`Array.from(document.querySelectorAll('button')).some(b=>b.textContent.trim()==='Stop recording')`));await delay(1000);
+ await evaluate(`Array.from(document.querySelectorAll('button')).find(b=>b.textContent.trim()==='Stop recording').click()`);
+ await wait(()=>evaluate(`!!document.querySelector('audio[aria-label="Voice note preview"]')`));
+ await delay(500);
+ assert.deepEqual(await evaluate('window.mediaViolations'),[],'The actual app CSP must permit private blob voice preview');
+ await wait(()=>evaluate('document.querySelector("audio").readyState>=2'));
+ checks.push('Actual microphone recording has a playable blob preview under the app CSP');
+ await evaluate(`Array.from(document.querySelectorAll('button')).find(b=>b.textContent.trim()==='Cancel').click()`);
+ checks.push('Recording can be discarded before upload/publication');
+ assert.deepEqual(errors,[],'No uncaught rendered application exception');
+ result.status='passed';result.browser=(await call('Browser.getVersion')).product;
+ result.scope='Real local Chromium rendering with fake microphone. Not physical microphone, OS/mobile, call/TURN or production certification.';
+ console.log(JSON.stringify({status:result.status,checks:checks.length,browser:result.browser}));
+}finally{
+ await writeFile(output,JSON.stringify(result,null,2)+'\n');
+ socket?.close();browser.kill('SIGTERM');await delay(200);await rm(profile,{recursive:true,force:true});
+}

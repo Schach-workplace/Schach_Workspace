@@ -1,0 +1,5494 @@
+{
+  "anchorDate": "2026-10-10",
+  "sessions": [
+    {
+      "user": {
+        "id": "u-founder",
+        "name": "Rohan Mehta",
+        "email": "founder@schach.demo",
+        "isPlatformAdmin": true
+      },
+      "companies": [
+        {
+          "id": "c-schach",
+          "name": "Schach Engineers",
+          "slug": "schach",
+          "industry": "Engineering & manufacturing",
+          "timezone": "Asia/Kolkata",
+          "color": "#F97316",
+          "currency": "INR",
+          "fiscalYearStartMonth": 4,
+          "createdAt": "2026-08-11T10:00:00Z"
+        },
+        {
+          "id": "c-meridian",
+          "name": "Meridian Works",
+          "slug": "meridian",
+          "industry": "Projects & services",
+          "timezone": "Asia/Kolkata",
+          "color": "#3B82F6",
+          "currency": "INR",
+          "fiscalYearStartMonth": 4,
+          "createdAt": "2026-09-10T10:00:00Z"
+        }
+      ]
+    },
+    {
+      "user": {
+        "id": "u-ceo",
+        "name": "Aditi Rao",
+        "email": "ceo@schach.demo",
+        "isPlatformAdmin": false
+      },
+      "companies": [
+        {
+          "id": "c-schach",
+          "name": "Schach Engineers",
+          "slug": "schach",
+          "industry": "Engineering & manufacturing",
+          "timezone": "Asia/Kolkata",
+          "color": "#F97316",
+          "currency": "INR",
+          "fiscalYearStartMonth": 4,
+          "createdAt": "2026-08-11T10:00:00Z"
+        }
+      ]
+    },
+    {
+      "user": {
+        "id": "u-head",
+        "name": "Arjun Shah",
+        "email": "head@schach.demo",
+        "isPlatformAdmin": false
+      },
+      "companies": [
+        {
+          "id": "c-schach",
+          "name": "Schach Engineers",
+          "slug": "schach",
+          "industry": "Engineering & manufacturing",
+          "timezone": "Asia/Kolkata",
+          "color": "#F97316",
+          "currency": "INR",
+          "fiscalYearStartMonth": 4,
+          "createdAt": "2026-08-11T10:00:00Z"
+        }
+      ]
+    },
+    {
+      "user": {
+        "id": "u-member",
+        "name": "Meera Iyer",
+        "email": "member@schach.demo",
+        "isPlatformAdmin": false
+      },
+      "companies": [
+        {
+          "id": "c-schach",
+          "name": "Schach Engineers",
+          "slug": "schach",
+          "industry": "Engineering & manufacturing",
+          "timezone": "Asia/Kolkata",
+          "color": "#F97316",
+          "currency": "INR",
+          "fiscalYearStartMonth": 4,
+          "createdAt": "2026-08-11T10:00:00Z"
+        }
+      ]
+    },
+    {
+      "user": {
+        "id": "u-kabir",
+        "name": "Kabir Patel",
+        "email": "kabir@schach.demo",
+        "isPlatformAdmin": false
+      },
+      "companies": [
+        {
+          "id": "c-schach",
+          "name": "Schach Engineers",
+          "slug": "schach",
+          "industry": "Engineering & manufacturing",
+          "timezone": "Asia/Kolkata",
+          "color": "#F97316",
+          "currency": "INR",
+          "fiscalYearStartMonth": 4,
+          "createdAt": "2026-08-11T10:00:00Z"
+        }
+      ]
+    },
+    {
+      "user": {
+        "id": "u-vikram",
+        "name": "Vikram Desai",
+        "email": "vikram@schach.demo",
+        "isPlatformAdmin": false
+      },
+      "companies": [
+        {
+          "id": "c-schach",
+          "name": "Schach Engineers",
+          "slug": "schach",
+          "industry": "Engineering & manufacturing",
+          "timezone": "Asia/Kolkata",
+          "color": "#F97316",
+          "currency": "INR",
+          "fiscalYearStartMonth": 4,
+          "createdAt": "2026-08-11T10:00:00Z"
+        }
+      ]
+    },
+    {
+      "user": {
+        "id": "u-ananya",
+        "name": "Ananya Nair",
+        "email": "ananya@schach.demo",
+        "isPlatformAdmin": false
+      },
+      "companies": [
+        {
+          "id": "c-schach",
+          "name": "Schach Engineers",
+          "slug": "schach",
+          "industry": "Engineering & manufacturing",
+          "timezone": "Asia/Kolkata",
+          "color": "#F97316",
+          "currency": "INR",
+          "fiscalYearStartMonth": 4,
+          "createdAt": "2026-08-11T10:00:00Z"
+        }
+      ]
+    },
+    {
+      "user": {
+        "id": "u-rahul",
+        "name": "Rahul Sinha",
+        "email": "rahul@schach.demo",
+        "isPlatformAdmin": false
+      },
+      "companies": [
+        {
+          "id": "c-schach",
+          "name": "Schach Engineers",
+          "slug": "schach",
+          "industry": "Engineering & manufacturing",
+          "timezone": "Asia/Kolkata",
+          "color": "#F97316",
+          "currency": "INR",
+          "fiscalYearStartMonth": 4,
+          "createdAt": "2026-08-11T10:00:00Z"
+        }
+      ]
+    },
+    {
+      "user": {
+        "id": "u-neha",
+        "name": "Neha Kapoor",
+        "email": "neha@schach.demo",
+        "isPlatformAdmin": false
+      },
+      "companies": [
+        {
+          "id": "c-schach",
+          "name": "Schach Engineers",
+          "slug": "schach",
+          "industry": "Engineering & manufacturing",
+          "timezone": "Asia/Kolkata",
+          "color": "#F97316",
+          "currency": "INR",
+          "fiscalYearStartMonth": 4,
+          "createdAt": "2026-08-11T10:00:00Z"
+        }
+      ]
+    },
+    {
+      "user": {
+        "id": "u-sameer",
+        "name": "Sameer Joshi",
+        "email": "sameer@schach.demo",
+        "isPlatformAdmin": false
+      },
+      "companies": [
+        {
+          "id": "c-schach",
+          "name": "Schach Engineers",
+          "slug": "schach",
+          "industry": "Engineering & manufacturing",
+          "timezone": "Asia/Kolkata",
+          "color": "#F97316",
+          "currency": "INR",
+          "fiscalYearStartMonth": 4,
+          "createdAt": "2026-08-11T10:00:00Z"
+        }
+      ]
+    },
+    {
+      "user": {
+        "id": "u-priya",
+        "name": "Priya Menon",
+        "email": "priya@schach.demo",
+        "isPlatformAdmin": false
+      },
+      "companies": [
+        {
+          "id": "c-schach",
+          "name": "Schach Engineers",
+          "slug": "schach",
+          "industry": "Engineering & manufacturing",
+          "timezone": "Asia/Kolkata",
+          "color": "#F97316",
+          "currency": "INR",
+          "fiscalYearStartMonth": 4,
+          "createdAt": "2026-08-11T10:00:00Z"
+        }
+      ]
+    },
+    {
+      "user": {
+        "id": "u-dev",
+        "name": "Dev Kulkarni",
+        "email": "dev@schach.demo",
+        "isPlatformAdmin": false
+      },
+      "companies": [
+        {
+          "id": "c-schach",
+          "name": "Schach Engineers",
+          "slug": "schach",
+          "industry": "Engineering & manufacturing",
+          "timezone": "Asia/Kolkata",
+          "color": "#F97316",
+          "currency": "INR",
+          "fiscalYearStartMonth": 4,
+          "createdAt": "2026-08-11T10:00:00Z"
+        }
+      ]
+    },
+    {
+      "user": {
+        "id": "u-finance",
+        "name": "Kavya Shah",
+        "email": "finance@schach.demo",
+        "isPlatformAdmin": false
+      },
+      "companies": [
+        {
+          "id": "c-schach",
+          "name": "Schach Engineers",
+          "slug": "schach",
+          "industry": "Engineering & manufacturing",
+          "timezone": "Asia/Kolkata",
+          "color": "#F97316",
+          "currency": "INR",
+          "fiscalYearStartMonth": 4,
+          "createdAt": "2026-08-11T10:00:00Z"
+        }
+      ]
+    },
+    {
+      "user": {
+        "id": "u-sana",
+        "name": "Sana Khan",
+        "email": "sana@schach.demo",
+        "isPlatformAdmin": false
+      },
+      "companies": [
+        {
+          "id": "c-schach",
+          "name": "Schach Engineers",
+          "slug": "schach",
+          "industry": "Engineering & manufacturing",
+          "timezone": "Asia/Kolkata",
+          "color": "#F97316",
+          "currency": "INR",
+          "fiscalYearStartMonth": 4,
+          "createdAt": "2026-08-11T10:00:00Z"
+        }
+      ]
+    },
+    {
+      "user": {
+        "id": "u-tara",
+        "name": "Tara Singh",
+        "email": "tara@schach.demo",
+        "isPlatformAdmin": false
+      },
+      "companies": [
+        {
+          "id": "c-schach",
+          "name": "Schach Engineers",
+          "slug": "schach",
+          "industry": "Engineering & manufacturing",
+          "timezone": "Asia/Kolkata",
+          "color": "#F97316",
+          "currency": "INR",
+          "fiscalYearStartMonth": 4,
+          "createdAt": "2026-08-11T10:00:00Z"
+        }
+      ]
+    },
+    {
+      "user": {
+        "id": "u-nikhil",
+        "name": "Nikhil Verma",
+        "email": "nikhil@schach.demo",
+        "isPlatformAdmin": false
+      },
+      "companies": [
+        {
+          "id": "c-schach",
+          "name": "Schach Engineers",
+          "slug": "schach",
+          "industry": "Engineering & manufacturing",
+          "timezone": "Asia/Kolkata",
+          "color": "#F97316",
+          "currency": "INR",
+          "fiscalYearStartMonth": 4,
+          "createdAt": "2026-08-11T10:00:00Z"
+        }
+      ]
+    },
+    {
+      "user": {
+        "id": "u-isha",
+        "name": "Isha Bhat",
+        "email": "isha@schach.demo",
+        "isPlatformAdmin": false
+      },
+      "companies": [
+        {
+          "id": "c-schach",
+          "name": "Schach Engineers",
+          "slug": "schach",
+          "industry": "Engineering & manufacturing",
+          "timezone": "Asia/Kolkata",
+          "color": "#F97316",
+          "currency": "INR",
+          "fiscalYearStartMonth": 4,
+          "createdAt": "2026-08-11T10:00:00Z"
+        }
+      ]
+    },
+    {
+      "user": {
+        "id": "u-meridian",
+        "name": "Avni Desai",
+        "email": "avni@meridian.demo",
+        "isPlatformAdmin": false
+      },
+      "companies": [
+        {
+          "id": "c-meridian",
+          "name": "Meridian Works",
+          "slug": "meridian",
+          "industry": "Projects & services",
+          "timezone": "Asia/Kolkata",
+          "color": "#3B82F6",
+          "currency": "INR",
+          "fiscalYearStartMonth": 4,
+          "createdAt": "2026-09-10T10:00:00Z"
+        }
+      ]
+    }
+  ],
+  "workspaces": [
+    {
+      "company": {
+        "id": "c-schach",
+        "name": "Schach Engineers",
+        "slug": "schach",
+        "industry": "Engineering & manufacturing",
+        "timezone": "Asia/Kolkata",
+        "color": "#F97316",
+        "currency": "INR",
+        "fiscalYearStartMonth": 4,
+        "createdAt": "2026-08-11T10:00:00Z"
+      },
+      "me": {
+        "id": "u-founder",
+        "membershipId": "m-u-founder",
+        "name": "Rohan Mehta",
+        "email": "founder@schach.demo",
+        "role": "founder",
+        "departmentId": "",
+        "managerId": "",
+        "title": "Founder",
+        "capacityHours": 40,
+        "avatar": "RM",
+        "active": true
+      },
+      "departments": [
+        {
+          "id": "d-eng",
+          "companyId": "c-schach",
+          "name": "Engineering",
+          "headId": "u-head",
+          "color": "#6366F1",
+          "description": "Drawings, BOQs and technical delivery"
+        },
+        {
+          "id": "d-mfg",
+          "companyId": "c-schach",
+          "name": "Manufacturing",
+          "headId": "u-vikram",
+          "color": "#F97316",
+          "description": "Production, quality and dispatch readiness"
+        },
+        {
+          "id": "d-sales",
+          "companyId": "c-schach",
+          "name": "Sales",
+          "headId": "u-neha",
+          "color": "#3B82F6",
+          "description": "Customers, proposals and channel partners"
+        },
+        {
+          "id": "d-fin",
+          "companyId": "c-schach",
+          "name": "Finance",
+          "headId": "u-priya",
+          "color": "#16A34A",
+          "description": "Collections, controls and financial reporting"
+        },
+        {
+          "id": "d-people",
+          "companyId": "c-schach",
+          "name": "People & Admin",
+          "headId": "u-sana",
+          "color": "#A855F7",
+          "description": "People, policies and capability building"
+        },
+        {
+          "id": "d-proc",
+          "companyId": "c-schach",
+          "name": "Procurement",
+          "headId": "u-nikhil",
+          "color": "#14B8A6",
+          "description": "Materials, vendor reliability and cost control"
+        }
+      ],
+      "people": [
+        {
+          "id": "u-founder",
+          "membershipId": "m-u-founder",
+          "name": "Rohan Mehta",
+          "email": "founder@schach.demo",
+          "role": "founder",
+          "departmentId": "",
+          "managerId": "",
+          "title": "Founder",
+          "capacityHours": 40,
+          "avatar": "RM",
+          "active": true
+        },
+        {
+          "id": "u-ceo",
+          "membershipId": "m-u-ceo",
+          "name": "Aditi Rao",
+          "email": "ceo@schach.demo",
+          "role": "ceo",
+          "departmentId": "",
+          "managerId": "u-founder",
+          "title": "Chief Executive Officer",
+          "capacityHours": 40,
+          "avatar": "AR",
+          "active": true
+        },
+        {
+          "id": "u-head",
+          "membershipId": "m-u-head",
+          "name": "Arjun Shah",
+          "email": "head@schach.demo",
+          "role": "head",
+          "departmentId": "d-eng",
+          "managerId": "u-ceo",
+          "title": "Head of Engineering",
+          "capacityHours": 40,
+          "avatar": "AS",
+          "active": true
+        },
+        {
+          "id": "u-member",
+          "membershipId": "m-u-member",
+          "name": "Meera Iyer",
+          "email": "member@schach.demo",
+          "role": "member",
+          "departmentId": "d-eng",
+          "managerId": "u-head",
+          "title": "Design Engineer",
+          "capacityHours": 40,
+          "avatar": "MI",
+          "active": true
+        },
+        {
+          "id": "u-kabir",
+          "membershipId": "m-u-kabir",
+          "name": "Kabir Patel",
+          "email": "kabir@schach.demo",
+          "role": "member",
+          "departmentId": "d-eng",
+          "managerId": "u-head",
+          "title": "Technical Coordinator",
+          "capacityHours": 40,
+          "avatar": "KP",
+          "active": true
+        },
+        {
+          "id": "u-vikram",
+          "membershipId": "m-u-vikram",
+          "name": "Vikram Desai",
+          "email": "vikram@schach.demo",
+          "role": "head",
+          "departmentId": "d-mfg",
+          "managerId": "u-ceo",
+          "title": "Head of Manufacturing",
+          "capacityHours": 44,
+          "avatar": "VD",
+          "active": true
+        },
+        {
+          "id": "u-ananya",
+          "membershipId": "m-u-ananya",
+          "name": "Ananya Nair",
+          "email": "ananya@schach.demo",
+          "role": "manager",
+          "departmentId": "d-mfg",
+          "managerId": "u-vikram",
+          "title": "Production Manager",
+          "capacityHours": 44,
+          "avatar": "AN",
+          "active": true
+        },
+        {
+          "id": "u-rahul",
+          "membershipId": "m-u-rahul",
+          "name": "Rahul Sinha",
+          "email": "rahul@schach.demo",
+          "role": "member",
+          "departmentId": "d-mfg",
+          "managerId": "u-ananya",
+          "title": "Quality Engineer",
+          "capacityHours": 40,
+          "avatar": "RS",
+          "active": true
+        },
+        {
+          "id": "u-neha",
+          "membershipId": "m-u-neha",
+          "name": "Neha Kapoor",
+          "email": "neha@schach.demo",
+          "role": "head",
+          "departmentId": "d-sales",
+          "managerId": "u-ceo",
+          "title": "Head of Sales",
+          "capacityHours": 40,
+          "avatar": "NK",
+          "active": true
+        },
+        {
+          "id": "u-sameer",
+          "membershipId": "m-u-sameer",
+          "name": "Sameer Joshi",
+          "email": "sameer@schach.demo",
+          "role": "member",
+          "departmentId": "d-sales",
+          "managerId": "u-neha",
+          "title": "Business Development",
+          "capacityHours": 40,
+          "avatar": "SJ",
+          "active": true
+        },
+        {
+          "id": "u-priya",
+          "membershipId": "m-u-priya",
+          "name": "Priya Menon",
+          "email": "priya@schach.demo",
+          "role": "head",
+          "departmentId": "d-fin",
+          "managerId": "u-ceo",
+          "title": "Finance Controller",
+          "capacityHours": 40,
+          "avatar": "PM",
+          "active": true
+        },
+        {
+          "id": "u-dev",
+          "membershipId": "m-u-dev",
+          "name": "Dev Kulkarni",
+          "email": "dev@schach.demo",
+          "role": "member",
+          "departmentId": "d-fin",
+          "managerId": "u-priya",
+          "title": "Accounts Executive",
+          "capacityHours": 40,
+          "avatar": "DK",
+          "active": true
+        },
+        {
+          "id": "u-finance",
+          "membershipId": "m-u-finance",
+          "name": "Kavya Shah",
+          "email": "finance@schach.demo",
+          "role": "finance",
+          "departmentId": "d-fin",
+          "managerId": "u-ceo",
+          "title": "Finance Operations Lead",
+          "capacityHours": 40,
+          "avatar": "KS",
+          "active": true
+        },
+        {
+          "id": "u-sana",
+          "membershipId": "m-u-sana",
+          "name": "Sana Khan",
+          "email": "sana@schach.demo",
+          "role": "head",
+          "departmentId": "d-people",
+          "managerId": "u-ceo",
+          "title": "People & Culture Lead",
+          "capacityHours": 40,
+          "avatar": "SK",
+          "active": true
+        },
+        {
+          "id": "u-tara",
+          "membershipId": "m-u-tara",
+          "name": "Tara Singh",
+          "email": "tara@schach.demo",
+          "role": "member",
+          "departmentId": "d-people",
+          "managerId": "u-sana",
+          "title": "People Operations",
+          "capacityHours": 36,
+          "avatar": "TS",
+          "active": true
+        },
+        {
+          "id": "u-nikhil",
+          "membershipId": "m-u-nikhil",
+          "name": "Nikhil Verma",
+          "email": "nikhil@schach.demo",
+          "role": "head",
+          "departmentId": "d-proc",
+          "managerId": "u-ceo",
+          "title": "Procurement Lead",
+          "capacityHours": 40,
+          "avatar": "NV",
+          "active": true
+        },
+        {
+          "id": "u-isha",
+          "membershipId": "m-u-isha",
+          "name": "Isha Bhat",
+          "email": "isha@schach.demo",
+          "role": "member",
+          "departmentId": "d-proc",
+          "managerId": "u-nikhil",
+          "title": "Procurement Executive",
+          "capacityHours": 40,
+          "avatar": "IB",
+          "active": true
+        }
+      ],
+      "projects": [
+        {
+          "id": "p-phoenix",
+          "companyId": "c-schach",
+          "name": "Phoenix Tower \u00b7 Package A",
+          "description": "Design-to-dispatch delivery of the first formwork package.",
+          "departmentId": "d-eng",
+          "ownerId": "u-head",
+          "dueDate": "2026-10-28",
+          "color": "#6366F1",
+          "status": "active"
+        },
+        {
+          "id": "p-factory",
+          "companyId": "c-schach",
+          "name": "Factory performance",
+          "description": "Improve first-pass quality and remove recurring production delays.",
+          "departmentId": "d-mfg",
+          "ownerId": "u-vikram",
+          "dueDate": "2026-11-09",
+          "color": "#F97316",
+          "status": "active"
+        },
+        {
+          "id": "p-channel",
+          "companyId": "c-schach",
+          "name": "West region expansion",
+          "description": "Build an active and measurable partner pipeline.",
+          "departmentId": "d-sales",
+          "ownerId": "u-neha",
+          "dueDate": "2026-11-03",
+          "color": "#3B82F6",
+          "status": "active"
+        },
+        {
+          "id": "p-finance",
+          "companyId": "c-schach",
+          "name": "October financial close",
+          "description": "Close the books with reconciled balances and accountable collections.",
+          "departmentId": "d-fin",
+          "ownerId": "u-priya",
+          "dueDate": "2026-10-22",
+          "color": "#16A34A",
+          "status": "active"
+        },
+        {
+          "id": "p-people",
+          "companyId": "c-schach",
+          "name": "Team enablement",
+          "description": "Give new colleagues a clear role, onboarding path and review cadence.",
+          "departmentId": "d-people",
+          "ownerId": "u-sana",
+          "dueDate": "2026-10-30",
+          "color": "#A855F7",
+          "status": "active"
+        },
+        {
+          "id": "p-supply",
+          "companyId": "c-schach",
+          "name": "Supply reliability",
+          "description": "Secure material availability and improve vendor commitments.",
+          "departmentId": "d-proc",
+          "ownerId": "u-nikhil",
+          "dueDate": "2026-10-25",
+          "color": "#14B8A6",
+          "status": "active"
+        }
+      ],
+      "tasks": [
+        {
+          "id": "t-001",
+          "code": "SCH-1001",
+          "companyId": "c-schach",
+          "projectId": "p-phoenix",
+          "departmentId": "d-eng",
+          "parentId": "",
+          "title": "Release revised podium drawings",
+          "description": "Resolve the final grid revision and issue the coordinated podium drawing set.",
+          "ownerId": "u-member",
+          "createdBy": "u-head",
+          "reviewerId": "u-head",
+          "status": "in_progress",
+          "priority": "critical",
+          "startDate": "2026-10-05",
+          "dueDate": "2026-10-08",
+          "originalDueDate": "2026-10-06",
+          "progress": 70,
+          "estimatedHours": 16,
+          "actualHours": 11.2,
+          "tags": [
+            "Delivery"
+          ],
+          "checklist": [
+            {
+              "id": "t-001-a",
+              "text": "Validate required inputs",
+              "done": true
+            },
+            {
+              "id": "t-001-b",
+              "text": "Attach evidence and confirm acceptance",
+              "done": false
+            }
+          ],
+          "dependencies": [
+            "t-040"
+          ],
+          "collaborators": [],
+          "recurrence": "none",
+          "requiresApproval": true,
+          "blockerReason": "",
+          "deadlineChangeReason": "Revised podium grid received after the baseline was agreed.",
+          "completedAt": "",
+          "createdAt": "2026-10-01T10:00:00Z",
+          "updatedAt": "2026-10-09T10:00:00Z",
+          "version": 1,
+          "comments": [
+            {
+              "id": "t-001-comment",
+              "userId": "u-head",
+              "body": "Please add the next action and the support you need. Keep the commitment date current with a reason for any change.",
+              "createdAt": "2026-10-09T13:00:00Z"
+            }
+          ],
+          "timeEntries": [
+            {
+              "id": "t-001-time-0",
+              "userId": "u-member",
+              "hours": 8,
+              "date": "2026-10-09",
+              "note": "Progress against the agreed deliverable",
+              "createdAt": "2026-10-09T12:00:00Z"
+            },
+            {
+              "id": "t-001-time-1",
+              "userId": "u-member",
+              "hours": 3.2,
+              "date": "2026-10-08",
+              "note": "Progress against the agreed deliverable",
+              "createdAt": "2026-10-08T12:00:00Z"
+            }
+          ],
+          "attachments": []
+        },
+        {
+          "id": "t-002",
+          "code": "SCH-1002",
+          "companyId": "c-schach",
+          "projectId": "p-factory",
+          "departmentId": "d-mfg",
+          "parentId": "",
+          "title": "Approve supplier material test certificates",
+          "description": "Review batch certificates against the approved procurement specification.",
+          "ownerId": "u-rahul",
+          "createdBy": "u-vikram",
+          "reviewerId": "u-vikram",
+          "status": "in_review",
+          "priority": "high",
+          "startDate": "2026-10-05",
+          "dueDate": "2026-10-10",
+          "originalDueDate": "2026-10-10",
+          "progress": 100,
+          "estimatedHours": 5,
+          "actualHours": 5.0,
+          "tags": [
+            "Operations"
+          ],
+          "checklist": [
+            {
+              "id": "t-002-a",
+              "text": "Validate required inputs",
+              "done": true
+            },
+            {
+              "id": "t-002-b",
+              "text": "Attach evidence and confirm acceptance",
+              "done": true
+            }
+          ],
+          "dependencies": [],
+          "collaborators": [],
+          "recurrence": "none",
+          "requiresApproval": true,
+          "blockerReason": "",
+          "deadlineChangeReason": "",
+          "completedAt": "",
+          "createdAt": "2026-10-01T10:00:00Z",
+          "updatedAt": "2026-10-09T10:00:00Z",
+          "version": 1,
+          "comments": [],
+          "timeEntries": [
+            {
+              "id": "t-002-time-0",
+              "userId": "u-rahul",
+              "hours": 5.0,
+              "date": "2026-10-09",
+              "note": "Progress against the agreed deliverable",
+              "createdAt": "2026-10-09T12:00:00Z"
+            }
+          ],
+          "attachments": []
+        },
+        {
+          "id": "t-003",
+          "code": "SCH-1003",
+          "companyId": "c-schach",
+          "projectId": "p-supply",
+          "departmentId": "d-proc",
+          "parentId": "",
+          "title": "Resolve extrusion delivery delay",
+          "description": "Confirm a revised delivery commitment and protect the production plan.",
+          "ownerId": "u-isha",
+          "createdBy": "u-nikhil",
+          "reviewerId": "u-nikhil",
+          "status": "blocked",
+          "priority": "critical",
+          "startDate": "2026-10-05",
+          "dueDate": "2026-10-09",
+          "originalDueDate": "2026-10-09",
+          "progress": 35,
+          "estimatedHours": 12,
+          "actualHours": 4.2,
+          "tags": [
+            "Operations"
+          ],
+          "checklist": [
+            {
+              "id": "t-003-a",
+              "text": "Validate required inputs",
+              "done": true
+            },
+            {
+              "id": "t-003-b",
+              "text": "Attach evidence and confirm acceptance",
+              "done": false
+            }
+          ],
+          "dependencies": [],
+          "collaborators": [],
+          "recurrence": "none",
+          "requiresApproval": true,
+          "blockerReason": "Vendor has not confirmed the replacement vehicle. Procurement needs an escalation call.",
+          "deadlineChangeReason": "",
+          "completedAt": "",
+          "createdAt": "2026-10-01T10:00:00Z",
+          "updatedAt": "2026-10-09T10:00:00Z",
+          "version": 1,
+          "comments": [
+            {
+              "id": "t-003-comment",
+              "userId": "u-nikhil",
+              "body": "Please add the next action and the support you need. Keep the commitment date current with a reason for any change.",
+              "createdAt": "2026-10-09T13:00:00Z"
+            }
+          ],
+          "timeEntries": [
+            {
+              "id": "t-003-time-0",
+              "userId": "u-isha",
+              "hours": 4.2,
+              "date": "2026-10-09",
+              "note": "Progress against the agreed deliverable",
+              "createdAt": "2026-10-09T12:00:00Z"
+            }
+          ],
+          "attachments": []
+        },
+        {
+          "id": "t-004",
+          "code": "SCH-1004",
+          "companyId": "c-schach",
+          "projectId": "p-channel",
+          "departmentId": "d-sales",
+          "parentId": "",
+          "title": "Submit Ahmedabad partner proposal",
+          "description": "Prepare the commercial proposal and confirm the decision meeting.",
+          "ownerId": "u-sameer",
+          "createdBy": "u-neha",
+          "reviewerId": "u-neha",
+          "status": "in_progress",
+          "priority": "high",
+          "startDate": "2026-10-05",
+          "dueDate": "2026-10-11",
+          "originalDueDate": "2026-10-11",
+          "progress": 65,
+          "estimatedHours": 10,
+          "actualHours": 6.5,
+          "tags": [
+            "Operations"
+          ],
+          "checklist": [
+            {
+              "id": "t-004-a",
+              "text": "Validate required inputs",
+              "done": true
+            },
+            {
+              "id": "t-004-b",
+              "text": "Attach evidence and confirm acceptance",
+              "done": false
+            }
+          ],
+          "dependencies": [],
+          "collaborators": [],
+          "recurrence": "none",
+          "requiresApproval": true,
+          "blockerReason": "",
+          "deadlineChangeReason": "",
+          "completedAt": "",
+          "createdAt": "2026-10-01T10:00:00Z",
+          "updatedAt": "2026-10-09T10:00:00Z",
+          "version": 1,
+          "comments": [],
+          "timeEntries": [
+            {
+              "id": "t-004-time-0",
+              "userId": "u-sameer",
+              "hours": 6.5,
+              "date": "2026-10-09",
+              "note": "Progress against the agreed deliverable",
+              "createdAt": "2026-10-09T12:00:00Z"
+            }
+          ],
+          "attachments": []
+        },
+        {
+          "id": "t-005",
+          "code": "SCH-1005",
+          "companyId": "c-schach",
+          "projectId": "p-finance",
+          "departmentId": "d-fin",
+          "parentId": "",
+          "title": "Reconcile October receivables",
+          "description": "Reconcile receipts, identify unallocated payments and explain balance differences.",
+          "ownerId": "u-dev",
+          "createdBy": "u-priya",
+          "reviewerId": "u-priya",
+          "status": "in_progress",
+          "priority": "high",
+          "startDate": "2026-10-05",
+          "dueDate": "2026-10-07",
+          "originalDueDate": "2026-10-07",
+          "progress": 55,
+          "estimatedHours": 12,
+          "actualHours": 6.6,
+          "tags": [
+            "Operations"
+          ],
+          "checklist": [
+            {
+              "id": "t-005-a",
+              "text": "Validate required inputs",
+              "done": true
+            },
+            {
+              "id": "t-005-b",
+              "text": "Attach evidence and confirm acceptance",
+              "done": false
+            }
+          ],
+          "dependencies": [],
+          "collaborators": [],
+          "recurrence": "none",
+          "requiresApproval": true,
+          "blockerReason": "",
+          "deadlineChangeReason": "",
+          "completedAt": "",
+          "createdAt": "2026-10-01T10:00:00Z",
+          "updatedAt": "2026-10-09T10:00:00Z",
+          "version": 1,
+          "comments": [
+            {
+              "id": "t-005-comment",
+              "userId": "u-priya",
+              "body": "Please add the next action and the support you need. Keep the commitment date current with a reason for any change.",
+              "createdAt": "2026-10-09T13:00:00Z"
+            }
+          ],
+          "timeEntries": [
+            {
+              "id": "t-005-time-0",
+              "userId": "u-dev",
+              "hours": 6.6,
+              "date": "2026-10-09",
+              "note": "Progress against the agreed deliverable",
+              "createdAt": "2026-10-09T12:00:00Z"
+            }
+          ],
+          "attachments": []
+        },
+        {
+          "id": "t-006",
+          "code": "SCH-1006",
+          "companyId": "c-schach",
+          "projectId": "p-people",
+          "departmentId": "d-people",
+          "parentId": "",
+          "title": "Complete new joiner onboarding checklist",
+          "description": "Ensure access, induction and the first 30-day goals are assigned.",
+          "ownerId": "u-tara",
+          "createdBy": "u-sana",
+          "reviewerId": "u-sana",
+          "status": "todo",
+          "priority": "medium",
+          "startDate": "2026-10-05",
+          "dueDate": "2026-10-12",
+          "originalDueDate": "2026-10-12",
+          "progress": 0,
+          "estimatedHours": 6,
+          "actualHours": 0.0,
+          "tags": [
+            "Operations"
+          ],
+          "checklist": [
+            {
+              "id": "t-006-a",
+              "text": "Validate required inputs",
+              "done": false
+            },
+            {
+              "id": "t-006-b",
+              "text": "Attach evidence and confirm acceptance",
+              "done": false
+            }
+          ],
+          "dependencies": [],
+          "collaborators": [],
+          "recurrence": "none",
+          "requiresApproval": true,
+          "blockerReason": "",
+          "deadlineChangeReason": "",
+          "completedAt": "",
+          "createdAt": "2026-10-01T10:00:00Z",
+          "updatedAt": "2026-10-06T10:00:00Z",
+          "version": 1,
+          "comments": [],
+          "timeEntries": [],
+          "attachments": []
+        },
+        {
+          "id": "t-007",
+          "code": "SCH-1007",
+          "companyId": "c-schach",
+          "projectId": "p-phoenix",
+          "departmentId": "d-eng",
+          "parentId": "",
+          "title": "Issue tower level 8 BOQ",
+          "description": "Validate quantities against the latest coordinated drawings.",
+          "ownerId": "u-kabir",
+          "createdBy": "u-head",
+          "reviewerId": "u-head",
+          "status": "in_progress",
+          "priority": "high",
+          "startDate": "2026-10-05",
+          "dueDate": "2026-10-13",
+          "originalDueDate": "2026-10-13",
+          "progress": 40,
+          "estimatedHours": 20,
+          "actualHours": 8.0,
+          "tags": [
+            "Delivery"
+          ],
+          "checklist": [
+            {
+              "id": "t-007-a",
+              "text": "Validate required inputs",
+              "done": true
+            },
+            {
+              "id": "t-007-b",
+              "text": "Attach evidence and confirm acceptance",
+              "done": false
+            }
+          ],
+          "dependencies": [],
+          "collaborators": [],
+          "recurrence": "none",
+          "requiresApproval": true,
+          "blockerReason": "",
+          "deadlineChangeReason": "",
+          "completedAt": "",
+          "createdAt": "2026-10-01T10:00:00Z",
+          "updatedAt": "2026-10-09T10:00:00Z",
+          "version": 1,
+          "comments": [],
+          "timeEntries": [
+            {
+              "id": "t-007-time-0",
+              "userId": "u-kabir",
+              "hours": 8.0,
+              "date": "2026-10-09",
+              "note": "Progress against the agreed deliverable",
+              "createdAt": "2026-10-09T12:00:00Z"
+            }
+          ],
+          "attachments": []
+        },
+        {
+          "id": "t-008",
+          "code": "SCH-1008",
+          "companyId": "c-schach",
+          "projectId": "p-factory",
+          "departmentId": "d-mfg",
+          "parentId": "",
+          "title": "Review CNC maintenance plan",
+          "description": "Agree the preventive maintenance window and spare-parts list.",
+          "ownerId": "u-ananya",
+          "createdBy": "u-vikram",
+          "reviewerId": "u-vikram",
+          "status": "in_progress",
+          "priority": "medium",
+          "startDate": "2026-10-05",
+          "dueDate": "2026-10-14",
+          "originalDueDate": "2026-10-14",
+          "progress": 30,
+          "estimatedHours": 10,
+          "actualHours": 3.0,
+          "tags": [
+            "Operations"
+          ],
+          "checklist": [
+            {
+              "id": "t-008-a",
+              "text": "Validate required inputs",
+              "done": false
+            },
+            {
+              "id": "t-008-b",
+              "text": "Attach evidence and confirm acceptance",
+              "done": false
+            }
+          ],
+          "dependencies": [],
+          "collaborators": [],
+          "recurrence": "none",
+          "requiresApproval": true,
+          "blockerReason": "",
+          "deadlineChangeReason": "",
+          "completedAt": "",
+          "createdAt": "2026-10-01T10:00:00Z",
+          "updatedAt": "2026-10-09T10:00:00Z",
+          "version": 1,
+          "comments": [],
+          "timeEntries": [
+            {
+              "id": "t-008-time-0",
+              "userId": "u-ananya",
+              "hours": 3.0,
+              "date": "2026-10-09",
+              "note": "Progress against the agreed deliverable",
+              "createdAt": "2026-10-09T12:00:00Z"
+            }
+          ],
+          "attachments": []
+        },
+        {
+          "id": "t-009",
+          "code": "SCH-1009",
+          "companyId": "c-schach",
+          "projectId": "p-factory",
+          "departmentId": "d-mfg",
+          "parentId": "",
+          "title": "Publish weekly production commitments",
+          "description": "Confirm achievable output by line and name the owner of each constraint.",
+          "ownerId": "u-vikram",
+          "createdBy": "u-vikram",
+          "reviewerId": "u-ceo",
+          "status": "todo",
+          "priority": "high",
+          "startDate": "2026-10-05",
+          "dueDate": "2026-10-12",
+          "originalDueDate": "2026-10-12",
+          "progress": 0,
+          "estimatedHours": 4,
+          "actualHours": 0.0,
+          "tags": [
+            "Operations"
+          ],
+          "checklist": [
+            {
+              "id": "t-009-a",
+              "text": "Validate required inputs",
+              "done": false
+            },
+            {
+              "id": "t-009-b",
+              "text": "Attach evidence and confirm acceptance",
+              "done": false
+            }
+          ],
+          "dependencies": [],
+          "collaborators": [],
+          "recurrence": "none",
+          "requiresApproval": true,
+          "blockerReason": "",
+          "deadlineChangeReason": "",
+          "completedAt": "",
+          "createdAt": "2026-10-01T10:00:00Z",
+          "updatedAt": "2026-10-06T10:00:00Z",
+          "version": 1,
+          "comments": [],
+          "timeEntries": [],
+          "attachments": []
+        },
+        {
+          "id": "t-010",
+          "code": "SCH-1010",
+          "companyId": "c-schach",
+          "projectId": "p-supply",
+          "departmentId": "d-proc",
+          "parentId": "",
+          "title": "Sign off vendor comparison for plywood",
+          "description": "Compare approved suppliers on landed cost, lead time and quality history.",
+          "ownerId": "u-nikhil",
+          "createdBy": "u-nikhil",
+          "reviewerId": "u-ceo",
+          "status": "in_review",
+          "priority": "high",
+          "startDate": "2026-10-05",
+          "dueDate": "2026-10-11",
+          "originalDueDate": "2026-10-11",
+          "progress": 100,
+          "estimatedHours": 6,
+          "actualHours": 6.0,
+          "tags": [
+            "Operations"
+          ],
+          "checklist": [
+            {
+              "id": "t-010-a",
+              "text": "Validate required inputs",
+              "done": true
+            },
+            {
+              "id": "t-010-b",
+              "text": "Attach evidence and confirm acceptance",
+              "done": true
+            }
+          ],
+          "dependencies": [],
+          "collaborators": [],
+          "recurrence": "none",
+          "requiresApproval": true,
+          "blockerReason": "",
+          "deadlineChangeReason": "",
+          "completedAt": "",
+          "createdAt": "2026-10-01T10:00:00Z",
+          "updatedAt": "2026-10-09T10:00:00Z",
+          "version": 1,
+          "comments": [],
+          "timeEntries": [
+            {
+              "id": "t-010-time-0",
+              "userId": "u-nikhil",
+              "hours": 6.0,
+              "date": "2026-10-09",
+              "note": "Progress against the agreed deliverable",
+              "createdAt": "2026-10-09T12:00:00Z"
+            }
+          ],
+          "attachments": []
+        },
+        {
+          "id": "t-011",
+          "code": "SCH-1011",
+          "companyId": "c-schach",
+          "projectId": "p-phoenix",
+          "departmentId": "d-eng",
+          "parentId": "",
+          "title": "Close Pune client technical queries",
+          "description": "Close the technical clarifications required for the final offer.",
+          "ownerId": "u-head",
+          "createdBy": "u-head",
+          "reviewerId": "u-ceo",
+          "status": "blocked",
+          "priority": "high",
+          "startDate": "2026-10-05",
+          "dueDate": "2026-10-08",
+          "originalDueDate": "2026-10-08",
+          "progress": 60,
+          "estimatedHours": 8,
+          "actualHours": 4.8,
+          "tags": [
+            "Delivery"
+          ],
+          "checklist": [
+            {
+              "id": "t-011-a",
+              "text": "Validate required inputs",
+              "done": true
+            },
+            {
+              "id": "t-011-b",
+              "text": "Attach evidence and confirm acceptance",
+              "done": false
+            }
+          ],
+          "dependencies": [],
+          "collaborators": [],
+          "recurrence": "none",
+          "requiresApproval": true,
+          "blockerReason": "Awaiting revised structural drawings from the client.",
+          "deadlineChangeReason": "",
+          "completedAt": "",
+          "createdAt": "2026-10-01T10:00:00Z",
+          "updatedAt": "2026-10-09T10:00:00Z",
+          "version": 1,
+          "comments": [
+            {
+              "id": "t-011-comment",
+              "userId": "u-ceo",
+              "body": "Please add the next action and the support you need. Keep the commitment date current with a reason for any change.",
+              "createdAt": "2026-10-09T13:00:00Z"
+            }
+          ],
+          "timeEntries": [
+            {
+              "id": "t-011-time-0",
+              "userId": "u-head",
+              "hours": 4.8,
+              "date": "2026-10-09",
+              "note": "Progress against the agreed deliverable",
+              "createdAt": "2026-10-09T12:00:00Z"
+            }
+          ],
+          "attachments": []
+        },
+        {
+          "id": "t-012",
+          "code": "SCH-1012",
+          "companyId": "c-schach",
+          "projectId": "p-finance",
+          "departmentId": "d-fin",
+          "parentId": "",
+          "title": "Prepare CEO weekly finance note",
+          "description": "Summarise cash position, overdue balances and decisions required this week.",
+          "ownerId": "u-priya",
+          "createdBy": "u-priya",
+          "reviewerId": "u-ceo",
+          "status": "in_review",
+          "priority": "medium",
+          "startDate": "2026-10-05",
+          "dueDate": "2026-10-10",
+          "originalDueDate": "2026-10-10",
+          "progress": 100,
+          "estimatedHours": 5,
+          "actualHours": 5.0,
+          "tags": [
+            "Operations"
+          ],
+          "checklist": [
+            {
+              "id": "t-012-a",
+              "text": "Validate required inputs",
+              "done": true
+            },
+            {
+              "id": "t-012-b",
+              "text": "Attach evidence and confirm acceptance",
+              "done": true
+            }
+          ],
+          "dependencies": [],
+          "collaborators": [],
+          "recurrence": "none",
+          "requiresApproval": true,
+          "blockerReason": "",
+          "deadlineChangeReason": "",
+          "completedAt": "",
+          "createdAt": "2026-10-01T10:00:00Z",
+          "updatedAt": "2026-10-09T10:00:00Z",
+          "version": 1,
+          "comments": [],
+          "timeEntries": [
+            {
+              "id": "t-012-time-0",
+              "userId": "u-priya",
+              "hours": 5.0,
+              "date": "2026-10-09",
+              "note": "Progress against the agreed deliverable",
+              "createdAt": "2026-10-09T12:00:00Z"
+            }
+          ],
+          "attachments": []
+        },
+        {
+          "id": "t-013",
+          "code": "SCH-1013",
+          "companyId": "c-schach",
+          "projectId": "p-people",
+          "departmentId": "d-people",
+          "parentId": "",
+          "title": "Schedule quarterly performance conversations",
+          "description": "Publish review slots and circulate the role-specific discussion guide.",
+          "ownerId": "u-sana",
+          "createdBy": "u-sana",
+          "reviewerId": "u-ceo",
+          "status": "in_progress",
+          "priority": "medium",
+          "startDate": "2026-10-05",
+          "dueDate": "2026-10-15",
+          "originalDueDate": "2026-10-15",
+          "progress": 60,
+          "estimatedHours": 8,
+          "actualHours": 4.8,
+          "tags": [
+            "Operations"
+          ],
+          "checklist": [
+            {
+              "id": "t-013-a",
+              "text": "Validate required inputs",
+              "done": true
+            },
+            {
+              "id": "t-013-b",
+              "text": "Attach evidence and confirm acceptance",
+              "done": false
+            }
+          ],
+          "dependencies": [],
+          "collaborators": [],
+          "recurrence": "none",
+          "requiresApproval": true,
+          "blockerReason": "",
+          "deadlineChangeReason": "",
+          "completedAt": "",
+          "createdAt": "2026-10-01T10:00:00Z",
+          "updatedAt": "2026-10-09T10:00:00Z",
+          "version": 1,
+          "comments": [],
+          "timeEntries": [
+            {
+              "id": "t-013-time-0",
+              "userId": "u-sana",
+              "hours": 4.8,
+              "date": "2026-10-09",
+              "note": "Progress against the agreed deliverable",
+              "createdAt": "2026-10-09T12:00:00Z"
+            }
+          ],
+          "attachments": []
+        },
+        {
+          "id": "t-014",
+          "code": "SCH-1014",
+          "companyId": "c-schach",
+          "projectId": "p-phoenix",
+          "departmentId": "d-eng",
+          "parentId": "",
+          "title": "Validate safety screen connection details",
+          "description": "Check the interface design against the approved project inputs.",
+          "ownerId": "u-member",
+          "createdBy": "u-head",
+          "reviewerId": "u-head",
+          "status": "todo",
+          "priority": "high",
+          "startDate": "2026-10-05",
+          "dueDate": "2026-10-14",
+          "originalDueDate": "2026-10-14",
+          "progress": 0,
+          "estimatedHours": 24,
+          "actualHours": 0.0,
+          "tags": [
+            "Delivery"
+          ],
+          "checklist": [
+            {
+              "id": "t-014-a",
+              "text": "Validate required inputs",
+              "done": false
+            },
+            {
+              "id": "t-014-b",
+              "text": "Attach evidence and confirm acceptance",
+              "done": false
+            }
+          ],
+          "dependencies": [
+            "t-001"
+          ],
+          "collaborators": [],
+          "recurrence": "none",
+          "requiresApproval": true,
+          "blockerReason": "",
+          "deadlineChangeReason": "",
+          "completedAt": "",
+          "createdAt": "2026-10-01T10:00:00Z",
+          "updatedAt": "2026-10-06T10:00:00Z",
+          "version": 1,
+          "comments": [],
+          "timeEntries": [],
+          "attachments": []
+        },
+        {
+          "id": "t-015",
+          "code": "SCH-1015",
+          "companyId": "c-schach",
+          "projectId": "p-channel",
+          "departmentId": "d-sales",
+          "parentId": "",
+          "title": "Update partner opportunity register",
+          "description": "Record next steps, decision dates and accountable owners for active opportunities.",
+          "ownerId": "u-sameer",
+          "createdBy": "u-neha",
+          "reviewerId": "u-neha",
+          "status": "todo",
+          "priority": "medium",
+          "startDate": "2026-10-05",
+          "dueDate": "2026-10-13",
+          "originalDueDate": "2026-10-13",
+          "progress": 0,
+          "estimatedHours": 5,
+          "actualHours": 0.0,
+          "tags": [
+            "Operations"
+          ],
+          "checklist": [
+            {
+              "id": "t-015-a",
+              "text": "Validate required inputs",
+              "done": false
+            },
+            {
+              "id": "t-015-b",
+              "text": "Attach evidence and confirm acceptance",
+              "done": false
+            }
+          ],
+          "dependencies": [],
+          "collaborators": [],
+          "recurrence": "none",
+          "requiresApproval": true,
+          "blockerReason": "",
+          "deadlineChangeReason": "",
+          "completedAt": "",
+          "createdAt": "2026-10-01T10:00:00Z",
+          "updatedAt": "2026-10-06T10:00:00Z",
+          "version": 1,
+          "comments": [],
+          "timeEntries": [],
+          "attachments": []
+        },
+        {
+          "id": "t-016",
+          "code": "SCH-1016",
+          "companyId": "c-schach",
+          "projectId": "p-factory",
+          "departmentId": "d-mfg",
+          "parentId": "",
+          "title": "Confirm pallet packing sequence",
+          "description": "Sequence packing to match the site's unloading and erection priorities.",
+          "ownerId": "u-ananya",
+          "createdBy": "u-vikram",
+          "reviewerId": "u-vikram",
+          "status": "todo",
+          "priority": "high",
+          "startDate": "2026-10-05",
+          "dueDate": "2026-10-15",
+          "originalDueDate": "2026-10-15",
+          "progress": 0,
+          "estimatedHours": 14,
+          "actualHours": 0.0,
+          "tags": [
+            "Operations"
+          ],
+          "checklist": [
+            {
+              "id": "t-016-a",
+              "text": "Validate required inputs",
+              "done": false
+            },
+            {
+              "id": "t-016-b",
+              "text": "Attach evidence and confirm acceptance",
+              "done": false
+            }
+          ],
+          "dependencies": [],
+          "collaborators": [],
+          "recurrence": "none",
+          "requiresApproval": true,
+          "blockerReason": "",
+          "deadlineChangeReason": "",
+          "completedAt": "",
+          "createdAt": "2026-10-01T10:00:00Z",
+          "updatedAt": "2026-10-06T10:00:00Z",
+          "version": 1,
+          "comments": [],
+          "timeEntries": [],
+          "attachments": []
+        },
+        {
+          "id": "t-017",
+          "code": "SCH-1017",
+          "companyId": "c-schach",
+          "projectId": "p-factory",
+          "departmentId": "d-mfg",
+          "parentId": "",
+          "title": "Finish first-article dimensional inspection",
+          "description": "Record dimensional checks and close any nonconformities before release.",
+          "ownerId": "u-rahul",
+          "createdBy": "u-vikram",
+          "reviewerId": "u-vikram",
+          "status": "done",
+          "priority": "high",
+          "startDate": "2026-10-05",
+          "dueDate": "2026-10-06",
+          "originalDueDate": "2026-10-06",
+          "progress": 100,
+          "estimatedHours": 8,
+          "actualHours": 8.0,
+          "tags": [
+            "Operations"
+          ],
+          "checklist": [
+            {
+              "id": "t-017-a",
+              "text": "Validate required inputs",
+              "done": true
+            },
+            {
+              "id": "t-017-b",
+              "text": "Attach evidence and confirm acceptance",
+              "done": true
+            }
+          ],
+          "dependencies": [],
+          "collaborators": [],
+          "recurrence": "none",
+          "requiresApproval": true,
+          "blockerReason": "",
+          "deadlineChangeReason": "",
+          "completedAt": "2026-10-05T10:00:00Z",
+          "createdAt": "2026-10-01T10:00:00Z",
+          "updatedAt": "2026-10-09T10:00:00Z",
+          "version": 1,
+          "comments": [],
+          "timeEntries": [
+            {
+              "id": "t-017-time-0",
+              "userId": "u-rahul",
+              "hours": 8.0,
+              "date": "2026-10-09",
+              "note": "Progress against the agreed deliverable",
+              "createdAt": "2026-10-09T12:00:00Z"
+            }
+          ],
+          "attachments": []
+        },
+        {
+          "id": "t-018",
+          "code": "SCH-1018",
+          "companyId": "c-schach",
+          "projectId": "p-phoenix",
+          "departmentId": "d-eng",
+          "parentId": "",
+          "title": "Complete drawing revision register",
+          "description": "Archive superseded drawings and confirm the latest revision for each sheet.",
+          "ownerId": "u-kabir",
+          "createdBy": "u-head",
+          "reviewerId": "u-head",
+          "status": "done",
+          "priority": "medium",
+          "startDate": "2026-10-05",
+          "dueDate": "2026-10-07",
+          "originalDueDate": "2026-10-07",
+          "progress": 100,
+          "estimatedHours": 6,
+          "actualHours": 6.0,
+          "tags": [
+            "Delivery"
+          ],
+          "checklist": [
+            {
+              "id": "t-018-a",
+              "text": "Validate required inputs",
+              "done": true
+            },
+            {
+              "id": "t-018-b",
+              "text": "Attach evidence and confirm acceptance",
+              "done": true
+            }
+          ],
+          "dependencies": [],
+          "collaborators": [],
+          "recurrence": "none",
+          "requiresApproval": true,
+          "blockerReason": "",
+          "deadlineChangeReason": "",
+          "completedAt": "2026-10-06T10:00:00Z",
+          "createdAt": "2026-10-01T10:00:00Z",
+          "updatedAt": "2026-10-09T10:00:00Z",
+          "version": 1,
+          "comments": [],
+          "timeEntries": [
+            {
+              "id": "t-018-time-0",
+              "userId": "u-kabir",
+              "hours": 6.0,
+              "date": "2026-10-09",
+              "note": "Progress against the agreed deliverable",
+              "createdAt": "2026-10-09T12:00:00Z"
+            }
+          ],
+          "attachments": []
+        },
+        {
+          "id": "t-019",
+          "code": "SCH-1019",
+          "companyId": "c-schach",
+          "projectId": "p-channel",
+          "departmentId": "d-sales",
+          "parentId": "",
+          "title": "Release partner onboarding kit",
+          "description": "Publish the approved product and partner onboarding material.",
+          "ownerId": "u-neha",
+          "createdBy": "u-neha",
+          "reviewerId": "u-ceo",
+          "status": "done",
+          "priority": "medium",
+          "startDate": "2026-10-05",
+          "dueDate": "2026-10-05",
+          "originalDueDate": "2026-10-05",
+          "progress": 100,
+          "estimatedHours": 8,
+          "actualHours": 8.0,
+          "tags": [
+            "Operations"
+          ],
+          "checklist": [
+            {
+              "id": "t-019-a",
+              "text": "Validate required inputs",
+              "done": true
+            },
+            {
+              "id": "t-019-b",
+              "text": "Attach evidence and confirm acceptance",
+              "done": true
+            }
+          ],
+          "dependencies": [],
+          "collaborators": [],
+          "recurrence": "none",
+          "requiresApproval": true,
+          "blockerReason": "",
+          "deadlineChangeReason": "",
+          "completedAt": "2026-10-06T10:00:00Z",
+          "createdAt": "2026-10-01T10:00:00Z",
+          "updatedAt": "2026-10-09T10:00:00Z",
+          "version": 1,
+          "comments": [],
+          "timeEntries": [
+            {
+              "id": "t-019-time-0",
+              "userId": "u-neha",
+              "hours": 8.0,
+              "date": "2026-10-09",
+              "note": "Progress against the agreed deliverable",
+              "createdAt": "2026-10-09T12:00:00Z"
+            }
+          ],
+          "attachments": []
+        },
+        {
+          "id": "t-020",
+          "code": "SCH-1020",
+          "companyId": "c-schach",
+          "projectId": "p-finance",
+          "departmentId": "d-fin",
+          "parentId": "",
+          "title": "Reconcile bank transactions",
+          "description": "Match statement movements to the ledger and list unresolved items.",
+          "ownerId": "u-dev",
+          "createdBy": "u-priya",
+          "reviewerId": "u-priya",
+          "status": "done",
+          "priority": "medium",
+          "startDate": "2026-10-05",
+          "dueDate": "2026-10-06",
+          "originalDueDate": "2026-10-06",
+          "progress": 100,
+          "estimatedHours": 6,
+          "actualHours": 6.0,
+          "tags": [
+            "Operations"
+          ],
+          "checklist": [
+            {
+              "id": "t-020-a",
+              "text": "Validate required inputs",
+              "done": true
+            },
+            {
+              "id": "t-020-b",
+              "text": "Attach evidence and confirm acceptance",
+              "done": true
+            }
+          ],
+          "dependencies": [],
+          "collaborators": [],
+          "recurrence": "none",
+          "requiresApproval": true,
+          "blockerReason": "",
+          "deadlineChangeReason": "",
+          "completedAt": "2026-10-07T10:00:00Z",
+          "createdAt": "2026-10-01T10:00:00Z",
+          "updatedAt": "2026-10-09T10:00:00Z",
+          "version": 1,
+          "comments": [],
+          "timeEntries": [
+            {
+              "id": "t-020-time-0",
+              "userId": "u-dev",
+              "hours": 6.0,
+              "date": "2026-10-09",
+              "note": "Progress against the agreed deliverable",
+              "createdAt": "2026-10-09T12:00:00Z"
+            }
+          ],
+          "attachments": []
+        },
+        {
+          "id": "t-021",
+          "code": "SCH-1021",
+          "companyId": "c-schach",
+          "projectId": "p-people",
+          "departmentId": "d-people",
+          "parentId": "",
+          "title": "Finalise quality induction module",
+          "description": "Share the induction material and confirm it is understood by supervisors.",
+          "ownerId": "u-tara",
+          "createdBy": "u-sana",
+          "reviewerId": "u-sana",
+          "status": "done",
+          "priority": "low",
+          "startDate": "2026-10-05",
+          "dueDate": "2026-10-08",
+          "originalDueDate": "2026-10-08",
+          "progress": 100,
+          "estimatedHours": 4,
+          "actualHours": 4.0,
+          "tags": [
+            "Operations"
+          ],
+          "checklist": [
+            {
+              "id": "t-021-a",
+              "text": "Validate required inputs",
+              "done": true
+            },
+            {
+              "id": "t-021-b",
+              "text": "Attach evidence and confirm acceptance",
+              "done": true
+            }
+          ],
+          "dependencies": [],
+          "collaborators": [],
+          "recurrence": "none",
+          "requiresApproval": true,
+          "blockerReason": "",
+          "deadlineChangeReason": "",
+          "completedAt": "2026-10-07T10:00:00Z",
+          "createdAt": "2026-10-01T10:00:00Z",
+          "updatedAt": "2026-10-09T10:00:00Z",
+          "version": 1,
+          "comments": [],
+          "timeEntries": [
+            {
+              "id": "t-021-time-0",
+              "userId": "u-tara",
+              "hours": 4.0,
+              "date": "2026-10-09",
+              "note": "Progress against the agreed deliverable",
+              "createdAt": "2026-10-09T12:00:00Z"
+            }
+          ],
+          "attachments": []
+        },
+        {
+          "id": "t-022",
+          "code": "SCH-1022",
+          "companyId": "c-schach",
+          "projectId": "p-supply",
+          "departmentId": "d-proc",
+          "parentId": "",
+          "title": "Approve raw material forecast",
+          "description": "Align forecast consumption with released production requirements.",
+          "ownerId": "u-nikhil",
+          "createdBy": "u-nikhil",
+          "reviewerId": "u-ceo",
+          "status": "done",
+          "priority": "high",
+          "startDate": "2026-10-05",
+          "dueDate": "2026-10-07",
+          "originalDueDate": "2026-10-07",
+          "progress": 100,
+          "estimatedHours": 5,
+          "actualHours": 5.0,
+          "tags": [
+            "Operations"
+          ],
+          "checklist": [
+            {
+              "id": "t-022-a",
+              "text": "Validate required inputs",
+              "done": true
+            },
+            {
+              "id": "t-022-b",
+              "text": "Attach evidence and confirm acceptance",
+              "done": true
+            }
+          ],
+          "dependencies": [],
+          "collaborators": [],
+          "recurrence": "none",
+          "requiresApproval": true,
+          "blockerReason": "",
+          "deadlineChangeReason": "",
+          "completedAt": "2026-10-06T10:00:00Z",
+          "createdAt": "2026-10-01T10:00:00Z",
+          "updatedAt": "2026-10-09T10:00:00Z",
+          "version": 1,
+          "comments": [],
+          "timeEntries": [
+            {
+              "id": "t-022-time-0",
+              "userId": "u-nikhil",
+              "hours": 5.0,
+              "date": "2026-10-09",
+              "note": "Progress against the agreed deliverable",
+              "createdAt": "2026-10-09T12:00:00Z"
+            }
+          ],
+          "attachments": []
+        },
+        {
+          "id": "t-023",
+          "code": "SCH-1023",
+          "companyId": "c-schach",
+          "projectId": "p-phoenix",
+          "departmentId": "d-eng",
+          "parentId": "",
+          "title": "Review formwork panel nesting",
+          "description": "Review utilisation and flag exceptions before cutting begins.",
+          "ownerId": "u-member",
+          "createdBy": "u-head",
+          "reviewerId": "u-head",
+          "status": "in_progress",
+          "priority": "medium",
+          "startDate": "2026-10-05",
+          "dueDate": "2026-10-16",
+          "originalDueDate": "2026-10-16",
+          "progress": 25,
+          "estimatedHours": 12,
+          "actualHours": 3.0,
+          "tags": [
+            "Delivery"
+          ],
+          "checklist": [
+            {
+              "id": "t-023-a",
+              "text": "Validate required inputs",
+              "done": false
+            },
+            {
+              "id": "t-023-b",
+              "text": "Attach evidence and confirm acceptance",
+              "done": false
+            }
+          ],
+          "dependencies": [],
+          "collaborators": [],
+          "recurrence": "none",
+          "requiresApproval": true,
+          "blockerReason": "",
+          "deadlineChangeReason": "",
+          "completedAt": "",
+          "createdAt": "2026-10-01T10:00:00Z",
+          "updatedAt": "2026-10-09T10:00:00Z",
+          "version": 1,
+          "comments": [],
+          "timeEntries": [
+            {
+              "id": "t-023-time-0",
+              "userId": "u-member",
+              "hours": 3.0,
+              "date": "2026-10-09",
+              "note": "Progress against the agreed deliverable",
+              "createdAt": "2026-10-09T12:00:00Z"
+            }
+          ],
+          "attachments": []
+        },
+        {
+          "id": "t-024",
+          "code": "SCH-1024",
+          "companyId": "c-schach",
+          "projectId": "p-supply",
+          "departmentId": "d-proc",
+          "parentId": "",
+          "title": "Collect revised freight quotation",
+          "description": "Obtain a written quotation with route, transit and handling commitments.",
+          "ownerId": "u-isha",
+          "createdBy": "u-nikhil",
+          "reviewerId": "u-nikhil",
+          "status": "todo",
+          "priority": "medium",
+          "startDate": "2026-10-05",
+          "dueDate": "2026-10-12",
+          "originalDueDate": "2026-10-12",
+          "progress": 0,
+          "estimatedHours": 4,
+          "actualHours": 0.0,
+          "tags": [
+            "Operations"
+          ],
+          "checklist": [
+            {
+              "id": "t-024-a",
+              "text": "Validate required inputs",
+              "done": false
+            },
+            {
+              "id": "t-024-b",
+              "text": "Attach evidence and confirm acceptance",
+              "done": false
+            }
+          ],
+          "dependencies": [],
+          "collaborators": [],
+          "recurrence": "none",
+          "requiresApproval": true,
+          "blockerReason": "",
+          "deadlineChangeReason": "",
+          "completedAt": "",
+          "createdAt": "2026-10-01T10:00:00Z",
+          "updatedAt": "2026-10-06T10:00:00Z",
+          "version": 1,
+          "comments": [],
+          "timeEntries": [],
+          "attachments": []
+        },
+        {
+          "id": "t-025",
+          "code": "SCH-1025",
+          "companyId": "c-schach",
+          "projectId": "p-factory",
+          "departmentId": "d-mfg",
+          "parentId": "",
+          "title": "Review manufacturing rework causes",
+          "description": "Identify the repeat defect types and corrective actions with owners.",
+          "ownerId": "u-vikram",
+          "createdBy": "u-vikram",
+          "reviewerId": "u-ceo",
+          "status": "blocked",
+          "priority": "high",
+          "startDate": "2026-10-05",
+          "dueDate": "2026-10-13",
+          "originalDueDate": "2026-10-13",
+          "progress": 45,
+          "estimatedHours": 8,
+          "actualHours": 3.6,
+          "tags": [
+            "Operations"
+          ],
+          "checklist": [
+            {
+              "id": "t-025-a",
+              "text": "Validate required inputs",
+              "done": true
+            },
+            {
+              "id": "t-025-b",
+              "text": "Attach evidence and confirm acceptance",
+              "done": false
+            }
+          ],
+          "dependencies": [],
+          "collaborators": [],
+          "recurrence": "none",
+          "requiresApproval": true,
+          "blockerReason": "Two inspection reports are still missing from the night shift.",
+          "deadlineChangeReason": "",
+          "completedAt": "",
+          "createdAt": "2026-10-01T10:00:00Z",
+          "updatedAt": "2026-10-09T10:00:00Z",
+          "version": 1,
+          "comments": [
+            {
+              "id": "t-025-comment",
+              "userId": "u-ceo",
+              "body": "Please add the next action and the support you need. Keep the commitment date current with a reason for any change.",
+              "createdAt": "2026-10-09T13:00:00Z"
+            }
+          ],
+          "timeEntries": [
+            {
+              "id": "t-025-time-0",
+              "userId": "u-vikram",
+              "hours": 3.6,
+              "date": "2026-10-09",
+              "note": "Progress against the agreed deliverable",
+              "createdAt": "2026-10-09T12:00:00Z"
+            }
+          ],
+          "attachments": []
+        },
+        {
+          "id": "t-026",
+          "code": "SCH-1026",
+          "companyId": "c-schach",
+          "projectId": "p-channel",
+          "departmentId": "d-sales",
+          "parentId": "",
+          "title": "Complete GIFT City account review",
+          "description": "Confirm stakeholder mapping and the next commercial decision.",
+          "ownerId": "u-neha",
+          "createdBy": "u-neha",
+          "reviewerId": "u-ceo",
+          "status": "in_progress",
+          "priority": "medium",
+          "startDate": "2026-10-05",
+          "dueDate": "2026-10-14",
+          "originalDueDate": "2026-10-14",
+          "progress": 50,
+          "estimatedHours": 6,
+          "actualHours": 3.0,
+          "tags": [
+            "Operations"
+          ],
+          "checklist": [
+            {
+              "id": "t-026-a",
+              "text": "Validate required inputs",
+              "done": true
+            },
+            {
+              "id": "t-026-b",
+              "text": "Attach evidence and confirm acceptance",
+              "done": false
+            }
+          ],
+          "dependencies": [],
+          "collaborators": [],
+          "recurrence": "none",
+          "requiresApproval": true,
+          "blockerReason": "",
+          "deadlineChangeReason": "",
+          "completedAt": "",
+          "createdAt": "2026-10-01T10:00:00Z",
+          "updatedAt": "2026-10-09T10:00:00Z",
+          "version": 1,
+          "comments": [],
+          "timeEntries": [
+            {
+              "id": "t-026-time-0",
+              "userId": "u-neha",
+              "hours": 3.0,
+              "date": "2026-10-09",
+              "note": "Progress against the agreed deliverable",
+              "createdAt": "2026-10-09T12:00:00Z"
+            }
+          ],
+          "attachments": []
+        },
+        {
+          "id": "t-027",
+          "code": "SCH-1027",
+          "companyId": "c-schach",
+          "projectId": "p-people",
+          "departmentId": "d-people",
+          "parentId": "",
+          "title": "Prepare department capacity review",
+          "description": "Compare committed work with available hours and flag hiring needs.",
+          "ownerId": "u-sana",
+          "createdBy": "u-sana",
+          "reviewerId": "u-ceo",
+          "status": "todo",
+          "priority": "medium",
+          "startDate": "2026-10-05",
+          "dueDate": "2026-10-17",
+          "originalDueDate": "2026-10-17",
+          "progress": 0,
+          "estimatedHours": 6,
+          "actualHours": 0.0,
+          "tags": [
+            "Operations"
+          ],
+          "checklist": [
+            {
+              "id": "t-027-a",
+              "text": "Validate required inputs",
+              "done": false
+            },
+            {
+              "id": "t-027-b",
+              "text": "Attach evidence and confirm acceptance",
+              "done": false
+            }
+          ],
+          "dependencies": [],
+          "collaborators": [],
+          "recurrence": "none",
+          "requiresApproval": true,
+          "blockerReason": "",
+          "deadlineChangeReason": "",
+          "completedAt": "",
+          "createdAt": "2026-10-01T10:00:00Z",
+          "updatedAt": "2026-10-06T10:00:00Z",
+          "version": 1,
+          "comments": [],
+          "timeEntries": [],
+          "attachments": []
+        },
+        {
+          "id": "t-028",
+          "code": "SCH-1028",
+          "companyId": "c-schach",
+          "projectId": "p-finance",
+          "departmentId": "d-fin",
+          "parentId": "",
+          "title": "Review monthly purchase variance",
+          "description": "Explain the material purchase variance with procurement.",
+          "ownerId": "u-priya",
+          "createdBy": "u-priya",
+          "reviewerId": "u-ceo",
+          "status": "todo",
+          "priority": "high",
+          "startDate": "2026-10-05",
+          "dueDate": "2026-10-16",
+          "originalDueDate": "2026-10-16",
+          "progress": 0,
+          "estimatedHours": 10,
+          "actualHours": 0.0,
+          "tags": [
+            "Operations"
+          ],
+          "checklist": [
+            {
+              "id": "t-028-a",
+              "text": "Validate required inputs",
+              "done": false
+            },
+            {
+              "id": "t-028-b",
+              "text": "Attach evidence and confirm acceptance",
+              "done": false
+            }
+          ],
+          "dependencies": [],
+          "collaborators": [],
+          "recurrence": "none",
+          "requiresApproval": true,
+          "blockerReason": "",
+          "deadlineChangeReason": "",
+          "completedAt": "",
+          "createdAt": "2026-10-01T10:00:00Z",
+          "updatedAt": "2026-10-06T10:00:00Z",
+          "version": 1,
+          "comments": [],
+          "timeEntries": [],
+          "attachments": []
+        },
+        {
+          "id": "t-029",
+          "code": "SCH-1029",
+          "companyId": "c-schach",
+          "projectId": "p-phoenix",
+          "departmentId": "d-eng",
+          "parentId": "",
+          "title": "Set up site handover document pack",
+          "description": "Create the checklist for drawings, certificates and delivery documents.",
+          "ownerId": "u-kabir",
+          "createdBy": "u-head",
+          "reviewerId": "u-head",
+          "status": "backlog",
+          "priority": "medium",
+          "startDate": "2026-10-05",
+          "dueDate": "2026-10-20",
+          "originalDueDate": "2026-10-20",
+          "progress": 0,
+          "estimatedHours": 8,
+          "actualHours": 0.0,
+          "tags": [
+            "Delivery"
+          ],
+          "checklist": [
+            {
+              "id": "t-029-a",
+              "text": "Validate required inputs",
+              "done": false
+            },
+            {
+              "id": "t-029-b",
+              "text": "Attach evidence and confirm acceptance",
+              "done": false
+            }
+          ],
+          "dependencies": [],
+          "collaborators": [],
+          "recurrence": "none",
+          "requiresApproval": true,
+          "blockerReason": "",
+          "deadlineChangeReason": "",
+          "completedAt": "",
+          "createdAt": "2026-10-01T10:00:00Z",
+          "updatedAt": "2026-10-06T10:00:00Z",
+          "version": 1,
+          "comments": [],
+          "timeEntries": [],
+          "attachments": []
+        },
+        {
+          "id": "t-030",
+          "code": "SCH-1030",
+          "companyId": "c-schach",
+          "projectId": "p-factory",
+          "departmentId": "d-mfg",
+          "parentId": "",
+          "title": "Refresh preventative maintenance register",
+          "description": "Update responsible technicians, frequencies and inspection evidence.",
+          "ownerId": "u-ananya",
+          "createdBy": "u-vikram",
+          "reviewerId": "u-vikram",
+          "status": "backlog",
+          "priority": "low",
+          "startDate": "2026-10-05",
+          "dueDate": "2026-10-22",
+          "originalDueDate": "2026-10-22",
+          "progress": 0,
+          "estimatedHours": 6,
+          "actualHours": 0.0,
+          "tags": [
+            "Operations"
+          ],
+          "checklist": [
+            {
+              "id": "t-030-a",
+              "text": "Validate required inputs",
+              "done": false
+            },
+            {
+              "id": "t-030-b",
+              "text": "Attach evidence and confirm acceptance",
+              "done": false
+            }
+          ],
+          "dependencies": [],
+          "collaborators": [],
+          "recurrence": "none",
+          "requiresApproval": true,
+          "blockerReason": "",
+          "deadlineChangeReason": "",
+          "completedAt": "",
+          "createdAt": "2026-10-01T10:00:00Z",
+          "updatedAt": "2026-10-06T10:00:00Z",
+          "version": 1,
+          "comments": [],
+          "timeEntries": [],
+          "attachments": []
+        },
+        {
+          "id": "t-031",
+          "code": "SCH-1031",
+          "companyId": "c-schach",
+          "projectId": "p-channel",
+          "departmentId": "d-sales",
+          "parentId": "",
+          "title": "Publish regional customer visit plan",
+          "description": "Schedule meetings with clear objectives and expected decisions.",
+          "ownerId": "u-sameer",
+          "createdBy": "u-neha",
+          "reviewerId": "u-neha",
+          "status": "todo",
+          "priority": "medium",
+          "startDate": "2026-10-05",
+          "dueDate": "2026-10-15",
+          "originalDueDate": "2026-10-15",
+          "progress": 0,
+          "estimatedHours": 8,
+          "actualHours": 0.0,
+          "tags": [
+            "Operations"
+          ],
+          "checklist": [
+            {
+              "id": "t-031-a",
+              "text": "Validate required inputs",
+              "done": false
+            },
+            {
+              "id": "t-031-b",
+              "text": "Attach evidence and confirm acceptance",
+              "done": false
+            }
+          ],
+          "dependencies": [],
+          "collaborators": [],
+          "recurrence": "none",
+          "requiresApproval": true,
+          "blockerReason": "",
+          "deadlineChangeReason": "",
+          "completedAt": "",
+          "createdAt": "2026-10-01T10:00:00Z",
+          "updatedAt": "2026-10-06T10:00:00Z",
+          "version": 1,
+          "comments": [],
+          "timeEntries": [],
+          "attachments": []
+        },
+        {
+          "id": "t-032",
+          "code": "SCH-1032",
+          "companyId": "c-schach",
+          "projectId": "p-finance",
+          "departmentId": "d-fin",
+          "parentId": "",
+          "title": "Close outstanding expense approvals",
+          "description": "Resolve the supported expense claims pending department approval.",
+          "ownerId": "u-dev",
+          "createdBy": "u-priya",
+          "reviewerId": "u-priya",
+          "status": "in_review",
+          "priority": "medium",
+          "startDate": "2026-10-05",
+          "dueDate": "2026-10-09",
+          "originalDueDate": "2026-10-09",
+          "progress": 100,
+          "estimatedHours": 4,
+          "actualHours": 4.0,
+          "tags": [
+            "Operations"
+          ],
+          "checklist": [
+            {
+              "id": "t-032-a",
+              "text": "Validate required inputs",
+              "done": true
+            },
+            {
+              "id": "t-032-b",
+              "text": "Attach evidence and confirm acceptance",
+              "done": true
+            }
+          ],
+          "dependencies": [],
+          "collaborators": [],
+          "recurrence": "none",
+          "requiresApproval": true,
+          "blockerReason": "",
+          "deadlineChangeReason": "",
+          "completedAt": "",
+          "createdAt": "2026-10-01T10:00:00Z",
+          "updatedAt": "2026-10-09T10:00:00Z",
+          "version": 1,
+          "comments": [],
+          "timeEntries": [
+            {
+              "id": "t-032-time-0",
+              "userId": "u-dev",
+              "hours": 4.0,
+              "date": "2026-10-09",
+              "note": "Progress against the agreed deliverable",
+              "createdAt": "2026-10-09T12:00:00Z"
+            }
+          ],
+          "attachments": []
+        },
+        {
+          "id": "t-033",
+          "code": "SCH-1033",
+          "companyId": "c-schach",
+          "projectId": "p-people",
+          "departmentId": "d-people",
+          "parentId": "",
+          "title": "Complete monthly safety refresher",
+          "description": "Record attendance and action points from the safety refresher.",
+          "ownerId": "u-tara",
+          "createdBy": "u-sana",
+          "reviewerId": "u-sana",
+          "status": "in_progress",
+          "priority": "high",
+          "startDate": "2026-10-05",
+          "dueDate": "2026-10-11",
+          "originalDueDate": "2026-10-11",
+          "progress": 75,
+          "estimatedHours": 6,
+          "actualHours": 4.5,
+          "tags": [
+            "Operations"
+          ],
+          "checklist": [
+            {
+              "id": "t-033-a",
+              "text": "Validate required inputs",
+              "done": true
+            },
+            {
+              "id": "t-033-b",
+              "text": "Attach evidence and confirm acceptance",
+              "done": false
+            }
+          ],
+          "dependencies": [],
+          "collaborators": [],
+          "recurrence": "none",
+          "requiresApproval": true,
+          "blockerReason": "",
+          "deadlineChangeReason": "",
+          "completedAt": "",
+          "createdAt": "2026-10-01T10:00:00Z",
+          "updatedAt": "2026-10-09T10:00:00Z",
+          "version": 1,
+          "comments": [],
+          "timeEntries": [
+            {
+              "id": "t-033-time-0",
+              "userId": "u-tara",
+              "hours": 4.5,
+              "date": "2026-10-09",
+              "note": "Progress against the agreed deliverable",
+              "createdAt": "2026-10-09T12:00:00Z"
+            }
+          ],
+          "attachments": []
+        },
+        {
+          "id": "t-034",
+          "code": "SCH-1034",
+          "companyId": "c-schach",
+          "projectId": "p-supply",
+          "departmentId": "d-proc",
+          "parentId": "",
+          "title": "Confirm alternative extrusion supplier",
+          "description": "Document specification compliance and a verified production slot.",
+          "ownerId": "u-isha",
+          "createdBy": "u-nikhil",
+          "reviewerId": "u-nikhil",
+          "status": "todo",
+          "priority": "high",
+          "startDate": "2026-10-05",
+          "dueDate": "2026-10-14",
+          "originalDueDate": "2026-10-14",
+          "progress": 0,
+          "estimatedHours": 8,
+          "actualHours": 0.0,
+          "tags": [
+            "Operations"
+          ],
+          "checklist": [
+            {
+              "id": "t-034-a",
+              "text": "Validate required inputs",
+              "done": false
+            },
+            {
+              "id": "t-034-b",
+              "text": "Attach evidence and confirm acceptance",
+              "done": false
+            }
+          ],
+          "dependencies": [],
+          "collaborators": [],
+          "recurrence": "none",
+          "requiresApproval": true,
+          "blockerReason": "",
+          "deadlineChangeReason": "",
+          "completedAt": "",
+          "createdAt": "2026-10-01T10:00:00Z",
+          "updatedAt": "2026-10-06T10:00:00Z",
+          "version": 1,
+          "comments": [],
+          "timeEntries": [],
+          "attachments": []
+        },
+        {
+          "id": "t-035",
+          "code": "SCH-1035",
+          "companyId": "c-schach",
+          "projectId": "p-phoenix",
+          "departmentId": "d-eng",
+          "parentId": "",
+          "title": "Update drawing issue checklist",
+          "description": "Make the checklist consistent across engineering handovers.",
+          "ownerId": "u-head",
+          "createdBy": "u-head",
+          "reviewerId": "u-ceo",
+          "status": "done",
+          "priority": "medium",
+          "startDate": "2026-10-05",
+          "dueDate": "2026-10-04",
+          "originalDueDate": "2026-10-04",
+          "progress": 100,
+          "estimatedHours": 4,
+          "actualHours": 4.0,
+          "tags": [
+            "Delivery"
+          ],
+          "checklist": [
+            {
+              "id": "t-035-a",
+              "text": "Validate required inputs",
+              "done": true
+            },
+            {
+              "id": "t-035-b",
+              "text": "Attach evidence and confirm acceptance",
+              "done": true
+            }
+          ],
+          "dependencies": [],
+          "collaborators": [],
+          "recurrence": "none",
+          "requiresApproval": true,
+          "blockerReason": "",
+          "deadlineChangeReason": "",
+          "completedAt": "2026-10-03T10:00:00Z",
+          "createdAt": "2026-10-01T10:00:00Z",
+          "updatedAt": "2026-10-09T10:00:00Z",
+          "version": 1,
+          "comments": [],
+          "timeEntries": [
+            {
+              "id": "t-035-time-0",
+              "userId": "u-head",
+              "hours": 4.0,
+              "date": "2026-10-09",
+              "note": "Progress against the agreed deliverable",
+              "createdAt": "2026-10-09T12:00:00Z"
+            }
+          ],
+          "attachments": []
+        },
+        {
+          "id": "t-036",
+          "code": "SCH-1036",
+          "companyId": "c-schach",
+          "projectId": "p-factory",
+          "departmentId": "d-mfg",
+          "parentId": "",
+          "title": "Complete dispatch readiness review",
+          "description": "Check identification, packing and documents against the release checklist.",
+          "ownerId": "u-rahul",
+          "createdBy": "u-vikram",
+          "reviewerId": "u-vikram",
+          "status": "done",
+          "priority": "high",
+          "startDate": "2026-10-05",
+          "dueDate": "2026-10-08",
+          "originalDueDate": "2026-10-08",
+          "progress": 100,
+          "estimatedHours": 6,
+          "actualHours": 6.0,
+          "tags": [
+            "Operations"
+          ],
+          "checklist": [
+            {
+              "id": "t-036-a",
+              "text": "Validate required inputs",
+              "done": true
+            },
+            {
+              "id": "t-036-b",
+              "text": "Attach evidence and confirm acceptance",
+              "done": true
+            }
+          ],
+          "dependencies": [],
+          "collaborators": [],
+          "recurrence": "none",
+          "requiresApproval": true,
+          "blockerReason": "",
+          "deadlineChangeReason": "",
+          "completedAt": "2026-10-07T10:00:00Z",
+          "createdAt": "2026-10-01T10:00:00Z",
+          "updatedAt": "2026-10-09T10:00:00Z",
+          "version": 1,
+          "comments": [],
+          "timeEntries": [
+            {
+              "id": "t-036-time-0",
+              "userId": "u-rahul",
+              "hours": 6.0,
+              "date": "2026-10-09",
+              "note": "Progress against the agreed deliverable",
+              "createdAt": "2026-10-09T12:00:00Z"
+            }
+          ],
+          "attachments": []
+        },
+        {
+          "id": "t-037",
+          "code": "SCH-1037",
+          "companyId": "c-schach",
+          "projectId": "p-supply",
+          "departmentId": "d-proc",
+          "parentId": "",
+          "title": "Retire superseded vendor quotation",
+          "description": "Replaced by the updated consolidated request.",
+          "ownerId": "u-nikhil",
+          "createdBy": "u-nikhil",
+          "reviewerId": "u-ceo",
+          "status": "cancelled",
+          "priority": "low",
+          "startDate": "2026-10-05",
+          "dueDate": "2026-10-06",
+          "originalDueDate": "2026-10-06",
+          "progress": 0,
+          "estimatedHours": 1,
+          "actualHours": 0.0,
+          "tags": [
+            "Operations"
+          ],
+          "checklist": [
+            {
+              "id": "t-037-a",
+              "text": "Validate required inputs",
+              "done": false
+            },
+            {
+              "id": "t-037-b",
+              "text": "Attach evidence and confirm acceptance",
+              "done": false
+            }
+          ],
+          "dependencies": [],
+          "collaborators": [],
+          "recurrence": "none",
+          "requiresApproval": true,
+          "blockerReason": "",
+          "deadlineChangeReason": "",
+          "completedAt": "",
+          "createdAt": "2026-10-01T10:00:00Z",
+          "updatedAt": "2026-10-06T10:00:00Z",
+          "version": 1,
+          "comments": [],
+          "timeEntries": [],
+          "attachments": []
+        },
+        {
+          "id": "t-038",
+          "code": "SCH-1038",
+          "companyId": "c-schach",
+          "projectId": "p-channel",
+          "departmentId": "d-sales",
+          "parentId": "",
+          "title": "Review customer feedback actions",
+          "description": "Convert open feedback into a named owner and a clear acceptance criterion.",
+          "ownerId": "u-neha",
+          "createdBy": "u-neha",
+          "reviewerId": "u-ceo",
+          "status": "todo",
+          "priority": "medium",
+          "startDate": "2026-10-05",
+          "dueDate": "2026-10-18",
+          "originalDueDate": "2026-10-18",
+          "progress": 0,
+          "estimatedHours": 6,
+          "actualHours": 0.0,
+          "tags": [
+            "Operations"
+          ],
+          "checklist": [
+            {
+              "id": "t-038-a",
+              "text": "Validate required inputs",
+              "done": false
+            },
+            {
+              "id": "t-038-b",
+              "text": "Attach evidence and confirm acceptance",
+              "done": false
+            }
+          ],
+          "dependencies": [],
+          "collaborators": [],
+          "recurrence": "none",
+          "requiresApproval": true,
+          "blockerReason": "",
+          "deadlineChangeReason": "",
+          "completedAt": "",
+          "createdAt": "2026-10-01T10:00:00Z",
+          "updatedAt": "2026-10-06T10:00:00Z",
+          "version": 1,
+          "comments": [],
+          "timeEntries": [],
+          "attachments": []
+        },
+        {
+          "id": "t-039",
+          "code": "SCH-1039",
+          "companyId": "c-schach",
+          "projectId": "p-factory",
+          "departmentId": "d-mfg",
+          "parentId": "",
+          "title": "Daily production handover",
+          "description": "Record output, constraints and commitments for the next shift.",
+          "ownerId": "u-ananya",
+          "createdBy": "u-vikram",
+          "reviewerId": "u-vikram",
+          "status": "done",
+          "priority": "medium",
+          "startDate": "2026-10-05",
+          "dueDate": "2026-10-09",
+          "originalDueDate": "2026-10-09",
+          "progress": 100,
+          "estimatedHours": 1,
+          "actualHours": 1.0,
+          "tags": [
+            "Operations"
+          ],
+          "checklist": [
+            {
+              "id": "t-039-a",
+              "text": "Validate required inputs",
+              "done": true
+            },
+            {
+              "id": "t-039-b",
+              "text": "Attach evidence and confirm acceptance",
+              "done": true
+            }
+          ],
+          "dependencies": [],
+          "collaborators": [],
+          "recurrence": "daily",
+          "requiresApproval": true,
+          "blockerReason": "",
+          "deadlineChangeReason": "",
+          "completedAt": "2026-10-08T10:00:00Z",
+          "createdAt": "2026-10-01T10:00:00Z",
+          "updatedAt": "2026-10-09T10:00:00Z",
+          "version": 1,
+          "comments": [],
+          "timeEntries": [
+            {
+              "id": "t-039-time-0",
+              "userId": "u-ananya",
+              "hours": 1.0,
+              "date": "2026-10-09",
+              "note": "Progress against the agreed deliverable",
+              "createdAt": "2026-10-09T12:00:00Z"
+            }
+          ],
+          "attachments": []
+        },
+        {
+          "id": "t-040",
+          "code": "SCH-1040",
+          "companyId": "c-schach",
+          "projectId": "p-phoenix",
+          "departmentId": "d-eng",
+          "parentId": "",
+          "title": "Approve baseline package schedule",
+          "description": "Confirm the baseline milestones against the agreed delivery date.",
+          "ownerId": "u-head",
+          "createdBy": "u-head",
+          "reviewerId": "u-ceo",
+          "status": "done",
+          "priority": "high",
+          "startDate": "2026-10-05",
+          "dueDate": "2026-10-02",
+          "originalDueDate": "2026-10-02",
+          "progress": 100,
+          "estimatedHours": 5,
+          "actualHours": 5.0,
+          "tags": [
+            "Delivery"
+          ],
+          "checklist": [
+            {
+              "id": "t-040-a",
+              "text": "Validate required inputs",
+              "done": true
+            },
+            {
+              "id": "t-040-b",
+              "text": "Attach evidence and confirm acceptance",
+              "done": true
+            }
+          ],
+          "dependencies": [],
+          "collaborators": [],
+          "recurrence": "none",
+          "requiresApproval": true,
+          "blockerReason": "",
+          "deadlineChangeReason": "",
+          "completedAt": "2026-10-01T10:00:00Z",
+          "createdAt": "2026-10-01T10:00:00Z",
+          "updatedAt": "2026-10-09T10:00:00Z",
+          "version": 1,
+          "comments": [],
+          "timeEntries": [
+            {
+              "id": "t-040-time-0",
+              "userId": "u-head",
+              "hours": 5.0,
+              "date": "2026-10-09",
+              "note": "Progress against the agreed deliverable",
+              "createdAt": "2026-10-09T12:00:00Z"
+            }
+          ],
+          "attachments": []
+        }
+      ],
+      "goals": [
+        {
+          "id": "g-delivery",
+          "companyId": "c-schach",
+          "name": "Improve drawing delivery reliability",
+          "description": "Accepted drawing packages completed within the original commitment.",
+          "ownerId": "u-head",
+          "departmentId": "d-eng",
+          "unit": "%",
+          "baseline": 70,
+          "target": 95,
+          "current": 84,
+          "dueDate": "2026-11-09",
+          "taskIds": [
+            "t-001",
+            "t-007",
+            "t-014",
+            "t-018"
+          ]
+        },
+        {
+          "id": "g-quality",
+          "companyId": "c-schach",
+          "name": "Reduce manufacturing rework",
+          "description": "Track the proportion of inspected output requiring rework.",
+          "ownerId": "u-vikram",
+          "departmentId": "d-mfg",
+          "unit": "%",
+          "baseline": 8,
+          "target": 3,
+          "current": 4.8,
+          "dueDate": "2026-11-09",
+          "taskIds": [
+            "t-017",
+            "t-025",
+            "t-036"
+          ]
+        },
+        {
+          "id": "g-partners",
+          "companyId": "c-schach",
+          "name": "Activate qualified channel partners",
+          "description": "Count partners with completed onboarding and a qualified opportunity.",
+          "ownerId": "u-neha",
+          "departmentId": "d-sales",
+          "unit": "partners",
+          "baseline": 0,
+          "target": 12,
+          "current": 7,
+          "dueDate": "2026-11-03",
+          "taskIds": [
+            "t-004",
+            "t-019",
+            "t-026"
+          ]
+        },
+        {
+          "id": "g-collection",
+          "companyId": "c-schach",
+          "name": "Close reconciliation exceptions",
+          "description": "Resolve outstanding reconciliation items with documented evidence.",
+          "ownerId": "u-priya",
+          "departmentId": "d-fin",
+          "unit": "items",
+          "baseline": 0,
+          "target": 30,
+          "current": 23,
+          "dueDate": "2026-10-22",
+          "taskIds": [
+            "t-005",
+            "t-012",
+            "t-020"
+          ]
+        }
+      ],
+      "activities": [
+        {
+          "id": "a-baseline",
+          "companyId": "c-schach",
+          "taskId": "t-001",
+          "userId": "u-head",
+          "action": "deadline_changed",
+          "detail": "Deadline changed from 2026-10-06 to 2026-10-08. Revised podium grid received after the baseline was agreed.",
+          "createdAt": "2026-10-08T10:00:00Z"
+        },
+        {
+          "id": "a-0",
+          "companyId": "c-schach",
+          "taskId": "t-001",
+          "userId": "u-member",
+          "action": "progress_updated",
+          "detail": "SCH-1001 \u00b7 Release revised podium drawings",
+          "createdAt": "2026-10-10T10:00:00Z"
+        },
+        {
+          "id": "a-1",
+          "companyId": "c-schach",
+          "taskId": "t-002",
+          "userId": "u-rahul",
+          "action": "submitted_for_review",
+          "detail": "SCH-1002 \u00b7 Approve supplier material test certificates",
+          "createdAt": "2026-10-10T09:00:00Z"
+        },
+        {
+          "id": "a-2",
+          "companyId": "c-schach",
+          "taskId": "t-003",
+          "userId": "u-isha",
+          "action": "progress_updated",
+          "detail": "SCH-1003 \u00b7 Resolve extrusion delivery delay",
+          "createdAt": "2026-10-10T08:00:00Z"
+        },
+        {
+          "id": "a-3",
+          "companyId": "c-schach",
+          "taskId": "t-004",
+          "userId": "u-sameer",
+          "action": "progress_updated",
+          "detail": "SCH-1004 \u00b7 Submit Ahmedabad partner proposal",
+          "createdAt": "2026-10-10T07:00:00Z"
+        },
+        {
+          "id": "a-4",
+          "companyId": "c-schach",
+          "taskId": "t-005",
+          "userId": "u-dev",
+          "action": "progress_updated",
+          "detail": "SCH-1005 \u00b7 Reconcile October receivables",
+          "createdAt": "2026-10-10T10:00:00Z"
+        },
+        {
+          "id": "a-5",
+          "companyId": "c-schach",
+          "taskId": "t-006",
+          "userId": "u-tara",
+          "action": "progress_updated",
+          "detail": "SCH-1006 \u00b7 Complete new joiner onboarding checklist",
+          "createdAt": "2026-10-10T09:00:00Z"
+        },
+        {
+          "id": "a-6",
+          "companyId": "c-schach",
+          "taskId": "t-007",
+          "userId": "u-kabir",
+          "action": "progress_updated",
+          "detail": "SCH-1007 \u00b7 Issue tower level 8 BOQ",
+          "createdAt": "2026-10-10T08:00:00Z"
+        },
+        {
+          "id": "a-7",
+          "companyId": "c-schach",
+          "taskId": "t-008",
+          "userId": "u-ananya",
+          "action": "progress_updated",
+          "detail": "SCH-1008 \u00b7 Review CNC maintenance plan",
+          "createdAt": "2026-10-10T07:00:00Z"
+        }
+      ],
+      "notifications": [
+        {
+          "id": "n-0",
+          "companyId": "c-schach",
+          "userId": "u-founder",
+          "taskId": "t-003",
+          "title": "A critical commitment is blocked",
+          "body": "Resolve extrusion delivery delay",
+          "kind": "blocked",
+          "read": false,
+          "createdAt": "2026-10-10T09:00:00Z"
+        },
+        {
+          "id": "n-1",
+          "companyId": "c-schach",
+          "userId": "u-founder",
+          "taskId": "t-001",
+          "title": "Engineering needs a deadline decision",
+          "body": "Release revised podium drawings",
+          "kind": "overdue",
+          "read": false,
+          "createdAt": "2026-10-10T10:00:00Z"
+        },
+        {
+          "id": "n-2",
+          "companyId": "c-schach",
+          "userId": "u-founder",
+          "taskId": "t-012",
+          "title": "Finance note ready for review",
+          "body": "Prepare CEO weekly finance note",
+          "kind": "review",
+          "read": false,
+          "createdAt": "2026-10-10T11:00:00Z"
+        },
+        {
+          "id": "c-schach-expense-3-notice-u-finance",
+          "companyId": "c-schach",
+          "userId": "u-finance",
+          "taskId": "",
+          "expenseId": "c-schach-expense-3",
+          "title": "Expense ready for review",
+          "body": "EXP-0003 \u00b7 Phoenix site coordination visit",
+          "kind": "expense_review",
+          "read": false,
+          "createdAt": "2026-10-08T11:00:00Z"
+        },
+        {
+          "id": "c-schach-expense-3-notice-u-head",
+          "companyId": "c-schach",
+          "userId": "u-head",
+          "taskId": "",
+          "expenseId": "c-schach-expense-3",
+          "title": "Expense ready for review",
+          "body": "EXP-0003 \u00b7 Phoenix site coordination visit",
+          "kind": "expense_review",
+          "read": false,
+          "createdAt": "2026-10-08T11:00:00Z"
+        },
+        {
+          "id": "c-schach-expense-3-notice-u-founder",
+          "companyId": "c-schach",
+          "userId": "u-founder",
+          "taskId": "",
+          "expenseId": "c-schach-expense-3",
+          "title": "Expense ready for review",
+          "body": "EXP-0003 \u00b7 Phoenix site coordination visit",
+          "kind": "expense_review",
+          "read": false,
+          "createdAt": "2026-10-08T11:00:00Z"
+        },
+        {
+          "id": "c-schach-expense-4-notice-u-finance",
+          "companyId": "c-schach",
+          "userId": "u-finance",
+          "taskId": "",
+          "expenseId": "c-schach-expense-4",
+          "title": "Expense ready for review",
+          "body": "EXP-0004 \u00b7 Independent design peer review",
+          "kind": "expense_review",
+          "read": false,
+          "createdAt": "2026-10-07T11:00:00Z"
+        },
+        {
+          "id": "c-schach-expense-4-notice-u-founder",
+          "companyId": "c-schach",
+          "userId": "u-founder",
+          "taskId": "",
+          "expenseId": "c-schach-expense-4",
+          "title": "Expense ready for review",
+          "body": "EXP-0004 \u00b7 Independent design peer review",
+          "kind": "expense_review",
+          "read": false,
+          "createdAt": "2026-10-07T11:00:00Z"
+        },
+        {
+          "id": "c-schach-expense-7-notice-u-finance",
+          "companyId": "c-schach",
+          "userId": "u-finance",
+          "taskId": "",
+          "expenseId": "c-schach-expense-7",
+          "title": "Expense ready for review",
+          "body": "EXP-0007 \u00b7 Factory safety refresher material",
+          "kind": "expense_review",
+          "read": false,
+          "createdAt": "2026-10-09T11:00:00Z"
+        },
+        {
+          "id": "c-schach-expense-7-notice-u-founder",
+          "companyId": "c-schach",
+          "userId": "u-founder",
+          "taskId": "",
+          "expenseId": "c-schach-expense-7",
+          "title": "Expense ready for review",
+          "body": "EXP-0007 \u00b7 Factory safety refresher material",
+          "kind": "expense_review",
+          "read": false,
+          "createdAt": "2026-10-09T11:00:00Z"
+        },
+        {
+          "id": "c-schach-expense-10-notice-u-finance",
+          "companyId": "c-schach",
+          "userId": "u-finance",
+          "taskId": "",
+          "expenseId": "c-schach-expense-10",
+          "title": "Expense ready for review",
+          "body": "EXP-0010 \u00b7 Local customer meeting transport",
+          "kind": "expense_review",
+          "read": false,
+          "createdAt": "2026-10-09T11:00:00Z"
+        },
+        {
+          "id": "c-schach-expense-10-notice-u-founder",
+          "companyId": "c-schach",
+          "userId": "u-founder",
+          "taskId": "",
+          "expenseId": "c-schach-expense-10",
+          "title": "Expense ready for review",
+          "body": "EXP-0010 \u00b7 Local customer meeting transport",
+          "kind": "expense_review",
+          "read": false,
+          "createdAt": "2026-10-09T11:00:00Z"
+        },
+        {
+          "id": "c-schach-expense-10-notice-u-neha",
+          "companyId": "c-schach",
+          "userId": "u-neha",
+          "taskId": "",
+          "expenseId": "c-schach-expense-10",
+          "title": "Expense ready for review",
+          "body": "EXP-0010 \u00b7 Local customer meeting transport",
+          "kind": "expense_review",
+          "read": false,
+          "createdAt": "2026-10-09T11:00:00Z"
+        },
+        {
+          "id": "c-schach-expense-14-notice-u-finance",
+          "companyId": "c-schach",
+          "userId": "u-finance",
+          "taskId": "",
+          "expenseId": "c-schach-expense-14",
+          "title": "Expense ready for review",
+          "body": "EXP-0014 \u00b7 Leadership training programme",
+          "kind": "expense_review",
+          "read": false,
+          "createdAt": "2026-10-08T11:00:00Z"
+        },
+        {
+          "id": "c-schach-expense-14-notice-u-founder",
+          "companyId": "c-schach",
+          "userId": "u-founder",
+          "taskId": "",
+          "expenseId": "c-schach-expense-14",
+          "title": "Expense ready for review",
+          "body": "EXP-0014 \u00b7 Leadership training programme",
+          "kind": "expense_review",
+          "read": false,
+          "createdAt": "2026-10-08T11:00:00Z"
+        }
+      ],
+      "financeScope": "company",
+      "expenseCategories": [
+        {
+          "id": "c-schach-category-1",
+          "companyId": "c-schach",
+          "name": "Materials",
+          "color": "#F97316",
+          "active": true,
+          "receiptRequired": true,
+          "version": 1
+        },
+        {
+          "id": "c-schach-category-2",
+          "companyId": "c-schach",
+          "name": "Equipment",
+          "color": "#6366F1",
+          "active": true,
+          "receiptRequired": true,
+          "version": 1
+        },
+        {
+          "id": "c-schach-category-3",
+          "companyId": "c-schach",
+          "name": "Travel",
+          "color": "#3B82F6",
+          "active": true,
+          "receiptRequired": true,
+          "version": 1
+        },
+        {
+          "id": "c-schach-category-4",
+          "companyId": "c-schach",
+          "name": "Software",
+          "color": "#14B8A6",
+          "active": true,
+          "receiptRequired": true,
+          "version": 1
+        },
+        {
+          "id": "c-schach-category-5",
+          "companyId": "c-schach",
+          "name": "Professional services",
+          "color": "#A855F7",
+          "active": true,
+          "receiptRequired": true,
+          "version": 1
+        },
+        {
+          "id": "c-schach-category-6",
+          "companyId": "c-schach",
+          "name": "People & administration",
+          "color": "#16A34A",
+          "active": true,
+          "receiptRequired": true,
+          "version": 1
+        },
+        {
+          "id": "c-schach-category-7",
+          "companyId": "c-schach",
+          "name": "Other",
+          "color": "#64748B",
+          "active": true,
+          "receiptRequired": true,
+          "version": 1
+        }
+      ],
+      "budgets": [
+        {
+          "id": "c-schach-budget-d-eng-2025",
+          "companyId": "c-schach",
+          "departmentId": "d-eng",
+          "name": "Engineering \u00b7 FY 2025\u201326",
+          "startDate": "2025-04-01",
+          "endDate": "2026-03-31",
+          "amountMinor": 120000000,
+          "currency": "INR",
+          "status": "closed",
+          "notes": "Fictional operating allocation for the interactive sample.",
+          "createdBy": "u-founder",
+          "createdAt": "2025-03-20T10:00:00Z",
+          "updatedAt": "2026-09-15T10:00:00Z",
+          "version": 2
+        },
+        {
+          "id": "c-schach-budget-d-eng-2026",
+          "companyId": "c-schach",
+          "departmentId": "d-eng",
+          "name": "Engineering \u00b7 FY 2026\u201327",
+          "startDate": "2026-04-01",
+          "endDate": "2027-03-31",
+          "amountMinor": 120000000,
+          "currency": "INR",
+          "status": "active",
+          "notes": "Fictional operating allocation for the interactive sample.",
+          "createdBy": "u-founder",
+          "createdAt": "2026-03-20T10:00:00Z",
+          "updatedAt": "2026-09-15T10:00:00Z",
+          "version": 2
+        },
+        {
+          "id": "c-schach-budget-d-mfg-2025",
+          "companyId": "c-schach",
+          "departmentId": "d-mfg",
+          "name": "Manufacturing \u00b7 FY 2025\u201326",
+          "startDate": "2025-04-01",
+          "endDate": "2026-03-31",
+          "amountMinor": 250000000,
+          "currency": "INR",
+          "status": "closed",
+          "notes": "Fictional operating allocation for the interactive sample.",
+          "createdBy": "u-founder",
+          "createdAt": "2025-03-20T10:00:00Z",
+          "updatedAt": "2026-09-15T10:00:00Z",
+          "version": 2
+        },
+        {
+          "id": "c-schach-budget-d-mfg-2026",
+          "companyId": "c-schach",
+          "departmentId": "d-mfg",
+          "name": "Manufacturing \u00b7 FY 2026\u201327",
+          "startDate": "2026-04-01",
+          "endDate": "2027-03-31",
+          "amountMinor": 250000000,
+          "currency": "INR",
+          "status": "active",
+          "notes": "Fictional operating allocation for the interactive sample.",
+          "createdBy": "u-founder",
+          "createdAt": "2026-03-20T10:00:00Z",
+          "updatedAt": "2026-09-15T10:00:00Z",
+          "version": 2
+        },
+        {
+          "id": "c-schach-budget-d-sales-2025",
+          "companyId": "c-schach",
+          "departmentId": "d-sales",
+          "name": "Sales \u00b7 FY 2025\u201326",
+          "startDate": "2025-04-01",
+          "endDate": "2026-03-31",
+          "amountMinor": 60000000,
+          "currency": "INR",
+          "status": "closed",
+          "notes": "Fictional operating allocation for the interactive sample.",
+          "createdBy": "u-founder",
+          "createdAt": "2025-03-20T10:00:00Z",
+          "updatedAt": "2026-09-15T10:00:00Z",
+          "version": 2
+        },
+        {
+          "id": "c-schach-budget-d-sales-2026",
+          "companyId": "c-schach",
+          "departmentId": "d-sales",
+          "name": "Sales \u00b7 FY 2026\u201327",
+          "startDate": "2026-04-01",
+          "endDate": "2027-03-31",
+          "amountMinor": 60000000,
+          "currency": "INR",
+          "status": "active",
+          "notes": "Fictional operating allocation for the interactive sample.",
+          "createdBy": "u-founder",
+          "createdAt": "2026-03-20T10:00:00Z",
+          "updatedAt": "2026-09-15T10:00:00Z",
+          "version": 2
+        },
+        {
+          "id": "c-schach-budget-d-fin-2025",
+          "companyId": "c-schach",
+          "departmentId": "d-fin",
+          "name": "Finance \u00b7 FY 2025\u201326",
+          "startDate": "2025-04-01",
+          "endDate": "2026-03-31",
+          "amountMinor": 30000000,
+          "currency": "INR",
+          "status": "closed",
+          "notes": "Fictional operating allocation for the interactive sample.",
+          "createdBy": "u-founder",
+          "createdAt": "2025-03-20T10:00:00Z",
+          "updatedAt": "2026-09-15T10:00:00Z",
+          "version": 2
+        },
+        {
+          "id": "c-schach-budget-d-fin-2026",
+          "companyId": "c-schach",
+          "departmentId": "d-fin",
+          "name": "Finance \u00b7 FY 2026\u201327",
+          "startDate": "2026-04-01",
+          "endDate": "2027-03-31",
+          "amountMinor": 30000000,
+          "currency": "INR",
+          "status": "active",
+          "notes": "Fictional operating allocation for the interactive sample.",
+          "createdBy": "u-founder",
+          "createdAt": "2026-03-20T10:00:00Z",
+          "updatedAt": "2026-09-15T10:00:00Z",
+          "version": 2
+        },
+        {
+          "id": "c-schach-budget-d-people-2025",
+          "companyId": "c-schach",
+          "departmentId": "d-people",
+          "name": "People & Admin \u00b7 FY 2025\u201326",
+          "startDate": "2025-04-01",
+          "endDate": "2026-03-31",
+          "amountMinor": 45000000,
+          "currency": "INR",
+          "status": "closed",
+          "notes": "Fictional operating allocation for the interactive sample.",
+          "createdBy": "u-founder",
+          "createdAt": "2025-03-20T10:00:00Z",
+          "updatedAt": "2026-09-15T10:00:00Z",
+          "version": 2
+        },
+        {
+          "id": "c-schach-budget-d-people-2026",
+          "companyId": "c-schach",
+          "departmentId": "d-people",
+          "name": "People & Admin \u00b7 FY 2026\u201327",
+          "startDate": "2026-04-01",
+          "endDate": "2027-03-31",
+          "amountMinor": 45000000,
+          "currency": "INR",
+          "status": "active",
+          "notes": "Fictional operating allocation for the interactive sample.",
+          "createdBy": "u-founder",
+          "createdAt": "2026-03-20T10:00:00Z",
+          "updatedAt": "2026-09-15T10:00:00Z",
+          "version": 2
+        },
+        {
+          "id": "c-schach-budget-d-proc-2025",
+          "companyId": "c-schach",
+          "departmentId": "d-proc",
+          "name": "Procurement \u00b7 FY 2025\u201326",
+          "startDate": "2025-04-01",
+          "endDate": "2026-03-31",
+          "amountMinor": 180000000,
+          "currency": "INR",
+          "status": "closed",
+          "notes": "Fictional operating allocation for the interactive sample.",
+          "createdBy": "u-founder",
+          "createdAt": "2025-03-20T10:00:00Z",
+          "updatedAt": "2026-09-15T10:00:00Z",
+          "version": 2
+        },
+        {
+          "id": "c-schach-budget-d-proc-2026",
+          "companyId": "c-schach",
+          "departmentId": "d-proc",
+          "name": "Procurement \u00b7 FY 2026\u201327",
+          "startDate": "2026-04-01",
+          "endDate": "2027-03-31",
+          "amountMinor": 180000000,
+          "currency": "INR",
+          "status": "active",
+          "notes": "Fictional operating allocation for the interactive sample.",
+          "createdBy": "u-founder",
+          "createdAt": "2026-03-20T10:00:00Z",
+          "updatedAt": "2026-09-15T10:00:00Z",
+          "version": 2
+        }
+      ],
+      "expenses": [
+        {
+          "id": "c-schach-expense-1",
+          "companyId": "c-schach",
+          "code": "EXP-0001",
+          "departmentId": "d-eng",
+          "categoryId": "c-schach-category-4",
+          "title": "Design software annual renewal",
+          "description": "Fictional sample expense for reviewing department spending and approvals.",
+          "vendor": "Sample Design Systems",
+          "invoiceNumber": "DEMO-ACH-001",
+          "expenseDate": "2026-09-22",
+          "amountMinor": 18500000,
+          "currency": "INR",
+          "projectId": "p-phoenix",
+          "taskId": "t-001",
+          "createdBy": "u-member",
+          "status": "paid",
+          "receiptExceptionReason": "",
+          "submittedAt": "2026-09-22T11:00:00Z",
+          "reviewedBy": "u-head",
+          "reviewedAt": "2026-09-22T12:00:00Z",
+          "reviewNote": "Receipt and business purpose reviewed.",
+          "budgetOverrideReason": "",
+          "paidBy": "u-finance",
+          "paidAt": "2026-09-23T10:00:00Z",
+          "paidDate": "2026-09-23",
+          "paymentMethod": "bank_transfer",
+          "paymentReference": "DEMO-TRANSFER-0001",
+          "createdAt": "2026-09-22T10:00:00Z",
+          "updatedAt": "2026-09-22T10:00:00Z",
+          "version": 4,
+          "receipts": [
+            {
+              "id": "c-schach-expense-1-receipt",
+              "fileName": "EXP-0001-sample-receipt.txt",
+              "mimeType": "text/plain; charset=utf-8",
+              "size": 259,
+              "uploadedBy": "u-member",
+              "createdAt": "2026-09-22T10:00:00Z"
+            }
+          ]
+        },
+        {
+          "id": "c-schach-expense-2",
+          "companyId": "c-schach",
+          "code": "EXP-0002",
+          "departmentId": "d-eng",
+          "categoryId": "c-schach-category-2",
+          "title": "Survey equipment calibration",
+          "description": "Fictional sample expense for reviewing department spending and approvals.",
+          "vendor": "Sample Precision Labs",
+          "invoiceNumber": "DEMO-ACH-002",
+          "expenseDate": "2026-10-04",
+          "amountMinor": 4250000,
+          "currency": "INR",
+          "projectId": "p-phoenix",
+          "taskId": "t-007",
+          "createdBy": "u-kabir",
+          "status": "approved",
+          "receiptExceptionReason": "",
+          "submittedAt": "2026-10-04T11:00:00Z",
+          "reviewedBy": "u-head",
+          "reviewedAt": "2026-10-04T12:00:00Z",
+          "reviewNote": "Receipt and business purpose reviewed.",
+          "budgetOverrideReason": "",
+          "paidBy": "",
+          "paidAt": "",
+          "paidDate": "",
+          "paymentMethod": "",
+          "paymentReference": "",
+          "createdAt": "2026-10-04T10:00:00Z",
+          "updatedAt": "2026-10-04T10:00:00Z",
+          "version": 3,
+          "receipts": [
+            {
+              "id": "c-schach-expense-2-receipt",
+              "fileName": "EXP-0002-sample-receipt.txt",
+              "mimeType": "text/plain; charset=utf-8",
+              "size": 256,
+              "uploadedBy": "u-kabir",
+              "createdAt": "2026-10-04T10:00:00Z"
+            }
+          ]
+        },
+        {
+          "id": "c-schach-expense-3",
+          "companyId": "c-schach",
+          "code": "EXP-0003",
+          "departmentId": "d-eng",
+          "categoryId": "c-schach-category-3",
+          "title": "Phoenix site coordination visit",
+          "description": "Fictional sample expense for reviewing department spending and approvals.",
+          "vendor": "Sample Travel Desk",
+          "invoiceNumber": "DEMO-ACH-003",
+          "expenseDate": "2026-10-08",
+          "amountMinor": 1875000,
+          "currency": "INR",
+          "projectId": "p-phoenix",
+          "taskId": "t-014",
+          "createdBy": "u-member",
+          "status": "submitted",
+          "receiptExceptionReason": "",
+          "submittedAt": "2026-10-08T11:00:00Z",
+          "reviewedBy": "",
+          "reviewedAt": "",
+          "reviewNote": "",
+          "budgetOverrideReason": "",
+          "paidBy": "",
+          "paidAt": "",
+          "paidDate": "",
+          "paymentMethod": "",
+          "paymentReference": "",
+          "createdAt": "2026-10-08T10:00:00Z",
+          "updatedAt": "2026-10-08T10:00:00Z",
+          "version": 2,
+          "receipts": [
+            {
+              "id": "c-schach-expense-3-receipt",
+              "fileName": "EXP-0003-sample-receipt.txt",
+              "mimeType": "text/plain; charset=utf-8",
+              "size": 256,
+              "uploadedBy": "u-member",
+              "createdAt": "2026-10-08T10:00:00Z"
+            }
+          ]
+        },
+        {
+          "id": "c-schach-expense-4",
+          "companyId": "c-schach",
+          "code": "EXP-0004",
+          "departmentId": "d-eng",
+          "categoryId": "c-schach-category-5",
+          "title": "Independent design peer review",
+          "description": "Fictional sample expense for reviewing department spending and approvals.",
+          "vendor": "Sample Structural Advisors",
+          "invoiceNumber": "DEMO-ACH-004",
+          "expenseDate": "2026-10-07",
+          "amountMinor": 9500000,
+          "currency": "INR",
+          "projectId": "p-phoenix",
+          "taskId": "t-011",
+          "createdBy": "u-head",
+          "status": "submitted",
+          "receiptExceptionReason": "",
+          "submittedAt": "2026-10-07T11:00:00Z",
+          "reviewedBy": "",
+          "reviewedAt": "",
+          "reviewNote": "",
+          "budgetOverrideReason": "",
+          "paidBy": "",
+          "paidAt": "",
+          "paidDate": "",
+          "paymentMethod": "",
+          "paymentReference": "",
+          "createdAt": "2026-10-07T10:00:00Z",
+          "updatedAt": "2026-10-07T10:00:00Z",
+          "version": 2,
+          "receipts": [
+            {
+              "id": "c-schach-expense-4-receipt",
+              "fileName": "EXP-0004-sample-receipt.txt",
+              "mimeType": "text/plain; charset=utf-8",
+              "size": 263,
+              "uploadedBy": "u-head",
+              "createdAt": "2026-10-07T10:00:00Z"
+            }
+          ]
+        },
+        {
+          "id": "c-schach-expense-5",
+          "companyId": "c-schach",
+          "code": "EXP-0005",
+          "departmentId": "d-mfg",
+          "categoryId": "c-schach-category-2",
+          "title": "CNC preventive maintenance service",
+          "description": "Fictional sample expense for reviewing department spending and approvals.",
+          "vendor": "Sample Machine Care",
+          "invoiceNumber": "DEMO-ACH-005",
+          "expenseDate": "2026-09-26",
+          "amountMinor": 16500000,
+          "currency": "INR",
+          "projectId": "p-factory",
+          "taskId": "t-008",
+          "createdBy": "u-ananya",
+          "status": "paid",
+          "receiptExceptionReason": "",
+          "submittedAt": "2026-09-26T11:00:00Z",
+          "reviewedBy": "u-vikram",
+          "reviewedAt": "2026-09-26T12:00:00Z",
+          "reviewNote": "Receipt and business purpose reviewed.",
+          "budgetOverrideReason": "",
+          "paidBy": "u-finance",
+          "paidAt": "2026-09-27T10:00:00Z",
+          "paidDate": "2026-09-27",
+          "paymentMethod": "bank_transfer",
+          "paymentReference": "DEMO-TRANSFER-0005",
+          "createdAt": "2026-09-26T10:00:00Z",
+          "updatedAt": "2026-09-26T10:00:00Z",
+          "version": 4,
+          "receipts": [
+            {
+              "id": "c-schach-expense-5-receipt",
+              "fileName": "EXP-0005-sample-receipt.txt",
+              "mimeType": "text/plain; charset=utf-8",
+              "size": 261,
+              "uploadedBy": "u-ananya",
+              "createdAt": "2026-09-26T10:00:00Z"
+            }
+          ]
+        },
+        {
+          "id": "c-schach-expense-6",
+          "companyId": "c-schach",
+          "code": "EXP-0006",
+          "departmentId": "d-mfg",
+          "categoryId": "c-schach-category-1",
+          "title": "Inspection gauges and test coupons",
+          "description": "Fictional sample expense for reviewing department spending and approvals.",
+          "vendor": "Sample Quality Supplies",
+          "invoiceNumber": "DEMO-ACH-006",
+          "expenseDate": "2026-10-06",
+          "amountMinor": 3825000,
+          "currency": "INR",
+          "projectId": "p-factory",
+          "taskId": "t-017",
+          "createdBy": "u-rahul",
+          "status": "approved",
+          "receiptExceptionReason": "",
+          "submittedAt": "2026-10-06T11:00:00Z",
+          "reviewedBy": "u-vikram",
+          "reviewedAt": "2026-10-06T12:00:00Z",
+          "reviewNote": "Receipt and business purpose reviewed.",
+          "budgetOverrideReason": "",
+          "paidBy": "",
+          "paidAt": "",
+          "paidDate": "",
+          "paymentMethod": "",
+          "paymentReference": "",
+          "createdAt": "2026-10-06T10:00:00Z",
+          "updatedAt": "2026-10-06T10:00:00Z",
+          "version": 3,
+          "receipts": [
+            {
+              "id": "c-schach-expense-6-receipt",
+              "fileName": "EXP-0006-sample-receipt.txt",
+              "mimeType": "text/plain; charset=utf-8",
+              "size": 264,
+              "uploadedBy": "u-rahul",
+              "createdAt": "2026-10-06T10:00:00Z"
+            }
+          ]
+        },
+        {
+          "id": "c-schach-expense-7",
+          "companyId": "c-schach",
+          "code": "EXP-0007",
+          "departmentId": "d-mfg",
+          "categoryId": "c-schach-category-6",
+          "title": "Factory safety refresher material",
+          "description": "Fictional sample expense for reviewing department spending and approvals.",
+          "vendor": "Sample Safety Academy",
+          "invoiceNumber": "DEMO-ACH-007",
+          "expenseDate": "2026-10-09",
+          "amountMinor": 1250000,
+          "currency": "INR",
+          "projectId": "p-factory",
+          "taskId": "t-009",
+          "createdBy": "u-vikram",
+          "status": "submitted",
+          "receiptExceptionReason": "",
+          "submittedAt": "2026-10-09T11:00:00Z",
+          "reviewedBy": "",
+          "reviewedAt": "",
+          "reviewNote": "",
+          "budgetOverrideReason": "",
+          "paidBy": "",
+          "paidAt": "",
+          "paidDate": "",
+          "paymentMethod": "",
+          "paymentReference": "",
+          "createdAt": "2026-10-09T10:00:00Z",
+          "updatedAt": "2026-10-09T10:00:00Z",
+          "version": 2,
+          "receipts": [
+            {
+              "id": "c-schach-expense-7-receipt",
+              "fileName": "EXP-0007-sample-receipt.txt",
+              "mimeType": "text/plain; charset=utf-8",
+              "size": 261,
+              "uploadedBy": "u-vikram",
+              "createdAt": "2026-10-09T10:00:00Z"
+            }
+          ]
+        },
+        {
+          "id": "c-schach-expense-8",
+          "companyId": "c-schach",
+          "code": "EXP-0008",
+          "departmentId": "d-sales",
+          "categoryId": "c-schach-category-3",
+          "title": "Ahmedabad customer visit",
+          "description": "Fictional sample expense for reviewing department spending and approvals.",
+          "vendor": "Sample Regional Travel",
+          "invoiceNumber": "DEMO-ACH-008",
+          "expenseDate": "2026-10-02",
+          "amountMinor": 2845000,
+          "currency": "INR",
+          "projectId": "p-channel",
+          "taskId": "t-004",
+          "createdBy": "u-sameer",
+          "status": "paid",
+          "receiptExceptionReason": "",
+          "submittedAt": "2026-10-02T11:00:00Z",
+          "reviewedBy": "u-neha",
+          "reviewedAt": "2026-10-02T12:00:00Z",
+          "reviewNote": "Receipt and business purpose reviewed.",
+          "budgetOverrideReason": "",
+          "paidBy": "u-finance",
+          "paidAt": "2026-10-03T10:00:00Z",
+          "paidDate": "2026-10-03",
+          "paymentMethod": "bank_transfer",
+          "paymentReference": "DEMO-TRANSFER-0008",
+          "createdAt": "2026-10-02T10:00:00Z",
+          "updatedAt": "2026-10-02T10:00:00Z",
+          "version": 4,
+          "receipts": [
+            {
+              "id": "c-schach-expense-8-receipt",
+              "fileName": "EXP-0008-sample-receipt.txt",
+              "mimeType": "text/plain; charset=utf-8",
+              "size": 253,
+              "uploadedBy": "u-sameer",
+              "createdAt": "2026-10-02T10:00:00Z"
+            }
+          ]
+        },
+        {
+          "id": "c-schach-expense-9",
+          "companyId": "c-schach",
+          "code": "EXP-0009",
+          "departmentId": "d-sales",
+          "categoryId": "c-schach-category-5",
+          "title": "Partner launch venue deposit",
+          "description": "Fictional sample expense for reviewing department spending and approvals.",
+          "vendor": "Sample Events Studio",
+          "invoiceNumber": "DEMO-ACH-009",
+          "expenseDate": "2026-10-05",
+          "amountMinor": 6750000,
+          "currency": "INR",
+          "projectId": "p-channel",
+          "taskId": "t-026",
+          "createdBy": "u-neha",
+          "status": "approved",
+          "receiptExceptionReason": "",
+          "submittedAt": "2026-10-05T11:00:00Z",
+          "reviewedBy": "u-founder",
+          "reviewedAt": "2026-10-05T12:00:00Z",
+          "reviewNote": "Receipt and business purpose reviewed.",
+          "budgetOverrideReason": "",
+          "paidBy": "",
+          "paidAt": "",
+          "paidDate": "",
+          "paymentMethod": "",
+          "paymentReference": "",
+          "createdAt": "2026-10-05T10:00:00Z",
+          "updatedAt": "2026-10-05T10:00:00Z",
+          "version": 3,
+          "receipts": [
+            {
+              "id": "c-schach-expense-9-receipt",
+              "fileName": "EXP-0009-sample-receipt.txt",
+              "mimeType": "text/plain; charset=utf-8",
+              "size": 255,
+              "uploadedBy": "u-neha",
+              "createdAt": "2026-10-05T10:00:00Z"
+            }
+          ]
+        },
+        {
+          "id": "c-schach-expense-10",
+          "companyId": "c-schach",
+          "code": "EXP-0010",
+          "departmentId": "d-sales",
+          "categoryId": "c-schach-category-3",
+          "title": "Local customer meeting transport",
+          "description": "Fictional sample expense for reviewing department spending and approvals.",
+          "vendor": "Sample City Mobility",
+          "invoiceNumber": "DEMO-ACH-010",
+          "expenseDate": "2026-10-09",
+          "amountMinor": 42000,
+          "currency": "INR",
+          "projectId": "p-channel",
+          "taskId": "t-015",
+          "createdBy": "u-sameer",
+          "status": "submitted",
+          "receiptExceptionReason": "Original receipt was misplaced during the site visit; trip details are recorded.",
+          "submittedAt": "2026-10-09T11:00:00Z",
+          "reviewedBy": "",
+          "reviewedAt": "",
+          "reviewNote": "",
+          "budgetOverrideReason": "",
+          "paidBy": "",
+          "paidAt": "",
+          "paidDate": "",
+          "paymentMethod": "",
+          "paymentReference": "",
+          "createdAt": "2026-10-09T10:00:00Z",
+          "updatedAt": "2026-10-09T10:00:00Z",
+          "version": 2,
+          "receipts": []
+        },
+        {
+          "id": "c-schach-expense-11",
+          "companyId": "c-schach",
+          "code": "EXP-0011",
+          "departmentId": "d-fin",
+          "categoryId": "c-schach-category-4",
+          "title": "Accounts reporting subscription",
+          "description": "Fictional sample expense for reviewing department spending and approvals.",
+          "vendor": "Sample Ledger Software",
+          "invoiceNumber": "DEMO-ACH-011",
+          "expenseDate": "2026-09-18",
+          "amountMinor": 3600000,
+          "currency": "INR",
+          "projectId": "p-finance",
+          "taskId": "t-005",
+          "createdBy": "u-dev",
+          "status": "paid",
+          "receiptExceptionReason": "",
+          "submittedAt": "2026-09-18T11:00:00Z",
+          "reviewedBy": "u-priya",
+          "reviewedAt": "2026-09-18T12:00:00Z",
+          "reviewNote": "Receipt and business purpose reviewed.",
+          "budgetOverrideReason": "",
+          "paidBy": "u-finance",
+          "paidAt": "2026-09-19T10:00:00Z",
+          "paidDate": "2026-09-19",
+          "paymentMethod": "bank_transfer",
+          "paymentReference": "DEMO-TRANSFER-0011",
+          "createdAt": "2026-09-18T10:00:00Z",
+          "updatedAt": "2026-09-18T10:00:00Z",
+          "version": 4,
+          "receipts": [
+            {
+              "id": "c-schach-expense-11-receipt",
+              "fileName": "EXP-0011-sample-receipt.txt",
+              "mimeType": "text/plain; charset=utf-8",
+              "size": 260,
+              "uploadedBy": "u-dev",
+              "createdAt": "2026-09-18T10:00:00Z"
+            }
+          ]
+        },
+        {
+          "id": "c-schach-expense-12",
+          "companyId": "c-schach",
+          "code": "EXP-0012",
+          "departmentId": "d-fin",
+          "categoryId": "c-schach-category-5",
+          "title": "Controls workshop facilitation",
+          "description": "Fictional sample expense for reviewing department spending and approvals.",
+          "vendor": "Sample Controls Advisory",
+          "invoiceNumber": "DEMO-ACH-012",
+          "expenseDate": "2026-10-09",
+          "amountMinor": 2500000,
+          "currency": "INR",
+          "projectId": "",
+          "taskId": "",
+          "createdBy": "u-finance",
+          "status": "draft",
+          "receiptExceptionReason": "",
+          "submittedAt": "",
+          "reviewedBy": "",
+          "reviewedAt": "",
+          "reviewNote": "",
+          "budgetOverrideReason": "",
+          "paidBy": "",
+          "paidAt": "",
+          "paidDate": "",
+          "paymentMethod": "",
+          "paymentReference": "",
+          "createdAt": "2026-10-09T10:00:00Z",
+          "updatedAt": "2026-10-09T10:00:00Z",
+          "version": 1,
+          "receipts": []
+        },
+        {
+          "id": "c-schach-expense-13",
+          "companyId": "c-schach",
+          "code": "EXP-0013",
+          "departmentId": "d-people",
+          "categoryId": "c-schach-category-6",
+          "title": "New joiner induction materials",
+          "description": "Fictional sample expense for reviewing department spending and approvals.",
+          "vendor": "Sample Team Supplies",
+          "invoiceNumber": "DEMO-ACH-013",
+          "expenseDate": "2026-10-07",
+          "amountMinor": 1850000,
+          "currency": "INR",
+          "projectId": "p-people",
+          "taskId": "t-006",
+          "createdBy": "u-tara",
+          "status": "approved",
+          "receiptExceptionReason": "",
+          "submittedAt": "2026-10-07T11:00:00Z",
+          "reviewedBy": "u-sana",
+          "reviewedAt": "2026-10-07T12:00:00Z",
+          "reviewNote": "Receipt and business purpose reviewed.",
+          "budgetOverrideReason": "",
+          "paidBy": "",
+          "paidAt": "",
+          "paidDate": "",
+          "paymentMethod": "",
+          "paymentReference": "",
+          "createdAt": "2026-10-07T10:00:00Z",
+          "updatedAt": "2026-10-07T10:00:00Z",
+          "version": 3,
+          "receipts": [
+            {
+              "id": "c-schach-expense-13-receipt",
+              "fileName": "EXP-0013-sample-receipt.txt",
+              "mimeType": "text/plain; charset=utf-8",
+              "size": 257,
+              "uploadedBy": "u-tara",
+              "createdAt": "2026-10-07T10:00:00Z"
+            }
+          ]
+        },
+        {
+          "id": "c-schach-expense-14",
+          "companyId": "c-schach",
+          "code": "EXP-0014",
+          "departmentId": "d-people",
+          "categoryId": "c-schach-category-6",
+          "title": "Leadership training programme",
+          "description": "Fictional sample expense for reviewing department spending and approvals.",
+          "vendor": "Sample Learning Partners",
+          "invoiceNumber": "DEMO-ACH-014",
+          "expenseDate": "2026-10-08",
+          "amountMinor": 8250000,
+          "currency": "INR",
+          "projectId": "p-people",
+          "taskId": "t-013",
+          "createdBy": "u-sana",
+          "status": "submitted",
+          "receiptExceptionReason": "",
+          "submittedAt": "2026-10-08T11:00:00Z",
+          "reviewedBy": "",
+          "reviewedAt": "",
+          "reviewNote": "",
+          "budgetOverrideReason": "",
+          "paidBy": "",
+          "paidAt": "",
+          "paidDate": "",
+          "paymentMethod": "",
+          "paymentReference": "",
+          "createdAt": "2026-10-08T10:00:00Z",
+          "updatedAt": "2026-10-08T10:00:00Z",
+          "version": 2,
+          "receipts": [
+            {
+              "id": "c-schach-expense-14-receipt",
+              "fileName": "EXP-0014-sample-receipt.txt",
+              "mimeType": "text/plain; charset=utf-8",
+              "size": 260,
+              "uploadedBy": "u-sana",
+              "createdAt": "2026-10-08T10:00:00Z"
+            }
+          ]
+        },
+        {
+          "id": "c-schach-expense-15",
+          "companyId": "c-schach",
+          "code": "EXP-0015",
+          "departmentId": "d-proc",
+          "categoryId": "c-schach-category-1",
+          "title": "Approved plywood sample batch",
+          "description": "Fictional sample expense for reviewing department spending and approvals.",
+          "vendor": "Sample Panel Industries",
+          "invoiceNumber": "DEMO-ACH-015",
+          "expenseDate": "2026-09-28",
+          "amountMinor": 14250000,
+          "currency": "INR",
+          "projectId": "p-supply",
+          "taskId": "t-003",
+          "createdBy": "u-isha",
+          "status": "paid",
+          "receiptExceptionReason": "",
+          "submittedAt": "2026-09-28T11:00:00Z",
+          "reviewedBy": "u-nikhil",
+          "reviewedAt": "2026-09-28T12:00:00Z",
+          "reviewNote": "Receipt and business purpose reviewed.",
+          "budgetOverrideReason": "",
+          "paidBy": "u-finance",
+          "paidAt": "2026-09-29T10:00:00Z",
+          "paidDate": "2026-09-29",
+          "paymentMethod": "bank_transfer",
+          "paymentReference": "DEMO-TRANSFER-0015",
+          "createdAt": "2026-09-28T10:00:00Z",
+          "updatedAt": "2026-09-28T10:00:00Z",
+          "version": 4,
+          "receipts": [
+            {
+              "id": "c-schach-expense-15-receipt",
+              "fileName": "EXP-0015-sample-receipt.txt",
+              "mimeType": "text/plain; charset=utf-8",
+              "size": 260,
+              "uploadedBy": "u-isha",
+              "createdAt": "2026-09-28T10:00:00Z"
+            }
+          ]
+        },
+        {
+          "id": "c-schach-expense-16",
+          "companyId": "c-schach",
+          "code": "EXP-0016",
+          "departmentId": "d-proc",
+          "categoryId": "c-schach-category-3",
+          "title": "Supplier inspection travel",
+          "description": "Fictional sample expense for reviewing department spending and approvals.",
+          "vendor": "Sample Vendor Travel",
+          "invoiceNumber": "DEMO-ACH-016",
+          "expenseDate": "2026-10-06",
+          "amountMinor": 960000,
+          "currency": "INR",
+          "projectId": "p-supply",
+          "taskId": "t-024",
+          "createdBy": "u-isha",
+          "status": "rejected",
+          "receiptExceptionReason": "",
+          "submittedAt": "2026-10-06T11:00:00Z",
+          "reviewedBy": "u-nikhil",
+          "reviewedAt": "2026-10-06T12:00:00Z",
+          "reviewNote": "Please correct the invoice reference and explain the business purpose.",
+          "budgetOverrideReason": "",
+          "paidBy": "",
+          "paidAt": "",
+          "paidDate": "",
+          "paymentMethod": "",
+          "paymentReference": "",
+          "createdAt": "2026-10-06T10:00:00Z",
+          "updatedAt": "2026-10-06T10:00:00Z",
+          "version": 3,
+          "receipts": [
+            {
+              "id": "c-schach-expense-16-receipt",
+              "fileName": "EXP-0016-sample-receipt.txt",
+              "mimeType": "text/plain; charset=utf-8",
+              "size": 252,
+              "uploadedBy": "u-isha",
+              "createdAt": "2026-10-06T10:00:00Z"
+            }
+          ]
+        },
+        {
+          "id": "c-schach-expense-17",
+          "companyId": "c-schach",
+          "code": "EXP-0017",
+          "departmentId": "d-proc",
+          "categoryId": "c-schach-category-7",
+          "title": "Cancelled freight reservation",
+          "description": "Fictional sample expense for reviewing department spending and approvals.",
+          "vendor": "Sample Freight Services",
+          "invoiceNumber": "DEMO-ACH-017",
+          "expenseDate": "2026-10-05",
+          "amountMinor": 480000,
+          "currency": "INR",
+          "projectId": "p-supply",
+          "taskId": "t-010",
+          "createdBy": "u-nikhil",
+          "status": "void",
+          "receiptExceptionReason": "",
+          "submittedAt": "",
+          "reviewedBy": "",
+          "reviewedAt": "",
+          "reviewNote": "",
+          "budgetOverrideReason": "",
+          "paidBy": "",
+          "paidAt": "",
+          "paidDate": "",
+          "paymentMethod": "",
+          "paymentReference": "",
+          "createdAt": "2026-10-05T10:00:00Z",
+          "updatedAt": "2026-10-05T10:00:00Z",
+          "version": 1,
+          "receipts": [
+            {
+              "id": "c-schach-expense-17-receipt",
+              "fileName": "EXP-0017-sample-receipt.txt",
+              "mimeType": "text/plain; charset=utf-8",
+              "size": 258,
+              "uploadedBy": "u-nikhil",
+              "createdAt": "2026-10-05T10:00:00Z"
+            }
+          ]
+        }
+      ],
+      "financeEvents": [
+        {
+          "id": "c-schach-fe-1",
+          "companyId": "c-schach",
+          "departmentId": "d-eng",
+          "entityType": "budget",
+          "entityId": "c-schach-budget-d-eng-2025",
+          "userId": "u-founder",
+          "action": "budget_created",
+          "detail": "Engineering \u00b7 FY 2025\u201326: 120000000 minor units allocated.",
+          "createdAt": "2026-09-15T10:00:00Z"
+        },
+        {
+          "id": "c-schach-fe-2",
+          "companyId": "c-schach",
+          "departmentId": "d-eng",
+          "entityType": "budget",
+          "entityId": "c-schach-budget-d-eng-2026",
+          "userId": "u-founder",
+          "action": "budget_created",
+          "detail": "Engineering \u00b7 FY 2026\u201327: 120000000 minor units allocated.",
+          "createdAt": "2026-09-15T10:00:00Z"
+        },
+        {
+          "id": "c-schach-fe-3",
+          "companyId": "c-schach",
+          "departmentId": "d-mfg",
+          "entityType": "budget",
+          "entityId": "c-schach-budget-d-mfg-2025",
+          "userId": "u-founder",
+          "action": "budget_created",
+          "detail": "Manufacturing \u00b7 FY 2025\u201326: 250000000 minor units allocated.",
+          "createdAt": "2026-09-15T10:00:00Z"
+        },
+        {
+          "id": "c-schach-fe-4",
+          "companyId": "c-schach",
+          "departmentId": "d-mfg",
+          "entityType": "budget",
+          "entityId": "c-schach-budget-d-mfg-2026",
+          "userId": "u-founder",
+          "action": "budget_created",
+          "detail": "Manufacturing \u00b7 FY 2026\u201327: 250000000 minor units allocated.",
+          "createdAt": "2026-09-15T10:00:00Z"
+        },
+        {
+          "id": "c-schach-fe-5",
+          "companyId": "c-schach",
+          "departmentId": "d-sales",
+          "entityType": "budget",
+          "entityId": "c-schach-budget-d-sales-2025",
+          "userId": "u-founder",
+          "action": "budget_created",
+          "detail": "Sales \u00b7 FY 2025\u201326: 60000000 minor units allocated.",
+          "createdAt": "2026-09-15T10:00:00Z"
+        },
+        {
+          "id": "c-schach-fe-6",
+          "companyId": "c-schach",
+          "departmentId": "d-sales",
+          "entityType": "budget",
+          "entityId": "c-schach-budget-d-sales-2026",
+          "userId": "u-founder",
+          "action": "budget_created",
+          "detail": "Sales \u00b7 FY 2026\u201327: 60000000 minor units allocated.",
+          "createdAt": "2026-09-15T10:00:00Z"
+        },
+        {
+          "id": "c-schach-fe-7",
+          "companyId": "c-schach",
+          "departmentId": "d-fin",
+          "entityType": "budget",
+          "entityId": "c-schach-budget-d-fin-2025",
+          "userId": "u-founder",
+          "action": "budget_created",
+          "detail": "Finance \u00b7 FY 2025\u201326: 30000000 minor units allocated.",
+          "createdAt": "2026-09-15T10:00:00Z"
+        },
+        {
+          "id": "c-schach-fe-8",
+          "companyId": "c-schach",
+          "departmentId": "d-fin",
+          "entityType": "budget",
+          "entityId": "c-schach-budget-d-fin-2026",
+          "userId": "u-founder",
+          "action": "budget_created",
+          "detail": "Finance \u00b7 FY 2026\u201327: 30000000 minor units allocated.",
+          "createdAt": "2026-09-15T10:00:00Z"
+        },
+        {
+          "id": "c-schach-fe-9",
+          "companyId": "c-schach",
+          "departmentId": "d-people",
+          "entityType": "budget",
+          "entityId": "c-schach-budget-d-people-2025",
+          "userId": "u-founder",
+          "action": "budget_created",
+          "detail": "People & Admin \u00b7 FY 2025\u201326: 45000000 minor units allocated.",
+          "createdAt": "2026-09-15T10:00:00Z"
+        },
+        {
+          "id": "c-schach-fe-10",
+          "companyId": "c-schach",
+          "departmentId": "d-people",
+          "entityType": "budget",
+          "entityId": "c-schach-budget-d-people-2026",
+          "userId": "u-founder",
+          "action": "budget_created",
+          "detail": "People & Admin \u00b7 FY 2026\u201327: 45000000 minor units allocated.",
+          "createdAt": "2026-09-15T10:00:00Z"
+        },
+        {
+          "id": "c-schach-fe-11",
+          "companyId": "c-schach",
+          "departmentId": "d-proc",
+          "entityType": "budget",
+          "entityId": "c-schach-budget-d-proc-2025",
+          "userId": "u-founder",
+          "action": "budget_created",
+          "detail": "Procurement \u00b7 FY 2025\u201326: 180000000 minor units allocated.",
+          "createdAt": "2026-09-15T10:00:00Z"
+        },
+        {
+          "id": "c-schach-fe-12",
+          "companyId": "c-schach",
+          "departmentId": "d-proc",
+          "entityType": "budget",
+          "entityId": "c-schach-budget-d-proc-2026",
+          "userId": "u-founder",
+          "action": "budget_created",
+          "detail": "Procurement \u00b7 FY 2026\u201327: 180000000 minor units allocated.",
+          "createdAt": "2026-09-15T10:00:00Z"
+        },
+        {
+          "id": "c-schach-fe-13",
+          "companyId": "c-schach",
+          "departmentId": "d-eng",
+          "entityType": "expense",
+          "entityId": "c-schach-expense-1",
+          "userId": "u-member",
+          "action": "expense_created",
+          "detail": "EXP-0001 \u00b7 Design software annual renewal",
+          "createdAt": "2026-09-22T10:00:00Z"
+        },
+        {
+          "id": "c-schach-fe-14",
+          "companyId": "c-schach",
+          "departmentId": "d-eng",
+          "entityType": "expense",
+          "entityId": "c-schach-expense-1",
+          "userId": "u-member",
+          "action": "expense_submitted",
+          "detail": "Submitted for independent review.",
+          "createdAt": "2026-09-22T10:00:00Z"
+        },
+        {
+          "id": "c-schach-fe-15",
+          "companyId": "c-schach",
+          "departmentId": "d-eng",
+          "entityType": "expense",
+          "entityId": "c-schach-expense-1",
+          "userId": "u-head",
+          "action": "expense_approved",
+          "detail": "Receipt and business purpose reviewed.",
+          "createdAt": "2026-09-22T10:00:00Z"
+        },
+        {
+          "id": "c-schach-fe-16",
+          "companyId": "c-schach",
+          "departmentId": "d-eng",
+          "entityType": "expense",
+          "entityId": "c-schach-expense-1",
+          "userId": "u-finance",
+          "action": "payment_recorded",
+          "detail": "External payment recorded: DEMO-TRANSFER-0001.",
+          "createdAt": "2026-09-23T10:00:00Z"
+        },
+        {
+          "id": "c-schach-fe-17",
+          "companyId": "c-schach",
+          "departmentId": "d-eng",
+          "entityType": "expense",
+          "entityId": "c-schach-expense-2",
+          "userId": "u-kabir",
+          "action": "expense_created",
+          "detail": "EXP-0002 \u00b7 Survey equipment calibration",
+          "createdAt": "2026-10-04T10:00:00Z"
+        },
+        {
+          "id": "c-schach-fe-18",
+          "companyId": "c-schach",
+          "departmentId": "d-eng",
+          "entityType": "expense",
+          "entityId": "c-schach-expense-2",
+          "userId": "u-kabir",
+          "action": "expense_submitted",
+          "detail": "Submitted for independent review.",
+          "createdAt": "2026-10-04T10:00:00Z"
+        },
+        {
+          "id": "c-schach-fe-19",
+          "companyId": "c-schach",
+          "departmentId": "d-eng",
+          "entityType": "expense",
+          "entityId": "c-schach-expense-2",
+          "userId": "u-head",
+          "action": "expense_approved",
+          "detail": "Receipt and business purpose reviewed.",
+          "createdAt": "2026-10-04T10:00:00Z"
+        },
+        {
+          "id": "c-schach-fe-20",
+          "companyId": "c-schach",
+          "departmentId": "d-eng",
+          "entityType": "expense",
+          "entityId": "c-schach-expense-3",
+          "userId": "u-member",
+          "action": "expense_created",
+          "detail": "EXP-0003 \u00b7 Phoenix site coordination visit",
+          "createdAt": "2026-10-08T10:00:00Z"
+        },
+        {
+          "id": "c-schach-fe-21",
+          "companyId": "c-schach",
+          "departmentId": "d-eng",
+          "entityType": "expense",
+          "entityId": "c-schach-expense-3",
+          "userId": "u-member",
+          "action": "expense_submitted",
+          "detail": "Submitted for independent review.",
+          "createdAt": "2026-10-08T10:00:00Z"
+        },
+        {
+          "id": "c-schach-fe-22",
+          "companyId": "c-schach",
+          "departmentId": "d-eng",
+          "entityType": "expense",
+          "entityId": "c-schach-expense-4",
+          "userId": "u-head",
+          "action": "expense_created",
+          "detail": "EXP-0004 \u00b7 Independent design peer review",
+          "createdAt": "2026-10-07T10:00:00Z"
+        },
+        {
+          "id": "c-schach-fe-23",
+          "companyId": "c-schach",
+          "departmentId": "d-eng",
+          "entityType": "expense",
+          "entityId": "c-schach-expense-4",
+          "userId": "u-head",
+          "action": "expense_submitted",
+          "detail": "Submitted for independent review.",
+          "createdAt": "2026-10-07T10:00:00Z"
+        },
+        {
+          "id": "c-schach-fe-24",
+          "companyId": "c-schach",
+          "departmentId": "d-mfg",
+          "entityType": "expense",
+          "entityId": "c-schach-expense-5",
+          "userId": "u-ananya",
+          "action": "expense_created",
+          "detail": "EXP-0005 \u00b7 CNC preventive maintenance service",
+          "createdAt": "2026-09-26T10:00:00Z"
+        },
+        {
+          "id": "c-schach-fe-25",
+          "companyId": "c-schach",
+          "departmentId": "d-mfg",
+          "entityType": "expense",
+          "entityId": "c-schach-expense-5",
+          "userId": "u-ananya",
+          "action": "expense_submitted",
+          "detail": "Submitted for independent review.",
+          "createdAt": "2026-09-26T10:00:00Z"
+        },
+        {
+          "id": "c-schach-fe-26",
+          "companyId": "c-schach",
+          "departmentId": "d-mfg",
+          "entityType": "expense",
+          "entityId": "c-schach-expense-5",
+          "userId": "u-vikram",
+          "action": "expense_approved",
+          "detail": "Receipt and business purpose reviewed.",
+          "createdAt": "2026-09-26T10:00:00Z"
+        },
+        {
+          "id": "c-schach-fe-27",
+          "companyId": "c-schach",
+          "departmentId": "d-mfg",
+          "entityType": "expense",
+          "entityId": "c-schach-expense-5",
+          "userId": "u-finance",
+          "action": "payment_recorded",
+          "detail": "External payment recorded: DEMO-TRANSFER-0005.",
+          "createdAt": "2026-09-27T10:00:00Z"
+        },
+        {
+          "id": "c-schach-fe-28",
+          "companyId": "c-schach",
+          "departmentId": "d-mfg",
+          "entityType": "expense",
+          "entityId": "c-schach-expense-6",
+          "userId": "u-rahul",
+          "action": "expense_created",
+          "detail": "EXP-0006 \u00b7 Inspection gauges and test coupons",
+          "createdAt": "2026-10-06T10:00:00Z"
+        },
+        {
+          "id": "c-schach-fe-29",
+          "companyId": "c-schach",
+          "departmentId": "d-mfg",
+          "entityType": "expense",
+          "entityId": "c-schach-expense-6",
+          "userId": "u-rahul",
+          "action": "expense_submitted",
+          "detail": "Submitted for independent review.",
+          "createdAt": "2026-10-06T10:00:00Z"
+        },
+        {
+          "id": "c-schach-fe-30",
+          "companyId": "c-schach",
+          "departmentId": "d-mfg",
+          "entityType": "expense",
+          "entityId": "c-schach-expense-6",
+          "userId": "u-vikram",
+          "action": "expense_approved",
+          "detail": "Receipt and business purpose reviewed.",
+          "createdAt": "2026-10-06T10:00:00Z"
+        },
+        {
+          "id": "c-schach-fe-31",
+          "companyId": "c-schach",
+          "departmentId": "d-mfg",
+          "entityType": "expense",
+          "entityId": "c-schach-expense-7",
+          "userId": "u-vikram",
+          "action": "expense_created",
+          "detail": "EXP-0007 \u00b7 Factory safety refresher material",
+          "createdAt": "2026-10-09T10:00:00Z"
+        },
+        {
+          "id": "c-schach-fe-32",
+          "companyId": "c-schach",
+          "departmentId": "d-mfg",
+          "entityType": "expense",
+          "entityId": "c-schach-expense-7",
+          "userId": "u-vikram",
+          "action": "expense_submitted",
+          "detail": "Submitted for independent review.",
+          "createdAt": "2026-10-09T10:00:00Z"
+        },
+        {
+          "id": "c-schach-fe-33",
+          "companyId": "c-schach",
+          "departmentId": "d-sales",
+          "entityType": "expense",
+          "entityId": "c-schach-expense-8",
+          "userId": "u-sameer",
+          "action": "expense_created",
+          "detail": "EXP-0008 \u00b7 Ahmedabad customer visit",
+          "createdAt": "2026-10-02T10:00:00Z"
+        },
+        {
+          "id": "c-schach-fe-34",
+          "companyId": "c-schach",
+          "departmentId": "d-sales",
+          "entityType": "expense",
+          "entityId": "c-schach-expense-8",
+          "userId": "u-sameer",
+          "action": "expense_submitted",
+          "detail": "Submitted for independent review.",
+          "createdAt": "2026-10-02T10:00:00Z"
+        },
+        {
+          "id": "c-schach-fe-35",
+          "companyId": "c-schach",
+          "departmentId": "d-sales",
+          "entityType": "expense",
+          "entityId": "c-schach-expense-8",
+          "userId": "u-neha",
+          "action": "expense_approved",
+          "detail": "Receipt and business purpose reviewed.",
+          "createdAt": "2026-10-02T10:00:00Z"
+        },
+        {
+          "id": "c-schach-fe-36",
+          "companyId": "c-schach",
+          "departmentId": "d-sales",
+          "entityType": "expense",
+          "entityId": "c-schach-expense-8",
+          "userId": "u-finance",
+          "action": "payment_recorded",
+          "detail": "External payment recorded: DEMO-TRANSFER-0008.",
+          "createdAt": "2026-10-03T10:00:00Z"
+        },
+        {
+          "id": "c-schach-fe-37",
+          "companyId": "c-schach",
+          "departmentId": "d-sales",
+          "entityType": "expense",
+          "entityId": "c-schach-expense-9",
+          "userId": "u-neha",
+          "action": "expense_created",
+          "detail": "EXP-0009 \u00b7 Partner launch venue deposit",
+          "createdAt": "2026-10-05T10:00:00Z"
+        },
+        {
+          "id": "c-schach-fe-38",
+          "companyId": "c-schach",
+          "departmentId": "d-sales",
+          "entityType": "expense",
+          "entityId": "c-schach-expense-9",
+          "userId": "u-neha",
+          "action": "expense_submitted",
+          "detail": "Submitted for independent review.",
+          "createdAt": "2026-10-05T10:00:00Z"
+        },
+        {
+          "id": "c-schach-fe-39",
+          "companyId": "c-schach",
+          "departmentId": "d-sales",
+          "entityType": "expense",
+          "entityId": "c-schach-expense-9",
+          "userId": "u-founder",
+          "action": "expense_approved",
+          "detail": "Receipt and business purpose reviewed.",
+          "createdAt": "2026-10-05T10:00:00Z"
+        },
+        {
+          "id": "c-schach-fe-40",
+          "companyId": "c-schach",
+          "departmentId": "d-sales",
+          "entityType": "expense",
+          "entityId": "c-schach-expense-10",
+          "userId": "u-sameer",
+          "action": "expense_created",
+          "detail": "EXP-0010 \u00b7 Local customer meeting transport",
+          "createdAt": "2026-10-09T10:00:00Z"
+        },
+        {
+          "id": "c-schach-fe-41",
+          "companyId": "c-schach",
+          "departmentId": "d-sales",
+          "entityType": "expense",
+          "entityId": "c-schach-expense-10",
+          "userId": "u-sameer",
+          "action": "expense_submitted",
+          "detail": "Submitted for independent review.",
+          "createdAt": "2026-10-09T10:00:00Z"
+        },
+        {
+          "id": "c-schach-fe-42",
+          "companyId": "c-schach",
+          "departmentId": "d-fin",
+          "entityType": "expense",
+          "entityId": "c-schach-expense-11",
+          "userId": "u-dev",
+          "action": "expense_created",
+          "detail": "EXP-0011 \u00b7 Accounts reporting subscription",
+          "createdAt": "2026-09-18T10:00:00Z"
+        },
+        {
+          "id": "c-schach-fe-43",
+          "companyId": "c-schach",
+          "departmentId": "d-fin",
+          "entityType": "expense",
+          "entityId": "c-schach-expense-11",
+          "userId": "u-dev",
+          "action": "expense_submitted",
+          "detail": "Submitted for independent review.",
+          "createdAt": "2026-09-18T10:00:00Z"
+        },
+        {
+          "id": "c-schach-fe-44",
+          "companyId": "c-schach",
+          "departmentId": "d-fin",
+          "entityType": "expense",
+          "entityId": "c-schach-expense-11",
+          "userId": "u-priya",
+          "action": "expense_approved",
+          "detail": "Receipt and business purpose reviewed.",
+          "createdAt": "2026-09-18T10:00:00Z"
+        },
+        {
+          "id": "c-schach-fe-45",
+          "companyId": "c-schach",
+          "departmentId": "d-fin",
+          "entityType": "expense",
+          "entityId": "c-schach-expense-11",
+          "userId": "u-finance",
+          "action": "payment_recorded",
+          "detail": "External payment recorded: DEMO-TRANSFER-0011.",
+          "createdAt": "2026-09-19T10:00:00Z"
+        },
+        {
+          "id": "c-schach-fe-46",
+          "companyId": "c-schach",
+          "departmentId": "d-fin",
+          "entityType": "expense",
+          "entityId": "c-schach-expense-12",
+          "userId": "u-finance",
+          "action": "expense_created",
+          "detail": "EXP-0012 \u00b7 Controls workshop facilitation",
+          "createdAt": "2026-10-09T10:00:00Z"
+        },
+        {
+          "id": "c-schach-fe-47",
+          "companyId": "c-schach",
+          "departmentId": "d-people",
+          "entityType": "expense",
+          "entityId": "c-schach-expense-13",
+          "userId": "u-tara",
+          "action": "expense_created",
+          "detail": "EXP-0013 \u00b7 New joiner induction materials",
+          "createdAt": "2026-10-07T10:00:00Z"
+        },
+        {
+          "id": "c-schach-fe-48",
+          "companyId": "c-schach",
+          "departmentId": "d-people",
+          "entityType": "expense",
+          "entityId": "c-schach-expense-13",
+          "userId": "u-tara",
+          "action": "expense_submitted",
+          "detail": "Submitted for independent review.",
+          "createdAt": "2026-10-07T10:00:00Z"
+        },
+        {
+          "id": "c-schach-fe-49",
+          "companyId": "c-schach",
+          "departmentId": "d-people",
+          "entityType": "expense",
+          "entityId": "c-schach-expense-13",
+          "userId": "u-sana",
+          "action": "expense_approved",
+          "detail": "Receipt and business purpose reviewed.",
+          "createdAt": "2026-10-07T10:00:00Z"
+        },
+        {
+          "id": "c-schach-fe-50",
+          "companyId": "c-schach",
+          "departmentId": "d-people",
+          "entityType": "expense",
+          "entityId": "c-schach-expense-14",
+          "userId": "u-sana",
+          "action": "expense_created",
+          "detail": "EXP-0014 \u00b7 Leadership training programme",
+          "createdAt": "2026-10-08T10:00:00Z"
+        },
+        {
+          "id": "c-schach-fe-51",
+          "companyId": "c-schach",
+          "departmentId": "d-people",
+          "entityType": "expense",
+          "entityId": "c-schach-expense-14",
+          "userId": "u-sana",
+          "action": "expense_submitted",
+          "detail": "Submitted for independent review.",
+          "createdAt": "2026-10-08T10:00:00Z"
+        },
+        {
+          "id": "c-schach-fe-52",
+          "companyId": "c-schach",
+          "departmentId": "d-proc",
+          "entityType": "expense",
+          "entityId": "c-schach-expense-15",
+          "userId": "u-isha",
+          "action": "expense_created",
+          "detail": "EXP-0015 \u00b7 Approved plywood sample batch",
+          "createdAt": "2026-09-28T10:00:00Z"
+        },
+        {
+          "id": "c-schach-fe-53",
+          "companyId": "c-schach",
+          "departmentId": "d-proc",
+          "entityType": "expense",
+          "entityId": "c-schach-expense-15",
+          "userId": "u-isha",
+          "action": "expense_submitted",
+          "detail": "Submitted for independent review.",
+          "createdAt": "2026-09-28T10:00:00Z"
+        },
+        {
+          "id": "c-schach-fe-54",
+          "companyId": "c-schach",
+          "departmentId": "d-proc",
+          "entityType": "expense",
+          "entityId": "c-schach-expense-15",
+          "userId": "u-nikhil",
+          "action": "expense_approved",
+          "detail": "Receipt and business purpose reviewed.",
+          "createdAt": "2026-09-28T10:00:00Z"
+        },
+        {
+          "id": "c-schach-fe-55",
+          "companyId": "c-schach",
+          "departmentId": "d-proc",
+          "entityType": "expense",
+          "entityId": "c-schach-expense-15",
+          "userId": "u-finance",
+          "action": "payment_recorded",
+          "detail": "External payment recorded: DEMO-TRANSFER-0015.",
+          "createdAt": "2026-09-29T10:00:00Z"
+        },
+        {
+          "id": "c-schach-fe-56",
+          "companyId": "c-schach",
+          "departmentId": "d-proc",
+          "entityType": "expense",
+          "entityId": "c-schach-expense-16",
+          "userId": "u-isha",
+          "action": "expense_created",
+          "detail": "EXP-0016 \u00b7 Supplier inspection travel",
+          "createdAt": "2026-10-06T10:00:00Z"
+        },
+        {
+          "id": "c-schach-fe-57",
+          "companyId": "c-schach",
+          "departmentId": "d-proc",
+          "entityType": "expense",
+          "entityId": "c-schach-expense-16",
+          "userId": "u-isha",
+          "action": "expense_submitted",
+          "detail": "Submitted for independent review.",
+          "createdAt": "2026-10-06T10:00:00Z"
+        },
+        {
+          "id": "c-schach-fe-58",
+          "companyId": "c-schach",
+          "departmentId": "d-proc",
+          "entityType": "expense",
+          "entityId": "c-schach-expense-16",
+          "userId": "u-nikhil",
+          "action": "expense_rejected",
+          "detail": "Please correct the invoice reference and explain the business purpose.",
+          "createdAt": "2026-10-06T10:00:00Z"
+        },
+        {
+          "id": "c-schach-fe-59",
+          "companyId": "c-schach",
+          "departmentId": "d-proc",
+          "entityType": "expense",
+          "entityId": "c-schach-expense-17",
+          "userId": "u-nikhil",
+          "action": "expense_created",
+          "detail": "EXP-0017 \u00b7 Cancelled freight reservation",
+          "createdAt": "2026-10-05T10:00:00Z"
+        }
+      ]
+    },
+    {
+      "company": {
+        "id": "c-meridian",
+        "name": "Meridian Works",
+        "slug": "meridian",
+        "industry": "Projects & services",
+        "timezone": "Asia/Kolkata",
+        "color": "#3B82F6",
+        "currency": "INR",
+        "fiscalYearStartMonth": 4,
+        "createdAt": "2026-09-10T10:00:00Z"
+      },
+      "me": {
+        "id": "u-founder",
+        "membershipId": "meridian-founder",
+        "name": "Rohan Mehta",
+        "email": "founder@schach.demo",
+        "role": "founder",
+        "departmentId": "",
+        "managerId": "",
+        "title": "Founder",
+        "capacityHours": 40,
+        "avatar": "RM",
+        "active": true
+      },
+      "departments": [
+        {
+          "id": "d-projects",
+          "companyId": "c-meridian",
+          "name": "Projects",
+          "headId": "u-meridian",
+          "color": "#3B82F6",
+          "description": "Project delivery and customer coordination"
+        }
+      ],
+      "people": [
+        {
+          "id": "u-founder",
+          "membershipId": "meridian-founder",
+          "name": "Rohan Mehta",
+          "email": "founder@schach.demo",
+          "role": "founder",
+          "departmentId": "",
+          "managerId": "",
+          "title": "Founder",
+          "capacityHours": 40,
+          "avatar": "RM",
+          "active": true
+        },
+        {
+          "id": "u-meridian",
+          "membershipId": "meridian-head",
+          "name": "Avni Desai",
+          "email": "avni@meridian.demo",
+          "role": "head",
+          "departmentId": "d-projects",
+          "managerId": "u-founder",
+          "title": "Head of Projects",
+          "capacityHours": 40,
+          "avatar": "AD",
+          "active": true
+        }
+      ],
+      "projects": [
+        {
+          "id": "p-meridian",
+          "companyId": "c-meridian",
+          "name": "Project Northstar",
+          "description": "A separate fictional environment to demonstrate company isolation.",
+          "departmentId": "d-projects",
+          "ownerId": "u-meridian",
+          "dueDate": "2026-10-30",
+          "color": "#3B82F6",
+          "status": "active"
+        }
+      ],
+      "tasks": [
+        {
+          "id": "mt-0",
+          "code": "MER-1001",
+          "companyId": "c-meridian",
+          "projectId": "p-meridian",
+          "departmentId": "d-projects",
+          "parentId": "",
+          "title": "Confirm mobilisation checklist",
+          "description": "Ensure access, induction and the first 30-day goals are assigned.",
+          "ownerId": "u-meridian",
+          "createdBy": "u-founder",
+          "reviewerId": "u-founder",
+          "status": "in_progress",
+          "priority": "medium",
+          "startDate": "2026-10-05",
+          "dueDate": "2026-10-11",
+          "originalDueDate": "2026-10-11",
+          "progress": 60,
+          "estimatedHours": 6,
+          "actualHours": 0,
+          "tags": [
+            "Operations"
+          ],
+          "checklist": [],
+          "dependencies": [],
+          "collaborators": [],
+          "recurrence": "none",
+          "requiresApproval": true,
+          "blockerReason": "",
+          "deadlineChangeReason": "",
+          "completedAt": "",
+          "createdAt": "2026-10-01T10:00:00Z",
+          "updatedAt": "2026-10-06T10:00:00Z",
+          "version": 1,
+          "comments": [],
+          "timeEntries": [],
+          "attachments": []
+        },
+        {
+          "id": "mt-1",
+          "code": "MER-1002",
+          "companyId": "c-meridian",
+          "projectId": "p-meridian",
+          "departmentId": "d-projects",
+          "parentId": "",
+          "title": "Review site delivery schedule",
+          "description": "Validate quantities against the latest coordinated drawings.",
+          "ownerId": "u-meridian",
+          "createdBy": "u-founder",
+          "reviewerId": "u-founder",
+          "status": "todo",
+          "priority": "high",
+          "startDate": "2026-10-05",
+          "dueDate": "2026-10-12",
+          "originalDueDate": "2026-10-12",
+          "progress": 0,
+          "estimatedHours": 20,
+          "actualHours": 0,
+          "tags": [
+            "Delivery"
+          ],
+          "checklist": [],
+          "dependencies": [],
+          "collaborators": [],
+          "recurrence": "none",
+          "requiresApproval": true,
+          "blockerReason": "",
+          "deadlineChangeReason": "",
+          "completedAt": "",
+          "createdAt": "2026-10-01T10:00:00Z",
+          "updatedAt": "2026-10-09T10:00:00Z",
+          "version": 1,
+          "comments": [],
+          "timeEntries": [],
+          "attachments": []
+        },
+        {
+          "id": "mt-2",
+          "code": "MER-1003",
+          "companyId": "c-meridian",
+          "projectId": "p-meridian",
+          "departmentId": "d-projects",
+          "parentId": "",
+          "title": "Approve project risk register",
+          "description": "Agree the preventive maintenance window and spare-parts list.",
+          "ownerId": "u-meridian",
+          "createdBy": "u-founder",
+          "reviewerId": "u-founder",
+          "status": "in_review",
+          "priority": "medium",
+          "startDate": "2026-10-05",
+          "dueDate": "2026-10-13",
+          "originalDueDate": "2026-10-13",
+          "progress": 100,
+          "estimatedHours": 10,
+          "actualHours": 0,
+          "tags": [
+            "Operations"
+          ],
+          "checklist": [],
+          "dependencies": [],
+          "collaborators": [],
+          "recurrence": "none",
+          "requiresApproval": true,
+          "blockerReason": "",
+          "deadlineChangeReason": "",
+          "completedAt": "",
+          "createdAt": "2026-10-01T10:00:00Z",
+          "updatedAt": "2026-10-09T10:00:00Z",
+          "version": 1,
+          "comments": [],
+          "timeEntries": [],
+          "attachments": []
+        },
+        {
+          "id": "mt-3",
+          "code": "MER-1004",
+          "companyId": "c-meridian",
+          "projectId": "p-meridian",
+          "departmentId": "d-projects",
+          "parentId": "",
+          "title": "Issue stakeholder weekly update",
+          "description": "Confirm achievable output by line and name the owner of each constraint.",
+          "ownerId": "u-meridian",
+          "createdBy": "u-founder",
+          "reviewerId": "u-founder",
+          "status": "done",
+          "priority": "high",
+          "startDate": "2026-10-05",
+          "dueDate": "2026-10-14",
+          "originalDueDate": "2026-10-14",
+          "progress": 100,
+          "estimatedHours": 4,
+          "actualHours": 0,
+          "tags": [
+            "Operations"
+          ],
+          "checklist": [],
+          "dependencies": [],
+          "collaborators": [],
+          "recurrence": "none",
+          "requiresApproval": true,
+          "blockerReason": "",
+          "deadlineChangeReason": "",
+          "completedAt": "2026-10-09T10:00:00Z",
+          "createdAt": "2026-10-01T10:00:00Z",
+          "updatedAt": "2026-10-06T10:00:00Z",
+          "version": 1,
+          "comments": [],
+          "timeEntries": [],
+          "attachments": []
+        }
+      ],
+      "goals": [],
+      "activities": [],
+      "notifications": [
+        {
+          "id": "c-meridian-expense-2-notice-u-founder",
+          "companyId": "c-meridian",
+          "userId": "u-founder",
+          "taskId": "",
+          "expenseId": "c-meridian-expense-2",
+          "title": "Expense ready for review",
+          "body": "EXP-0002 \u00b7 Site logistics planning support",
+          "kind": "expense_review",
+          "read": false,
+          "createdAt": "2026-10-08T11:00:00Z"
+        }
+      ],
+      "financeScope": "company",
+      "expenseCategories": [
+        {
+          "id": "c-meridian-category-1",
+          "companyId": "c-meridian",
+          "name": "Materials",
+          "color": "#F97316",
+          "active": true,
+          "receiptRequired": true,
+          "version": 1
+        },
+        {
+          "id": "c-meridian-category-2",
+          "companyId": "c-meridian",
+          "name": "Equipment",
+          "color": "#6366F1",
+          "active": true,
+          "receiptRequired": true,
+          "version": 1
+        },
+        {
+          "id": "c-meridian-category-3",
+          "companyId": "c-meridian",
+          "name": "Travel",
+          "color": "#3B82F6",
+          "active": true,
+          "receiptRequired": true,
+          "version": 1
+        },
+        {
+          "id": "c-meridian-category-4",
+          "companyId": "c-meridian",
+          "name": "Software",
+          "color": "#14B8A6",
+          "active": true,
+          "receiptRequired": true,
+          "version": 1
+        },
+        {
+          "id": "c-meridian-category-5",
+          "companyId": "c-meridian",
+          "name": "Professional services",
+          "color": "#A855F7",
+          "active": true,
+          "receiptRequired": true,
+          "version": 1
+        },
+        {
+          "id": "c-meridian-category-6",
+          "companyId": "c-meridian",
+          "name": "People & administration",
+          "color": "#16A34A",
+          "active": true,
+          "receiptRequired": true,
+          "version": 1
+        },
+        {
+          "id": "c-meridian-category-7",
+          "companyId": "c-meridian",
+          "name": "Other",
+          "color": "#64748B",
+          "active": true,
+          "receiptRequired": true,
+          "version": 1
+        }
+      ],
+      "budgets": [
+        {
+          "id": "c-meridian-budget-d-projects-2025",
+          "companyId": "c-meridian",
+          "departmentId": "d-projects",
+          "name": "Projects \u00b7 FY 2025\u201326",
+          "startDate": "2025-04-01",
+          "endDate": "2026-03-31",
+          "amountMinor": 80000000,
+          "currency": "INR",
+          "status": "closed",
+          "notes": "Fictional operating allocation for the interactive sample.",
+          "createdBy": "u-founder",
+          "createdAt": "2025-03-20T10:00:00Z",
+          "updatedAt": "2026-09-15T10:00:00Z",
+          "version": 2
+        },
+        {
+          "id": "c-meridian-budget-d-projects-2026",
+          "companyId": "c-meridian",
+          "departmentId": "d-projects",
+          "name": "Projects \u00b7 FY 2026\u201327",
+          "startDate": "2026-04-01",
+          "endDate": "2027-03-31",
+          "amountMinor": 80000000,
+          "currency": "INR",
+          "status": "active",
+          "notes": "Fictional operating allocation for the interactive sample.",
+          "createdBy": "u-founder",
+          "createdAt": "2026-03-20T10:00:00Z",
+          "updatedAt": "2026-09-15T10:00:00Z",
+          "version": 2
+        }
+      ],
+      "expenses": [
+        {
+          "id": "c-meridian-expense-1",
+          "companyId": "c-meridian",
+          "code": "EXP-0001",
+          "departmentId": "d-projects",
+          "categoryId": "c-meridian-category-3",
+          "title": "Northstar site mobilisation visit",
+          "description": "Fictional sample expense for reviewing department spending and approvals.",
+          "vendor": "Sample Northstar Travel",
+          "invoiceNumber": "DEMO-IAN-001",
+          "expenseDate": "2026-10-03",
+          "amountMinor": 1250000,
+          "currency": "INR",
+          "projectId": "p-meridian",
+          "taskId": "mt-0",
+          "createdBy": "u-meridian",
+          "status": "paid",
+          "receiptExceptionReason": "",
+          "submittedAt": "2026-10-03T11:00:00Z",
+          "reviewedBy": "u-founder",
+          "reviewedAt": "2026-10-03T12:00:00Z",
+          "reviewNote": "Receipt and business purpose reviewed.",
+          "budgetOverrideReason": "",
+          "paidBy": "u-founder",
+          "paidAt": "2026-10-04T10:00:00Z",
+          "paidDate": "2026-10-04",
+          "paymentMethod": "bank_transfer",
+          "paymentReference": "DEMO-TRANSFER-0001",
+          "createdAt": "2026-10-03T10:00:00Z",
+          "updatedAt": "2026-10-03T10:00:00Z",
+          "version": 4,
+          "receipts": [
+            {
+              "id": "c-meridian-expense-1-receipt",
+              "fileName": "EXP-0001-sample-receipt.txt",
+              "mimeType": "text/plain; charset=utf-8",
+              "size": 261,
+              "uploadedBy": "u-meridian",
+              "createdAt": "2026-10-03T10:00:00Z"
+            }
+          ]
+        },
+        {
+          "id": "c-meridian-expense-2",
+          "companyId": "c-meridian",
+          "code": "EXP-0002",
+          "departmentId": "d-projects",
+          "categoryId": "c-meridian-category-5",
+          "title": "Site logistics planning support",
+          "description": "Fictional sample expense for reviewing department spending and approvals.",
+          "vendor": "Sample Site Advisory",
+          "invoiceNumber": "DEMO-IAN-002",
+          "expenseDate": "2026-10-08",
+          "amountMinor": 4500000,
+          "currency": "INR",
+          "projectId": "p-meridian",
+          "taskId": "mt-1",
+          "createdBy": "u-meridian",
+          "status": "submitted",
+          "receiptExceptionReason": "",
+          "submittedAt": "2026-10-08T11:00:00Z",
+          "reviewedBy": "",
+          "reviewedAt": "",
+          "reviewNote": "",
+          "budgetOverrideReason": "",
+          "paidBy": "",
+          "paidAt": "",
+          "paidDate": "",
+          "paymentMethod": "",
+          "paymentReference": "",
+          "createdAt": "2026-10-08T10:00:00Z",
+          "updatedAt": "2026-10-08T10:00:00Z",
+          "version": 2,
+          "receipts": [
+            {
+              "id": "c-meridian-expense-2-receipt",
+              "fileName": "EXP-0002-sample-receipt.txt",
+              "mimeType": "text/plain; charset=utf-8",
+              "size": 256,
+              "uploadedBy": "u-meridian",
+              "createdAt": "2026-10-08T10:00:00Z"
+            }
+          ]
+        }
+      ],
+      "financeEvents": [
+        {
+          "id": "c-meridian-fe-1",
+          "companyId": "c-meridian",
+          "departmentId": "d-projects",
+          "entityType": "budget",
+          "entityId": "c-meridian-budget-d-projects-2025",
+          "userId": "u-founder",
+          "action": "budget_created",
+          "detail": "Projects \u00b7 FY 2025\u201326: 80000000 minor units allocated.",
+          "createdAt": "2026-09-15T10:00:00Z"
+        },
+        {
+          "id": "c-meridian-fe-2",
+          "companyId": "c-meridian",
+          "departmentId": "d-projects",
+          "entityType": "budget",
+          "entityId": "c-meridian-budget-d-projects-2026",
+          "userId": "u-founder",
+          "action": "budget_created",
+          "detail": "Projects \u00b7 FY 2026\u201327: 80000000 minor units allocated.",
+          "createdAt": "2026-09-15T10:00:00Z"
+        },
+        {
+          "id": "c-meridian-fe-3",
+          "companyId": "c-meridian",
+          "departmentId": "d-projects",
+          "entityType": "expense",
+          "entityId": "c-meridian-expense-1",
+          "userId": "u-meridian",
+          "action": "expense_created",
+          "detail": "EXP-0001 \u00b7 Northstar site mobilisation visit",
+          "createdAt": "2026-10-03T10:00:00Z"
+        },
+        {
+          "id": "c-meridian-fe-4",
+          "companyId": "c-meridian",
+          "departmentId": "d-projects",
+          "entityType": "expense",
+          "entityId": "c-meridian-expense-1",
+          "userId": "u-meridian",
+          "action": "expense_submitted",
+          "detail": "Submitted for independent review.",
+          "createdAt": "2026-10-03T10:00:00Z"
+        },
+        {
+          "id": "c-meridian-fe-5",
+          "companyId": "c-meridian",
+          "departmentId": "d-projects",
+          "entityType": "expense",
+          "entityId": "c-meridian-expense-1",
+          "userId": "u-founder",
+          "action": "expense_approved",
+          "detail": "Receipt and business purpose reviewed.",
+          "createdAt": "2026-10-03T10:00:00Z"
+        },
+        {
+          "id": "c-meridian-fe-6",
+          "companyId": "c-meridian",
+          "departmentId": "d-projects",
+          "entityType": "expense",
+          "entityId": "c-meridian-expense-1",
+          "userId": "u-founder",
+          "action": "payment_recorded",
+          "detail": "External payment recorded: DEMO-TRANSFER-0001.",
+          "createdAt": "2026-10-04T10:00:00Z"
+        },
+        {
+          "id": "c-meridian-fe-7",
+          "companyId": "c-meridian",
+          "departmentId": "d-projects",
+          "entityType": "expense",
+          "entityId": "c-meridian-expense-2",
+          "userId": "u-meridian",
+          "action": "expense_created",
+          "detail": "EXP-0002 \u00b7 Site logistics planning support",
+          "createdAt": "2026-10-08T10:00:00Z"
+        },
+        {
+          "id": "c-meridian-fe-8",
+          "companyId": "c-meridian",
+          "departmentId": "d-projects",
+          "entityType": "expense",
+          "entityId": "c-meridian-expense-2",
+          "userId": "u-meridian",
+          "action": "expense_submitted",
+          "detail": "Submitted for independent review.",
+          "createdAt": "2026-10-08T10:00:00Z"
+        }
+      ]
+    }
+  ],
+  "receiptContents": {
+    "c-schach-expense-1-receipt": "FICTIONAL SAMPLE RECEIPT \u2014 NOT A TAX INVOICE\nCompany: Schach Engineers\nVendor: Sample Design Systems\nReference: DEMO-ACH-001\nDescription: Design software annual renewal\nGross amount: 185000.00 INR\nFor demonstration only. No payment or tax claim is implied.\n",
+    "c-schach-expense-2-receipt": "FICTIONAL SAMPLE RECEIPT \u2014 NOT A TAX INVOICE\nCompany: Schach Engineers\nVendor: Sample Precision Labs\nReference: DEMO-ACH-002\nDescription: Survey equipment calibration\nGross amount: 42500.00 INR\nFor demonstration only. No payment or tax claim is implied.\n",
+    "c-schach-expense-3-receipt": "FICTIONAL SAMPLE RECEIPT \u2014 NOT A TAX INVOICE\nCompany: Schach Engineers\nVendor: Sample Travel Desk\nReference: DEMO-ACH-003\nDescription: Phoenix site coordination visit\nGross amount: 18750.00 INR\nFor demonstration only. No payment or tax claim is implied.\n",
+    "c-schach-expense-4-receipt": "FICTIONAL SAMPLE RECEIPT \u2014 NOT A TAX INVOICE\nCompany: Schach Engineers\nVendor: Sample Structural Advisors\nReference: DEMO-ACH-004\nDescription: Independent design peer review\nGross amount: 95000.00 INR\nFor demonstration only. No payment or tax claim is implied.\n",
+    "c-schach-expense-5-receipt": "FICTIONAL SAMPLE RECEIPT \u2014 NOT A TAX INVOICE\nCompany: Schach Engineers\nVendor: Sample Machine Care\nReference: DEMO-ACH-005\nDescription: CNC preventive maintenance service\nGross amount: 165000.00 INR\nFor demonstration only. No payment or tax claim is implied.\n",
+    "c-schach-expense-6-receipt": "FICTIONAL SAMPLE RECEIPT \u2014 NOT A TAX INVOICE\nCompany: Schach Engineers\nVendor: Sample Quality Supplies\nReference: DEMO-ACH-006\nDescription: Inspection gauges and test coupons\nGross amount: 38250.00 INR\nFor demonstration only. No payment or tax claim is implied.\n",
+    "c-schach-expense-7-receipt": "FICTIONAL SAMPLE RECEIPT \u2014 NOT A TAX INVOICE\nCompany: Schach Engineers\nVendor: Sample Safety Academy\nReference: DEMO-ACH-007\nDescription: Factory safety refresher material\nGross amount: 12500.00 INR\nFor demonstration only. No payment or tax claim is implied.\n",
+    "c-schach-expense-8-receipt": "FICTIONAL SAMPLE RECEIPT \u2014 NOT A TAX INVOICE\nCompany: Schach Engineers\nVendor: Sample Regional Travel\nReference: DEMO-ACH-008\nDescription: Ahmedabad customer visit\nGross amount: 28450.00 INR\nFor demonstration only. No payment or tax claim is implied.\n",
+    "c-schach-expense-9-receipt": "FICTIONAL SAMPLE RECEIPT \u2014 NOT A TAX INVOICE\nCompany: Schach Engineers\nVendor: Sample Events Studio\nReference: DEMO-ACH-009\nDescription: Partner launch venue deposit\nGross amount: 67500.00 INR\nFor demonstration only. No payment or tax claim is implied.\n",
+    "c-schach-expense-11-receipt": "FICTIONAL SAMPLE RECEIPT \u2014 NOT A TAX INVOICE\nCompany: Schach Engineers\nVendor: Sample Ledger Software\nReference: DEMO-ACH-011\nDescription: Accounts reporting subscription\nGross amount: 36000.00 INR\nFor demonstration only. No payment or tax claim is implied.\n",
+    "c-schach-expense-13-receipt": "FICTIONAL SAMPLE RECEIPT \u2014 NOT A TAX INVOICE\nCompany: Schach Engineers\nVendor: Sample Team Supplies\nReference: DEMO-ACH-013\nDescription: New joiner induction materials\nGross amount: 18500.00 INR\nFor demonstration only. No payment or tax claim is implied.\n",
+    "c-schach-expense-14-receipt": "FICTIONAL SAMPLE RECEIPT \u2014 NOT A TAX INVOICE\nCompany: Schach Engineers\nVendor: Sample Learning Partners\nReference: DEMO-ACH-014\nDescription: Leadership training programme\nGross amount: 82500.00 INR\nFor demonstration only. No payment or tax claim is implied.\n",
+    "c-schach-expense-15-receipt": "FICTIONAL SAMPLE RECEIPT \u2014 NOT A TAX INVOICE\nCompany: Schach Engineers\nVendor: Sample Panel Industries\nReference: DEMO-ACH-015\nDescription: Approved plywood sample batch\nGross amount: 142500.00 INR\nFor demonstration only. No payment or tax claim is implied.\n",
+    "c-schach-expense-16-receipt": "FICTIONAL SAMPLE RECEIPT \u2014 NOT A TAX INVOICE\nCompany: Schach Engineers\nVendor: Sample Vendor Travel\nReference: DEMO-ACH-016\nDescription: Supplier inspection travel\nGross amount: 9600.00 INR\nFor demonstration only. No payment or tax claim is implied.\n",
+    "c-schach-expense-17-receipt": "FICTIONAL SAMPLE RECEIPT \u2014 NOT A TAX INVOICE\nCompany: Schach Engineers\nVendor: Sample Freight Services\nReference: DEMO-ACH-017\nDescription: Cancelled freight reservation\nGross amount: 4800.00 INR\nFor demonstration only. No payment or tax claim is implied.\n",
+    "c-meridian-expense-1-receipt": "FICTIONAL SAMPLE RECEIPT \u2014 NOT A TAX INVOICE\nCompany: Meridian Works\nVendor: Sample Northstar Travel\nReference: DEMO-IAN-001\nDescription: Northstar site mobilisation visit\nGross amount: 12500.00 INR\nFor demonstration only. No payment or tax claim is implied.\n",
+    "c-meridian-expense-2-receipt": "FICTIONAL SAMPLE RECEIPT \u2014 NOT A TAX INVOICE\nCompany: Meridian Works\nVendor: Sample Site Advisory\nReference: DEMO-IAN-002\nDescription: Site logistics planning support\nGross amount: 45000.00 INR\nFor demonstration only. No payment or tax claim is implied.\n"
+  }
+}

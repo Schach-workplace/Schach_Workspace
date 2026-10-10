@@ -1,0 +1,68 @@
+name: schach-workspace
+services:
+  db:
+    image: postgres:18-alpine
+    environment:
+      POSTGRES_USER: schach
+      POSTGRES_DB: schach_workspace
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set a unique POSTGRES_PASSWORD in .env}
+    volumes:
+      - postgres_data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U schach -d schach_workspace"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+  migrate:
+    build: .
+    entrypoint: ["/app/migrate"]
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgres://schach@db:5432/schach_workspace?sslmode=disable
+      PGPASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD}
+    restart: "no"
+  app:
+    build: .
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgres://schach@db:5432/schach_workspace?sslmode=disable
+      PGPASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD}
+      BOOTSTRAP_EMAIL: ${BOOTSTRAP_EMAIL:?Set BOOTSTRAP_EMAIL}
+      BOOTSTRAP_NAME: ${BOOTSTRAP_NAME:?Set BOOTSTRAP_NAME}
+      BOOTSTRAP_PASSWORD: ${BOOTSTRAP_PASSWORD:?Set a unique BOOTSTRAP_PASSWORD}
+      ENVIRONMENT: ${ENVIRONMENT:-development}
+      SECURE_COOKIES: ${SECURE_COOKIES:-false}
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-http://127.0.0.1:8080}
+      SESSION_HOURS: ${SESSION_HOURS:-72}
+      MEDIA_ROOT: /app/media
+      CLAMAV_ADDRESS: clamav:3310
+      MFA_ENCRYPTION_KEY: ${MFA_ENCRYPTION_KEY:-}
+      LIVEKIT_INTERNAL_URL: ${LIVEKIT_INTERNAL_URL:-}
+      LIVEKIT_API_KEY: ${LIVEKIT_API_KEY:-}
+      LIVEKIT_API_SECRET: ${LIVEKIT_API_SECRET:-}
+    volumes:
+      - communication_media:/app/media
+    ports:
+      - "127.0.0.1:8080:8080"
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:8080/api/health"]
+      interval: 20s
+      timeout: 5s
+      retries: 3
+    restart: unless-stopped
+  clamav:
+    image: clamav/clamav@sha256:ebec5bc138401b36ae987caa1a3fa3c3b2a21ed3d51f0bfa5852825e663e67b0
+    volumes:
+      - clamav_signatures:/var/lib/clamav
+    restart: unless-stopped
+volumes:
+  communication_media:
+  clamav_signatures:
+  postgres_data:

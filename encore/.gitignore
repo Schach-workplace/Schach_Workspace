@@ -1,0 +1,7 @@
+.encore/
+.secrets.local.cue
+*.test
+encore.gen.go
+encore.gen.cue
+/.encore
+/encore.gen

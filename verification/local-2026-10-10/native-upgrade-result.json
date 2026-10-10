@@ -1,0 +1,13 @@
+{
+  "status": "passed",
+  "scope": "Native PostgreSQL minimal populated v1 upgrade and reverse downgrade; task row equality and company finance defaults. Full all-table preservation remains covered by 100 PGlite checks.",
+  "checks": [
+    "Apply migration 1",
+    "Populate legacy company/user/member/task",
+    "Apply migration 2",
+    "Preserve entire legacy task row",
+    "INR/April defaults",
+    "Version 2 down preserves task",
+    "Version 1 down removes all tables"
+  ]
+}

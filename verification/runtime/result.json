@@ -1,0 +1,16 @@
+{
+  "status": "passed",
+  "checks": [
+    "Actual Encore analyzer/check succeeds",
+    "Direct and spoofed cron invocations rejected",
+    "Workspace/finance API scenarios pass over native Encore TCP",
+    "Non-demo bootstrap refuses weak password",
+    "Strong bootstrap succeeds; account and session survive restart without password reset",
+    "Populated demo database survives restart",
+    "Generated-wrapper SDK compilation succeeds"
+  ],
+  "limitations": [
+    "Managed cron, production TLS/private ingress and deployed proxy are separate deployment gates."
+  ],
+  "ownedDatabaseContainersRemoved": 3
+}

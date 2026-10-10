@@ -1,0 +1,1 @@
+DROP TABLE communication_export_audits;

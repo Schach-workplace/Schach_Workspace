@@ -1,0 +1,924 @@
+{
+  "kind": "PGlite migration compatibility check",
+  "executedAt": "2026-10-10T12:27:00.923Z",
+  "nodeVersion": "v24.14.0",
+  "pgliteVersion": "0.5.8",
+  "migrationSha256": {
+    "up": "4502929647861a5abf59509dda73bc91ac2f847f190a9c37419b5627e361f8b5",
+    "down": "2ef1edfbc7b654d00d84f061f55652fbe93124fe375d1d713c7caf4d9822ebb5"
+  },
+  "orderedMigrations": [
+    {
+      "version": 1,
+      "upFile": "1_initial.up.sql",
+      "downFile": "1_initial.down.sql",
+      "upSha256": "4502929647861a5abf59509dda73bc91ac2f847f190a9c37419b5627e361f8b5",
+      "downSha256": "2ef1edfbc7b654d00d84f061f55652fbe93124fe375d1d713c7caf4d9822ebb5"
+    },
+    {
+      "version": 2,
+      "upFile": "2_department_finance.up.sql",
+      "downFile": "2_department_finance.down.sql",
+      "upSha256": "e0c46f3d6db61d4c85450a69314bed36f5caba84b47db4e9b3fc31be96a46646",
+      "downSha256": "cd2fef467bd3b1124fa441fcd212fd5ffc67e9a335ae57c21ee0645f4bb41432"
+    },
+    {
+      "version": 3,
+      "upFile": "3_communication_core.up.sql",
+      "downFile": "3_communication_core.down.sql",
+      "upSha256": "508fedd724b05fa93fcf0d3c867f46e200bb87449ecbdbd03840ca3bf3aab2c5",
+      "downSha256": "f53ab8a277b705598e0473db48bf1477d99f77f9eb72c1a23c6bd65bd1abd87d"
+    },
+    {
+      "version": 4,
+      "upFile": "4_communication_messages.up.sql",
+      "downFile": "4_communication_messages.down.sql",
+      "upSha256": "b5672c537d1ef0465a9d1b4eab4c2f39ff1f5244b01259f154b8ac73e6040708",
+      "downSha256": "90e18d887b22062f183ae6df3ce8ee285ded7274b36b848842bd11e3b7ddd126"
+    },
+    {
+      "version": 5,
+      "upFile": "5_timed_deadlines.up.sql",
+      "downFile": "5_timed_deadlines.down.sql",
+      "upSha256": "366790aae9fc0c734c00cbb46ac62503f9feb04041b50af83e9b929c709f5261",
+      "downSha256": "784550a142fd4ac5d55c8bbab26c12284468f4b40bcee5184664aea8b4281e37"
+    },
+    {
+      "version": 6,
+      "upFile": "6_communication_work.up.sql",
+      "downFile": "6_communication_work.down.sql",
+      "upSha256": "9af28fa540f8dc2bf308a0755bf2000a0a38e931dcd0cd6c71082631b7cb2b8e",
+      "downSha256": "da95d664f0101f0da7893bd54c649c901f67540b130ac299fae216f324530b39"
+    },
+    {
+      "version": 7,
+      "upFile": "7_communication_daily.up.sql",
+      "downFile": "7_communication_daily.down.sql",
+      "upSha256": "03885b510c9b7b4271279ef4d64220498c74bbf10e998f391ab79ce960e6e7b3",
+      "downSha256": "d79845e1394e64dfc045715df03d69f17710c6250ecd04584639acd1e8ab2ebf"
+    },
+    {
+      "version": 8,
+      "upFile": "8_communication_media.up.sql",
+      "downFile": "8_communication_media.down.sql",
+      "upSha256": "74bf7f94802e32fce77e58d4818941b82ceb80687c486afa79a486d1f77d6daa",
+      "downSha256": "44eea999040517ff1459cafe070a72d5c645d10d2be5e2f0ba3b7f9ef48c0eaa"
+    },
+    {
+      "version": 9,
+      "upFile": "9_communication_devices.up.sql",
+      "downFile": "9_communication_devices.down.sql",
+      "upSha256": "7444081ca84c5e27f5e3b08cd39a15031abe89b7af8d48e3f5a126a05909ea8f",
+      "downSha256": "9d522d264d06b37478ab09d858439787432775b970b5ebfdabac7bb2614dcb91"
+    },
+    {
+      "version": 10,
+      "upFile": "10_communication_calls.up.sql",
+      "downFile": "10_communication_calls.down.sql",
+      "upSha256": "8c70d5fbf6c1249dfc0104f94f7c77dfb418d6c5bc40e963ad2fd1a25f8f47e9",
+      "downSha256": "9e83ce58d8829389c6d091ae47462209bb47b3720ebe701ffb5ea5d8d04500fe"
+    },
+    {
+      "version": 11,
+      "upFile": "11_account_offboarding.up.sql",
+      "downFile": "11_account_offboarding.down.sql",
+      "upSha256": "6937de37c89e884cdf73b19efaa68c5c668000463b0a8f83b2a0da73224a85e6",
+      "downSha256": "e31268c423a4de97b3bd49a222f765c4eaa703272f4c1076fa910cad96b6d43f"
+    },
+    {
+      "version": 12,
+      "upFile": "12_communication_structured.up.sql",
+      "downFile": "12_communication_structured.down.sql",
+      "upSha256": "6c5ab5ff77140d496e6f1052aedabad7166ad8022ceae49c245da891ec2f1563",
+      "downSha256": "5d0cf65d24ed7b3a6d68ee3408e5138050f6748300ea0b543c2e7f2c4ac6dc9a"
+    },
+    {
+      "version": 13,
+      "upFile": "13_communication_intake.up.sql",
+      "downFile": "13_communication_intake.down.sql",
+      "upSha256": "e5593d2f25b7e3081e00887fd38a5688a65b32ab3e05217dd1f94fa1f87b8a3e",
+      "downSha256": "d8cdfed751d1463024ffbbfb0624a9984cd07373b27cf4c95b39b731a16b2152"
+    },
+    {
+      "version": 14,
+      "upFile": "14_communication_record_revisions.up.sql",
+      "downFile": "14_communication_record_revisions.down.sql",
+      "upSha256": "1157bf54b775ab73d8fd0eb2dc39565d415f126a20a3dde60fa58b4261710c18",
+      "downSha256": "387b500dcbd85b60cb009b8bc8a92b2d6273c4b31954bd49fa5b282ae70c3504"
+    },
+    {
+      "version": 15,
+      "upFile": "15_communication_call_jobs.up.sql",
+      "downFile": "15_communication_call_jobs.down.sql",
+      "upSha256": "da2bc6b6e70af4f3cb27928d264f0626e75a262e4e77c5f9375d982c14706c61",
+      "downSha256": "46d4203ed9849f327544a84961b8a710e90e037e903186c55e022c401502b113"
+    },
+    {
+      "version": 16,
+      "upFile": "16_communication_finance.up.sql",
+      "downFile": "16_communication_finance.down.sql",
+      "upSha256": "797ef4aede0f31cf6787facbe95aa6a8941d1a4dc8ea3b0a2589f42b203cdc8b",
+      "downSha256": "49f6db1a2e38ddb44a5a4b2dab5f4b4f5a81eb1d0186668bbb73010d3861a6bd"
+    },
+    {
+      "version": 17,
+      "upFile": "17_communication_controls.up.sql",
+      "downFile": "17_communication_controls.down.sql",
+      "upSha256": "d9b677ed4d5e9a6a5358b3fa900d50a904241dc06471d3b04a75adf8cda868d0",
+      "downSha256": "05976179a1e2784540ef50ef3853ab98660414cfd070ff8a19d5be742ecbf9bc"
+    },
+    {
+      "version": 18,
+      "upFile": "18_communication_bundles.up.sql",
+      "downFile": "18_communication_bundles.down.sql",
+      "upSha256": "1a010b775ee9a3221b16121a3058fdfe3c81c071b93c177f0eb210c0e0a2d017",
+      "downSha256": "a3e645b2913da95baa5f84f8298d96d15b3e27be5435887a7bdcbbb147303164"
+    },
+    {
+      "version": 19,
+      "upFile": "19_communication_upload_retries.up.sql",
+      "downFile": "19_communication_upload_retries.down.sql",
+      "upSha256": "72ab862dd1b2eb91dfa0f1a81f3505e6bb10788e62059317a919e092ca2bb58d",
+      "downSha256": "ada4480be033a792132ac3710e70fc8b17cf632cdb3ef782ae7b59d6effc4538"
+    },
+    {
+      "version": 20,
+      "upFile": "20_authenticator.up.sql",
+      "downFile": "20_authenticator.down.sql",
+      "upSha256": "dbc7d66ca427c3eb394569803d91d54142ff7b983fb06b1fa5415c25bf961281",
+      "downSha256": "cdcb1a28388a59b9be16091031cb25879ad270cfc907d6792f75d1d95a1c2b06"
+    },
+    {
+      "version": 21,
+      "upFile": "21_communication_push.up.sql",
+      "downFile": "21_communication_push.down.sql",
+      "upSha256": "78e0b50cc41c146f5c83f1d24c191062876990c2f7d308858191e2c00d57e9e8",
+      "downSha256": "e752c4bb22bad1a61559116b04e70bbe2886933f0763624d16632b860e0b8de2"
+    },
+    {
+      "version": 22,
+      "upFile": "22_communication_retention.up.sql",
+      "downFile": "22_communication_retention.down.sql",
+      "upSha256": "2131b21c9a18b09172e126bce6f0f8fd88c17fedeacb9c55ae186a7a7b063b08",
+      "downSha256": "0f4e90464f1dee451289d927b955f0e08558e20e4e93710b27b19ee9a2a71b94"
+    },
+    {
+      "version": 23,
+      "upFile": "23_communication_call_outcomes.up.sql",
+      "downFile": "23_communication_call_outcomes.down.sql",
+      "upSha256": "1c1fb5a47bf6fef5bf68aba12541e69368995e83fe85f97d8c5525ba2f685d52",
+      "downSha256": "fca11502b78bb224d05672aa6ed0b4bb3cdc863584a7e72548f91881ff72fe12"
+    },
+    {
+      "version": 24,
+      "upFile": "24_communication_exports.up.sql",
+      "downFile": "24_communication_exports.down.sql",
+      "upSha256": "5c61a6ad0faa43ecfda8adf261367a55ac4119ff6b645c1f4e6bd07b807632a5",
+      "downSha256": "e6a2e8f313c6004dac343f3cbde8372cfd9e7d9e39b15d4d2b7549baa0ad6b2f"
+    }
+  ],
+  "checks": [
+    {
+      "name": "Both ordered standalone and Encore migration pairs are byte-identical",
+      "passed": true
+    },
+    {
+      "name": "Entire up migration accepted in one transaction",
+      "passed": true
+    },
+    {
+      "name": "All 14 expected tables created",
+      "passed": true,
+      "detail": [
+        "activities",
+        "attachments",
+        "automation_records",
+        "comments",
+        "companies",
+        "departments",
+        "goals",
+        "memberships",
+        "notifications",
+        "projects",
+        "sessions",
+        "tasks",
+        "time_entries",
+        "users"
+      ]
+    },
+    {
+      "name": "Valid cross-table fixtures and same task code in different companies accepted",
+      "passed": true
+    },
+    {
+      "name": "Valid comments, time, evidence, sessions and automation record accepted",
+      "passed": true
+    },
+    {
+      "name": "Cross-company task owner rejected",
+      "passed": true,
+      "detail": {
+        "sqlstate": "23503",
+        "constraint": "tasks_company_id_owner_id_fkey"
+      }
+    },
+    {
+      "name": "Cross-company project owner rejected",
+      "passed": true,
+      "detail": {
+        "sqlstate": "23503",
+        "constraint": "projects_company_id_owner_id_fkey"
+      }
+    },
+    {
+      "name": "Cross-company goal owner rejected",
+      "passed": true,
+      "detail": {
+        "sqlstate": "23503",
+        "constraint": "goals_company_id_owner_id_fkey"
+      }
+    },
+    {
+      "name": "Cross-company comments task rejected",
+      "passed": true,
+      "detail": {
+        "sqlstate": "23503",
+        "constraint": "comments_company_id_task_id_fkey"
+      }
+    },
+    {
+      "name": "Cross-company time_entries task rejected",
+      "passed": true,
+      "detail": {
+        "sqlstate": "23503",
+        "constraint": "time_entries_company_id_task_id_fkey"
+      }
+    },
+    {
+      "name": "Cross-company attachments task rejected",
+      "passed": true,
+      "detail": {
+        "sqlstate": "23503",
+        "constraint": "attachments_company_id_task_id_fkey"
+      }
+    },
+    {
+      "name": "Duplicate membership rejected",
+      "passed": true,
+      "detail": {
+        "sqlstate": "23505",
+        "constraint": "membership_company_user"
+      }
+    },
+    {
+      "name": "Duplicate task code within company rejected",
+      "passed": true,
+      "detail": {
+        "sqlstate": "23505",
+        "constraint": "task_company_code"
+      }
+    },
+    {
+      "name": "Duplicate company slug rejected",
+      "passed": true,
+      "detail": {
+        "sqlstate": "23505",
+        "constraint": "companies_slug_key"
+      }
+    },
+    {
+      "name": "Duplicate account email rejected",
+      "passed": true,
+      "detail": {
+        "sqlstate": "23505",
+        "constraint": "users_email_key"
+      }
+    },
+    {
+      "name": "Duplicate automation key rejected",
+      "passed": true,
+      "detail": {
+        "sqlstate": "23505",
+        "constraint": "automation_records_pkey"
+      }
+    },
+    {
+      "name": "Invalid company role rejected",
+      "passed": true,
+      "detail": {
+        "sqlstate": "23514",
+        "constraint": "memberships_role_check"
+      }
+    },
+    {
+      "name": "Capacity over 168 hours rejected",
+      "passed": true,
+      "detail": {
+        "sqlstate": "23514",
+        "constraint": "memberships_capacity_hours_check"
+      }
+    },
+    {
+      "name": "Invalid task status rejected",
+      "passed": true,
+      "detail": {
+        "sqlstate": "23514",
+        "constraint": "tasks_status_check"
+      }
+    },
+    {
+      "name": "Progress over 100 rejected",
+      "passed": true,
+      "detail": {
+        "sqlstate": "23514",
+        "constraint": "tasks_progress_check"
+      }
+    },
+    {
+      "name": "Negative task effort rejected",
+      "passed": true,
+      "detail": {
+        "sqlstate": "23514",
+        "constraint": "tasks_estimated_hours_check"
+      }
+    },
+    {
+      "name": "Nonpositive task version rejected",
+      "passed": true,
+      "detail": {
+        "sqlstate": "23514",
+        "constraint": "tasks_version_check"
+      }
+    },
+    {
+      "name": "Owner as reviewer rejected",
+      "passed": true,
+      "detail": {
+        "sqlstate": "23514",
+        "constraint": "tasks_check"
+      }
+    },
+    {
+      "name": "Required review without reviewer rejected",
+      "passed": true,
+      "detail": {
+        "sqlstate": "23514",
+        "constraint": "tasks_check1"
+      }
+    },
+    {
+      "name": "Time entry over 24 hours rejected",
+      "passed": true,
+      "detail": {
+        "sqlstate": "23514",
+        "constraint": "time_entries_hours_check"
+      }
+    },
+    {
+      "name": "Nonpositive time entry rejected",
+      "passed": true,
+      "detail": {
+        "sqlstate": "23514",
+        "constraint": "time_entries_hours_check"
+      }
+    },
+    {
+      "name": "Attachment over 10 MiB rejected",
+      "passed": true,
+      "detail": {
+        "sqlstate": "23514",
+        "constraint": "attachments_size_check"
+      }
+    },
+    {
+      "name": "Empty attachment rejected",
+      "passed": true,
+      "detail": {
+        "sqlstate": "23514",
+        "constraint": "attachments_size_check"
+      }
+    },
+    {
+      "name": "Goal target equal to baseline rejected",
+      "passed": true,
+      "detail": {
+        "sqlstate": "23514",
+        "constraint": "goals_check"
+      }
+    },
+    {
+      "name": "Session for nonexistent user rejected",
+      "passed": true,
+      "detail": {
+        "sqlstate": "23503",
+        "constraint": "sessions_user_id_fkey"
+      }
+    },
+    {
+      "name": "JSONB arrays and checklist objects round-trip with empty-array defaults",
+      "passed": true
+    },
+    {
+      "name": "Malformed JSONB rejected",
+      "passed": true,
+      "detail": {
+        "sqlstate": "22P02",
+        "constraint": null
+      }
+    },
+    {
+      "name": "Evidence bytea round-trips exactly",
+      "passed": true
+    },
+    {
+      "name": "Session timestamptz values accepted and ordered",
+      "passed": true
+    },
+    {
+      "name": "Constraint error rolls back all writes in a multi-statement transaction",
+      "passed": true
+    },
+    {
+      "name": "Version one rejects the finance role before upgrade",
+      "passed": true,
+      "detail": {
+        "sqlstate": "23514",
+        "constraint": "memberships_role_check"
+      }
+    },
+    {
+      "name": "Version two upgrades the populated version-one database atomically",
+      "passed": true
+    },
+    {
+      "name": "Upgrade preserves every populated version-one field and row, including evidence bytes and audit history",
+      "passed": true
+    },
+    {
+      "name": "Populated companies receive INR and April fiscal-year defaults",
+      "passed": true
+    },
+    {
+      "name": "Existing task notifications receive an empty expense reference",
+      "passed": true
+    },
+    {
+      "name": "All five financial tables are present after the ordered upgrade",
+      "passed": true
+    },
+    {
+      "name": "Unsupported company currency rejected",
+      "passed": true,
+      "detail": {
+        "sqlstate": "23514",
+        "constraint": "companies_currency_check"
+      }
+    },
+    {
+      "name": "Fiscal-year month before January rejected",
+      "passed": true,
+      "detail": {
+        "sqlstate": "23514",
+        "constraint": "companies_fiscal_year_start_month_check"
+      }
+    },
+    {
+      "name": "Fiscal-year month after December rejected",
+      "passed": true,
+      "detail": {
+        "sqlstate": "23514",
+        "constraint": "companies_fiscal_year_start_month_check"
+      }
+    },
+    {
+      "name": "Negative expense sequence rejected",
+      "passed": true,
+      "detail": {
+        "sqlstate": "23514",
+        "constraint": "companies_next_expense_number_check"
+      }
+    },
+    {
+      "name": "Both financial amount columns use exact PostgreSQL bigint storage",
+      "passed": true
+    },
+    {
+      "name": "Version two accepts the added finance role without changing existing memberships",
+      "passed": true
+    },
+    {
+      "name": "Categories have safe defaults and zero-valued draft budgets are accepted",
+      "passed": true
+    },
+    {
+      "name": "Category names are case-insensitively unique within a company",
+      "passed": true,
+      "detail": {
+        "sqlstate": "23505",
+        "constraint": "expense_category_company_name"
+      }
+    },
+    {
+      "name": "Empty category names rejected",
+      "passed": true,
+      "detail": {
+        "sqlstate": "23514",
+        "constraint": "expense_categories_name_check"
+      }
+    },
+    {
+      "name": "Nonpositive category version rejected",
+      "passed": true,
+      "detail": {
+        "sqlstate": "23514",
+        "constraint": "expense_categories_version_check"
+      }
+    },
+    {
+      "name": "Cross-company budget department rejected",
+      "passed": true,
+      "detail": {
+        "sqlstate": "23503",
+        "constraint": "budgets_company_id_department_id_fkey"
+      }
+    },
+    {
+      "name": "Cross-company budget creator rejected",
+      "passed": true,
+      "detail": {
+        "sqlstate": "23503",
+        "constraint": "budgets_company_id_created_by_fkey"
+      }
+    },
+    {
+      "name": "Negative budget amount rejected",
+      "passed": true,
+      "detail": {
+        "sqlstate": "23514",
+        "constraint": "budgets_amount_minor_check"
+      }
+    },
+    {
+      "name": "Over-limit budget amount rejected",
+      "passed": true,
+      "detail": {
+        "sqlstate": "23514",
+        "constraint": "budgets_amount_minor_check"
+      }
+    },
+    {
+      "name": "Nonintegral textual budget amount rejected by bigint input",
+      "passed": true,
+      "detail": {
+        "sqlstate": "22P02",
+        "constraint": null
+      }
+    },
+    {
+      "name": "Unsupported budget currency rejected",
+      "passed": true,
+      "detail": {
+        "sqlstate": "23514",
+        "constraint": "budgets_currency_check"
+      }
+    },
+    {
+      "name": "Unknown budget state rejected",
+      "passed": true,
+      "detail": {
+        "sqlstate": "23514",
+        "constraint": "budgets_status_check"
+      }
+    },
+    {
+      "name": "Reversed budget date order rejected",
+      "passed": true,
+      "detail": {
+        "sqlstate": "23514",
+        "constraint": "budgets_check"
+      }
+    },
+    {
+      "name": "Blank budget date rejected",
+      "passed": true,
+      "detail": {
+        "sqlstate": "23514",
+        "constraint": "budgets_check"
+      }
+    },
+    {
+      "name": "Nonpositive budget version rejected",
+      "passed": true,
+      "detail": {
+        "sqlstate": "23514",
+        "constraint": "budgets_version_check"
+      }
+    },
+    {
+      "name": "Maximum budget minor-unit amount round-trips exactly",
+      "passed": true
+    },
+    {
+      "name": "Expense codes and invoice keys can repeat across companies; blank invoice numbers may repeat",
+      "passed": true
+    },
+    {
+      "name": "Expense receipt bytea and independent financial events persist",
+      "passed": true
+    },
+    {
+      "name": "Cross-company expense department rejected",
+      "passed": true,
+      "detail": {
+        "sqlstate": "23503",
+        "constraint": "expenses_company_id_department_id_fkey"
+      }
+    },
+    {
+      "name": "Cross-company expense category rejected",
+      "passed": true,
+      "detail": {
+        "sqlstate": "23503",
+        "constraint": "expenses_company_id_category_id_fkey"
+      }
+    },
+    {
+      "name": "Cross-company expense creator rejected",
+      "passed": true,
+      "detail": {
+        "sqlstate": "23503",
+        "constraint": "expenses_company_id_created_by_fkey"
+      }
+    },
+    {
+      "name": "Cross-company receipt expense rejected",
+      "passed": true,
+      "detail": {
+        "sqlstate": "23503",
+        "constraint": "expense_receipts_company_id_expense_id_fkey"
+      }
+    },
+    {
+      "name": "Cross-company receipt uploader rejected",
+      "passed": true,
+      "detail": {
+        "sqlstate": "23503",
+        "constraint": "expense_receipts_company_id_uploaded_by_fkey"
+      }
+    },
+    {
+      "name": "Financial event without a real company rejected",
+      "passed": true,
+      "detail": {
+        "sqlstate": "23503",
+        "constraint": "finance_events_company_id_fkey"
+      }
+    },
+    {
+      "name": "Unsupported financial event entity type rejected",
+      "passed": true,
+      "detail": {
+        "sqlstate": "23514",
+        "constraint": "finance_events_entity_type_check"
+      }
+    },
+    {
+      "name": "Duplicate expense code within a company rejected",
+      "passed": true,
+      "detail": {
+        "sqlstate": "23505",
+        "constraint": "expense_company_code"
+      }
+    },
+    {
+      "name": "Duplicate normalized non-void vendor/invoice key rejected",
+      "passed": true,
+      "detail": {
+        "sqlstate": "23505",
+        "constraint": "expense_company_vendor_invoice"
+      }
+    },
+    {
+      "name": "Voided expenses preserve history without occupying the active vendor/invoice unique key",
+      "passed": true
+    },
+    {
+      "name": "Nonpositive expense amount rejected",
+      "passed": true,
+      "detail": {
+        "sqlstate": "23514",
+        "constraint": "expenses_amount_minor_check"
+      }
+    },
+    {
+      "name": "Over-limit expense amount rejected",
+      "passed": true,
+      "detail": {
+        "sqlstate": "23514",
+        "constraint": "expenses_amount_minor_check"
+      }
+    },
+    {
+      "name": "Nonintegral textual expense amount rejected by bigint input",
+      "passed": true,
+      "detail": {
+        "sqlstate": "22P02",
+        "constraint": null
+      }
+    },
+    {
+      "name": "Unsupported expense currency rejected",
+      "passed": true,
+      "detail": {
+        "sqlstate": "23514",
+        "constraint": "expenses_currency_check"
+      }
+    },
+    {
+      "name": "Nonpositive expense version rejected",
+      "passed": true,
+      "detail": {
+        "sqlstate": "23514",
+        "constraint": "expenses_version_check"
+      }
+    },
+    {
+      "name": "Unknown expense state rejected",
+      "passed": true,
+      "detail": {
+        "sqlstate": "23514",
+        "constraint": "expenses_status_check"
+      }
+    },
+    {
+      "name": "Blank expense date rejected",
+      "passed": true,
+      "detail": {
+        "sqlstate": "23514",
+        "constraint": "expenses_expense_date_check"
+      }
+    },
+    {
+      "name": "Expense creator cannot be recorded as reviewer",
+      "passed": true,
+      "detail": {
+        "sqlstate": "23514",
+        "constraint": "expenses_check"
+      }
+    },
+    {
+      "name": "Expense creator cannot be recorded as payment actor",
+      "passed": true,
+      "detail": {
+        "sqlstate": "23514",
+        "constraint": "expenses_check1"
+      }
+    },
+    {
+      "name": "Submitted expense without submission metadata rejected",
+      "passed": true,
+      "detail": {
+        "sqlstate": "23514",
+        "constraint": "expenses_check2"
+      }
+    },
+    {
+      "name": "Approved expense without independent review metadata rejected",
+      "passed": true,
+      "detail": {
+        "sqlstate": "23514",
+        "constraint": "expenses_check3"
+      }
+    },
+    {
+      "name": "Paid expense without payment metadata rejected",
+      "passed": true,
+      "detail": {
+        "sqlstate": "23514",
+        "constraint": "expenses_check4"
+      }
+    },
+    {
+      "name": "Oversized expense receipt rejected",
+      "passed": true,
+      "detail": {
+        "sqlstate": "23514",
+        "constraint": "expense_receipts_size_check"
+      }
+    },
+    {
+      "name": "Empty expense receipt rejected",
+      "passed": true,
+      "detail": {
+        "sqlstate": "23514",
+        "constraint": "expense_receipts_size_check"
+      }
+    },
+    {
+      "name": "Maximum expense minor-unit amount round-trips exactly",
+      "passed": true
+    },
+    {
+      "name": "A valid externally recorded payment preserves its exact amount and independent actor metadata",
+      "passed": true
+    },
+    {
+      "name": "Payment dated before the expense rejected",
+      "passed": true,
+      "detail": {
+        "sqlstate": "23514",
+        "constraint": "expenses_check4"
+      }
+    },
+    {
+      "name": "Paid expense without a reference rejected",
+      "passed": true,
+      "detail": {
+        "sqlstate": "23514",
+        "constraint": "expenses_check4"
+      }
+    },
+    {
+      "name": "Unsupported payment method rejected",
+      "passed": true,
+      "detail": {
+        "sqlstate": "23514",
+        "constraint": "expenses_payment_method_check"
+      }
+    },
+    {
+      "name": "Paid expense without review timestamp rejected",
+      "passed": true,
+      "detail": {
+        "sqlstate": "23514",
+        "constraint": "expenses_check3"
+      }
+    },
+    {
+      "name": "A financial foreign-key failure rolls back its preceding expense insert",
+      "passed": true
+    },
+    {
+      "name": "Version-two downgrade removes financial tables while preserving original version-one data",
+      "passed": true
+    },
+    {
+      "name": "Disposable downgrade retains the added account and converts finance membership to the documented member role",
+      "passed": true
+    },
+    {
+      "name": "Version-two downgrade removes financial company settings and sequence columns",
+      "passed": true
+    },
+    {
+      "name": "Version-two downgrade restores the original allowed-role constraint",
+      "passed": true,
+      "detail": {
+        "sqlstate": "23514",
+        "constraint": "memberships_role_check"
+      }
+    },
+    {
+      "name": "Reverse-order downgrades remove all disposable fixture tables",
+      "passed": true
+    }
+  ],
+  "limitations": [
+    "No Go, GORM or pgx integration was executed by this probe.",
+    "In-memory WASM execution does not verify native PostgreSQL deployment, TLS, credentials, pool behavior, or disk persistence.",
+    "No independent PostgreSQL connections, concurrent row locks, deadlocks, failover, scheduler overlap, or throughput were tested.",
+    "The down migration was executed only against this disposable fixture database; no production backup/restore was exercised.",
+    "Optional text references, JSON graph edges, role visibility, active-membership checks, financial workflow, duplicate normalization, and serialized budget approval remain application-enforced; SQL acceptance does not certify them."
+  ],
+  "sources": [
+    "https://pglite.dev/docs/about",
+    "https://pglite.dev/docs/api"
+  ],
+  "engine": {
+    "version": "PostgreSQL 18.3 (PGlite 0.5.8) on wasm32-unknown-emscripten, compiled by emcc (Emscripten gcc/clang-like replacement + linker emulating GNU ld) 3.1.74 (1092ec30a3fb1d46b1782ff1b4db5094d3d06ae5), 32-bit",
+    "server_version": "18.3"
+  },
+  "catalog": [
+    {
+      "type": "c",
+      "count": 15
+    },
+    {
+      "type": "f",
+      "count": 20
+    },
+    {
+      "type": "n",
+      "count": 127
+    },
+    {
+      "type": "p",
+      "count": 14
+    },
+    {
+      "type": "u",
+      "count": 7
+    }
+  ],
+  "passed": true
+}

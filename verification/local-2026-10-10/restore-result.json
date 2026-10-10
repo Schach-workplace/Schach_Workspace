@@ -1,0 +1,86 @@
+{
+  "status": "passed",
+  "scope": "Local public-schema SQL backup restore into a disposable native PostgreSQL database; row counts for all tables and exact binary-data hashes. Not production restore, encrypted backup, or recovery-time verification.",
+  "tableCounts": [
+    {
+      "table": "activities",
+      "rows": 71
+    },
+    {
+      "table": "attachments",
+      "rows": 2
+    },
+    {
+      "table": "automation_records",
+      "rows": 0
+    },
+    {
+      "table": "budgets",
+      "rows": 16
+    },
+    {
+      "table": "comments",
+      "rows": 9
+    },
+    {
+      "table": "companies",
+      "rows": 6
+    },
+    {
+      "table": "departments",
+      "rows": 12
+    },
+    {
+      "table": "expense_categories",
+      "rows": 46
+    },
+    {
+      "table": "expense_receipts",
+      "rows": 19
+    },
+    {
+      "table": "expenses",
+      "rows": 31
+    },
+    {
+      "table": "finance_events",
+      "rows": 121
+    },
+    {
+      "table": "goals",
+      "rows": 6
+    },
+    {
+      "table": "memberships",
+      "rows": 36
+    },
+    {
+      "table": "notifications",
+      "rows": 68
+    },
+    {
+      "table": "projects",
+      "rows": 10
+    },
+    {
+      "table": "sessions",
+      "rows": 15
+    },
+    {
+      "table": "tasks",
+      "rows": 49
+    },
+    {
+      "table": "time_entries",
+      "rows": 29
+    },
+    {
+      "table": "users",
+      "rows": 31
+    }
+  ],
+  "binaryTablesChecked": [
+    "attachments",
+    "expense_receipts"
+  ]
+}

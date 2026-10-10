@@ -1,0 +1,2 @@
+DROP TABLE communication_expense_retries;
+DROP TABLE communication_expense_links;

@@ -1,0 +1,19 @@
+{
+  "status": "passed",
+  "checkedAt": "2026-10-10T12:25:13.060Z",
+  "checks": 11,
+  "details": [
+    "No external script or stylesheet is needed",
+    "CSS assets are embedded",
+    "Exactly one compiled application is embedded",
+    "Compiled application mounts the leadership overview",
+    "Brand images are embedded",
+    "Compiled finance view renders company totals and department budgets",
+    "Department drilldown shows its real allocation and expense records",
+    "Both demonstration companies are available",
+    "Company switch and task navigation use the second company data",
+    "Second company financial records stay separate in the compiled preview",
+    "No application error was reported during the compiled flow"
+  ],
+  "scope": "Compiled self-contained artifact executed in Happy DOM. Asset completeness and DOM interactions only; no real browser, device, screenshot or layout verification."
+}

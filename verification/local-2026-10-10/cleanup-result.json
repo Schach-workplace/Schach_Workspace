@@ -1,0 +1,11 @@
+{
+  "status": "passed",
+  "ownedContainersRemoved": [
+    "schach-baseline-20261010",
+    "sqldb-xvooo-default-db4vvnmvlhohn7daim1g",
+    "schach-baseline-probe-app-1",
+    "schach-baseline-probe-db-1"
+  ],
+  "temporaryCredentialsRemoved": true,
+  "productSourceFilesUnchanged": 61
+}

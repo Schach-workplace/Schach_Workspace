@@ -1,0 +1,13 @@
+# Copy to ignored deploy/livekit.yaml, restrict it to 0600 and replace secrets.
+# Signaling 7880 stays private. Configure advertised RTC address and TLS TURN
+# for the actual India deployment; this template alone is not a TURN setup.
+port: 7880
+bind_addresses: ["0.0.0.0"]
+rtc:
+  tcp_port: 7881
+  udp_port: 7882
+  use_external_ip: true
+keys:
+  replace-with-private-api-key: replace-with-a-random-secret-of-at-least-32-characters
+logging:
+  level: warn

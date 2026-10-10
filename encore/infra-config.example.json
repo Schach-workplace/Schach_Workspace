@@ -1,0 +1,31 @@
+{
+  "metadata": {
+    "app_id": "schach-workspace",
+    "env_name": "production",
+    "env_type": "production",
+    "cloud": "aws",
+    "base_url": "https://workspace.example.com"
+  },
+  "auth": [
+    { "type": "key", "id": 1, "key": { "$env": "SERVICE_API_KEY" } }
+  ],
+  "sql_servers": [
+    {
+      "host": "postgres.example.internal:5432",
+      "tls_config": { "disabled": false },
+      "databases": {
+        "workspace": {
+          "name": "workspace",
+          "username": { "$env": "DB_USER" },
+          "password": { "$env": "DB_PASSWORD" },
+          "min_connections": 1,
+          "max_connections": 20
+        }
+      }
+    }
+  ],
+  "secrets": {
+    "BootstrapPassword": { "$env": "BOOTSTRAP_PASSWORD" }
+  },
+  "log_config": "info"
+}
