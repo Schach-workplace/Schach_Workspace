@@ -12,8 +12,10 @@ import {
   TrendingUp,
 } from 'lucide-react';
 import { useWorkspace } from '../store';
-import type { Goal, Task } from '../types';
-import { exportTasksCSV, validDate } from '../data/imports';
+import type { Goal } from '../types';
+import { buildTaskReport, reportDeadlineMet } from '../data/reports';
+import { useTaskReport } from '../data/useTaskReport';
+import { exportTasksCSV } from '../data/imports';
 import EntityForm from '../components/EntityForm';
 import {
   addDays,
@@ -25,7 +27,6 @@ import {
   EmptyState,
   goalPercent,
   isOpen,
-  isOverdue,
   Modal,
   percent,
   personName,
@@ -203,18 +204,8 @@ export function GoalsPage({ onTask }: { onTask: (id: string) => void }) {
   );
 }
 
-function completionDate(task: Task, zone: string) {
-  return task.completedAt
-    ? new Intl.DateTimeFormat('en-CA', {
-        timeZone: zone,
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-      }).format(new Date(task.completedAt))
-    : '';
-}
 export function ReportsPage({ onTask }: { onTask: (id: string) => void }) {
-  const { data: workspace, notify } = useWorkspace();
+  const { data: workspace, notify, mode } = useWorkspace();
   const data = workspace!;
   const date = today(data.company.timezone);
   const [from, setFrom] = useState(date.slice(0, 7) + '-01');
@@ -222,68 +213,52 @@ export function ReportsPage({ onTask }: { onTask: (id: string) => void }) {
   const [department, setDepartment] = useState('');
   const [owner, setOwner] = useState('');
   const [tab, setTab] = useState('commitments');
-  const valid = validDate(from) && validDate(to) && from <= to;
-  const filtered = data.tasks.filter(
-    (t) => (!department || t.departmentId === department) && (!owner || t.ownerId === owner),
+  const [project, setProject] = useState('');
+  const filters = { from, to, departmentId: department, ownerId: owner, projectId: project };
+  const input = useTaskReport(data, mode, filters);
+  const report = buildTaskReport(
+    input.tasks,
+    filters,
+    data.company.timezone,
+    input.generatedAt ? new Date(input.generatedAt) : new Date(),
   );
-  const cohort = valid
-    ? filtered.filter(
-        (t) => t.dueDate && t.dueDate >= from && t.dueDate <= to && t.status !== 'cancelled',
-      )
-    : [];
-  const accepted = valid
-    ? filtered.filter(
-        (t) =>
-          t.status === 'done' &&
-          completionDate(t, data.company.timezone) >= from &&
-          completionDate(t, data.company.timezone) <= to,
-      )
-    : [];
-  const originals = accepted.filter((t) => t.originalDueDate);
-  const ontime = originals.filter(
-    (t) => completionDate(t, data.company.timezone) <= t.originalDueDate,
+  const {
+    valid,
+    cohort,
+    accepted,
+    originals,
+    ontime,
+    currents,
+    currentOnTime,
+    done,
+    changed,
+    overdue,
+    blocked,
+    pending,
+    buckets,
+  } = report;
+  const overdueIDs = new Set(overdue.map((t) => t.id));
+  const needsAttention = cohort.filter(
+    (t) => overdueIDs.has(t.id) || t.status === 'blocked' || t.status === 'in_review',
   );
-  const currents = accepted.filter((t) => t.dueDate);
-  const currentOnTime = currents.filter(
-    (t) => completionDate(t, data.company.timezone) <= t.dueDate,
-  );
-  const done = cohort.filter((t) => t.status === 'done');
-  const changed = cohort.filter((t) => t.originalDueDate && t.originalDueDate !== t.dueDate);
-  const overdue = cohort.filter((t) => isOverdue(t, date));
-  const blocked = cohort.filter((t) => t.status === 'blocked');
-  const pending = cohort.filter((t) => t.status === 'in_review');
-  const days = valid
-    ? Math.floor(
-        (new Date(`${to}T12:00:00Z`).getTime() - new Date(`${from}T12:00:00Z`).getTime()) /
-          86400000,
-      ) + 1
-    : 0;
-  const bucketSize = Math.max(1, Math.ceil(days / 12));
-  const buckets = Array.from({ length: Math.ceil(days / bucketSize) }, (_, i) => {
-    const start = addDays(from, i * bucketSize);
-    const end = addDays(from, Math.min(days - 1, (i + 1) * bucketSize - 1));
-    return {
-      start,
-      end,
-      count: accepted.filter(
-        (t) =>
-          completionDate(t, data.company.timezone) >= start &&
-          completionDate(t, data.company.timezone) <= end,
-      ).length,
-    };
-  });
   const max = Math.max(1, ...buckets.map((b) => b.count));
-  const tableTasks =
-    tab === 'accepted'
-      ? accepted
-      : tab === 'exceptions'
-        ? cohort.filter(
-            (t) => isOverdue(t, date) || t.status === 'blocked' || t.status === 'in_review',
-          )
-        : cohort;
+  const tableTasks = tab === 'accepted' ? accepted : tab === 'exceptions' ? needsAttention : cohort;
   return (
     <div className="page-content">
-      <section className="report-controls panel">
+      <p className="field-help">
+        Current-state report · {data.company.timezone} · later task changes can change these
+        figures.
+      </p>
+      {input.loading && <p role="status">Loading authorized report…</p>}
+      {input.error && (
+        <div className="inline-error" role="alert">
+          {input.error}{' '}
+          <button className="button button-secondary" onClick={input.retry}>
+            Retry report
+          </button>
+        </div>
+      )}
+      <section className="report-controls panel" aria-busy={input.loading}>
         <div className="report-dates">
           <label>
             From
@@ -306,15 +281,35 @@ export function ReportsPage({ onTask }: { onTask: (id: string) => void }) {
               onChange={(e) => setTo(e.target.value)}
             />
           </label>
-          <button
-            className="button button-secondary"
-            onClick={() => {
-              setFrom(addDays(date, -29));
-              setTo(date);
-            }}
-          >
-            Last 30 days
-          </button>
+          <div className="report-presets" role="group" aria-label="Report date presets">
+            <button
+              className="button button-secondary"
+              onClick={() => {
+                setFrom(date.slice(0, 7) + '-01');
+                setTo(date);
+              }}
+            >
+              This month
+            </button>
+            <button
+              className="button button-secondary"
+              onClick={() => {
+                setFrom(addDays(date, -6));
+                setTo(date);
+              }}
+            >
+              Last 7 days
+            </button>
+            <button
+              className="button button-secondary"
+              onClick={() => {
+                setFrom(addDays(date, -29));
+                setTo(date);
+              }}
+            >
+              Last 30 days
+            </button>
+          </div>
         </div>
         <div className="report-filter-row">
           <select
@@ -341,9 +336,21 @@ export function ReportsPage({ onTask }: { onTask: (id: string) => void }) {
               </option>
             ))}
           </select>
+          <select
+            aria-label="Report project"
+            value={project}
+            onChange={(e) => setProject(e.target.value)}
+          >
+            <option value="">All projects</option>
+            {data.projects.map((p) => (
+              <option key={p.id} value={p.id}>
+                {p.name}
+              </option>
+            ))}
+          </select>
           <button
             className="button button-dark"
-            disabled={!valid}
+            disabled={!valid || !input.available}
             onClick={() => {
               downloadText(`schach-report-${from}-to-${to}.csv`, exportTasksCSV(tableTasks, data));
               notify(`Exported ${tableTasks.length} tasks from the selected report tab.`);
@@ -480,9 +487,11 @@ export function ReportsPage({ onTask }: { onTask: (id: string) => void }) {
                 .map((d) => {
                   const due = cohort.filter((t) => t.departmentId === d.id);
                   const done = accepted.filter((t) => t.departmentId === d.id);
-                  const dated = done.filter((t) => t.originalDueDate);
-                  const onTime = dated.filter(
-                    (t) => completionDate(t, data.company.timezone) <= t.originalDueDate,
+                  const dated = done.filter(
+                    (t) => reportDeadlineMet(t, data.company.timezone, true) !== null,
+                  );
+                  const onTime = dated.filter((t) =>
+                    reportDeadlineMet(t, data.company.timezone, true),
                   );
                   return (
                     <tr key={d.id}>
@@ -496,7 +505,7 @@ export function ReportsPage({ onTask }: { onTask: (id: string) => void }) {
                           ? `${percent(onTime.length, dated.length)}% (${onTime.length}/${dated.length})`
                           : 'No data'}
                       </td>
-                      <td>{due.filter((t) => isOverdue(t, date)).length}</td>
+                      <td>{due.filter((t) => overdueIDs.has(t.id)).length}</td>
                     </tr>
                   );
                 })}
@@ -512,9 +521,7 @@ export function ReportsPage({ onTask }: { onTask: (id: string) => void }) {
             {
               id: 'exceptions',
               name: 'Needs attention',
-              count: cohort.filter(
-                (t) => isOverdue(t, date) || t.status === 'blocked' || t.status === 'in_review',
-              ).length,
+              count: needsAttention.length,
             },
           ].map((t) => (
             <button
@@ -537,8 +544,10 @@ export function ReportsPage({ onTask }: { onTask: (id: string) => void }) {
           <p>
             Acceptance metrics use completion dates in the selected period. On-time rates include
             only accepted tasks with the relevant deadline. Commitment completion uses non-cancelled
-            tasks whose current deadline falls in the period. Overdue is evaluated today in the
-            company timezone. No data is shown as a dash; an empty group never becomes 100%.
+            tasks whose current deadline falls in the period. Timed deadlines compare exact
+            instants; all-day deadlines use company calendar dates. Overdue is evaluated at report
+            refresh. This is current state, not a historical snapshot. No data is shown as a dash;
+            an empty group never becomes 100%.
           </p>
         </div>
       </div>

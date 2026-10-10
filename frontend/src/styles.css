@@ -8503,3 +8503,11 @@ small,
     width: calc(50% - 8px);
   }
 }
+
+/* Report date shortcuts remain touch-friendly without widening phone layouts. */
+.report-presets { display: flex; flex-wrap: wrap; gap: 8px; }
+.report-presets .button { min-height: 44px; }
+@media (max-width: 600px) {
+  .report-presets { width: 100%; }
+  .report-filter-row select { min-height: 44px; }
+}
