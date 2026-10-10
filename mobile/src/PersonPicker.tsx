@@ -10,6 +10,7 @@ export default function PersonPicker({
   onChange,
   label = "Person",
   disabled = false,
+  authorized = true,
   departmentNames = {},
 }: {
   people: SelectablePerson[];
@@ -19,22 +20,23 @@ export default function PersonPicker({
   onChange: (id: string) => void;
   label?: string;
   disabled?: boolean;
+  authorized?: boolean;
   departmentNames?: Record<string, string>;
 }) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
-  const available = selectablePeople(people, excludeIds);
+  const available = authorized ? selectablePeople(people, excludeIds) : [];
   const selected = available.find((p) => p.id === value);
   const valid = !!selected;
   const invalidate = useEffectEvent(() => onChange(""));
   useEffect(() => {
-    if (value && !valid) invalidate();
-  }, [value, valid]);
+    if (authorized && value && !valid) invalidate();
+  }, [value, valid, authorized]);
   return (
     <View>
       <Action
         title={label + ": " + (selected?.name ?? "Choose person")}
-        disabled={disabled}
+        disabled={disabled || !authorized}
         onPress={() => {
           setQuery("");
           setOpen(true);
@@ -55,7 +57,7 @@ export default function PersonPicker({
             placeholder="Search authorized people"
             style={ui.input}
           />
-          {allowNone && (
+          {authorized && allowNone && (
             <Action
               title="No reviewer"
               onPress={() => {
@@ -65,7 +67,7 @@ export default function PersonPicker({
             />
           )}
           <FlatList
-            data={selectablePeople(people, excludeIds, query)}
+            data={authorized ? selectablePeople(people, excludeIds, query) : []}
             keyExtractor={(p) => p.id}
             keyboardShouldPersistTaps="handled"
             ListEmptyComponent={<Text>No authorized people match.</Text>}

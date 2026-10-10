@@ -6,6 +6,7 @@ import {
   retireAttempt,
   clearAttemptsForPrincipal,
   clearAttemptScope,
+  clearAttemptsForSource,
 } from '../../../shared/business/attempts';
 const scope = {
   serverOrigin: 'https://example.test',
@@ -41,5 +42,29 @@ it('purges a principal without touching a different company', () => {
   clearAttemptsForPrincipal(scope.serverOrigin, scope.companyId, scope.userId);
   expect(readAttempt(scope)).toBeUndefined();
   expect(readAttempt(other)?.retryKey).toBe('two');
+  clearAttemptScope(other);
+});
+it('binds a frozen attempt to its target and HTTP method as well as concrete payload', () => {
+  beginAttempt(scope, { version: 1 }, 'one', { path: '/task-templates/t', method: 'PATCH' });
+  expect(() =>
+    beginAttempt(scope, { version: 1 }, 'two', { path: '/task-templates', method: 'POST' }),
+  ).toThrow();
+});
+it('purges only attempts bound to a denied source in the current principal', () => {
+  const bound = { ...scope, formId: 'milestone-form:p' };
+  const other = { ...bound, companyId: 'other' };
+  beginAttempt(bound, { projectId: 'p' }, 'bound', {
+    path: '/projects/p/milestones',
+    method: 'POST',
+  });
+  beginAttempt(other, { projectId: 'p' }, 'other', {
+    path: '/projects/p/milestones',
+    method: 'POST',
+  });
+  beginAttempt(scope, {}, 'unrelated', { path: '/task-templates/t', method: 'PATCH' });
+  clearAttemptsForSource(scope.serverOrigin, scope.companyId, scope.userId, '/projects/p');
+  expect(readAttempt(bound)).toBeUndefined();
+  expect(readAttempt(other)?.retryKey).toBe('other');
+  expect(readAttempt(scope)?.retryKey).toBe('unrelated');
   clearAttemptScope(other);
 });

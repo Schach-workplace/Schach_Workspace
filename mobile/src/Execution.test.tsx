@@ -33,7 +33,9 @@ vi.mock("./Workspace", () => ({
     createElement("div", {}, children),
 }));
 vi.mock("./AttentionInbox", () => ({ default: () => null }));
-vi.mock("./DeadlinePicker", () => ({ default: () => null }));
+vi.mock("@react-native-community/datetimepicker", () => ({
+  default: () => null,
+}));
 
 vi.mock("./ConnectUI", () => ({
   ui: {},
@@ -43,6 +45,7 @@ vi.mock("./ConnectUI", () => ({
     createElement("section", { "aria-label": title }, children),
 }));
 vi.mock("react-native", () => ({
+  Platform: { OS: "android" },
   FlatList: ({ data, renderItem }: any) =>
     createElement("div", {}, ...data.map((item: any) => renderItem({ item }))),
   View: ({ children }: any) => createElement("div", {}, children),
@@ -61,6 +64,7 @@ const render = async (node: ReactNode) =>
     await new Promise((r) => setTimeout(r, 5));
   });
 beforeEach(() => {
+  Object.assign(globalThis, { IS_REACT_ACT_ENVIRONMENT: true });
   clearAllBusinessAttempts();
   clearAllDrafts();
   c = document.createElement("div");
@@ -766,4 +770,139 @@ it("confirmed project denial purges preserved milestone modal and authored field
     c.querySelector<HTMLInputElement>('input[aria-label="Milestone title"]')
       ?.value,
   ).toBe("");
+});
+
+it("publishes one atomic all-day and timed schedule commitment from the real deadline picker callback", async () => {
+  s.request.mockResolvedValue({
+    proposal: { id: "picker-proposal", rows: [], advisories: [] },
+  });
+  await render(createElement(NativeSchedule, { tasks: [task] }));
+  await fill("Due date", "2026-10-22");
+  expect(
+    c.querySelector<HTMLInputElement>('input[aria-label="Due date"]')?.value,
+  ).toBe("2026-10-22");
+  await fill("Deadline time", "16:30");
+  expect(
+    c.querySelector<HTMLInputElement>('input[aria-label="Due date"]')?.value,
+  ).toBe("2026-10-22");
+  expect(
+    c.querySelector<HTMLInputElement>('input[aria-label="Deadline time"]')
+      ?.value,
+  ).toBe("16:30");
+  await fill("Reason: A", "Reviewed timed commitment");
+  await click("Preview schedule");
+  const submitted = s.request.mock.calls.find((v) =>
+    v[0].endsWith("/preview"),
+  )![2];
+  expect(submitted.changes[0]).toMatchObject({
+    dueDate: "2026-10-22",
+    deadlineMode: "timed",
+    dueAt: "2026-10-22T11:00:00.000Z",
+    dueTimezone: "Asia/Kolkata",
+  });
+});
+
+it("native template rename preserves an absent relative deadline separately from zero", async () => {
+  const existing = {
+    ...template,
+    kind: "task",
+    scopeOwnerId: "actor",
+    scopeDepartmentId: "",
+    defaults: { title: "No deadline", ownerPolicy: "actor", checklist: [] },
+  };
+  s.request.mockImplementation(async (path: string, method?: string) =>
+    method
+      ? { id: "t" }
+      : path.endsWith("/t")
+        ? { template: existing }
+        : path.includes("task-templates?")
+          ? { templates: [existing] }
+          : { projects: [] },
+  );
+  await render(createElement(NativeTemplates));
+  await click("Delivery template");
+  await click("Manage task templates");
+  await fill("Template name", "Renamed without deadline");
+  await click("Save template");
+  expect(
+    s.request.mock.calls.find((v) => v[1] === "PATCH")![2].defaults,
+  ).not.toHaveProperty("relativeDueDays");
+});
+it("retains and deduplicates all graph pages including later edges", async () => {
+  const node = (id: string) => ({
+    id,
+    title: id.toUpperCase(),
+    code: id,
+    originalCommitment: { dueDate: "" },
+    currentCommitment: { dueDate: "" },
+  });
+  s.request.mockImplementation(async (path: string) =>
+    path.includes("cursor=")
+      ? {
+          nodes: [node("b"), node("c")],
+          edges: [
+            { from: "a", to: "b" },
+            { from: "b", to: "c" },
+          ],
+          paths: [
+            ["a", "b"],
+            ["b", "c"],
+          ],
+          nextCursor: "",
+        }
+      : {
+          nodes: [node("a")],
+          edges: [{ from: "a", to: "b" }],
+          paths: [["a", "b"]],
+          nextCursor: "next",
+        },
+  );
+  await render(createElement(NativeImpact, { id: "a" }));
+  expect(c.textContent).toContain("B → C");
+  expect(
+    [...c.querySelectorAll("span")].filter((e) => e.textContent === "A → B"),
+  ).toHaveLength(1);
+});
+it("keeps an authored milestone reviewer search mounted during source checks without clearing the selected person", async () => {
+  let pause = false,
+    release!: (v: any) => void;
+  const detail = {
+    project: { ...project, ownerId: "actor" },
+    canEdit: true,
+    summary: { total: 0, accepted: 0 },
+  };
+  s.request.mockImplementation(async (path: string) =>
+    path.endsWith("/deep")
+      ? pause
+        ? new Promise((r) => (release = r))
+        : detail
+      : { milestones: [] },
+  );
+  await render(createElement(ProjectScreen, { id: "deep" }));
+  await click("New project milestone");
+  await click("Independent milestone reviewer: Choose person");
+  await click("Independent reviewer · head");
+  await click("Independent milestone reviewer: Independent reviewer");
+  await fill("Find independent milestone reviewer", "Inde");
+  const input = c.querySelector(
+    'input[aria-label="Find independent milestone reviewer"]',
+  )!;
+  (input as HTMLInputElement).focus();
+  pause = true;
+  s.w.executionEpoch = 1;
+  await render(createElement(ProjectScreen, { id: "deep" }));
+  expect(
+    c.querySelector('input[aria-label="Find independent milestone reviewer"]'),
+  ).toBe(input);
+  expect(document.activeElement).toBe(input);
+  expect(c.textContent).not.toContain("Independent reviewer · head");
+  pause = false;
+  await act(async () => {
+    release(detail);
+    await new Promise((r) => setTimeout(r, 10));
+  });
+  expect((input as HTMLInputElement).value).toBe("Inde");
+  expect(c.textContent).toContain(
+    "Independent milestone reviewer: Independent reviewer",
+  );
 });

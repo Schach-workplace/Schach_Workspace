@@ -1,3 +1,5 @@
+import ExecutionRecovery from './ExecutionRecovery';
+import { useExecutionInput, useExecutionBasis, clearExecutionForm } from '../data/executionInput';
 import { deadlineCandidates, localDeadline } from '../data/deadlines';
 import { clearAttemptScope } from '../data/businessAttempts';
 import { useEffect, useState } from 'react';
@@ -23,8 +25,8 @@ export default function ProjectMilestones({
   onTask?: (id: string) => void;
 }) {
   const q = useExecutionRead<{ milestones: MilestoneView[] }>(`/projects/${project.id}/milestones`);
-  const [selected, setSelected] = useState('');
-  const [creating, setCreating] = useState(false);
+  const [selected, setSelected] = useExecutionInput('$project:' + project.id, 'selected', '');
+  const [creating, setCreating] = useExecutionInput('$project:' + project.id, 'creating', false);
   return (
     <section className="panel execution-panel" aria-label="Project milestones">
       <h3>Human project milestones</h3>
@@ -88,23 +90,70 @@ function MilestoneForm({
   const store = useWorkspace();
   const data = store.data!;
   const action = useExecutionMutation('milestone-form:' + (milestone?.id ?? project.id));
-  const [projectVersion] = useState(project.version);
-  const [version] = useState(milestone?.version);
-  const [title, setTitle] = useState(milestone?.title ?? '');
-  const [description, setDescription] = useState(milestone?.description ?? '');
-  const [owner, setOwner] = useState(milestone?.ownerId ?? data.me.id);
-  const [reviewer, setReviewer] = useState(milestone?.reviewerId ?? '');
-  const [criteria, setCriteria] = useState(milestone?.criteria.map((c) => c.text).join('\n') ?? '');
-  const [selected, setSelected] = useState<string[]>(milestone?.taskIds ?? []);
-  const [date, setDate] = useState(milestone?.dueDate ?? '');
-  const [mode, setMode] = useState(milestone?.deadlineMode ?? 'all_day');
-  const [zone, setZone] = useState(milestone?.dueTimezone || data.company.timezone);
-  const [time, setTime] = useState(
+  const form = '$milestone:' + (milestone?.id ?? project.id);
+  const { basis, freeze: freezeBasis } = useExecutionBasis(form, {
+    projectVersion: project.version,
+    version: milestone?.version,
+  });
+  const { projectVersion, version } = basis;
+  const [title, setTitle] = useExecutionInput(form, 'title', milestone?.title ?? '', freezeBasis);
+  const [description, setDescription] = useExecutionInput(
+    form,
+    'description',
+    milestone?.description ?? '',
+    freezeBasis,
+  );
+  const [owner, setOwner] = useExecutionInput(
+    form,
+    'owner',
+    milestone?.ownerId ?? data.me.id,
+    freezeBasis,
+  );
+  const [reviewer, setReviewer] = useExecutionInput(
+    form,
+    'reviewer',
+    milestone?.reviewerId ?? '',
+    freezeBasis,
+  );
+  const [criteria, setCriteria] = useExecutionInput(
+    form,
+    'criteria',
+    milestone?.criteria.map((c) => c.text).join('\n') ?? '',
+    freezeBasis,
+  );
+  const [selected, setSelected] = useExecutionInput<string[]>(
+    form,
+    'selected',
+    milestone?.taskIds ?? [],
+    freezeBasis,
+  );
+  const [date, setDate] = useExecutionInput(form, 'date', milestone?.dueDate ?? '', freezeBasis);
+  const [mode, setMode] = useExecutionInput(
+    form,
+    'mode',
+    milestone?.deadlineMode ?? 'all_day',
+    freezeBasis,
+  );
+  const [zone, setZone] = useExecutionInput(
+    form,
+    'zone',
+    milestone?.dueTimezone || data.company.timezone,
+    freezeBasis,
+  );
+  const [time, setTime] = useExecutionInput(
+    form,
+    'time',
     milestone?.dueAt
       ? localDeadline(milestone.dueAt, milestone.dueTimezone || data.company.timezone).slice(11)
       : '16:00',
+    freezeBasis,
   );
-  const [instant, setInstant] = useState(milestone?.dueAt ?? '');
+  const [instant, setInstant] = useExecutionInput(
+    form,
+    'instant',
+    milestone?.dueAt ?? '',
+    freezeBasis,
+  );
   const candidates = mode === 'timed' && date ? deadlineCandidates(date + 'T' + time, zone) : [];
   const changedDeadline =
     !!milestone &&
@@ -113,7 +162,7 @@ function MilestoneForm({
       (mode === 'timed' &&
         (zone !== milestone.dueTimezone ||
           (candidates.length === 1 ? candidates[0] : instant) !== milestone.dueAt)));
-  const [reason, setReason] = useState('');
+  const [reason, setReason] = useExecutionInput(form, 'reason', '', freezeBasis);
   const [error, setError] = useState('');
   const tasks = data.tasks.filter((t) => t.projectId === project.id);
   return (
@@ -230,11 +279,28 @@ function MilestoneForm({
       <button
         className="button button-primary"
         disabled={
-          action.busy || !title || !criteria.trim() || !selected.length || (!milestone && !reviewer)
+          action.busy ||
+          (!action.attempt &&
+            (!title || !criteria.trim() || !selected.length || (!milestone && !reviewer)))
         }
         onClick={() =>
           void (async () => {
             try {
+              if (action.attempt) {
+                await action.execute(
+                  action.attempt.target?.path ??
+                    (milestone
+                      ? `/project-milestones/${milestone.id}`
+                      : `/projects/${project.id}/milestones`),
+                  action.attempt.payload,
+                  action.attempt.target?.method ?? (milestone ? 'PATCH' : 'POST'),
+                  () => {
+                    clearExecutionForm(store.companyId, store.session?.user.id ?? data.me.id, form);
+                    onDone();
+                  },
+                );
+                return;
+              }
               const at =
                 mode === 'timed' ? (candidates.length === 1 ? candidates[0] : instant) : '';
               if (mode === 'timed' && (!at || !candidates.includes(at)))
@@ -264,8 +330,11 @@ function MilestoneForm({
                   ...(changedDeadline ? { deadlineChangeReason: reason } : {}),
                 },
                 milestone ? 'PATCH' : 'POST',
+                () => {
+                  clearExecutionForm(store.companyId, store.session?.user.id ?? data.me.id, form);
+                  onDone();
+                },
               );
-              onDone();
             } catch (e) {
               setError((e as Error).message);
             }
@@ -274,6 +343,13 @@ function MilestoneForm({
       >
         {action.attempt ? 'Retry same milestone save' : 'Save milestone criteria'}
       </button>
+      <ExecutionRecovery
+        action={action}
+        onReconcile={() => {
+          clearExecutionForm(store.companyId, store.session?.user.id ?? data.me.id, form);
+          onDone();
+        }}
+      />
       {(error || action.error) && <ErrorMessage error={error || action.error} />}
     </section>
   );
@@ -292,12 +368,20 @@ function MilestoneDetail({
   const store = useWorkspace();
   const q = useExecutionRead<{ milestone: MilestoneView }>(`/project-milestones/${id}`);
   const action = useExecutionMutation('milestone-transition:' + id);
-  const [assertions, setAssertions] = useState<Record<string, string>>({});
-  const [basis, setBasis] = useState<TaskBasis[]>();
-  const [reason, setReason] = useState('');
-  const [note, setNote] = useState('');
+  const [assertions, setAssertions] = useExecutionInput<Record<string, string>>(
+    '$milestone:' + id,
+    'assertions',
+    {},
+  );
+  const [basis, setBasis] = useExecutionInput<TaskBasis[] | undefined>(
+    '$milestone:' + id,
+    'taskBasis',
+    undefined,
+  );
+  const [reason, setReason] = useExecutionInput('$milestone:' + id, 'reason', '');
+  const [note, setNote] = useExecutionInput('$milestone:' + id, 'note', '');
   const [error, setError] = useState('');
-  const [editing, setEditing] = useState(false);
+  const [editing, setEditing] = useExecutionInput('$milestone:' + id, 'editing', false);
   const m = q.data?.milestone;
   useEffect(() => {
     if (q.denied) {
@@ -499,6 +583,17 @@ function MilestoneDetail({
               Retry same milestone action
             </button>
           )}
+          <ExecutionRecovery
+            action={action}
+            onReconcile={() => {
+              clearExecutionForm(
+                store.companyId,
+                store.session?.user.id ?? store.data!.me.id,
+                '$milestone:' + id,
+              );
+              void q.retry();
+            }}
+          />
           {m.acceptances?.map((a) => (
             <article key={a.id}>
               <h4>Historical human acceptance</h4>

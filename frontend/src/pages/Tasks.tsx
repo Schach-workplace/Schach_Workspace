@@ -1,3 +1,6 @@
+import ExecutionRecovery from '../components/ExecutionRecovery';
+import { clearAttemptScope } from '../data/businessAttempts';
+import { ApiError } from '../data/api';
 import {
   useBusinessAttempt,
   beginAttempt,
@@ -192,8 +195,10 @@ export default function TasksPage({
   const [sort, setSort] = useState('deadline');
   const [expanded, setExpanded] = useState(false);
   const [importOpen, setImportOpen] = useState(false);
-  const [rows, setRows] = useState<CreateTaskInput[]>([]);
+  const [rows, setRows] = useState<CreateTaskInput[]>(() => business.attempt?.payload.rows ?? []);
   const [importError, setImportError] = useState('');
+  const importPending = useRef(false);
+  const [importBusy, setImportBusy] = useState(false);
   const [moving, setMoving] = useState('');
   const [moveError, setMoveError] = useState('');
   const fileRef = useRef<HTMLInputElement>(null);
@@ -300,7 +305,7 @@ export default function TasksPage({
                 className="button button-secondary"
                 onClick={() => {
                   setImportError('');
-                  setRows([]);
+                  setRows(business.attempt?.payload.rows ?? []);
                   setImportOpen(true);
                 }}
               >
@@ -550,7 +555,11 @@ export default function TasksPage({
             <div>
               <h3>Choose your completed CSV</h3>
               <p>The whole import is validated together. Failed rows are never partially added.</p>
-              <button className="button button-secondary" onClick={() => fileRef.current?.click()}>
+              <button
+                className="button button-secondary"
+                disabled={!!business.attempt || importBusy}
+                onClick={() => fileRef.current?.click()}
+              >
                 <ArrowUpFromLine size={14} />
                 Choose CSV
               </button>
@@ -559,7 +568,9 @@ export default function TasksPage({
                 ref={fileRef}
                 hidden
                 accept=".csv,text/csv"
+                disabled={!!business.attempt || importBusy}
                 onChange={async (e) => {
+                  if (business.attempt || importPending.current) return;
                   setImportError('');
                   setRows([]);
                   const file = e.target.files?.[0];
@@ -593,17 +604,38 @@ export default function TasksPage({
               another CSV will not replace this attempt.
             </p>
           )}
+          <ExecutionRecovery
+            action={{
+              attempt: business.attempt,
+              busy: importBusy,
+              abandon: () => {
+                if (!importPending.current) {
+                  clearAttemptScope(business.scope);
+                  setImportError('');
+                  setRows([]);
+                }
+              },
+            }}
+          />
           <div className="form-actions">
             <button className="button button-secondary" onClick={() => setImportOpen(false)}>
               Cancel
             </button>
             <button
               className="button button-primary"
-              disabled={(!rows.length && !business.attempt) || store.saving}
+              disabled={(!rows.length && !business.attempt) || store.saving || importBusy}
               onClick={async () => {
+                if (importPending.current) return;
+                importPending.current = true;
+                setImportBusy(true);
+                setImportError('');
                 try {
-                  const attempt =
-                    business.attempt ?? beginAttempt(business.scope, { rows }, businessKey());
+                  const attempt = beginAttempt(
+                    business.scope,
+                    business.attempt?.payload ?? { rows },
+                    businessKey(),
+                    { path: '/tasks/import', method: 'POST' },
+                  );
                   if (attempt.state !== 'committed')
                     await store.mutate(
                       '/tasks/import',
@@ -617,7 +649,12 @@ export default function TasksPage({
                   retireAttempt(business.scope, attempt.retryKey);
                   setImportOpen(false);
                 } catch (e) {
+                  if (e instanceof ApiError && [401, 403, 404].includes(e.status))
+                    clearAttemptScope(business.scope);
                   setImportError(e instanceof Error ? e.message : 'Import failed.');
+                } finally {
+                  importPending.current = false;
+                  setImportBusy(false);
                 }
               }}
             >

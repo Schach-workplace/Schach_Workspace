@@ -42,3 +42,24 @@ it('retries frozen task intent after losing the response and remounting', async 
   await waitFor(() => expect(state.store.mutate).toHaveBeenCalledTimes(2));
   expect(state.store.mutate.mock.calls[1][1]).toEqual(original);
 });
+import { ApiError } from '../data/api';
+it.each([409, 422])(
+  'ordinary task creation keeps HTTP%s frozen until warned deliberate correction',
+  async (status) => {
+    state.store.mutate
+      .mockReset()
+      .mockRejectedValueOnce(new ApiError('Inspect existing work', status, 'rejected'))
+      .mockResolvedValue({ id: 'corrected' });
+    render(<TaskDrawer taskId="new" onClose={() => {}} />);
+    fireEvent.change(screen.getByLabelText('Task title'), { target: { value: 'Original' } });
+    fireEvent.submit(document.querySelector('form')!);
+    await screen.findByText('Inspect existing work');
+    const original = state.store.mutate.mock.calls[0][1];
+    fireEvent.click(screen.getByText('Abandon retry after inspection; prior result may exist'));
+    fireEvent.change(screen.getByLabelText('Task title'), { target: { value: 'Corrected' } });
+    fireEvent.submit(document.querySelector('form')!);
+    await waitFor(() => expect(state.store.mutate).toHaveBeenCalledTimes(2));
+    expect(state.store.mutate.mock.calls[1][1]).toMatchObject({ title: 'Corrected' });
+    expect(state.store.mutate.mock.calls[1][1].retryKey).not.toBe(original.retryKey);
+  },
+);

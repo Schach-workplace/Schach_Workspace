@@ -1,3 +1,5 @@
+import { clearExecutionForm } from './executionInput';
+import { mergeExecutionPage } from '../../../shared/business/pagination';
 import { useEffect, useRef, useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useWorkspace } from '../store';
@@ -10,6 +12,7 @@ import {
   markAttemptCommitted,
   retireAttempt,
   clearAttemptScope,
+  clearAttemptsForSource,
 } from './businessAttempts';
 export * from '../../../shared/business/types';
 export async function executionRead<T>(
@@ -57,9 +60,7 @@ export async function executionRead<T>(
         { signal },
       );
       const rows = result as Record<string, unknown>;
-      for (const key of ['templates', 'projects', 'milestones', 'nodes'])
-        if (Array.isArray(rows[key]) && Array.isArray(page[key]))
-          rows[key] = [...(rows[key] as unknown[]), ...(page[key] as unknown[])];
+      mergeExecutionPage(rows, page);
       cursor = String(page.nextCursor ?? '');
     }
   }
@@ -107,12 +108,37 @@ export function useExecutionRead<T>(path: string, enabled = true) {
     query.isFetchedAfterMount &&
     !query.isFetching &&
     !query.error;
+  const denied =
+    enabled &&
+    foreground &&
+    !!store.data &&
+    !query.isFetching &&
+    query.error instanceof ApiError &&
+    [401, 403, 404].includes(query.error.status);
+  useEffect(() => {
+    if (!denied) return;
+    clearAttemptsForSource(
+      (import.meta.env.VITE_API_URL ?? window.location.origin) + ':' + store.mode,
+      company,
+      user,
+      path,
+    );
+    const project = path.match(/^\/projects\/([^/?]+)$/),
+      milestone = path.match(/^\/project-milestones\/([^/?]+)$/),
+      template = path.match(/^\/task-templates\/([^/?]+)$/);
+    if (project) {
+      clearExecutionForm(company, user, '$project:' + project[1]);
+      clearExecutionForm(company, user, '$milestone:' + project[1]);
+    }
+    if (milestone) clearExecutionForm(company, user, '$milestone:' + milestone[1]);
+    if (template) clearExecutionForm(company, user, '$template-manage:' + template[1]);
+  }, [denied, company, user, path]);
   return {
     data: ready ? query.data : undefined,
     ready,
     loading: enabled && foreground && (query.isFetching || query.isPending),
     error: query.error,
-    denied: query.error instanceof ApiError && [401, 403, 404].includes(query.error.status),
+    denied,
     retry: query.refetch,
   };
 }
@@ -129,6 +155,7 @@ export function useExecutionMutation(formId: string) {
     path: string,
     payload: Record<string, unknown>,
     method: 'POST' | 'PATCH' = 'POST',
+    onCommitted?: (result: T) => void,
   ): Promise<T> {
     if (pending.current) throw Error('This action is already being submitted.');
     if (store.mode === 'demo')
@@ -137,12 +164,19 @@ export function useExecutionMutation(formId: string) {
     setBusy(true);
     setError('');
     const captured = owner;
+    let committedResult: T | undefined;
     try {
-      const attempt = business.attempt ?? beginAttempt(business.scope, payload, businessKey());
-      const committed = (r: Record<string, unknown>) =>
-        markAttemptCommitted(business.scope, attempt.retryKey, {
+      const attempt = beginAttempt(business.scope, payload, businessKey(), { path, method });
+      const committed = (r: Record<string, unknown>) => {
+        committedResult = r as T;
+        const matching = markAttemptCommitted(business.scope, attempt.retryKey, {
           ids: (r.ids as string[]) ?? (r.id ? [String(r.id)] : []),
         });
+        if (matching) {
+          retireAttempt(business.scope, attempt.retryKey);
+          onCommitted?.(r as T);
+        }
+      };
       const result = path.endsWith('/preview')
         ? await request<T>(`/companies/${encodeURIComponent(business.scope.companyId)}${path}`, {
             method,
@@ -155,15 +189,13 @@ export function useExecutionMutation(formId: string) {
             path,
             { ...attempt.payload, retryKey: attempt.retryKey },
             method,
-            (r) =>
-              markAttemptCommitted(business.scope, attempt.retryKey, {
-                ids: r.ids ?? (r.id ? [r.id] : []),
-              }),
+            (r) => committed(r as unknown as Record<string, unknown>),
           );
       if (current.current !== captured) throw Error('Company changed. Open the current workspace.');
       retireAttempt(business.scope, attempt.retryKey);
       return result as T;
     } catch (e) {
+      if (committedResult !== undefined) return committedResult;
       if (e instanceof ApiError && [401, 403, 404].includes(e.status))
         clearAttemptScope(business.scope);
       if (current.current === captured) setError((e as Error).message);
@@ -173,5 +205,16 @@ export function useExecutionMutation(formId: string) {
       if (current.current === captured) setBusy(false);
     }
   }
-  return { ...business, execute, busy, error };
+  return {
+    ...business,
+    execute,
+    busy,
+    error,
+    abandon: () => {
+      if (!pending.current) {
+        clearAttemptScope(business.scope);
+        setError('');
+      }
+    },
+  };
 }

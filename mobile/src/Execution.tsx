@@ -105,6 +105,7 @@ export function NativeDeadline({
   setDate,
   setTime,
   setInstant,
+  onChange,
   disabled = false,
   timezone,
   onTimezone,
@@ -112,9 +113,10 @@ export function NativeDeadline({
   date: string;
   time: string;
   instant: string;
-  setDate: (v: string) => void;
-  setTime: (v: string) => void;
-  setInstant: (v: string) => void;
+  setDate?: (v: string) => void;
+  setTime?: (v: string) => void;
+  setInstant?: (v: string) => void;
+  onChange?: (v: { date: string; time: string; instant: string }) => void;
   timezone?: string;
   onTimezone?: (v: string) => void;
   disabled?: boolean;
@@ -145,9 +147,12 @@ export function NativeDeadline({
         timezone={zone}
         disabled={disabled}
         onChange={(v) => {
-          setDate(v.date);
-          setTime(v.time);
-          setInstant("");
+          if (onChange) onChange({ ...v, instant: "" });
+          else {
+            setDate?.(v.date);
+            setTime?.(v.time);
+            setInstant?.("");
+          }
         }}
       />
       {!!error && <Text accessibilityRole="alert">{error}</Text>}
@@ -157,7 +162,9 @@ export function NativeDeadline({
           title={"Use explicit instant " + at}
           disabled={disabled}
           selected={instant === at}
-          onPress={() => setInstant(at)}
+          onPress={() =>
+            onChange ? onChange({ date, time, instant: at }) : setInstant?.(at)
+          }
         />
       ))}
     </View>
@@ -567,47 +574,35 @@ function ScheduleDeadline({
   const [instant, setInstant] = useState(row.dueAt);
   const w = useWorkspace();
   const zone = row.dueTimezone || w.work?.company.timezone || "Asia/Kolkata";
+  function publish(date: string, time: string, instant: string, zone: string) {
+    setTime(time);
+    setInstant(instant);
+    try {
+      onChange(workDeadline(date, time, zone, instant));
+    } catch {
+      onChange({
+        dueDate: date,
+        deadlineMode: time ? "timed" : "all_day",
+        dueTimezone: time ? zone : "",
+        dueAt: "",
+      });
+    }
+  }
   return (
     <View>
       <NativeDeadline
         timezone={zone}
-        onTimezone={(zone) => {
-          setInstant("");
-          try {
-            onChange(workDeadline(row.dueDate, time, zone, ""));
-          } catch {
-            onChange({ dueTimezone: zone, dueAt: "" });
-          }
-        }}
+        onTimezone={(zone) => publish(row.dueDate, time, "", zone)}
         date={row.dueDate}
         time={time}
         instant={instant}
-        setDate={(date) => {
-          setInstant("");
-          try {
-            onChange(workDeadline(date, time, zone, ""));
-          } catch {
-            onChange({ dueDate: date, dueAt: "" });
-          }
-        }}
-        setTime={(v) => {
-          setTime(v);
-          setInstant("");
-          try {
-            onChange(workDeadline(row.dueDate, v, zone, ""));
-          } catch {
-            onChange({ dueAt: "" });
-          }
-        }}
-        setInstant={(v) => {
-          setInstant(v);
-          onChange(workDeadline(row.dueDate, time, zone, v));
-        }}
+        onChange={(v) => publish(v.date, v.time, v.instant, zone)}
         disabled={disabled}
       />
     </View>
   );
 }
+
 export function NativeTemplates({
   task,
   onDone,
@@ -987,7 +982,9 @@ function NativeTemplateForm({
   const [days, setDays] = useRamInput(
     form,
     "days",
-    String(template?.defaults.relativeDueDays ?? 0),
+    template?.defaults.relativeDueDays === undefined
+      ? ""
+      : String(template.defaults.relativeDueDays),
   );
 
   const locked = action.busy || !!action.attempt;
@@ -1018,7 +1015,7 @@ function NativeTemplateForm({
             fixedOwnerId: fixed,
             reviewerId: reviewer,
             requiresApproval: required,
-            relativeDueDays: Number(days),
+            ...(days.trim() ? { relativeDueDays: Number(days) } : {}),
             checklist: lines
               .split("\n")
               .map((s) => s.trim())

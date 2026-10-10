@@ -4,8 +4,13 @@ export interface BusinessAttemptScope {
   userId: string;
   formId: string;
 }
+export interface BusinessAttemptTarget {
+  path: string;
+  method: "POST" | "PATCH";
+}
 export interface FrozenBusinessAttempt<T = unknown> {
   retryKey: string;
+  target?: BusinessAttemptTarget;
   payload: T;
   state: "unknown" | "committed";
   result?: { ids: string[] };
@@ -55,10 +60,14 @@ export function beginAttempt<T>(
   scope: BusinessAttemptScope,
   payload: T,
   key: string,
+  target?: BusinessAttemptTarget,
 ): FrozenBusinessAttempt<T> {
   const previous = readAttempt<T>(scope);
   if (previous) {
-    if (canonical(previous.payload) !== canonical(payload))
+    if (
+      canonical(previous.payload) !== canonical(payload) ||
+      canonical(previous.target) !== canonical(target)
+    )
       throw Error(
         "This attempt may already have created work. Retry its frozen intent before starting another.",
       );
@@ -67,6 +76,7 @@ export function beginAttempt<T>(
   if (!key.trim() || key.length > 100) throw Error("Choose a valid retry key.");
   const attempt = freeze({
     retryKey: key,
+    ...(target ? { target: { ...target } } : {}),
     payload: JSON.parse(JSON.stringify(payload)) as T,
     state: "unknown" as const,
   });
@@ -115,6 +125,26 @@ export function clearAttemptsForPrincipal(
   for (const key of attempts.keys()) {
     const [s, c, u] = JSON.parse(key);
     if (s === serverOrigin && c === companyId && u === userId)
+      attempts.delete(key);
+  }
+  changed();
+}
+export function clearAttemptsForSource(
+  serverOrigin: string,
+  companyId: string,
+  userId: string,
+  sourcePath: string,
+) {
+  for (const [key, attempt] of attempts) {
+    const [s, c, u] = JSON.parse(key);
+    const path = attempt.target?.path;
+    if (
+      s === serverOrigin &&
+      c === companyId &&
+      u === userId &&
+      path &&
+      (path === sourcePath || path.startsWith(sourcePath + "/"))
+    )
       attempts.delete(key);
   }
   changed();

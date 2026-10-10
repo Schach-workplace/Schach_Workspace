@@ -1,3 +1,5 @@
+import ExecutionRecovery from './ExecutionRecovery';
+import { useExecutionInput, clearExecutionForm } from '../data/executionInput';
 import { clearAttemptScope } from '../data/businessAttempts';
 import { commitmentLabel } from '../../../shared/business/types';
 import { useEffect, useState } from 'react';
@@ -37,26 +39,30 @@ export default function ScheduleReview({ tasks, onDone }: { tasks: Task[]; onDon
         })),
   );
   const [selected, setSelected] = useState<string[]>(rows.map((r) => r.taskId));
-  const [proposal, setProposal] = useState<ScheduleProposalView>();
+  const [proposalId, setProposalId] = useExecutionInput(
+    '$schedule:' + identity,
+    'proposal',
+    String(applyAction.attempt?.payload.proposalId ?? ''),
+  );
   const [method, setMethod] = useState<'manual' | 'calendar_day_shift'>('manual');
   const [offset, setOffset] = useState(1);
   const [error, setError] = useState('');
   const [wall, setWall] = useState<Record<string, string>>({});
   const [fold, setFold] = useState<Record<string, string>>({});
   const inspected = useExecutionRead<{ proposal: ScheduleProposalView }>(
-    `/task-schedule/${proposal?.id}`,
-    !!proposal,
+    `/task-schedule/${proposalId}`,
+    !!proposalId,
   );
-  const view = inspected.data?.proposal ?? (inspected.ready ? proposal : undefined);
+  const view = inspected.data?.proposal;
   useEffect(() => {
     if (inspected.denied) {
       clearAttemptScope(previewAction.scope);
       clearAttemptScope(applyAction.scope);
-      setProposal(undefined);
+      setProposalId('');
     }
   }, [inspected.denied]);
   const update = (id: string, key: keyof ScheduleChange, value: unknown) => {
-    setProposal(undefined);
+    setProposalId('');
     setMethod('manual');
     setRows((rows) => rows.map((r) => (r.taskId === id ? { ...r, [key]: value } : r)));
   };
@@ -78,7 +84,7 @@ export default function ScheduleReview({ tasks, onDone }: { tasks: Task[]; onDon
       {tasks.every((t) => t.status === 'done') && (
         <p>Accepted work must be reopened through its existing review workflow.</p>
       )}
-      {!proposal && (
+      {!proposalId && !applyAction.attempt && (
         <>
           <Field label="Schedule method">
             <select
@@ -269,14 +275,14 @@ export default function ScheduleReview({ tasks, onDone }: { tasks: Task[]; onDon
                 });
                 const result = await previewAction.execute<{ proposal: ScheduleProposalView }>(
                   '/task-schedule/preview',
-                  {
+                  previewAction.attempt?.payload ?? {
                     method,
                     ...(method === 'calendar_day_shift' ? { dayOffset: offset } : {}),
                     changes,
                     context: { projects, milestones: [] },
                   },
                 );
-                setProposal(result.proposal);
+                setProposalId(result.proposal.id);
               })
             }
           >
@@ -284,7 +290,7 @@ export default function ScheduleReview({ tasks, onDone }: { tasks: Task[]; onDon
           </button>
         </>
       )}
-      {proposal && !view && <p role="status">Checking the proposal’s current source access…</p>}
+      {proposalId && !view && <p role="status">Checking the proposal’s current source access…</p>}
       {view && (
         <>
           <p>
@@ -309,7 +315,7 @@ export default function ScheduleReview({ tasks, onDone }: { tasks: Task[]; onDon
           <button
             className="button"
             disabled={applyAction.busy || !!applyAction.attempt}
-            onClick={() => setProposal(undefined)}
+            onClick={() => setProposalId('')}
           >
             Edit and create a fresh preview
           </button>
@@ -318,11 +324,14 @@ export default function ScheduleReview({ tasks, onDone }: { tasks: Task[]; onDon
             disabled={applyAction.busy || (view.expired && !applyAction.attempt)}
             onClick={() =>
               void run(async () => {
-                await applyAction.execute('/task-schedule/apply', {
-                  proposalId: view.id,
-                  expectedProposalVersion: view.version,
-                });
-                setProposal(undefined);
+                await applyAction.execute(
+                  '/task-schedule/apply',
+                  applyAction.attempt?.payload ?? {
+                    proposalId: view.id,
+                    expectedProposalVersion: view.version,
+                  },
+                );
+                setProposalId('');
                 onDone?.();
               })
             }
@@ -331,6 +340,18 @@ export default function ScheduleReview({ tasks, onDone }: { tasks: Task[]; onDon
           </button>
         </>
       )}
+      <ExecutionRecovery action={previewAction} />
+      <ExecutionRecovery
+        action={applyAction}
+        onReconcile={() => {
+          setProposalId('');
+          clearExecutionForm(
+            store.companyId,
+            store.session?.user.id ?? data.me.id,
+            '$schedule:' + identity,
+          );
+        }}
+      />
       <button className="button" disabled={applyAction.busy || previewAction.busy} onClick={onDone}>
         Cancel schedule review
       </button>

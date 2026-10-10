@@ -1,3 +1,4 @@
+import { mergeExecutionPage } from "../../shared/business/pagination";
 import { useRamInput } from "./ramInput";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { client, NativeApiError } from "./client";
@@ -55,20 +56,10 @@ export function useExecutionRead<T>(path: string, enabled = true) {
             const next = await client.request<T>(
               `/companies/${w.company}${path}${path.includes("?") ? "&" : "?"}cursor=${encodeURIComponent(cursor)}`,
             );
-            for (const key of [
-              "projects",
-              "templates",
-              "milestones",
-              "nodes",
-            ]) {
-              const target = data as Record<string, unknown>;
-              const page = next as Record<string, unknown>;
-              if (Array.isArray(target[key]) && Array.isArray(page[key]))
-                target[key] = [
-                  ...(target[key] as unknown[]),
-                  ...(page[key] as unknown[]),
-                ];
-            }
+            mergeExecutionPage(
+              data as Record<string, unknown>,
+              next as Record<string, unknown>,
+            );
             cursor = (next as { nextCursor?: string }).nextCursor;
           }
         }
@@ -172,8 +163,12 @@ export function useExecutionMutation(formId: string) {
       // Existing project PATCH uses the accepted positive-version CAS contract.
       const keyed = !(method === "PATCH" && /^\/projects\/[^/]+$/.test(path));
       const attempt = keyed
-        ? (business.attempt ??
-          beginAttempt(business.scope, payload, businessKey()))
+        ? beginAttempt(
+            business.scope,
+            business.attempt?.payload ?? payload,
+            businessKey(),
+            { path, method },
+          )
         : undefined;
       const result = await client.request<T>(
         `/companies/${w.company}${path}`,

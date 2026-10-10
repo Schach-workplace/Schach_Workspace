@@ -419,10 +419,11 @@ function MilestoneForm({
         disabled={locked}
         multiline
       />
-      {sourceReady && !milestone && (
+      {!milestone && (
         <>
           <PersonPicker
             label="Milestone owner"
+            authorized={sourceReady}
             people={w.work?.people ?? []}
             value={owner}
             onChange={(v) => {
@@ -433,6 +434,7 @@ function MilestoneForm({
           />
           <PersonPicker
             label="Independent milestone reviewer"
+            authorized={sourceReady}
             people={(w.work?.people ?? []).filter((p) => p.role !== "viewer")}
             value={reviewer}
             excludeIds={[owner]}

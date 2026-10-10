@@ -1,3 +1,6 @@
+import ExecutionRecovery from './ExecutionRecovery';
+import { clearAttemptScope } from '../data/businessAttempts';
+import { ApiError } from '../data/api';
 import TaskTemplates from './TaskTemplates';
 import TaskImpact from './TaskImpact';
 import ScheduleReview from './ScheduleReview';
@@ -261,6 +264,8 @@ function TaskDrawerBody({
     try {
       await fn();
     } catch (e) {
+      if (!task && e instanceof ApiError && [401, 403, 404].includes(e.status))
+        clearAttemptScope(business.scope);
       setError(e instanceof Error ? e.message : 'The change could not be saved. Please try again.');
     }
   }
@@ -310,7 +315,12 @@ function TaskDrawerBody({
           deadlineChangeReason: _deadlineReason,
           ...input
         } = cleaned;
-        const attempt = business.attempt ?? beginAttempt(business.scope, input, businessKey());
+        const attempt = beginAttempt(
+          business.scope,
+          business.attempt?.payload ?? input,
+          businessKey(),
+          { path: '/tasks', method: 'POST' },
+        );
         if (attempt.state === 'committed') {
           retireAttempt(business.scope, attempt.retryKey);
           onClose();
@@ -473,6 +483,20 @@ function TaskDrawerBody({
                       The previous request may already have created work. Retry the same frozen
                       details before starting another task.
                     </p>
+                  )}
+                  {!task && (
+                    <ExecutionRecovery
+                      action={{
+                        attempt: business.attempt,
+                        busy: store.saving,
+                        abandon: () => {
+                          if (!submitting.current) {
+                            clearAttemptScope(business.scope);
+                            setError('');
+                          }
+                        },
+                      }}
+                    />
                   )}
                   <fieldset
                     disabled={

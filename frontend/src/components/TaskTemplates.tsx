@@ -1,3 +1,5 @@
+import ExecutionRecovery from './ExecutionRecovery';
+import { useExecutionInput, clearExecutionForm } from '../data/executionInput';
 import { clearAttemptScope } from '../data/businessAttempts';
 import { useEffect, useState } from 'react';
 import { useWorkspace } from '../store';
@@ -23,36 +25,106 @@ export default function TaskTemplates({
   const data = store.data!;
   const kind = task ? 'checklist' : 'task';
   const list = useExecutionRead<{ templates: TaskTemplateView[] }>(`/task-templates?kind=${kind}`);
-  const [selected, setSelected] = useState('');
+  const [selected, setSelected] = useExecutionInput('$template-nav:' + kind, 'selected', '');
   const detail = useExecutionRead<{ template: TaskTemplateView }>(
     `/task-templates/${selected}`,
     !!selected,
   );
   const source = detail.data?.template;
   const action = useExecutionMutation(`template:${selected}:${task?.id ?? 'create'}`);
-  const manage = useExecutionMutation(`template-manage:${selected}`);
+  const [managementId, setManagementId] = useExecutionInput(
+    '$template-nav:' + kind,
+    'managementId',
+    '',
+  );
+  const managementForm = '$template-manage:' + (managementId || 'new-' + kind);
+  const manage = useExecutionMutation('template-manage:' + (managementId || 'new-' + kind));
   const [preview, setPreview] = useState<TemplatePreview>();
   const [error, setError] = useState('');
-  const [project, setProject] = useState(initialProject);
-  const [anchor, setAnchor] = useState(today(data.company.timezone));
-  const [editingTemplate, setEditingTemplate] = useState(false);
-  const [managementVersion, setManagementVersion] = useState(0);
-  const [managing, setManaging] = useState(false);
-  const [name, setName] = useState('');
-  const [scopeOwner, setScopeOwner] = useState(data.me.id);
-  const [scopeDepartment, setScopeDepartment] = useState(data.me.departmentId);
-  const [checklist, setChecklist] = useState('');
-  const [ownerPolicy, setOwnerPolicy] = useState('actor');
-  const [fixedOwner, setFixedOwner] = useState('');
-  const [reviewer, setReviewer] = useState('');
-  const [required, setRequired] = useState(false);
-  const [relative, setRelative] = useState('');
-  const [taskTitle, setTaskTitle] = useState('');
-  const [taskDescription, setTaskDescription] = useState('');
-  const [priority, setPriority] = useState('medium');
-  const [estimate, setEstimate] = useState('0');
-  const [tags, setTags] = useState('');
-  const [initialStatus, setInitialStatus] = useState('todo');
+  const [project, setProject] = useState(
+    String(action.attempt?.payload.projectId ?? initialProject),
+  );
+  const [anchor, setAnchor] = useState(
+    String(action.attempt?.payload.anchorDate ?? today(data.company.timezone)),
+  );
+  const [editingTemplate, setEditingTemplate] = useExecutionInput(
+    '$template-nav:' + kind,
+    'editing',
+    false,
+  );
+  const [managementVersion, setManagementVersion] = useExecutionInput(
+    '$template-nav:' + kind,
+    'expectedBasis',
+    0,
+  );
+  const [managing, setManaging] = useExecutionInput('$template-nav:' + kind, 'managing', false);
+  const [name, setName, prefillName] = useExecutionInput(managementForm, 'name', '');
+  const [scopeOwner, setScopeOwner, prefillScopeOwner] = useExecutionInput(
+    managementForm,
+    'scopeOwner',
+    data.me.id,
+  );
+  const [scopeDepartment, setScopeDepartment, prefillScopeDepartment] = useExecutionInput(
+    managementForm,
+    'scopeDepartment',
+    data.me.departmentId,
+  );
+  const [checklist, setChecklist, prefillChecklist] = useExecutionInput(
+    managementForm,
+    'checklist',
+    '',
+  );
+  const [ownerPolicy, setOwnerPolicy, prefillOwnerPolicy] = useExecutionInput(
+    managementForm,
+    'ownerPolicy',
+    'actor',
+  );
+  const [fixedOwner, setFixedOwner, prefillFixedOwner] = useExecutionInput(
+    managementForm,
+    'fixedOwner',
+    '',
+  );
+  const [reviewer, setReviewer, prefillReviewer] = useExecutionInput(
+    managementForm,
+    'reviewer',
+    '',
+  );
+  const [required, setRequired, prefillRequired] = useExecutionInput(
+    managementForm,
+    'required',
+    false,
+  );
+  const [relative, setRelative, prefillRelative] = useExecutionInput(
+    managementForm,
+    'relative',
+    '',
+  );
+  const [taskTitle, setTaskTitle, prefillTaskTitle] = useExecutionInput(
+    managementForm,
+    'taskTitle',
+    '',
+  );
+  const [taskDescription, setTaskDescription, prefillTaskDescription] = useExecutionInput(
+    managementForm,
+    'taskDescription',
+    '',
+  );
+  const [priority, setPriority, prefillPriority] = useExecutionInput(
+    managementForm,
+    'priority',
+    'medium',
+  );
+  const [estimate, setEstimate, prefillEstimate] = useExecutionInput(
+    managementForm,
+    'estimate',
+    '0',
+  );
+  const [tags, setTags, prefillTags] = useExecutionInput(managementForm, 'tags', '');
+  const [initialStatus, setInitialStatus, prefillInitialStatus] = useExecutionInput(
+    managementForm,
+    'initialStatus',
+    'todo',
+  );
   const currentProject = data.projects.find((p) => p.id === project);
   const projectDetail = useExecutionRead<{ project: { version: number } }>(
     `/projects/${project}`,
@@ -69,6 +141,9 @@ export default function TaskTemplates({
       clearAttemptScope(manage.scope);
       setPreview(undefined);
       setManaging(false);
+      clearExecutionForm(store.companyId, store.session?.user.id ?? data.me.id, managementForm);
+      setManagementId('');
+      setSelected('');
       setName('');
       setChecklist('');
     }
@@ -105,32 +180,45 @@ export default function TaskTemplates({
       setPreview(p);
     });
   }
-  function loadManagement() {
-    setEditingTemplate(true);
+  function prefillManagement() {
     if (source) {
-      setManagementVersion(source.version);
-      setName(source.name);
-      setScopeOwner(source.scopeOwnerId);
-      setScopeDepartment(source.scopeDepartmentId);
-      setChecklist(source.defaults.checklist.join('\n'));
-      setTaskTitle(source.defaults.title ?? '');
-      setTaskDescription(source.defaults.description ?? '');
-      setPriority(source.defaults.priority || 'medium');
-      setEstimate(String(source.defaults.estimatedHours ?? 0));
-      setTags((source.defaults.tags ?? []).join(', '));
-      setInitialStatus(source.defaults.status ?? 'todo');
-      setOwnerPolicy(source.defaults.ownerPolicy ?? 'actor');
-      setFixedOwner(source.defaults.fixedOwnerId ?? '');
-      setReviewer(source.defaults.reviewerId ?? '');
-      setRequired(!!source.defaults.requiresApproval);
-      setRelative(
+      prefillName(source.name);
+      prefillScopeOwner(source.scopeOwnerId);
+      prefillScopeDepartment(source.scopeDepartmentId);
+      prefillChecklist(source.defaults.checklist.join('\n'));
+      prefillTaskTitle(source.defaults.title ?? '');
+      prefillTaskDescription(source.defaults.description ?? '');
+      prefillPriority(source.defaults.priority || 'medium');
+      prefillEstimate(String(source.defaults.estimatedHours ?? 0));
+      prefillTags((source.defaults.tags ?? []).join(', '));
+      prefillInitialStatus(source.defaults.status ?? 'todo');
+      prefillOwnerPolicy(source.defaults.ownerPolicy ?? 'actor');
+      prefillFixedOwner(source.defaults.fixedOwnerId ?? '');
+      prefillReviewer(source.defaults.reviewerId ?? '');
+      prefillRequired(!!source.defaults.requiresApproval);
+      prefillRelative(
         source.defaults.relativeDueDays === undefined
           ? ''
           : String(source.defaults.relativeDueDays),
       );
     }
+  }
+  function loadManagement() {
+    if (!source || !detail.ready) return;
+    setEditingTemplate(true);
+    setManagementId(source.id);
+    setManagementVersion(source.version);
+    prefillManagement();
     setManaging(true);
   }
+  useEffect(() => {
+    if (managing && managementId && source?.id === managementId && detail.ready) {
+      prefillManagement();
+      if (!managementVersion) setManagementVersion(source.version);
+    }
+  }, [managing, managementId, source?.id, detail.ready]);
+  const managementReady = !managementId || (detail.ready && source?.id === managementId);
+
   return (
     <section
       className="panel execution-panel"
@@ -149,8 +237,8 @@ export default function TaskTemplates({
       <Field label="Template">
         <select
           value={selected}
+          disabled={managing || !!action.attempt || !!manage.attempt}
           onChange={(e) => setSelected(e.target.value)}
-          disabled={!!action.attempt}
         >
           <option value="">Choose an authorized template</option>
           {list.data?.templates
@@ -218,11 +306,14 @@ export default function TaskTemplates({
                   disabled={action.busy}
                   onClick={() =>
                     void run(async () => {
-                      await action.execute(`/tasks/${task.id}/checklists/apply`, {
-                        version: task.version,
-                        templateId: source.id,
-                        expectedTemplateVersion: source.version,
-                      });
+                      await action.execute(
+                        `/tasks/${task.id}/checklists/apply`,
+                        action.attempt?.payload ?? {
+                          version: task.version,
+                          templateId: source.id,
+                          expectedTemplateVersion: source.version,
+                        },
+                      );
                       setSelected('');
                     })
                   }
@@ -294,7 +385,7 @@ export default function TaskTemplates({
                 void run(async () => {
                   const result = await action.execute<{ id: string }>(
                     `/task-templates/${source.id}/apply`,
-                    {
+                    action.attempt?.payload ?? {
                       expectedTemplateVersion: preview?.templateVersion ?? source.version,
                       projectId: project,
                       expectedProjectVersion: project
@@ -323,6 +414,8 @@ export default function TaskTemplates({
               setManaging(true);
               setName('');
               setChecklist('');
+              setManagementId('');
+              setManagementVersion(0);
               setTaskTitle('');
             }}
           >
@@ -335,7 +428,7 @@ export default function TaskTemplates({
           )}
         </div>
       )}
-      {managing && (
+      {managing && managementReady && (
         <fieldset disabled={manage.busy || !!manage.attempt}>
           <legend>Manage explicit template scope</legend>
           <Field label="Template name">
@@ -454,6 +547,9 @@ export default function TaskTemplates({
           )}
         </fieldset>
       )}
+      {managing && !managementReady && (
+        <p role="status">Checking current template access. Editing resumes after authorization.</p>
+      )}
       {managing && (
         <div className="form-actions">
           <button className="button" onClick={() => setManaging(false)}>
@@ -461,9 +557,32 @@ export default function TaskTemplates({
           </button>
           <button
             className="button button-primary"
-            disabled={manage.busy || !name || (!task && !taskTitle)}
+            disabled={
+              !managementReady ||
+              manage.busy ||
+              (!manage.attempt && (!name || (!task && !taskTitle)))
+            }
             onClick={() =>
               void run(async () => {
+                if (!managementReady) return;
+                if (manage.attempt) {
+                  await manage.execute(
+                    manage.attempt.target?.path ??
+                      (managementId ? `/task-templates/${managementId}` : '/task-templates'),
+                    manage.attempt.payload,
+                    manage.attempt.target?.method ?? (managementId ? 'PATCH' : 'POST'),
+                    () => {
+                      clearExecutionForm(
+                        store.companyId,
+                        store.session?.user.id ?? data.me.id,
+                        managementForm,
+                      );
+                      setManaging(false);
+                    },
+                  );
+                  await list.retry();
+                  return;
+                }
                 const defaults = {
                   checklist: checklist
                     .split('\n')
@@ -488,9 +607,9 @@ export default function TaskTemplates({
                       }
                     : {}),
                 };
-                const editing = !!source && editingTemplate;
+                const editing = !!managementId && editingTemplate;
                 await manage.execute(
-                  editing ? `/task-templates/${source.id}` : '/task-templates',
+                  editing ? `/task-templates/${managementId}` : '/task-templates',
                   {
                     name,
                     kind,
@@ -500,15 +619,22 @@ export default function TaskTemplates({
                     ...(editing ? { version: managementVersion } : {}),
                   },
                   editing ? 'PATCH' : 'POST',
+                  () => {
+                    clearExecutionForm(
+                      store.companyId,
+                      store.session?.user.id ?? data.me.id,
+                      managementForm,
+                    );
+                    setManaging(false);
+                  },
                 );
-                setManaging(false);
                 await list.retry();
               })
             }
           >
-            Save scoped template
+            {manage.attempt ? 'Retry same scoped template submission' : 'Save scoped template'}
           </button>
-          {source && (
+          {source && managementReady && !manage.attempt && (
             <button
               className="button"
               onClick={() =>
@@ -517,8 +643,15 @@ export default function TaskTemplates({
                     `/task-templates/${source.id}`,
                     { version: source.version, archived: !source.archived },
                     'PATCH',
+                    () => {
+                      clearExecutionForm(
+                        store.companyId,
+                        store.session?.user.id ?? data.me.id,
+                        managementForm,
+                      );
+                      setManaging(false);
+                    },
                   );
-                  setManaging(false);
                   await list.retry();
                 })
               }
@@ -528,6 +661,16 @@ export default function TaskTemplates({
           )}
         </div>
       )}
+      <ExecutionRecovery action={action} onReconcile={() => setPreview(undefined)} />
+      <ExecutionRecovery
+        action={manage}
+        onReconcile={() => {
+          clearExecutionForm(store.companyId, store.session?.user.id ?? data.me.id, managementForm);
+          setManaging(false);
+          setManagementVersion(0);
+          void detail.retry();
+        }}
+      />
       {!!(error || action.error || manage.error) && (
         <ErrorMessage error={error || action.error || manage.error} />
       )}{' '}

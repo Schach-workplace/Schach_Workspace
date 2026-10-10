@@ -1,8 +1,9 @@
 // @vitest-environment happy-dom
 import { render, screen, fireEvent, cleanup, waitFor } from '@testing-library/react';
-import { it, expect, vi, afterEach } from 'vitest';
+import { it, expect, vi, afterEach, beforeEach } from 'vitest';
 import TaskTemplates from './TaskTemplates';
 import sample from '../data/sample.json';
+import { clearAllDrafts } from '../communication/drafts';
 const state = vi.hoisted(() => ({ execute: vi.fn(), read: vi.fn(), query: vi.fn() }));
 vi.mock('../store', () => ({
   useWorkspace: () => ({ data: sample.workspaces[0], mode: 'api', companyId: 'c-schach' }),
@@ -17,7 +18,11 @@ vi.mock('../data/execution', () => ({
   }),
   executionRead: (...a: any[]) => state.read(...a),
 }));
-afterEach(cleanup);
+beforeEach(() => clearAllDrafts());
+afterEach(() => {
+  cleanup();
+  clearAllDrafts();
+});
 it('previews a scoped template and confirms one reviewed owner/reviewer task', async () => {
   const template = {
     id: 'tpl',
@@ -102,4 +107,46 @@ it('renames a captured template without losing typed defaults or silently advanc
       relativeDueDays: 2,
     },
   });
+});
+it('hides fetched management prefill and prevents an edit becoming a POST during source reauthorization', async () => {
+  const source = {
+    id: 'scoped',
+    version: 4,
+    name: 'Private scoped template',
+    kind: 'task',
+    scopeOwnerId: 'u-founder',
+    scopeDepartmentId: '',
+    defaults: { title: 'Private task default', checklist: [] },
+  };
+  let pending = false;
+  state.execute.mockClear();
+  state.execute.mockResolvedValue({ id: 'scoped' });
+  state.query.mockImplementation((p: string) =>
+    p.endsWith('/scoped')
+      ? { ready: !pending, data: pending ? undefined : { template: source }, retry: vi.fn() }
+      : { ready: true, data: { templates: [source] }, retry: vi.fn() },
+  );
+  const v = render(<TaskTemplates />);
+  fireEvent.change(screen.getByLabelText('Template'), { target: { value: 'scoped' } });
+  fireEvent.click(screen.getByText('Edit template'));
+  fireEvent.change(screen.getByLabelText('Template name'), {
+    target: { value: 'Authored rename' },
+  });
+  pending = true;
+  v.rerender(<TaskTemplates />);
+  expect(screen.queryByLabelText('Default task title')).toBeNull();
+  const save = screen.getByText('Save scoped template');
+  expect(save.hasAttribute('disabled')).toBe(true);
+  fireEvent.click(save);
+  expect(state.execute).not.toHaveBeenCalled();
+  pending = false;
+  v.rerender(<TaskTemplates />);
+  expect((screen.getByLabelText('Template name') as HTMLInputElement).value).toBe(
+    'Authored rename',
+  );
+  fireEvent.click(screen.getByText('Save scoped template'));
+  await waitFor(() => expect(state.execute).toHaveBeenCalledTimes(1));
+  expect(state.execute.mock.calls[0][0]).toBe('/task-templates/scoped');
+  expect(state.execute.mock.calls[0][2]).toBe('PATCH');
+  expect(state.execute.mock.calls[0][1].version).toBe(4);
 });
