@@ -293,36 +293,49 @@ func (s *Server) createTask(w http.ResponseWriter, r *http.Request) error {
 	if e != nil {
 		return e
 	}
-	if a.Member.Role == "viewer" {
-		return denied()
-	}
-	f, e := readFields(w, r, createTaskFields...)
+	allowed := append(append([]string{}, createTaskFields...), "retryKey")
+	f, e := readFields(w, r, allowed...)
 	if e != nil {
 		return e
 	}
-	t, e := makeTask(a, f)
+	key, e := optionalBusinessKey(f)
 	if e != nil {
 		return e
 	}
+	delete(f, "retryKey")
+	var result BusinessResult
 	e = s.withAccessTransaction(r, a, func(tx *gorm.DB) error {
-		if a.Member.Role == "viewer" {
-			return denied()
+		authorize := func() error { return authorizeTaskCreation(tx, a, f) }
+		apply := func() (BusinessResult, error) {
+			t, e := makeTask(a, f)
+			if e != nil {
+				return BusinessResult{}, e
+			}
+			if e = validateTask(tx, a, &t); e != nil {
+				return BusinessResult{}, e
+			}
+			if e = setWorkflow(tx, &t, "", false); e != nil {
+				return BusinessResult{}, e
+			}
+			if e = insertTask(tx, a, &t); e != nil {
+				return BusinessResult{}, e
+			}
+			return BusinessResult{Kind: "task", IDs: []string{t.ID}, Versions: []int64{t.Version}}, nil
 		}
-		if e := validateTask(tx, a, &t); e != nil {
-			return e
+		if key == "" {
+			if e = authorize(); e != nil {
+				return e
+			}
+			result, e = apply()
+		} else {
+			result, e = businessMutation(tx, a, "task_create", key, f, authorize, func(v BusinessResult) error { return authorizeTaskResults(tx, a, v) }, apply)
 		}
-		if !a.canCreate(t.OwnerID, t.DepartmentID) {
-			return denied()
-		}
-		if e := setWorkflow(tx, &t, "", false); e != nil {
-			return e
-		}
-		return insertTask(tx, a, &t)
+		return e
 	})
 	if e != nil {
 		return e
 	}
-	return ok(w, t.ID)
+	return ok(w, result.IDs[0])
 }
 func structuralChanged(a, b Task) bool {
 	return a.OwnerID != b.OwnerID || a.ReviewerID != b.ReviewerID || a.RequiresApproval != b.RequiresApproval || a.DepartmentID != b.DepartmentID || a.ProjectID != b.ProjectID || a.ParentID != b.ParentID || a.Recurrence != b.Recurrence || !reflect.DeepEqual(a.Dependencies, b.Dependencies)
@@ -435,26 +448,23 @@ func (s *Server) importTasks(w http.ResponseWriter, r *http.Request) error {
 	if e != nil {
 		return e
 	}
-	if a.Member.Role == "viewer" {
-		return denied()
-	}
-	var input struct {
-		Rows []map[string]json.RawMessage `json:"rows"`
-	}
-	if e = decode(w, r, &input); e != nil {
+	envelope, e := readFields(w, r, "rows", "retryKey")
+	if e != nil {
 		return e
 	}
-	if len(input.Rows) < 1 || len(input.Rows) > 200 {
+	key, e := optionalBusinessKey(envelope)
+	if e != nil {
+		return e
+	}
+	delete(envelope, "retryKey")
+	var rows []map[string]json.RawMessage
+	if e = json.Unmarshal(envelope["rows"], &rows); e != nil || len(rows) < 1 || len(rows) > 200 {
 		return invalid("Import between 1 and 200 rows at a time.")
 	}
-	created := 0
-	e = s.withAccessTransaction(r, a, func(tx *gorm.DB) error {
-		if a.Member.Role == "viewer" {
-			return denied()
-		}
+	validateRows := func(tx *gorm.DB, workflow bool) ([]Task, error) {
 		tasks := []Task{}
 		errs := []RowError{}
-		for i, f := range input.Rows {
+		for i, f := range rows {
 			var validation error
 			for k, v := range f {
 				if !in(k, createTaskFields...) || string(v) == "null" {
@@ -462,18 +472,18 @@ func (s *Server) importTasks(w http.ResponseWriter, r *http.Request) error {
 					break
 				}
 			}
-			t, e := makeTask(a, f)
+			var t Task
 			if validation == nil {
-				validation = e
+				validation = authorizeTaskCreation(tx, a, f)
 			}
-			if validation == nil {
-				validation = validateTask(tx, a, &t)
-			}
-			if validation == nil && !a.canCreate(t.OwnerID, t.DepartmentID) {
-				validation = denied()
-			}
-			if validation == nil {
-				validation = setWorkflow(tx, &t, "", false)
+			if validation == nil && workflow {
+				t, validation = makeTask(a, f)
+				if validation == nil {
+					validation = validateTask(tx, a, &t)
+				}
+				if validation == nil {
+					validation = setWorkflow(tx, &t, "", false)
+				}
 			}
 			if validation != nil {
 				errs = append(errs, RowError{Row: i + 1, Message: validation.Error()})
@@ -482,20 +492,48 @@ func (s *Server) importTasks(w http.ResponseWriter, r *http.Request) error {
 			}
 		}
 		if len(errs) > 0 {
-			return &apiError{Status: 422, Code: "invalid_import", Message: "No rows were imported. Fix the listed row errors and retry.", Rows: errs}
+			return nil, &apiError{Status: 422, Code: "invalid_import", Message: "No rows were imported. Fix the listed row errors and retry.", Rows: errs}
 		}
-		for i := range tasks {
-			if e := insertTask(tx, a, &tasks[i]); e != nil {
+		return tasks, nil
+	}
+	var result BusinessResult
+	e = s.withAccessTransaction(r, a, func(tx *gorm.DB) error {
+		authorize := func() error {
+			if a.Member.Role == "viewer" {
+				return denied()
+			}
+			_, e := validateRows(tx, false)
+			return e
+		}
+		apply := func() (BusinessResult, error) {
+			tasks, e := validateRows(tx, true)
+			if e != nil {
+				return BusinessResult{}, e
+			}
+			out := BusinessResult{Kind: "tasks", IDs: []string{}, Versions: []int64{}}
+			for i := range tasks {
+				if e = insertTask(tx, a, &tasks[i]); e != nil {
+					return out, e
+				}
+				out.IDs = append(out.IDs, tasks[i].ID)
+				out.Versions = append(out.Versions, tasks[i].Version)
+			}
+			return out, audit(tx, a.Company.ID, "", a.User.ID, "tasks_imported", fmt.Sprintf("Imported %d tasks atomically.", len(tasks)))
+		}
+		if key == "" {
+			if e = authorize(); e != nil {
 				return e
 			}
-			created++
+			result, e = apply()
+		} else {
+			result, e = businessMutation(tx, a, "task_import", key, envelope, authorize, func(v BusinessResult) error { return authorizeTaskResults(tx, a, v) }, apply)
 		}
-		return audit(tx, a.Company.ID, "", a.User.ID, "tasks_imported", fmt.Sprintf("Imported %d tasks atomically.", created))
+		return e
 	})
 	if e != nil {
 		return e
 	}
-	return respond(w, 200, map[string]any{"ok": true, "created": created})
+	return respond(w, 200, map[string]any{"ok": true, "created": len(result.IDs), "ids": result.IDs})
 }
 func (s *Server) reviewTask(w http.ResponseWriter, r *http.Request) error {
 	a, e := s.access(r)
