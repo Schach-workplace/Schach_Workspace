@@ -44,7 +44,7 @@ func TestAttentionWindows(t *testing.T) {
 }
 func TestAttentionReminderLeaseAndEscalation(t *testing.T) {
 	s, c, cid, uid, _ := attentionFixture(t)
-	now := time.Now().UTC()
+	now := time.Now().UTC().Truncate(time.Microsecond)
 	if _, e := s.RunAttention(context.Background(), now, 100); e != nil {
 		t.Fatal(e)
 	}
@@ -82,7 +82,7 @@ func TestAttentionReminderLeaseAndEscalation(t *testing.T) {
 }
 func TestAttentionReminderDeferralCancellationAndEligibility(t *testing.T) {
 	s, c, cid, uid, id := attentionFixture(t)
-	now := time.Now().UTC()
+	now := time.Now().UTC().Truncate(time.Microsecond)
 	future := now.Add(time.Hour)
 	s.db.Model(&AttentionItem{}).Where("id=?", "attention-test").Update("snoozed_until", future)
 	if _, e := s.RunAttention(context.Background(), now, 100); e != nil {
