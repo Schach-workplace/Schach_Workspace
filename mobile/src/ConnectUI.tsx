@@ -1,6 +1,8 @@
 import type { ReactNode } from "react";
 import {
   Modal,
+  KeyboardAvoidingView,
+  Platform,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -66,10 +68,12 @@ export function Sheet({
   title,
   onClose,
   children,
+  keyboard = false,
 }: {
   title: string;
   onClose: () => void;
   children: ReactNode;
+  keyboard?: boolean;
 }) {
   return (
     <Modal
@@ -79,16 +83,22 @@ export function Sheet({
       onRequestClose={onClose}
     >
       <SafeAreaView style={ui.sheet}>
-        <View style={ui.header}>
-          <Text style={ui.title}>{title}</Text>
-          <Action title="Close" onPress={onClose} />
-        </View>
-        <ScrollView
-          keyboardShouldPersistTaps="handled"
-          contentContainerStyle={ui.sheetBody}
+        <KeyboardAvoidingView
+          style={{ flex: 1 }}
+          enabled={keyboard}
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
         >
-          {children}
-        </ScrollView>
+          <View style={ui.header}>
+            <Text style={ui.title}>{title}</Text>
+            <Action title="Close" onPress={onClose} />
+          </View>
+          <ScrollView
+            keyboardShouldPersistTaps="handled"
+            contentContainerStyle={ui.sheetBody}
+          >
+            {children}
+          </ScrollView>
+        </KeyboardAvoidingView>
       </SafeAreaView>
     </Modal>
   );
