@@ -82,6 +82,11 @@ export interface NativeExpense {
   receipts: { id: string; fileName: string }[];
 }
 export interface WorkTask {
+  code?: string;
+  projectId?: string;
+  startDate?: string;
+  originalDeadlineMode?: string;
+  originalDueTimezone?: string;
   attachments: { id: string; fileName: string }[];
   description: string;
   id: string;
@@ -116,6 +121,7 @@ export interface CallConnection {
 function useController() {
   const [recordEpoch, setRecordEpoch] = useState(0);
   const [attentionEpoch, setAttentionEpoch] = useState(0);
+  const [executionEpoch, setExecutionEpoch] = useState(0);
   const seenWorkEvents = useRef(new Set<string>());
   const [policyEpoch, setPolicyEpoch] = useState(0);
   const [session, setSession] = useState<Session | null>(null);
@@ -308,6 +314,7 @@ function useController() {
     setWork({ ...bootstrap, tasks, expenses });
     setAuthorized(true);
     setAttentionEpoch((old) => old + 1);
+    setExecutionEpoch((old) => old + 1);
     let businessChanged = false,
       otherScope = false;
     for (const event of attention.events) {
@@ -517,6 +524,7 @@ function useController() {
     policyEpoch,
     recordEpoch,
     attentionEpoch,
+    executionEpoch,
     invalidatePrivateViews,
     conversations,
     listMore,

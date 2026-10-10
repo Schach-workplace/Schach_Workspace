@@ -36,6 +36,7 @@ export default function TaskTemplates({
   const [project, setProject] = useState(initialProject);
   const [anchor, setAnchor] = useState(today(data.company.timezone));
   const [editingTemplate, setEditingTemplate] = useState(false);
+  const [managementVersion, setManagementVersion] = useState(0);
   const [managing, setManaging] = useState(false);
   const [name, setName] = useState('');
   const [scopeOwner, setScopeOwner] = useState(data.me.id);
@@ -102,6 +103,7 @@ export default function TaskTemplates({
   function loadManagement() {
     setEditingTemplate(true);
     if (source) {
+      setManagementVersion(source.version);
       setName(source.name);
       setScopeOwner(source.scopeOwnerId);
       setScopeDepartment(source.scopeDepartmentId);
@@ -446,7 +448,7 @@ export default function TaskTemplates({
                     scopeOwnerId: scopeOwner,
                     scopeDepartmentId: scopeDepartment,
                     defaults,
-                    ...(editing ? { version: source.version } : {}),
+                    ...(editing ? { version: managementVersion } : {}),
                   },
                   editing ? 'PATCH' : 'POST',
                 );

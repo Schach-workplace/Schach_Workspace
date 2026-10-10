@@ -1,8 +1,14 @@
 package platform
 
 import (
+	"crypto/sha256"
+	"fmt"
 	"os"
+	"path/filepath"
 	"schach.local/workspace/backend/migrations"
+	"sort"
+	"strconv"
+	"strings"
 	"testing"
 )
 
@@ -43,4 +49,71 @@ func TestNativeVersionedUpgradeRunner(t *testing.T) {
 	if e := migrations.Apply(t.Context(), db, 0); e == nil {
 		t.Fatal("checksum tampering accepted")
 	}
+}
+
+func TestMilestone5NumberedUpgradeFrom27(t *testing.T) {
+	if os.Getenv("TEST_DATABASE_URL") == "" {
+		t.Skip("owned PostgreSQL numbered SQL upgrade")
+	}
+	s, db := testServer(t)
+	c := login(t, s, "founder@example.com")
+	cid := firstCompany(t, s, c)
+	id := createTask(t, s, c, cid, taskBody(me(t, s, c)))
+	files, e := filepath.Glob("../migrations/*.up.sql")
+	if e != nil {
+		t.Fatal(e)
+	}
+	sort.Slice(files, func(i, j int) bool { return migrationNumber(files[i]) < migrationNumber(files[j]) })
+	for i := len(files) - 1; i >= 0; i-- {
+		if migrationNumber(files[i]) > 27 {
+			down, e := os.ReadFile(strings.Replace(files[i], ".up.sql", ".down.sql", 1))
+			if e != nil {
+				t.Fatal(e)
+			}
+			if e = db.Exec(string(down)).Error; e != nil {
+				t.Fatal(e)
+			}
+		}
+	}
+	if e = db.Exec("CREATE TABLE schach_schema_migrations(version integer PRIMARY KEY,sha256 text NOT NULL,applied_at timestamptz NOT NULL DEFAULT now())").Error; e != nil {
+		t.Fatal(e)
+	}
+	for _, file := range files {
+		n := migrationNumber(file)
+		if n > 27 {
+			continue
+		}
+		raw, e := os.ReadFile(file)
+		if e != nil {
+			t.Fatal(e)
+		}
+		sum := sha256.Sum256(raw)
+		if e = db.Exec("INSERT INTO schach_schema_migrations(version,sha256) VALUES (?,?)", n, fmt.Sprintf("%x", sum)).Error; e != nil {
+			t.Fatal(e)
+		}
+	}
+	if e = migrations.Apply(t.Context(), db, 0); e != nil {
+		t.Fatal(e)
+	}
+	var count int64
+	db.Table("schach_schema_migrations").Count(&count)
+	if count != 31 {
+		t.Fatal("expected actual numbered SQL ledger31", count)
+	}
+	var task Task
+	if e = db.First(&task, "id = ?", id).Error; e != nil || task.Version != 1 || task.OriginalDueDate != "2026-10-20" {
+		t.Fatal("existing commitment changed", e, task)
+	}
+	for _, table := range []string{"business_mutation_retries", "task_templates", "project_milestones", "task_schedule_proposals"} {
+		if !db.Migrator().HasTable(table) {
+			t.Fatal(table)
+		}
+	}
+	if e = migrations.Apply(t.Context(), db, 0); e != nil {
+		t.Fatal("upgrade replay", e)
+	}
+}
+func migrationNumber(file string) int {
+	n, _ := strconv.Atoi(strings.Split(filepath.Base(file), "_")[0])
+	return n
 }

@@ -1,3 +1,4 @@
+import { deadlineCandidates, localDeadline } from '../data/deadlines';
 import { clearAttemptScope } from '../data/businessAttempts';
 import { useEffect, useState } from 'react';
 import { useWorkspace } from '../store';
@@ -96,6 +97,22 @@ function MilestoneForm({
   const [criteria, setCriteria] = useState(milestone?.criteria.map((c) => c.text).join('\n') ?? '');
   const [selected, setSelected] = useState<string[]>(milestone?.taskIds ?? []);
   const [date, setDate] = useState(milestone?.dueDate ?? '');
+  const [mode, setMode] = useState(milestone?.deadlineMode ?? 'all_day');
+  const [zone, setZone] = useState(milestone?.dueTimezone || data.company.timezone);
+  const [time, setTime] = useState(
+    milestone?.dueAt
+      ? localDeadline(milestone.dueAt, milestone.dueTimezone || data.company.timezone).slice(11)
+      : '16:00',
+  );
+  const [instant, setInstant] = useState(milestone?.dueAt ?? '');
+  const candidates = mode === 'timed' && date ? deadlineCandidates(date + 'T' + time, zone) : [];
+  const changedDeadline =
+    !!milestone &&
+    (date !== milestone.dueDate ||
+      mode !== milestone.deadlineMode ||
+      (mode === 'timed' &&
+        (zone !== milestone.dueTimezone ||
+          (candidates.length === 1 ? candidates[0] : instant) !== milestone.dueAt)));
   const [reason, setReason] = useState('');
   const [error, setError] = useState('');
   const tasks = data.tasks.filter((t) => t.projectId === project.id);
@@ -142,7 +159,51 @@ function MilestoneForm({
         <Field label="Milestone all-day deadline">
           <input type="date" value={date} onChange={(e) => setDate(e.target.value)} />
         </Field>
-        {milestone && date !== milestone.dueDate && (
+        <Field label="Milestone deadline mode">
+          <select value={mode} onChange={(e) => setMode(e.target.value as typeof mode)}>
+            <option value="all_day">All day</option>
+            <option value="timed">Timed with explicit offset</option>
+          </select>
+        </Field>
+        {mode === 'timed' && (
+          <>
+            <Field label="Milestone local time">
+              <input
+                type="time"
+                value={time}
+                onChange={(e) => {
+                  setTime(e.target.value);
+                  setInstant('');
+                }}
+              />
+            </Field>
+            <Field label="Milestone commitment timezone">
+              <input
+                value={zone}
+                onChange={(e) => {
+                  setZone(e.target.value);
+                  setInstant('');
+                }}
+              />
+            </Field>
+            {candidates.length !== 1 && (
+              <Field label="Milestone repeated time instant">
+                <select value={instant} onChange={(e) => setInstant(e.target.value)}>
+                  <option value="">Choose a valid instant</option>
+                  {candidates.map((at) => (
+                    <option key={at} value={at}>
+                      {at}
+                    </option>
+                  ))}
+                </select>
+              </Field>
+            )}
+            {!candidates.length && (
+              <p role="alert">This local time does not exist. Choose another time.</p>
+            )}
+          </>
+        )}
+        {changedDeadline && (
           <Field label="Milestone deadline change reason">
             <textarea value={reason} onChange={(e) => setReason(e.target.value)} />
           </Field>
@@ -174,6 +235,10 @@ function MilestoneForm({
         onClick={() =>
           void (async () => {
             try {
+              const at =
+                mode === 'timed' ? (candidates.length === 1 ? candidates[0] : instant) : '';
+              if (mode === 'timed' && (!at || !candidates.includes(at)))
+                throw Error('Choose a valid local time and explicit repeated-time offset.');
               const lines = criteria
                 .split('\n')
                 .map((c) => c.trim())
@@ -193,12 +258,10 @@ function MilestoneForm({
                   })),
                   taskIds: selected,
                   dueDate: date,
-                  deadlineMode: 'all_day',
-                  dueAt: '',
-                  dueTimezone: '',
-                  ...(milestone && date !== milestone.dueDate
-                    ? { deadlineChangeReason: reason }
-                    : {}),
+                  deadlineMode: mode,
+                  dueAt: at,
+                  dueTimezone: mode === 'timed' ? zone : '',
+                  ...(changedDeadline ? { deadlineChangeReason: reason } : {}),
                 },
                 milestone ? 'PATCH' : 'POST',
               );
@@ -306,7 +369,7 @@ function MilestoneDetail({
           {m.criteria.map((c) => (
             <div key={c.id}>
               <p>{c.text}</p>
-              {m.canSubmit && (
+              {m.canSubmit && !action.attempt && (
                 <Field label={'Criterion assertion: ' + c.text}>
                   <textarea
                     value={assertions[c.id] ?? ''}
@@ -322,7 +385,7 @@ function MilestoneDetail({
               Inspect selected task evidence
             </button>
           ))}
-          {m.canSubmit && (
+          {m.canSubmit && !action.attempt && (
             <>
               <button
                 className="button"
@@ -360,7 +423,7 @@ function MilestoneDetail({
               </button>
             </>
           )}
-          {m.canReview && (
+          {m.canReview && !action.attempt && (
             <>
               <p>
                 Review assertions against each task’s current evidence. Bound task versions:{' '}
@@ -393,7 +456,7 @@ function MilestoneDetail({
               </button>
             </>
           )}
-          {m.canReopen && (
+          {m.canReopen && !action.attempt && (
             <>
               <Field label="Milestone reopen reason">
                 <textarea value={reason} onChange={(e) => setReason(e.target.value)} />
@@ -421,6 +484,20 @@ function MilestoneDetail({
                 void q.retry();
               }}
             />
+          )}
+          {!!action.attempt && (
+            <button
+              className="button button-primary"
+              disabled={action.busy}
+              onClick={() =>
+                void action
+                  .execute(`/project-milestones/${id}/transition`, action.attempt!.payload)
+                  .then(() => q.retry())
+                  .catch(() => {})
+              }
+            >
+              Retry same milestone action
+            </button>
           )}
           {m.acceptances?.map((a) => (
             <article key={a.id}>

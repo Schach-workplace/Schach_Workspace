@@ -1,10 +1,11 @@
+import { NativeImpact, NativeSchedule, NativeTemplates } from "./Execution";
 import { readNativeDetail } from "./readScopes";
 import CaptureControl from "./CaptureControl";
 import { useEffect, useEffectEvent, useRef, useState } from "react";
 import { Text, TextInput, View } from "react-native";
 import { router } from "expo-router";
 import { Page, useWorkspace, type WorkTask } from "./Workspace";
-import { Action, ui } from "./ConnectUI";
+import { Action, Sheet, ui } from "./ConnectUI";
 import NativeMedia from "./Media";
 import { client } from "./client";
 import { useRamInput } from "./ramInput";
@@ -14,6 +15,9 @@ export default function TaskDetailScreen({ id }: { id: string }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
+  const [execution, setExecution] = useState<
+    "templates" | "impact" | "schedule" | ""
+  >("");
   const [reason, setReason] = useRamInput("$task:" + id, "reason", "");
   const pending = useRef(false);
   const alive = useRef(true);
@@ -124,6 +128,64 @@ export default function TaskDetailScreen({ id }: { id: string }) {
             {task.status.replaceAll("_", " ")} · {dateLabel(task)}
           </Text>
           <Text>{task.description}</Text>
+          {task.projectId && (
+            <Action
+              title="Open current project"
+              onPress={() =>
+                router.push({
+                  pathname: "/project/[id]",
+                  params: { id: task.projectId!, company: w.company },
+                })
+              }
+            />
+          )}
+          <Action
+            title="Reusable checklist"
+            onPress={() => setExecution("templates")}
+          />
+          <Action
+            title="Dependency impact and current blockers"
+            onPress={() => setExecution("impact")}
+          />
+          {editable && (
+            <Action
+              title="Review task schedule"
+              onPress={() => setExecution("schedule")}
+            />
+          )}
+          {!!execution && (
+            <Sheet
+              keyboard
+              title={
+                execution === "templates"
+                  ? "Reusable checklist"
+                  : execution === "impact"
+                    ? "Dependency impact"
+                    : "Reviewed schedule"
+              }
+              onClose={() => setExecution("")}
+            >
+              {execution === "templates" && (
+                <NativeTemplates
+                  task={task}
+                  onDone={() => {
+                    setExecution("");
+                    void load();
+                  }}
+                />
+              )}
+              {execution === "impact" && <NativeImpact id={task.id} />}
+              {execution === "schedule" && (
+                <NativeSchedule
+                  tasks={[task]}
+                  onDone={() => {
+                    setExecution("");
+                    void load();
+                  }}
+                />
+              )}
+            </Sheet>
+          )}
           <Text style={ui.subtitle}>
             Original commitment:{" "}
             {task.originalDueAt ||

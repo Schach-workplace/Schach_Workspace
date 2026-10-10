@@ -43,7 +43,8 @@ func visibleImpact(tx *gorm.DB, a *access, root Task) ([]TaskImpactNode, []TaskI
 		return nil, nil, e
 	}
 	visible := map[string]Task{}
-	adj := map[string][]string{}
+	upstream := map[string][]string{}
+	downstream := map[string][]string{}
 	for _, t := range tasks {
 		visible[t.ID] = t
 	}
@@ -51,21 +52,25 @@ func visibleImpact(tx *gorm.DB, a *access, root Task) ([]TaskImpactNode, []TaskI
 	for _, t := range tasks {
 		for _, dep := range t.Dependencies {
 			if _, ok := visible[dep]; ok {
-				adj[t.ID] = append(adj[t.ID], dep)
-				adj[dep] = append(adj[dep], t.ID)
+				upstream[t.ID] = append(upstream[t.ID], dep)
+				downstream[dep] = append(downstream[dep], t.ID)
 				edges = append(edges, TaskImpactEdge{From: dep, To: t.ID})
 			}
 		}
 	}
 	seen := map[string]bool{root.ID: true}
-	pending := []string{root.ID}
-	for len(pending) > 0 {
-		id := pending[0]
-		pending = pending[1:]
-		for _, next := range adj[id] {
-			if !seen[next] {
-				seen[next] = true
-				pending = append(pending, next)
+	for _, direction := range []map[string][]string{upstream, downstream} {
+		visited := map[string]bool{root.ID: true}
+		pending := []string{root.ID}
+		for len(pending) > 0 {
+			id := pending[0]
+			pending = pending[1:]
+			for _, next := range direction[id] {
+				if !visited[next] {
+					visited[next] = true
+					seen[next] = true
+					pending = append(pending, next)
+				}
 			}
 		}
 	}

@@ -33,3 +33,22 @@ func TestTaskImpactPrivacy(t *testing.T) {
 		t.Fatal(st)
 	}
 }
+
+func TestTaskImpactDirectedPaths(t *testing.T) {
+	s, db := testServer(t)
+	c := login(t, s, "founder@example.com")
+	cid := firstCompany(t, s, c)
+	owner := me(t, s, c)
+	upstream := createTask(t, s, c, cid, taskBody(owner))
+	root := createTask(t, s, c, cid, taskBody(owner))
+	downstream := createTask(t, s, c, cid, taskBody(owner))
+	sibling := createTask(t, s, c, cid, taskBody(owner))
+	for id, deps := range map[string][]string{root: {upstream}, downstream: {root}, sibling: {upstream}} {
+		raw, _ := json.Marshal(deps)
+		db.Model(&Task{}).Where("id = ?", id).Update("dependencies", string(raw))
+	}
+	st, _, w := req(t, s, "GET", "/api/companies/"+cid+"/tasks/"+root+"/impact", nil, c)
+	if st != 200 || !strings.Contains(w.Body.String(), upstream) || !strings.Contains(w.Body.String(), downstream) || strings.Contains(w.Body.String(), sibling) {
+		t.Fatal("root impact must follow directed ancestor/descendant paths", st, w.Body.String())
+	}
+}

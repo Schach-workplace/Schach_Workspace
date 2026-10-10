@@ -6,6 +6,12 @@ import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import WorkScreen from "./WorkScreen";
 import TaskDetailScreen from "./TaskDetailScreen";
 import { clearAllDrafts } from "./conversationDrafts";
+vi.mock("./Execution", () => ({
+  NativeTemplates: () => null,
+  NativeProjectChoice: () => null,
+  NativeImpact: () => null,
+  NativeSchedule: () => null,
+}));
 vi.mock("expo-crypto", () => ({ randomUUID: () => crypto.randomUUID() }));
 vi.mock("expo-router", () => ({ router: { push: vi.fn(), back: vi.fn() } }));
 vi.mock("@react-native-community/datetimepicker", () => ({
@@ -118,6 +124,7 @@ beforeEach(() => {
       me: { id: "me", role: "member", departmentId: "d" },
       company: { id: "company", timezone: "Asia/Kolkata" },
       people: [
+        { id: "me", name: "Current member", role: "member", active: true },
         { id: "reviewer", name: "Reviewer", role: "head", active: true },
       ],
       tasks: [
@@ -203,7 +210,9 @@ it("retains input after a network failure and guards overlapping submissions", a
       ) as HTMLInputElement
     ).value,
   ).toBe("Keep my input");
-  expect(container.textContent).toContain("Network unavailable");
+  expect(container.textContent).toContain(
+    "Retry this same submission when connected.",
+  );
 });
 it("clears a company-specific form and denies viewer creation", async () => {
   await act(async () => root.render(createElement(WorkScreen)));
@@ -429,6 +438,21 @@ it("retries a lost create response with the same frozen key after dismissal and 
   await act(async () => root.render(null));
   await act(async () => root.render(<WorkScreen />));
   await click("New task");
-  await click("Create task");
+  await click("Retry same submission");
   expect(state.request.mock.calls[1][2]).toEqual(submitted);
+});
+it("clears only the current create-owned global recovery error", async () => {
+  state.request.mockRejectedValueOnce(Error("transport"));
+  await act(() => root.render(<WorkScreen />));
+  await click("New task");
+  await fill("Task title", "Recover once");
+  await click("Create task");
+  expect(container.textContent).not.toContain("transport");
+  await click("Retry same submission");
+  const update = state.w.setError.mock.calls.at(-1)?.[0];
+  expect(typeof update).toBe("function");
+  expect(
+    update("The result is unknown. Retry this same submission when connected."),
+  ).toBe("");
+  expect(update("Newer unrelated error")).toBe("Newer unrelated error");
 });

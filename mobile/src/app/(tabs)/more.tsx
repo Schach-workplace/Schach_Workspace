@@ -1,4 +1,5 @@
 import { useRamInput } from "../../ramInput";
+import { NativeProjects } from "../../Execution";
 import IntakeQueue from "../../Intake";
 import { useState, useEffect, useEffectEvent } from "react";
 import { Button, Text, TextInput, View } from "react-native";
@@ -60,6 +61,7 @@ export default function More() {
   return (
     <Page>
       <Text style={styles.heading}>Account and finance</Text>
+      <NativeProjects />
       <IntakeQueue />
       <Button
         title="Enable private notification hints"

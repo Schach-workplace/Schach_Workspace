@@ -34,7 +34,9 @@ const empty = (): Draft => ({
   reviewVersion: 0,
   attempt: null,
 });
-export default function AttentionInbox() {
+export default function AttentionInbox({
+  sourceTaskId,
+}: { sourceTaskId?: string } = {}) {
   const w = useWorkspace();
   const [tab, setTab] = useState("actions");
   const [state, setState] = useState("open");
@@ -45,6 +47,7 @@ export default function AttentionInbox() {
     action: AttentionTransitionInput["action"];
   } | null>(null);
   const scope = [
+    sourceTaskId,
     w.company,
     w.session?.user.id,
     w.work?.readBasis,
@@ -86,6 +89,13 @@ export default function AttentionInbox() {
           decisionsOnly: String(decisions),
           limit: "100",
         });
+        if (sourceTaskId) {
+          params.set("sourceKind", "task");
+          params.set("sourceId", sourceTaskId);
+          params.set("kind", "blocker");
+          params.set("state", "open");
+          params.set("decisionsOnly", "false");
+        }
         if (cursor) params.set("cursor", cursor);
         const v = await client.request<{
           items: AttentionView[];
@@ -112,7 +122,7 @@ export default function AttentionInbox() {
     return () => {
       active = false;
     };
-  }, [scope, w.foreground, w.company, state, decisions]);
+  }, [scope, w.foreground, w.company, state, decisions, sourceTaskId]);
   const items = loaded?.scope === scope && w.foreground ? loaded.items : null;
   useEffect(() => {
     let active = true;

@@ -1,3 +1,4 @@
+import { NativeTemplates, NativeProjectChoice } from "./Execution";
 import {
   useBusinessAttempt,
   beginAttempt,
@@ -39,6 +40,8 @@ export default function WorkScreen() {
 }
 function WorkView({ w }: { w: ReturnType<typeof useWorkspace> }) {
   const business = useBusinessAttempt<Record<string, unknown>>("task-create");
+  const [templates, setTemplates] = useState(false);
+  const [ownedError, setOwnedError] = useRamInput("$work", "ownedError", "");
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState("all");
   const [creating, setCreating, retireCreating, matchesCreating] = useRamInput(
@@ -70,6 +73,21 @@ function WorkView({ w }: { w: ReturnType<typeof useWorkspace> }) {
     "$work",
     "reviewer",
     "",
+  );
+  const [owner, setOwner, retireOwner, matchesOwner] = useRamInput(
+    "$work",
+    "owner",
+    w.session?.user.id ?? "",
+  );
+  const [projectId, setProjectId, retireProject, matchesProject] = useRamInput(
+    "$work",
+    "project",
+    "",
+  );
+  const [required, setRequired, retireRequired, matchesRequired] = useRamInput(
+    "$work",
+    "required",
+    false,
   );
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
@@ -113,10 +131,13 @@ function WorkView({ w }: { w: ReturnType<typeof useWorkspace> }) {
     setError("");
     try {
       await action();
-    } catch (e) {
+    } catch {
       if (alive.current) {
-        setError((e as Error).message);
-        w.setError((e as Error).message);
+        const message =
+          "The result is unknown. Retry this same submission when connected.";
+        setError(message);
+        setOwnedError(message);
+        w.setError(message);
       }
     } finally {
       pending.current = false;
@@ -135,10 +156,11 @@ function WorkView({ w }: { w: ReturnType<typeof useWorkspace> }) {
       const input = {
         title: title.trim(),
         description: "",
-        ownerId: w.session!.user.id,
+        ownerId: owner,
+        projectId,
         departmentId: w.work!.me.departmentId,
         reviewerId: reviewer,
-        requiresApproval: !!reviewer,
+        requiresApproval: required || !!reviewer,
         ...deadline.value,
         recurrence: "none",
         priority: "medium",
@@ -167,13 +189,19 @@ function WorkView({ w }: { w: ReturnType<typeof useWorkspace> }) {
         ids: [result.id],
       });
       retireAttempt(business.scope, attempt.retryKey);
+      if (ownedError)
+        w.setError((current) => (current === ownedError ? "" : current));
+      setOwnedError("");
       if (
         matchesTitle() &&
         matchesDate() &&
         matchesTime() &&
         matchesInstant() &&
         matchesReviewer() &&
-        matchesCreating()
+        matchesCreating() &&
+        matchesOwner() &&
+        matchesProject() &&
+        matchesRequired()
       ) {
         retireTitle();
         retireDate();
@@ -181,6 +209,9 @@ function WorkView({ w }: { w: ReturnType<typeof useWorkspace> }) {
         retireInstant();
         retireReviewer();
         retireCreating();
+        retireOwner();
+        retireProject();
+        retireRequired();
       }
       await w.refresh("tasks");
     });
@@ -259,6 +290,20 @@ function WorkView({ w }: { w: ReturnType<typeof useWorkspace> }) {
           </View>
         )}
       />
+      {templates && editable && (
+        <Sheet
+          keyboard
+          title="Task templates"
+          onClose={() => setTemplates(false)}
+        >
+          <NativeTemplates
+            onDone={() => {
+              setTemplates(false);
+              setCreating(false);
+            }}
+          />
+        </Sheet>
+      )}
       {creating && editable && (
         <Sheet
           title="New commitment"
@@ -284,6 +329,34 @@ function WorkView({ w }: { w: ReturnType<typeof useWorkspace> }) {
               onPress={() => clearAttemptScope(business.scope)}
             />
           )}
+          <Action
+            title="Choose task template"
+            disabled={busy || !!business.attempt}
+            onPress={() => setTemplates(true)}
+          />
+          <NativeProjectChoice
+            value={projectId}
+            disabled={busy || !!business.attempt}
+            onSelect={(p) => {
+              setProjectId(p?.id ?? "");
+              setOwner(
+                p?.taskOwnerPolicy === "fixed"
+                  ? p.defaultTaskOwnerId
+                  : p?.taskOwnerPolicy === "project_owner"
+                    ? p.ownerId
+                    : w.session!.user.id,
+              );
+              setReviewer(p?.defaultReviewerId ?? "");
+              setRequired(p?.defaultRequiresApproval ?? false);
+            }}
+          />
+          <PersonPicker
+            label="Accountable owner"
+            people={w.work?.people ?? []}
+            value={owner}
+            onChange={setOwner}
+            disabled={busy || !!business.attempt}
+          />
           <Text>Task title</Text>
           <TextInput
             accessibilityLabel="Task title"
@@ -298,7 +371,7 @@ function WorkView({ w }: { w: ReturnType<typeof useWorkspace> }) {
             date={dueDate}
             time={time}
             timezone={zone}
-            disabled={busy}
+            disabled={busy || !!business.attempt}
             onChange={(v) => {
               setDate(v.date);
               setTime(v.time);
@@ -348,16 +421,38 @@ function WorkView({ w }: { w: ReturnType<typeof useWorkspace> }) {
             label="Reviewer"
             people={w.work?.people ?? []}
             value={reviewer}
-            excludeIds={[w.session?.user.id ?? ""]}
+            excludeIds={[owner]}
             allowNone
             onChange={setReviewer}
-            disabled={busy}
+            disabled={busy || !!business.attempt}
+          />
+          <Action
+            title={
+              required
+                ? "Independent approval required"
+                : "Require independent approval"
+            }
+            selected={required}
+            disabled={busy || !!business.attempt}
+            onPress={() => setRequired((v) => !v)}
           />
           {!!error && <Text accessibilityRole="alert">{error}</Text>}
           <Action
-            title={busy ? "Creating…" : "Create task"}
+            title={
+              busy
+                ? "Submitting…"
+                : business.attempt
+                  ? "Retry same submission"
+                  : "Create task"
+            }
             primary
-            disabled={busy || !title.trim() || !deadline.value}
+            disabled={
+              busy ||
+              !title.trim() ||
+              !deadline.value ||
+              !owner ||
+              (required && !reviewer)
+            }
             onPress={create}
           />
         </Sheet>

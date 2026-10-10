@@ -42,11 +42,28 @@ export async function executionRead<T>(
       'demo_unavailable',
     );
   }
-  return request<T>(`/companies/${encodeURIComponent(company)}${path}`, {
+  const result = await request<T>(`/companies/${encodeURIComponent(company)}${path}`, {
     method: body === undefined ? 'GET' : 'POST',
     body,
     signal,
   });
+  if (body === undefined && result && typeof result === 'object' && 'nextCursor' in result) {
+    let cursor = (result as { nextCursor?: string }).nextCursor;
+    const seen = new Set<string>();
+    while (cursor && !seen.has(cursor)) {
+      seen.add(cursor);
+      const page = await request<Record<string, unknown>>(
+        `/companies/${encodeURIComponent(company)}${path}${path.includes('?') ? '&' : '?'}cursor=${encodeURIComponent(cursor)}`,
+        { signal },
+      );
+      const rows = result as Record<string, unknown>;
+      for (const key of ['templates', 'projects', 'milestones', 'nodes'])
+        if (Array.isArray(rows[key]) && Array.isArray(page[key]))
+          rows[key] = [...(rows[key] as unknown[]), ...(page[key] as unknown[])];
+      cursor = String(page.nextCursor ?? '');
+    }
+  }
+  return result;
 }
 export function useExecutionRead<T>(path: string, enabled = true) {
   const store = useWorkspace();
