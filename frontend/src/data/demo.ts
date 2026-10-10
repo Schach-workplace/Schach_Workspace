@@ -1347,7 +1347,8 @@ function demoAttentionView(
       (!replay && a.kind === 'blocker' && t.status !== 'blocked') ||
       (!replay &&
         a.kind === 'update' &&
-        (t.ownerId !== p.id || ['done', 'cancelled'].includes(t.status)))
+        ((t.ownerId !== p.id && !a.occurrenceKey.startsWith('route:')) ||
+          ['done', 'cancelled'].includes(t.status)))
     )
       return null;
     Object.assign(view, {
@@ -1531,7 +1532,14 @@ async function demoAttentionMutation(
           a.sourceKind === row.sourceKind &&
           a.sourceId === row.sourceId &&
           a.kind === row.kind &&
-          a.state === 'open',
+          a.state === 'open' &&
+          a.sourceRevision === row.sourceRevision &&
+          !!demoAttentionView(
+            db,
+            w,
+            w.people.find((p) => p.id === input.recipientId)!,
+            a,
+          ),
       );
       if (!target) {
         target = {

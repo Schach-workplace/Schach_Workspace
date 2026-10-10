@@ -63,3 +63,77 @@ it('replays an authorized resolved task action after the business decision compl
     false,
   );
 });
+
+it('routes an owner update to an eligible independent recipient without changing task ownership', async () => {
+  const company = sample.workspaces[0].company.id,
+    leader = sample.sessions[0].user.id;
+  const workspace = await readDemoWorkspace(company, leader);
+  const owner = workspace.people.find(
+    (p) =>
+      p.id !== leader &&
+      p.active &&
+      workspace.tasks.some(
+        (t) =>
+          t.ownerId === p.id && !['done', 'cancelled', 'blocked', 'in_review'].includes(t.status),
+      ),
+  )!;
+  expect(owner).toBeTruthy();
+  const item = (await demoAttentionRead(company, owner.id)).find(
+    (i) => i.kind === 'update' && i.routePeople.some((p) => p.id === leader),
+  )!;
+  expect(item).toBeTruthy();
+  const result = await demoMutate(company, owner.id, `/attention/${item.id}/transition`, {
+    expectedVersion: item.version,
+    retryKey: 'owner-route',
+    action: 'route',
+    reason: 'Independent attention handoff',
+    recipientId: leader,
+  });
+  expect((await demoAttentionRead(company, leader)).some((i) => i.id === result.id)).toBe(true);
+  expect(
+    (await readDemoWorkspace(company, leader)).tasks.find((t) => t.id === item.sourceId)?.ownerId,
+  ).toBe(owner.id);
+});
+it('reuses only a currently projected target and denies replay after recipient revocation', async () => {
+  const company = sample.workspaces[0].company.id,
+    user = sample.sessions[0].user.id;
+  const item = (await demoAttentionRead(company, user)).find(
+    (i) => i.kind === 'task_review' && i.routePeople.length,
+  )!;
+  expect(item).toBeTruthy();
+  const target = item.routePeople[0].id;
+  await demoMutate(company, user, `/attention/${item.id}/transition`, {
+    expectedVersion: item.version,
+    retryKey: 'old-target',
+    action: 'route',
+    reason: 'First reviewed handoff',
+    recipientId: target,
+  });
+  await demoMutate(
+    company,
+    user,
+    `/tasks/${item.sourceId}`,
+    { version: item.sourceVersion, title: 'Changed current review source' },
+    'PATCH',
+  );
+  const next = (await demoAttentionRead(company, user)).find(
+    (i) => i.sourceId === item.sourceId && i.sourceVersion > item.sourceVersion,
+  )!;
+  expect(next).toBeTruthy();
+  const input = {
+    expectedVersion: next.version,
+    retryKey: 'fresh-target',
+    action: 'route',
+    reason: 'Current reviewed handoff',
+    recipientId: target,
+  };
+  const result = await demoMutate(company, user, `/attention/${next.id}/transition`, input);
+  expect((await demoAttentionDetail(company, target, result.id!)).sourceVersion).toBe(
+    next.sourceVersion,
+  );
+  await demoMutate(company, user, `/people/${target}`, { active: false }, 'PATCH');
+  await expect(
+    demoMutate(company, user, `/attention/${next.id}/transition`, input),
+  ).rejects.toMatchObject({ status: 404 });
+  await expect(demoAttentionDetail(company, target, result.id!)).rejects.toBeTruthy();
+});
