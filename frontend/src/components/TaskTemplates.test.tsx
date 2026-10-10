@@ -150,3 +150,105 @@ it('hides fetched management prefill and prevents an edit becoming a POST during
   expect(state.execute.mock.calls[0][2]).toBe('PATCH');
   expect(state.execute.mock.calls[0][1].version).toBe(4);
 });
+it.each(['repeat Edit', 'Cancel and re-enter', 'Cancel and remount'])(
+  'keeps the original CAS with retained authored template changes after %s and concurrent source refresh',
+  async (reopening) => {
+    let template = {
+      id: 'retained',
+      version: 1,
+      name: 'Original template',
+      kind: 'task',
+      scopeOwnerId: 'u-founder',
+      scopeDepartmentId: '',
+      defaults: { title: 'Original task default', checklist: ['Original check'] },
+    };
+    state.execute.mockClear();
+    state.execute.mockResolvedValue({ id: 'retained' });
+    state.query.mockImplementation((path: string) => ({
+      ready: true,
+      data: path.endsWith('/retained') ? { template } : { templates: [template] },
+      retry: vi.fn(),
+    }));
+    let v = render(<TaskTemplates />);
+    fireEvent.change(screen.getByLabelText('Template'), { target: { value: 'retained' } });
+    fireEvent.click(screen.getByText('Edit template'));
+    fireEvent.change(screen.getByLabelText('Template name'), {
+      target: { value: 'Authored against version one' },
+    });
+    if (reopening !== 'repeat Edit') fireEvent.click(screen.getByText('Cancel template editing'));
+    template = {
+      ...template,
+      version: 2,
+      name: 'Concurrent template name',
+      defaults: { title: 'Concurrent task default', checklist: ['Concurrent check'] },
+    };
+    if (reopening === 'Cancel and remount') {
+      v.unmount();
+      v = render(<TaskTemplates />);
+    } else v.rerender(<TaskTemplates />);
+    fireEvent.click(screen.getByText('Edit template'));
+    expect((screen.getByLabelText('Template name') as HTMLInputElement).value).toBe(
+      'Authored against version one',
+    );
+    expect((screen.getByLabelText('Default task title') as HTMLInputElement).value).toBe(
+      'Concurrent task default',
+    );
+    fireEvent.click(screen.getByText('Save scoped template'));
+    await waitFor(() => expect(state.execute).toHaveBeenCalledTimes(1));
+    expect(state.execute.mock.calls[0][0]).toBe('/task-templates/retained');
+    expect(state.execute.mock.calls[0][2]).toBe('PATCH');
+    expect(state.execute.mock.calls[0][1]).toMatchObject({
+      version: 1,
+      name: 'Authored against version one',
+      defaults: { title: 'Concurrent task default' },
+    });
+  },
+);
+it('captures the current template version for a fresh edit after a matching successful save retires the draft', async () => {
+  let template = {
+    id: 'saved',
+    version: 1,
+    name: 'Original template',
+    kind: 'task',
+    scopeOwnerId: 'u-founder',
+    scopeDepartmentId: '',
+    defaults: { title: 'Original task default', checklist: [] },
+  };
+  state.execute.mockClear();
+  state.execute.mockImplementation(async (_path, _body, _method, committed) => {
+    committed?.({ id: 'saved' });
+    return { id: 'saved' };
+  });
+  state.query.mockImplementation((path: string) => ({
+    ready: true,
+    data: path.endsWith('/saved') ? { template } : { templates: [template] },
+    retry: vi.fn(),
+  }));
+  const v = render(<TaskTemplates />);
+  fireEvent.change(screen.getByLabelText('Template'), { target: { value: 'saved' } });
+  fireEvent.click(screen.getByText('Edit template'));
+  fireEvent.change(screen.getByLabelText('Template name'), {
+    target: { value: 'First authored rename' },
+  });
+  fireEvent.click(screen.getByText('Save scoped template'));
+  await waitFor(() => expect(screen.queryByLabelText('Template name')).toBeNull());
+  template = { ...template, version: 2, name: 'Saved server template' };
+  v.rerender(<TaskTemplates />);
+  fireEvent.click(screen.getByText('Edit template'));
+  expect((screen.getByLabelText('Template name') as HTMLInputElement).value).toBe(
+    'Saved server template',
+  );
+  fireEvent.change(screen.getByLabelText('Template name'), {
+    target: { value: 'Fresh authored rename' },
+  });
+  fireEvent.click(screen.getByText('Save scoped template'));
+  await waitFor(() => expect(state.execute).toHaveBeenCalledTimes(2));
+  expect(state.execute.mock.calls[0][1]).toMatchObject({
+    version: 1,
+    name: 'First authored rename',
+  });
+  expect(state.execute.mock.calls[1][1]).toMatchObject({
+    version: 2,
+    name: 'Fresh authored rename',
+  });
+});

@@ -53,7 +53,7 @@ export default function TaskTemplates({
     false,
   );
   const [managementVersion, setManagementVersion] = useExecutionInput(
-    '$template-nav:' + kind,
+    managementForm,
     'expectedBasis',
     0,
   );
@@ -207,7 +207,6 @@ export default function TaskTemplates({
     if (!source || !detail.ready) return;
     setEditingTemplate(true);
     setManagementId(source.id);
-    setManagementVersion(source.version);
     prefillManagement();
     setManaging(true);
   }
@@ -415,7 +414,6 @@ export default function TaskTemplates({
               setName('');
               setChecklist('');
               setManagementId('');
-              setManagementVersion(0);
               setTaskTitle('');
             }}
           >
