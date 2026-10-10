@@ -1,0 +1,16 @@
+{
+  "status": "passed",
+  "checks": [
+    "Actual Encore exporter builds current code without a development watcher",
+    "Exported Encore boots against native PostgreSQL with all numbered migrations",
+    "Unauthenticated and spoofed scheduled invocations rejected by exported private boundary",
+    "Original 38 workspace + 53 finance assertions pass on actual exported Encore TCP",
+    "Actual exported Encore/proxy socket upgrade, origin refusal, private hints and revocation close",
+    "Actual exported Encore restart preserves message ACK, session and retry ID"
+  ],
+  "sourceCommit": "26542bfda5490826fa1f23031f0a77a5b13ff32f",
+  "method": "Frozen git archive; actual Encore Docker exporter, owned PostgreSQL with numbered migrations1\u201325, real TCP/proxy WebSocket and restart probe",
+  "command": "TEST_DATABASE_URL=<owned disposable PostgreSQL> python3 verification/runtime/encore_export_smoke.py --postgres-container schach-m0-native-20261010 --allow-demo-mutations --output <owned temporary output>",
+  "scope": "Backend/Encore source unchanged through milestone3. Docker frontend shared-module packaging independently checked for milestone3. No physical, production or capacity result.",
+  "cleanup": "Owned runtime/network/image/physical workspace database removed; source application/data untouched"
+}

@@ -1,0 +1,51 @@
+{
+  "sourceCommit": "1d74c31132b8246603dbc853556ca29b1a134e4f",
+  "sourceMethod": "git archive; copied installed SDK57 dependencies matching lockfile",
+  "status": "passed",
+  "physicalDevice": false,
+  "organizationSigning": false,
+  "commands": [
+    [
+      "npx",
+      "expo",
+      "prebuild",
+      "--no-install"
+    ],
+    [
+      "python3",
+      "verification/mobile-milestone-3/check-native-config.py"
+    ],
+    [
+      "./gradlew",
+      "assembleRelease",
+      "-PreactNativeArchitectures=arm64-v8a,x86_64",
+      "--max-workers=4",
+      "--no-daemon",
+      "-Dorg.gradle.jvmargs=-Xmx6g -XX:MaxMetaspaceSize=1g"
+    ],
+    [
+      "/tmp/schach-communication-tools-20261010/android-sdk/build-tools/36.0.0/apksigner",
+      "verify",
+      "--verbose",
+      "--print-certs",
+      "/tmp/schach-roadmap-android-iyiei5me/mobile/android/app/build/outputs/apk/release/app-release.apk"
+    ],
+    [
+      "/tmp/schach-communication-tools-20261010/android-sdk/build-tools/36.0.0/aapt",
+      "dump",
+      "permissions",
+      "/tmp/schach-roadmap-android-iyiei5me/mobile/android/app/build/outputs/apk/release/app-release.apk"
+    ]
+  ],
+  "apk": "/tmp/schach-roadmap-android-iyiei5me/mobile/android/app/build/outputs/apk/release/app-release.apk",
+  "embeddedBundle": true,
+  "abis": [
+    "arm64-v8a",
+    "x86_64"
+  ],
+  "signing": "Android Debug evaluation certificate; not organization/store signing",
+  "previousSource": "c5d2b2520d56a0b316bd47bff90ef1a35b9c7a8b",
+  "apkBytes": 97814040,
+  "apkSHA256": "9a8ca3bd27207a0c7e2393aeb6abf8420ff2ff0e8e08e87141d712035acf400e",
+  "elapsedSeconds": 93.55
+}

@@ -41,11 +41,13 @@
 - Acceptance: summary/row/export totals agree under a consistent read; scoped rows before pagination; bounded payloads; no cross-role cache reuse; reduced bytes/query work compared with recorded baseline. Report p95 results, not assumed capacity.
 
 ### Milestone 3: Connect and native usability
-- [ ] Update `frontend/src/communication/store.tsx` and native client sync to apply authorized event changes while preserving loaded pages and scroll; retain permission heartbeats and overflow/refetch handling.
-- [ ] Add isolated conversation drafts, mention navigation and contextual linked-work updates in web/native Connect.
-- [ ] Add Expo-compatible calendar/person pickers, virtualized work/chat histories, camera/receipt capture, accessible keyboard-safe sheets and routed task detail.
+- [x] Update `frontend/src/communication/store.tsx` and native client sync to apply authorized event changes while preserving loaded pages and scroll; retain permission heartbeats and overflow/refetch handling.
+- [x] Add isolated conversation drafts, mention navigation and contextual linked-work updates in web/native Connect.
+- [x] Add Expo-compatible calendar/person pickers, virtualized work/chat histories, camera/receipt capture, accessible keyboard-safe sheets and routed task detail.
 - [ ] Exercise Android/iOS devices for foreground/background, large text, voice, push and LiveKit audio/video/TURN.
 - Acceptance: old history remains visible after new messages; cursor/permission epochs invalidate correctly; transport failure preserves pending input; repeated sends are canonical; keyboard/back/safe-area behavior passes actual device scripts. Device gates remain unchecked without devices.
+
+- Reviewed code evidence: `verification/workspace-improvements-roadmap/milestone-3.md`. Physical-device checkbox remains unchecked.
 
 ### Milestone 4: Unified attention and decisions
 - [ ] Add typed action items in `communication_notifications.go`, `automations.go` and `workspace.go`; project them into web/native Inbox and leadership overview.
