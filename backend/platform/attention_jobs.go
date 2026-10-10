@@ -128,7 +128,7 @@ func (s *Server) RunAttention(ctx context.Context, now time.Time, limit int) (in
 	}
 	now = now.UTC()
 	var items []AttentionItem
-	q := s.db.WithContext(ctx).Where("state=? AND NOT EXISTS (SELECT 1 FROM attention_reminders r WHERE r.company_id=attention_items.company_id AND r.item_id=attention_items.id AND r.stage='initial' AND r.window_key=CAST(attention_items.version AS TEXT))", "open")
+	q := s.db.WithContext(ctx).Where("state=?", "open")
 	if e := q.Order("updated_at,id").Limit(limit).Find(&items).Error; e != nil {
 		return 0, e
 	}
@@ -172,7 +172,12 @@ func (s *Server) RunAttention(ctx context.Context, now time.Time, limit int) (in
 				return deferAttentionAttempt(tx, item)
 			}
 			key := strconv.FormatInt(item.Version, 10)
-			if e = scheduleAttentionReminder(tx, item, "initial", key, at); e != nil {
+			if e = scheduleAttentionReminder(tx, item, "initial", key, at, now); e != nil {
+				return e
+			}
+			// Reconcile each stage independently. Completed initial delivery must
+			// not exclude later configured escalation from the bounded fair scan.
+			if e := deferAttentionAttempt(tx, item); e != nil {
 				return e
 			}
 			if pref.EscalationEnabled {
@@ -187,11 +192,11 @@ func (s *Server) RunAttention(ctx context.Context, now time.Time, limit int) (in
 					}
 					escalateAt, e = nextAttentionWindow(targetPref, a.Company.Timezone, escalateAt)
 					if e == nil {
-						return scheduleAttentionReminder(tx, item, "escalation", key, escalateAt)
+						return scheduleAttentionReminder(tx, item, "escalation", key, escalateAt, now)
 					}
 				}
 			}
-			return nil
+			return cancelAttentionStage(tx, item, "escalation", key, now)
 		})
 		if e != nil {
 			return 0, e
@@ -282,6 +287,15 @@ func (s *Server) RunAttention(ctx context.Context, now time.Time, limit int) (in
 				}
 			}
 			at := now
+			if item.DueAt != nil && item.DueAt.After(at) {
+				at = *item.DueAt
+			}
+			if job.Stage == "escalation" {
+				configured := item.CreatedAt.Add(time.Duration(pref.EscalationAfterMinutes) * time.Minute)
+				if configured.After(at) {
+					at = configured
+				}
+			}
 			if item.SnoozedUntil != nil && item.SnoozedUntil.After(at) {
 				at = *item.SnoozedUntil
 			}
@@ -335,12 +349,26 @@ func (s *Server) RunAttention(ctx context.Context, now time.Time, limit int) (in
 	}
 	return delivered, nil
 }
-func scheduleAttentionReminder(tx *gorm.DB, item AttentionItem, stage, key string, at time.Time) error {
+func scheduleAttentionReminder(tx *gorm.DB, item AttentionItem, stage, key string, at, now time.Time) error {
+	var existing AttentionReminder
+	e := lockCommunicationRow(tx, "UPDATE").Where("company_id=? AND item_id=? AND recipient_id=? AND stage=? AND window_key=?", item.CompanyID, item.ID, item.RecipientID, stage, key).First(&existing).Error
+	if e == nil {
+		if existing.DeliveredAt != nil || existing.LeaseUntil != nil && existing.LeaseUntil.After(now) {
+			return nil
+		}
+		return tx.Model(&existing).Updates(map[string]any{"available_at": at, "cancelled_at": nil}).Error
+	}
+	if e != gorm.ErrRecordNotFound {
+		return e
+	}
 	claimed, e := claimAutomation(tx, item.CompanyID, "attention:"+item.ID+":"+stage+":"+key)
 	if e != nil || !claimed {
 		return e
 	}
 	return tx.Clauses(clause.OnConflict{DoNothing: true}).Create(&AttentionReminder{ID: newID("reminder"), CompanyID: item.CompanyID, ItemID: item.ID, RecipientID: item.RecipientID, Stage: stage, WindowKey: key, AvailableAt: at}).Error
+}
+func cancelAttentionStage(tx *gorm.DB, item AttentionItem, stage, key string, now time.Time) error {
+	return tx.Model(&AttentionReminder{}).Where("company_id=? AND item_id=? AND stage=? AND window_key=? AND delivered_at IS NULL AND cancelled_at IS NULL", item.CompanyID, item.ID, stage, key).Updates(map[string]any{"cancelled_at": now, "lease_token": "", "lease_until": nil}).Error
 }
 
 // Inaccessible/invalid-policy candidates remain retryable without claiming a stage.

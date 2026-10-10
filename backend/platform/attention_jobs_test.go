@@ -252,3 +252,152 @@ func TestAttentionReminderReusesOpenTargetObligation(t *testing.T) {
 		t.Fatalf("duplicate target obligation %d", count)
 	}
 }
+
+func TestAttentionPreferenceEscalationLifecycle(t *testing.T) {
+	s, c, cid, _, _ := attentionFixture(t)
+	target := addPerson(t, s, c, cid, "late-escalation@example.com", "admin")
+	now := time.Now().UTC().Truncate(time.Microsecond)
+	s.db.Model(&AttentionItem{}).Where("id=?", "attention-test").Update("created_at", now)
+	s.db.Where("id<>?", "attention-test").Delete(&AttentionItem{})
+	if _, e := s.RunAttention(t.Context(), now, 100); e != nil {
+		t.Fatal(e)
+	}
+	pref := map[string]any{"version": 1, "workingDays": []int{}, "escalationEnabled": true, "escalationAfterMinutes": 1, "escalationUserId": target}
+	st, _, w := req(t, s, "PATCH", "/api/companies/"+cid+"/attention/preferences", pref, c)
+	if st != 200 {
+		t.Fatal(st, w.Body.String())
+	}
+	if _, e := s.RunAttention(t.Context(), now.Add(30*time.Second), 100); e != nil {
+		t.Fatal(e)
+	}
+	var job AttentionReminder
+	if e := s.db.First(&job, "item_id=? AND stage=?", "attention-test", "escalation").Error; e != nil {
+		t.Fatal("enabling after initial must schedule", e)
+	}
+	pref["version"] = 2
+	pref["escalationAfterMinutes"] = 60
+	st, _, w = req(t, s, "PATCH", "/api/companies/"+cid+"/attention/preferences", pref, c)
+	if st != 200 {
+		t.Fatal(st, w.Body.String())
+	}
+	// Exercise final delivery recheck independently: the scheduler's one-ID batch is another inaccessible item.
+	var source AttentionItem
+	s.db.First(&source, "id=?", "attention-test")
+	s.db.Model(&source).Update("updated_at", now.Add(24*time.Hour))
+	source.ID = "invalid-before-interval"
+	source.RecipientID = "absent"
+	source.OccurrenceKey = "other"
+	source.UpdatedAt = now.Add(-time.Hour)
+	if e := s.db.Create(&source).Error; e != nil {
+		t.Fatal(e)
+	}
+	if _, e := s.RunAttention(t.Context(), now.Add(2*time.Minute), 1); e != nil {
+		t.Fatal(e)
+	}
+	s.db.First(&job, "id=?", job.ID)
+	if job.DeliveredAt != nil || !job.AvailableAt.Equal(now.Add(time.Hour)) {
+		t.Fatalf("current interval must defer %+v", job)
+	}
+	pref["version"] = 3
+	pref["escalationEnabled"] = false
+	st, _, w = req(t, s, "PATCH", "/api/companies/"+cid+"/attention/preferences", pref, c)
+	if st != 200 {
+		t.Fatal(st, w.Body.String())
+	}
+	if _, e := s.RunAttention(t.Context(), now.Add(3*time.Minute), 100); e != nil {
+		t.Fatal(e)
+	}
+	s.db.First(&job, "id=?", job.ID)
+	if job.CancelledAt == nil {
+		t.Fatal("disabled pending escalation not cancelled")
+	}
+	replacement := addPerson(t, s, c, cid, "replacement-escalation@example.com", "admin")
+	pref["version"] = 4
+	pref["escalationEnabled"] = true
+	pref["escalationAfterMinutes"] = 1
+	pref["escalationUserId"] = replacement
+	st, _, w = req(t, s, "PATCH", "/api/companies/"+cid+"/attention/preferences", pref, c)
+	if st != 200 {
+		t.Fatal(st, w.Body.String())
+	}
+	var wg sync.WaitGroup
+	errs := make(chan error, 2)
+	for i := 0; i < 2; i++ {
+		wg.Add(1)
+		go func() { defer wg.Done(); _, e := s.RunAttention(t.Context(), now.Add(4*time.Minute), 100); errs <- e }()
+	}
+	wg.Wait()
+	close(errs)
+	for e := range errs {
+		if e != nil {
+			t.Fatal(e)
+		}
+	}
+	var count int64
+	s.db.Model(&AttentionReminder{}).Where("item_id=? AND stage=?", "attention-test", "escalation").Count(&count)
+	if count != 1 {
+		t.Fatalf("stage duplicate %d", count)
+	}
+	s.db.Model(&AttentionDelivery{}).Where("item_id=? AND stage=?", "attention-test", "initial").Count(&count)
+	if count != 1 {
+		t.Fatalf("initial duplicate %d", count)
+	}
+	var delivery AttentionDelivery
+	if e := s.db.First(&delivery, "item_id=? AND stage=?", "attention-test", "escalation").Error; e != nil || delivery.RecipientID != replacement {
+		t.Fatalf("current target %+v %v", delivery, e)
+	}
+}
+
+func TestAttentionPreferenceTargetWindowRequeuesSameStage(t *testing.T) {
+	s, c, cid, _, _ := attentionFixture(t)
+	target := addPerson(t, s, c, cid, "window-target@example.com", "admin")
+	tc := login(t, s, "window-target@example.com")
+	now := time.Date(2026, 10, 12, 9, 0, 0, 0, time.UTC)
+	s.db.Model(&Company{}).Where("id=?", cid).Update("timezone", "UTC")
+	s.db.Where("id<>?", "attention-test").Delete(&AttentionItem{})
+	s.db.Model(&AttentionItem{}).Where("id=?", "attention-test").Update("created_at", now)
+	if _, e := s.RunAttention(t.Context(), now, 100); e != nil {
+		t.Fatal(e)
+	}
+	path := "/api/companies/" + cid + "/attention/preferences"
+	p := map[string]any{"version": 1, "workingDays": []int{}, "escalationEnabled": true, "escalationAfterMinutes": 1, "escalationUserId": target}
+	st, _, w := req(t, s, "PATCH", path, p, c)
+	if st != 200 {
+		t.Fatal(st, w.Body.String())
+	}
+	targetPrefs := map[string]any{"version": 1, "workingDays": []int{}, "quietStart": "09:00", "quietEnd": "11:00"}
+	st, _, w = req(t, s, "PATCH", path, targetPrefs, tc)
+	if st != 200 {
+		t.Fatal(st, w.Body.String())
+	}
+	if _, e := s.RunAttention(t.Context(), now.Add(30*time.Second), 100); e != nil {
+		t.Fatal(e)
+	}
+	var job AttentionReminder
+	s.db.First(&job, "item_id=? AND stage=?", "attention-test", "escalation")
+	if job.ID == "" || !job.AvailableAt.Equal(now.Add(2*time.Hour)) {
+		t.Fatalf("quiet target %+v", job)
+	}
+	targetPrefs["version"] = 2
+	targetPrefs["quietStart"] = ""
+	targetPrefs["quietEnd"] = ""
+	st, _, w = req(t, s, "PATCH", path, targetPrefs, tc)
+	if st != 200 {
+		t.Fatal(st, w.Body.String())
+	}
+	if _, e := s.RunAttention(t.Context(), now.Add(2*time.Minute), 100); e != nil {
+		t.Fatal(e)
+	}
+	s.db.First(&job, "id=?", job.ID)
+	if job.DeliveredAt == nil {
+		t.Fatal("new window must requeue same stage")
+	}
+	if _, e := s.RunAttention(t.Context(), now.Add(3*time.Minute), 100); e != nil {
+		t.Fatal(e)
+	}
+	var count int64
+	s.db.Model(&AttentionReminder{}).Where("item_id=? AND stage=?", "attention-test", "escalation").Count(&count)
+	if count != 1 {
+		t.Fatalf("requeue duplicates %d", count)
+	}
+}

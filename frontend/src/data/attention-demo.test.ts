@@ -137,3 +137,56 @@ it('reuses only a currently projected target and denies replay after recipient r
   ).rejects.toMatchObject({ status: 404 });
   await expect(demoAttentionDetail(company, target, result.id!)).rejects.toBeTruthy();
 });
+
+it('hides a routed collaborator update and denies canonical route replay after task source access changes', async () => {
+  const company = sample.workspaces[0].company.id,
+    user = sample.sessions[0].user.id;
+  const workspace = await readDemoWorkspace(company, user);
+  const target = workspace.people.find((p) => p.active && p.role === 'member' && p.id !== user)!;
+  expect(target).toBeTruthy();
+  const base = workspace.tasks[0];
+  const created = await demoMutate(company, user, '/tasks', {
+    ...base,
+    title: 'Owned fictional source revocation',
+    dueDate: '2026-10-20',
+    startDate: '',
+    deadlineMode: 'all_day',
+    dueAt: '',
+    dueTimezone: '',
+    estimatedHours: 1,
+    ownerId: user,
+    reviewerId: '',
+    requiresApproval: false,
+    status: 'todo',
+    collaborators: [target.id],
+    parentId: '',
+    dependencies: [],
+    checklist: [],
+  });
+  const item = (await demoAttentionRead(company, user)).find(
+    (i) => i.sourceId === created.id && i.kind === 'update',
+  )!;
+  const input = {
+    expectedVersion: item.version,
+    retryKey: 'source-revoke-route',
+    action: 'route',
+    reason: 'Current collaborator handoff',
+    recipientId: target.id,
+  };
+  const routed = await demoMutate(company, user, `/attention/${item.id}/transition`, input);
+  expect((await demoAttentionRead(company, target.id)).some((i) => i.id === routed.id)).toBe(true);
+  await demoMutate(
+    company,
+    user,
+    `/tasks/${created.id}`,
+    { version: item.sourceVersion, collaborators: [] },
+    'PATCH',
+  );
+  expect((await demoAttentionRead(company, target.id)).some((i) => i.id === routed.id)).toBe(false);
+  await expect(demoAttentionDetail(company, target.id, routed.id!)).rejects.toMatchObject({
+    status: 404,
+  });
+  await expect(
+    demoMutate(company, user, `/attention/${item.id}/transition`, input),
+  ).rejects.toMatchObject({ status: 404 });
+});
