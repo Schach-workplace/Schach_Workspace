@@ -97,6 +97,10 @@ func (s *Server) addTime(w http.ResponseWriter, r *http.Request) error {
 		if !a.canWrite(t) && !in(a.User.ID, t.Collaborators...) && t.ReviewerID != a.User.ID {
 			return denied()
 		}
+		at := time.Now().UTC()
+		if e := ensureObservedTaskState(tx, t, at); e != nil {
+			return e
+		}
 		entry := TimeEntry{ID: id, CompanyID: t.CompanyID, TaskID: t.ID, UserID: a.User.ID, Hours: v.Hours, Date: v.Date, Note: strings.TrimSpace(v.Note), CreatedAt: nowString()}
 		if e = tx.Create(&entry).Error; e != nil {
 			return e
@@ -108,7 +112,6 @@ func (s *Server) addTime(w http.ResponseWriter, r *http.Request) error {
 		if e := tx.First(&t, "id=? AND company_id=?", t.ID, t.CompanyID).Error; e != nil {
 			return e
 		}
-		at := time.Now().UTC()
 		if e := appendTaskFact(tx, &before, t, ReportFactActor{ID: a.User.ID}, "time", at); e != nil {
 			return e
 		}

@@ -157,7 +157,7 @@ func (s *Server) downloadReportArtifact(w http.ResponseWriter, r *http.Request) 
 		if e != nil {
 			return e
 		}
-		return s.withAccessTransaction(r, a, func(tx *gorm.DB) error {
+		return s.withReportAccessTransaction(r, a, func(tx *gorm.DB) error {
 			if e := tx.First(&artifact, "id=? AND company_id=? AND recipient_id=?", r.PathValue("id"), a.Company.ID, a.User.ID).Error; e != nil {
 				return missing()
 			}

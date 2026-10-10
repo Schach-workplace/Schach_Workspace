@@ -59,6 +59,8 @@ func (s *Server) savedReportRoutes() {
 	s.route("GET "+root, s.listSavedReports)
 	s.route("POST "+root, s.createSavedReport)
 	s.route("GET "+root+"/recipients", s.savedReportRecipients)
+	s.route("GET "+root+"/orphans", s.listOrphanReports)
+	s.route("PATCH "+root+"/{id}/orphan-state", s.updateOrphanReport)
 	s.route("GET "+root+"/{id}", s.readSavedReport)
 	s.route("PATCH "+root+"/{id}", s.updateSavedReport)
 	s.route("POST "+root+"/{id}/generate", s.generateSavedReport)
@@ -89,7 +91,7 @@ func validateSavedConfiguration(tx *gorm.DB, a *access, c SavedReportConfigurati
 	}
 	seen := map[string]bool{}
 	for _, id := range c.RecipientIDs {
-		if seen[id] || !a.activeUser(id) {
+		if seen[id] || !a.activeUser(id) || a.Users[id].ID == "" || a.Users[id].Suspended {
 			return invalid("Choose distinct active company recipients.")
 		}
 		seen[id] = true
@@ -164,7 +166,7 @@ func (s *Server) createSavedReport(w http.ResponseWriter, r *http.Request) error
 		return e
 	}
 	var d SavedReportDefinition
-	e = s.withAccessTransaction(r, a, func(tx *gorm.DB) error {
+	e = s.withReportAccessTransaction(r, a, func(tx *gorm.DB) error {
 		out, e := businessMutation(tx, a, "report.definition.create", input.RetryKey, input.Configuration, func() error {
 			if a.Member.Role == "viewer" {
 				return denied()
@@ -209,7 +211,7 @@ func (s *Server) updateSavedReport(w http.ResponseWriter, r *http.Request) error
 		return invalid("Choose a valid definition version and state.")
 	}
 	var d SavedReportDefinition
-	e = s.withAccessTransaction(r, a, func(tx *gorm.DB) error {
+	e = s.withReportAccessTransaction(r, a, func(tx *gorm.DB) error {
 		out, e := businessMutation(tx, a, "report.definition.update", input.RetryKey, []any{r.PathValue("id"), input.ExpectedVersion, input.Configuration, input.State}, func() error {
 			var e error
 			d, e = savedDefinition(tx, a, r.PathValue("id"), true)
@@ -260,7 +262,7 @@ func (s *Server) listSavedReports(w http.ResponseWriter, r *http.Request) error 
 		return e
 	}
 	var rows []SavedReportDefinition
-	e = s.withAccessTransaction(r, a, func(tx *gorm.DB) error {
+	e = s.withReportAccessTransaction(r, a, func(tx *gorm.DB) error {
 		return tx.Where("company_id=? AND owner_id=? AND state<>'deleted'", a.Company.ID, a.User.ID).Order("updated_at DESC,id").Limit(100).Find(&rows).Error
 	})
 	if e != nil {
@@ -275,7 +277,7 @@ func (s *Server) readSavedReport(w http.ResponseWriter, r *http.Request) error {
 	}
 	var d SavedReportDefinition
 	var schedule ReportSchedule
-	e = s.withAccessTransaction(r, a, func(tx *gorm.DB) error {
+	e = s.withReportAccessTransaction(r, a, func(tx *gorm.DB) error {
 		var e error
 		d, e = savedDefinition(tx, a, r.PathValue("id"), false)
 		if e != nil {
@@ -294,12 +296,12 @@ func (s *Server) savedReportRecipients(w http.ResponseWriter, r *http.Request) e
 		return e
 	}
 	rows := []map[string]string{}
-	e = s.withAccessTransaction(r, a, func(tx *gorm.DB) error {
+	e = s.withReportAccessTransaction(r, a, func(tx *gorm.DB) error {
 		if a.Member.Role == "viewer" {
 			return denied()
 		}
 		for uid := range a.Members {
-			if a.activeUser(uid) {
+			if a.activeUser(uid) && a.Users[uid].ID != "" && !a.Users[uid].Suspended {
 				rows = append(rows, map[string]string{"id": uid, "name": a.Users[uid].Name})
 			}
 		}
@@ -327,7 +329,7 @@ func (s *Server) generateSavedReport(w http.ResponseWriter, r *http.Request) err
 		return invalid("A definition version is required.")
 	}
 	var sid string
-	e = s.withAccessTransaction(r, a, func(tx *gorm.DB) error {
+	e = s.withReportAccessTransaction(r, a, func(tx *gorm.DB) error {
 		var d SavedReportDefinition
 		out, e := businessMutation(tx, a, "report.definition.generate", input.RetryKey, []any{r.PathValue("id"), input.ExpectedVersion}, func() error {
 			var e error
@@ -354,7 +356,7 @@ func (s *Server) generateSavedReport(w http.ResponseWriter, r *http.Request) err
 			sid = out.IDs[0]
 		}
 		return e
-	})
+	}, s.reportCaptureOptions())
 	if e != nil {
 		return e
 	}

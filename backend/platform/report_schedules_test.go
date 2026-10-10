@@ -3,6 +3,10 @@ package platform
 import (
 	"context"
 	"gorm.io/gorm"
+	"io"
+	"net/http"
+	"net/http/httptest"
+	"strings"
 	"testing"
 	"time"
 )
@@ -200,5 +204,92 @@ func TestReportWorkerCleanupRetainsHistory(t *testing.T) {
 	db.Model(&HistoricalReportSnapshot{}).Where("id=?", sid).Count(&n)
 	if n != 1 {
 		t.Fatal("cleanup deleted snapshot")
+	}
+}
+
+type blockedReportStore struct {
+	ReportArtifactStore
+	entered chan struct{}
+}
+
+func (s *blockedReportStore) Put(ctx context.Context, key string, r io.Reader) error {
+	close(s.entered)
+	<-ctx.Done()
+	return ctx.Err()
+}
+func TestReportBlockedStorageLeavesCommunicationAndRevocationLive(t *testing.T) {
+	s, c, cid, owner, uid, mc := conversationFixture(t)
+	store, e := NewFileReportArtifactStore(t.TempDir() + "/reports")
+	if e != nil {
+		t.Fatal(e)
+	}
+	blocked := &blockedReportStore{ReportArtifactStore: store, entered: make(chan struct{})}
+	s.opts.ReportArtifactStore = blocked
+	removed := make(chan struct{}, 4)
+	provider := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if strings.Contains(r.URL.Path, "RemoveParticipant") {
+			removed <- struct{}{}
+		}
+		w.Header().Set("Content-Type", "application/json")
+		w.Write([]byte("{}"))
+	}))
+	defer provider.Close()
+	s.opts.LiveKitURL = provider.URL
+	s.opts.LiveKitAPIKey = "test-key"
+	s.opts.LiveKitAPISecret = "01234567890123456789012345678901"
+	conv := newConversation(t, s, c, cid, []string{owner, uid}, "group")
+	root := "/api/companies/" + cid
+	call := financeOK(t, s, "POST", root+"/conversations/"+conv+"/calls", map[string]any{"kind": "audio", "retryKey": "blocked-report-call"}, c)["id"].(string)
+	device := financeOK(t, s, "POST", "/api/devices", map[string]any{"platform": "web", "name": "Owned test"}, mc)["id"].(string)
+	financeOK(t, s, "POST", root+"/calls/"+call+"/token", map[string]any{"deviceId": device}, mc)
+	b := financeOK(t, s, "POST", root+"/reports/history/snapshots", map[string]any{"retryKey": "blocked-report-snap", "request": historyRequest()}, c)
+	financeOK(t, s, "POST", root+"/reports/exports", map[string]any{"retryKey": "blocked-report-export", "snapshotId": b["snapshotId"], "csvSchemaVersion": 1}, c)
+	workers := s.StartBackgroundWorkers(t.Context())
+	defer func() {
+		ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+		defer cancel()
+		if e := workers.Stop(ctx); e != nil {
+			t.Error(e)
+		}
+	}()
+	select {
+	case <-blocked.entered:
+	case <-time.After(3 * time.Second):
+		t.Fatal("storage never blocked")
+	}
+	sendMessage(t, s, c, cid, conv, "during-report-block", "Local communication remains live")
+	// An independent maintenance revocation is discovered by the actual worker.
+	if e = s.db.Model(&Membership{}).Where("company_id=? AND user_id=?", cid, uid).Update("active", false).Error; e != nil {
+		t.Fatal(e)
+	}
+	select {
+	case <-removed:
+	case <-time.After(4 * time.Second):
+		t.Fatal("blocked export stalled call revocation/cleanup tick")
+	}
+	var count int64
+	s.db.Model(&CommunicationOutbox{}).Where("company_id=? AND delivered=?", cid, true).Count(&count)
+	if count == 0 {
+		t.Fatal("communication outbox did not advance")
+	}
+	var grant CommunicationCallGrant
+	s.db.First(&grant, "call_id=? AND user_id=?", call, uid)
+	if grant.Active {
+		t.Fatal("revoked grant stayed active")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+	if e = workers.Stop(ctx); e != nil {
+		t.Fatal("workers did not join", e)
+	}
+	var job ReportExportJob
+	s.db.Where("company_id=?", cid).First(&job)
+	if job.State != "running" || job.LeaseUntil == nil || job.ArtifactID != "" {
+		t.Fatal("cancelled storage did not leave reclaimable lease", job)
+	}
+	var artifacts int64
+	s.db.Model(&ReportArtifact{}).Where("job_id=?", job.ID).Count(&artifacts)
+	if artifacts != 0 {
+		t.Fatal("cancelled generation published")
 	}
 }

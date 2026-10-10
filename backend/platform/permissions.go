@@ -1,6 +1,7 @@
 package platform
 
 import (
+	"database/sql"
 	"net/http"
 	"time"
 
@@ -163,7 +164,7 @@ func scopedTask(db *gorm.DB, a *access, id string) (Task, error) {
 // withAccessTransaction serializes company mutations before refreshing permissions.
 // This protects reporting/dependency graphs across edits to different rows as well
 // as preventing stale role snapshots from authorizing a later write.
-func (s *Server) withAccessTransaction(r *http.Request, a *access, fn func(*gorm.DB) error) error {
+func (s *Server) withAccessTransaction(r *http.Request, a *access, fn func(*gorm.DB) error, opts ...*sql.TxOptions) error {
 	return s.db.WithContext(r.Context()).Transaction(func(tx *gorm.DB) error {
 		if err := lockCompany(tx, a.Company.ID); err != nil {
 			return err
@@ -207,5 +208,5 @@ func (s *Server) withAccessTransaction(r *http.Request, a *access, fn func(*gorm
 			a.Users[user.ID] = user
 		}
 		return fn(tx)
-	})
+	}, opts...)
 }

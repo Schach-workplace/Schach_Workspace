@@ -33,6 +33,7 @@ func TestTaskCreateCanonicalRetry(t *testing.T) {
 }
 func TestTaskImportCanonicalRetry(t *testing.T) {
 	s, db := testServer(t)
+	t.Cleanup(func() { assertNativeTaskFacts(t, s) })
 	c := login(t, s, "founder@example.com")
 	cid := firstCompany(t, s, c)
 	rows := []any{taskBody(me(t, s, c)), taskBody(me(t, s, c))}

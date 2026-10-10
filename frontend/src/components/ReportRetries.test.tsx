@@ -34,8 +34,9 @@ beforeEach(() => {
               : path.includes('/rows')
                 ? { rows: [], cursor: '' }
                 : path.endsWith('/definitions')
-                  ? { definitions: [] }
+                  ? { definitions: [], orphans: [] }
                   : {
+                      orphans: [],
                       snapshot: {
                         id: 'saved',
                         request: { reportZone: 'Asia/Kolkata' },

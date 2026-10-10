@@ -11,6 +11,7 @@ import (
 	"strconv"
 	"strings"
 	"testing"
+	"time"
 )
 
 func TestNativeVersionedUpgradeRunner(t *testing.T) {
@@ -98,8 +99,8 @@ func TestMilestone5NumberedUpgradeFrom27(t *testing.T) {
 	}
 	var count int64
 	db.Table("schach_schema_migrations").Count(&count)
-	if count != 32 {
-		t.Fatal("expected actual numbered SQL ledger32", count)
+	if count != int64(len(files)) {
+		t.Fatal("expected actual numbered SQL ledger through current head", count)
 	}
 	var task Task
 	if e = db.First(&task, "id = ?", id).Error; e != nil || task.Version != 1 || task.OriginalDueDate != "2026-10-20" {
@@ -135,6 +136,24 @@ func TestMilestone5SubmissionHistoryUpgradeFrom31(t *testing.T) {
 	}
 	var before ProjectMilestone
 	db.First(&before, "id = ?", id)
+	// Remove only newer M6 tables in this owned fixture before replaying the
+	// accepted 31-to32 provenance upgrade through the current migration head.
+	newer, e := filepath.Glob("../migrations/*.up.sql")
+	if e != nil {
+		t.Fatal(e)
+	}
+	sort.Slice(newer, func(i, j int) bool { return migrationNumber(newer[i]) > migrationNumber(newer[j]) })
+	for _, file := range newer {
+		if migrationNumber(file) > 32 {
+			raw, e := os.ReadFile(strings.Replace(file, ".up.sql", ".down.sql", 1))
+			if e != nil {
+				t.Fatal(e)
+			}
+			if e = db.Exec(string(raw)).Error; e != nil {
+				t.Fatal(e)
+			}
+		}
+	}
 	down, e := os.ReadFile("../migrations/32_milestone_submission_history.down.sql")
 	if e != nil {
 		t.Fatal(e)
@@ -173,7 +192,7 @@ func TestMilestone5SubmissionHistoryUpgradeFrom31(t *testing.T) {
 	}
 	var count int64
 	db.Table("schach_schema_migrations").Count(&count)
-	if count != 32 {
+	if count != int64(len(files)) {
 		t.Fatal(count)
 	}
 	var row Task
@@ -195,5 +214,82 @@ func TestMilestone5SubmissionHistoryUpgradeFrom31(t *testing.T) {
 	}
 	if e = migrations.Apply(t.Context(), db, 0); e != nil {
 		t.Fatal("upgrade replay", e)
+	}
+}
+
+func TestMilestone6NumberedUpgradeFrom32(t *testing.T) {
+	if os.Getenv("TEST_DATABASE_URL") == "" {
+		t.Skip("owned PostgreSQL numbered SQL upgrade")
+	}
+	s, db := testServer(t)
+	c := login(t, s, "founder@example.com")
+	cid := firstCompany(t, s, c)
+	body := taskBody(me(t, s, c))
+	body["status"] = "done"
+	id := createTask(t, s, c, cid, body)
+	files, e := filepath.Glob("../migrations/*.up.sql")
+	if e != nil {
+		t.Fatal(e)
+	}
+	sort.Slice(files, func(i, j int) bool { return migrationNumber(files[i]) < migrationNumber(files[j]) })
+	for i := len(files) - 1; i >= 0; i-- {
+		if migrationNumber(files[i]) > 32 {
+			down, e := os.ReadFile(strings.Replace(files[i], ".up.sql", ".down.sql", 1))
+			if e != nil {
+				t.Fatal(e)
+			}
+			if e = db.Exec(string(down)).Error; e != nil {
+				t.Fatal(e)
+			}
+		}
+	}
+	if e = db.Exec("CREATE TABLE schach_schema_migrations(version integer PRIMARY KEY,sha256 text NOT NULL,applied_at timestamptz NOT NULL DEFAULT now())").Error; e != nil {
+		t.Fatal(e)
+	}
+	for _, file := range files {
+		n := migrationNumber(file)
+		if n > 32 {
+			continue
+		}
+		raw, e := os.ReadFile(file)
+		if e != nil {
+			t.Fatal(e)
+		}
+		sum := sha256.Sum256(raw)
+		if e = db.Exec("INSERT INTO schach_schema_migrations(version,sha256) VALUES (?,?)", n, fmt.Sprintf("%x", sum)).Error; e != nil {
+			t.Fatal(e)
+		}
+	}
+	if e = migrations.Apply(t.Context(), db, 0); e != nil {
+		t.Fatal(e)
+	}
+	var count int64
+	db.Table("schach_schema_migrations").Count(&count)
+	if count != int64(len(files)) {
+		t.Fatal("expected actual numbered SQL ledger through current head", count)
+	}
+	var task Task
+	if e = db.First(&task, "id = ?", id).Error; e != nil || task.Version != 1 || task.OriginalDueDate != "2026-10-20" {
+		t.Fatal("existing commitment changed", e, task)
+	}
+	for _, table := range []string{"task_facts", "task_history_coverages", "task_acceptance_facts", "task_time_facts", "historical_report_snapshots", "report_export_jobs"} {
+		if !db.Migrator().HasTable(table) {
+			t.Fatal(table)
+		}
+	}
+	if e = migrations.Apply(t.Context(), db, 0); e != nil {
+		t.Fatal("upgrade replay", e)
+	}
+	if _, _, e = s.InitializeReportHistory(t.Context(), time.Now().UTC(), 100); e != nil {
+		t.Fatal(e)
+	}
+	var coverage TaskHistoryCoverage
+	if e = db.First(&coverage, "task_id=?", id).Error; e != nil || !coverage.UnknownBefore {
+		t.Fatal("legacy boundary invented", coverage, e)
+	}
+	var accepted int64
+	db.Model(&TaskAcceptanceFact{}).Where("task_id=?", id).Count(&accepted)
+	if accepted != 0 {
+		t.Fatal("legacy done invented acceptance", accepted)
 	}
 }

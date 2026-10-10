@@ -28,6 +28,7 @@ type ReportDefinitionBasis struct {
 	Revision int64
 }
 type HistoricalReportRow struct {
+	EpisodeIDs      []string        `json:"episodeIds,omitempty" gorm:"-"`
 	SnapshotID      string          `json:"-" gorm:"primaryKey"`
 	RowID           string          `json:"rowId" gorm:"primaryKey"`
 	Order           int             `json:"-" gorm:"column:row_order"`
@@ -50,16 +51,17 @@ type HistoricalReportRow struct {
 	ProjectLabel    string          `json:"projectLabel"`
 }
 type HistoricalReportMetric struct {
-	Code            string   `json:"code"`
-	Value           float64  `json:"value"`
-	Unit            string   `json:"unit"`
-	Numerator       *int     `json:"numerator,omitempty"`
-	Denominator     *int     `json:"denominator,omitempty"`
-	Rate            *float64 `json:"rate"`
-	Coverage        []string `json:"coverage"`
-	Contributing    []string `json:"contributingRows"`
-	NumeratorRows   []string `json:"numeratorRows"`
-	DenominatorRows []string `json:"denominatorRows"`
+	EpisodeIDsByRow map[string][]string `json:"episodeIdsByRow,omitempty"`
+	Code            string              `json:"code"`
+	Value           float64             `json:"value"`
+	Unit            string              `json:"unit"`
+	Numerator       *int                `json:"numerator,omitempty"`
+	Denominator     *int                `json:"denominator,omitempty"`
+	Rate            *float64            `json:"rate"`
+	Coverage        []string            `json:"coverage"`
+	Contributing    []string            `json:"contributingRows"`
+	NumeratorRows   []string            `json:"numeratorRows"`
+	DenominatorRows []string            `json:"denominatorRows"`
 }
 type HistoricalReportSummary struct {
 	Metrics  map[string]HistoricalReportMetric `json:"metrics"`
@@ -142,13 +144,20 @@ func reduceHistoricalReport(rows []HistoricalReportRow, p ResolvedReportPeriod) 
 		}
 		summary.Metrics[c] = HistoricalReportMetric{Code: c, Unit: unit, Coverage: []string{}, Contributing: []string{}, NumeratorRows: []string{}, DenominatorRows: []string{}}
 	}
+	invalidRows := map[string]bool{}
 	add := func(code string, r HistoricalReportRow, value float64) {
+		if code == "coverage.invalid_deadline" {
+			if invalidRows[r.RowID] {
+				return
+			}
+			invalidRows[r.RowID] = true
+		}
 		m := summary.Metrics[code]
 		m.Value += value
 		m.Contributing = append(m.Contributing, r.RowID)
 		summary.Metrics[code] = m
 	}
-	unique := map[string]bool{}
+	unique := map[string]string{}
 	for _, r := range rows {
 		switch r.Kind {
 		case "coverage":
@@ -192,10 +201,17 @@ func reduceHistoricalReport(rows []HistoricalReportRow, p ResolvedReportPeriod) 
 			}
 		case "acceptance":
 			add("acceptance.episodes", r, 1)
-			if !unique[r.TaskID] {
+			if unique[r.TaskID] == "" {
 				add("acceptance.unique_tasks", r, 1)
-				unique[r.TaskID] = true
+				unique[r.TaskID] = r.RowID
 			}
+			mUnique := summary.Metrics["acceptance.unique_tasks"]
+			if mUnique.EpisodeIDsByRow == nil {
+				mUnique.EpisodeIDsByRow = map[string][]string{}
+			}
+			key := unique[r.TaskID]
+			mUnique.EpisodeIDsByRow[key] = append(mUnique.EpisodeIDsByRow[key], r.AcceptanceID)
+			summary.Metrics["acceptance.unique_tasks"] = mUnique
 			for _, x := range []struct {
 				code     string
 				deadline ReportDeadline

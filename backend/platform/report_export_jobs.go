@@ -10,6 +10,7 @@ import (
 	"gorm.io/gorm/clause"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -102,7 +103,7 @@ func (s *Server) createReportExport(w http.ResponseWriter, r *http.Request) erro
 		return &apiError{Status: 503, Code: "export_unavailable", Message: "Report export storage is unavailable."}
 	}
 	var job ReportExportJob
-	e = s.withAccessTransaction(r, a, func(tx *gorm.DB) error {
+	e = s.withReportAccessTransaction(r, a, func(tx *gorm.DB) error {
 		out, e := businessMutation(tx, a, "report.export.create", input.RetryKey, []any{input.SnapshotID, input.Schema}, func() error { return authorizeHistoricalSources(tx, a, input.SnapshotID) }, func(out BusinessResult) error { _, e := authorizeReportExportJob(tx, a, out.IDs[0]); return e }, func() (BusinessResult, error) {
 			var snap HistoricalReportSnapshot
 			if e := tx.First(&snap, "id=?", input.SnapshotID).Error; e != nil {
@@ -134,7 +135,7 @@ func (s *Server) readReportExport(w http.ResponseWriter, r *http.Request) error 
 	}
 	var job ReportExportJob
 	var artifact *ReportArtifact
-	e = s.withAccessTransaction(r, a, func(tx *gorm.DB) error {
+	e = s.withReportAccessTransaction(r, a, func(tx *gorm.DB) error {
 		var e error
 		job, e = authorizeReportExportJob(tx, a, r.PathValue("id"))
 		if e != nil {
@@ -171,7 +172,7 @@ func (s *Server) cancelReportExport(w http.ResponseWriter, r *http.Request) erro
 	if e := decode(w, r, &input); e != nil {
 		return e
 	}
-	e = s.withAccessTransaction(r, a, func(tx *gorm.DB) error {
+	e = s.withReportAccessTransaction(r, a, func(tx *gorm.DB) error {
 		_, e := businessMutation(tx, a, "report.export.cancel", input.RetryKey, r.PathValue("id"), func() error { _, e := authorizeReportExportJob(tx, a, r.PathValue("id")); return e }, func(out BusinessResult) error { _, e := authorizeReportExportJob(tx, a, out.IDs[0]); return e }, func() (BusinessResult, error) {
 			if e := tx.Model(&ReportExportJob{}).Where("id=?", r.PathValue("id")).Updates(map[string]any{"state": "cancelled", "lease_token": "", "lease_until": nil, "failure_code": "user_cancelled", "updated_at": time.Now().UTC()}).Error; e != nil {
 				return BusinessResult{}, e
@@ -247,11 +248,11 @@ func (s *Server) reportJobTransaction(ctx context.Context, job ReportExportJob, 
 	})
 }
 func historicalCSVHeader() []string {
-	return []string{"schema", "basis", "from", "to", "report_zone", "row_id", "kind", "task_id", "task_version", "fact_id", "acceptance_id", "time_fact_id", "code", "title", "status", "owner_id", "owner_label", "department_id", "project_id", "label_basis", "original_mode", "original_date", "original_at", "original_zone", "current_mode", "current_date", "current_at", "current_zone", "company_policy_zone", "accepted_at", "acceptance_kind", "entry_date", "hours", "state_actual_hours", "provenance", "coverage_reason"}
+	return []string{"schema", "basis", "from", "to", "report_zone", "row_id", "kind", "task_id", "task_version", "fact_id", "acceptance_id", "time_fact_id", "code", "title", "status", "owner_id", "owner_label", "department_id", "project_id", "label_basis", "original_mode", "original_date", "original_at", "original_zone", "current_mode", "current_date", "current_at", "current_zone", "company_policy_zone", "accepted_at", "acceptance_kind", "entry_date", "hours", "state_actual_hours", "provenance", "coverage_reason", "matching_episode_ids"}
 }
 func historicalCSVRow(snap HistoricalReportSnapshot, r HistoricalReportRow) []string {
 	s := r.State
-	return []string{"1", snap.Basis, snap.Request.From, snap.Request.To, snap.Request.ReportZone, r.RowID, r.Kind, r.TaskID, strconv.FormatInt(r.TaskVersion, 10), r.FactID, r.AcceptanceID, r.TimeFactID, s.Code, s.Title, s.Status, s.OwnerID, r.OwnerLabel, s.DepartmentID, s.ProjectID, r.LabelBasis, s.Original.Mode, s.Original.Date, s.Original.At, s.Original.Zone, s.Current.Mode, s.Current.Date, s.Current.At, s.Current.Zone, s.CompanyPolicyZone, r.AcceptedAtRaw, r.AcceptanceKind, r.EntryDate, strconv.FormatFloat(r.Hours, 'f', -1, 64), strconv.FormatFloat(s.ActualHours, 'f', -1, 64), r.Provenance, r.Reason}
+	return []string{"1", snap.Basis, snap.Request.From, snap.Request.To, snap.Request.ReportZone, r.RowID, r.Kind, r.TaskID, strconv.FormatInt(r.TaskVersion, 10), r.FactID, r.AcceptanceID, r.TimeFactID, s.Code, s.Title, s.Status, s.OwnerID, r.OwnerLabel, s.DepartmentID, s.ProjectID, r.LabelBasis, s.Original.Mode, s.Original.Date, s.Original.At, s.Original.Zone, s.Current.Mode, s.Current.Date, s.Current.At, s.Current.Zone, s.CompanyPolicyZone, r.AcceptedAtRaw, r.AcceptanceKind, r.EntryDate, strconv.FormatFloat(r.Hours, 'f', -1, 64), strconv.FormatFloat(s.ActualHours, 'f', -1, 64), r.Provenance, r.Reason, strings.Join(snap.Summary.Metrics["acceptance.unique_tasks"].EpisodeIDsByRow[r.RowID], "|")}
 }
 func (s *Server) generateReportExport(ctx context.Context, job ReportExportJob, token string) error {
 	ctx, cancel := context.WithTimeout(ctx, 120*time.Second)

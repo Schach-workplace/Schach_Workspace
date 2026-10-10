@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import OrphanReports from './OrphanReports';
 import { useWorkspace } from '../store';
 import { useExecutionRead, useExecutionMutation } from '../data/execution';
 import { useExecutionInput, clearExecutionForm } from '../data/executionInput';
@@ -42,6 +43,7 @@ export default function SavedReports({ onOpen }: { onOpen: (id: string) => void 
             </button>
           ))}
       </section>
+      <OrphanReports />
       <DefinitionForm
         key={selected || 'new'}
         id={selected}
@@ -298,6 +300,23 @@ function DefinitionForm({
             ))}
             <div>
               <p>Active recipients (1–100)</p>
+              {config.recipientIds.some(
+                (id) => !people.data?.recipients.some((p) => p.id === id),
+              ) && (
+                <button
+                  className="button button-secondary"
+                  type="button"
+                  onClick={() =>
+                    edit({
+                      recipientIds: config.recipientIds.filter((id) =>
+                        people.data?.recipients.some((p) => p.id === id),
+                      ),
+                    })
+                  }
+                >
+                  Remove unavailable recipients
+                </button>
+              )}
               {people.data?.recipients.map((p) => (
                 <label key={p.id}>
                   <input

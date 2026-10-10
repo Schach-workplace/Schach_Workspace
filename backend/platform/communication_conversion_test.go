@@ -28,6 +28,7 @@ func TestPrivateConversionPublicationDenied(t *testing.T) {
 }
 func TestConversionRetriesAndPrimaryAnchor(t *testing.T) {
 	s, c, cid, owner, uid, mc := conversationFixture(t)
+	t.Cleanup(func() { assertNativeTaskFacts(t, s) })
 	id := newConversation(t, s, c, cid, []string{owner, uid}, "group")
 	allowPublication(t, s, c, cid, id)
 	m := sendMessage(t, s, mc, cid, id, "source", "Do work")

@@ -227,3 +227,52 @@ func TestTaskFactsExactDeadlineSurvivesPostgresReload(t *testing.T) {
 		}
 	}
 }
+
+func TestTaskTimeFactsLegacyFirstWriteStaysNative(t *testing.T) {
+	s, db := testServer(t)
+	c := login(t, s, "founder@example.com")
+	cid := firstCompany(t, s, c)
+	id := createTask(t, s, c, cid, taskBody(me(t, s, c)))
+	db.Where("task_id=?", id).Delete(&TaskFact{})
+	db.Where("task_id=?", id).Delete(&TaskHistoryCoverage{})
+	st, _, w := req(t, s, "POST", "/api/companies/"+cid+"/tasks/"+id+"/time", map[string]any{"hours": 2, "date": "2026-09-10", "note": "private"}, c)
+	if st != 200 {
+		t.Fatal(w.Body.String())
+	}
+	var facts []TaskTimeFact
+	db.Where("task_id=?", id).Find(&facts)
+	if len(facts) != 1 || facts[0].Provenance != "native_time_entry" {
+		t.Fatal("new real time entry misclassified as observation", facts)
+	}
+}
+
+// Called after real producer flows: every persisted successful revision must
+// have one lean native fact, including retries, evidence and recurring creation.
+func assertNativeTaskFacts(t *testing.T, s *Server) {
+	t.Helper()
+	var tasks []Task
+	if e := s.db.Find(&tasks).Error; e != nil {
+		t.Fatal(e)
+	}
+	if len(tasks) == 0 {
+		t.Fatal("producer created no task")
+	}
+	for _, task := range tasks {
+		var facts []TaskFact
+		if e := s.db.Where("task_id=?", task.ID).Order("task_version").Find(&facts).Error; e != nil {
+			t.Fatal(e)
+		}
+		if len(facts) != int(task.Version) {
+			t.Fatalf("%s persisted version %d has %d facts", task.ID, task.Version, len(facts))
+		}
+		for i, f := range facts {
+			if f.TaskVersion != int64(i+1) || f.Provenance != "native_event" || f.UnknownBefore {
+				t.Fatalf("missing native revision: %+v", f)
+			}
+		}
+		latest := facts[len(facts)-1]
+		if latest.State.Status != task.Status || latest.State.ActualHours != task.ActualHours || latest.State.Title != task.Title || latest.State.Current.Date != task.DueDate {
+			t.Fatal("fact disagrees with persisted producer result", latest.State, task)
+		}
+	}
+}

@@ -9,6 +9,7 @@ import (
 
 func TestTaskEvidenceInvalidatesOpenReview(t *testing.T) {
 	s, c, cid, _, uid, mc := conversationFixture(t)
+	t.Cleanup(func() { assertNativeTaskFacts(t, s) })
 	b := taskBody(uid)
 	b["reviewerId"] = me(t, s, c)
 	b["requiresApproval"] = true
@@ -32,6 +33,13 @@ func TestTaskEvidenceInvalidatesOpenReview(t *testing.T) {
 	st, _, _ = req(t, s, "POST", "/api/companies/"+cid+"/tasks/"+id+"/review", map[string]any{"version": 2, "decision": "approve", "comment": "Inspected new evidence"}, c)
 	if st != 200 {
 		t.Fatal(st)
+	}
+	var acceptance TaskAcceptanceFact
+	if e := s.db.First(&acceptance, "task_id=?", id).Error; e != nil {
+		t.Fatal(e)
+	}
+	if acceptance.AcceptanceKind != "independent_review" || acceptance.ActorID != me(t, s, c) || acceptance.State.OwnerID == acceptance.ActorID {
+		t.Fatal("review provenance lost", acceptance)
 	}
 }
 func TestAcceptedTaskRequiresReopenForEvidence(t *testing.T) {

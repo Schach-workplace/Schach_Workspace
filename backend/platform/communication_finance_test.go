@@ -47,6 +47,7 @@ func TestExpenseConversionCreatesOnlyReviewedDraft(t *testing.T) {
 }
 func TestIntakePublishesSelectedWorkAndUsesTaskEngine(t *testing.T) {
 	f := newFinanceFixture(t)
+	t.Cleanup(func() { assertNativeTaskFacts(t, f.s) })
 	mc, uid := f.person(t, "requester@example.com", "member", f.department)
 	id := newConversation(t, f.s, f.cookie, f.cid, []string{f.uid, uid}, "group")
 	allowPublication(t, f.s, f.cookie, f.cid, id)

@@ -27,6 +27,7 @@ export interface HistoricalMetric {
   contributingRows: string[];
   numeratorRows: string[];
   denominatorRows: string[];
+  episodeIdsByRow?: Record<string, string[]>;
 }
 export interface HistoricalSnapshot {
   id: string;
@@ -49,6 +50,7 @@ export interface HistoricalRow {
   factId: string;
   taskVersion: number;
   acceptanceId?: string;
+  episodeIds?: string[];
   timeFactId?: string;
   acceptedAtRaw?: string;
   acceptanceKind?: string;
@@ -177,4 +179,11 @@ export function metricValue(metric: HistoricalMetric): string {
       ? "Unavailable"
       : `${metric.rate.toFixed(1)}% (${metric.numerator}/${metric.denominator})`
     : `${metric.value} ${metric.unit === "hours" ? "hours" : ""}`.trim();
+}
+
+export interface OrphanDefinition {
+  id: string;
+  ownerId: string;
+  version: number;
+  state: "active" | "paused" | "deleted";
 }

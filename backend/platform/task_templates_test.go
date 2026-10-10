@@ -13,6 +13,7 @@ func templateBody(owner string, kind string) map[string]any {
 }
 func TestTemplateApplication(t *testing.T) {
 	s, db := testServer(t)
+	t.Cleanup(func() { assertNativeTaskFacts(t, s) })
 	c := login(t, s, "founder@example.com")
 	cid := firstCompany(t, s, c)
 	uid := me(t, s, c)
@@ -49,6 +50,7 @@ func TestTemplateApplication(t *testing.T) {
 }
 func TestChecklistApplication(t *testing.T) {
 	s, db := testServer(t)
+	t.Cleanup(func() { assertNativeTaskFacts(t, s) })
 	c := login(t, s, "founder@example.com")
 	cid := firstCompany(t, s, c)
 	uid := me(t, s, c)

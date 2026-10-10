@@ -1,6 +1,10 @@
 package platform
 
 import (
+	"encoding/json"
+	"fmt"
+	"gorm.io/gorm"
+	"strings"
 	"testing"
 	"time"
 )
@@ -150,5 +154,107 @@ func TestHistoricalCompareBothManifests(t *testing.T) {
 	st, b, _ := req(t, s, "POST", base+"/compare", input, c)
 	if st != 409 || b["comparisons"] != nil {
 		t.Fatal("comparison disclosed inaccessible side", st, b)
+	}
+}
+
+func TestHistoricalUniqueEpisodesAndInvalidCoverage(t *testing.T) {
+	p, _ := resolveReportPeriod("2026-09-01", "2026-09-30", "UTC")
+	rows := []HistoricalReportRow{{RowID: "one", Kind: "acceptance", TaskID: "task", AcceptanceID: "episode-one"}, {RowID: "two", Kind: "acceptance", TaskID: "task", AcceptanceID: "episode-two"}}
+	summary := reduceHistoricalReport(rows, p)
+	raw, _ := json.Marshal(summary.Metrics["acceptance.unique_tasks"])
+	if !strings.Contains(string(raw), "episode-one") || !strings.Contains(string(raw), "episode-two") {
+		t.Fatal("unique task row lacks all matching episode ids", string(raw))
+	}
+	if summary.Metrics["coverage.invalid_deadline"].Value != 2 {
+		t.Fatal("same row counted twice for original/current missing deadline", summary.Metrics["coverage.invalid_deadline"])
+	}
+}
+
+func TestHistoricalObservedMidPeriodDisclosesUnknownStart(t *testing.T) {
+	s, db := testServer(t)
+	c := login(t, s, "founder@example.com")
+	cid := firstCompany(t, s, c)
+	body := taskBody(me(t, s, c))
+	body["startDate"] = "2026-09-01"
+	body["dueDate"] = "2026-09-20"
+	id := createTask(t, s, c, cid, body)
+	db.Where("task_id=?", id).Delete(&TaskFact{})
+	db.Where("task_id=?", id).Delete(&TaskHistoryCoverage{})
+	var task Task
+	db.First(&task, "id=?", id)
+	if e := db.Transaction(func(tx *gorm.DB) error {
+		return ensureObservedTaskState(tx, task, time.Date(2026, 9, 10, 0, 0, 0, 0, time.UTC))
+	}); e != nil {
+		t.Fatal(e)
+	}
+	st, b, w := req(t, s, "POST", "/api/companies/"+cid+"/reports/history/snapshots", map[string]any{"retryKey": "mid-period", "request": historyRequest()}, c)
+	if st != 200 {
+		t.Fatal(st, w.Body.String())
+	}
+	var snap HistoricalReportSnapshot
+	db.First(&snap, "id=?", b["snapshotId"])
+	if snap.Summary.Metrics["state.cohort"].Value != 1 || snap.Summary.Metrics["coverage.unknown_before"].Value != 1 {
+		t.Fatal("known cutoff erased unknown period start", snap.Summary)
+	}
+}
+func TestHistoricalCaptureRejectsRowAndCanonicalByteLimits(t *testing.T) {
+	for _, kind := range []string{"rows", "bytes"} {
+		t.Run(kind, func(t *testing.T) {
+			s, db := testServer(t)
+			c := login(t, s, "founder@example.com")
+			cid := firstCompany(t, s, c)
+			owner := me(t, s, c)
+			if kind == "rows" {
+				rows := make([]Task, 10001)
+				for i := range rows {
+					rows[i] = Task{ID: newID("task"), CompanyID: cid, OwnerID: owner, CreatedBy: owner, Code: fmt.Sprintf("LIMIT-%d", i), Title: "Bounded fixture", Version: 1, Status: "todo", Priority: "high", Recurrence: "none", DueDate: "2026-09-20", DeadlineMode: "all_day", Tags: []string{}, Checklist: []ChecklistItem{}, Dependencies: []string{}, Collaborators: []string{}}
+				}
+				if e := db.CreateInBatches(&rows, 100).Error; e != nil {
+					t.Fatal(e)
+				}
+			} else {
+				for i := 0; i < 2; i++ {
+					id := createTask(t, s, c, cid, taskBody(owner))
+					db.Where("task_id=?", id).Delete(&TaskFact{})
+					db.Where("task_id=?", id).Delete(&TaskHistoryCoverage{})
+					db.Model(&Task{}).Where("id=?", id).Updates(map[string]any{"title": strings.Repeat("x", 5<<20), "due_date": "2026-09-20"})
+					var task Task
+					db.First(&task, "id=?", id)
+					if e := db.Transaction(func(tx *gorm.DB) error {
+						return ensureObservedTaskState(tx, task, time.Date(2026, 9, 10, 0, 0, 0, 0, time.UTC))
+					}); e != nil {
+						t.Fatal(e)
+					}
+				}
+			}
+			st, b, w := req(t, s, "POST", "/api/companies/"+cid+"/reports/history/snapshots", map[string]any{"retryKey": "limit", "request": historyRequest()}, c)
+			if st != 422 || !strings.Contains(w.Body.String(), "range_too_large") {
+				t.Fatal("limit not explicit", st, b)
+			}
+			var n int64
+			db.Model(&HistoricalReportSnapshot{}).Count(&n)
+			if n != 0 {
+				t.Fatal("oversized snapshot persisted", n)
+			}
+		})
+	}
+}
+
+func TestHistoricalHTTPActorRefreshRejectsLateSuspension(t *testing.T) {
+	s, db := testServer(t)
+	c := login(t, s, "founder@example.com")
+	cid := firstCompany(t, s, c)
+	r := requestForAccess("/api/companies/"+cid+"/reports/history/snapshots", c, cid)
+	a, e := s.access(r)
+	if e != nil {
+		t.Fatal(e)
+	}
+	if e = db.Model(&User{}).Where("id=?", a.User.ID).Update("suspended", true).Error; e != nil {
+		t.Fatal(e)
+	}
+	invoked := false
+	e = s.withReportAccessTransaction(r, a, func(tx *gorm.DB) error { invoked = true; return nil })
+	if e == nil || invoked {
+		t.Fatal("stale HTTP actor disclosed report data", e, invoked)
 	}
 }

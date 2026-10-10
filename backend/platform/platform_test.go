@@ -239,6 +239,7 @@ func TestMemberVisibilityAndViewerWriteDenial(t *testing.T) {
 }
 func TestApprovalSeparationAndStaleVersions(t *testing.T) {
 	s, _ := testServer(t)
+	t.Cleanup(func() { assertNativeTaskFacts(t, s) })
 	c := login(t, s, "founder@example.com")
 	cid := firstCompany(t, s, c)
 	owner := addPerson(t, s, c, cid, "member@example.com", "member")
@@ -378,6 +379,7 @@ func TestConcurrentUpdatesHaveOneWinner(t *testing.T) {
 }
 func TestRecurringTasksAndRemindersAreIdempotent(t *testing.T) {
 	s, db := testServer(t)
+	t.Cleanup(func() { assertNativeTaskFacts(t, s) })
 	c := login(t, s, "founder@example.com")
 	cid := firstCompany(t, s, c)
 	b := taskBody(me(t, s, c))

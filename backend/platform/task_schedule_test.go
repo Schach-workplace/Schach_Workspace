@@ -38,6 +38,7 @@ func TestTaskSchedulePreview(t *testing.T) {
 }
 func TestTaskScheduleApply(t *testing.T) {
 	s, db := testServer(t)
+	t.Cleanup(func() { assertNativeTaskFacts(t, s) })
 	c := login(t, s, "founder@example.com")
 	cid := firstCompany(t, s, c)
 	id := createTask(t, s, c, cid, taskBody(me(t, s, c)))

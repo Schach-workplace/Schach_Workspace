@@ -131,7 +131,7 @@ func (s *Server) updateReportSchedule(w http.ResponseWriter, r *http.Request) er
 	}
 	var schedule ReportSchedule
 	var definition SavedReportDefinition
-	e = s.withAccessTransaction(r, a, func(tx *gorm.DB) error {
+	e = s.withReportAccessTransaction(r, a, func(tx *gorm.DB) error {
 		out, e := businessMutation(tx, a, "report.schedule.update", input.RetryKey, []any{r.PathValue("id"), input.ExpectedDefinitionVersion, input.ExpectedScheduleVersion, input.Weekdays, input.LocalMinute, input.ScheduleZone, input.State}, func() error {
 			var e error
 			definition, e = savedDefinition(tx, a, r.PathValue("id"), true)
@@ -300,7 +300,7 @@ func (s *Server) RunReportSchedules(ctx context.Context, now time.Time, limit in
 			}
 			schedule.NextOccurrenceUTC = next
 			return tx.Save(&schedule).Error
-		})
+		}, s.reportCaptureOptions())
 		if e != nil {
 			return created, e
 		}

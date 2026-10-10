@@ -1,7 +1,9 @@
 package platform
 
 import (
+	"database/sql"
 	"gorm.io/gorm"
+	"net/http"
 	"time"
 )
 
@@ -74,4 +76,17 @@ func validateHistoricalRequest(tx *gorm.DB, a *access, input HistoricalReportReq
 		}
 	}
 	return nil
+}
+
+// HTTP reports retain the actual session fence, then reuse the accepted current
+// actor helper's sorted membership/User locks before inspecting any source.
+func (s *Server) withReportAccessTransaction(r *http.Request, a *access, fn func(*gorm.DB) error, opts ...*sql.TxOptions) error {
+	return s.withAccessTransaction(r, a, func(tx *gorm.DB) error {
+		fresh, e := currentAttentionActorLocked(tx, a.Company.ID, a.User.ID)
+		if e != nil {
+			return e
+		}
+		*a = *fresh
+		return fn(tx)
+	}, opts...)
 }

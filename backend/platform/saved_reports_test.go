@@ -1,6 +1,9 @@
 package platform
 
-import "testing"
+import (
+	"strings"
+	"testing"
+)
 
 func savedConfig(uid string) map[string]any {
 	return map[string]any{"name": "Monthly delivery", "basis": "task_history_v1", "filters": map[string]any{}, "periodRule": "fixed", "from": "2026-09-01", "to": "2026-09-30", "timezonePolicy": "explicit", "reportZone": "Asia/Kolkata", "recipientIds": []string{uid}}
@@ -90,5 +93,53 @@ func TestSavedReportInvalidation(t *testing.T) {
 	st, _, _ = req(t, s, "POST", path+"/"+id+"/generate", map[string]any{"retryKey": "paused-generate", "expectedVersion": 2}, c)
 	if st != 409 {
 		t.Fatal("paused generation accepted", st)
+	}
+}
+
+func TestSavedReportOrphanManagementIsMetadataOnly(t *testing.T) {
+	s, db := testServer(t)
+	c := login(t, s, "founder@example.com")
+	cid := firstCompany(t, s, c)
+	owner := addPerson(t, s, c, cid, "orphan-owner@example.com", "member")
+	mc := login(t, s, "orphan-owner@example.com")
+	root := "/api/companies/" + cid + "/reports/definitions"
+	st, b, w := req(t, s, "POST", root, map[string]any{"retryKey": "orphan-create", "configuration": savedConfig(owner)}, mc)
+	if st != 200 {
+		t.Fatal(st, w.Body.String())
+	}
+	id := b["definition"].(map[string]any)["id"].(string)
+	st, _, _ = req(t, s, "PATCH", root+"/"+id+"/orphan-state", map[string]any{"retryKey": "healthy", "expectedVersion": 1, "state": "paused"}, c)
+	if st != 404 {
+		t.Fatal("healthy definition exposed", st)
+	}
+	if e := db.Model(&Membership{}).Where("company_id=? AND user_id=?", cid, owner).Update("active", false).Error; e != nil {
+		t.Fatal(e)
+	}
+	st, b, w = req(t, s, "GET", root+"/orphans", nil, c)
+	if st != 200 {
+		t.Fatal(st, w.Body.String())
+	}
+	if strings.Contains(w.Body.String(), "configuration") || strings.Contains(w.Body.String(), "Monthly delivery") || strings.Contains(w.Body.String(), "recipientIds") {
+		t.Fatal("orphan contents disclosed", b)
+	}
+	patch := map[string]any{"retryKey": "orphan-pause", "expectedVersion": 1, "state": "paused"}
+	for i := 0; i < 2; i++ {
+		st, b, w = req(t, s, "PATCH", root+"/"+id+"/orphan-state", patch, c)
+		if st != 200 || b["version"] != float64(2) {
+			t.Fatal(st, w.Body.String())
+		}
+	}
+	st, _, _ = req(t, s, "GET", root+"/"+id, nil, c)
+	if st != 404 {
+		t.Fatal("leadership gained contents", st)
+	}
+	st, _, w = req(t, s, "PATCH", root+"/"+id+"/orphan-state", map[string]any{"retryKey": "orphan-delete", "expectedVersion": 2, "state": "deleted"}, c)
+	if st != 200 {
+		t.Fatal(st, w.Body.String())
+	}
+	var d SavedReportDefinition
+	db.First(&d, "id=?", id)
+	if d.State != "deleted" || d.OwnerID != owner || d.Version != 3 {
+		t.Fatal(d)
 	}
 }

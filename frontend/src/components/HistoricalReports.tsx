@@ -326,7 +326,10 @@ export default function HistoricalReports({
                     <span>
                       {r.kind} · version {r.taskVersion} · {r.acceptanceKind?.replaceAll('_', ' ')}{' '}
                       {r.reason?.replaceAll('_', ' ')} {r.entryDate}{' '}
-                      {r.hours ? `${r.hours} hours` : ''}
+                      {r.hours ? `${r.hours} hours` : ''}{' '}
+                      {r.episodeIds?.length
+                        ? `Matching acceptance episodes: ${r.episodeIds.join(', ')}`
+                        : ''}
                     </span>
                   </li>
                 ))}

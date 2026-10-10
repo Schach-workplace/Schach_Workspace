@@ -167,6 +167,11 @@ func captureHistoricalReportTx(tx *gorm.DB, a *access, input HistoricalReportReq
 				continue
 			}
 			if reportDimensionsMatch(f.State, input.Filters) {
+				if cov.UnknownBefore && cov.FirstKnownAt.After(period.StartInclusive) {
+					if e := add(HistoricalReportRow{Kind: "coverage", TaskID: cov.TaskID, Reason: "unknown_before", Provenance: "observed_current_state"}); e != nil {
+						return snap, e
+					}
+				}
 				if e := add(HistoricalReportRow{Kind: "state", TaskID: f.TaskID, FactID: f.ID, TaskVersion: f.TaskVersion, State: f.State, Provenance: f.Provenance}); e != nil {
 					return snap, e
 				}
@@ -267,10 +272,11 @@ func (s *Server) captureHistoricalReport(ctx context.Context, a *access, input H
 		if e := lockCompany(tx, a.Company.ID); e != nil {
 			return e
 		}
-		if _, e := currentAttentionActorLocked(tx, a.Company.ID, a.User.ID); e != nil {
+		fresh, e := currentAttentionActorLocked(tx, a.Company.ID, a.User.ID)
+		if e != nil {
 			return e
 		}
-		var e error
+		*a = *fresh
 		snap, e = captureHistoricalReportTx(tx, a, input, definition)
 		return e
 	}, opts)
@@ -289,7 +295,7 @@ func (s *Server) createHistoricalSnapshot(w http.ResponseWriter, r *http.Request
 		return e
 	}
 	var id string
-	e = s.withAccessTransaction(r, a, func(tx *gorm.DB) error {
+	e = s.withReportAccessTransaction(r, a, func(tx *gorm.DB) error {
 		out, e := businessMutation(tx, a, "report.history.capture", input.RetryKey, input.Request, func() error { return validateHistoricalRequest(tx, a, input.Request) }, func(out BusinessResult) error { return authorizeHistoricalSources(tx, a, out.IDs[0]) }, func() (BusinessResult, error) {
 			snap, e := captureHistoricalReportTx(tx, a, input.Request, nil)
 			if e != nil {
@@ -301,7 +307,7 @@ func (s *Server) createHistoricalSnapshot(w http.ResponseWriter, r *http.Request
 			id = out.IDs[0]
 		}
 		return e
-	})
+	}, s.reportCaptureOptions())
 	if e != nil {
 		return e
 	}
@@ -317,7 +323,7 @@ func (s *Server) readHistoricalSnapshot(w http.ResponseWriter, r *http.Request) 
 		return e
 	}
 	var snap HistoricalReportSnapshot
-	e = s.withAccessTransaction(r, a, func(tx *gorm.DB) error {
+	e = s.withReportAccessTransaction(r, a, func(tx *gorm.DB) error {
 		if e := authorizeHistoricalSources(tx, a, r.PathValue("id")); e != nil {
 			return e
 		}
@@ -364,14 +370,14 @@ func (s *Server) readHistoricalRows(w http.ResponseWriter, r *http.Request) erro
 		}
 		cursor = c
 	}
+	var snap HistoricalReportSnapshot
 	rows := []HistoricalReportRow{}
 	var m HistoricalReportMetric
 	var next string
-	e = s.withAccessTransaction(r, a, func(tx *gorm.DB) error {
+	e = s.withReportAccessTransaction(r, a, func(tx *gorm.DB) error {
 		if e := authorizeHistoricalSources(tx, a, cursor.Snapshot); e != nil {
 			return e
 		}
-		var snap HistoricalReportSnapshot
 		if e := tx.First(&snap, "id=?", cursor.Snapshot).Error; e != nil {
 			return e
 		}
@@ -408,6 +414,9 @@ func (s *Server) readHistoricalRows(w http.ResponseWriter, r *http.Request) erro
 	if e != nil {
 		return e
 	}
+	for i := range rows {
+		rows[i].EpisodeIDs = append([]string{}, snap.Summary.Metrics["acceptance.unique_tasks"].EpisodeIDsByRow[rows[i].RowID]...)
+	}
 	return respond(w, 200, map[string]any{"code": m.Code, "value": m.Value, "unit": m.Unit, "numerator": m.Numerator, "denominator": m.Denominator, "rate": m.Rate, "coverage": m.Coverage, "rows": rows, "cursor": next})
 }
 func (s *Server) compareHistoricalSnapshots(w http.ResponseWriter, r *http.Request) error {
@@ -423,7 +432,7 @@ func (s *Server) compareHistoricalSnapshots(w http.ResponseWriter, r *http.Reque
 		return e
 	}
 	comparisons := map[string]any{}
-	e = s.withAccessTransaction(r, a, func(tx *gorm.DB) error {
+	e = s.withReportAccessTransaction(r, a, func(tx *gorm.DB) error {
 		for _, id := range []string{input.Left, input.Right} {
 			if e := authorizeHistoricalSources(tx, a, id); e != nil {
 				return e
@@ -454,4 +463,12 @@ func (s *Server) compareHistoricalSnapshots(w http.ResponseWriter, r *http.Reque
 		return e
 	}
 	return respond(w, 200, map[string]any{"comparisons": comparisons})
+}
+
+func (s *Server) reportCaptureOptions() *sql.TxOptions {
+	opts := &sql.TxOptions{}
+	if s.db.Dialector.Name() == "postgres" {
+		opts.Isolation = sql.LevelRepeatableRead
+	}
+	return opts
 }
