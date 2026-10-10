@@ -104,6 +104,9 @@ func TestReportExportLeaseLifecycle(t *testing.T) {
 	if st != 200 || !strings.Contains(w.Body.String(), "schema,basis") {
 		t.Fatal(st, w.Body.String())
 	}
+	if w.Header().Get("Content-Length") == "" {
+		t.Fatal("partial CSV cannot be detected without exact content length")
+	}
 	var intents int64
 	db.Model(&ReportDeliveryIntent{}).Where("job_id=?", job.ID).Count(&intents)
 	if intents != 1 {

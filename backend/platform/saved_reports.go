@@ -62,6 +62,7 @@ func (s *Server) savedReportRoutes() {
 	s.route("GET "+root+"/{id}", s.readSavedReport)
 	s.route("PATCH "+root+"/{id}", s.updateSavedReport)
 	s.route("POST "+root+"/{id}/generate", s.generateSavedReport)
+	s.route("PATCH "+root+"/{id}/schedule", s.updateReportSchedule)
 }
 func validateSavedConfiguration(tx *gorm.DB, a *access, c SavedReportConfiguration) error {
 	if !clean(c.Name, 120) || c.Basis != "task_history_v1" || !in(c.PeriodRule, "fixed", "previous_week", "previous_month") || !in(c.TimezonePolicy, "explicit", "company_at_resolution") {

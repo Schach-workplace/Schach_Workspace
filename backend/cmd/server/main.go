@@ -147,6 +147,13 @@ func run() error {
 	if err := platform.ConfigureCommunication(&options); err != nil {
 		return err
 	}
+	reportRoot := ""
+	if !production {
+		reportRoot = filepath.Join(filepath.Dir(*localDB), "report-artifacts")
+	}
+	if err := platform.ConfigureReports(&options, reportRoot); err != nil {
+		return err
+	}
 	app, err := platform.New(db, options)
 	if err != nil {
 		return err
@@ -167,7 +174,7 @@ func run() error {
 		return err
 	}
 	observationCancel()
-	go app.RunCommunicationWorker(ctx)
+	workers := app.StartBackgroundWorkers(ctx)
 	if !envBool("DISABLE_SCHEDULER") {
 		go schedule(ctx, app)
 	}
@@ -180,6 +187,11 @@ func run() error {
 	slog.Info("Schach Workspace ready", "address", *addr, "frontend", absFrontend, "production", production)
 	if err = server.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
 		return err
+	}
+	if ctx.Err() != nil {
+		shutdown, cancel := context.WithTimeout(context.Background(), 15*time.Second)
+		defer cancel()
+		return workers.Stop(shutdown)
 	}
 	return nil
 }

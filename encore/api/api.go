@@ -3,7 +3,9 @@ package api
 
 import (
 	"context"
+	"encore.dev/shutdown"
 	"errors"
+	"log/slog"
 	"net/http"
 	"os"
 	"strings"
@@ -35,7 +37,32 @@ var cfg = config.Load[*Config]()
 var secrets struct{ BootstrapPassword string }
 
 //encore:service
-type Service struct{ app *platform.Server }
+type Service struct {
+	app     *platform.Server
+	workers *platform.WorkerLifecycle
+}
+
+var _ shutdown.Handler = (*Service)(nil)
+
+func (s *Service) Shutdown(progress shutdown.Progress) error {
+	slog.Info("background worker shutdown started")
+	bounded, cancel := context.WithTimeout(context.Background(), 15*time.Second)
+	defer cancel()
+	if progress.ForceShutdown != nil {
+		go func() {
+			select {
+			case <-progress.ForceShutdown.Done():
+				cancel()
+			case <-bounded.Done():
+			}
+		}()
+	}
+	e := s.workers.Stop(bounded)
+	if e == nil {
+		slog.Info("background workers stopped")
+	}
+	return e
+}
 
 func initService() (*Service, error) {
 	db, err := gorm.Open(postgres.New(postgres.Config{Conn: database.Stdlib()}), &gorm.Config{Logger: logger.Default.LogMode(logger.Error)})
@@ -82,6 +109,13 @@ func initService() (*Service, error) {
 	if err := platform.ConfigureCommunication(&options); err != nil {
 		return nil, err
 	}
+	reportRoot := ""
+	if meta.Environment.Cloud == encore.CloudLocal {
+		reportRoot = ".encore/report-artifacts"
+	}
+	if err := platform.ConfigureReports(&options, reportRoot); err != nil {
+		return nil, err
+	}
 	app, err := platform.New(db, options)
 	if err != nil {
 		return nil, err
@@ -92,8 +126,7 @@ func initService() (*Service, error) {
 		return nil, err
 	}
 	observationCancel()
-	go app.RunCommunicationWorker(context.Background())
-	return &Service{app: app}, nil
+	return &Service{app: app, workers: app.StartBackgroundWorkers(context.Background())}, nil
 }
 
 // HTTP forwards every /api route to the shared authenticated, company-scoped handler.

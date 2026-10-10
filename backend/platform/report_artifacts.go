@@ -9,6 +9,7 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"strconv"
 	"syscall"
 	"time"
 )
@@ -20,7 +21,10 @@ type ReportArtifactStore interface {
 	Open(context.Context, string) (io.ReadCloser, error)
 	Delete(context.Context, string) error
 }
-type FileReportArtifactStore struct{ root string }
+type FileReportArtifactStore struct {
+	root  string
+	sweep *os.File
+}
 
 var reportArtifactKey = regexp.MustCompile(`^rpt_[0-9a-f]{32}$`)
 
@@ -40,7 +44,7 @@ func NewFileReportArtifactStore(root string) (*FileReportArtifactStore, error) {
 	if e != nil || !info.IsDir() || info.Mode().Perm() != 0700 {
 		return nil, errors.New("report artifact root must be a private 0700 directory")
 	}
-	return &FileReportArtifactStore{absolute}, nil
+	return &FileReportArtifactStore{root: absolute}, nil
 }
 func (s *FileReportArtifactStore) path(key string) (string, error) {
 	if !reportArtifactKey.MatchString(key) {
@@ -182,6 +186,8 @@ func (s *Server) downloadReportArtifact(w http.ResponseWriter, r *http.Request) 
 		return e
 	}
 	w.Header().Set("Content-Type", "text/csv; charset=utf-8")
+	w.Header().Set("Content-Length", strconv.FormatInt(artifact.Length, 10))
+	w.Header().Set("X-Report-SHA256", artifact.SHA256)
 	w.Header().Set("Cache-Control", "private, no-store")
 	w.Header().Set("Content-Disposition", `attachment; filename="historical-report.csv"`)
 	w.Header().Set("X-Content-Type-Options", "nosniff")

@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
+	"time"
 )
 
 // currentAttentionActorLocked refreshes current actor/directory after the caller
@@ -59,6 +60,21 @@ func projectAttentionSource(tx *gorm.DB, a *access, item AttentionItem, replay b
 		return v, missing()
 	}
 	switch item.SourceKind {
+	case "report_export":
+		job, e := authorizeReportExportJob(tx, a, item.SourceID)
+		if e != nil {
+			return v, e
+		}
+		if item.Kind != "report_ready" || job.State != "ready" || job.ArtifactID == "" {
+			return v, missing()
+		}
+		var artifact ReportArtifact
+		if e := tx.First(&artifact, "id=? AND company_id=? AND recipient_id=?", job.ArtifactID, a.Company.ID, a.User.ID).Error; e != nil || artifact.State != "ready" || !time.Now().UTC().Before(artifact.ExpiresAt) {
+			return v, missing()
+		}
+		v.Title = "Report ready"
+		v.SourceVersion = 1
+		v.Link = "#report?company=" + url.QueryEscape(a.Company.ID) + "&job=" + url.QueryEscape(job.ID)
 	case "task":
 		t, e := scopedTask(tx, a, item.SourceID)
 		if e != nil {
