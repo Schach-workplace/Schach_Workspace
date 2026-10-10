@@ -22,6 +22,7 @@ import {
   X,
 } from 'lucide-react';
 import { useTaskDetail, useWorkspace } from '../store';
+import { useRecordDraft, useUserDraftState, type RecordDraftMemory } from './useRecordDraft';
 import type { CreateTaskInput, Task, Person } from '../types';
 import {
   Avatar,
@@ -54,6 +55,22 @@ export default function TaskDrawer(props: {
   initialProject?: string;
 }) {
   const detail = useTaskDetail(props.taskId);
+  const store = useWorkspace();
+  const data = store.data;
+  const memory = useRecordDraft(
+    JSON.stringify([
+      store.mode,
+      store.session?.user.id,
+      store.companyId,
+      props.taskId,
+      data?.readBasis,
+      data?.me.role,
+      data?.me.departmentId,
+      data?.me.managerId,
+    ]),
+    detail.accessRevoked ||
+      (!!data && props.taskId !== 'new' && !data.tasks.some((t) => t.id === props.taskId)),
+  );
   if (props.taskId !== 'new' && !detail.task)
     return (
       <div role="dialog" aria-label="Task details">
@@ -61,15 +78,24 @@ export default function TaskDrawer(props: {
         <p role={detail.error ? 'alert' : 'status'}>{detail.error || 'Loading task details…'}</p>
       </div>
     );
-  return <TaskDrawerBody {...props} resolvedTask={detail.task} resolvedPeople={detail.people} />;
+  return (
+    <TaskDrawerBody
+      {...props}
+      memory={memory}
+      resolvedTask={detail.task}
+      resolvedPeople={detail.people}
+    />
+  );
 }
 function TaskDrawerBody({
+  memory,
   resolvedTask,
   resolvedPeople,
   taskId,
   onClose,
   initialProject = '',
 }: {
+  memory: RecordDraftMemory;
   resolvedTask?: Task;
   resolvedPeople?: Person[];
   taskId: string;
@@ -138,13 +164,20 @@ function TaskDrawerBody({
           blockerReason: '',
           deadlineChangeReason: '',
         };
-  const [draft, setDraft] = useState<Draft>(() => makeDraft(task));
-  const [wallTime, setWallTime] = useState(
+  const [draft, setDraft] = useState<Draft>(() => ({
+    ...makeDraft(task),
+    ...((memory.patch as Partial<Draft>) ?? {}),
+  }));
+  const [wallTime, setWallTime] = useUserDraftState(
+    memory,
+    'wallTime',
     task?.dueAt
       ? localDeadline(task.dueAt, task.dueTimezone || data.company.timezone).slice(11)
       : '16:00',
   );
-  const [foldChoice, setFoldChoice] = useState(
+  const [foldChoice, setFoldChoice] = useUserDraftState(
+    memory,
+    'foldChoice',
     task?.dueAt ? new Date(task.dueAt).toISOString() : '',
   );
   const candidates =
@@ -154,18 +187,37 @@ function TaskDrawerBody({
           draft.dueTimezone || data.company.timezone,
         )
       : [];
-  const [version, setVersion] = useState(task?.version || 0);
-  const [dirty, setDirty] = useState(false);
-  const [tab, setTab] = useState('details');
+  const [version, setVersion] = useState(
+    (memory.baseVersion as number | undefined) ?? task?.version ?? 0,
+  );
+  const [dirty, setDirtyState] = useState(!!memory.dirty);
+  const setDirty = (next: boolean) => {
+    if (next) {
+      memory.baseVersion ??= version;
+      memory.dirty = true;
+    } else
+      for (const key of ['patch', 'baseVersion', 'dirty', 'tagText', 'wallTime', 'foldChoice'])
+        delete memory[key];
+    setDirtyState(next);
+  };
+  const [tab, setTab] = useUserDraftState(memory, 'tab', 'details');
   const [error, setError] = useState('');
-  const [checkText, setCheckText] = useState('');
-  const [comment, setComment] = useState('');
-  const [tagText, setTagText] = useState(task?.tags.join(', ') || '');
-  const [reviewComment, setReviewComment] = useState('');
-  const [nudge, setNudge] = useState('');
-  const [hours, setHours] = useState('1');
-  const [timeDate, setTimeDate] = useState(today(data.company.timezone));
-  const [timeNote, setTimeNote] = useState('');
+  const [checkText, setCheckText] = useUserDraftState(memory, 'checkText', '');
+  const [comment, setComment] = useUserDraftState(memory, 'comment', '');
+  const [tagText, setTagText, setFetchedTagText] = useUserDraftState(
+    memory,
+    'tagText',
+    task?.tags.join(', ') || '',
+  );
+  const [reviewComment, setReviewComment] = useUserDraftState(memory, 'reviewComment', '');
+  const [nudge, setNudge] = useUserDraftState(memory, 'nudge', '');
+  const [hours, setHours] = useUserDraftState(memory, 'hours', '1');
+  const [timeDate, setTimeDate] = useUserDraftState(
+    memory,
+    'timeDate',
+    today(data.company.timezone),
+  );
+  const [timeNote, setTimeNote] = useUserDraftState(memory, 'timeNote', '');
   const fileRef = useRef<HTMLInputElement>(null);
   const writable = canEditTask(data, task);
   const structural = !task || canStructureTask(data, task);
@@ -183,10 +235,11 @@ function TaskDrawerBody({
     if (task && !dirty) {
       setDraft(makeDraft(task));
       setVersion(task.version);
-      setTagText(task.tags.join(', '));
+      setFetchedTagText(task.tags.join(', '));
     }
   }, [task, dirty]); // Retain unsaved edits when a newer version arrives.
   const set = <K extends keyof Draft>(key: K, value: Draft[K]) => {
+    memory.patch = { ...((memory.patch as Partial<Draft>) ?? {}), [key]: value };
     setDraft((d) => ({ ...d, [key]: value }));
     setDirty(true);
   };
@@ -335,7 +388,7 @@ function TaskDrawerBody({
                   onClick={() => {
                     setDraft(makeDraft(task));
                     setVersion(task.version);
-                    setTagText(task.tags.join(', '));
+                    setFetchedTagText(task.tags.join(', '));
                     setDirty(false);
                   }}
                 >

@@ -549,6 +549,9 @@ export function useWorkspace(): WorkspaceStore {
 export function useTaskDetail(id: string) {
   const store = useWorkspace();
   const data = store.data;
+  // The web store assembles every authorized list page before publishing data.
+  // Its confirmed absence/version is therefore part of the selected read scope.
+  const record = data?.tasks.find((t) => t.id === id);
   const result = useQuery({
     queryKey: [
       'workspace',
@@ -556,13 +559,15 @@ export function useTaskDetail(id: string) {
       store.session?.user.id ?? '',
       store.companyId,
       'task:' + id,
+      record?.version ?? 'absent',
       data?.readBasis,
       data?.me.role,
       data?.me.departmentId,
     ],
-    enabled: store.mode === 'api' && !!data && id !== '' && id !== 'new',
+    enabled: store.mode === 'api' && !!record && id !== '' && id !== 'new',
     staleTime: 0,
     retry: false,
+    refetchInterval: store.mode === 'api' ? 30000 : false,
     queryFn: ({ signal }) =>
       readDetail<{ task: Task; people?: Person[] }>(
         `/companies/${encodeURIComponent(store.companyId)}/tasks/${encodeURIComponent(id)}`,
@@ -574,18 +579,25 @@ export function useTaskDetail(id: string) {
     task:
       store.mode === 'demo'
         ? data?.tasks.find((t) => t.id === id)
-        : result.isFetchedAfterMount && !result.isError
+        : record && result.isFetchedAfterMount && !result.isError
           ? result.data?.task
           : undefined,
     loading:
       store.mode === 'api' && id !== 'new' && (!result.isFetchedAfterMount || result.isPending),
-    people: result.isFetchedAfterMount && !result.isError ? (result.data?.people ?? []) : [],
-    error: result.error?.message ?? '',
+    people:
+      record && result.isFetchedAfterMount && !result.isError ? (result.data?.people ?? []) : [],
+    accessRevoked:
+      result.error instanceof ApiError && [401, 403, 404].includes(result.error.status),
+    error:
+      store.mode === 'api' && data && !record && id !== 'new'
+        ? 'This record is no longer available in your authorized workspace.'
+        : (result.error?.message ?? ''),
   };
 }
 export function useExpenseDetail(id: string) {
   const store = useWorkspace();
   const data = store.data;
+  const record = data?.expenses.find((t) => t.id === id);
   const result = useQuery({
     queryKey: [
       'workspace',
@@ -593,13 +605,15 @@ export function useExpenseDetail(id: string) {
       store.session?.user.id ?? '',
       store.companyId,
       'expense:' + id,
+      record?.version ?? 'absent',
       data?.readBasis,
       data?.me.role,
       data?.me.departmentId,
     ],
-    enabled: store.mode === 'api' && !!data && !!id,
+    enabled: store.mode === 'api' && !!record && !!id,
     staleTime: 0,
     retry: false,
+    refetchInterval: store.mode === 'api' ? 30000 : false,
     queryFn: ({ signal }) =>
       readDetail<{ expense: Expense; people?: Person[]; financeEvents: FinanceEvent[] }>(
         `/companies/${encodeURIComponent(store.companyId)}/expenses/${encodeURIComponent(id)}`,
@@ -611,11 +625,17 @@ export function useExpenseDetail(id: string) {
     expense:
       store.mode === 'demo'
         ? data?.expenses.find((t) => t.id === id)
-        : result.isFetchedAfterMount && !result.isError
+        : record && result.isFetchedAfterMount && !result.isError
           ? result.data?.expense
           : undefined,
     loading: store.mode === 'api' && (!result.isFetchedAfterMount || result.isPending),
-    people: result.isFetchedAfterMount && !result.isError ? (result.data?.people ?? []) : [],
-    error: result.error?.message ?? '',
+    people:
+      record && result.isFetchedAfterMount && !result.isError ? (result.data?.people ?? []) : [],
+    accessRevoked:
+      result.error instanceof ApiError && [401, 403, 404].includes(result.error.status),
+    error:
+      store.mode === 'api' && data && !record && id !== 'new'
+        ? 'This record is no longer available in your authorized workspace.'
+        : (result.error?.message ?? ''),
   };
 }

@@ -165,7 +165,7 @@ func (s *Server) taskList(w http.ResponseWriter, r *http.Request) error {
 	q := r.URL.Query()
 	basis := payloadHash([]string{accessBasis(a), "tasks", q.Get("departmentId"), q.Get("ownerId"), q.Get("projectId"), q.Get("status")})
 	db := s.db.WithContext(r.Context())
-	query := taskReadQuery(db, a).Omit("Description", "Checklist", "BlockerReason", "DeadlineChangeReason")
+	query := taskReadQuery(db, a).Omit("Checklist")
 	for _, f := range []struct{ key, col string }{{"departmentId", "department_id"}, {"ownerId", "owner_id"}, {"projectId", "project_id"}, {"status", "status"}} {
 		if v := q.Get(f.key); v != "" {
 			query = query.Where(f.col+" = ?", v)
@@ -283,7 +283,7 @@ func (s *Server) expenseList(w http.ResponseWriter, r *http.Request) error {
 	q := r.URL.Query()
 	basis := payloadHash([]string{accessBasis(a), "expenses", q.Get("departmentId"), q.Get("status")})
 	db := s.db.WithContext(r.Context())
-	query := expenseReadQuery(db, a).Omit("Description", "ReviewNote", "ReceiptExceptionReason", "BudgetOverrideReason")
+	query := expenseReadQuery(db, a)
 	if v := q.Get("departmentId"); v != "" {
 		query = query.Where("department_id = ?", v)
 	}

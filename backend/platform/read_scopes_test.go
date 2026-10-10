@@ -233,3 +233,52 @@ func TestTaskDetailEvidenceBoundedAndCursorScoped(t *testing.T) {
 		t.Fatal("other record cursor", status)
 	}
 }
+
+func TestListBusinessFieldsPreserveSearchExportAndBlocker(t *testing.T) {
+	t.Run("tasks", func(t *testing.T) {
+		s, db := testServer(t)
+		c := login(t, s, "founder@example.com")
+		cid := firstCompany(t, s, c)
+		id := createTask(t, s, c, cid, taskBody(me(t, s, c)))
+		fields := map[string]any{"description": "Unique searchable delivery context", "blocker_reason": "Waiting for signed design", "deadline_change_reason": "Supplier confirmation moved the deadline"}
+		if e := db.Model(&Task{}).Where("id=?", id).Updates(fields).Error; e != nil {
+			t.Fatal(e)
+		}
+		status, b, _ := req(t, s, "GET", "/api/companies/"+cid+"/tasks", nil, c)
+		if status != 200 {
+			t.Fatal(status, b)
+		}
+		row := b["tasks"].([]any)[0].(map[string]any)
+		for key, want := range map[string]string{"description": fields["description"].(string), "blockerReason": fields["blocker_reason"].(string), "deadlineChangeReason": fields["deadline_change_reason"].(string)} {
+			if row[key] != want {
+				t.Fatalf("%s: got %v want %s", key, row[key], want)
+			}
+		}
+		for _, key := range []string{"comments", "timeEntries", "attachments", "checklist"} {
+			if len(row[key].([]any)) != 0 {
+				t.Fatal("list evidence", key)
+			}
+		}
+	})
+	t.Run("expenses", func(t *testing.T) {
+		f := newFinanceFixture(t)
+		id := f.addExpense(t, 100, f.cookie)
+		fields := map[string]any{"description": "Unique searchable finance context", "review_note": "Reviewed independently with evidence", "receipt_exception_reason": "Original invoice pending from supplier", "budget_override_reason": "Authorised exceptional site expense"}
+		if e := f.db.Model(&Expense{}).Where("id=?", id).Updates(fields).Error; e != nil {
+			t.Fatal(e)
+		}
+		status, b, _ := req(t, f.s, "GET", f.base()+"/expenses", nil, f.cookie)
+		if status != 200 {
+			t.Fatal(status, b)
+		}
+		row := b["expenses"].([]any)[0].(map[string]any)
+		for key, want := range map[string]string{"description": fields["description"].(string), "reviewNote": fields["review_note"].(string), "receiptExceptionReason": fields["receipt_exception_reason"].(string), "budgetOverrideReason": fields["budget_override_reason"].(string)} {
+			if row[key] != want {
+				t.Fatalf("%s: got %v want %s", key, row[key], want)
+			}
+		}
+		if len(row["receipts"].([]any)) != 0 {
+			t.Fatal("list receipt history")
+		}
+	})
+}

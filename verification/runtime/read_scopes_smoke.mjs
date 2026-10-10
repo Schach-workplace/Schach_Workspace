@@ -1,0 +1,69 @@
+// Actual scoped-read/editor acceptance on owned disposable fictional loopback data.
+import assert from 'node:assert/strict';
+import { spawn } from 'node:child_process';
+import { mkdtemp, rm, writeFile } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+const base=process.env.SCHACH_SMOKE_URL||'http://127.0.0.1:8084';
+assert(process.argv.includes('--allow-demo-mutations'),'Explicit --allow-demo-mutations required');
+assert(['localhost','127.0.0.1','[::1]'].includes(new URL(base).hostname));
+const output=process.env.SCHACH_SMOKE_RESULT;assert(output,'Set SCHACH_SMOKE_RESULT');
+const profile=await mkdtemp(join(tmpdir(),'schach-report-browser-'));
+const browser=spawn('chromium',['--headless=new','--no-sandbox','--disable-dev-shm-usage','--remote-debugging-port=0',`--user-data-dir=${profile}`,'about:blank'],{stdio:['ignore','ignore','pipe']});
+let endpoint='',socket,run;browser.stderr.on('data',b=>{const m=String(b).match(/DevTools listening on (ws:\/\/\S+)/);if(m)endpoint=m[1]});
+const delay=ms=>new Promise(r=>setTimeout(r,ms));
+async function wait(fn){const end=Date.now()+20000;while(Date.now()<end){if(await fn())return;await delay(100)}throw Error('Rendered scoped-read check timed out')}
+const result={status:'failed',checks:[]};
+let founderCookie='',stage='fixture';
+async function api(path,method='GET',body){
+ const response=await fetch(base+'/api'+path,{method,headers:{'Content-Type':'application/json',Cookie:founderCookie},body:body?JSON.stringify(body):undefined});
+ if(response.headers.getSetCookie().length)founderCookie=response.headers.getSetCookie().map(v=>v.split(';')[0]).join('; ');
+ if(!response.ok)throw Error('Owned fixture request failed '+response.status);
+ return response.json();
+}
+try{
+ const session=await api('/auth/login','POST',{email:'founder@schach.demo',password:'SchachDemo!2026'});
+ const company=session.companies[0],root='/companies/'+company.id;
+ const bootstrap=await api(root+'/bootstrap'),member=bootstrap.people.find(p=>p.email==='member@schach.demo');assert(member);
+ const title='Fictional scoped detail acceptance '+Date.now();
+ const created=await api(root+'/tasks','POST',{title,description:'Fictional private searchable context',ownerId:member.id,reviewerId:'',departmentId:'',projectId:'',parentId:'',priority:'medium',status:'todo',dueDate:'2026-10-10',deadlineMode:'all_day',dueAt:'',dueTimezone:'',startDate:'',estimatedHours:0,tags:[],checklist:[],dependencies:[],collaborators:[],recurrence:'none',requiresApproval:false});
+ await api(root+'/tasks/'+created.id+'/comments','POST',{body:'Fictional private source comment'});
+ let record=(await api(root+'/tasks/'+created.id)).task;
+ await api(root+'/tasks/'+created.id,'PATCH',{version:record.version,status:'blocked',blockerReason:'Fictional awaiting signed design'});
+ record=(await api(root+'/tasks/'+created.id)).task;const inspectedVersion=record.version;
+ await wait(()=>endpoint);const targets=await(await fetch(`http://127.0.0.1:${new URL(endpoint).port}/json/list`)).json();socket=new WebSocket(targets.find(t=>t.type==='page').webSocketDebuggerUrl);await new Promise((r,j)=>{socket.onopen=r;socket.onerror=j});
+ let next=0;const pending=new Map();socket.onmessage=({data})=>{const v=JSON.parse(data);if(v.id){const p=pending.get(v.id);pending.delete(v.id);v.error?p.reject(Error(v.error.message)):p.resolve(v.result)}};
+ const call=(method,params={})=>new Promise((resolve,reject)=>{const id=++next;pending.set(id,{resolve,reject});socket.send(JSON.stringify({id,method,params}))});
+ run=async expression=>{const r=await call('Runtime.evaluate',{expression,returnByValue:true,awaitPromise:true});if(r.exceptionDetails)throw Error(r.exceptionDetails.exception?.description||r.exceptionDetails.text);return r.result.value};
+ const click=title=>run(`Array.from(document.querySelectorAll('button')).find(b=>b.textContent.trim()===${JSON.stringify(title)}).click()`);
+ stage='sign-in';await call('Runtime.enable');await call('Emulation.setDeviceMetricsOverride',{width:1440,height:1000,deviceScaleFactor:1,mobile:false});await call('Page.navigate',{url:base});await wait(()=>run('!!document.querySelector("input[type=password]")'));
+ await run(`(()=>{const set=Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set;for(const [selector,value] of [['input[type=email]','member@schach.demo'],['input[type=password]','SchachDemo!2026']]){const el=document.querySelector(selector);set.call(el,value);el.dispatchEvent(new Event('input',{bubbles:true}))}document.querySelector('form').requestSubmit()})()`);
+ stage='member-workspace';await wait(()=>run('!document.querySelector("input[type=password]")&&document.body.innerText.includes("All tasks")'));await click('All tasks');
+ stage='description-search';await wait(()=>run(`!!document.querySelector('input[aria-label="Search tasks"]')`));
+ await run(`(()=>{const el=document.querySelector('input[aria-label="Search tasks"]');Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set.call(el,'Fictional private searchable context');el.dispatchEvent(new Event('input',{bubbles:true}))})()`);
+ await wait(()=>run(`Array.from(document.querySelectorAll('.task-open strong')).some(e=>e.textContent===${JSON.stringify(title)})`));
+ stage='csv';await run(`window.reportDownload=null;const original=URL.createObjectURL;URL.createObjectURL=function(blob){window.reportDownload=blob;return original.call(this,blob)}`);await click('Export');await wait(()=>run('!!window.reportDownload'));
+ const csv=await run('window.reportDownload.text()');assert(csv.includes('Fictional private searchable context')&&csv.includes('Fictional awaiting signed design'));
+ result.checks.push('Current API description search and task CSV preserve business fields');
+ stage='open-detail';await run(`Array.from(document.querySelectorAll('.task-open')).find(e=>e.textContent.includes(${JSON.stringify(title)})).click()`);
+ await wait(()=>run(`!!document.querySelector('textarea')&&document.querySelector('textarea').value==='Fictional private searchable context'`));
+ const basis=await run(`(async()=> (await(await fetch('/api'+${JSON.stringify(root+'/bootstrap')},{credentials:'include'})).json()).readBasis)()`);
+ const fill=value=>run(`(()=>{const el=document.querySelector('textarea');Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype,'value').set.call(el,${JSON.stringify(value)});el.dispatchEvent(new Event('input',{bubbles:true}))})()`);
+ await fill('Fictional user authored unsaved edit');
+ await run(`(()=>{const original=window.fetch;window.pauseDetails=true;window.detailReleases=[];window.fetch=async function(input,options){if(options?.method==='PATCH'&&String(input).endsWith(${JSON.stringify(root+'/tasks/'+created.id)}))window.lastTaskPatch=JSON.parse(options.body);const response=await original.call(this,input,options);if(window.pauseDetails&&String(input).endsWith(${JSON.stringify(root+'/tasks/'+created.id)})&&(!options?.method||options.method==='GET'))await new Promise(resolve=>window.detailReleases.push(resolve));return response}})()`);
+ await api(root+'/tasks/'+created.id,'PATCH',{version:record.version,description:'Fictional server edit by another user'});
+ const hint=()=>run(`window.dispatchEvent(new CustomEvent('schach-work-event',{detail:{company:${JSON.stringify(company.id)},user:${JSON.stringify(member.id)},kind:'work_linked'}}))`);
+ stage='version-refresh';await hint();await wait(()=>run(`document.body.innerText.includes('Loading task details')`));assert(await run(`!Array.from(document.querySelectorAll('textarea')).some(e=>e.value==='Fictional user authored unsaved edit')`));
+ await run('window.pauseDetails=false;for(const release of window.detailReleases)release();window.detailReleases=[]');
+ await wait(()=>run(`!!document.querySelector('textarea')&&document.querySelector('textarea').value==='Fictional user authored unsaved edit'`));assert(await run(`document.body.innerText.includes('Editing version '+${inspectedVersion})&&document.body.innerText.includes('Load latest version')`));
+ stage='optimistic-conflict';await click('Save changes');await wait(()=>run('!!window.lastTaskPatch'));assert.equal(await run('window.lastTaskPatch.version'),inspectedVersion);
+ await wait(()=>run(`!!document.querySelector('.error-message')||!!document.querySelector('[role=alert]')`));
+ await click('Load latest version');await wait(()=>run(`document.querySelector('textarea')?.value==='Fictional server edit by another user'`));
+ result.checks.push('Pending fresh detail hides source content, preserves authored edits and retains inspected optimistic version until deliberate reconciliation');
+ stage='access-revocation';await fill('Fictional sensitive revoked draft');await run(`Array.from(document.querySelectorAll('.sheet-tabs button')).find(b=>b.textContent.startsWith('Activity')).click()`);await wait(()=>run(`document.body.innerText.includes('Fictional private source comment')`));
+ record=(await api(root+'/tasks/'+created.id)).task;await api(root+'/tasks/'+created.id,'PATCH',{version:record.version,ownerId:session.user.id});await hint();
+ await wait(()=>run(`!document.body.innerText.includes('Fictional private source comment')&&(!document.querySelector('textarea')||document.querySelector('textarea').value!=='Fictional sensitive revoked draft')&&document.body.innerText.includes('no longer available')`));
+ const afterBasis=await run(`(async()=> (await(await fetch('/api'+${JSON.stringify(root+'/bootstrap')},{credentials:'include'})).json()).readBasis)()`);assert.equal(afterBasis,basis);
+ result.checks.push('Reassignment with unchanged membership basis removes mounted private details and authored drafts');
+ result.status='passed';result.browser=(await call('Browser.getVersion')).product;result.scope='Current real Chromium/API on owned fictional8084; synthetic authorized-kind event dispatch exercises client invalidation; backend reads and mutations are real. No physical native certification.';console.log(JSON.stringify({status:result.status,checks:result.checks.length}));
+}catch(e){result.error=stage+': '+e.message;if(run)result.body=await run('document.body.innerText.slice(0,1800)');process.exitCode=1;console.error(result.error)}finally{await writeFile(output,JSON.stringify(result,null,2)+'\n');socket?.close();browser.kill('SIGTERM');await delay(200);await rm(profile,{recursive:true,force:true})}

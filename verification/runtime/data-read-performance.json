@@ -1,7 +1,7 @@
 {
   "bootstrap": {
-    "p50Ms": 4.511,
-    "p95Ms": 5.369,
+    "p50Ms": 3.46,
+    "p95Ms": 3.91,
     "bytes": 2603,
     "queries": 17,
     "queryRows": 514
@@ -15,78 +15,78 @@
     "transport": "httptest shared HTTP handler; PostgreSQL native"
   },
   "indexedTaskPage": {
-    "p50Ms": 1.588,
-    "p95Ms": 2.025,
-    "bytes": 87102,
+    "p50Ms": 1.545,
+    "p95Ms": 1.97,
+    "bytes": 89502,
     "queries": 7,
     "queryRows": 107
   },
   "initialSameSelection": {
-    "p50Ms": 14.482,
-    "p95Ms": 16.98,
-    "bytes": 437918,
+    "p50Ms": 14.052,
+    "p95Ms": 15.416,
+    "bytes": 449918,
     "queries": 66,
     "queryRows": 1060
   },
   "legacyReport": {
-    "p50Ms": 8.125,
-    "p95Ms": 9.207,
+    "p50Ms": 7.748,
+    "p95Ms": 8.847,
     "bytes": 446490,
     "queries": 7,
     "queryRows": 506
   },
   "legacyWorkspace": {
-    "p50Ms": 24.18,
-    "p95Ms": 28.655,
+    "p50Ms": 24.001,
+    "p95Ms": 25.683,
     "bytes": 1602392,
     "queries": 20,
     "queryRows": 5514
   },
   "reportSummary": {
-    "p50Ms": 5.502,
-    "p95Ms": 6.587,
+    "p50Ms": 5.02,
+    "p95Ms": 5.64,
     "bytes": 1762,
     "queries": 9,
     "queryRows": 506
   },
   "taskPage": {
-    "p50Ms": 3.166,
-    "p95Ms": 4.365,
-    "bytes": 87102,
+    "p50Ms": 2.381,
+    "p95Ms": 3.308,
+    "bytes": 89502,
     "queries": 7,
     "queryRows": 107
   },
   "taskPlanAfter": [
-    "Limit  (cost=0.28..89.76 rows=101 width=38) (actual time=0.015..0.035 rows=101.00 loops=1)",
+    "Limit  (cost=0.28..89.76 rows=101 width=38) (actual time=0.012..0.033 rows=101.00 loops=1)",
     "  Buffers: shared hit=5 read=3",
-    "  -\u003e  Index Only Scan using tasks_company_created_page on tasks  (cost=0.28..443.25 rows=500 width=38) (actual time=0.013..0.029 rows=101.00 loops=1)",
-    "        Index Cond: (company_id = 'cmp_4a32bd9222d62eb20fc473a8046728b2'::text)",
+    "  -\u003e  Index Only Scan using tasks_company_created_page on tasks  (cost=0.28..443.25 rows=500 width=38) (actual time=0.012..0.028 rows=101.00 loops=1)",
+    "        Index Cond: (company_id = 'cmp_a0bea91d57cb296d5c0ce04c31c0f616'::text)",
     "        Heap Fetches: 101",
     "        Index Searches: 1",
     "        Buffers: shared hit=5 read=3",
     "Planning:",
     "  Buffers: shared hit=30 read=1",
-    "Planning Time: 0.193 ms",
-    "Execution Time: 0.049 ms"
+    "Planning Time: 0.111 ms",
+    "Execution Time: 0.042 ms"
   ],
   "taskPlanBefore": [
-    "Limit  (cost=259.55..259.81 rows=101 width=38) (actual time=0.924..0.931 rows=101.00 loops=1)",
+    "Limit  (cost=259.55..259.81 rows=101 width=38) (actual time=0.780..0.787 rows=101.00 loops=1)",
     "  Buffers: shared hit=26",
-    "  -\u003e  Sort  (cost=259.55..260.80 rows=500 width=38) (actual time=0.923..0.926 rows=101.00 loops=1)",
+    "  -\u003e  Sort  (cost=259.55..260.80 rows=500 width=38) (actual time=0.780..0.783 rows=101.00 loops=1)",
     "        Sort Key: created_at DESC, id DESC",
     "        Sort Method: top-N heapsort  Memory: 39kB",
     "        Buffers: shared hit=26",
-    "        -\u003e  Bitmap Heap Scan on tasks  (cost=8.16..240.41 rows=500 width=38) (actual time=0.023..0.197 rows=500.00 loops=1)",
-    "              Recheck Cond: ((company_id)::text = 'cmp_4a32bd9222d62eb20fc473a8046728b2'::text)",
+    "        -\u003e  Bitmap Heap Scan on tasks  (cost=8.16..240.41 rows=500 width=38) (actual time=0.013..0.081 rows=500.00 loops=1)",
+    "              Recheck Cond: ((company_id)::text = 'cmp_a0bea91d57cb296d5c0ce04c31c0f616'::text)",
     "              Heap Blocks: exact=24",
     "              Buffers: shared hit=26",
-    "              -\u003e  Bitmap Index Scan on idx_tasks_company_due  (cost=0.00..8.03 rows=500 width=0) (actual time=0.012..0.012 rows=500.00 loops=1)",
-    "                    Index Cond: ((company_id)::text = 'cmp_4a32bd9222d62eb20fc473a8046728b2'::text)",
+    "              -\u003e  Bitmap Index Scan on idx_tasks_company_due  (cost=0.00..8.03 rows=500 width=0) (actual time=0.008..0.008 rows=500.00 loops=1)",
+    "                    Index Cond: ((company_id)::text = 'cmp_a0bea91d57cb296d5c0ce04c31c0f616'::text)",
     "                    Index Searches: 1",
     "                    Buffers: shared hit=2",
     "Planning:",
     "  Buffers: shared hit=9",
-    "Planning Time: 0.135 ms",
-    "Execution Time: 0.943 ms"
+    "Planning Time: 0.073 ms",
+    "Execution Time: 0.796 ms"
   ]
 }

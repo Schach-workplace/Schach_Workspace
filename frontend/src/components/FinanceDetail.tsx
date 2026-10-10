@@ -16,6 +16,7 @@ import {
   X,
 } from 'lucide-react';
 import { useExpenseDetail, useWorkspace } from '../store';
+import { useRecordDraft, useUserDraftState, type RecordDraftMemory } from './useRecordDraft';
 import type { Expense, Person } from '../types';
 import { budgetUsage, formatMoney } from '../data/finance';
 import { validDate } from '../data/imports';
@@ -47,6 +48,21 @@ export default function FinanceDetail(props: {
   onOpenTask: (id: string) => void;
 }) {
   const detail = useExpenseDetail(props.expense.id);
+  const store = useWorkspace();
+  const data = store.data;
+  const memory = useRecordDraft(
+    JSON.stringify([
+      store.mode,
+      store.session?.user.id,
+      store.companyId,
+      props.expense.id,
+      data?.readBasis,
+      data?.me.role,
+      data?.me.departmentId,
+      data?.me.managerId,
+    ]),
+    detail.accessRevoked || (!!data && !data.expenses.some((e) => e.id === props.expense.id)),
+  );
   if (!detail.expense)
     return (
       <div role="dialog" aria-label="Expense details">
@@ -57,6 +73,7 @@ export default function FinanceDetail(props: {
   return (
     <FinanceDetailBody
       {...props}
+      memory={memory}
       expense={detail.expense}
       resolvedPeople={detail.people}
       onEdit={() => props.onEdit(detail.expense!)}
@@ -64,12 +81,14 @@ export default function FinanceDetail(props: {
   );
 }
 function FinanceDetailBody({
+  memory,
   resolvedPeople,
   expense,
   onClose,
   onEdit,
   onOpenTask,
 }: {
+  memory: RecordDraftMemory;
   resolvedPeople?: Person[];
   expense: Expense;
   onClose: () => void;
@@ -84,14 +103,30 @@ function FinanceDetailBody({
     ),
   };
   const [error, setError] = useState('');
-  const [action, setAction] = useState<Decision | null>(null);
-  const [actionVersion, setActionVersion] = useState(expense.version);
-  const [note, setNote] = useState('');
-  const [overrideReason, setOverrideReason] = useState('');
-  const [authoriseOverride, setAuthoriseOverride] = useState(false);
-  const [paidDate, setPaidDate] = useState(today(data.company.timezone));
-  const [paymentMethod, setPaymentMethod] = useState('bank_transfer');
-  const [paymentReference, setPaymentReference] = useState('');
+  const [action, setAction] = useUserDraftState<Decision | null>(memory, 'action', null);
+  const [actionVersion, setActionVersion] = useUserDraftState(
+    memory,
+    'actionVersion',
+    expense.version,
+  );
+  const [note, setNote] = useUserDraftState(memory, 'note', '');
+  const [overrideReason, setOverrideReason] = useUserDraftState(memory, 'overrideReason', '');
+  const [authoriseOverride, setAuthoriseOverride] = useUserDraftState(
+    memory,
+    'authoriseOverride',
+    false,
+  );
+  const [paidDate, setPaidDate] = useUserDraftState(
+    memory,
+    'paidDate',
+    today(data.company.timezone),
+  );
+  const [paymentMethod, setPaymentMethod] = useUserDraftState(
+    memory,
+    'paymentMethod',
+    'bank_transfer',
+  );
+  const [paymentReference, setPaymentReference] = useUserDraftState(memory, 'paymentReference', '');
   const fileRef = useRef<HTMLInputElement>(null);
   const own = expense.createdBy === data.me.id;
   const manager = financeManager(data);

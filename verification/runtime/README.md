@@ -49,3 +49,11 @@ TEST_DATABASE_URL='postgres://...owned-test-instance...' verification/runtime/da
 ```
 
 The committed `data-read-performance.json` is a local handler/PostgreSQL measurement, not a production capacity claim. `platform.Options.MetricSink` receives sanitized route-template, status, byte and request/query timing measurements; without a sink the same fields use `slog.Debug`. SQL, raw URLs, IDs, message text and error details are excluded. Report summary/rows/export share a five-minute bounded process-local snapshot; access changes, process restarts or eviction require a new summary. Reports initially load 100 rows, with explicit further pages. Workspace boards currently combine bounded list pages to preserve existing aggregate views, while evidence is loaded only for the selected record in bounded pages.
+
+The scoped-read/editor regression probe uses a separate founder HTTP session and a real member browser session on the owned demo. It verifies description search/task CSV, delayed detail reauthorization with RAM-only authored edits and the inspected optimistic version, explicit conflict reconciliation, and reassignment removing a mounted private detail with an unchanged membership basis. It sends synthetic sanitized work hints to exercise client invalidation; backend reads/mutations are real:
+
+```sh
+SCHACH_SMOKE_URL=http://127.0.0.1:8084 SCHACH_SMOKE_RESULT=/tmp/schach-read-scopes-result.json node verification/runtime/read_scopes_smoke.mjs --allow-demo-mutations
+```
+
+The probe creates only fictional task/comment records and reassigns that task. It requires the current API-mode web build and fictional demo accounts; it never targets existing user app/database8080. It does not certify physical native devices.
