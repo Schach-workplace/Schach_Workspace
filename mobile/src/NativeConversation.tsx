@@ -172,7 +172,11 @@ export default function NativeConversation() {
     generation: client.generation,
   });
   const sourceRequest = useRef(0);
-  const pendingSource = useRef("");
+  const pendingSources = useRef(new Set<string>());
+  const sourceChanges = useRef({
+    revision: 0,
+    versions: new Map<string, number>(),
+  });
   useLayoutEffect(() => {
     owner.current = {
       root,
@@ -180,12 +184,43 @@ export default function NativeConversation() {
       generation: client.generation,
     };
     sourceRequest.current++;
+    pendingSources.current = new Set();
+    sourceChanges.current = { revision: 0, versions: new Map() };
   }, [root, w.foreground]);
   const current = () =>
     alive.current &&
     owner.current.root === root &&
     owner.current.foreground &&
     owner.current.generation === client.generation;
+  function beginSource(id: string, knownRoot = "") {
+    const request = ++sourceRequest.current;
+    const ownership = owner.current;
+    const history = engine.current;
+    const launched = sourceChanges.current.revision;
+    const requested = [id, knownRoot].filter(Boolean);
+    pendingSources.current = new Set(requested);
+    return (result?: { root: Message; messages: Message[] }) => {
+      if (
+        !current() ||
+        ownership !== owner.current ||
+        history !== engine.current ||
+        request !== sourceRequest.current
+      )
+        return false;
+      const dependencies = result
+        ? [
+            ...requested,
+            result.root.id,
+            result.root.replyToId,
+            ...result.messages.flatMap((m) => [m.id, m.replyToId]),
+          ]
+        : requested;
+      return dependencies.every(
+        (id) =>
+          !id || (sourceChanges.current.versions.get(id) ?? 0) <= launched,
+      );
+    };
+  }
   const mine = members.find((m) => m.userId === w.session?.user.id);
   const disabled =
     !conversation ||
@@ -193,9 +228,13 @@ export default function NativeConversation() {
     mine?.role === "viewer" ||
     !!conversation.archived;
   function resetSources(ids: string[]) {
-    if (ids.includes(pendingSource.current)) {
+    if (ids.length) {
+      const revision = ++sourceChanges.current.revision;
+      for (const id of ids) sourceChanges.current.versions.set(id, revision);
+    }
+    if (ids.some((id) => pendingSources.current.has(id))) {
       sourceRequest.current++;
-      pendingSource.current = "";
+      pendingSources.current.clear();
     }
     clearDraftSources(w.company, w.session?.user.id ?? "", w.selected, ids);
     if (ids.length) setSourceEpoch((n) => n + 1);
@@ -451,8 +490,7 @@ export default function NativeConversation() {
     [draftScope, viewport],
   );
   const openTarget = useEffectEvent(() => {
-    const request = ++sourceRequest.current;
-    pendingSource.current = target ?? "";
+    const valid = beginSource(target ?? "");
     if (!target || !conversation) return;
     const index = messages.findIndex((m) => m.id === target);
     if (index >= 0) {
@@ -464,32 +502,25 @@ export default function NativeConversation() {
           root + "/messages/" + encodeURIComponent(target) + "/thread",
         )
         .then((v) => {
-          if (current() && request === sourceRequest.current && !v.root.removed)
-            setThread(v);
+          if (valid(v) && !v.root.removed) setThread(v);
         })
         .catch((e) => {
-          if (current() && request === sourceRequest.current) clear(e);
+          if (valid()) clear(e);
         });
   });
   useEffect(() => {
     openTarget();
   }, [target, conversation?.id]);
   async function openThread(m: Message) {
-    const request = ++sourceRequest.current;
-    pendingSource.current = m.id;
+    const valid = beginSource(m.id, m.replyToId);
     try {
       const result = await client.requestThread<{
         root: Message;
         messages: Message[];
       }>(root + "/messages/" + m.id + "/thread");
-      if (
-        current() &&
-        request === sourceRequest.current &&
-        !result.root.removed
-      )
-        setThread(result);
+      if (valid(result) && !result.root.removed) setThread(result);
     } catch (e) {
-      if (current() && request === sourceRequest.current) clear(e as Error);
+      if (valid()) clear(e as Error);
     }
   }
   const names = Object.fromEntries(

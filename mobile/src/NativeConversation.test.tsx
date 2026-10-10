@@ -13,9 +13,12 @@ import {
   readHistoryPosition,
   writeHistoryPosition,
   clearAllDrafts,
+  readDraft,
+  writeDraft,
 } from "./conversationDrafts";
 import NativeConversation from "./NativeConversation";
 const state = vi.hoisted(() => ({
+  events: [] as any[],
   target: "",
   thread: null as any,
   offline: false,
@@ -40,7 +43,7 @@ vi.mock("./client", () => ({
       }
       if (state.offline) throw Error("Network unavailable");
       if (_path.includes("/sync"))
-        return { events: [], cursor: "events", hasMore: false };
+        return { events: state.events, cursor: "events", hasMore: false };
       if (_path.endsWith("/messages"))
         return { messages: state.rows, cursor: "", hasMore: false };
       if (_path.endsWith("/read")) {
@@ -184,6 +187,7 @@ let container: HTMLDivElement;
 beforeEach(() => {
   vi.useFakeTimers();
   Object.assign(globalThis, { IS_REACT_ACT_ENVIRONMENT: true });
+  state.events = [];
   state.target = "";
   state.thread = vi.fn();
   state.offline = false;
@@ -355,4 +359,158 @@ it("rejects an old target result after target replacement on a mounted native ro
     }),
   );
   expect(container.textContent).not.toContain("Old private target");
+});
+
+const dependencyRoot = {
+  id: "root",
+  sequence: 1,
+  revision: 1,
+  body: "Invalidated private root",
+  removed: false,
+  replyToId: "",
+  senderId: "person",
+  createdAt: "2026-10-10T12:00:00Z",
+  mediaIds: [],
+};
+const dependencyReply = {
+  ...dependencyRoot,
+  id: "reply",
+  sequence: 2,
+  body: "Loaded reply",
+  replyToId: "root",
+};
+const dependencyScope = {
+  serverOrigin: "https://fixture.test",
+  companyId: "company",
+  userId: "person",
+  conversationId: "chat",
+};
+const openReplyThread = () =>
+  [...container.querySelectorAll("button")]
+    .filter((b) => b.textContent === "Thread")
+    .at(-1)!
+    .click();
+it.each([
+  {
+    name: "known reply root deletion",
+    known: true,
+    kind: "message_removed",
+    id: "root",
+  },
+  {
+    name: "root deletion learned only from target result",
+    known: false,
+    kind: "message_removed",
+    id: "root",
+  },
+  {
+    name: "reply dependency deletion learned only from target result",
+    known: false,
+    kind: "message_removed",
+    id: "another",
+  },
+  {
+    name: "delayed older root revision after edit",
+    known: true,
+    kind: "message_edited",
+    id: "root",
+  },
+])(
+  "rejects a pending thread after $name without discarding authored frozen input",
+  async (c) => {
+    let release: (v: any) => void = () => {};
+    const currentRoot = {
+      ...dependencyRoot,
+      revision: 2,
+      body: "Current authorized root",
+    };
+    state.thread = vi.fn((path: string) =>
+      path.endsWith("/root/thread")
+        ? Promise.resolve({ root: currentRoot, messages: [] })
+        : new Promise((r) => (release = r)),
+    );
+    state.rows = c.known ? [dependencyReply] : [];
+    if (!c.known) state.target = "reply";
+    await act(async () => root.render(<NativeConversation />));
+    if (c.known) await act(async () => openReplyThread());
+    expect(state.thread).toHaveBeenCalledOnce();
+    const frozen = Object.freeze({
+      clientMessageId: "frozen",
+      body: "Authored survives",
+      replyToId: "root",
+      mentionIds: ["person"],
+      mentionAll: false,
+    });
+    const threadScope = { ...dependencyScope, threadRootId: "root" };
+    await act(async () => {
+      writeDraft(dependencyScope, {
+        body: frozen.body,
+        replyToId: "root",
+        pendingPayload: frozen,
+      });
+      writeDraft(threadScope, {
+        body: "Authored thread survives",
+        replyToId: "root",
+        pendingPayload: frozen,
+      });
+    });
+    state.events = [{ kind: c.kind, messageId: c.id }];
+    await act(async () => vi.advanceTimersByTimeAsync(15000));
+    expect(readDraft(dependencyScope).body).toBe(frozen.body);
+    expect(readDraft(dependencyScope).pendingPayload).toBe(frozen);
+    expect(readDraft(dependencyScope).replyToId).toBe(
+      c.id === "root" ? "" : "root",
+    );
+    await act(async () =>
+      release({
+        root: dependencyRoot,
+        messages: [
+          dependencyReply,
+          {
+            ...dependencyReply,
+            id: "another",
+            body: "Invalidated reply dependency",
+          },
+        ],
+      }),
+    );
+    expect(container.textContent).not.toContain("Invalidated private root");
+    expect(container.textContent).not.toContain("Invalidated reply dependency");
+    expect(readDraft(dependencyScope).pendingPayload).toBe(frozen);
+    expect(readDraft(threadScope).body).toBe("Authored thread survives");
+    expect(readDraft(threadScope).pendingPayload).toBe(frozen);
+    if (c.kind === "message_edited") {
+      state.events = [];
+      state.thread = vi.fn(async () => ({
+        root: currentRoot,
+        messages: [dependencyReply],
+      }));
+      await act(async () => openReplyThread());
+      expect(container.textContent).toContain(
+        "Reply to Current authorized root",
+      );
+      expect(readDraft(dependencyScope).body).toBe(frozen.body);
+      expect(readDraft(dependencyScope).pendingPayload).toBe(frozen);
+    }
+  },
+);
+it("allows a current pending thread through unrelated source invalidation", async () => {
+  let release: (v: any) => void = () => {};
+  state.rows = [dependencyReply];
+  state.thread = vi.fn(() => new Promise((r) => (release = r)));
+  await act(async () => root.render(<NativeConversation />));
+  await act(async () => openReplyThread());
+  await act(async () =>
+    writeDraft(dependencyScope, { body: "Unrelated authored draft" }),
+  );
+  state.events = [{ kind: "message_removed", messageId: "unrelated" }];
+  await act(async () => vi.advanceTimersByTimeAsync(15000));
+  await act(async () =>
+    release({
+      root: { ...dependencyRoot, body: "Current unrelated thread" },
+      messages: [dependencyReply],
+    }),
+  );
+  expect(container.textContent).toContain("Reply to Current unrelated thread");
+  expect(readDraft(dependencyScope).body).toBe("Unrelated authored draft");
 });
