@@ -323,6 +323,14 @@ func strictJSON(raw json.RawMessage, dst any) error {
 	return nil
 }
 
+func decodeBusiness(w http.ResponseWriter, r *http.Request, dst any) error {
+	var raw json.RawMessage
+	if e := decode(w, r, &raw); e != nil {
+		return e
+	}
+	return strictJSON(raw, dst)
+}
+
 type TemplateUseInput struct {
 	RetryKey                string                     `json:"retryKey"`
 	ExpectedTemplateVersion int64                      `json:"expectedTemplateVersion"`
@@ -453,7 +461,7 @@ func (s *Server) templatePreview(w http.ResponseWriter, r *http.Request) error {
 		return e
 	}
 	var input TemplateUseInput
-	if e = decode(w, r, &input); e != nil {
+	if e = decodeBusiness(w, r, &input); e != nil {
 		return e
 	}
 	if input.RetryKey != "" {
@@ -483,7 +491,7 @@ func (s *Server) templateApply(w http.ResponseWriter, r *http.Request) error {
 		return e
 	}
 	var input TemplateUseInput
-	if e = decode(w, r, &input); e != nil {
+	if e = decodeBusiness(w, r, &input); e != nil {
 		return e
 	}
 	key := input.RetryKey
@@ -552,7 +560,7 @@ func (s *Server) checklistApply(w http.ResponseWriter, r *http.Request) error {
 		TemplateID              string `json:"templateId"`
 		ExpectedTemplateVersion int64  `json:"expectedTemplateVersion"`
 	}
-	if e = decode(w, r, &input); e != nil {
+	if e = decodeBusiness(w, r, &input); e != nil {
 		return e
 	}
 	key := input.RetryKey
