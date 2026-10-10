@@ -2,6 +2,7 @@ package platform
 
 import (
 	"gorm.io/gorm"
+	"time"
 )
 
 // Caller holds the existing company business lock. Evidence and optimistic
@@ -45,7 +46,12 @@ func appendTaskEvidence(tx *gorm.DB, a *access, taskID string, file Attachment) 
 		return e
 	}
 	before := t
-	t.Version++
+	if e := tx.First(&t, "id=? AND company_id=?", t.ID, t.CompanyID).Error; e != nil {
+		return e
+	}
+	if e := appendTaskFact(tx, &before, t, ReportFactActor{ID: a.User.ID}, "evidence", time.Now().UTC()); e != nil {
+		return e
+	}
 	if e := syncTaskAttention(tx, a, &before, t); e != nil {
 		return e
 	}

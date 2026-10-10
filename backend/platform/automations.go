@@ -170,6 +170,9 @@ func (s *Server) runCompanyAutomations(ctx context.Context, c Company, actorID s
 					if e = tx.Omit("Comments", "TimeEntries", "Attachments").Create(&newTask).Error; e != nil {
 						return e
 					}
+					if e := appendTaskFact(tx, nil, newTask, ReportFactActor{Kind: "system"}, "recurrence", time.Now().UTC()); e != nil {
+						return e
+					}
 					actor, e := currentAttentionActorLocked(tx, c.ID, newTask.OwnerID)
 					if e != nil {
 						return e

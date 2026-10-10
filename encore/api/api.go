@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"strings"
+	"time"
 
 	"encore.dev"
 	"encore.dev/beta/errs"
@@ -85,6 +86,12 @@ func initService() (*Service, error) {
 	if err != nil {
 		return nil, err
 	}
+	observation, observationCancel := context.WithTimeout(context.Background(), 10*time.Second)
+	if _, _, err := app.InitializeReportHistory(observation, time.Now().UTC(), 100); err != nil {
+		observationCancel()
+		return nil, err
+	}
+	observationCancel()
 	go app.RunCommunicationWorker(context.Background())
 	return &Service{app: app}, nil
 }

@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
+	"time"
 	"unicode"
 
 	"gorm.io/gorm"
@@ -101,6 +102,21 @@ func (s *Server) addTime(w http.ResponseWriter, r *http.Request) error {
 			return e
 		}
 		if e = tx.Model(&Task{}).Where("id = ? AND company_id = ?", t.ID, t.CompanyID).Updates(map[string]any{"actual_hours": gorm.Expr("actual_hours + ?", v.Hours), "version": gorm.Expr("version + 1"), "updated_at": nowString()}).Error; e != nil {
+			return e
+		}
+		before := t
+		if e := tx.First(&t, "id=? AND company_id=?", t.ID, t.CompanyID).Error; e != nil {
+			return e
+		}
+		at := time.Now().UTC()
+		if e := appendTaskFact(tx, &before, t, ReportFactActor{ID: a.User.ID}, "time", at); e != nil {
+			return e
+		}
+		var fact TaskFact
+		if e := tx.First(&fact, "company_id=? AND task_id=? AND task_version=?", t.CompanyID, t.ID, t.Version).Error; e != nil {
+			return e
+		}
+		if e := appendTaskTimeFact(tx, entry, t, fact.ID, "native_time_entry", at); e != nil {
 			return e
 		}
 		return audit(tx, t.CompanyID, t.ID, a.User.ID, "time_logged", fmt.Sprintf("Logged %.2f hours on %s. %s", v.Hours, v.Date, entry.Note))

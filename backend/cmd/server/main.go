@@ -161,6 +161,12 @@ func run() error {
 	server := &http.Server{Addr: *addr, Handler: mux, ReadHeaderTimeout: 10 * time.Second, ReadTimeout: 40 * time.Second, WriteTimeout: 60 * time.Second, IdleTimeout: 90 * time.Second, MaxHeaderBytes: 1 << 20}
 	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
 	defer stop()
+	observation, observationCancel := context.WithTimeout(ctx, 10*time.Second)
+	if _, _, err := app.InitializeReportHistory(observation, time.Now().UTC(), 100); err != nil {
+		observationCancel()
+		return err
+	}
+	observationCancel()
 	go app.RunCommunicationWorker(ctx)
 	if !envBool("DISABLE_SCHEDULER") {
 		go schedule(ctx, app)

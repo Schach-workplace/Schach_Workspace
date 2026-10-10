@@ -5,6 +5,7 @@ import (
 	"gorm.io/gorm"
 	"sort"
 	"strings"
+	"time"
 )
 
 func prepareTaskPatch(tx *gorm.DB, a *access, old Task, version int64, f map[string]json.RawMessage, graph map[string]Task) (Task, error) {
@@ -69,6 +70,9 @@ func commitTaskPatch(tx *gorm.DB, a *access, old, t Task, f map[string]json.RawM
 	}
 	if res.RowsAffected != 1 {
 		return conflict()
+	}
+	if e := appendTaskFact(tx, &old, t, ReportFactActor{ID: a.User.ID}, "patch", time.Now().UTC()); e != nil {
+		return e
 	}
 	keys := []string{}
 	for k := range f {

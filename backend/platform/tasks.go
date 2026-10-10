@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"reflect"
 	"strings"
+	"time"
 
 	"gorm.io/gorm"
 )
@@ -280,6 +281,9 @@ func insertTask(tx *gorm.DB, a *access, t *Task) error {
 	if e = tx.Omit("Comments", "TimeEntries", "Attachments").Create(t).Error; e != nil {
 		return e
 	}
+	if e = appendTaskFact(tx, nil, *t, ReportFactActor{ID: a.User.ID}, "create", time.Now().UTC()); e != nil {
+		return e
+	}
 	if e = audit(tx, t.CompanyID, t.ID, a.User.ID, "task_created", t.Code+": "+t.Title+"; original deadline "+t.OriginalDueDate+"."); e != nil {
 		return e
 	}
@@ -514,6 +518,7 @@ func (s *Server) reviewTask(w http.ResponseWriter, r *http.Request) error {
 		if t.Status != "in_review" {
 			return invalid("This task must be submitted for review before recording a decision.")
 		}
+		before := t
 		old := t.Version
 		if v.Decision == "approve" {
 			t.Status = "done"
@@ -535,6 +540,13 @@ func (s *Server) reviewTask(w http.ResponseWriter, r *http.Request) error {
 		}
 		if res.RowsAffected != 1 {
 			return conflict()
+		}
+		operation := "request_changes"
+		if v.Decision == "approve" {
+			operation = "approve"
+		}
+		if e = appendTaskFact(tx, &before, t, ReportFactActor{ID: a.User.ID}, operation, time.Now().UTC()); e != nil {
+			return e
 		}
 		if e = audit(tx, t.CompanyID, t.ID, a.User.ID, "review_"+v.Decision, strings.TrimSpace(v.Comment)); e != nil {
 			return e
