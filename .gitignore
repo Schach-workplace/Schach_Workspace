@@ -42,3 +42,5 @@ deploy/secrets/
 *.aab
 *.ipa
 verification/**/logs/
+
+.worktrees/
