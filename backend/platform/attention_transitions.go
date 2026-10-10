@@ -146,7 +146,7 @@ func (s *Server) transitionAttention(w http.ResponseWriter, r *http.Request) err
 				return err
 			}
 			var target AttentionItem
-			err := tx.Where("company_id=? AND recipient_id=? AND source_kind=? AND source_id=? AND kind=? AND state=? AND (occurrence_key=? OR occurrence_key LIKE ?)", item.CompanyID, input.RecipientID, item.SourceKind, item.SourceID, item.Kind, "open", rootAttentionOccurrence(item.OccurrenceKey), "%:"+rootAttentionOccurrence(item.OccurrenceKey)+":%").Order("created_at,id").First(&target).Error
+			target, err = openAttentionTarget(tx, a, item, input.RecipientID)
 			if err != nil && err != gorm.ErrRecordNotFound {
 				return err
 			}

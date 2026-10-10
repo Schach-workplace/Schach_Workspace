@@ -226,3 +226,29 @@ func TestAttentionReminderRevokedBatchDoesNotStarveCurrentItems(t *testing.T) {
 		t.Fatal("revoked prefix starved current item", count)
 	}
 }
+
+func TestAttentionReminderReusesOpenTargetObligation(t *testing.T) {
+	s, c, cid, uid, _ := attentionFixture(t)
+	target := addPerson(t, s, c, cid, "attention-existing-target@example.com", "admin")
+	now := time.Now().UTC().Truncate(time.Microsecond)
+	var item AttentionItem
+	s.db.First(&item, "id=?", "attention-test")
+	existing := item
+	existing.ID = "existing-target"
+	existing.RecipientID = target
+	if e := ensureAttentionItem(s.db, existing); e != nil {
+		t.Fatal(e)
+	}
+	s.db.Model(&AttentionItem{}).Where("id=?", item.ID).Update("created_at", now.Add(-time.Hour))
+	if e := s.db.Create(&AttentionPreference{CompanyID: cid, UserID: uid, Version: 1, EscalationEnabled: true, EscalationAfterMinutes: 1, EscalationUserID: target, WorkingDays: []int{}}).Error; e != nil {
+		t.Fatal(e)
+	}
+	if _, e := s.RunAttention(t.Context(), now, 100); e != nil {
+		t.Fatal(e)
+	}
+	var count int64
+	s.db.Model(&AttentionItem{}).Where("company_id=? AND recipient_id=? AND source_id=? AND kind=? AND state=?", cid, target, item.SourceID, item.Kind, "open").Count(&count)
+	if count != 1 {
+		t.Fatalf("duplicate target obligation %d", count)
+	}
+}

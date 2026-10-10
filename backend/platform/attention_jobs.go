@@ -310,7 +310,11 @@ func (s *Server) RunAttention(ctx context.Context, now time.Time, limit int) (in
 					}
 					target.RecipientEpoch = scope.Epoch
 				}
-				if e := ensureAttentionItem(tx, target); e != nil {
+				if _, e := openAttentionTarget(tx, a, item, recipient); e == gorm.ErrRecordNotFound {
+					if e := ensureAttentionItem(tx, target); e != nil {
+						return e
+					}
+				} else if e != nil {
 					return e
 				}
 			}

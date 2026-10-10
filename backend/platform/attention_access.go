@@ -281,3 +281,22 @@ func (s *Server) getAttentionRecord(w http.ResponseWriter, r *http.Request) erro
 	}
 	return respond(w, 200, map[string]any{"record": record, "responses": responses})
 }
+
+// Reuse only an open target whose exact current source projection is still valid.
+func openAttentionTarget(tx *gorm.DB, a *access, item AttentionItem, uid string) (AttentionItem, error) {
+	var rows []AttentionItem
+	base := rootAttentionOccurrence(item.OccurrenceKey)
+	e := tx.Where("company_id=? AND recipient_id=? AND source_kind=? AND source_id=? AND kind=? AND state=? AND (occurrence_key=? OR occurrence_key LIKE ?)", item.CompanyID, uid, item.SourceKind, item.SourceID, item.Kind, "open", base, "%:"+base+":%").Order("created_at,id").Find(&rows).Error
+	if e != nil {
+		return AttentionItem{}, e
+	}
+	target := attentionForMember(a, uid)
+	for _, candidate := range rows {
+		if _, e := attentionSource(tx, target, candidate); e == nil {
+			return candidate, nil
+		} else if !attentionMissing(e) {
+			return AttentionItem{}, e
+		}
+	}
+	return AttentionItem{}, gorm.ErrRecordNotFound
+}
