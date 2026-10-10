@@ -280,6 +280,9 @@ func insertTask(tx *gorm.DB, a *access, t *Task) error {
 	if e = notification(tx, t.CompanyID, t.ID, t.OwnerID, "Task assigned", t.Code+" · "+t.Title, "assignment"); e != nil {
 		return e
 	}
+	if e := syncTaskAttention(tx, a, nil, *t); e != nil {
+		return e
+	}
 	if t.Status == "in_review" {
 		return notification(tx, t.CompanyID, t.ID, t.ReviewerID, "Review requested", t.Code+" · "+t.Title, "review")
 	}
@@ -420,7 +423,7 @@ func (s *Server) patchTask(w http.ResponseWriter, r *http.Request) error {
 				return e
 			}
 		}
-		return nil
+		return syncTaskAttention(tx, a, &old, t)
 	})
 	if e != nil {
 		return e
@@ -562,6 +565,9 @@ func (s *Server) reviewTask(w http.ResponseWriter, r *http.Request) error {
 			if e = tx.Create(&Comment{ID: newID("cmt"), CompanyID: t.CompanyID, TaskID: t.ID, UserID: a.User.ID, Body: "[" + strings.ReplaceAll(v.Decision, "_", " ") + "] " + strings.TrimSpace(v.Comment), CreatedAt: nowString()}).Error; e != nil {
 				return e
 			}
+		}
+		if e := syncTaskAttention(tx, a, nil, t); e != nil {
+			return e
 		}
 		return notification(tx, t.CompanyID, t.ID, t.OwnerID, map[bool]string{true: "Task approved", false: "Changes requested"}[v.Decision == "approve"], t.Code+" · "+v.Comment, "review")
 	})

@@ -44,6 +44,11 @@ func appendTaskEvidence(tx *gorm.DB, a *access, taskID string, file Attachment) 
 	if e := audit(tx, a.Company.ID, t.ID, a.User.ID, "evidence_uploaded", file.FileName+" added; review version advanced."); e != nil {
 		return e
 	}
+	before := t
+	t.Version++
+	if e := syncTaskAttention(tx, a, &before, t); e != nil {
+		return e
+	}
 	if t.Status == "in_review" && a.activeUser(t.ReviewerID) {
 		return notification(tx, a.Company.ID, t.ID, t.ReviewerID, "Review evidence changed", t.Code+" requires a fresh evidence review.", "review")
 	}

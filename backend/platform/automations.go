@@ -83,7 +83,7 @@ func (s *Server) runCompanyAutomations(ctx context.Context, c Company, actorID s
 			return e
 		}
 		var members []Membership
-		if e = tx.Where("company_id = ? AND active = ?", c.ID, true).Find(&members).Error; e != nil {
+		if e = lockCommunicationRow(tx, "UPDATE").Where("company_id = ? AND active = ?", c.ID, true).Order("user_id").Find(&members).Error; e != nil {
 			return e
 		}
 		active := map[string]bool{}
@@ -170,6 +170,13 @@ func (s *Server) runCompanyAutomations(ctx context.Context, c Company, actorID s
 					if e = tx.Omit("Comments", "TimeEntries", "Attachments").Create(&newTask).Error; e != nil {
 						return e
 					}
+					actor, e := currentAttentionActorLocked(tx, c.ID, newTask.OwnerID)
+					if e != nil {
+						return e
+					}
+					if e = syncTaskAttention(tx, actor, nil, newTask); e != nil {
+						return e
+					}
 					if e = audit(tx, c.ID, newTask.ID, "", "recurrence_created", "Next "+t.Recurrence+" occurrence of "+t.Code+"; deadline "+next+"."); e != nil {
 						return e
 					}
@@ -196,6 +203,9 @@ func (s *Server) runCompanyAutomations(ctx context.Context, c Company, actorID s
 			if !in(t.Status, "done", "cancelled") && t.DueDate != "" && t.DueDate <= tomorrow && active[t.OwnerID] {
 				claimed, e := claimAutomation(tx, c.ID, "reminder:"+t.ID+":"+today)
 				if e != nil {
+					return e
+				}
+				if e := ensureDeadlineAttention(tx, t, "day:"+today, time.Now().UTC()); e != nil {
 					return e
 				}
 				if claimed {

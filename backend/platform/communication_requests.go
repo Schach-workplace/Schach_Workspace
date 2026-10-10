@@ -136,6 +136,9 @@ func (s *Server) createCommunicationRequest(w http.ResponseWriter, r *http.Reque
 			return e
 		}
 		id = item.ID
+		if e := syncIntakeAttention(tx, a, item); e != nil {
+			return e
+		}
 		return appendCommunicationEvent(tx, scope, "request_published", source.ID, source.Sequence)
 	})
 	if e != nil {
@@ -248,6 +251,9 @@ func (s *Server) assignCommunicationRequest(w http.ResponseWriter, r *http.Reque
 		if e := tx.Save(&item).Error; e != nil {
 			return e
 		}
+		if e := syncIntakeAttention(tx, a, item); e != nil {
+			return e
+		}
 		return audit(tx, a.Company.ID, id, a.User.ID, "intake_assigned", item.Title+" assigned through the existing task workflow.")
 	})
 	if e != nil {
@@ -301,6 +307,9 @@ func (s *Server) patchCommunicationRequest(w http.ResponseWriter, r *http.Reques
 		item.Version++
 		item.UpdatedAt = nowString()
 		if e := tx.Save(&item).Error; e != nil {
+			return e
+		}
+		if e := syncIntakeAttention(tx, a, item); e != nil {
 			return e
 		}
 		return audit(tx, a.Company.ID, item.TaskID, a.User.ID, "intake_"+input.State, input.Reason)

@@ -113,6 +113,9 @@ func timedDeadlineReminder(tx *gorm.DB, t Task, now time.Time, loc *time.Locatio
 	} else if due.Sub(now) > 24*time.Hour {
 		return 0, nil
 	}
+	if e := ensureDeadlineAttention(tx, t, kind+":"+today, now); e != nil {
+		return 0, e
+	}
 	claimed, e := claimAutomation(tx, t.CompanyID, key)
 	if e != nil {
 		return 0, e

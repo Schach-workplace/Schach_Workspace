@@ -494,6 +494,9 @@ func (s *Server) transitionExpense(w http.ResponseWriter, r *http.Request) error
 		if err = financeEvent(tx, e.CompanyID, e.DepartmentID, "expense", e.ID, a.User.ID, action, detail); err != nil {
 			return err
 		}
+		if err := syncExpenseAttention(tx, a, Expense{Status: oldStatus}, e); err != nil {
+			return err
+		}
 		if v.Action == "submit" {
 			return notifyExpenseApprovers(tx, a, e)
 		}

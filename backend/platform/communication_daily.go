@@ -81,9 +81,15 @@ func (s *Server) saveCommunicationMessage(w http.ResponseWriter, r *http.Request
 		}
 		key := CommunicationBookmark{CompanyID: a.CompanyID, UserID: a.UserID, MessageID: m.ID, ConversationID: m.ConversationID, RemindAt: input.RemindAt, CreatedAt: nowString()}
 		if !input.Saved && input.RemindAt == "" {
-			return tx.Where("company_id = ? AND user_id = ? AND message_id = ?", a.CompanyID, a.UserID, m.ID).Delete(&CommunicationBookmark{}).Error
+			if e := tx.Where("company_id = ? AND user_id = ? AND message_id = ?", a.CompanyID, a.UserID, m.ID).Delete(&CommunicationBookmark{}).Error; e != nil {
+				return e
+			}
+			return syncBookmarkAttention(tx, a, key)
 		}
-		return tx.Save(&key).Error
+		if e := tx.Save(&key).Error; e != nil {
+			return e
+		}
+		return syncBookmarkAttention(tx, a, key)
 	})
 	if e != nil {
 		return e

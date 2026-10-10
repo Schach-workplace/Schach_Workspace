@@ -149,6 +149,9 @@ func (s *Server) createCommunicationRecord(w http.ResponseWriter, r *http.Reques
 				return e
 			}
 		}
+		if e := syncRecordAttention(tx, a, record); e != nil {
+			return e
+		}
 		return appendCommunicationEvent(tx, a, "record_created", source.ID, source.Sequence)
 	})
 	if e != nil {
@@ -224,6 +227,9 @@ func (s *Server) respondCommunicationRecord(w http.ResponseWriter, r *http.Reque
 		}
 		source, e := scopedMessage(tx, a, record.AnchorMessageID)
 		if e != nil {
+			return e
+		}
+		if e := syncRecordAttention(tx, a, record); e != nil {
 			return e
 		}
 		return appendCommunicationEvent(tx, a, "record_response", source.ID, source.Sequence)

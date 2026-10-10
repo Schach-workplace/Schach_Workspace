@@ -102,6 +102,9 @@ func (s *Server) editCommunicationRecord(w http.ResponseWriter, r *http.Request)
 		if e != nil {
 			return e
 		}
+		if e := syncRecordAttention(tx, a, record); e != nil {
+			return e
+		}
 		return appendCommunicationEvent(tx, a, "record_revised", source.ID, source.Sequence)
 	})
 	if e != nil {
