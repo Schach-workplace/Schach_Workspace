@@ -1,14 +1,14 @@
-import { useState } from 'react';
 // @vitest-environment happy-dom
+import { useState } from 'react';
 import { render, screen, cleanup, waitFor, fireEvent } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { it, expect, vi, afterEach, beforeEach } from 'vitest';
 import { useExecutionRead, useExecutionMutation } from './execution';
-const state = vi.hoisted(() => ({ mutate: vi.fn() }));
+const state = vi.hoisted(() => ({ mutate: vi.fn(), company: 'c' }));
 vi.mock('../store', () => ({
   useWorkspace: () => ({
     mode: 'api',
-    companyId: 'c',
+    companyId: state.company,
     session: { user: { id: 'u' } },
     data: { readBasis: 'unchanged' },
     mutate: state.mutate,
@@ -22,6 +22,7 @@ beforeEach(() => {
   clearAllBusinessAttempts();
   clearAllDrafts();
   state.mutate.mockReset();
+  state.company = 'c';
 });
 afterEach(() => {
   cleanup();
@@ -291,4 +292,39 @@ it('purges authored existing milestone RAM and its frozen decision when the pare
   await screen.findByText('denied');
   await screen.findByText('retired');
   expect(screen.getByText('empty authored form')).toBeTruthy();
+});
+it('keeps a delayed known commit from invoking current-flow callbacks after a company switch', async () => {
+  let release!: () => void;
+  const committed = vi.fn();
+  state.mutate.mockImplementation(async (_p, _b, _m, ack) => {
+    await new Promise<void>((r) => (release = r));
+    ack({ id: 'old-company-result' });
+    return { id: 'old-company-result' };
+  });
+  function Probe() {
+    const a = useExecutionMutation('delayed');
+    const [result, setResult] = useState('');
+    return (
+      <>
+        <button
+          onClick={() =>
+            void a
+              .execute('/task-templates', { name: 'Original' }, 'POST', committed)
+              .then(() => setResult('opened stale result'))
+              .catch(() => setResult('Company changed'))
+          }
+        >
+          Save delayed
+        </button>
+        <p>{result}</p>
+      </>
+    );
+  }
+  const v = render(<Probe />);
+  fireEvent.click(screen.getByText('Save delayed'));
+  state.company = 'other';
+  v.rerender(<Probe />);
+  release();
+  await screen.findByText('Company changed');
+  expect(committed).not.toHaveBeenCalled();
 });

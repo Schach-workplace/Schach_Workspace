@@ -195,7 +195,7 @@ export function useExecutionMutation(formId: string, sources: string[] = []) {
         });
         if (matching) {
           retireAttempt(business.scope, attempt.retryKey);
-          onCommitted?.(r as T);
+          if (current.current === captured) onCommitted?.(r as T);
         }
       };
       const result = path.endsWith('/preview')
@@ -216,7 +216,7 @@ export function useExecutionMutation(formId: string, sources: string[] = []) {
       retireAttempt(business.scope, attempt.retryKey);
       return result as T;
     } catch (e) {
-      if (committedResult !== undefined) return committedResult;
+      if (committedResult !== undefined && current.current === captured) return committedResult;
       if (e instanceof ApiError && [401, 403, 404].includes(e.status))
         clearAttemptScope(business.scope);
       if (current.current === captured) setError((e as Error).message);
