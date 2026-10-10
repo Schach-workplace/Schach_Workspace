@@ -4,18 +4,30 @@ import {
   createElement,
   forwardRef,
   useImperativeHandle,
+  useLayoutEffect,
   type ReactNode,
 } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
+import {
+  readHistoryPosition,
+  writeHistoryPosition,
+  clearAllDrafts,
+} from "./conversationDrafts";
 import NativeConversation from "./NativeConversation";
 const state = vi.hoisted(() => ({
   offline: false,
+  rows: [] as any[],
+  reads: [] as number[],
+  list: null as any,
+  scrolls: [] as number[],
   posts: [] as unknown[],
   w: {} as any,
 }));
 vi.mock("./client", () => ({
+  NativeApiError: class extends Error {},
   client: {
+    endpoint: "https://fixture.test",
     request: vi.fn(async (_path: string, method = "GET", body?: unknown) => {
       if (method === "POST" && _path.endsWith("/messages")) {
         state.posts.push(body);
@@ -23,9 +35,14 @@ vi.mock("./client", () => ({
         return { message: { id: "accepted" } };
       }
       if (state.offline) throw Error("Network unavailable");
+      if (_path.includes("/sync"))
+        return { events: [], cursor: "events", hasMore: false };
       if (_path.endsWith("/messages"))
-        return { messages: [], cursor: "", hasMore: false };
-      if (_path.endsWith("/read")) return {};
+        return { messages: state.rows, cursor: "", hasMore: false };
+      if (_path.endsWith("/read")) {
+        state.reads.push((body as any).sequence);
+        return {};
+      }
       return {
         conversation: {
           id: "chat",
@@ -42,10 +59,12 @@ vi.mock("./client", () => ({
   },
 }));
 vi.mock("expo-router", () => ({
+  useLocalSearchParams: () => ({}),
   router: { back: vi.fn(), push: vi.fn(), replace: vi.fn() },
 }));
 vi.mock("expo-crypto", () => ({ randomUUID: () => crypto.randomUUID() }));
 vi.mock("./Media", () => ({ default: () => null }));
+vi.mock("./LinkedWork", () => ({ default: () => null }));
 vi.mock("./Publication", () => ({ default: () => null }));
 vi.mock("./Structured", () => ({ default: () => null }));
 vi.mock("./ChatControls", () => ({ default: () => null }));
@@ -75,6 +94,25 @@ vi.mock("./ConnectUI", () => ({
 }));
 vi.mock("react-native", () => ({
   Platform: { OS: "android" },
+  FlatList: forwardRef(function List(props: any, ref) {
+    const { data, renderItem, ListHeaderComponent } = props;
+    useLayoutEffect(() => {
+      state.list = props;
+    });
+    useImperativeHandle(ref, () => ({
+      scrollToEnd() {},
+      scrollToIndex() {},
+      scrollToOffset(v: { offset: number }) {
+        state.scrolls.push(v.offset);
+      },
+    }));
+    return createElement(
+      "div",
+      {},
+      ListHeaderComponent,
+      ...data.map((item: any, index: number) => renderItem({ item, index })),
+    );
+  }),
   View: ({ children }: { children: ReactNode }) =>
     createElement("div", {}, children),
   Text: ({ children }: { children: ReactNode }) =>
@@ -120,6 +158,10 @@ beforeEach(() => {
   Object.assign(globalThis, { IS_REACT_ACT_ENVIRONMENT: true });
   state.offline = false;
   state.posts = [];
+  state.rows = [];
+  state.reads = [];
+  state.list = null;
+  state.scrolls = [];
   state.w = {
     company: "company",
     selected: "chat",
@@ -135,6 +177,7 @@ beforeEach(() => {
 afterEach(() => {
   act(() => root.unmount());
   vi.useRealTimers();
+  clearAllDrafts();
 });
 it("keeps the same pending message across a recoverable polling outage", async () => {
   await act(async () => root.render(createElement(NativeConversation)));
@@ -171,4 +214,86 @@ it("keeps the same pending message across a recoverable polling outage", async (
   );
   expect(state.posts).toHaveLength(2);
   expect(state.posts[0]).toEqual(state.posts[1]);
+});
+
+it("uses stable virtual list IDs and acknowledges the highest viewed sequence only at foreground bottom", async () => {
+  state.rows = Array.from({ length: 100 }, (_, i) => ({
+    id: "m" + (i + 1),
+    sequence: i + 1,
+    revision: 1,
+    body: "Message " + (i + 1),
+    senderId: "person",
+    createdAt: "2026-10-10T12:00:00Z",
+    removed: false,
+    replyToId: "",
+    mediaIds: [],
+  }));
+  await act(async () => root.render(<NativeConversation />));
+  expect(state.list.data).toHaveLength(100);
+  expect(state.list.keyExtractor(state.rows[39])).toBe("m40");
+  expect(state.list.maintainVisibleContentPosition).toEqual({
+    minIndexForVisible: 0,
+  });
+  expect(state.reads).toEqual([]);
+  await act(async () => state.list.onContentSizeChange());
+  await act(async () =>
+    state.list.onViewableItemsChanged({
+      viewableItems: [{ item: state.rows[39] }],
+    }),
+  );
+  expect(state.reads).toEqual([]);
+  await act(async () =>
+    state.list.onScroll({
+      nativeEvent: {
+        contentSize: { height: 1000 },
+        contentOffset: { y: 900 },
+        layoutMeasurement: { height: 100 },
+      },
+    }),
+  );
+  expect(state.reads).toEqual([40]);
+  await act(async () =>
+    state.list.onViewableItemsChanged({
+      viewableItems: [{ item: state.rows[99] }],
+    }),
+  );
+  expect(state.reads).toEqual([40, 100]);
+  state.w = { ...state.w, foreground: false };
+  await act(async () => root.render(<NativeConversation />));
+  await act(async () =>
+    state.list.onViewableItemsChanged({
+      viewableItems: [{ item: { ...state.rows[99], sequence: 101 } }],
+    }),
+  );
+  expect(state.reads).toEqual([40, 100]);
+});
+
+it("restores the saved native pixel offset after fresh authorized route hydration", async () => {
+  const scope = {
+    serverOrigin: "https://fixture.test",
+    companyId: "company",
+    userId: "person",
+    conversationId: "chat",
+  };
+  state.rows = Array.from({ length: 100 }, (_, i) => ({
+    id: "m" + (i + 1),
+    sequence: i + 1,
+    revision: 1,
+    body: "Fresh " + (i + 1),
+    senderId: "person",
+    createdAt: "2026-10-10T12:00:00Z",
+    removed: false,
+    replyToId: "",
+    mediaIds: [],
+  }));
+  writeHistoryPosition(scope, {
+    oldestSequence: 1,
+    anchorId: "m80",
+    offset: 745,
+    atBottom: false,
+  });
+  await act(async () => root.render(<NativeConversation />));
+  await act(async () => state.list.onContentSizeChange());
+  expect(state.scrolls).toEqual([745]);
+  expect(readHistoryPosition(scope)?.oldestSequence).toBe(1);
 });

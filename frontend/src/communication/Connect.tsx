@@ -1,4 +1,12 @@
-import { lazy, Suspense, useEffect, useEffectEvent, useRef, useState } from 'react';
+import {
+  lazy,
+  Suspense,
+  useEffect,
+  useEffectEvent,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
 import {
   ArrowLeft,
   Bookmark,
@@ -20,6 +28,7 @@ import { useWorkspace } from '../store';
 import { useCommunication } from './store';
 import type { Message, Conversation } from './types';
 import Composer from './Composer';
+import { readDraft, writeDraft, readHistoryPosition, writeHistoryPosition } from './drafts';
 import NewConversation from './NewConversation';
 import DailyTools from './DailyTools';
 import ConversationSettings from './ConversationSettings';
@@ -30,13 +39,14 @@ import MessageTaskConversion from '../components/MessageTaskConversion';
 import './Connect.css';
 const Calls = lazy(() => import('./Calls'));
 type Panel = 'search' | 'saved' | 'details' | 'work' | 'records' | null;
-export default function Connect() {
+export default function Connect({ onTask }: { onTask?: (id: string) => void } = {}) {
   const workspace = useWorkspace();
   const chat = useCommunication(
     workspace.companyId,
     workspace.session?.user.id ?? '',
     workspace.mode === 'api',
   );
+  const [target, setTarget] = useState<{ conversationId: string; messageId: string } | null>(null);
   const member = chat.members.find((m) => m.userId === workspace.session?.user.id);
   const privacyKey =
     workspace.companyId +
@@ -48,14 +58,28 @@ export default function Connect() {
     (chat.conversation
       ? chat.conversation.version + ':' + member?.epoch + ':' + member?.role
       : 'unavailable') +
-    ':' +
-    chat.privacyEpoch;
-  return <ConnectView key={privacyKey} workspace={workspace} chat={chat} />;
+    '';
+  return (
+    <ConnectView
+      key={privacyKey}
+      workspace={workspace}
+      chat={chat}
+      target={target}
+      onTarget={setTarget}
+      onTask={onTask}
+    />
+  );
 }
 function ConnectView({
   workspace,
   chat,
+  target,
+  onTarget,
+  onTask,
 }: {
+  target: { conversationId: string; messageId: string } | null;
+  onTarget: (target: { conversationId: string; messageId: string } | null) => void;
+  onTask?: (id: string) => void;
   workspace: ReturnType<typeof useWorkspace>;
   chat: ReturnType<typeof useCommunication>;
 }) {
@@ -82,6 +106,124 @@ function ConnectView({
   const [attention, setAttention] = useState<Record<string, number>>({});
   const historyRef = useRef<HTMLDivElement>(null);
   const atBottom = useRef(true);
+  const anchor = useRef<{ id: string; offset: number } | null>(null);
+  const [newCount, setNewCount] = useState(0);
+  const lastSequence = useRef(0);
+  const draftScope = {
+    serverOrigin: import.meta.env.VITE_API_URL || window.location.origin,
+    companyId: workspace.companyId,
+    userId: data.me.id,
+    conversationId: chat.selected,
+  };
+  useLayoutEffect(() => {
+    const p = readHistoryPosition(draftScope);
+    if (p) {
+      atBottom.current = p.atBottom ?? true;
+      anchor.current = p.anchorId ? { id: p.anchorId, offset: p.offset ?? 0 } : null;
+    }
+  }, [chat.selected]);
+  function chooseReply(message: Message | null) {
+    writeDraft(draftScope, { replyToId: message?.id ?? '' });
+    setReply(message);
+  }
+  useEffect(() => {
+    const id = readDraft(draftScope).replyToId;
+    if (id && !reply) {
+      const m = chat.messages.find((m) => m.id === id && !m.removed);
+      if (m) setReply(m);
+    }
+  }, [chat.messages]);
+  function captureAnchor() {
+    const el = historyRef.current;
+    if (!el) return;
+    const top = el.getBoundingClientRect().top + el.clientTop;
+    const row = [...el.querySelectorAll<HTMLElement>('[data-message-id]')].find(
+      (r) => r.getBoundingClientRect().bottom > top,
+    );
+    anchor.current = row
+      ? { id: row.dataset.messageId!, offset: row.getBoundingClientRect().top - top }
+      : null;
+    if (row)
+      writeHistoryPosition(draftScope, {
+        anchorId: anchor.current!.id,
+        offset: anchor.current!.offset,
+        atBottom: atBottom.current,
+      });
+  }
+  useLayoutEffect(() => {
+    const el = historyRef.current;
+    if (!el) return;
+    const sequence = chat.messages.at(-1)?.sequence ?? 0;
+    if (atBottom.current) {
+      el.scrollTop = el.scrollHeight;
+      setNewCount(0);
+    } else {
+      const a = anchor.current;
+      const row =
+        a &&
+        [...el.querySelectorAll<HTMLElement>('[data-message-id]')].find(
+          (r) => r.dataset.messageId === a.id,
+        );
+      if (a && !row) return;
+      if (row && a)
+        el.scrollTop +=
+          row.getBoundingClientRect().top -
+          el.getBoundingClientRect().top -
+          el.clientTop -
+          a.offset;
+      if (lastSequence.current > 0 && sequence > lastSequence.current)
+        setNewCount((n) => n + sequence - lastSequence.current);
+    }
+    lastSequence.current = sequence;
+    captureAnchor();
+  }, [chat.messages]);
+  useEffect(() => {
+    const changed = (m: Message | null) =>
+      m &&
+      chat.messages.some((row) => row.id === m.id && (row.removed || row.revision !== m.revision));
+    if (changed(reply)) setReply(null);
+    if (changed(thread?.root ?? null) || thread?.messages.some(changed)) setThread(null);
+    if (changed(workSource)) setWorkSource(null);
+    if (changed(conversion)) setConversion(null);
+    if (changed(structured)) setStructured(null);
+    if (changed(actionSource)) setActionSource(null);
+    if (changed(edit)) setEdit(null);
+    if (changed(remind)) setRemind(null);
+    if (changed(remove)) setRemove(null);
+  }, [chat.messages]);
+  useEffect(() => {
+    if (!target || target.conversationId !== chat.selected || !conversation) return;
+    const row = [
+      ...(historyRef.current?.querySelectorAll<HTMLElement>('[data-message-id]') ?? []),
+    ].find((r) => r.dataset.messageId === target.messageId);
+    if (row) {
+      row.scrollIntoView({ block: 'center' });
+      row.focus();
+      atBottom.current = false;
+      captureAnchor();
+      onTarget(null);
+      return;
+    }
+    void chat
+      .command<{ root: Message; messages: Message[] }>(
+        `/conversations/${chat.selected}/messages/${target.messageId}/thread`,
+        undefined,
+        'GET',
+      )
+      .then((v) => {
+        if (alive.current) {
+          setThread(v);
+          onTarget(null);
+        }
+      })
+      .catch((e) => {
+        if (alive.current) {
+          setThread(null);
+          setError(e.message);
+          onTarget(null);
+        }
+      });
+  }, [target, conversation?.id]);
   const alive = useRef(true);
   const shellRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -97,7 +239,20 @@ function ConnectView({
       const shell = shellRef.current;
       if (!shell) return;
       shell.style.setProperty('--connect-viewport-height', viewport.height + 'px');
-      shell.dataset.keyboard = String(viewport.height < window.innerHeight * 0.8);
+      shell.dataset.keyboard = String(
+        viewport.height < window.innerHeight * 0.8 || viewport.height < 650,
+      );
+      requestAnimationFrame(() => {
+        const nav = document.querySelector('.mobile-bottom-nav');
+        const bottom = Math.min(
+          viewport.offsetTop + viewport.height,
+          nav?.getBoundingClientRect().top ?? viewport.height,
+        );
+        shell.style.setProperty(
+          '--connect-available-height',
+          Math.max(160, bottom - shell.getBoundingClientRect().top - 16) + 'px',
+        );
+      });
     };
     resize();
     viewport.addEventListener('resize', resize);
@@ -156,6 +311,7 @@ function ConnectView({
       !last ||
       !atBottom.current ||
       document.visibilityState === 'hidden' ||
+      !alive.current ||
       last.sequence <= Math.max(readSent.current, me?.readSequence ?? 0)
     )
       return;
@@ -416,13 +572,21 @@ function ConnectView({
               onScroll={(e) => {
                 const el = e.currentTarget;
                 atBottom.current = el.scrollHeight - el.scrollTop - el.clientHeight < 70;
-                if (atBottom.current) acknowledgeRead();
+                captureAnchor();
+                if (atBottom.current) {
+                  setNewCount(0);
+                  acknowledgeRead();
+                }
               }}
             >
               {chat.hasMore && (
                 <button
                   className="connect-load"
-                  onClick={() => void chat.loadMore().catch((e) => setError(e.message))}
+                  disabled={chat.olderBusy}
+                  onClick={() => {
+                    captureAnchor();
+                    void chat.loadMore().catch((e) => setError(e.message));
+                  }}
                 >
                   Load older messages
                 </button>
@@ -450,7 +614,14 @@ function ConnectView({
                       year: 'numeric',
                     });
                     return (
-                      <li className="connect-message-group" key={m.id}>
+                      <li
+                        className="connect-message-group"
+                        key={m.id}
+                        data-message-id={m.id}
+                        data-sequence={m.sequence}
+                        data-revision={m.revision}
+                        tabIndex={-1}
+                      >
                         {(!previous ||
                           new Date(previous.createdAt).toDateString() !==
                             new Date(m.createdAt).toDateString()) && (
@@ -501,7 +672,7 @@ function ConnectView({
                               ))}
                             {!m.removed && (
                               <div className="connect-message-actions">
-                                <button disabled={disabled} onClick={() => setReply(m)}>
+                                <button disabled={disabled} onClick={() => chooseReply(m)}>
                                   Reply
                                 </button>
                                 <button onClick={() => void openThread(m)}>Open thread</button>
@@ -522,6 +693,38 @@ function ConnectView({
               )}
             </div>
             <footer className="connect-compose-area">
+              {!!newCount && (
+                <button
+                  onClick={() => {
+                    const el = historyRef.current;
+                    if (el) el.scrollTop = el.scrollHeight;
+                    atBottom.current = true;
+                    setNewCount(0);
+                    acknowledgeRead();
+                  }}
+                >
+                  {newCount} new messages
+                </button>
+              )}
+              <details>
+                <summary>Mentions in loaded history</summary>
+                {chat.messages
+                  .filter((m) => !m.removed && (m.mentionAll || m.mentionIds?.includes(data.me.id)))
+                  .map((m) => (
+                    <button
+                      key={m.id}
+                      onClick={() => onTarget({ conversationId: chat.selected, messageId: m.id })}
+                    >
+                      {m.mentionAll ? '@all · ' : ''}
+                      {m.body.slice(0, 80)}
+                    </button>
+                  ))}
+                {chat.hasMore && (
+                  <button disabled={chat.olderBusy} onClick={() => void chat.loadMore()}>
+                    Load older mentions
+                  </button>
+                )}
+              </details>
               {disabled ? (
                 <p className="connect-readonly">
                   <LockKeyhole size={16} />
@@ -532,12 +735,13 @@ function ConnectView({
               ) : (
                 <>
                   <Composer
+                    scope={draftScope}
                     members={chat.members}
                     names={Object.fromEntries(data.people.map((p) => [p.id, p.name]))}
                     canMentionAll={['owner', 'moderator'].includes(me?.role ?? '')}
                     disabled={disabled}
                     reply={reply}
-                    onClearReply={() => setReply(null)}
+                    onClearReply={() => chooseReply(null)}
                     send={(input) =>
                       chat.command(`/conversations/${chat.selected}/messages`, input)
                     }
@@ -619,8 +823,9 @@ function ConnectView({
               conversation={chat.selected}
               data={data}
               command={chat.command}
-              select={(id) => {
+              select={(id, messageId) => {
                 setPanel(null);
+                onTarget({ conversationId: id, messageId });
                 chat.select(id);
               }}
               initialMode={panel === 'saved' ? 'saved' : ''}
@@ -695,6 +900,12 @@ function ConnectView({
           <div className="connect-dialog-body">
             <WorkflowTools
               conversation={conversation}
+              onTask={onTask}
+              onSource={(messageId) => {
+                setPanel(null);
+                setWorkSource(null);
+                onTarget({ conversationId: chat.selected, messageId });
+              }}
               source={workSource}
               data={data}
               command={chat.command}
@@ -755,6 +966,7 @@ function ConnectView({
               </p>
             )}
             <Composer
+              scope={{ ...draftScope, threadRootId: thread.root.id }}
               members={chat.members}
               names={Object.fromEntries(data.people.map((p) => [p.id, p.name]))}
               disabled={disabled}
@@ -781,7 +993,7 @@ function ConnectView({
         >
           <div className="connect-action-menu">
             {[
-              ['Reply', disabled, () => setReply(actionSource)],
+              ['Reply', disabled, () => chooseReply(actionSource)],
               ['Open thread', false, () => void openThread(actionSource)],
               [
                 'Save privately',

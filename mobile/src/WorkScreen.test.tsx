@@ -3,8 +3,15 @@ import { act, createElement, type ReactNode } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import WorkScreen from "./WorkScreen";
+import TaskDetailScreen from "./TaskDetailScreen";
+import { clearAllDrafts } from "./conversationDrafts";
+vi.mock("expo-router", () => ({ router: { push: vi.fn(), back: vi.fn() } }));
+vi.mock("@react-native-community/datetimepicker", () => ({
+  default: () => null,
+}));
 const state = vi.hoisted(() => ({ w: {} as any, request: vi.fn() }));
 vi.mock("./client", () => ({ client: { request: state.request } }));
+vi.mock("./CaptureControl", () => ({ default: () => null }));
 vi.mock("./Media", () => ({ default: { downloadPath: vi.fn() } }));
 vi.mock("./Workspace", () => ({
   useWorkspace: () => state.w,
@@ -40,6 +47,12 @@ vi.mock("./ConnectUI", () => ({
     ),
 }));
 vi.mock("react-native", () => ({
+  FlatList: ({ data, renderItem }: any) =>
+    createElement(
+      "div",
+      {},
+      ...data.map((item: any, index: number) => renderItem({ item, index })),
+    ),
   Platform: { OS: "android" },
   StyleSheet: { create: (x: unknown) => x },
   View: ({ children }: { children: ReactNode }) =>
@@ -94,6 +107,7 @@ beforeEach(() => {
   );
   state.w = {
     company: "company",
+    foreground: true,
     policyEpoch: 0,
     session: { user: { id: "me" } },
     setError: vi.fn(),
@@ -133,6 +147,7 @@ beforeEach(() => {
 afterEach(() => {
   act(() => root.unmount());
   vi.useRealTimers();
+  clearAllDrafts();
 });
 it("keeps creation out of the list and supports search/status filters", async () => {
   await act(async () => root.render(createElement(WorkScreen)));
@@ -206,6 +221,9 @@ it("requires reviewing changed task details before a versioned write", async () 
     .mockResolvedValue({ task: { ...state.w.work.tasks[0], version: 2 } });
   await act(async () => root.render(createElement(WorkScreen)));
   await click("Open: Prepare handover");
+  await act(async () =>
+    root.render(createElement(TaskDetailScreen, { id: "open" })),
+  );
   await click("Submit for review / complete");
   expect(state.request).toHaveBeenCalledTimes(2);
   expect(state.request.mock.calls[0][0]).toContain("/tasks/");
@@ -250,7 +268,77 @@ it("clears retained draft after a confirmed authorization epoch change", async (
   await act(async () => root.render(createElement(WorkScreen)));
   await click("New task");
   await fill("Task title", "Clear on confirmed access change");
+  clearAllDrafts();
   state.w = { ...state.w, policyEpoch: state.w.policyEpoch + 1 };
   await act(async () => root.render(createElement(WorkScreen)));
   expect(container.querySelector('input[aria-label="Task title"]')).toBeNull();
+});
+
+it("restores authored input after the OS picker remounts the route, without a cached task body", async () => {
+  await act(async () => root.render(createElement(WorkScreen)));
+  await click("New task");
+  await fill("Task title", "Camera return input");
+  await fill("Deadline time", "16:00");
+  await act(async () => root.render(null));
+  state.w = { ...state.w, work: null, foreground: false };
+  await act(async () => root.render(createElement(WorkScreen)));
+  state.w = {
+    ...state.w,
+    foreground: true,
+    work: {
+      me: { role: "member", id: "me" },
+      company: { timezone: "Asia/Kolkata" },
+      tasks: [],
+      people: [],
+    },
+  };
+  await act(async () => root.render(createElement(WorkScreen)));
+  await click("New task");
+  expect(
+    (
+      container.querySelector(
+        'input[aria-label="Task title"]',
+      ) as HTMLInputElement
+    ).value,
+  ).toBe("Camera return input");
+  expect(
+    (
+      container.querySelector(
+        'input[aria-label="Deadline time"]',
+      ) as HTMLInputElement
+    ).value,
+  ).toBe("16:00");
+  expect(container.textContent).not.toContain("Prepare handover");
+});
+it("routes to a task outside the loaded list and inspects all bounded evidence pages", async () => {
+  state.w.work.tasks = [];
+  state.request.mockImplementation(async (path: string) =>
+    path.includes("/attachments?")
+      ? {
+          attachments: [{ id: "more", fileName: "Later evidence.pdf" }],
+          hasMore: false,
+          cursor: "",
+        }
+      : {
+          task: {
+            id: "target",
+            title: "Outside list",
+            status: "todo",
+            version: 1,
+            attachments: [{ id: "first", fileName: "First evidence.pdf" }],
+            description: "",
+            ownerId: "other",
+            requiresApproval: false,
+          },
+          evidence: { attachments: { hasMore: true, cursor: "next" } },
+        },
+  );
+  await act(async () => root.render(<TaskDetailScreen id="target" />));
+  expect(container.textContent).toContain("Outside list");
+  expect(container.textContent).toContain(
+    "Inspect evidence: Later evidence.pdf",
+  );
+  expect(state.request.mock.calls[1][0]).toContain(
+    "/tasks/target/attachments?limit=100&cursor=next",
+  );
 });

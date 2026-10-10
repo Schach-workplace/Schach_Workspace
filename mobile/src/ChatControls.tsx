@@ -11,6 +11,9 @@ export interface Member {
   userId: string;
   role: string;
   epoch: number;
+  active?: boolean;
+  historyFromSequence?: number;
+  readSequence?: number;
 }
 export default function ChatControls({
   conversation,

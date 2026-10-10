@@ -1,5 +1,17 @@
-import { useState } from "react";
-import { Text, TextInput, View } from "react-native";
+import {
+  useState,
+  useId,
+  useSyncExternalStore,
+  useRef,
+  useEffect,
+} from "react";
+import {
+  readDraft,
+  writeDraft,
+  subscribeDraft,
+  type DraftScope,
+} from "./conversationDrafts";
+import { FlatList, Text, TextInput, View } from "react-native";
 import * as Crypto from "expo-crypto";
 import { Action, Sheet, ui } from "./ConnectUI";
 import type { Member } from "./ChatControls";
@@ -12,6 +24,7 @@ interface Input {
   mentionAll: boolean;
 }
 export default function NativeComposer({
+  scope: providedScope,
   disabled,
   reply,
   onClearReply,
@@ -21,6 +34,7 @@ export default function NativeComposer({
   canMentionAll,
   onMedia,
 }: {
+  scope?: DraftScope;
   disabled: boolean;
   reply: Message | null;
   onClearReply?: () => void;
@@ -30,36 +44,72 @@ export default function NativeComposer({
   canMentionAll: boolean;
   onMedia?: () => void;
 }) {
-  const [draft, setDraft] = useState("");
-  const [pending, setPending] = useState<Input | null>(null);
-  const [busy, setBusy] = useState(false);
-  const [error, setError] = useState("");
-  const [mentions, setMentions] = useState<string[]>([]);
-  const [all, setAll] = useState(false);
+  const id = useId();
+  const scope = providedScope ?? {
+    serverOrigin: "local",
+    companyId: "",
+    userId: "",
+    conversationId: id,
+  };
+  const state = useSyncExternalStore(subscribeDraft, () => readDraft(scope));
+  const {
+    body: draft,
+    mentionIds: mentions,
+    mentionAll: all,
+    pendingPayload: pending,
+    busy,
+    error,
+  } = state;
+  const setDraft = (body: string) => writeDraft(scope, { body });
+  const setMentions = (fn: (ids: string[]) => string[]) =>
+    writeDraft(scope, { mentionIds: fn(readDraft(scope).mentionIds) });
+  const setAll = (fn: (v: boolean) => boolean) =>
+    writeDraft(scope, { mentionAll: fn(readDraft(scope).mentionAll) });
   const [showMentions, setShowMentions] = useState(false);
-  async function send() {
-    if (disabled || busy || !draft.trim()) return;
-    const input = pending ?? {
-      body: draft,
-      clientMessageId: Crypto.randomUUID(),
-      replyToId: reply?.id ?? "",
-      mentionIds: mentions,
-      mentionAll: all,
+  const [query, setQuery] = useState("");
+  const alive = useRef(true);
+  useEffect(() => {
+    alive.current = true;
+    return () => {
+      alive.current = false;
     };
-    setPending(input);
-    setBusy(true);
-    setError("");
+  }, []);
+  async function send() {
+    if (disabled || readDraft(scope).busy || !draft.trim()) return;
+    const input = Object.freeze({
+      ...(pending ?? {
+        body: draft,
+        clientMessageId: Crypto.randomUUID(),
+        replyToId: reply?.id ?? scope.threadRootId ?? "",
+        mentionIds: mentions,
+        mentionAll: all,
+      }),
+      mentionIds: [...mentions],
+    });
+    // A retry uses its original selection even if directory input changed.
+    const frozen = pending ?? input;
+    writeDraft(scope, {
+      pendingPayload: frozen,
+      replyToId: frozen.replyToId,
+      busy: true,
+      error: "",
+    });
     try {
-      await onSend(input);
-      setPending(null);
-      setDraft("");
-      onClearReply?.();
-      setMentions([]);
-      setAll(false);
+      await onSend(frozen as Input);
+      if (readDraft(scope).pendingPayload !== frozen) return;
+      writeDraft(scope, {
+        body: "",
+        pendingPayload: null,
+        mentionIds: [],
+        mentionAll: false,
+        replyToId: "",
+        error: "",
+        busy: false,
+      });
+      if (alive.current) onClearReply?.();
     } catch (e) {
-      setError((e as Error).message);
-    } finally {
-      setBusy(false);
+      if (readDraft(scope).pendingPayload === frozen)
+        writeDraft(scope, { error: (e as Error).message, busy: false });
     }
   }
   return (
@@ -119,30 +169,53 @@ export default function NativeComposer({
         <Action
           title="Return to draft"
           onPress={() => {
-            setPending(null);
-            setError("");
+            writeDraft(scope, { pendingPayload: null, error: "" });
           }}
         />
       )}
       {showMentions && (
         <Sheet
+          scroll={false}
+          keyboard
           title="Mention participants"
           onClose={() => setShowMentions(false)}
         >
-          {members.map((m) => (
-            <Action
-              key={m.userId}
-              title={names[m.userId] ?? "Company member"}
-              selected={mentions.includes(m.userId)}
-              onPress={() =>
-                setMentions((ids) =>
-                  ids.includes(m.userId)
-                    ? ids.filter((id) => id !== m.userId)
-                    : [...ids, m.userId],
-                )
-              }
-            />
-          ))}
+          <TextInput
+            accessibilityLabel="Find participant"
+            value={query}
+            onChangeText={setQuery}
+            style={ui.input}
+          />
+          <Text>
+            Selected:{" "}
+            {mentions.map((id) => names[id] ?? "Company member").join(", ") ||
+              "None"}
+          </Text>
+          <FlatList
+            data={members.filter(
+              (m) =>
+                m.active &&
+                (names[m.userId] ?? "Company member")
+                  .toLowerCase()
+                  .includes(query.toLowerCase()),
+            )}
+            keyExtractor={(m) => m.userId}
+            keyboardShouldPersistTaps="handled"
+            renderItem={({ item: m }) => (
+              <Action
+                key={m.userId}
+                title={names[m.userId] ?? "Company member"}
+                selected={mentions.includes(m.userId)}
+                onPress={() =>
+                  setMentions((ids) =>
+                    ids.includes(m.userId)
+                      ? ids.filter((id) => id !== m.userId)
+                      : [...ids, m.userId],
+                  )
+                }
+              />
+            )}
+          />
           {canMentionAll && (
             <>
               <Action

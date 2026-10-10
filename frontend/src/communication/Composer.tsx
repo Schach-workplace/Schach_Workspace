@@ -1,4 +1,5 @@
-import { useState, useId } from 'react';
+import { useState, useId, useSyncExternalStore, useEffect, useRef } from 'react';
+import { readDraft, writeDraft, subscribeDraft, type DraftScope } from './drafts';
 import type { Message, Member } from './types';
 interface Send {
   clientMessageId: string;
@@ -9,6 +10,7 @@ interface Send {
 }
 export default function Composer({
   send,
+  scope: providedScope,
   disabled,
   reply,
   onClearReply,
@@ -16,6 +18,7 @@ export default function Composer({
   names = {},
   canMentionAll = false,
 }: {
+  scope?: DraftScope;
   members?: Member[];
   names?: Record<string, string>;
   canMentionAll?: boolean;
@@ -25,27 +28,61 @@ export default function Composer({
   onClearReply: () => void;
 }) {
   const composerId = useId();
-  const [mentions, setMentions] = useState<string[]>([]);
-  const [all, setAll] = useState(false);
-  const [draft, setDraft] = useState('');
-  const [pending, setPending] = useState<Send | null>(null);
-  const [busy, setBusy] = useState(false);
-  const [error, setError] = useState('');
+  const scope = providedScope ?? {
+    serverOrigin: 'local',
+    companyId: '',
+    userId: '',
+    conversationId: composerId,
+  };
+  const state = useSyncExternalStore(subscribeDraft, () => readDraft(scope));
+  const {
+    body: draft,
+    mentionIds: mentions,
+    mentionAll: all,
+    pendingPayload: pending,
+    busy,
+    error,
+  } = state;
+  const setDraft = (body: string) => writeDraft(scope, { body });
+  const setMentions = (fn: (ids: string[]) => string[]) =>
+    writeDraft(scope, { mentionIds: fn(readDraft(scope).mentionIds) });
+  const setAll = (mentionAll: boolean) => writeDraft(scope, { mentionAll });
+  const alive = useRef(true);
+  useEffect(() => {
+    alive.current = true;
+    return () => {
+      alive.current = false;
+    };
+  }, []);
+  const [mentionQuery, setMentionQuery] = useState('');
   async function submit(input: Send) {
-    setPending(input);
-    setBusy(true);
-    setError('');
+    if (readDraft(scope).busy) return;
+    const frozen = Object.freeze({
+      ...input,
+      mentionIds: Object.freeze([...(input.mentionIds ?? [])]) as unknown as string[],
+    });
+    writeDraft(scope, {
+      pendingPayload: frozen,
+      replyToId: frozen.replyToId,
+      busy: true,
+      error: '',
+    });
     try {
-      await send(input);
-      setPending(null);
-      setDraft((old) => (old === input.body ? '' : old));
-      onClearReply();
-      setMentions([]);
-      setAll(false);
+      await send(frozen);
+      if (readDraft(scope).pendingPayload !== frozen) return;
+      writeDraft(scope, {
+        pendingPayload: null,
+        body: '',
+        mentionIds: [],
+        mentionAll: false,
+        replyToId: '',
+        error: '',
+        busy: false,
+      });
+      if (alive.current) onClearReply();
     } catch (e) {
-      setError((e as Error).message);
-    } finally {
-      setBusy(false);
+      if (readDraft(scope).pendingPayload === frozen)
+        writeDraft(scope, { error: (e as Error).message, busy: false });
     }
   }
   return (
@@ -68,7 +105,14 @@ export default function Composer({
       {reply && (
         <div>
           Reply to {reply.body.slice(0, 80)}{' '}
-          <button type="button" onClick={onClearReply}>
+          <button
+            type="button"
+            disabled={busy || !!pending}
+            onClick={() => {
+              writeDraft(scope, { replyToId: '' });
+              onClearReply();
+            }}
+          >
             Cancel reply
           </button>
         </div>
@@ -90,21 +134,34 @@ export default function Composer({
       />
       <details className="connect-mentions">
         <summary>Mention participants</summary>
-        {members.map((m) => (
-          <label key={m.userId}>
-            <input
-              type="checkbox"
-              disabled={disabled || busy || !!pending}
-              checked={mentions.includes(m.userId)}
-              onChange={(e) =>
-                setMentions((ids) =>
-                  e.target.checked ? [...ids, m.userId] : ids.filter((id) => id !== m.userId),
-                )
-              }
-            />
-            {names[m.userId] ?? 'Company member'}
-          </label>
-        ))}
+        <p>Selected: {mentions.map((id) => names[id] ?? 'Company member').join(', ') || 'None'}</p>
+        <label>
+          Find participant
+          <input value={mentionQuery} onChange={(e) => setMentionQuery(e.target.value)} />
+        </label>
+        {members
+          .filter(
+            (m) =>
+              m.active &&
+              (names[m.userId] ?? 'Company member')
+                .toLocaleLowerCase()
+                .includes(mentionQuery.toLocaleLowerCase()),
+          )
+          .map((m) => (
+            <label key={m.userId}>
+              <input
+                type="checkbox"
+                disabled={disabled || busy || !!pending}
+                checked={mentions.includes(m.userId)}
+                onChange={(e) =>
+                  setMentions((ids) =>
+                    e.target.checked ? [...ids, m.userId] : ids.filter((id) => id !== m.userId),
+                  )
+                }
+              />
+              {names[m.userId] ?? 'Company member'}
+            </label>
+          ))}
         {canMentionAll && (
           <label>
             <input
@@ -127,8 +184,7 @@ export default function Composer({
           <button
             type="button"
             onClick={() => {
-              setPending(null);
-              setError('');
+              writeDraft(scope, { pendingPayload: null, error: '' });
             }}
           >
             Return to draft

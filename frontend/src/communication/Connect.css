@@ -811,8 +811,8 @@
 @media (max-width: 760px) {
   .connect-shell.connect-layout {
     display: flex;
-    height: calc(var(--connect-viewport-height, 100dvh) - 275px);
-    min-height: 420px;
+    height: var(--connect-available-height, calc(var(--connect-viewport-height, 100dvh) - 275px));
+    min-height: 0;
     border-radius: 10px;
     max-height: none;
   }
@@ -862,7 +862,7 @@
     gap: 16px;
   }
   .connect-message-actions button {
-    min-height: 36px;
+    min-height: 44px;
     font-size: 11px;
   }
   .connect-compose-area {
@@ -912,8 +912,8 @@
     display: none;
   }
   .connect-shell.connect-layout[data-keyboard='true'] {
-    height: calc(var(--connect-viewport-height, 100dvh) - 155px);
-    min-height: 180px;
+    height: var(--connect-available-height, calc(var(--connect-viewport-height, 100dvh) - 155px));
+    min-height: 0;
   }
   .connect-shell[data-keyboard='true'] .connect-call-strip,
   .connect-shell[data-keyboard='true'] .connect-send-row .connect-hint {

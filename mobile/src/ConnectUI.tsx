@@ -68,19 +68,25 @@ export function Sheet({
   title,
   onClose,
   children,
-  keyboard = false,
+  keyboard = true,
+  scroll = true,
+  busy = false,
 }: {
   title: string;
   onClose: () => void;
   children: ReactNode;
   keyboard?: boolean;
+  scroll?: boolean;
+  busy?: boolean;
 }) {
   return (
     <Modal
       visible
       animationType="slide"
       presentationStyle="pageSheet"
-      onRequestClose={onClose}
+      onRequestClose={() => {
+        if (!busy) onClose();
+      }}
     >
       <SafeAreaView style={ui.sheet}>
         <KeyboardAvoidingView
@@ -90,14 +96,18 @@ export function Sheet({
         >
           <View style={ui.header}>
             <Text style={ui.title}>{title}</Text>
-            <Action title="Close" onPress={onClose} />
+            <Action title="Close" disabled={busy} onPress={onClose} />
           </View>
-          <ScrollView
-            keyboardShouldPersistTaps="handled"
-            contentContainerStyle={ui.sheetBody}
-          >
-            {children}
-          </ScrollView>
+          {scroll ? (
+            <ScrollView
+              keyboardShouldPersistTaps="handled"
+              contentContainerStyle={ui.sheetBody}
+            >
+              {children}
+            </ScrollView>
+          ) : (
+            <View style={[ui.sheetBody, { flex: 1 }]}>{children}</View>
+          )}
         </KeyboardAvoidingView>
       </SafeAreaView>
     </Modal>
@@ -119,6 +129,7 @@ export const ui = StyleSheet.create({
   subtitle: { fontSize: 12, color: "#8590a2", lineHeight: 19 },
   action: {
     minHeight: 44,
+    minWidth: 44,
     justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: 13,
@@ -127,7 +138,12 @@ export const ui = StyleSheet.create({
   actionText: { fontSize: 12, fontWeight: "600", color: "#68788f" },
   primary: { backgroundColor: "#ed741f" },
   selected: { backgroundColor: "#fff1e5" },
-  row: { flexDirection: "row", alignItems: "center", gap: 10 },
+  row: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    alignItems: "center",
+    gap: 10,
+  },
   avatar: {
     width: 38,
     height: 38,

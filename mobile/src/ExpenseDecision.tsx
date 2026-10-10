@@ -1,3 +1,5 @@
+import CaptureControl from "./CaptureControl";
+import { useRamInput } from "./ramInput";
 import { useEffect, useState } from "react";
 import { Button, Text, TextInput, View } from "react-native";
 import { client } from "./client";
@@ -9,7 +11,9 @@ export default function ExpenseDecision(props: {
   onClose: () => void;
 }) {
   const w = useWorkspace();
+  const [evidenceEpoch, setEvidenceEpoch] = useState(0);
   const scope = [
+    evidenceEpoch,
     w.company,
     w.recordEpoch,
     w.work?.readBasis,
@@ -48,22 +52,45 @@ export default function ExpenseDecision(props: {
       </View>
     );
   return (
-    <ExpenseDecisionBody key={scope} expense={detail} onClose={props.onClose} />
+    <ExpenseDecisionBody
+      key={scope}
+      expense={detail}
+      onClose={props.onClose}
+      onEvidenceAdded={() => setEvidenceEpoch((e) => e + 1)}
+    />
   );
 }
 function ExpenseDecisionBody({
   expense,
   onClose,
+  onEvidenceAdded,
 }: {
   expense: NativeExpense;
   onClose: () => void;
+  onEvidenceAdded: () => void;
 }) {
   const w = useWorkspace();
-  const [note, setNote] = useState("");
-  const [overrideReason, setOverride] = useState("");
-  const [paidDate, setDate] = useState("");
-  const [method, setMethod] = useState("bank_transfer");
-  const [reference, setReference] = useState("");
+  const [note, setNote] = useRamInput("$expense:" + expense.id, "note", "");
+  const [overrideReason, setOverride] = useRamInput(
+    "$expense:" + expense.id,
+    "overrideReason",
+    "",
+  );
+  const [paidDate, setDate] = useRamInput(
+    "$expense:" + expense.id,
+    "paidDate",
+    "",
+  );
+  const [method, setMethod] = useRamInput(
+    "$expense:" + expense.id,
+    "method",
+    "bank_transfer",
+  );
+  const [reference, setReference] = useRamInput(
+    "$expense:" + expense.id,
+    "reference",
+    "",
+  );
   const [confirm, setConfirm] = useState(false);
   const [busy, setBusy] = useState(false);
   const me = w.work?.me;
@@ -124,6 +151,23 @@ function ExpenseDecisionBody({
           }
         />
       ))}
+      {writable && (mine || authority) && (
+        <CaptureControl
+          scope={{
+            serverOrigin: client.endpoint,
+            companyId: w.company,
+            userId: w.session?.user.id ?? "",
+            targetKind: "expense",
+            targetId: expense.id,
+          }}
+          label={"Receipt: " + expense.title}
+          onUploaded={async () => {
+            setConfirm(false);
+            await w.refresh("finance");
+            onEvidenceAdded();
+          }}
+        />
+      )}
       <TextInput
         accessibilityLabel="Financial decision note"
         style={styles.input}

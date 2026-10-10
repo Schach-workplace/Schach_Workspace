@@ -1,5 +1,5 @@
 import { useEffect, useEffectEvent, useState, useRef } from "react";
-import { ScrollView, Text, TextInput, View, Pressable } from "react-native";
+import { FlatList, Text, TextInput, View, Pressable } from "react-native";
 import { router } from "expo-router";
 import { client } from "./client";
 import { Page, useWorkspace, type Conversation } from "./Workspace";
@@ -56,9 +56,12 @@ function List() {
     const timer = setInterval(() => checkAttention(), 15000);
     return () => clearInterval(timer);
   }, [w.company, w.foreground]);
-  function open(id: string) {
+  function open(id: string, messageId?: string) {
     w.select(id);
-    router.push({ pathname: "/chat/[id]", params: { id, company: w.company } });
+    router.push({
+      pathname: "/chat/[id]",
+      params: { id, company: w.company, messageId },
+    });
   }
   const rows = w.conversations.filter(
     (c) =>
@@ -103,8 +106,12 @@ function List() {
           />
         ))}
       </View>
-      <ScrollView style={{ flex: 1 }} keyboardShouldPersistTaps="handled">
-        {rows.map((c) => (
+      <FlatList
+        data={rows}
+        keyExtractor={(c) => c.id}
+        style={{ flex: 1 }}
+        keyboardShouldPersistTaps="handled"
+        renderItem={({ item: c }) => (
           <Pressable
             key={c.id}
             accessibilityRole="button"
@@ -139,33 +146,37 @@ function List() {
               <Text style={ui.badge}>{attention[c.id]}</Text>
             )}
           </Pressable>
-        ))}
-        {!rows.length && (
-          <View style={ui.empty}>
-            <Text style={ui.title}>
-              {q || filter !== "all"
-                ? "No matching conversations"
-                : "Start a conversation"}
-            </Text>
-            <Text style={ui.subtitle}>
-              Message a person or bring your team together.
-            </Text>
-            {w.work?.me.role !== "viewer" && (
+        )}
+        ListFooterComponent={
+          <View>
+            {!rows.length && (
+              <View style={ui.empty}>
+                <Text style={ui.title}>
+                  {q || filter !== "all"
+                    ? "No matching conversations"
+                    : "Start a conversation"}
+                </Text>
+                <Text style={ui.subtitle}>
+                  Message a person or bring your team together.
+                </Text>
+                {w.work?.me.role !== "viewer" && (
+                  <Action
+                    primary
+                    title="Message a person"
+                    onPress={() => setCreating(true)}
+                  />
+                )}
+              </View>
+            )}
+            {w.listMore && (
               <Action
-                primary
-                title="Message a person"
-                onPress={() => setCreating(true)}
+                title="Load more conversations"
+                onPress={w.loadMoreConversations}
               />
             )}
           </View>
-        )}
-        {w.listMore && (
-          <Action
-            title="Load more conversations"
-            onPress={w.loadMoreConversations}
-          />
-        )}
-      </ScrollView>
+        }
+      />
       <View style={ui.header}>
         <Action
           title="Search & saved messages"
@@ -184,9 +195,9 @@ function List() {
       {search && (
         <SearchSheet
           onClose={() => setSearch(false)}
-          onOpen={(id) => {
+          onOpen={(id, messageId) => {
             setSearch(false);
-            open(id);
+            open(id, messageId);
           }}
         />
       )}
@@ -240,7 +251,7 @@ function NewChat({
     }
   }
   return (
-    <Sheet title="New conversation" onClose={onClose}>
+    <Sheet keyboard busy={busy} title="New conversation" onClose={onClose}>
       <View style={ui.row}>
         {[
           ["dm", "Direct message"],
@@ -359,7 +370,7 @@ export function SearchSheet({
   conversation = "",
 }: {
   onClose: () => void;
-  onOpen: (id: string) => void;
+  onOpen: (id: string, messageId?: string) => void;
   conversation?: string;
 }) {
   const w = useWorkspace();
@@ -431,7 +442,7 @@ export function SearchSheet({
         <Pressable
           key={m.id}
           style={ui.conversation}
-          onPress={() => onOpen(m.conversationId)}
+          onPress={() => onOpen(m.conversationId, m.id)}
           accessibilityRole="button"
         >
           <Text style={ui.body}>{m.body}</Text>

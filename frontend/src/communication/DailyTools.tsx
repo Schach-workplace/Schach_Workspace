@@ -12,7 +12,7 @@ export default function DailyTools({
   conversation: string;
   data: WorkspaceData;
   command: <T>(path: string, body: unknown, method?: string) => Promise<T>;
-  select: (id: string) => void;
+  select: (id: string, messageId: string) => void;
 }) {
   const [briefing, setBriefing] = useState<{
     visibleTaskCount: number;
@@ -119,7 +119,7 @@ export default function DailyTools({
                   {new Date(reminders[m.id]).toLocaleString()}
                 </small>
               )}
-              <button onClick={() => select(m.conversationId)}>Open conversation</button>
+              <button onClick={() => select(m.conversationId, m.id)}>Open conversation</button>
               <span>
                 {' '}
                 · Revision {m.revision} ·{' '}

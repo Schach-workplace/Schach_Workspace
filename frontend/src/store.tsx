@@ -1,3 +1,4 @@
+import { clearAllDrafts as clearConnectDrafts } from './communication/drafts';
 import {
   createContext,
   useCallback,
@@ -5,6 +6,7 @@ import {
   useEffect,
   useMemo,
   useRef,
+  useLayoutEffect,
   useState,
 } from 'react';
 import type { ReactNode } from 'react';
@@ -103,6 +105,12 @@ function Store({ children }: { children: ReactNode }) {
     const timer = setTimeout(() => setToast(''), 5000);
     return () => clearTimeout(timer);
   }, [toast]);
+  const connectOwner = useRef('');
+  const nextConnectOwner = (session?.user.id ?? '') + ':' + companyId;
+  useLayoutEffect(() => {
+    if (connectOwner.current && connectOwner.current !== nextConnectOwner) clearConnectDrafts();
+    connectOwner.current = nextConnectOwner;
+  }, [nextConnectOwner]);
   const key = ['workspace', MODE, session?.user.id ?? '', companyId];
   const scopeEnabled = !!session && !!companyId && !deniedCompanies.includes(companyId);
   const workspace = useQuery({
@@ -123,6 +131,7 @@ function Store({ children }: { children: ReactNode }) {
     workspace.isFetchedAfterMount &&
     !!workspace.data &&
     !(workspace.error instanceof ApiError && [401, 403].includes(workspace.error.status));
+  const connectAuthorization = useRef<{ owner: string; basis: string } | null>(null);
   const roleBasis = workspace.data
     ? [
         workspace.data.readBasis,
@@ -131,6 +140,13 @@ function Store({ children }: { children: ReactNode }) {
         workspace.data.me.managerId,
       ].join(':')
     : '';
+  useLayoutEffect(() => {
+    if (!authorized || !roleBasis) return;
+    const previous = connectAuthorization.current;
+    if (previous && previous.owner === nextConnectOwner && previous.basis !== roleBasis)
+      clearConnectDrafts();
+    connectAuthorization.current = { owner: nextConnectOwner, basis: roleBasis };
+  }, [authorized, roleBasis, nextConnectOwner]);
   const tasks = useQuery({
     queryKey: [...key, 'tasks', roleBasis],
     enabled: MODE === 'api' && authorized,
@@ -306,6 +322,7 @@ function Store({ children }: { children: ReactNode }) {
     [client, applySession, notify],
   );
   const logout = useCallback(async () => {
+    clearConnectDrafts();
     try {
       if (MODE === 'demo') await demoLogout();
       else await request('/auth/logout', { method: 'POST' });

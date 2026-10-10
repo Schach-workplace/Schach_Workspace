@@ -26,16 +26,16 @@ API responses set `Cache-Control: no-store`, `X-Content-Type-Options: nosniff`, 
 
 The authoritative role and company requirements are in [PRODUCT_SPEC.md](PRODUCT_SPEC.md) and [API_CONTRACT.md](API_CONTRACT.md). They must remain true in both the standalone and Encore adapters:
 
-| Boundary | Required behavior |
-| --- | --- |
-| Company | Resolve an active membership for the authenticated user and the company in the URL. Platform ownership does not grant a membership bypass. |
-| Leadership | Founder, CEO, and company admin can administer their company; they cannot act in another company without membership. |
-| Department and manager | A department head is scoped to that department; a manager sees reports and their own work. |
-| Member | Task visibility follows ownership, creation, collaboration, and assigned review. Visibility alone must not grant administrative edits. |
-| Finance | Company financial authority; does not gain people administration or broad work access. |
-| Viewer | Read-only work visibility; deny mutations, collaborator actions and finance records. |
-| References | Owners, reviewers, departments, projects, parents, dependencies, goals, attachments, and notifications must resolve inside the current company and applicable role scope. |
-| Approval | An accountable owner cannot approve their own required work review. An expense creator cannot approve/reject/pay that expense, including when the creator is a founder. |
+| Boundary               | Required behavior                                                                                                                                                         |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Company                | Resolve an active membership for the authenticated user and the company in the URL. Platform ownership does not grant a membership bypass.                                |
+| Leadership             | Founder, CEO, and company admin can administer their company; they cannot act in another company without membership.                                                      |
+| Department and manager | A department head is scoped to that department; a manager sees reports and their own work.                                                                                |
+| Member                 | Task visibility follows ownership, creation, collaboration, and assigned review. Visibility alone must not grant administrative edits.                                    |
+| Finance                | Company financial authority; does not gain people administration or broad work access.                                                                                    |
+| Viewer                 | Read-only work visibility; deny mutations, collaborator actions and finance records.                                                                                      |
+| References             | Owners, reviewers, departments, projects, parents, dependencies, goals, attachments, and notifications must resolve inside the current company and applicable role scope. |
+| Approval               | An accountable owner cannot approve their own required work review. An expense creator cannot approve/reject/pay that expense, including when the creator is a founder.   |
 
 Task edits use optimistic versions to reject stale writes. Original deadlines must remain intact and deadline changes require a reason. Audit records support operational accountability; they are ordinary database records, not an independently tamper-proof ledger. The application database and its administrators are trusted components. Do not claim separate physical tenant databases or PostgreSQL row-level-security enforcement unless those are added and verified.
 
@@ -61,7 +61,6 @@ Workload and delivery metrics describe recorded work. Self-reported time, task c
 
 Before real use, verify unauthorized and cross-company access, department/manager scope, viewer write denial, required-review segregation, stale writes, foreign references, uploads/downloads, session expiry/revocation, rejected origins, and recurrence concurrency on the deployed runtime. Run a backup restore into an isolated database. Keep actual command results and any unresolved findings with the release; do not convert an unexecuted checklist into a claim of verification.
 
-
 ## Finance boundaries and remaining gaps
 
 Money is stored in integer minor units, with company currency and fiscal-year settings locked after the first financial record. Budget approval and version checks execute under the same company lock as membership revalidation. Financial uploads have an expense-specific permission path; finance visibility does not reveal a private linked task/project ID, nor grant access to the task. Access-denied workspace queries clear cached content and refresh company memberships instead of displaying a stale denied-company snapshot.
@@ -80,4 +79,4 @@ Message retries, conversion retries and primary-action claims are durable and pa
 
 Chat media uses private storage and fail-closed ClamAV scanning; existing task/receipt format checks remain compatible and do not become a universal antivirus service. Selected owner exports require the selected-publication policy, a purpose and an audit record; they export only current authorized messages, without historical revisions/media bytes. Text/media retention scrubs live derived content and retains non-content retry tombstones; restoration requires reapplying retention. Backups and exported copies have separate expiry/ownership.
 
-Native tokens use platform secure storage and HTTPS in release builds. Company/logout/background changes cancel requests and clear managed private UI drafts; downloads are temporary until deliberately shared. This is cooperative client cleanup, not forensic remote erasure. FCM/APNs payloads contain generic hints only. Self-hosted call signaling must pass the revocable Schach gateway, with provider signaling inaccessible from outside. Recording is disabled. Read [communication operations](COMMUNICATION_OPERATIONS.md) for the required physical-device, TLS/TURN, signed-delivery, identity and recovery gates.
+Native tokens use platform secure storage and HTTPS in release builds. Company/account/origin changes, logout and confirmed permission/history revocation cancel requests and clear affected private authored drafts. Temporary background cancels requests and hides/clears server-fetched history and records; explicitly authored input and frozen pending sends may remain only in process RAM and return after fresh authorization. Normal same-company navigation retains isolated RAM drafts. Private authored drafts are never written to disk/localStorage. Selected capture/upload files use owned temporary cache with explicit destination and cleanup; downloads are temporary until deliberately shared. This is cooperative client cleanup, not forensic remote erasure. FCM/APNs payloads contain generic hints only. Self-hosted call signaling must pass the revocable Schach gateway, with provider signaling inaccessible from outside. Recording is disabled. Read [communication operations](COMMUNICATION_OPERATIONS.md) for the required physical-device, TLS/TURN, signed-delivery, identity and recovery gates.

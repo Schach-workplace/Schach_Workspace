@@ -44,7 +44,7 @@ import { InboxPage, SettingsPage } from './pages/InboxSettings';
 import FinancePage from './pages/Finance';
 
 const navigation = [
-  {id:'connect' as View,label:'Connect',icon:UsersRound,group:'workspace'},
+  { id: 'connect' as View, label: 'Connect', icon: UsersRound, group: 'workspace' },
   { id: 'overview' as View, label: 'Overview', icon: LayoutDashboard, group: 'workspace' },
   { id: 'my-work' as View, label: 'My work', icon: Check, group: 'workspace' },
   { id: 'tasks' as View, label: 'All tasks', icon: ClipboardList, group: 'workspace' },
@@ -59,7 +59,7 @@ const navigation = [
   { id: 'settings' as View, label: 'Settings', icon: Settings, group: 'tools' },
 ];
 const headings: Record<View, { title: string; description: string }> = {
-  connect:{title:'Connect',description:'Company conversations and accountable work.'},
+  connect: { title: 'Connect', description: 'Company conversations and accountable work.' },
   overview: {
     title: 'Your business, in focus.',
     description: 'The commitments, decisions and people moving your company forward.',
@@ -118,15 +118,16 @@ function Login() {
   const store = useWorkspace();
   const [email, setEmail] = useState(store.mode === 'demo' ? 'founder@schach.demo' : '');
   const [password, setPassword] = useState(store.mode === 'demo' ? 'SchachDemo!2026' : '');
-  const [code,setCode]=useState('');const [recoveryCode,setRecoveryCode]=useState('');
- const [busy, setBusy] = useState(false);
+  const [code, setCode] = useState('');
+  const [recoveryCode, setRecoveryCode] = useState('');
+  const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   async function login(event: FormEvent) {
     event.preventDefault();
     setBusy(true);
     setError('');
     try {
-      await store.login(email, password,code,recoveryCode);
+      await store.login(email, password, code, recoveryCode);
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Unable to sign in.');
     } finally {
@@ -227,7 +228,29 @@ function Login() {
                 placeholder="Enter your password"
               />
             </label>
-            {store.mode==='api'&&<><label className="field"><span className="field-label">Authenticator code (if enabled)</span><input inputMode="numeric" autoComplete="one-time-code" value={code} onChange={e=>setCode(e.target.value)} maxLength={6}/></label><label className="field"><span className="field-label">Recovery code (instead of authenticator)</span><input autoComplete="off" value={recoveryCode} onChange={e=>setRecoveryCode(e.target.value)} maxLength={32}/></label></>}
+            {store.mode === 'api' && (
+              <>
+                <label className="field">
+                  <span className="field-label">Authenticator code (if enabled)</span>
+                  <input
+                    inputMode="numeric"
+                    autoComplete="one-time-code"
+                    value={code}
+                    onChange={(e) => setCode(e.target.value)}
+                    maxLength={6}
+                  />
+                </label>
+                <label className="field">
+                  <span className="field-label">Recovery code (instead of authenticator)</span>
+                  <input
+                    autoComplete="off"
+                    value={recoveryCode}
+                    onChange={(e) => setRecoveryCode(e.target.value)}
+                    maxLength={32}
+                  />
+                </label>
+              </>
+            )}
             <button
               className="button button-primary login-submit"
               disabled={busy || store.loading}
@@ -712,7 +735,12 @@ export default function App() {
           {view === 'workload' && <WorkloadPage onTask={openTask} />}
           {view === 'goals' && <GoalsPage onTask={openTask} />}
           {view === 'reports' && <ReportsPage onTask={openTask} />}
-          {view === 'connect' && <Connect key={store.companyId+":"+(store.session?.user.id??"")} />}
+          {view === 'connect' && (
+            <Connect
+              onTask={openTask}
+              key={store.companyId + ':' + (store.session?.user.id ?? '')}
+            />
+          )}
           {view === 'people' && <Organization onNavigate={navigate} />}
           {view === 'finance' && (
             <FinancePage key={data.company.id} initialExpenseId={expenseId} onOpenTask={openTask} />

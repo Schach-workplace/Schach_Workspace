@@ -11,7 +11,11 @@ import { Action } from "../../ConnectUI";
 import NativeConversation from "../../NativeConversation";
 export default function ConversationRoute() {
   const w = useWorkspace();
-  const params = useLocalSearchParams<{ id: string; company: string }>();
+  const params = useLocalSearchParams<{
+    id: string;
+    company: string;
+    messageId?: string;
+  }>();
   const [focused, setFocused] = useState(false);
   const latest = useRef(w);
   useLayoutEffect(() => {

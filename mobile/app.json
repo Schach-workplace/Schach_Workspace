@@ -11,11 +11,8 @@
       "bundleIdentifier": "in.schach.workspace",
       "infoPlist": {
         "NSMicrophoneUsageDescription": "Send voice notes and join company calls.",
-        "NSCameraUsageDescription": "Share video in company calls.",
-        "UIBackgroundModes": [
-          "audio",
-          "remote-notification"
-        ]
+        "NSCameraUsageDescription": "Capture task evidence and expense receipts, share chat photos and join company video calls.",
+        "UIBackgroundModes": ["audio", "remote-notification"]
       }
     },
     "android": {
@@ -65,8 +62,8 @@
       [
         "@config-plugins/react-native-webrtc",
         {
-          "cameraPermission": "Join company video calls.",
-          "microphonePermission": "Join company audio calls."
+          "cameraPermission": "Capture task evidence and expense receipts, share chat photos and join company video calls.",
+          "microphonePermission": "Send voice notes and join company calls."
         }
       ],
       "expo-router",
@@ -79,7 +76,16 @@
       ],
       "expo-sharing",
       "expo-asset",
-      "./plugins/withCallService"
+      "./plugins/withCallService",
+      "@react-native-community/datetimepicker",
+      [
+        "expo-image-picker",
+        {
+          "cameraPermission": "Capture task evidence and expense receipts, share chat photos and join company video calls.",
+          "photosPermission": "Choose a photo explicitly for company chat, task evidence or expense receipts.",
+          "microphonePermission": "Send voice notes and join company calls."
+        }
+      ]
     ],
     "scheme": "schach"
   }

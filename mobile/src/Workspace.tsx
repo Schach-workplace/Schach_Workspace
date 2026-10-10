@@ -1,3 +1,6 @@
+import { router } from "expo-router";
+import { AuthorizedNotificationTarget } from "./notificationTarget";
+import { SafeAreaView } from "react-native-safe-area-context";
 import {
   createContext,
   useContext,
@@ -25,7 +28,9 @@ import {
   sameNativeReadBasis,
   confirmedNativeWork,
 } from "./readScopes";
-import { client, type Session } from "./client";
+import { clearCaptures, setCaptureContext, recoverCamera } from "./capture";
+import { clearAllDrafts } from "./conversationDrafts";
+import { client, NativeApiError, type Session } from "./client";
 export interface Conversation {
   peerId?: string;
   public: boolean;
@@ -38,6 +43,9 @@ export interface Conversation {
 }
 export interface Message {
   conversationId: string;
+  clientMessageId?: string;
+  mentionIds?: string[];
+  mentionAll?: boolean;
   id: string;
   body: string;
   sequence: number;
@@ -49,6 +57,7 @@ export interface Message {
   createdAt: string;
 }
 export interface Person {
+  managerId?: string;
   id: string;
   name: string;
   role: string;
@@ -122,9 +131,13 @@ function useController() {
   const [foreground, setForeground] = useState(
     AppState.currentState === "active",
   );
+  const [authorized, setAuthorized] = useState(false);
   const [restoring, setRestoring] = useState(true);
   const [call, setCall] = useState<CallConnection | null>(null);
   const restoreSequence = useRef(0);
+  const sessionAuthorized = useRef(false);
+  // Content-free authorization fingerprint survives fetched-history background clearing.
+  const confirmedBasis = useRef<string | null>(null);
   const currentScope = useRef({
     company,
     sessionId: session?.user.id,
@@ -132,8 +145,19 @@ function useController() {
   });
   useLayoutEffect(() => {
     currentScope.current = { company, sessionId: session?.user.id, foreground };
-  }, [company, session?.user.id, foreground]);
+    setCaptureContext({
+      serverOrigin: client.endpoint,
+      companyId: company,
+      userId: session?.user.id ?? "",
+      ready: foreground && authorized,
+    });
+  }, [company, session?.user.id, foreground, authorized]);
   function clearPrivate() {
+    clearAllDrafts();
+    clearCaptures();
+    confirmedBasis.current = null;
+    sessionAuthorized.current = false;
+    setAuthorized(false);
     client.clearGeneration();
     setConversations([]);
     setSelected("");
@@ -151,16 +175,27 @@ function useController() {
       )
         ? currentScope.current.company
         : (value.companies[0]?.id ?? "");
+      if (
+        (currentScope.current.sessionId &&
+          currentScope.current.sessionId !== value.user.id) ||
+        (currentScope.current.company && currentScope.current.company !== next)
+      )
+        clearPrivate();
       currentScope.current.sessionId = value.user.id;
+      client.userId = value.user.id;
       currentScope.current.company = next;
+      sessionAuthorized.current = true;
       setSession(value);
       setCompany(next);
     } catch (e) {
       if (sequence !== restoreSequence.current) return;
-      setSession(null);
-      setCall(null);
+      setAuthorized(false);
       setError((e as Error).message);
-      clearPrivate();
+      if (e instanceof NativeApiError && [401, 403, 404].includes(e.status)) {
+        setSession(null);
+        setCall(null);
+        clearPrivate();
+      }
     }
   }
   async function conversationPages() {
@@ -185,6 +220,7 @@ function useController() {
   async function refresh(scope: "all" | "tasks" | "finance" = "all") {
     if (
       !company ||
+      !sessionAuthorized.current ||
       !session ||
       !foreground ||
       currentScope.current.company !== company ||
@@ -206,6 +242,21 @@ function useController() {
     )
       return;
     const sameRole = sameNativeReadBasis(work, bootstrap);
+    const nextBasis = JSON.stringify([
+      client.endpoint,
+      company,
+      session.user.id,
+      bootstrap.readBasis,
+      bootstrap.me.role,
+      bootstrap.me.departmentId,
+      bootstrap.me.managerId,
+    ]);
+    if (confirmedBasis.current && confirmedBasis.current !== nextBasis) {
+      clearAllDrafts();
+      clearCaptures();
+      setPolicyEpoch((p) => p + 1);
+    }
+    confirmedBasis.current = nextBasis;
     // Confirmed membership changes take effect before subsequent pages arrive.
     // A transport error before bootstrap confirmation preserves the last work.
     setWork(confirmedNativeWork(work, bootstrap));
@@ -239,6 +290,7 @@ function useController() {
     setConversations(chat.conversations);
     setListMore(chat.hasMore);
     setWork({ ...bootstrap, tasks, expenses });
+    setAuthorized(true);
     let businessChanged = false,
       otherScope = false;
     for (const event of attention.events) {
@@ -296,9 +348,12 @@ function useController() {
     client.onPolicyChange = (status) => {
       clearEvent();
       setPolicyEpoch((p) => p + 1);
-      if (status === 401) setCall(null);
+      if (status === 401) {
+        setCall(null);
+        setSession(null);
+      }
     };
-    void client
+    const restored = client
       .restore()
       .then(async () => {
         if (client.token) await restoreEvent();
@@ -307,17 +362,55 @@ function useController() {
     const subscription = AppState.addEventListener("change", (state) => {
       currentScope.current.foreground = state === "active";
       setForeground(state === "active");
-      if (state !== "active") clearEvent();
-      else if (client.token) void restoreEvent();
+      if (state !== "active") {
+        sessionAuthorized.current = false;
+        client.clearGeneration();
+        setAuthorized(false);
+        setConversations([]);
+        setWork(null);
+        setInbox([]);
+      } else if (client.token) {
+        void restoreEvent();
+        if (Platform.OS === "android")
+          void recoverCamera().catch((e) => setError(e.message));
+      }
     });
     const received = Notifications.addNotificationReceivedListener(() => {
       if (client.token) void restoreEvent();
     });
-    const response = Notifications.addNotificationResponseReceivedListener(
-      () => {
-        if (client.token) void restoreEvent();
+    const notificationTarget = new AuthorizedNotificationTarget(
+      () => client.request<Session>("/auth/session"),
+      (company, id) =>
+        client.request(`/companies/${company}/conversations/${id}`),
+      (target) => {
+        if (currentScope.current.company !== target.companyId) {
+          clearEvent();
+          sessionAuthorized.current = true;
+          currentScope.current.company = target.companyId;
+          setCompany(target.companyId);
+        }
+        setSelected(target.conversationId);
+        router.push({
+          pathname: "/chat/[id]",
+          params: { id: target.conversationId, company: target.companyId },
+        });
       },
+      () => client.generation,
     );
+    const openResponse = (
+      response: Notifications.NotificationResponse | null,
+    ) => {
+      if (response && client.token)
+        void notificationTarget
+          .open(response.notification.request.content.data)
+          .catch((e) => setError(e.message));
+    };
+    const response =
+      Notifications.addNotificationResponseReceivedListener(openResponse);
+    void restored
+      .then(() => Notifications.getLastNotificationResponseAsync())
+      .then(openResponse)
+      .catch((e) => setError(e.message));
     return () => {
       client.onPolicyChange = undefined;
       subscription.remove();
@@ -338,7 +431,11 @@ function useController() {
       .catch((e) => setError(e.message));
     const timer = setInterval(
       () =>
-        void refreshEvent().catch((e) => {
+        void (
+          sessionAuthorized.current
+            ? refreshEvent()
+            : restoreEvent().then(() => refreshEvent())
+        ).catch((e) => {
           setError(e.message);
         }),
       15000,
@@ -352,7 +449,10 @@ function useController() {
     code: string,
     recovery: string,
   ) {
+    clearAllDrafts();
+    clearCaptures();
     const value = await client.login(endpoint, email, password, code, recovery);
+    sessionAuthorized.current = true;
     setSession(value);
     setCompany(value.companies[0]?.id ?? "");
     setError("");
@@ -370,15 +470,21 @@ function useController() {
     }
   }
   function select(id: string) {
+    if (id === selected) return;
     client.clearGeneration();
     setSelected(id);
   }
   function switchCompany(id: string) {
+    if (!session?.companies.some((c) => c.id === id)) {
+      setError("Company unavailable.");
+      return;
+    }
     setListPages(1);
     setListMore(false);
     currentScope.current.company = id;
     setCall(null);
     clearPrivate();
+    sessionAuthorized.current = true;
     setCompany(id);
   }
   return {
@@ -394,7 +500,7 @@ function useController() {
     selected,
     work,
     inbox,
-    foreground,
+    foreground: foreground && authorized,
     restoring,
     error,
     setError,
@@ -421,13 +527,22 @@ export function useWorkspace() {
 export function Page({
   children,
   scroll = true,
+  safeBottom = false,
 }: {
   children: ReactNode;
   scroll?: boolean;
+  safeBottom?: boolean;
 }) {
   const w = useWorkspace();
   return (
-    <View style={styles.root}>
+    <SafeAreaView
+      edges={
+        safeBottom
+          ? ["top", "left", "right", "bottom"]
+          : ["top", "left", "right"]
+      }
+      style={styles.root}
+    >
       <Text style={styles.heading}>Schach · {w.session?.user.name}</Text>
       <ScrollView horizontal style={{ maxHeight: 48 }}>
         {w.session?.companies.map((c) => (
@@ -452,7 +567,7 @@ export function Page({
       ) : (
         <Text>Return to the app to check current company access.</Text>
       )}
-    </View>
+    </SafeAreaView>
   );
 }
 export const styles = StyleSheet.create({

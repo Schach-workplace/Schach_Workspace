@@ -1,10 +1,12 @@
+import { router } from "expo-router";
+import DeadlinePicker from "./DeadlinePicker";
+import PersonPicker from "./PersonPicker";
+import { useRamInput } from "./ramInput";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Text, TextInput, View } from "react-native";
+import { FlatList, Text, TextInput, View } from "react-native";
 import { Page, useWorkspace, type WorkTask } from "./Workspace";
 import { Action, Sheet, ui } from "./ConnectUI";
-import NativeMedia from "./Media";
 import { client } from "./client";
-import { readNativeDetail } from "./readScopes";
 import {
   companyDate,
   DeadlineChoiceError,
@@ -16,10 +18,13 @@ export default function WorkScreen() {
   // Missing work can mean an outage/background clear, not a confirmed role change.
   const role = w.work?.me.role;
   const [lastRole, setLastRole] = useState(role);
+  const [basis, setBasis] = useState(w.work?.readBasis);
+  if (w.work?.readBasis && basis !== w.work.readBasis)
+    setBasis(w.work.readBasis);
   if (role && role !== lastRole) setLastRole(role);
   return (
     <WorkView
-      key={`${w.company}:${w.session?.user.id}:${w.policyEpoch}:${w.work?.readBasis}:${lastRole}`}
+      key={`${w.company}:${w.session?.user.id}:${w.policyEpoch}:${basis}:${lastRole}`}
       w={w}
     />
   );
@@ -27,14 +32,12 @@ export default function WorkScreen() {
 function WorkView({ w }: { w: ReturnType<typeof useWorkspace> }) {
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState("all");
-  const [creating, setCreating] = useState(false);
-  const [selected, setSelected] = useState("");
-  const [title, setTitle] = useState("");
-  const [dueDate, setDate] = useState("");
-  const [time, setTime] = useState("");
-  const [instant, setInstant] = useState("");
-  const [reviewer, setReviewer] = useState("");
-  const [reason, setReason] = useState("");
+  const [creating, setCreating] = useRamInput("$work", "creating", false);
+  const [title, setTitle] = useRamInput("$work", "title", "");
+  const [dueDate, setDate] = useRamInput("$work", "dueDate", "");
+  const [time, setTime] = useRamInput("$work", "time", "");
+  const [instant, setInstant] = useRamInput("$work", "instant", "");
+  const [reviewer, setReviewer] = useRamInput("$work", "reviewer", "");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const pending = useRef(false);
@@ -55,38 +58,6 @@ function WorkView({ w }: { w: ReturnType<typeof useWorkspace> }) {
           : t.status === "in_review")) &&
       (!query || t.title.toLowerCase().includes(query.toLowerCase())),
   );
-  const selectedVersion = w.work?.tasks.find((t) => t.id === selected)?.version;
-  const taskScope = [
-    w.company,
-    w.recordEpoch,
-    w.work?.readBasis,
-    w.work?.me.role,
-    selected,
-    selectedVersion,
-  ].join(":");
-  const [detail, setDetail] = useState<{
-    scope: string;
-    task: WorkTask;
-  } | null>(null);
-  useEffect(() => {
-    let active = true;
-    if (selected)
-      readNativeDetail<{ task: WorkTask }>(
-        (path) => client.request(path),
-        `/companies/${w.company}/tasks/${selected}`,
-        "task",
-      )
-        .then((v) => {
-          if (active) setDetail({ scope: taskScope, task: v.task });
-        })
-        .catch((e) => {
-          if (active) setError(e.message);
-        });
-    return () => {
-      active = false;
-    };
-  }, [selected, w.company, taskScope]);
-  const task = detail?.scope === taskScope ? detail.task : null;
   const deadline = useMemo(() => {
     try {
       return {
@@ -120,11 +91,7 @@ function WorkView({ w }: { w: ReturnType<typeof useWorkspace> }) {
     }
   }
   function openCreate() {
-    setTitle("");
-    setDate(companyDate(new Date(), zone));
-    setTime("");
-    setInstant("");
-    setReviewer("");
+    if (!dueDate) setDate(companyDate(new Date(), zone));
     setError("");
     setCreating(true);
   }
@@ -153,34 +120,6 @@ function WorkView({ w }: { w: ReturnType<typeof useWorkspace> }) {
       await w.refresh("tasks");
     });
   }
-  function actOnTask(current: WorkTask, status: string, review = false) {
-    void run(async () => {
-      const fresh = await client.request<{ task: WorkTask }>(
-        `/companies/${w.company}/tasks/${current.id}`,
-      );
-      const found = fresh.task;
-      if (!found || found.version !== current.version) {
-        await w.refresh("tasks");
-        throw Error(
-          "Task changed or access changed. Review the current details before trying again.",
-        );
-      }
-      if (review)
-        await client.request(
-          `/companies/${w.company}/tasks/${current.id}/review`,
-          "POST",
-          { version: current.version, decision: "approve", comment: reason },
-        );
-      else
-        await client.request(
-          `/companies/${w.company}/tasks/${current.id}`,
-          "PATCH",
-          { version: current.version, status },
-        );
-      if (alive.current) setSelected("");
-      await w.refresh("tasks");
-    });
-  }
   function dateLabel(t: WorkTask) {
     return t.deadlineMode === "timed" && t.dueAt
       ? new Intl.DateTimeFormat("en-IN", {
@@ -193,7 +132,7 @@ function WorkView({ w }: { w: ReturnType<typeof useWorkspace> }) {
       : t.dueDate || "No deadline";
   }
   return (
-    <Page>
+    <Page scroll={false}>
       <View style={ui.row}>
         <Text style={ui.title}>Work</Text>
         {editable && <Action title="New task" primary onPress={openCreate} />}
@@ -225,30 +164,36 @@ function WorkView({ w }: { w: ReturnType<typeof useWorkspace> }) {
       {!rows.length && (
         <Text style={ui.subtitle}>No work matches these filters.</Text>
       )}
-      {rows.map((t) => (
-        <View
-          key={t.id}
-          style={{
-            paddingVertical: 14,
-            borderBottomWidth: 1,
-            borderBottomColor: "#e9ebef",
-            gap: 8,
-          }}
-        >
-          <Text style={ui.name}>{t.title}</Text>
-          <Text style={ui.subtitle}>
-            {t.status.replaceAll("_", " ")} · {dateLabel(t)}
-          </Text>
-          <Action
-            title={"Open: " + t.title}
-            onPress={() => {
-              setReason("");
-              setError("");
-              setSelected(t.id);
+      <FlatList
+        data={rows}
+        keyExtractor={(t) => t.id}
+        renderItem={({ item: t }) => (
+          <View
+            key={t.id}
+            style={{
+              paddingVertical: 14,
+              borderBottomWidth: 1,
+              borderBottomColor: "#e9ebef",
+              gap: 8,
             }}
-          />
-        </View>
-      ))}
+          >
+            <Text style={ui.name}>{t.title}</Text>
+            <Text style={ui.subtitle}>
+              {t.status.replaceAll("_", " ")} · {dateLabel(t)}
+            </Text>
+            <Action
+              title={"Open: " + t.title}
+              onPress={() => {
+                setError("");
+                router.push({
+                  pathname: "/task/[id]",
+                  params: { id: t.id, company: w.company },
+                });
+              }}
+            />
+          </View>
+        )}
+      />
       {creating && editable && (
         <Sheet
           title="New commitment"
@@ -270,16 +215,16 @@ function WorkView({ w }: { w: ReturnType<typeof useWorkspace> }) {
             onChangeText={setTitle}
             style={ui.input}
           />
-          <Text>Deadline date</Text>
-          <TextInput
-            accessibilityLabel="Due date"
-            placeholder="YYYY-MM-DD"
-            value={dueDate}
-            onChangeText={(v) => {
-              setDate(v);
+          <DeadlinePicker
+            date={dueDate}
+            time={time}
+            timezone={zone}
+            disabled={busy}
+            onChange={(v) => {
+              setDate(v.date);
+              setTime(v.time);
               setInstant("");
             }}
-            style={ui.input}
           />
           <View style={[ui.row, { flexWrap: "wrap" }]}>
             {[
@@ -299,22 +244,6 @@ function WorkView({ w }: { w: ReturnType<typeof useWorkspace> }) {
               />
             ))}
           </View>
-          <Text>Optional deadline time · {zone}</Text>
-          <TextInput
-            accessibilityLabel="Deadline time"
-            placeholder="HH:mm, for example 16:00"
-            value={time}
-            onChangeText={(v) => {
-              setTime(v);
-              setInstant("");
-            }}
-            maxLength={5}
-            style={ui.input}
-          />
-          <Text style={ui.subtitle}>
-            Leave time empty for an all-day commitment. Times use the company
-            timezone.
-          </Text>
           {!!deadline.error && (
             <Text accessibilityRole="alert">{deadline.error}</Text>
           )}
@@ -333,25 +262,18 @@ function WorkView({ w }: { w: ReturnType<typeof useWorkspace> }) {
               onPress={() => setInstant(at)}
             />
           ))}
-          <Text>Reviewer</Text>
-          <Action
-            title="No reviewer"
-            selected={!reviewer}
-            onPress={() => setReviewer("")}
+          <PersonPicker
+            departmentNames={Object.fromEntries(
+              (w.work?.departments ?? []).map((d) => [d.id, d.name]),
+            )}
+            label="Reviewer"
+            people={w.work?.people ?? []}
+            value={reviewer}
+            excludeIds={[w.session?.user.id ?? ""]}
+            allowNone
+            onChange={setReviewer}
+            disabled={busy}
           />
-          {w.work?.people
-            .filter(
-              (p) =>
-                p.active && p.id !== w.session?.user.id && p.role !== "viewer",
-            )
-            .map((p) => (
-              <Action
-                key={p.id}
-                title={"Reviewer: " + p.name}
-                selected={reviewer === p.id}
-                onPress={() => setReviewer(p.id)}
-              />
-            ))}
           {!!error && <Text accessibilityRole="alert">{error}</Text>}
           <Action
             title={busy ? "Creating…" : "Create task"}
@@ -359,79 +281,6 @@ function WorkView({ w }: { w: ReturnType<typeof useWorkspace> }) {
             disabled={busy || !title.trim() || !deadline.value}
             onPress={create}
           />
-        </Sheet>
-      )}
-      {task && (
-        <Sheet
-          title={task.title}
-          onClose={() => {
-            if (!pending.current) setSelected("");
-          }}
-          keyboard
-        >
-          <Text>
-            {task.status.replaceAll("_", " ")} · {dateLabel(task)}
-          </Text>
-          <Text>{task.description}</Text>
-          <Text style={ui.subtitle}>
-            Original commitment:{" "}
-            {task.originalDueAt ||
-              task.originalDueDate ||
-              "No original deadline"}
-          </Text>
-          {task.attachments.map((a) => (
-            <Action
-              key={a.id}
-              title={"Inspect evidence: " + a.fileName}
-              onPress={() =>
-                void NativeMedia.downloadPath(
-                  `/companies/${w.company}/attachments/${a.id}`,
-                  a.id,
-                ).catch((e) => setError(e.message))
-              }
-            />
-          ))}
-          {editable && (
-            <>
-              <TextInput
-                accessibilityLabel="Review reason"
-                placeholder="Review or change reason"
-                value={reason}
-                onChangeText={setReason}
-                style={ui.input}
-              />
-              {!["done", "cancelled"].includes(task.status) && (
-                <>
-                  <Action
-                    title="Mark in progress"
-                    disabled={busy}
-                    onPress={() => actOnTask(task, "in_progress")}
-                  />
-                  <Action
-                    title="Submit for review / complete"
-                    primary
-                    disabled={busy}
-                    onPress={() =>
-                      actOnTask(
-                        task,
-                        task.requiresApproval ? "in_review" : "done",
-                      )
-                    }
-                  />
-                </>
-              )}
-              {task.reviewerId === w.session?.user.id &&
-                task.ownerId !== w.session?.user.id &&
-                task.status === "in_review" && (
-                  <Action
-                    title="Accept submitted evidence"
-                    disabled={busy}
-                    onPress={() => actOnTask(task, "", true)}
-                  />
-                )}
-            </>
-          )}
-          {!!error && <Text accessibilityRole="alert">{error}</Text>}
         </Sheet>
       )}
     </Page>

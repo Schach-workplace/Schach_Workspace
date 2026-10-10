@@ -1,12 +1,283 @@
-import IntakeQueue from '../../Intake';
-import {useState} from 'react';import {Button,Text,TextInput,View} from 'react-native';import {Page,useWorkspace,styles} from '../../Workspace';import ExpenseDecision from '../../ExpenseDecision';import type {NativeExpense} from '../../Workspace';import {client} from '../../client';
-export default function More(){const w=useWorkspace();const[devices,setDevices]=useState<{id:string;name:string;active:boolean;platform:string}[]>([]);const[review,setReview]=useState<NativeExpense|null>(null);const[title,setTitle]=useState('');const[vendor,setVendor]=useState('');const[date,setDate]=useState('');const[amount,setAmount]=useState('');const[category,setCategory]=useState('');const[muted,setMuted]=useState(false);const[quietStart,setQuietStart]=useState('');const[quietEnd,setQuietEnd]=useState('');const[password,setPassword]=useState('');const[secret,setSecret]=useState('');const[code,setCode]=useState('');const[recovery,setRecovery]=useState<string[]>([]);
- async function createExpense(){if(!w.work)return;await client.request(`/companies/${w.company}/expenses`,'POST',{title,description:'Native reviewed draft',vendor,invoiceNumber:'',expenseDate:date,amountMinor:Number(amount),departmentId:w.work.me.departmentId,categoryId:category,taskId:'',projectId:'',receiptExceptionReason:''});setTitle('');await w.refresh("finance")}
- return <Page><Text style={styles.heading}>Account and finance</Text><IntakeQueue/><Button title="Enable private notification hints" onPress={()=>void w.registerDevice(true).catch(e=>w.setError(e.message))}/><Button title={muted?'Unmute this company':'Mute this company'} onPress={()=>void client.request(`/companies/${w.company}/devices/${w.device}/preferences`,'POST',{muted:!muted,timezone:w.work?.company.timezone??'Asia/Kolkata',quietStart,quietEnd}).then(()=>setMuted(v=>!v)).catch(e=>w.setError(e.message))}/><TextInput style={styles.input} accessibilityLabel="Quiet hours start" placeholder="Quiet hours start HH:MM" value={quietStart} onChangeText={setQuietStart}/><TextInput style={styles.input} accessibilityLabel="Quiet hours end" placeholder="Quiet hours end HH:MM" value={quietEnd} onChangeText={setQuietEnd}/><Text>Private content is fetched after checking current access and is not retained for offline use. Exported files are independent copies.</Text>
- <Button title="List my registered devices" onPress={()=>void client.request<{devices:typeof devices}>('/devices').then(v=>setDevices(v.devices)).catch(e=>w.setError(e.message))}/>{devices.map(d=><View key={d.id}><Text>{d.name} · {d.platform} · {d.active?'Active':'Revoked'}</Text>{d.active&&<Button title="Revoke this device session in every company" onPress={()=>void client.request('/devices/'+d.id+'/revoke','POST',{}).then(()=>{if(d.id===w.device)return w.signOut();setDevices(rows=>rows.map(row=>row.id===d.id?{...row,active:false}:row))}).catch(e=>w.setError(e.message))}/>}</View>)}
- <Text>Authenticator protection</Text><TextInput style={styles.input} accessibilityLabel="Current password for authenticator" secureTextEntry value={password} onChangeText={setPassword}/><Button title="Set up authenticator" onPress={()=>void client.request<{secret:string}>('/auth/mfa/setup','POST',{password}).then(v=>{setSecret(v.secret);setPassword('')}).catch(e=>w.setError(e.message))}/>{secret&&<View><Text selectable>{secret}</Text><Text>Add this secret to your authenticator, then enter a current code.</Text><TextInput style={styles.input} accessibilityLabel="Authenticator confirmation code" value={code} onChangeText={setCode}/><Button title="Confirm authenticator" onPress={()=>void client.request<{recoveryCodes:string[]}>('/auth/mfa/confirm','POST',{code}).then(v=>{setRecovery(v.recoveryCodes);setSecret('');setCode('')}).catch(e=>w.setError(e.message))}/></View>}{recovery.length>0&&<View><Text>Store these single-use recovery codes privately.</Text>{recovery.map(c=><Text selectable key={c}>{c}</Text>)}<Button title="I stored my recovery codes" onPress={()=>setRecovery([])}/></View>}
- {w.work?.expenses.map(e=><View style={styles.message} key={e.id}><Text>{e.title} · {e.status} · {e.currency} {e.amountMinor/100}</Text><Button title="Review current finance record" onPress={()=>setReview(e)}/></View>)}
- {review&&<ExpenseDecision key={review.id+":"+review.version} expense={review} onClose={()=>setReview(null)}/>}
- {w.work?.me.role!=='viewer'&&<View><Text>Create an incurred-expense draft</Text><TextInput style={styles.input} accessibilityLabel="Expense title" placeholder="Expense title" value={title} onChangeText={setTitle}/><TextInput style={styles.input} accessibilityLabel="Vendor" placeholder="Vendor" value={vendor} onChangeText={setVendor}/><TextInput style={styles.input} accessibilityLabel="Expense date" placeholder="Expense date YYYY-MM-DD" value={date} onChangeText={setDate}/><TextInput style={styles.input} accessibilityLabel="Amount minor units" placeholder="Amount in minor units (paise for INR)" keyboardType="number-pad" value={amount} onChangeText={setAmount}/>{w.work?.expenseCategories.filter(c=>c.active).map(c=><Button key={c.id} title={c.name+(c.id===category?' ✓':'')} onPress={()=>setCategory(c.id)}/>)}<Button title="Create reviewed draft" disabled={!title||!vendor||!date||!category||!/^\d+$/.test(amount)} onPress={()=>void createExpense().catch(e=>w.setError(e.message))}/></View>}
- <Button title="Sign out" onPress={()=>void w.signOut().catch(e=>w.setError(e.message))}/></Page>
+import { useRamInput } from "../../ramInput";
+import IntakeQueue from "../../Intake";
+import { useState, useEffect, useEffectEvent } from "react";
+import { Button, Text, TextInput, View } from "react-native";
+import { Page, useWorkspace, styles } from "../../Workspace";
+import ExpenseDecision from "../../ExpenseDecision";
+import type { NativeExpense } from "../../Workspace";
+import { client } from "../../client";
+export default function More() {
+  const w = useWorkspace();
+  const [devices, setDevices] = useState<
+    { id: string; name: string; active: boolean; platform: string }[]
+  >([]);
+  const [review, setReview] = useState<NativeExpense | null>(null);
+  const [title, setTitle] = useRamInput("$finance-create", "title", "");
+  const [vendor, setVendor] = useRamInput("$finance-create", "vendor", "");
+  const [date, setDate] = useRamInput("$finance-create", "date", "");
+  const [amount, setAmount] = useRamInput("$finance-create", "amount", "");
+  const [category, setCategory] = useRamInput(
+    "$finance-create",
+    "category",
+    "",
+  );
+  const [muted, setMuted] = useState(false);
+  const [quietStart, setQuietStart] = useState("");
+  const [quietEnd, setQuietEnd] = useState("");
+  const [password, setPassword] = useState("");
+  const [secret, setSecret] = useState("");
+  const [code, setCode] = useState("");
+  const [recovery, setRecovery] = useState<string[]>([]);
+  const scrubFetched = useEffectEvent(() => {
+    setDevices([]);
+    setReview(null);
+    setSecret("");
+    setRecovery([]);
+    setPassword("");
+    setCode("");
+  });
+  useEffect(() => {
+    if (!w.foreground) void Promise.resolve().then(() => scrubFetched());
+  }, [w.foreground]);
+  async function createExpense() {
+    if (!w.work) return;
+    await client.request(`/companies/${w.company}/expenses`, "POST", {
+      title,
+      description: "Native reviewed draft",
+      vendor,
+      invoiceNumber: "",
+      expenseDate: date,
+      amountMinor: Number(amount),
+      departmentId: w.work.me.departmentId,
+      categoryId: category,
+      taskId: "",
+      projectId: "",
+      receiptExceptionReason: "",
+    });
+    setTitle("");
+    await w.refresh("finance");
+  }
+  return (
+    <Page>
+      <Text style={styles.heading}>Account and finance</Text>
+      <IntakeQueue />
+      <Button
+        title="Enable private notification hints"
+        onPress={() =>
+          void w.registerDevice(true).catch((e) => w.setError(e.message))
+        }
+      />
+      <Button
+        title={muted ? "Unmute this company" : "Mute this company"}
+        onPress={() =>
+          void client
+            .request(
+              `/companies/${w.company}/devices/${w.device}/preferences`,
+              "POST",
+              {
+                muted: !muted,
+                timezone: w.work?.company.timezone ?? "Asia/Kolkata",
+                quietStart,
+                quietEnd,
+              },
+            )
+            .then(() => setMuted((v) => !v))
+            .catch((e) => w.setError(e.message))
+        }
+      />
+      <TextInput
+        style={styles.input}
+        accessibilityLabel="Quiet hours start"
+        placeholder="Quiet hours start HH:MM"
+        value={quietStart}
+        onChangeText={setQuietStart}
+      />
+      <TextInput
+        style={styles.input}
+        accessibilityLabel="Quiet hours end"
+        placeholder="Quiet hours end HH:MM"
+        value={quietEnd}
+        onChangeText={setQuietEnd}
+      />
+      <Text>
+        Private content is fetched after checking current access and is not
+        retained for offline use. Exported files are independent copies.
+      </Text>
+      <Button
+        title="List my registered devices"
+        onPress={() =>
+          void client
+            .request<{ devices: typeof devices }>("/devices")
+            .then((v) => setDevices(v.devices))
+            .catch((e) => w.setError(e.message))
+        }
+      />
+      {devices.map((d) => (
+        <View key={d.id}>
+          <Text>
+            {d.name} · {d.platform} · {d.active ? "Active" : "Revoked"}
+          </Text>
+          {d.active && (
+            <Button
+              title="Revoke this device session in every company"
+              onPress={() =>
+                void client
+                  .request("/devices/" + d.id + "/revoke", "POST", {})
+                  .then(() => {
+                    if (d.id === w.device) return w.signOut();
+                    setDevices((rows) =>
+                      rows.map((row) =>
+                        row.id === d.id ? { ...row, active: false } : row,
+                      ),
+                    );
+                  })
+                  .catch((e) => w.setError(e.message))
+              }
+            />
+          )}
+        </View>
+      ))}
+      <Text>Authenticator protection</Text>
+      <TextInput
+        style={styles.input}
+        accessibilityLabel="Current password for authenticator"
+        secureTextEntry
+        value={password}
+        onChangeText={setPassword}
+      />
+      <Button
+        title="Set up authenticator"
+        onPress={() =>
+          void client
+            .request<{ secret: string }>("/auth/mfa/setup", "POST", {
+              password,
+            })
+            .then((v) => {
+              setSecret(v.secret);
+              setPassword("");
+            })
+            .catch((e) => w.setError(e.message))
+        }
+      />
+      {secret && (
+        <View>
+          <Text selectable>{secret}</Text>
+          <Text>
+            Add this secret to your authenticator, then enter a current code.
+          </Text>
+          <TextInput
+            style={styles.input}
+            accessibilityLabel="Authenticator confirmation code"
+            value={code}
+            onChangeText={setCode}
+          />
+          <Button
+            title="Confirm authenticator"
+            onPress={() =>
+              void client
+                .request<{ recoveryCodes: string[] }>(
+                  "/auth/mfa/confirm",
+                  "POST",
+                  { code },
+                )
+                .then((v) => {
+                  setRecovery(v.recoveryCodes);
+                  setSecret("");
+                  setCode("");
+                })
+                .catch((e) => w.setError(e.message))
+            }
+          />
+        </View>
+      )}
+      {recovery.length > 0 && (
+        <View>
+          <Text>Store these single-use recovery codes privately.</Text>
+          {recovery.map((c) => (
+            <Text selectable key={c}>
+              {c}
+            </Text>
+          ))}
+          <Button
+            title="I stored my recovery codes"
+            onPress={() => setRecovery([])}
+          />
+        </View>
+      )}
+      {w.work?.expenses.map((e) => (
+        <View style={styles.message} key={e.id}>
+          <Text>
+            {e.title} · {e.status} · {e.currency} {e.amountMinor / 100}
+          </Text>
+          <Button
+            title="Review current finance record"
+            onPress={() => setReview(e)}
+          />
+        </View>
+      ))}
+      {review && (
+        <ExpenseDecision
+          key={review.id + ":" + review.version}
+          expense={review}
+          onClose={() => setReview(null)}
+        />
+      )}
+      {w.work?.me.role !== "viewer" && (
+        <View>
+          <Text>Create an incurred-expense draft</Text>
+          <TextInput
+            style={styles.input}
+            accessibilityLabel="Expense title"
+            placeholder="Expense title"
+            value={title}
+            onChangeText={setTitle}
+          />
+          <TextInput
+            style={styles.input}
+            accessibilityLabel="Vendor"
+            placeholder="Vendor"
+            value={vendor}
+            onChangeText={setVendor}
+          />
+          <TextInput
+            style={styles.input}
+            accessibilityLabel="Expense date"
+            placeholder="Expense date YYYY-MM-DD"
+            value={date}
+            onChangeText={setDate}
+          />
+          <TextInput
+            style={styles.input}
+            accessibilityLabel="Amount minor units"
+            placeholder="Amount in minor units (paise for INR)"
+            keyboardType="number-pad"
+            value={amount}
+            onChangeText={setAmount}
+          />
+          {w.work?.expenseCategories
+            .filter((c) => c.active)
+            .map((c) => (
+              <Button
+                key={c.id}
+                title={c.name + (c.id === category ? " ✓" : "")}
+                onPress={() => setCategory(c.id)}
+              />
+            ))}
+          <Button
+            title="Create reviewed draft"
+            disabled={
+              !title || !vendor || !date || !category || !/^\d+$/.test(amount)
+            }
+            onPress={() =>
+              void createExpense().catch((e) => w.setError(e.message))
+            }
+          />
+        </View>
+      )}
+      <Button
+        title="Sign out"
+        onPress={() => void w.signOut().catch((e) => w.setError(e.message))}
+      />
+    </Page>
+  );
 }

@@ -1,7 +1,198 @@
-import {useEffect,useEffectEvent,useState} from 'react';import {Button,Text,TextInput,View} from 'react-native';import {client} from './client';import {styles,useWorkspace} from './Workspace';
-interface Intake{id:string;title:string;summary:string;state:string;version:number;departmentId:string}
-export default function IntakeQueue(){const w=useWorkspace();const[items,setItems]=useState<Intake[]>([]);const[selected,setSelected]=useState<Intake|null>(null);const[owner,setOwner]=useState(w.session!.user.id);const[reviewer,setReviewer]=useState('');const[due,setDue]=useState('');const[reason,setReason]=useState('');const[briefing,setBriefing]=useState<{visibleTaskCount:number;visibleOpenRequestCount:number;notice:string}|null>(null);const root=`/companies/${w.company}/communication/requests`;
- async function refresh(){const v=await client.request<{requests:Intake[]}>(root);setItems(v.requests)}const load=useEffectEvent(()=>refresh().catch(e=>w.setError(e.message)));useEffect(()=>{void Promise.resolve().then(()=>load())},[root]);
- async function assign(){if(!selected)return;try{await client.request(root+'/'+selected.id+'/assign','POST',{expectedVersion:selected.version,task:{title:selected.title,description:selected.summary,ownerId:owner,reviewerId:reviewer,requiresApproval:!!reviewer,departmentId:selected.departmentId,projectId:'',parentId:'',priority:'medium',status:'todo',dueDate:due,deadlineMode:'all_day',startDate:'',estimatedHours:0,tags:[],checklist:[],dependencies:[],collaborators:[],recurrence:'none'}});setSelected(null);await refresh();await w.refresh()}catch(e){w.setError((e as Error).message)}}
- async function close(state:string){if(!selected)return;try{await client.request(root+'/'+selected.id,'PATCH',{expectedVersion:selected.version,state,reason});setSelected(null);await refresh()}catch(e){w.setError((e as Error).message)}}
- return <View><Text style={styles.heading}>Published work and intake</Text><Button title="Published work briefing" onPress={()=>void client.request<NonNullable<typeof briefing>>(`/companies/${w.company}/communication/briefing`).then(setBriefing).catch(e=>w.setError(e.message))}/>{briefing&&<Text>{briefing.visibleTaskCount} visible tasks · {briefing.visibleOpenRequestCount} open requests. {briefing.notice}</Text>}{items.map(item=><View key={item.id} style={styles.message}><Text>{item.title} · {item.state}</Text><Text>{item.summary}</Text>{!['resolved','cancelled'].includes(item.state)&&w.work?.me.role!=='viewer'&&<Button title="Review intake action" onPress={()=>{setSelected(item);setDue('');setReason('')}}/>}</View>)}{selected&&<View style={styles.message}><Text>{selected.title} · version {selected.version}</Text>{selected.state==='open'&&(['founder','ceo','admin'].includes(w.work?.me.role??'')||w.work?.me.role==='head'&&selected.departmentId===w.work.me.departmentId)&&<><Text>Accountable owner</Text>{w.work?.people.filter(p=>p.active&&p.role!=='viewer').map(p=><Button key={p.id} title={p.name+(owner===p.id?' ✓':'')} onPress={()=>{setOwner(p.id);setReviewer('')}}/>)}<Text>Independent reviewer</Text><Button title="No review required" onPress={()=>setReviewer('')}/>{w.work?.people.filter(p=>p.active&&p.role!=='viewer'&&p.id!==owner).map(p=><Button key={p.id} title={p.name+(reviewer===p.id?' ✓':'')} onPress={()=>setReviewer(p.id)}/>)}<TextInput accessibilityLabel="Intake task due date" style={styles.input} placeholder="Task due date YYYY-MM-DD" value={due} onChangeText={setDue}/><Button title="Assign through task workflow" disabled={!due} onPress={()=>void assign()}/></>}<TextInput accessibilityLabel="Intake outcome reason" style={styles.input} placeholder="Outcome reason" value={reason} onChangeText={setReason}/><Button title="Resolve after task acceptance" disabled={!reason} onPress={()=>void close('resolved')}/><Button title="Cancel with reason" disabled={!reason} onPress={()=>void close('cancelled')}/><Button title="Close intake review" onPress={()=>setSelected(null)}/></View>}</View>}
+import PersonPicker from "./PersonPicker";
+import DeadlinePicker from "./DeadlinePicker";
+import { useRamInput } from "./ramInput";
+import { useEffect, useEffectEvent, useState } from "react";
+import { Button, Text, TextInput, View } from "react-native";
+import { client } from "./client";
+import { styles, useWorkspace } from "./Workspace";
+interface Intake {
+  id: string;
+  title: string;
+  summary: string;
+  state: string;
+  version: number;
+  departmentId: string;
+}
+export default function IntakeQueue() {
+  const w = useWorkspace();
+  const [items, setItems] = useState<Intake[]>([]);
+  const [selected, setSelected] = useState<Intake | null>(null);
+  const [owner, setOwner] = useRamInput("$intake", "owner", w.session!.user.id);
+  const [reviewer, setReviewer] = useRamInput("$intake", "reviewer", "");
+  const [due, setDue] = useRamInput("$intake", "due", "");
+  const [reason, setReason] = useRamInput("$intake", "reason", "");
+  const [briefing, setBriefing] = useState<{
+    visibleTaskCount: number;
+    visibleOpenRequestCount: number;
+    notice: string;
+  } | null>(null);
+  const root = `/companies/${w.company}/communication/requests`;
+  async function refresh() {
+    const v = await client.request<{ requests: Intake[] }>(root);
+    setItems(v.requests);
+  }
+  const load = useEffectEvent(() =>
+    refresh().catch((e) => w.setError(e.message)),
+  );
+  useEffect(() => {
+    void Promise.resolve().then(() => load());
+  }, [root]);
+  async function assign() {
+    if (!selected) return;
+    try {
+      await client.request(root + "/" + selected.id + "/assign", "POST", {
+        expectedVersion: selected.version,
+        task: {
+          title: selected.title,
+          description: selected.summary,
+          ownerId: owner,
+          reviewerId: reviewer,
+          requiresApproval: !!reviewer,
+          departmentId: selected.departmentId,
+          projectId: "",
+          parentId: "",
+          priority: "medium",
+          status: "todo",
+          dueDate: due,
+          deadlineMode: "all_day",
+          startDate: "",
+          estimatedHours: 0,
+          tags: [],
+          checklist: [],
+          dependencies: [],
+          collaborators: [],
+          recurrence: "none",
+        },
+      });
+      setSelected(null);
+      await refresh();
+      await w.refresh();
+    } catch (e) {
+      w.setError((e as Error).message);
+    }
+  }
+  async function close(state: string) {
+    if (!selected) return;
+    try {
+      await client.request(root + "/" + selected.id, "PATCH", {
+        expectedVersion: selected.version,
+        state,
+        reason,
+      });
+      setSelected(null);
+      await refresh();
+    } catch (e) {
+      w.setError((e as Error).message);
+    }
+  }
+  return (
+    <View>
+      <Text style={styles.heading}>Published work and intake</Text>
+      <Button
+        title="Published work briefing"
+        onPress={() =>
+          void client
+            .request<NonNullable<typeof briefing>>(
+              `/companies/${w.company}/communication/briefing`,
+            )
+            .then(setBriefing)
+            .catch((e) => w.setError(e.message))
+        }
+      />
+      {briefing && (
+        <Text>
+          {briefing.visibleTaskCount} visible tasks ·{" "}
+          {briefing.visibleOpenRequestCount} open requests. {briefing.notice}
+        </Text>
+      )}
+      {items.map((item) => (
+        <View key={item.id} style={styles.message}>
+          <Text>
+            {item.title} · {item.state}
+          </Text>
+          <Text>{item.summary}</Text>
+          {!["resolved", "cancelled"].includes(item.state) &&
+            w.work?.me.role !== "viewer" && (
+              <Button
+                title="Review intake action"
+                onPress={() => {
+                  setSelected(item);
+                  setDue("");
+                  setReason("");
+                }}
+              />
+            )}
+        </View>
+      ))}
+      {selected && (
+        <View style={styles.message}>
+          <Text>
+            {selected.title} · version {selected.version}
+          </Text>
+          {selected.state === "open" &&
+            (["founder", "ceo", "admin"].includes(w.work?.me.role ?? "") ||
+              (w.work?.me.role === "head" &&
+                selected.departmentId === w.work.me.departmentId)) && (
+              <>
+                <PersonPicker
+                  departmentNames={Object.fromEntries(
+                    (w.work?.departments ?? []).map((d) => [d.id, d.name]),
+                  )}
+                  label="Accountable owner"
+                  people={w.work?.people ?? []}
+                  value={owner}
+                  onChange={(id) => {
+                    setOwner(id);
+                    setReviewer("");
+                  }}
+                />
+                <PersonPicker
+                  departmentNames={Object.fromEntries(
+                    (w.work?.departments ?? []).map((d) => [d.id, d.name]),
+                  )}
+                  label="Independent reviewer"
+                  people={w.work?.people ?? []}
+                  value={reviewer}
+                  excludeIds={[owner]}
+                  allowNone
+                  onChange={setReviewer}
+                />
+                <DeadlinePicker
+                  date={due}
+                  time=""
+                  timezone={w.work?.company.timezone ?? "Asia/Kolkata"}
+                  onChange={(v) => setDue(v.date)}
+                />
+                <Button
+                  title="Assign through task workflow"
+                  disabled={!due}
+                  onPress={() => void assign()}
+                />
+              </>
+            )}
+          <TextInput
+            accessibilityLabel="Intake outcome reason"
+            style={styles.input}
+            placeholder="Outcome reason"
+            value={reason}
+            onChangeText={setReason}
+          />
+          <Button
+            title="Resolve after task acceptance"
+            disabled={!reason}
+            onPress={() => void close("resolved")}
+          />
+          <Button
+            title="Cancel with reason"
+            disabled={!reason}
+            onPress={() => void close("cancelled")}
+          />
+          <Button
+            title="Close intake review"
+            onPress={() => setSelected(null)}
+          />
+        </View>
+      )}
+    </View>
+  );
+}

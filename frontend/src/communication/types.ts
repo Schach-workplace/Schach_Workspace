@@ -13,6 +13,8 @@ export interface Conversation {
 }
 export interface Message {
   mediaIds?: string[];
+  mentionIds?: string[];
+  mentionAll?: boolean;
   id: string;
   conversationId: string;
   senderId: string;
