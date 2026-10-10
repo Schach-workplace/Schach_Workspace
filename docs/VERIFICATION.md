@@ -183,3 +183,7 @@ The packaging command is `python3 scripts/package_release.py` from the repositor
 ## Communication development verification — 2026-10-10
 
 The original finance/M0 evidence above is historical. Current communication capabilities, fresh command results, discovered defects and environment limitations are recorded separately in [COMMUNICATION_IMPLEMENTATION.md](COMMUNICATION_IMPLEMENTATION.md). That report takes precedence for current code; it does not turn physical-device, provider-push, India deployment or organizational cutover checklists into passed tests.
+
+## Connect UX follow-up — 10 October 2026
+
+The bounded browser/native redesign and nameless direct-message reuse have fresh evidence in [the Connect verification record](../verification/connect-ux-2026-10-10/result.json) and [independent review](../verification/connect-ux-2026-10-10/review.md). The implementation, acceptance cases, API compatibility and device limits are in [CONNECT_UX.md](CONNECT_UX.md). These results supersede older frontend/native test counts for this follow-up, without rewriting the historical communication/provider evidence.

@@ -197,3 +197,7 @@ Connect now provides company-scoped private DMs/groups/channels, durable text/me
 `mobile/` contains Android/iOS React Native clients with secure session storage, communication/media, work and independent finance review, structured responses and call integration. The tested Android artifact is a development build; iOS signing, physical-device push/background calls and real TLS/TURN remain rollout gates. The browser demo continues to label its fictional data and does not simulate shared communication.
 
 Read [implementation evidence and remaining gates](docs/COMMUNICATION_IMPLEMENTATION.md), [communication operations](docs/COMMUNICATION_OPERATIONS.md), and [mobile setup](mobile/README.md). The full implementation sequence remains in [the development plan](docs/superpowers/plans/2026-10-10-communication-implementation.md); its unchecked rollout gates must not be represented as completed adoption.
+
+### Connect interaction update
+
+Connect now separates the conversation list from the chat history and composer on desktop, phone browser and native clients. To send a direct message, choose a person: no conversation name is needed, and the server reopens the same private company-scoped chat. Group and channel creation retain names and explicit audience selection. Details, message actions, threads and selected work publication use contextual dialogs/sheets. See [the interaction and verification record](docs/CONNECT_UX.md).

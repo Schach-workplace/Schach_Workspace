@@ -20,6 +20,9 @@ func (s *Server) createConversation(w http.ResponseWriter, r *http.Request) erro
 	if e := decode(w, r, &input); e != nil {
 		return e
 	}
+	if input.Kind == "dm" {
+		input.Title = "Direct message"
+	}
 	if !in(input.Kind, "dm", "group", "channel") || !clean(input.Title, 120) || len(input.ParticipantIDs) > 100 {
 		return invalid("Choose a conversation kind, title and up to 100 participants.")
 	}
@@ -134,6 +137,26 @@ func (s *Server) listConversations(w http.ResponseWriter, r *http.Request) error
 		if hasMore {
 			rows = rows[:100]
 		}
+		// Only project peers for DMs in this already-authorized company page.
+		dmIDs := []string{}
+		for _, row := range rows {
+			if row.Kind == "dm" {
+				dmIDs = append(dmIDs, row.ID)
+			}
+		}
+		if len(dmIDs) > 0 {
+			var peers []ConversationMember
+			if e := tx.Where("company_id = ? AND conversation_id IN ? AND user_id <> ? AND active = ?", a.CompanyID, dmIDs, a.UserID, true).Find(&peers).Error; e != nil {
+				return e
+			}
+			peerByConversation := map[string]string{}
+			for _, peer := range peers {
+				peerByConversation[peer.ConversationID] = peer.UserID
+			}
+			for i := range rows {
+				rows[i].PeerID = peerByConversation[rows[i].ID]
+			}
+		}
 		if len(rows) > 0 {
 			last := rows[len(rows)-1]
 			data, _ := json.Marshal(conversationListCursor{a.CompanyID, a.UserID, last.CreatedAt, last.ID})
@@ -151,7 +174,17 @@ func (s *Server) getConversation(w http.ResponseWriter, r *http.Request) error {
 	members := []ConversationMember{}
 	e := s.withCommunicationTransaction(r, nil, func(tx *gorm.DB, a *conversationScope) error {
 		c = a.Conversation
-		return tx.Where("company_id = ? AND conversation_id = ? AND active = ?", a.CompanyID, c.ID, true).Find(&members).Error
+		if e := tx.Where("company_id = ? AND conversation_id = ? AND active = ?", a.CompanyID, c.ID, true).Find(&members).Error; e != nil {
+			return e
+		}
+		if c.Kind == "dm" {
+			for _, member := range members {
+				if member.UserID != a.UserID {
+					c.PeerID = member.UserID
+				}
+			}
+		}
+		return nil
 	})
 	if e != nil {
 		return e

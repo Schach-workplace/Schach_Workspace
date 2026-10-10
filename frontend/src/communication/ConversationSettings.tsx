@@ -1,9 +1,115 @@
-import {useState} from 'react';import type {Conversation,Member} from './types';import type {WorkspaceData} from '../types';
-export default function ConversationSettings({conversation,members,data,command}:{conversation:Conversation;members:Member[];data:WorkspaceData;command:<T>(path:string,body:unknown,method?:string)=>Promise<T>}){
- const[uid,setUid]=useState('');const[role,setRole]=useState('member');const[error,setError]=useState('');const mine=members.find(m=>m.userId===data.me.id);const canManage=['owner','moderator'].includes(mine?.role??'')&&data.me.role!=='viewer';
- async function change(userId:string,active:boolean,nextRole:string){try{await command(`/conversations/${conversation.id}/members`,{expectedVersion:conversation.version,userId,active,role:nextRole});setError('')}catch(e){setError((e as Error).message)}}
- return <details><summary>Conversation settings and participants</summary><p>{conversation.public?'Company channel with retained history':'Private conversation; new and rejoined participants start with future messages'}</p>{members.map(m=><p key={m.userId}>{data.people.find(p=>p.id===m.userId)?.name??'Company member'} · {m.role}{canManage&&conversation.kind!=='dm'&&m.role!=='owner'&&<><button onClick={()=>void change(m.userId,false,m.role)}>Remove participant</button>{mine?.role==='owner'&&<button onClick={()=>void change(m.userId,true,'owner')}>Transfer ownership</button>}</>}</p>)}
- {canManage&&conversation.kind!=='dm'&&<><label>Add participant<select value={uid} onChange={e=>setUid(e.target.value)}><option value="">Choose an active member</option>{data.people.filter(p=>p.active&&!members.some(m=>m.userId===p.id)).map(p=><option key={p.id} value={p.id}>{p.name}</option>)}</select></label><label>Conversation role<select value={role} onChange={e=>setRole(e.target.value)}><option>member</option><option>viewer</option><option>moderator</option></select></label><button disabled={!uid} onClick={()=>void change(uid,true,role)}>Add participant</button></>}
- {canManage&&<button onClick={()=>void command(`/conversations/${conversation.id}`,{expectedVersion:conversation.version,archived:!conversation.archived},'PATCH').catch(e=>setError(e.message))}>{conversation.archived?'Reopen conversation':'Archive conversation'}</button>}
- {conversation.kind==='dm'&&<button onClick={()=>{const target=members.find(m=>m.userId!==data.me.id);if(target)void command('/communication/blocks',{userId:target.userId,blocked:true}).catch(e=>setError(e.message))}}>Block direct messages and calls from this participant</button>}{error&&<p role="alert">{error}</p>}</details>
+import { useState } from 'react';
+import type { Conversation, Member } from './types';
+import type { WorkspaceData } from '../types';
+export default function ConversationSettings({
+  conversation,
+  members,
+  data,
+  command,
+}: {
+  conversation: Conversation;
+  members: Member[];
+  data: WorkspaceData;
+  command: <T>(path: string, body: unknown, method?: string) => Promise<T>;
+}) {
+  const [uid, setUid] = useState('');
+  const [role, setRole] = useState('member');
+  const [error, setError] = useState('');
+  const mine = members.find((m) => m.userId === data.me.id);
+  const canManage = ['owner', 'moderator'].includes(mine?.role ?? '') && data.me.role !== 'viewer';
+  async function change(userId: string, active: boolean, nextRole: string) {
+    try {
+      await command(`/conversations/${conversation.id}/members`, {
+        expectedVersion: conversation.version,
+        userId,
+        active,
+        role: nextRole,
+      });
+      setError('');
+    } catch (e) {
+      setError((e as Error).message);
+    }
+  }
+  return (
+    <details open>
+      <summary>Conversation settings and participants</summary>
+      <p>
+        {conversation.public
+          ? 'Company channel with retained history'
+          : 'Private conversation; new and rejoined participants start with future messages'}
+      </p>
+      {members.map((m) => (
+        <p key={m.userId}>
+          {data.people.find((p) => p.id === m.userId)?.name ?? 'Company member'} · {m.role}
+          {canManage && conversation.kind !== 'dm' && m.role !== 'owner' && (
+            <>
+              <button onClick={() => void change(m.userId, false, m.role)}>
+                Remove participant
+              </button>
+              {mine?.role === 'owner' && (
+                <button onClick={() => void change(m.userId, true, 'owner')}>
+                  Transfer ownership
+                </button>
+              )}
+            </>
+          )}
+        </p>
+      ))}
+      {canManage && conversation.kind !== 'dm' && (
+        <>
+          <label>
+            Add participant
+            <select value={uid} onChange={(e) => setUid(e.target.value)}>
+              <option value="">Choose an active member</option>
+              {data.people
+                .filter((p) => p.active && !members.some((m) => m.userId === p.id))
+                .map((p) => (
+                  <option key={p.id} value={p.id}>
+                    {p.name}
+                  </option>
+                ))}
+            </select>
+          </label>
+          <label>
+            Conversation role
+            <select value={role} onChange={(e) => setRole(e.target.value)}>
+              <option>member</option>
+              <option>viewer</option>
+              <option>moderator</option>
+            </select>
+          </label>
+          <button disabled={!uid} onClick={() => void change(uid, true, role)}>
+            Add participant
+          </button>
+        </>
+      )}
+      {canManage && (
+        <button
+          onClick={() =>
+            void command(
+              `/conversations/${conversation.id}`,
+              { expectedVersion: conversation.version, archived: !conversation.archived },
+              'PATCH',
+            ).catch((e) => setError(e.message))
+          }
+        >
+          {conversation.archived ? 'Reopen conversation' : 'Archive conversation'}
+        </button>
+      )}
+      {conversation.kind === 'dm' && (
+        <button
+          onClick={() => {
+            const target = members.find((m) => m.userId !== data.me.id);
+            if (target)
+              void command('/communication/blocks', { userId: target.userId, blocked: true }).catch(
+                (e) => setError(e.message),
+              );
+          }}
+        >
+          Block direct messages and calls from this participant
+        </button>
+      )}
+      {error && <p role="alert">{error}</p>}
+    </details>
+  );
 }

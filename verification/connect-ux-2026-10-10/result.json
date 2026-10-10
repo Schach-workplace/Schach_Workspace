@@ -1,0 +1,81 @@
+{
+  "status": "verified before local integration",
+  "browserTests": {
+    "passed": 83
+  },
+  "nativeTests": {
+    "passed": 10,
+    "scope": "Client/payload and route/composer orchestration, not physical device layout"
+  },
+  "sqlite": {
+    "passed": 105,
+    "skipped": 6,
+    "seconds": 34.133
+  },
+  "postgres": {
+    "passed": 108,
+    "skipped": 3,
+    "seconds": 55.625
+  },
+  "postgresDMRace": {
+    "passed": 2,
+    "seconds": 8.052
+  },
+  "browserRuntime": {
+    "status": "passed",
+    "checks": [
+      "Current API build mounts sign-in in native Chromium",
+      "Rendered founder sign-in succeeds with explicitly fictional accounts",
+      "Existing department finance view renders through the live API",
+      "Person picker opens a nameless DM, peer label resolves and composer sends through the real API",
+      "Selecting the same person reopens the canonical DM without adding a duplicate",
+      "Desktop message history scrolls independently with a visible fixed composer",
+      "Thread reply is submitted and rendered within its authorized thread",
+      "Message actions save privately and saved results reopen through current authorization",
+      "Selected publication retains audience preview and acknowledgement before task creation",
+      "390px phone layout switches between conversation list and chat, with no horizontal overflow",
+      "Voice capture and playable private preview still work in the phone layout"
+    ],
+    "browser": "Chrome/152.0.7977.82",
+    "scope": "Actual fictional demo API and Chromium desktop/390px browser. Fake microphone. Not physical Android/iOS or OS keyboard verification."
+  },
+  "builds": [
+    "Web API",
+    "Web browser-only demo",
+    "Android Hermes export",
+    "iOS Hermes export"
+  ],
+  "nativeTypecheck": "passed",
+  "nativeLint": "passed with zero warnings",
+  "encoreCheck": "Service initialized successfully with SEED_DEMO=true; no configured custom check commands (0/0).",
+  "additionalProviderChecks": "running separately with explicit owned scanner/LiveKit/gateway opt-in",
+  "physicalDevices": "not available",
+  "productionDeployment": "not performed",
+  "failureClassification": [
+    {
+      "kind": "application",
+      "problem": "DM creation required a title",
+      "resolution": "Nameless DM request and current-user peer projection; canonical pair retained"
+    },
+    {
+      "kind": "application",
+      "problem": "Phone composer overlapped bottom navigation",
+      "resolution": "Reserve navigation and visual viewport space; actual390px browser verified"
+    },
+    {
+      "kind": "application",
+      "problem": "StrictMode canceled live picker/media lifetime; native route/draft/read behavior",
+      "resolution": "Independent review findings fixed with regressions"
+    },
+    {
+      "kind": "environment",
+      "problem": "Encore empty database without bootstrap secret or explicit demo seeding",
+      "resolution": "SEED_DEMO=true encore check initialized owned local demo; production bootstrap unchanged"
+    },
+    {
+      "kind": "verification fixture",
+      "problem": "Audience preview probe omitted required due date; voice query had JS quoting error",
+      "resolution": "Corrected fixture; all11 browser runtime checks passed"
+    }
+  ]
+}

@@ -8,6 +8,7 @@ type Conversation struct {
 	Kind         string `json:"kind"`
 	Public       bool   `json:"public"`
 	PairKey      string `json:"-"`
+	PeerID       string `json:"peerId,omitempty" gorm:"-"`
 	Forwarding   string `json:"forwarding"`
 	Version      int64  `json:"version"`
 	NextSequence int64  `json:"-"`

@@ -139,3 +139,7 @@ POST, GET `/conversations/:id/records` create/list `{retryKey,kind:ack/poll/even
 Tasks now accept `deadlineMode:all_day/timed`, `dueDate`, and for timed mode `dueAt` with explicit UTC offset plus `dueTimezone` IANA zone. Original mode/instant/zone are immutable. Ambiguous DST input needs a selected offset; nonexistent wall time is rejected. Timed recurrence is explicitly rejected; legacy all-day recurrence remains supported. Imports/exports preserve these fields. Completed exactly at the timed instant is on time; overdue compares absolute instants, while all-day uses the company calendar.
 
 Adding task acceptance evidence bumps its optimistic version. A review inspected at version N cannot accept evidence version N+1. Accepted tasks must reopen before new evidence; ordinary discussion comments remain separate from acceptance evidence. All original finance controls remain unchanged.
+
+## Connect direct messages (10 October 2026)
+
+For `POST /api/companies/{cid}/conversations` with `kind: "dm"`, omit `title` and supply the other participant in `participantIds`. The server ignores DM titles and returns the existing company-scoped pair when present. Group/channel names remain required. Authorized DM list/detail projections include optional `peerId` for the other participant; the internal pair key stays private. This is an additive response field with no SQL migration. See [Connect UX](CONNECT_UX.md).

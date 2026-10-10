@@ -1,0 +1,18 @@
+{
+  "status": "passed",
+  "checks": [
+    "Current API build mounts sign-in in native Chromium",
+    "Rendered founder sign-in succeeds with explicitly fictional accounts",
+    "Existing department finance view renders through the live API",
+    "Person picker opens a nameless DM, peer label resolves and composer sends through the real API",
+    "Selecting the same person reopens the canonical DM without adding a duplicate",
+    "Desktop message history scrolls independently with a visible fixed composer",
+    "Thread reply is submitted and rendered within its authorized thread",
+    "Message actions save privately and saved results reopen through current authorization",
+    "Selected publication retains audience preview and acknowledgement before task creation",
+    "390px phone layout switches between conversation list and chat, with no horizontal overflow",
+    "Voice capture and playable private preview still work in the phone layout"
+  ],
+  "browser": "Chrome/152.0.7977.82",
+  "scope": "Actual fictional demo API and Chromium desktop/390px browser. Fake microphone. Not physical Android/iOS or OS keyboard verification."
+}

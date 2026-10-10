@@ -8503,5 +8503,3 @@ small,
     width: calc(50% - 8px);
   }
 }
-
-.connect-layout{display:grid;grid-template-columns:280px minmax(0,1fr);gap:20px}.connect-layout .panel{padding:20px}.connect-layout aside button{display:block;width:100%;text-align:left;margin:8px 0}.connect-layout input,.connect-layout select,.connect-layout textarea{display:block;width:100%;margin:6px 0 14px}.connect-layout input[type=checkbox]{display:inline;width:auto}.connect-messages{list-style:none;padding:0}.connect-messages li{padding:16px 0;border-bottom:1px solid var(--border)}.connect-messages button{margin:0 10px 0 0}.connect-layout button{padding:8px;border-radius:6px}.connect-layout textarea{min-height:90px}@media(max-width:760px){.connect-layout{grid-template-columns:1fr}}
