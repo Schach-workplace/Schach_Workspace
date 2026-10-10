@@ -1,5 +1,5 @@
 {
-  "status": "verified before local integration",
+  "status": "verified and integrated into local main",
   "browserTests": {
     "passed": 83
   },
@@ -13,9 +13,17 @@
     "seconds": 34.133
   },
   "postgres": {
-    "passed": 108,
-    "skipped": 3,
-    "seconds": 55.625
+    "passed": 111,
+    "skipped": 0,
+    "generalSuite": {
+      "passed": 108,
+      "optInSkipped": 3,
+      "seconds": 55.625
+    },
+    "separateOptInRun": {
+      "passed": 3,
+      "seconds": 4.014
+    }
   },
   "postgresDMRace": {
     "passed": 2,
@@ -48,7 +56,12 @@
   "nativeTypecheck": "passed",
   "nativeLint": "passed with zero warnings",
   "encoreCheck": "Service initialized successfully with SEED_DEMO=true; no configured custom check commands (0/0).",
-  "additionalProviderChecks": "running separately with explicit owned scanner/LiveKit/gateway opt-in",
+  "additionalProviderChecks": {
+    "status": "passed",
+    "gatewayLoadAndOverflowSeconds": 1.82,
+    "actualClamAVSeconds": 0.01,
+    "actualLiveKitAudioAndRevocationSeconds": 2.18
+  },
   "physicalDevices": "not available",
   "productionDeployment": "not performed",
   "failureClassification": [
@@ -76,6 +89,80 @@
       "kind": "verification fixture",
       "problem": "Audience preview probe omitted required due date; voice query had JS quoting error",
       "resolution": "Corrected fixture; all11 browser runtime checks passed"
+    },
+    {
+      "kind": "verification command",
+      "problem": "Preview VM verifier omitted required Node experimental-vm-modules flag",
+      "resolution": "Corrected command; all 11 checks passed"
+    },
+    {
+      "kind": "verification fixture",
+      "problem": "APK inspection expected obsolete libhermes.so filename",
+      "resolution": "Verified current libhermesvm.so for both architectures, updated Connect bundle strings and APK v2 signature"
     }
-  ]
+  ],
+  "mergedTree": {
+    "codeCommit": "24f5482",
+    "browserTestsPassed": 83,
+    "nativeTestsPassed": 10,
+    "nativeTypecheck": "passed",
+    "nativeLint": "passed with zero warnings",
+    "webAPIAndDemoBuilds": "passed",
+    "selfContainedPreviewChecksPassed": 11,
+    "previewBytes": 1019358,
+    "runningURL": "http://127.0.0.1:8080",
+    "servedIndexSHA256": "13890bf311a043ec68335332f59aa5247111f409d4fe1ee855ad192b67baf480",
+    "readOnlyBrowserCheck": "Finance and Connect render; DM picker has no name field; no conversation or message created",
+    "existingRows": {
+      "users": {
+        "before": 18,
+        "after": 18,
+        "preserved": true
+      },
+      "companies": {
+        "before": 2,
+        "after": 2,
+        "preserved": true
+      },
+      "tasks": {
+        "before": 45,
+        "after": 45,
+        "preserved": true
+      },
+      "expenses": {
+        "before": 19,
+        "after": 19,
+        "preserved": true
+      },
+      "conversations": {
+        "before": 4,
+        "after": 5,
+        "preserved": true
+      },
+      "messages": {
+        "before": 1,
+        "after": 3,
+        "preserved": true
+      }
+    },
+    "smokeEntryPoint": {
+      "status": "passed",
+      "checks": 11,
+      "scope": "Fresh disposable loopback demo at port 8082 using the merged main build; browser smoke compatibility entry point"
+    }
+  },
+  "androidAPK": {
+    "file": "Schach_Workspace_Connect_Android_Evaluation.apk",
+    "bytes": 96955280,
+    "sha256": "37830fa2b2cf82c64f070ff56f17ba17d2737a0637de14e2a992d606e4fdc4f6",
+    "architectures": [
+      "arm64-v8a",
+      "x86_64"
+    ],
+    "bundleContainsCurrentConnect": true,
+    "signing": "Android Debug certificate; APK v2 verified; evaluation only",
+    "physicalDeviceRun": false,
+    "buildDuration": "1h 17m 37s",
+    "gradleTasksExecuted": 959
+  }
 }

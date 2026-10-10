@@ -14,13 +14,13 @@ Local cron is refused because its header metadata is caller-controlled; use the 
 
 Current additional gates from repository root:
 
-For a running, explicitly fictional loopback demo, Chromium can verify the current rendered sign-in, finance, Connect and voice-preview flows:
+For a running, fresh disposable fictional loopback demo, Chromium verifies the rendered sign-in, finance, nameless DM reuse, history/composer, thread, saved messages, task disclosure gate, phone navigation and voice-preview flows. Set SCHACH_SMOKE_URL to its loopback address (the default is port 8080):
 
 ```sh
 SCHACH_SMOKE_RESULT=/tmp/schach-web-app-result.json node verification/runtime/web_app_smoke.mjs --allow-demo-mutations
 ```
 
-This creates private fictional groups and records/discards a fake microphone preview. It does not send media, test physical devices or certify calls. The test checks the real server's media policy, rather than replacing it in a harness.
+This creates a private fictional DM and messages, changes its publication policy, and records/discards a fake microphone preview. It writes desktop/phone screenshots beside the private result file; SCHACH_SCREENSHOT_DESKTOP and SCHACH_SCREENSHOT_MOBILE can override their paths. The legacy entry point delegates to connect_ux_smoke.mjs. It does not send media, test physical devices or certify calls. Use a fresh database so the fixture can check that exactly one canonical DM exists.
 
 ```sh
 python3 verification/runtime/compose_smoke.py --output /tmp/schach-compose-evidence
