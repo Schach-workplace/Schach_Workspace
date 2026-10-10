@@ -1,0 +1,47 @@
+{
+  "sourceCommit": "dddb2af9d7edab1f7c13fd8e1fe83f5444b637e2",
+  "actualNativeCalendarAndClockPickers": true,
+  "selectedDueDate": "2026-10-22",
+  "selectedTime": "16:00",
+  "zone": "Asia/Kolkata",
+  "task": {
+    "id": "tsk_dd95967a118364890bd4e5ea951a44e4",
+    "title": "Native task5",
+    "version": 2,
+    "status": "todo",
+    "due_date": "2026-10-22",
+    "deadline_mode": "timed",
+    "due_at": "2026-10-22T10:30:00Z",
+    "due_timezone": "Asia/Kolkata",
+    "original_due_date": "2026-10-11",
+    "original_deadline_mode": "all_day",
+    "original_due_at": null,
+    "original_due_timezone": "",
+    "deadline_change_reason": "Native date fix validation"
+  },
+  "proposal": {
+    "id": "schedule_3f4a59b83096d1c8916791cd99e915b2",
+    "version": 1,
+    "method": "manual",
+    "changes": "[{\"taskId\":\"tsk_dd95967a118364890bd4e5ea951a44e4\",\"version\":1,\"startDate\":\"\",\"dueDate\":\"2026-10-22\",\"deadlineMode\":\"timed\",\"dueAt\":\"2026-10-22T10:30:00.000Z\",\"dueTimezone\":\"Asia/Kolkata\",\"reason\":\"Native date fix validation\"}]",
+    "expires_at": "2026-10-10 22:59:33.7308694+00:00"
+  },
+  "retry": [
+    {
+      "operation": "schedule_preview",
+      "result_kind": "schedule",
+      "result_ids": "[\"schedule_3f4a59b83096d1c8916791cd99e915b2\"]",
+      "result_versions": "[1]"
+    },
+    {
+      "operation": "schedule_apply",
+      "result_kind": "tasks",
+      "result_ids": "[\"tsk_dd95967a118364890bd4e5ea951a44e4\"]",
+      "result_versions": "[2]"
+    }
+  ],
+  "primaryPreviewBoundsAboveIME": "[50,1168][1031,1289] before confirmation",
+  "platform": "owned API36 devshell with compiled dddbbackend and exactcommittedJS; no finalAPK orphysicalclaim",
+  "qualification": "First read-only SQL probe guessed proposal.state which does not exist; corrected model/pragma source before finalquery. It performed no write.",
+  "passed": true
+}

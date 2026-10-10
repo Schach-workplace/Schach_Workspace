@@ -1,0 +1,62 @@
+{
+  "sourceCommit": "79049f08ad91c5497cc6d3ebfb7fb272ffed9867",
+  "cleanSource": true,
+  "sourceTrees": {
+    "backend": "2131120ee0e24340d3afff2ed0084d6a7ecc7ab0",
+    "frontend": "39ad1b552d5374312bccc7106f4367b5d421d18b",
+    "shared": "2a96a62777f9073ac1f384f94d0413a900b5491b",
+    "mobile": "eb44201c57efd5ad9e21824d7cb686012e935a5b",
+    "encore": "0a3a936cd23e80526c686ad994856924f3f8cfa3"
+  },
+  "backendBinarySha256": "69eaf97b2b020ed1cc47f6a225ad27b53fbee409fea2e06b10ce57a4540618fe",
+  "backendBuild": "go build -buildvcs=false -o /tmp/m5-owned-execution/server-fix1 ./cmd/server",
+  "frontendAssets": {
+    "frontend/dist/favicon.svg": "ed1551c8e4a888081ab0b4b9d2a7d29c2b07e314e44519ba785b3370572be705",
+    "frontend/dist/schach-logo.webp": "ae8586a0dedf0c3ee3ee3f7802105f32756036a658a73016855b2379aa32fa13",
+    "frontend/dist/index.html": "2b3c2d6a8e8a8588bbd320d7c1bb8ed12dbfc15ce67411a6dd0a33173d25d920",
+    "frontend/dist/fonts/README.md": "e6fea2391466c9ce75d3954dd7e9a946f8457be65641347d265bf2787a221ae3",
+    "frontend/dist/fonts/chivo-OFL.txt": "c9b69fa18c372df2b187b49efc57b1ea643b86a938e5af32f6b5a7af1017c891",
+    "frontend/dist/fonts/chivo-latin-variable.woff2": "4b1f32027ce991997893f63a6b3bfd6ed887f1628b7baa2d3390d86bc67f6e28",
+    "frontend/dist/fonts/ibm-plex-sans-OFL.txt": "7e6b2818edbd8f6a01ae80641cc8f16a51080d08fb4e532be3a0b6f74adb07da",
+    "frontend/dist/fonts/ibm-plex-sans-latin-variable.woff2": "056e4e2459f57a0033c8c9c844ff19d6e42ac8602027803d4345823bcc939818",
+    "frontend/dist/assets/index-D2oYmO3_.js": "d802506d94f40bc9e4028415e8bf725559fbb599841c0beb273f6830983f6ff3",
+    "frontend/dist/assets/Calls-DnDbBW0k.js": "630b1cce9785d68a757d69f3ab7ef41eb5e6ffdc1ad9631b2d2720ebd36d00f2",
+    "frontend/dist/assets/Calls-C7z1-d2S.css": "54beb6fa5d06a09fa3ee837b8c1cc5543666ddf317e7859b91167c15a977edb7",
+    "frontend/dist/assets/index-DhM2UcmF.css": "ab442be3ad2de77bcdef37f9c479e818541a2241944f80ee1586155f19fb64e9"
+  },
+  "frontendBuild": "npm run build",
+  "database": "/tmp/m5-owned-execution/fixture.db; standalone SQLite GORM development migration, no numbered SQL certification",
+  "backendQualification": "Final HEAD rebuilt as server-fix1-final; SHA256 identical to running server-fix1 bytes. Backend tree unchanged across all client follow-up commits.",
+  "backendFinalBuild": "go build -buildvcs=false -o /tmp/m5-owned-execution/server-fix1-final ./cmd/server",
+  "httpErrors": [],
+  "status": "passed",
+  "platform": "Chromium API-mode with owned SQLite server",
+  "metrics": [
+    {
+      "width": 320,
+      "scrollWidth": 320,
+      "labels": true
+    },
+    {
+      "width": 375,
+      "scrollWidth": 375,
+      "labels": true
+    },
+    {
+      "width": 430,
+      "scrollWidth": 430,
+      "labels": true
+    }
+  ],
+  "templateSubmissions": 2,
+  "identicalFrozenIntent": true,
+  "matchingTasks": 1,
+  "scheduleAppliedOnce": true,
+  "task": "tsk_140f353f27e017fea1e195d6e8c6df8b",
+  "version": 2,
+  "currentDueDate": "2026-10-22",
+  "originalDueDate": "2026-10-20",
+  "elapsedMs": 2524,
+  "uncaughtErrors": [],
+  "limits": "Browser layout and DOM interactions only; no physical keyboard or screen reader certification"
+}

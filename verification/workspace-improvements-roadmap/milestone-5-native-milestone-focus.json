@@ -1,0 +1,43 @@
+{
+  "sourceCommit": "1e3cfb9e4b1d68ec53e2faac4c9955435cabed9d",
+  "events": [
+    {
+      "elapsedSeconds": 2.06,
+      "inputPresent": true,
+      "title": "Native milestone5",
+      "focused": "true"
+    },
+    {
+      "elapsedSeconds": 9.02,
+      "inputPresent": true,
+      "title": "Native milestone5",
+      "focused": "true"
+    },
+    {
+      "elapsedSeconds": 15.98,
+      "inputPresent": true,
+      "title": "Native milestone5",
+      "focused": "true"
+    },
+    {
+      "elapsedSeconds": 22.93,
+      "inputPresent": true,
+      "title": "Native milestone5",
+      "focused": "true"
+    },
+    {
+      "elapsedSeconds": 29.88,
+      "inputPresent": true,
+      "title": "Native milestone5",
+      "focused": "true"
+    },
+    {
+      "elapsedSeconds": 36.83,
+      "inputPresent": true,
+      "title": "Native milestone5",
+      "focused": "true"
+    }
+  ],
+  "physicalDevice": false,
+  "expectedRegularRefreshIntervalSeconds": 15
+}

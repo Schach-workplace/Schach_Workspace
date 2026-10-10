@@ -55,8 +55,8 @@
 - Acceptance: one actionable item per event; read does not imply resolved; failed/retried delivery does not duplicate; no private-source preview after revocation.
 
 ### Milestone 5: Tasks and project execution
-- [ ] Add permission-scoped templates, reusable checklists and milestone records through new migrations and `tasks.go`/`organization.go` APIs.
-- [ ] Extend task/project UI with owner defaults, blocker routing and dependency impact; offer reviewed schedule proposals.
+- [x] Add permission-scoped templates, reusable checklists and milestone records through new migrations and `tasks.go`/`organization.go` APIs.
+- [x] Extend task/project UI with owner defaults, blocker routing and dependency impact; offer reviewed schedule proposals.
 - Acceptance: templates cannot suppress review/evidence; cycles rejected; source links authorized separately; repeated application yields no duplicate work.
 
 ### Milestone 6: Historical and saved reports

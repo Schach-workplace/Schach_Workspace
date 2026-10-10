@@ -1,0 +1,53 @@
+{
+  "sourceCommit": "79049f08ad91c5497cc6d3ebfb7fb272ffed9867",
+  "backendCompiledCommit": "dddb2af9d7edab1f7c13fd8e1fe83f5444b637e2",
+  "backendAndSQLByteEquivalentToSource": true,
+  "platform": "owned API36 virtual Android on matched1ddevshell",
+  "samples": [
+    {
+      "elapsedSeconds": 2.05,
+      "inputPresent": true,
+      "authoredSearch": "Aditi",
+      "focused": "true",
+      "choiceVisible": true
+    },
+    {
+      "elapsedSeconds": 8.05,
+      "inputPresent": true,
+      "authoredSearch": "Aditi",
+      "focused": "true",
+      "choiceVisible": true
+    },
+    {
+      "elapsedSeconds": 14.04,
+      "inputPresent": true,
+      "authoredSearch": "Aditi",
+      "focused": "true",
+      "choiceVisible": true
+    },
+    {
+      "elapsedSeconds": 20.0,
+      "inputPresent": true,
+      "authoredSearch": "Aditi",
+      "focused": "true",
+      "choiceVisible": true
+    },
+    {
+      "elapsedSeconds": 25.97,
+      "inputPresent": true,
+      "authoredSearch": "Aditi",
+      "focused": "true",
+      "choiceVisible": true
+    },
+    {
+      "elapsedSeconds": 31.95,
+      "inputPresent": true,
+      "authoredSearch": "Aditi",
+      "focused": "true",
+      "choiceVisible": true
+    }
+  ],
+  "passed": true,
+  "qualification": "Initial combined author\u2192picker script did not open picker reliably; isolated picker open succeeded. This probe verifies authored picker input/focus across normal source polls, not continuous fetched choices or physical devices.",
+  "screenshotVisuallyInspectedIMEOpen": true
+}

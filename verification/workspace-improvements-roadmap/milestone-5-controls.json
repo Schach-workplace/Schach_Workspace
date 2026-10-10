@@ -1,0 +1,20 @@
+{
+  "sourceCommit": "a6671c0893fc870994ce25ec4c0d6d6d60173f28",
+  "fixBase": "1e3cfb9e4b1d68ec53e2faac4c9955435cabed9d",
+  "mirroredSQLFilesCompared": 128,
+  "immutableSQL1Through31FilesCompared": 124,
+  "pre28FilesComparedToTaskBase": 108,
+  "numberedPG32Proof": "worker final report; controller did not repeat suite",
+  "rootMainCommit": "d20063b8063ee1dfd9bec6b4cd7807f4e31bcfa6",
+  "rootMainClean": true,
+  "rootAPIHealthPath": "/api/health",
+  "rootAPIHealthStatus": 200,
+  "rootAPIHealthBody": {
+    "ok": true
+  },
+  "userDataResetOrSeedPerformed": false,
+  "physicalAndroidIOSSigningPushIndiaProduction": "unverified rollout gates",
+  "backendSQLByteEquivalentTo": "dddb2af9d7edab1f7c13fd8e1fe83f5444b637e2",
+  "backendSQLMobileSharedByteEquivalentTo": "79049f08ad91c5497cc6d3ebfb7fb272ffed9867",
+  "qualification": "First controller guard incorrectly compared shared against dddb and stopped; corrected separate exact backend/SQL versus complete790 runtime trees. No failed guard counted as PASS."
+}
