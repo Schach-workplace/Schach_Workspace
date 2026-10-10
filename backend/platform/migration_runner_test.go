@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"reflect"
 	"schach.local/workspace/backend/migrations"
 	"sort"
 	"strconv"
@@ -97,8 +98,8 @@ func TestMilestone5NumberedUpgradeFrom27(t *testing.T) {
 	}
 	var count int64
 	db.Table("schach_schema_migrations").Count(&count)
-	if count != 31 {
-		t.Fatal("expected actual numbered SQL ledger31", count)
+	if count != 32 {
+		t.Fatal("expected actual numbered SQL ledger32", count)
 	}
 	var task Task
 	if e = db.First(&task, "id = ?", id).Error; e != nil || task.Version != 1 || task.OriginalDueDate != "2026-10-20" {
@@ -116,4 +117,83 @@ func TestMilestone5NumberedUpgradeFrom27(t *testing.T) {
 func migrationNumber(file string) int {
 	n, _ := strconv.Atoi(strings.Split(filepath.Base(file), "_")[0])
 	return n
+}
+
+func TestMilestone5SubmissionHistoryUpgradeFrom31(t *testing.T) {
+	if os.Getenv("TEST_DATABASE_URL") == "" {
+		t.Skip("owned PostgreSQL31-to32 numbered runner")
+	}
+	s, cid, project, task, reviewer := milestoneFixture(t)
+	db := s.db
+	c := login(t, s, "founder@example.com")
+	base := "/api/companies/" + cid
+	_, created, _ := req(t, s, "POST", base+"/projects/"+project+"/milestones", map[string]any{"retryKey": "upgrade-create", "expectedProjectVersion": 1, "title": "Legacy in review", "ownerId": me(t, s, c), "reviewerId": reviewer, "criteria": []any{map[string]any{"id": "criterion", "text": "Inspect"}}, "taskIds": []string{task}}, c)
+	id := created["id"].(string)
+	path := base + "/project-milestones/" + id + "/transition"
+	if st, _, w := req(t, s, "POST", path, map[string]any{"retryKey": "upgrade-submit", "version": 1, "expectedProjectVersion": 1, "action": "submit", "criteriaVersion": 1, "tasks": []any{map[string]any{"taskId": task, "version": 1}}, "assertions": []any{map[string]any{"criterionId": "criterion", "statement": "Legacy assertion"}}}, c); st != 200 {
+		t.Fatal(st, w.Body.String())
+	}
+	var before ProjectMilestone
+	db.First(&before, "id = ?", id)
+	down, e := os.ReadFile("../migrations/32_milestone_submission_history.down.sql")
+	if e != nil {
+		t.Fatal(e)
+	}
+	if e = db.Exec(string(down)).Error; e != nil {
+		t.Fatal(e)
+	}
+	if e = db.Exec("CREATE TABLE schach_schema_migrations(version integer PRIMARY KEY,sha256 text NOT NULL,applied_at timestamptz NOT NULL DEFAULT now())").Error; e != nil {
+		t.Fatal(e)
+	}
+	files, e := filepath.Glob("../migrations/*.up.sql")
+	if e != nil {
+		t.Fatal(e)
+	}
+	for _, file := range files {
+		n := migrationNumber(file)
+		if n > 31 {
+			continue
+		}
+		raw, e := os.ReadFile(file)
+		if e != nil {
+			t.Fatal(e)
+		}
+		sum := sha256.Sum256(raw)
+		if e = db.Exec("INSERT INTO schach_schema_migrations(version,sha256) VALUES (?,?)", n, fmt.Sprintf("%x", sum)).Error; e != nil {
+			t.Fatal(e)
+		}
+	}
+	if e = migrations.Apply(t.Context(), db, 0); e != nil {
+		t.Fatal(e)
+	}
+	var after ProjectMilestone
+	db.First(&after, "id = ?", id)
+	if !reflect.DeepEqual(before, after) {
+		t.Fatal("existing submitted basis altered", before, after)
+	}
+	var count int64
+	db.Table("schach_schema_migrations").Count(&count)
+	if count != 32 {
+		t.Fatal(count)
+	}
+	var row Task
+	db.First(&row, "id = ?", task)
+	if row.Version != 1 || row.OriginalDueDate != "2026-10-20" {
+		t.Fatal("task changed", row)
+	}
+	rc := login(t, s, "milestone-reviewer@example.com")
+	reset := map[string]any{"retryKey": "upgrade-reset", "version": 2, "expectedProjectVersion": 1, "action": "request_changes", "reason": "Reinspect legacy work"}
+	for i := 0; i < 2; i++ {
+		if st, _, w := req(t, s, "POST", path, reset, rc); st != 200 {
+			t.Fatal(st, w.Body.String())
+		}
+	}
+	var events []MilestoneEvent
+	db.Where("milestone_id = ? AND action = ?", id, "request_changes").Find(&events)
+	if len(events) != 1 || len(events[0].Tasks) != 1 || len(events[0].Assertions) != 1 || events[0].ProjectVersion != 1 {
+		t.Fatal("new immutable recovery snapshot", events)
+	}
+	if e = migrations.Apply(t.Context(), db, 0); e != nil {
+		t.Fatal("upgrade replay", e)
+	}
 }

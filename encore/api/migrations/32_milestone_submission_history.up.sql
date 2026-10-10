@@ -1,0 +1,1 @@
+ALTER TABLE milestone_events ADD COLUMN submitted_by text NOT NULL DEFAULT '', ADD COLUMN submitted_at text NOT NULL DEFAULT '', ADD COLUMN criteria_version bigint NOT NULL DEFAULT 0, ADD COLUMN project_version bigint NOT NULL DEFAULT 0, ADD COLUMN tasks jsonb DEFAULT '[]'::jsonb, ADD COLUMN assertions jsonb DEFAULT '[]'::jsonb;

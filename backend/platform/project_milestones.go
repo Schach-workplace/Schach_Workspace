@@ -64,14 +64,20 @@ type MilestoneAcceptance struct {
 	Note             string               `json:"note"`
 }
 type MilestoneEvent struct {
-	ID          string `json:"id" gorm:"primaryKey"`
-	CompanyID   string `json:"companyId"`
-	MilestoneID string `json:"milestoneId" gorm:"index"`
-	ActorID     string `json:"actorId"`
-	Action      string `json:"action"`
-	Reason      string `json:"reason"`
-	Version     int64  `json:"version"`
-	CreatedAt   string `json:"createdAt"`
+	SubmittedBy     string               `json:"submittedBy"`
+	SubmittedAt     string               `json:"submittedAt"`
+	CriteriaVersion int64                `json:"criteriaVersion"`
+	ProjectVersion  int64                `json:"projectVersion"`
+	Tasks           []MilestoneTaskBasis `json:"tasks" gorm:"serializer:json;type:jsonb"`
+	Assertions      []MilestoneAssertion `json:"assertions" gorm:"serializer:json;type:jsonb"`
+	ID              string               `json:"id" gorm:"primaryKey"`
+	CompanyID       string               `json:"companyId"`
+	MilestoneID     string               `json:"milestoneId" gorm:"index"`
+	ActorID         string               `json:"actorId"`
+	Action          string               `json:"action"`
+	Reason          string               `json:"reason"`
+	Version         int64                `json:"version"`
+	CreatedAt       string               `json:"createdAt"`
 }
 
 func projectEditor(a *access, p Project) bool {
@@ -268,6 +274,18 @@ func milestoneProjection(tx *gorm.DB, a *access, m ProjectMilestone, p Project) 
 			}
 		}
 	}
+	var events []MilestoneEvent
+	if e := tx.Where("company_id = ? AND milestone_id = ?", a.Company.ID, m.ID).Order("created_at, id").Find(&events).Error; e != nil {
+		return nil, e
+	}
+	for _, event := range events {
+		for _, basis := range event.Tasks {
+			if _, e := scopedTask(tx, a, basis.TaskID); e != nil {
+				return nil, e
+			}
+		}
+	}
+	view["events"] = events
 	view["acceptances"] = history
 	view["canEdit"] = m.State == "draft" && (a.User.ID == m.OwnerID || projectEditor(a, p))
 	view["canSubmit"] = m.State == "draft" && a.User.ID == m.OwnerID
@@ -546,6 +564,7 @@ func (s *Server) transitionMilestone(w http.ResponseWriter, r *http.Request) err
 			if len(input.Note) > 4000 {
 				return BusinessResult{}, invalid("Review note allows 4,000 characters.")
 			}
+			priorSubmission := m
 			switch input.Action {
 			case "submit":
 				if m.State != "draft" || input.CriteriaVersion != m.CriteriaVersion {
@@ -593,7 +612,10 @@ func (s *Server) transitionMilestone(w http.ResponseWriter, r *http.Request) err
 				m.SubmittedTasks = input.Tasks
 				m.Assertions = input.Assertions
 			case "approve", "request_changes":
-				if m.State != "in_review" || input.CriteriaVersion != m.CriteriaVersion || !reflect.DeepEqual(input.Tasks, m.SubmittedTasks) || p.Version != m.SubmittedProjectVersion {
+				if m.State != "in_review" {
+					return BusinessResult{}, conflict()
+				}
+				if input.Action == "approve" && (input.CriteriaVersion != m.CriteriaVersion || !reflect.DeepEqual(input.Tasks, m.SubmittedTasks) || p.Version != m.SubmittedProjectVersion) {
 					return BusinessResult{}, conflict()
 				}
 				for _, basis := range m.SubmittedTasks {
@@ -601,11 +623,13 @@ func (s *Server) transitionMilestone(w http.ResponseWriter, r *http.Request) err
 					if e != nil {
 						return BusinessResult{}, e
 					}
-					if t.Version != basis.Version || t.Status != "done" {
-						return BusinessResult{}, conflict()
-					}
-					if e = completionReady(tx, t); e != nil {
-						return BusinessResult{}, e
+					if input.Action == "approve" {
+						if t.Version != basis.Version || t.Status != "done" {
+							return BusinessResult{}, conflict()
+						}
+						if e = completionReady(tx, t); e != nil {
+							return BusinessResult{}, e
+						}
 					}
 				}
 				if input.Action == "approve" {
@@ -634,7 +658,10 @@ func (s *Server) transitionMilestone(w http.ResponseWriter, r *http.Request) err
 			if e := tx.Save(&m).Error; e != nil {
 				return BusinessResult{}, e
 			}
-			if e := tx.Create(&MilestoneEvent{ID: newID("mev"), CompanyID: a.Company.ID, MilestoneID: m.ID, ActorID: a.User.ID, Action: input.Action, Reason: input.Reason, Version: m.Version, CreatedAt: nowString()}).Error; e != nil {
+			if input.Action == "submit" {
+				priorSubmission = m
+			}
+			if e := tx.Create(&MilestoneEvent{ID: newID("mev"), CompanyID: a.Company.ID, MilestoneID: m.ID, ActorID: a.User.ID, Action: input.Action, Reason: input.Reason, Version: m.Version, CreatedAt: nowString(), SubmittedBy: priorSubmission.SubmittedBy, SubmittedAt: priorSubmission.SubmittedAt, CriteriaVersion: priorSubmission.CriteriaVersion, ProjectVersion: priorSubmission.SubmittedProjectVersion, Tasks: priorSubmission.SubmittedTasks, Assertions: priorSubmission.Assertions}).Error; e != nil {
 				return BusinessResult{}, e
 			}
 			return BusinessResult{Kind: "milestone", IDs: []string{m.ID}, Versions: []int64{m.Version}}, nil

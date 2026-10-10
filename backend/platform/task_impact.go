@@ -86,6 +86,12 @@ func visibleImpact(tx *gorm.DB, a *access, root Task) ([]TaskImpactNode, []TaskI
 			filtered = append(filtered, edge)
 		}
 	}
+	sort.Slice(filtered, func(i, j int) bool {
+		if filtered[i].From == filtered[j].From {
+			return filtered[i].To < filtered[j].To
+		}
+		return filtered[i].From < filtered[j].From
+	})
 	return nodes, filtered, nil
 }
 func (s *Server) taskImpact(w http.ResponseWriter, r *http.Request) error {
@@ -110,7 +116,7 @@ func (s *Server) taskImpact(w http.ResponseWriter, r *http.Request) error {
 		if e != nil {
 			return e
 		}
-		basis := payloadHash([]any{accessBasis(a), "impact", root.ID, root.Version})
+		basis := payloadHash([]any{accessBasis(a), "impact", root.ID, root.Version, nodes, edges})
 		after := ""
 		if cursor := r.URL.Query().Get("cursor"); cursor != "" {
 			c, e := decodeReadCursor(cursor, basis)
@@ -140,7 +146,7 @@ func (s *Server) taskImpact(w http.ResponseWriter, r *http.Request) error {
 		pageEdges := []TaskImpactEdge{}
 		paths := [][]string{}
 		for _, edge := range edges {
-			if pageIDs[edge.From] && pageIDs[edge.To] {
+			if pageIDs[edge.From] {
 				pageEdges = append(pageEdges, edge)
 				paths = append(paths, []string{edge.From, edge.To})
 			}
