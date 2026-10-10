@@ -8540,3 +8540,37 @@ small,
 .attention-inbox select {
   min-height: 44px;
 }
+
+.execution-panel {
+  padding: 16px;
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+}
+.execution-panel article,
+.execution-panel fieldset {
+  padding: 12px;
+  border: 1px solid var(--border, #e5e7eb);
+  border-radius: 8px;
+  min-width: 0;
+}
+.execution-panel .button,
+.execution-choice {
+  min-height: 44px;
+  height: auto;
+  white-space: normal;
+}
+.execution-panel input,
+.execution-panel select,
+.execution-panel textarea {
+  max-width: 100%;
+  min-height: 44px;
+}
+.execution-panel p {
+  overflow-wrap: anywhere;
+}
+.execution-choice {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}

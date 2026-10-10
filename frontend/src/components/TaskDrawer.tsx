@@ -1,3 +1,6 @@
+import TaskTemplates from './TaskTemplates';
+import TaskImpact from './TaskImpact';
+import ScheduleReview from './ScheduleReview';
 import {
   useBusinessAttempt,
   beginAttempt,
@@ -453,515 +456,541 @@ function TaskDrawerBody({
               </div>
             )}
             {tab === 'details' && (
-              <form onSubmit={save} id="task-edit-form">
-                {!task && business.attempt && (
-                  <p role="alert">
-                    The previous request may already have created work. Retry the same frozen
-                    details before starting another task.
-                  </p>
+              <>
+                {' '}
+                {task ? (
+                  <>
+                    <TaskTemplates task={task} />
+                    <TaskImpact taskId={task.id} />
+                    <ScheduleReview tasks={[task]} />
+                  </>
+                ) : (
+                  <TaskTemplates initialProject={initialProject} onCreated={() => onClose()} />
                 )}
-                <fieldset
-                  disabled={!writable || store.saving || task?.status === 'done'}
-                  className="plain-fieldset"
-                >
-                  <Field label="Task title">
-                    <input
-                      required
-                      maxLength={240}
-                      autoFocus={!task}
-                      value={draft.title}
-                      onChange={(e) => set('title', e.target.value)}
-                      placeholder="What needs to get done?"
-                      className="task-title-input"
-                    />
-                  </Field>
-                  <Field
-                    label="Outcome & context"
-                    hint="Describe what a successful result looks like."
+                <form onSubmit={save} id="task-edit-form">
+                  {!task && business.attempt && (
+                    <p role="alert">
+                      The previous request may already have created work. Retry the same frozen
+                      details before starting another task.
+                    </p>
+                  )}
+                  <fieldset
+                    disabled={
+                      !writable ||
+                      store.saving ||
+                      task?.status === 'done' ||
+                      (!task && !!business.attempt)
+                    }
+                    className="plain-fieldset"
                   >
-                    <textarea
-                      value={draft.description}
-                      onChange={(e) => set('description', e.target.value)}
-                      rows={4}
-                      placeholder="Give the owner the context they need…"
-                    />
-                  </Field>
-                  <div className="form-grid">
-                    <Field label="Accountable owner">
-                      <select
+                    <Field label="Task title">
+                      <input
                         required
-                        disabled={!structural}
-                        value={draft.ownerId}
-                        onChange={(e) => {
-                          const person = data.people.find((p) => p.id === e.target.value);
-                          set('ownerId', e.target.value);
-                          if (!task && person) {
-                            const reviewer =
-                              person.managerId ||
-                              data.departments.find((d) => d.id === person.departmentId)?.headId ||
-                              '';
-                            setDraft((d) => ({
-                              ...d,
-                              ownerId: person.id,
-                              departmentId: person.departmentId,
-                              reviewerId: reviewer !== person.id ? reviewer : '',
-                              requiresApproval: !!reviewer && reviewer !== person.id,
-                            }));
-                          }
-                        }}
-                      >
-                        <option value="">Choose a person</option>
-                        {data.people
-                          .filter(
-                            (p) => p.active && (ownsScope(data, p.id) || p.id === draft.ownerId),
-                          )
-                          .map((p) => (
+                        maxLength={240}
+                        autoFocus={!task}
+                        value={draft.title}
+                        onChange={(e) => set('title', e.target.value)}
+                        placeholder="What needs to get done?"
+                        className="task-title-input"
+                      />
+                    </Field>
+                    <Field
+                      label="Outcome & context"
+                      hint="Describe what a successful result looks like."
+                    >
+                      <textarea
+                        value={draft.description}
+                        onChange={(e) => set('description', e.target.value)}
+                        rows={4}
+                        placeholder="Give the owner the context they need…"
+                      />
+                    </Field>
+                    <div className="form-grid">
+                      <Field label="Accountable owner">
+                        <select
+                          required
+                          disabled={!structural}
+                          value={draft.ownerId}
+                          onChange={(e) => {
+                            const person = data.people.find((p) => p.id === e.target.value);
+                            set('ownerId', e.target.value);
+                            if (!task && person) {
+                              const reviewer =
+                                person.managerId ||
+                                data.departments.find((d) => d.id === person.departmentId)
+                                  ?.headId ||
+                                '';
+                              setDraft((d) => ({
+                                ...d,
+                                ownerId: person.id,
+                                departmentId: person.departmentId,
+                                reviewerId: reviewer !== person.id ? reviewer : '',
+                                requiresApproval: !!reviewer && reviewer !== person.id,
+                              }));
+                            }
+                          }}
+                        >
+                          <option value="">Choose a person</option>
+                          {data.people
+                            .filter(
+                              (p) => p.active && (ownsScope(data, p.id) || p.id === draft.ownerId),
+                            )
+                            .map((p) => (
+                              <option key={p.id} value={p.id}>
+                                {p.name}
+                              </option>
+                            ))}
+                        </select>
+                      </Field>
+                      <Field label="Status">
+                        <select
+                          value={draft.status}
+                          onChange={(e) => set('status', e.target.value as Draft['status'])}
+                        >
+                          {(task
+                            ? statuses
+                            : statuses.filter((s) => s === 'todo' || s === 'backlog')
+                          ).map((s) => (
+                            <option
+                              key={s}
+                              value={s}
+                              disabled={s === 'done' && draft.requiresApproval}
+                            >
+                              {statusLabel[s]}
+                            </option>
+                          ))}
+                        </select>
+                      </Field>
+                      <Field label="Department">
+                        <select
+                          disabled={!structural}
+                          value={draft.departmentId}
+                          onChange={(e) => set('departmentId', e.target.value)}
+                        >
+                          <option value="">No department</option>
+                          {data.departments
+                            .filter(
+                              (d) =>
+                                canAdmin(data) ||
+                                d.id === data.me.departmentId ||
+                                d.id === draft.departmentId,
+                            )
+                            .map((d) => (
+                              <option key={d.id} value={d.id}>
+                                {d.name}
+                              </option>
+                            ))}
+                        </select>
+                      </Field>
+                      <Field label="Project">
+                        <select
+                          disabled={!structural}
+                          value={draft.projectId}
+                          onChange={(e) => set('projectId', e.target.value)}
+                        >
+                          <option value="">No project</option>
+                          {data.projects.map((p) => (
                             <option key={p.id} value={p.id}>
                               {p.name}
                             </option>
                           ))}
-                      </select>
-                    </Field>
-                    <Field label="Status">
-                      <select
-                        value={draft.status}
-                        onChange={(e) => set('status', e.target.value as Draft['status'])}
-                      >
-                        {(task
-                          ? statuses
-                          : statuses.filter((s) => s === 'todo' || s === 'backlog')
-                        ).map((s) => (
-                          <option
-                            key={s}
-                            value={s}
-                            disabled={s === 'done' && draft.requiresApproval}
-                          >
-                            {statusLabel[s]}
-                          </option>
-                        ))}
-                      </select>
-                    </Field>
-                    <Field label="Department">
-                      <select
-                        disabled={!structural}
-                        value={draft.departmentId}
-                        onChange={(e) => set('departmentId', e.target.value)}
-                      >
-                        <option value="">No department</option>
-                        {data.departments
-                          .filter(
-                            (d) =>
-                              canAdmin(data) ||
-                              d.id === data.me.departmentId ||
-                              d.id === draft.departmentId,
-                          )
-                          .map((d) => (
-                            <option key={d.id} value={d.id}>
-                              {d.name}
+                        </select>
+                      </Field>
+                      <Field label="Priority">
+                        <select
+                          value={draft.priority}
+                          onChange={(e) => set('priority', e.target.value as Draft['priority'])}
+                        >
+                          {priorities.map((p) => (
+                            <option key={p} value={p}>
+                              {p[0].toUpperCase() + p.slice(1)}
                             </option>
                           ))}
-                      </select>
-                    </Field>
-                    <Field label="Project">
-                      <select
-                        disabled={!structural}
-                        value={draft.projectId}
-                        onChange={(e) => set('projectId', e.target.value)}
-                      >
-                        <option value="">No project</option>
-                        {data.projects.map((p) => (
-                          <option key={p.id} value={p.id}>
-                            {p.name}
-                          </option>
-                        ))}
-                      </select>
-                    </Field>
-                    <Field label="Priority">
-                      <select
-                        value={draft.priority}
-                        onChange={(e) => set('priority', e.target.value as Draft['priority'])}
-                      >
-                        {priorities.map((p) => (
-                          <option key={p} value={p}>
-                            {p[0].toUpperCase() + p.slice(1)}
-                          </option>
-                        ))}
-                      </select>
-                    </Field>
-                    {task && (
-                      <Field label="Progress estimate">
+                        </select>
+                      </Field>
+                      {task && (
+                        <Field label="Progress estimate">
+                          <div className="input-suffix">
+                            <input
+                              type="number"
+                              min={0}
+                              max={100}
+                              required
+                              value={draft.progress}
+                              onChange={(e) => set('progress', Number(e.target.value))}
+                            />
+                            <span>%</span>
+                          </div>
+                        </Field>
+                      )}
+                      <Field label="Start date">
+                        <input
+                          type="date"
+                          value={draft.startDate}
+                          onChange={(e) => set('startDate', e.target.value)}
+                        />
+                      </Field>
+                      <Field label="Deadline">
+                        <input
+                          required
+                          type="date"
+                          min={draft.startDate || undefined}
+                          value={draft.dueDate}
+                          onChange={(e) => set('dueDate', e.target.value)}
+                        />
+                      </Field>
+                    </div>
+                    <div className="form-grid">
+                      <Field label="Deadline type">
+                        <select
+                          value={draft.deadlineMode ?? 'all_day'}
+                          onChange={(e) => {
+                            set('deadlineMode', e.target.value as 'all_day' | 'timed');
+                            set(
+                              'dueTimezone',
+                              e.target.value === 'timed' ? data.company.timezone : '',
+                            );
+                            set('dueAt', '');
+                            setFoldChoice('');
+                          }}
+                        >
+                          <option value="all_day">All day</option>
+                          <option value="timed">At a specific time</option>
+                        </select>
+                      </Field>
+                      {draft.deadlineMode === 'timed' && (
+                        <>
+                          <Field label="Commitment time">
+                            <input
+                              type="time"
+                              required
+                              value={wallTime}
+                              onChange={(e) => {
+                                setWallTime(e.target.value);
+                                setFoldChoice('');
+                                setDirty(true);
+                              }}
+                            />
+                          </Field>
+                          <Field label="Commitment timezone">
+                            <input
+                              required
+                              value={draft.dueTimezone || data.company.timezone}
+                              onChange={(e) => {
+                                set('dueTimezone', e.target.value);
+                                setFoldChoice('');
+                              }}
+                            />
+                          </Field>
+                          {candidates.length > 1 && (
+                            <Field label="Repeated time — choose offset">
+                              <select
+                                required
+                                value={foldChoice}
+                                onChange={(e) => setFoldChoice(e.target.value)}
+                              >
+                                <option value="">Select occurrence</option>
+                                {candidates.map((value) => (
+                                  <option key={value} value={value}>
+                                    {value} (UTC instant)
+                                  </option>
+                                ))}
+                              </select>
+                            </Field>
+                          )}
+                        </>
+                      )}
+                    </div>
+                    {task?.originalDueDate && (
+                      <div className="detail-note">
+                        <CalendarDays size={14} />
+                        Original commitment:{' '}
+                        <strong>
+                          {task.originalDeadlineMode === 'timed'
+                            ? `${task.originalDueAt} (${task.originalDueTimezone})`
+                            : dateLabel(task.originalDueDate)}
+                        </strong>
+                        {task.dueDate !== task.originalDueDate && (
+                          <span>· Current deadline changed</span>
+                        )}
+                      </div>
+                    )}
+                    {task &&
+                      deadlineChanged(
+                        {
+                          ...draft,
+                          dueAt:
+                            draft.deadlineMode === 'timed'
+                              ? candidates.length === 1
+                                ? candidates[0]
+                                : foldChoice
+                              : '',
+                        },
+                        task,
+                      ) && (
+                        <Field
+                          label="Why is the deadline changing?"
+                          hint="The original commitment stays in the audit history."
+                        >
+                          <textarea
+                            required
+                            value={draft.deadlineChangeReason}
+                            onChange={(e) => set('deadlineChangeReason', e.target.value)}
+                            placeholder="Explain the change in circumstances…"
+                            rows={2}
+                          />
+                        </Field>
+                      )}
+                    {draft.status === 'blocked' && (
+                      <Field label="What is blocking this task?">
+                        <textarea
+                          required
+                          rows={2}
+                          value={draft.blockerReason}
+                          onChange={(e) => set('blockerReason', e.target.value)}
+                          placeholder="Name the blocker and the help needed…"
+                        />
+                      </Field>
+                    )}
+                    <div className="form-section-heading">
+                      <ShieldCheck size={17} />
+                      <h3>Review & delivery</h3>
+                    </div>
+                    <div className="form-grid">
+                      <Field label="Reviewer">
+                        <select
+                          disabled={!structural || (!!task && task.ownerId === data.me.id)}
+                          value={draft.reviewerId}
+                          onChange={(e) => {
+                            set('reviewerId', e.target.value);
+                            set('requiresApproval', !!e.target.value);
+                          }}
+                        >
+                          <option value="">No reviewer</option>
+                          {data.people
+                            .filter(
+                              (p) => p.active && p.role !== 'viewer' && p.id !== draft.ownerId,
+                            )
+                            .map((p) => (
+                              <option key={p.id} value={p.id}>
+                                {p.name}
+                              </option>
+                            ))}
+                        </select>
+                      </Field>
+                      <Field label="Estimated effort">
                         <div className="input-suffix">
                           <input
                             type="number"
                             min={0}
-                            max={100}
-                            required
-                            value={draft.progress}
-                            onChange={(e) => set('progress', Number(e.target.value))}
+                            max={100000}
+                            step="0.25"
+                            value={draft.estimatedHours}
+                            onChange={(e) => set('estimatedHours', Number(e.target.value))}
                           />
-                          <span>%</span>
+                          <span>hours</span>
                         </div>
                       </Field>
-                    )}
-                    <Field label="Start date">
-                      <input
-                        type="date"
-                        value={draft.startDate}
-                        onChange={(e) => set('startDate', e.target.value)}
-                      />
-                    </Field>
-                    <Field label="Deadline">
-                      <input
-                        required
-                        type="date"
-                        min={draft.startDate || undefined}
-                        value={draft.dueDate}
-                        onChange={(e) => set('dueDate', e.target.value)}
-                      />
-                    </Field>
-                  </div>
-                  <div className="form-grid">
-                    <Field label="Deadline type">
-                      <select
-                        value={draft.deadlineMode ?? 'all_day'}
-                        onChange={(e) => {
-                          set('deadlineMode', e.target.value as 'all_day' | 'timed');
-                          set(
-                            'dueTimezone',
-                            e.target.value === 'timed' ? data.company.timezone : '',
-                          );
-                          set('dueAt', '');
-                          setFoldChoice('');
-                        }}
-                      >
-                        <option value="all_day">All day</option>
-                        <option value="timed">At a specific time</option>
-                      </select>
-                    </Field>
-                    {draft.deadlineMode === 'timed' && (
-                      <>
-                        <Field label="Commitment time">
-                          <input
-                            type="time"
-                            required
-                            value={wallTime}
-                            onChange={(e) => {
-                              setWallTime(e.target.value);
-                              setFoldChoice('');
-                              setDirty(true);
-                            }}
-                          />
-                        </Field>
-                        <Field label="Commitment timezone">
-                          <input
-                            required
-                            value={draft.dueTimezone || data.company.timezone}
-                            onChange={(e) => {
-                              set('dueTimezone', e.target.value);
-                              setFoldChoice('');
-                            }}
-                          />
-                        </Field>
-                        {candidates.length > 1 && (
-                          <Field label="Repeated time — choose offset">
-                            <select
-                              required
-                              value={foldChoice}
-                              onChange={(e) => setFoldChoice(e.target.value)}
-                            >
-                              <option value="">Select occurrence</option>
-                              {candidates.map((value) => (
-                                <option key={value} value={value}>
-                                  {value} (UTC instant)
-                                </option>
-                              ))}
-                            </select>
-                          </Field>
-                        )}
-                      </>
-                    )}
-                  </div>
-                  {task?.originalDueDate && (
-                    <div className="detail-note">
-                      <CalendarDays size={14} />
-                      Original commitment:{' '}
-                      <strong>
-                        {task.originalDeadlineMode === 'timed'
-                          ? `${task.originalDueAt} (${task.originalDueTimezone})`
-                          : dateLabel(task.originalDueDate)}
-                      </strong>
-                      {task.dueDate !== task.originalDueDate && (
-                        <span>· Current deadline changed</span>
-                      )}
                     </div>
-                  )}
-                  {task &&
-                    deadlineChanged(
-                      {
-                        ...draft,
-                        dueAt:
-                          draft.deadlineMode === 'timed'
-                            ? candidates.length === 1
-                              ? candidates[0]
-                              : foldChoice
-                            : '',
-                      },
-                      task,
-                    ) && (
-                      <Field
-                        label="Why is the deadline changing?"
-                        hint="The original commitment stays in the audit history."
-                      >
-                        <textarea
-                          required
-                          value={draft.deadlineChangeReason}
-                          onChange={(e) => set('deadlineChangeReason', e.target.value)}
-                          placeholder="Explain the change in circumstances…"
-                          rows={2}
-                        />
-                      </Field>
-                    )}
-                  {draft.status === 'blocked' && (
-                    <Field label="What is blocking this task?">
-                      <textarea
-                        required
-                        rows={2}
-                        value={draft.blockerReason}
-                        onChange={(e) => set('blockerReason', e.target.value)}
-                        placeholder="Name the blocker and the help needed…"
+                    <label className="check-field">
+                      <input
+                        type="checkbox"
+                        disabled={!structural || !!task?.requiresApproval}
+                        checked={draft.requiresApproval}
+                        onChange={(e) => set('requiresApproval', e.target.checked)}
                       />
-                    </Field>
-                  )}
-                  <div className="form-section-heading">
-                    <ShieldCheck size={17} />
-                    <h3>Review & delivery</h3>
-                  </div>
-                  <div className="form-grid">
-                    <Field label="Reviewer">
-                      <select
-                        disabled={!structural || (!!task && task.ownerId === data.me.id)}
-                        value={draft.reviewerId}
-                        onChange={(e) => {
-                          set('reviewerId', e.target.value);
-                          set('requiresApproval', !!e.target.value);
-                        }}
-                      >
-                        <option value="">No reviewer</option>
-                        {data.people
-                          .filter((p) => p.active && p.role !== 'viewer' && p.id !== draft.ownerId)
-                          .map((p) => (
-                            <option key={p.id} value={p.id}>
-                              {p.name}
-                            </option>
-                          ))}
-                      </select>
-                    </Field>
-                    <Field label="Estimated effort">
-                      <div className="input-suffix">
-                        <input
-                          type="number"
-                          min={0}
-                          max={100000}
-                          step="0.25"
-                          value={draft.estimatedHours}
-                          onChange={(e) => set('estimatedHours', Number(e.target.value))}
-                        />
-                        <span>hours</span>
-                      </div>
-                    </Field>
-                  </div>
-                  <label className="check-field">
-                    <input
-                      type="checkbox"
-                      disabled={!structural || !!task?.requiresApproval}
-                      checked={draft.requiresApproval}
-                      onChange={(e) => set('requiresApproval', e.target.checked)}
-                    />
-                    <span>Require independent approval before completion</span>
-                  </label>
-                  {draft.requiresApproval && (
-                    <p className="field-help">
-                      Submit work as “In review”. An assigned reviewer or company leader can accept
-                      the result. The owner cannot approve their own work.
-                    </p>
-                  )}
-                  <div className="form-section-heading">
-                    <CheckCheck size={17} />
-                    <h3>Acceptance checklist</h3>
-                    <span>
-                      {draft.checklist.filter((c) => c.done).length}/{draft.checklist.length}
-                    </span>
-                  </div>
-                  <div className="checklist">
-                    {draft.checklist.map((c) => (
-                      <div className="checklist-item" key={c.id}>
-                        <label>
-                          <input
-                            type="checkbox"
-                            checked={c.done}
-                            onChange={(e) =>
+                      <span>Require independent approval before completion</span>
+                    </label>
+                    {draft.requiresApproval && (
+                      <p className="field-help">
+                        Submit work as “In review”. An assigned reviewer or company leader can
+                        accept the result. The owner cannot approve their own work.
+                      </p>
+                    )}
+                    <div className="form-section-heading">
+                      <CheckCheck size={17} />
+                      <h3>Acceptance checklist</h3>
+                      <span>
+                        {draft.checklist.filter((c) => c.done).length}/{draft.checklist.length}
+                      </span>
+                    </div>
+                    <div className="checklist">
+                      {draft.checklist.map((c) => (
+                        <div className="checklist-item" key={c.id}>
+                          <label>
+                            <input
+                              type="checkbox"
+                              checked={c.done}
+                              onChange={(e) =>
+                                set(
+                                  'checklist',
+                                  draft.checklist.map((v) =>
+                                    v.id === c.id ? { ...v, done: e.target.checked } : v,
+                                  ),
+                                )
+                              }
+                            />
+                            <span className={c.done ? 'checked' : ''}>{c.text}</span>
+                          </label>
+                          <button
+                            type="button"
+                            className="icon-button"
+                            aria-label={`Remove ${c.text}`}
+                            onClick={() =>
                               set(
                                 'checklist',
-                                draft.checklist.map((v) =>
-                                  v.id === c.id ? { ...v, done: e.target.checked } : v,
-                                ),
+                                draft.checklist.filter((v) => v.id !== c.id),
                               )
                             }
-                          />
-                          <span className={c.done ? 'checked' : ''}>{c.text}</span>
-                        </label>
-                        <button
-                          type="button"
-                          className="icon-button"
-                          aria-label={`Remove ${c.text}`}
-                          onClick={() =>
+                          >
+                            <Trash2 size={14} />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="inline-input">
+                      <input
+                        aria-label="New checklist item"
+                        placeholder="Add an acceptance criterion"
+                        value={checkText}
+                        onChange={(e) => setCheckText(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            e.preventDefault();
+                            if (checkText.trim()) {
+                              set('checklist', [
+                                ...draft.checklist,
+                                { id: crypto.randomUUID(), text: checkText.trim(), done: false },
+                              ]);
+                              setCheckText('');
+                            }
+                          }
+                        }}
+                      />
+                      <button
+                        type="button"
+                        className="button button-secondary"
+                        disabled={!checkText.trim()}
+                        onClick={() => {
+                          set('checklist', [
+                            ...draft.checklist,
+                            { id: crypto.randomUUID(), text: checkText.trim(), done: false },
+                          ]);
+                          setCheckText('');
+                        }}
+                      >
+                        <Plus size={15} />
+                        Add
+                      </button>
+                    </div>
+                    <details className="advanced-fields">
+                      <summary>Dependencies, collaborators & recurring work</summary>
+                      <Field
+                        label="Depends on"
+                        hint="Hold Ctrl / Cmd to select multiple. Dependencies must be complete before acceptance."
+                      >
+                        <select
+                          multiple
+                          disabled={!structural}
+                          value={draft.dependencies}
+                          onChange={(e) =>
                             set(
-                              'checklist',
-                              draft.checklist.filter((v) => v.id !== c.id),
+                              'dependencies',
+                              Array.from(e.target.selectedOptions, (o) => o.value),
+                            )
+                          }
+                          size={4}
+                        >
+                          {data.tasks
+                            .filter((t) => t.id !== task?.id)
+                            .map((t) => (
+                              <option key={t.id} value={t.id}>
+                                {t.code} · {t.title}
+                              </option>
+                            ))}
+                        </select>
+                      </Field>
+                      <Field label="Parent task">
+                        <select
+                          disabled={!structural}
+                          value={draft.parentId}
+                          onChange={(e) => set('parentId', e.target.value)}
+                        >
+                          <option value="">No parent task</option>
+                          {data.tasks
+                            .filter((t) => t.id !== task?.id)
+                            .map((t) => (
+                              <option key={t.id} value={t.id}>
+                                {t.code} · {t.title}
+                              </option>
+                            ))}
+                        </select>
+                      </Field>
+                      <Field label="Collaborators" hint="Hold Ctrl / Cmd to select multiple.">
+                        <select
+                          multiple
+                          size={3}
+                          value={draft.collaborators}
+                          onChange={(e) =>
+                            set(
+                              'collaborators',
+                              Array.from(e.target.selectedOptions, (o) => o.value),
                             )
                           }
                         >
-                          <Trash2 size={14} />
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                  <div className="inline-input">
-                    <input
-                      aria-label="New checklist item"
-                      placeholder="Add an acceptance criterion"
-                      value={checkText}
-                      onChange={(e) => setCheckText(e.target.value)}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter') {
-                          e.preventDefault();
-                          if (checkText.trim()) {
-                            set('checklist', [
-                              ...draft.checklist,
-                              { id: crypto.randomUUID(), text: checkText.trim(), done: false },
-                            ]);
-                            setCheckText('');
-                          }
-                        }
-                      }}
-                    />
-                    <button
-                      type="button"
-                      className="button button-secondary"
-                      disabled={!checkText.trim()}
-                      onClick={() => {
-                        set('checklist', [
-                          ...draft.checklist,
-                          { id: crypto.randomUUID(), text: checkText.trim(), done: false },
-                        ]);
-                        setCheckText('');
-                      }}
-                    >
-                      <Plus size={15} />
-                      Add
-                    </button>
-                  </div>
-                  <details className="advanced-fields">
-                    <summary>Dependencies, collaborators & recurring work</summary>
-                    <Field
-                      label="Depends on"
-                      hint="Hold Ctrl / Cmd to select multiple. Dependencies must be complete before acceptance."
-                    >
-                      <select
-                        multiple
-                        disabled={!structural}
-                        value={draft.dependencies}
-                        onChange={(e) =>
-                          set(
-                            'dependencies',
-                            Array.from(e.target.selectedOptions, (o) => o.value),
-                          )
-                        }
-                        size={4}
-                      >
-                        {data.tasks
-                          .filter((t) => t.id !== task?.id)
-                          .map((t) => (
-                            <option key={t.id} value={t.id}>
-                              {t.code} · {t.title}
-                            </option>
-                          ))}
-                      </select>
-                    </Field>
-                    <Field label="Parent task">
-                      <select
-                        disabled={!structural}
-                        value={draft.parentId}
-                        onChange={(e) => set('parentId', e.target.value)}
-                      >
-                        <option value="">No parent task</option>
-                        {data.tasks
-                          .filter((t) => t.id !== task?.id)
-                          .map((t) => (
-                            <option key={t.id} value={t.id}>
-                              {t.code} · {t.title}
-                            </option>
-                          ))}
-                      </select>
-                    </Field>
-                    <Field label="Collaborators" hint="Hold Ctrl / Cmd to select multiple.">
-                      <select
-                        multiple
-                        size={3}
-                        value={draft.collaborators}
-                        onChange={(e) =>
-                          set(
-                            'collaborators',
-                            Array.from(e.target.selectedOptions, (o) => o.value),
-                          )
-                        }
-                      >
-                        {data.people
-                          .filter((p) => p.active)
-                          .map((p) => (
-                            <option key={p.id} value={p.id}>
-                              {p.name}
-                            </option>
-                          ))}
-                      </select>
-                    </Field>
-                    <div className="form-grid">
-                      <Field label="Repeat">
-                        <select
-                          disabled={!structural}
-                          value={draft.recurrence}
-                          onChange={(e) => set('recurrence', e.target.value as Draft['recurrence'])}
-                        >
-                          <option value="none">Does not repeat</option>
-                          <option value="daily">Daily</option>
-                          <option value="weekly">Weekly</option>
-                          <option value="monthly">Monthly</option>
+                          {data.people
+                            .filter((p) => p.active)
+                            .map((p) => (
+                              <option key={p.id} value={p.id}>
+                                {p.name}
+                              </option>
+                            ))}
                         </select>
                       </Field>
-                      <Field label="Tags" hint="Separate tags with commas.">
-                        <input
-                          value={tagText}
-                          onChange={(e) => {
-                            setTagText(e.target.value);
-                            setDirty(true);
-                          }}
-                          placeholder="launch, operations"
-                        />
-                      </Field>
+                      <div className="form-grid">
+                        <Field label="Repeat">
+                          <select
+                            disabled={!structural}
+                            value={draft.recurrence}
+                            onChange={(e) =>
+                              set('recurrence', e.target.value as Draft['recurrence'])
+                            }
+                          >
+                            <option value="none">Does not repeat</option>
+                            <option value="daily">Daily</option>
+                            <option value="weekly">Weekly</option>
+                            <option value="monthly">Monthly</option>
+                          </select>
+                        </Field>
+                        <Field label="Tags" hint="Separate tags with commas.">
+                          <input
+                            value={tagText}
+                            onChange={(e) => {
+                              setTagText(e.target.value);
+                              setDirty(true);
+                            }}
+                            placeholder="launch, operations"
+                          />
+                        </Field>
+                      </div>
+                    </details>
+                  </fieldset>
+                  {writable && task?.status !== 'done' && (
+                    <div className="form-actions task-save">
+                      <span>
+                        {task ? `Editing version ${version}` : 'Every task has a clear owner.'}
+                      </span>
+                      <SaveButton saving={store.saving}>
+                        {task
+                          ? 'Save changes'
+                          : business.attempt
+                            ? 'Retry same submission'
+                            : 'Create task'}
+                      </SaveButton>
                     </div>
-                  </details>
-                </fieldset>
-                {writable && task?.status !== 'done' && (
-                  <div className="form-actions task-save">
-                    <span>
-                      {task ? `Editing version ${version}` : 'Every task has a clear owner.'}
-                    </span>
-                    <SaveButton saving={store.saving}>
-                      {task ? 'Save changes' : 'Create task'}
-                    </SaveButton>
-                  </div>
-                )}
-              </form>
+                  )}
+                </form>
+              </>
             )}
             {tab === 'details' && canReview && (
               <div className="review-box">

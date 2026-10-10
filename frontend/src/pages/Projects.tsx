@@ -1,3 +1,6 @@
+import { useExecutionRead, type ProjectDetail } from '../data/execution';
+import ProjectMilestones from '../components/ProjectMilestones';
+import ScheduleReview from '../components/ScheduleReview';
 import { useState } from 'react';
 import {
   ArrowLeft,
@@ -43,7 +46,9 @@ export default function Projects({
   const [status, setStatus] = useState('');
   const [editing, setEditing] = useState<Project | 'new' | null>(null);
   const date = today(data.company.timezone);
-  const project = data.projects.find((p) => p.id === selectedId);
+  const current = useExecutionRead<ProjectDetail>(`/projects/${selectedId}`, !!selectedId);
+  const project = selectedId ? current.data?.project : undefined;
+  const [schedule, setSchedule] = useState(false);
   const shown = data.projects.filter(
     (p) =>
       p.name.toLowerCase().includes(search.toLowerCase()) &&
@@ -52,9 +57,23 @@ export default function Projects({
   );
   const tasks = project ? data.tasks.filter((t) => t.projectId === project.id) : [];
   const taskProgress = percent(
-    tasks.filter((t) => t.status === 'done').length,
-    tasks.filter((t) => t.status !== 'cancelled').length,
+    current.data?.summary.accepted ?? 0,
+    current.data?.summary.total ?? 0,
   );
+  if (selectedId && !project)
+    return (
+      <div className="page-content">
+        <button className="button" onClick={() => onSelect('')}>
+          All projects
+        </button>
+        <p role={current.error ? 'alert' : 'status'}>
+          {current.error?.message || 'Checking current project access…'}
+        </p>
+        <button className="button" onClick={() => void current.retry()}>
+          Retry project
+        </button>
+      </div>
+    );
   return (
     <div className="page-content">
       {project ? (
@@ -98,11 +117,11 @@ export default function Projects({
             </div>
             <div className="project-stats">
               <div>
-                <b>{tasks.length}</b>
-                <span>Total tasks</span>
+                <b>{current.data?.summary.total}</b>
+                <span>Authorized tasks</span>
               </div>
               <div>
-                <b>{tasks.filter((t) => t.status === 'done').length}</b>
+                <b>{current.data?.summary.accepted}</b>
                 <span>Accepted</span>
               </div>
               <div>
@@ -114,11 +133,20 @@ export default function Projects({
                 <span>Blocked</span>
               </div>
               <div className="project-overall-progress">
-                <span>{taskProgress}% accepted</span>
+                <span>{taskProgress}% of authorized tasks accepted</span>
                 <ProgressBar value={taskProgress} color="green" />
               </div>
             </div>
           </section>
+          <ProjectMilestones
+            project={current.data!.project}
+            canEdit={current.data!.canEdit}
+            onTask={onTask}
+          />
+          <button className="button" onClick={() => setSchedule(true)}>
+            Review project task schedule
+          </button>
+          {schedule && <ScheduleReview tasks={tasks} onDone={() => setSchedule(false)} />}
           <div className="section-header">
             <div>
               <h2>Project work</h2>
@@ -207,7 +235,7 @@ export default function Projects({
                   <p>{p.description || 'A shared space for related work and clear outcomes.'}</p>
                   <div className="project-card-progress">
                     <span>
-                      {completed}/{work.length} tasks accepted
+                      {completed}/{work.length} authorized tasks accepted
                     </span>
                     <strong>{percent(completed, work.length)}%</strong>
                   </div>

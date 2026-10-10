@@ -23,10 +23,15 @@ export async function readPages<T>(
 }
 export function affectedScopes(path: string): string[] {
   const parts = path.split('/').filter(Boolean);
-  if (parts[0] === 'attention') return ['attention'];
+  if (parts[0] === 'attention') return ['attention', 'execution'];
+  if (['task-templates', 'task-schedule'].includes(parts[0]))
+    return ['execution', 'tasks', 'attention', 'reports', 'details', 'bootstrap'];
+  if (['projects', 'project-milestones'].includes(parts[0]))
+    return ['execution', 'bootstrap', 'tasks', 'reports'];
   if (parts[0] === 'tasks') {
     return [
       'tasks',
+      'execution',
       'attention',
       ...(parts[1] && !['import'].includes(parts[1]) ? ['task:' + parts[1]] : []),
       'reports',
@@ -38,7 +43,7 @@ export function affectedScopes(path: string): string[] {
   }
   if (['budgets', 'expense-categories'].includes(parts[0])) return ['finance', 'bootstrap'];
   if (parts[0] === 'notifications') return ['bootstrap'];
-  return ['attention', 'bootstrap', 'tasks', 'finance', 'reports', 'details'];
+  return ['execution', 'attention', 'bootstrap', 'tasks', 'finance', 'reports', 'details'];
 }
 export function eventScopes(kind: string): string[] {
   if (
@@ -54,12 +59,12 @@ export function eventScopes(kind: string): string[] {
       'refetch_required',
     ].includes(kind)
   )
-    return ['attention', 'bootstrap', 'tasks', 'finance', 'reports', 'details'];
+    return ['execution', 'attention', 'bootstrap', 'tasks', 'finance', 'reports', 'details'];
   if (['work_linked', 'work_actions_declared', 'request_published'].includes(kind))
-    return ['attention', 'bootstrap', 'tasks', 'reports', 'task-details'];
+    return ['execution', 'attention', 'bootstrap', 'tasks', 'reports', 'task-details'];
   if (kind === 'expense_linked') return ['attention', 'bootstrap', 'finance', 'expense-details'];
   if (['policy_changed', 'membership_changed', 'refetch_required'].includes(kind))
-    return ['attention', 'bootstrap', 'tasks', 'finance', 'reports', 'details'];
+    return ['execution', 'attention', 'bootstrap', 'tasks', 'finance', 'reports', 'details'];
   return [];
 }
 export async function readDetail<T>(

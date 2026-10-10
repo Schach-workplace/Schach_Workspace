@@ -1,0 +1,56 @@
+// @vitest-environment happy-dom
+import { render, screen, fireEvent, cleanup, waitFor } from '@testing-library/react';
+import { it, expect, vi, afterEach } from 'vitest';
+import TaskTemplates from './TaskTemplates';
+import sample from '../data/sample.json';
+const state = vi.hoisted(() => ({ execute: vi.fn(), read: vi.fn(), query: vi.fn() }));
+vi.mock('../store', () => ({
+  useWorkspace: () => ({ data: sample.workspaces[0], mode: 'api', companyId: 'c-schach' }),
+}));
+vi.mock('../data/execution', () => ({
+  useExecutionRead: (path: string) => state.query(path),
+  useExecutionMutation: () => ({
+    execute: state.execute,
+    busy: false,
+    error: '',
+    attempt: undefined,
+  }),
+  executionRead: (...a: any[]) => state.read(...a),
+}));
+afterEach(cleanup);
+it('previews a scoped template and confirms one reviewed owner/reviewer task', async () => {
+  const template = {
+    id: 'tpl',
+    version: 1,
+    name: 'Delivery',
+    kind: 'task',
+    defaults: { checklist: ['Verify'], requiresApproval: true },
+  };
+  state.query.mockImplementation((p: string) => ({
+    data: p.includes('/tpl') ? { template } : { templates: [template] },
+    ready: true,
+    retry: vi.fn(),
+  }));
+  state.read.mockResolvedValue({
+    fields: {
+      title: 'Delivery',
+      ownerId: 'u-founder',
+      reviewerId: 'u-manager',
+      requiresApproval: true,
+      status: 'todo',
+    },
+    unresolved: [],
+    templateVersion: 1,
+  });
+  state.execute.mockResolvedValue({ id: 'created' });
+  render(<TaskTemplates />);
+  fireEvent.change(screen.getByLabelText('Template'), { target: { value: 'tpl' } });
+  fireEvent.click(screen.getByRole('button', { name: 'Preview template' }));
+  await screen.findByLabelText('Reviewed task title');
+  fireEvent.click(screen.getByRole('button', { name: 'Create reviewed task' }));
+  await waitFor(() => expect(state.execute).toHaveBeenCalledTimes(1));
+  expect(state.execute.mock.calls[0][1]).toMatchObject({
+    expectedTemplateVersion: 1,
+    fields: { requiresApproval: true, ownerId: 'u-founder' },
+  });
+});

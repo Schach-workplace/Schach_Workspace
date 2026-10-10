@@ -12,14 +12,16 @@ export default function AttentionInbox({
   onTask,
   onExpense,
   decisionsOnly = false,
+  sourceTaskId,
 }: {
   onTask: (id: string) => void;
   onExpense: (id: string) => void;
   decisionsOnly?: boolean;
+  sourceTaskId?: string;
 }) {
   const store = useWorkspace();
   const [state, setState] = useState('open');
-  const query = useAttention({ state, decisionsOnly });
+  const query = useAttention({ state, decisionsOnly, sourceTaskId });
   const [business, setBusiness] = useState<string | null>(null);
   const [selected, setSelected] = useState<{
     id: string;
@@ -51,7 +53,7 @@ export default function AttentionInbox({
           ? 'Pending business decisions, including resolved or snoozed Inbox items.'
           : 'Resolve this Inbox item; this does not approve the work. Reading updates is separate.'}
       </p>
-      {!decisionsOnly && (
+      {!decisionsOnly && !sourceTaskId && (
         <Field label="Attention filter">
           <select
             aria-label="Attention filter"

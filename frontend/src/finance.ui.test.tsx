@@ -130,7 +130,7 @@ describe('finance workflows (DOM simulation)', () => {
       'c-schach',
       'u-founder',
       `/projects/${task.projectId}`,
-      { departmentId: '' },
+      { departmentId: '',version:data.projects.find(p=>p.id===task.projectId)?.version??1 },
       'PATCH',
     );
     await openFinance('member@schach.demo');

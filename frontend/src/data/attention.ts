@@ -8,7 +8,8 @@ import type { AttentionView } from '../types';
 export function useAttention({
   state = 'open',
   decisionsOnly = false,
-}: { state?: string; decisionsOnly?: boolean } = {}) {
+  sourceTaskId = '',
+}: { state?: string; decisionsOnly?: boolean; sourceTaskId?: string } = {}) {
   const store = useWorkspace();
   const queryClient = useQueryClient();
   const [foreground, setForeground] = useState(document.visibilityState !== 'hidden');
@@ -28,7 +29,7 @@ export function useAttention({
     return () => document.removeEventListener('visibilitychange', changed);
   }, [queryClient, store.mode, user, company]);
   const query = useQuery({
-    queryKey: [...prefix, store.data?.readBasis, state, decisionsOnly],
+    queryKey: [...prefix, store.data?.readBasis, state, decisionsOnly, sourceTaskId],
     enabled: !!store.data && foreground,
     staleTime: 0,
     retry: false,
@@ -36,7 +37,7 @@ export function useAttention({
       store.mode === 'demo'
         ? demoAttentionRead(company, user, state, decisionsOnly)
         : readPages<AttentionView>(
-            `/companies/${encodeURIComponent(company)}/attention?state=${state}&decisionsOnly=${decisionsOnly}`,
+            `/companies/${encodeURIComponent(company)}/attention?state=${state}&decisionsOnly=${decisionsOnly}${sourceTaskId ? `&sourceKind=task&sourceId=${encodeURIComponent(sourceTaskId)}&kind=blocker` : ''}`,
             'items',
             signal,
           ),

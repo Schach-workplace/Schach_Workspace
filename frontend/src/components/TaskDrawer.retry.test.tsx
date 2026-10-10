@@ -1,3 +1,6 @@
+vi.mock('./TaskTemplates', () => ({ default: () => null }));
+vi.mock('./TaskImpact', () => ({ default: () => null }));
+vi.mock('./ScheduleReview', () => ({ default: () => null }));
 // @vitest-environment happy-dom
 import { render, screen, fireEvent, cleanup, waitFor } from '@testing-library/react';
 import { it, expect, vi, afterEach, beforeEach } from 'vitest';

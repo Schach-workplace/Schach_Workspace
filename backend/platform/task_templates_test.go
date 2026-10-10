@@ -140,3 +140,24 @@ func TestTemplateScopeAndDefaults(t *testing.T) {
 		t.Fatal("archive replay disclosure", st, b)
 	}
 }
+
+func TestTemplatePreviewApplyRoundtrip(t *testing.T) {
+	s, _ := testServer(t)
+	c := login(t, s, "founder@example.com")
+	cid := firstCompany(t, s, c)
+	uid := me(t, s, c)
+	base := "/api/companies/" + cid
+	_, b, _ := req(t, s, "POST", base+"/task-templates", templateBody(uid, "task"), c)
+	id := b["id"].(string)
+	input := map[string]any{"expectedTemplateVersion": 1, "anchorDate": "2026-10-11", "fields": map[string]any{}}
+	st, preview, w := req(t, s, "POST", base+"/task-templates/"+id+"/preview", input, c)
+	if st != 200 {
+		t.Fatal(w.Body.String())
+	}
+	input["fields"] = preview["fields"]
+	input["retryKey"] = "roundtrip"
+	st, _, w = req(t, s, "POST", base+"/task-templates/"+id+"/apply", input, c)
+	if st != 200 {
+		t.Fatal(st, w.Body.String())
+	}
+}

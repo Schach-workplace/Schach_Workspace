@@ -17,6 +17,7 @@ it('reads bounded pages until exhaustion with cancellation propagated', async ()
 it('invalidates task records/list/reports without refreshing finance', () => {
   expect(affectedScopes('/tasks/t/comments')).toEqual([
     'tasks',
+    'execution',
     'attention',
     'task:t',
     'reports',
@@ -29,6 +30,7 @@ it('invalidates task records/list/reports without refreshing finance', () => {
     'bootstrap',
   ]);
   expect(affectedScopes('/people/p')).toEqual([
+    'execution',
     'attention',
     'bootstrap',
     'tasks',
@@ -40,6 +42,7 @@ it('invalidates task records/list/reports without refreshing finance', () => {
 it('maps work outbox hints to only their affected business scopes', async () => {
   const { eventScopes } = await import('./readScopes');
   expect(eventScopes('work_linked')).toEqual([
+    'execution',
     'attention',
     'bootstrap',
     'tasks',

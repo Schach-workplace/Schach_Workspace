@@ -360,7 +360,11 @@ func templateFields(tx *gorm.DB, a *access, t TaskTemplate, input TemplateUseInp
 		put("priority", d.Priority)
 	}
 	put("estimatedHours", d.EstimatedHours)
-	put("tags", d.Tags)
+	if d.Tags == nil {
+		put("tags", []string{})
+	} else {
+		put("tags", d.Tags)
+	}
 	put("status", "todo")
 	if d.Status != "" {
 		put("status", d.Status)
@@ -410,7 +414,7 @@ func templateFields(tx *gorm.DB, a *access, t TaskTemplate, input TemplateUseInp
 		put("dueTimezone", "")
 	}
 	for k, v := range input.Fields {
-		if !in(k, createTaskFields...) || in(k, "parentId", "dependencies", "collaborators", "checklist", "recurrence") || string(v) == "null" {
+		if !in(k, createTaskFields...) || in(k, "parentId", "dependencies", "collaborators", "checklist") || string(v) == "null" {
 			return nil, nil, invalid("Unsupported template task field: " + k)
 		}
 		fields[k] = v
@@ -423,6 +427,9 @@ func templateFields(tx *gorm.DB, a *access, t TaskTemplate, input TemplateUseInp
 	}
 	var candidate Task
 	applyFields(fields, &candidate)
+	if candidate.Recurrence != "none" && candidate.Recurrence != "" {
+		return nil, nil, invalid("Template application does not set recurring workflow.")
+	}
 	if !in(candidate.Status, "todo", "backlog") {
 		return nil, nil, invalid("Template tasks start todo or backlog.")
 	}
