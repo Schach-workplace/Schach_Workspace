@@ -23,7 +23,7 @@ func currentAttentionActorLocked(tx *gorm.DB, cid, uid string) (*access, error) 
 		ids = append(ids, m.UserID)
 	}
 	var users []User
-	if e := tx.Where("id IN ?", ids).Find(&users).Error; e != nil {
+	if e := lockCommunicationRow(tx, "SHARE").Where("id IN ?", ids).Order("id").Find(&users).Error; e != nil {
 		return nil, e
 	}
 	for _, u := range users {
@@ -152,6 +152,13 @@ func attentionSource(tx *gorm.DB, a *access, item AttentionItem) (AttentionView,
 		}
 	} else {
 		v.CanRoute = false
+	}
+	var delivered int64
+	if e := tx.Model(&AttentionDelivery{}).Where("company_id=? AND item_id=? AND recipient_id=?", item.CompanyID, item.ID, item.RecipientID).Count(&delivered).Error; e != nil {
+		return v, e
+	}
+	if delivered > 0 {
+		v.ReminderState = "delivered"
 	}
 	return v, nil
 }

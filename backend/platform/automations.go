@@ -246,5 +246,9 @@ func (s *Server) runAutomationsHTTP(w http.ResponseWriter, r *http.Request) erro
 	if e != nil {
 		return e
 	}
-	return respond(w, 200, map[string]any{"ok": true, "created": n, "reminders": m})
+	local, e := s.RunAttention(r.Context(), time.Now().UTC(), 100)
+	if e != nil {
+		return e
+	}
+	return respond(w, 200, map[string]any{"ok": true, "created": n, "reminders": m, "attentionDeliveries": local})
 }

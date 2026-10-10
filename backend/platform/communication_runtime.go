@@ -90,6 +90,9 @@ func (s *Server) RunCommunicationWorker(ctx context.Context) {
 			}
 			scan++
 			if scan%60 == 0 {
+				if _, e = s.RunAttention(bounded, time.Now().UTC(), 100); e != nil && ctx.Err() == nil {
+					slog.Error("local attention unavailable")
+				}
 				if _, e = s.RunMessageRetention(bounded); e != nil && ctx.Err() == nil {
 					slog.Error("communication retention unavailable")
 				}

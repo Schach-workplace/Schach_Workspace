@@ -59,7 +59,7 @@ func (s *Server) listAttention(w http.ResponseWriter, r *http.Request) error {
 		// Scan bounded identifier batches, continuing past revoked candidates; LIMIT
 		// applies to authorized projections, never to an initial unscoped output page.
 		for {
-			q := tx.Where("company_id=? AND recipient_id=? AND state <> ?", a.Company.ID, a.User.ID, "superseded")
+			q := attentionCandidates(tx, a).Where("state <> ?", "superseded")
 			if decision != "true" && state != "all" {
 				q = q.Where("state=?", state)
 			}

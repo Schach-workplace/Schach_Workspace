@@ -99,3 +99,13 @@ type AttentionTransitionInput struct {
 	SnoozedUntil    *time.Time `json:"snoozedUntil,omitempty"`
 	RecipientID     string     `json:"recipientId,omitempty"`
 }
+
+// AttentionDelivery is the durable IDs-only local Inbox delivery receipt.
+type AttentionDelivery struct {
+	ID          string `gorm:"primaryKey;size:80"`
+	CompanyID   string
+	ItemID      string
+	RecipientID string
+	Stage       string
+	CreatedAt   time.Time
+}
