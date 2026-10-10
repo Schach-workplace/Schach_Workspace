@@ -1,0 +1,2 @@
+CREATE TABLE task_schedule_proposals(id text PRIMARY KEY,company_id text NOT NULL,actor_id text NOT NULL,version bigint NOT NULL,method text NOT NULL,day_offset integer,changes jsonb NOT NULL,context jsonb NOT NULL,before jsonb NOT NULL,request_hash text NOT NULL,created_at timestamptz NOT NULL,expires_at timestamptz NOT NULL);
+CREATE INDEX schedule_owner ON task_schedule_proposals(company_id,actor_id,id);

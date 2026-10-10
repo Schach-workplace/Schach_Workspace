@@ -83,7 +83,7 @@ func newID(prefix string) string {
 }
 func nowString() string { return time.Now().UTC().Format(time.RFC3339Nano) }
 func Migrate(db *gorm.DB) error {
-	return db.AutoMigrate(&ProjectMilestone{}, &MilestoneAcceptance{}, &MilestoneEvent{}, &TaskTemplate{}, &TaskTemplateApplication{}, &BusinessMutationRetry{}, &Company{}, &User{}, &Membership{}, &Department{}, &Project{}, &Task{}, &Comment{}, &TimeEntry{}, &Attachment{}, &Goal{}, &Activity{}, &Notification{}, &SessionRecord{}, &AutomationRecord{}, &ExpenseCategory{}, &Budget{}, &Expense{}, &ExpenseReceipt{}, &FinanceEvent{}, &Conversation{}, &ConversationMember{}, &ConversationInterval{}, &Message{}, &MessageRevision{}, &CommunicationEvent{}, &CommunicationOutbox{}, &CommunicationInbox{}, &CommunicationAction{}, &CommunicationRetry{}, &CommunicationWorkSource{}, &CommunicationBookmark{}, &CommunicationReaction{}, &CommunicationMedia{}, &CommunicationDevice{}, &CommunicationPreference{}, &CommunicationCall{}, &CommunicationCallGrant{}, &CommunicationRecord{}, &CommunicationRecipient{}, &CommunicationRequest{}, &CommunicationRecordRevision{}, &CommunicationExportAudit{}, &CommunicationCallJob{}, &CommunicationExpenseLink{}, &CommunicationExpenseRetry{}, &CommunicationBlock{}, &CommunicationPin{}, &CommunicationBundle{}, &CommunicationBundleAction{}, &UserMFA{}, &MFARecovery{}, &CommunicationPush{}, &AttentionItem{}, &AttentionRetry{}, &AttentionPreference{}, &AttentionReminder{}, &AttentionDelivery{})
+	return db.AutoMigrate(&TaskScheduleProposal{}, &ProjectMilestone{}, &MilestoneAcceptance{}, &MilestoneEvent{}, &TaskTemplate{}, &TaskTemplateApplication{}, &BusinessMutationRetry{}, &Company{}, &User{}, &Membership{}, &Department{}, &Project{}, &Task{}, &Comment{}, &TimeEntry{}, &Attachment{}, &Goal{}, &Activity{}, &Notification{}, &SessionRecord{}, &AutomationRecord{}, &ExpenseCategory{}, &Budget{}, &Expense{}, &ExpenseReceipt{}, &FinanceEvent{}, &Conversation{}, &ConversationMember{}, &ConversationInterval{}, &Message{}, &MessageRevision{}, &CommunicationEvent{}, &CommunicationOutbox{}, &CommunicationInbox{}, &CommunicationAction{}, &CommunicationRetry{}, &CommunicationWorkSource{}, &CommunicationBookmark{}, &CommunicationReaction{}, &CommunicationMedia{}, &CommunicationDevice{}, &CommunicationPreference{}, &CommunicationCall{}, &CommunicationCallGrant{}, &CommunicationRecord{}, &CommunicationRecipient{}, &CommunicationRequest{}, &CommunicationRecordRevision{}, &CommunicationExportAudit{}, &CommunicationCallJob{}, &CommunicationExpenseLink{}, &CommunicationExpenseRetry{}, &CommunicationBlock{}, &CommunicationPin{}, &CommunicationBundle{}, &CommunicationBundleAction{}, &UserMFA{}, &MFARecovery{}, &CommunicationPush{}, &AttentionItem{}, &AttentionRetry{}, &AttentionPreference{}, &AttentionReminder{}, &AttentionDelivery{})
 }
 func New(db *gorm.DB, opts Options) (*Server, error) {
 	if db == nil {
@@ -160,6 +160,7 @@ func (s *Server) routes() {
 	s.communicationRoutes()
 	s.templateRoutes()
 	s.milestoneRoutes()
+	s.scheduleRoutes()
 	s.attentionRoutes()
 	s.route("GET /api/health", func(w http.ResponseWriter, r *http.Request) error {
 		db, e := s.db.DB()

@@ -40,6 +40,12 @@ func (s *Server) listAttention(w http.ResponseWriter, r *http.Request) error {
 	if !in(decision, "", "false", "true") {
 		return invalid("Invalid decisions filter.")
 	}
+	sourceKind, sourceID, kind := r.URL.Query().Get("sourceKind"), r.URL.Query().Get("sourceId"), r.URL.Query().Get("kind")
+	if sourceKind != "" || sourceID != "" || kind != "" {
+		if sourceKind != "task" || sourceID == "" || len(sourceID) > 100 || kind != "blocker" || state != "open" || decision == "true" {
+			return invalid("Source lookup requires sourceKind=task, sourceId and kind=blocker for open items.")
+		}
+	}
 	views := []AttentionView{}
 	cursor := ""
 	more := false
@@ -50,7 +56,7 @@ func (s *Server) listAttention(w http.ResponseWriter, r *http.Request) error {
 		if err != nil {
 			return err
 		}
-		basis = payloadHash([]string{accessBasis(a), "attention", state, decision})
+		basis = payloadHash([]string{accessBasis(a), "attention", state, decision, sourceKind, sourceID, kind})
 		last := readCursor{Basis: basis}
 		if raw := r.URL.Query().Get("cursor"); raw != "" {
 			last, err = decodeReadCursor(raw, basis)
@@ -62,6 +68,12 @@ func (s *Server) listAttention(w http.ResponseWriter, r *http.Request) error {
 		// applies to authorized projections, never to an initial unscoped output page.
 		for {
 			q := attentionCandidates(tx, a).Where("state <> ?", "superseded")
+			if sourceKind != "" {
+				if _, err := scopedTask(tx, a, sourceID); err != nil {
+					return err
+				}
+				q = q.Where("source_kind = ? AND source_id = ? AND kind = ?", sourceKind, sourceID, kind)
+			}
 			if decision != "true" && state != "all" {
 				q = q.Where("state=?", state)
 			}
