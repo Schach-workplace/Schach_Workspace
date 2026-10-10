@@ -32,12 +32,36 @@ export default function WorkScreen() {
 function WorkView({ w }: { w: ReturnType<typeof useWorkspace> }) {
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState("all");
-  const [creating, setCreating] = useRamInput("$work", "creating", false);
-  const [title, setTitle] = useRamInput("$work", "title", "");
-  const [dueDate, setDate] = useRamInput("$work", "dueDate", "");
-  const [time, setTime] = useRamInput("$work", "time", "");
-  const [instant, setInstant] = useRamInput("$work", "instant", "");
-  const [reviewer, setReviewer] = useRamInput("$work", "reviewer", "");
+  const [creating, setCreating, retireCreating, matchesCreating] = useRamInput(
+    "$work",
+    "creating",
+    false,
+  );
+  const [title, setTitle, retireTitle, matchesTitle] = useRamInput(
+    "$work",
+    "title",
+    "",
+  );
+  const [dueDate, setDate, retireDate, matchesDate] = useRamInput(
+    "$work",
+    "dueDate",
+    "",
+  );
+  const [time, setTime, retireTime, matchesTime] = useRamInput(
+    "$work",
+    "time",
+    "",
+  );
+  const [instant, setInstant, retireInstant, matchesInstant] = useRamInput(
+    "$work",
+    "instant",
+    "",
+  );
+  const [reviewer, setReviewer, retireReviewer, matchesReviewer] = useRamInput(
+    "$work",
+    "reviewer",
+    "",
+  );
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const pending = useRef(false);
@@ -97,6 +121,7 @@ function WorkView({ w }: { w: ReturnType<typeof useWorkspace> }) {
   }
   function create() {
     if (!title.trim() || !deadline.value || !w.work) return;
+    const generation = client.generation;
     void run(async () => {
       await client.request(`/companies/${w.company}/tasks`, "POST", {
         title: title.trim(),
@@ -116,7 +141,22 @@ function WorkView({ w }: { w: ReturnType<typeof useWorkspace> }) {
         dependencies: [],
         collaborators: [],
       });
-      if (alive.current) setCreating(false);
+      if (client.generation !== generation) return;
+      if (
+        matchesTitle() &&
+        matchesDate() &&
+        matchesTime() &&
+        matchesInstant() &&
+        matchesReviewer() &&
+        matchesCreating()
+      ) {
+        retireTitle();
+        retireDate();
+        retireTime();
+        retireInstant();
+        retireReviewer();
+        retireCreating();
+      }
       await w.refresh("tasks");
     });
   }

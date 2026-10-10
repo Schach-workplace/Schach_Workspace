@@ -343,6 +343,10 @@ try {
       cursor = page.cursor;
     } while (page.hasMore);
     const baseline = cursor;
+    await fill(
+      ".connect-composer textarea",
+      "Draft retained through deleted replay root",
+    );
     const closedBefore = socketClosed;
     offline = true;
     for (const transport of transports) transport.destroy();
@@ -367,7 +371,7 @@ try {
       "PATCH",
     );
     await api(
-      root + "/messages/" + fixture.rows[7].id,
+      root + "/messages/" + newRows[0].id,
       { expectedRevision: 1, removed: true },
       "PATCH",
     );
@@ -398,9 +402,24 @@ try {
     await wait(async () => (await ids()).length === 376);
     await wait(() =>
       evaluate(
-        `document.querySelector('[data-message-id="${fixture.rows[6].id}"]')?.dataset.revision==='2'&&document.querySelector('[data-message-id="${fixture.rows[7].id}"]')?.innerText.includes('Message removed')`,
+        `document.querySelector('[data-message-id="${fixture.rows[6].id}"]')?.dataset.revision==='2'&&document.querySelector('[data-message-id="${newRows[0].id}"]')?.innerText.includes('Message removed')`,
       ),
     );
+    // The fresh reconciliation can expose the final range before per-event hydration drains.
+    // Wait for the last second-page edited-root body, including CDP loadingFinished bytes.
+    await wait(() =>
+      network
+        .slice(networkStart)
+        .some(
+          (r) =>
+            r.url.endsWith(
+              root + "/messages/" + fixture.rows[6].id + "/thread",
+            ) &&
+            r.status === 200 &&
+            r.bytes > 0,
+        ),
+    );
+    await stable();
     metric.catchUpMs = Date.now() - resume;
     metric.anchors.push(await checkAnchor(before));
     const loaded = await ids();
@@ -415,6 +434,13 @@ try {
     metric.catchUpWireBytes = network
       .slice(networkStart)
       .reduce((n, r) => n + (r.bytes || 0), 0);
+    assert.equal(
+      await evaluate(
+        'document.querySelector(".connect-composer textarea").value',
+      ),
+      "Draft retained through deleted replay root",
+    );
+    metric.crossPageDeletedRootRetainedDraft = true;
     const marker = `Authored retry ${width}`;
     let accepted = null,
       originalBody = null;
@@ -455,6 +481,15 @@ try {
         { urlPattern: f.proxy + root + "/messages", requestStage: "Response" },
       ],
     });
+    await evaluate(
+      `document.querySelector('[data-message-id="${fixture.rows[19].id}"] .connect-message-actions button').click()`,
+    );
+    await evaluate(
+      'document.querySelector(".connect-mentions summary").click()',
+    );
+    await evaluate(
+      `[...document.querySelectorAll(".connect-mentions label")].find(l=>l.textContent.includes(${JSON.stringify("History reader " + f.run)})).querySelector("input").click()`,
+    );
     await fill(".connect-composer textarea", marker);
     await evaluate(
       'document.querySelector(".connect-composer").requestSubmit()',
@@ -464,6 +499,8 @@ try {
       evaluate('document.body.innerText.includes("Retry same message")'),
     );
     assert(accepted?.id);
+    assert.equal(originalBody.replyToId, fixture.rows[19].id);
+    assert.deepEqual(originalBody.mentionIds, [f.readerId]);
     await call("Fetch.disable");
     ackHandler = null;
     await click("Back to conversations");
@@ -512,7 +549,15 @@ try {
     );
     assert.equal(canonical.length, 1);
     assert.equal(canonical[0].id, accepted.id);
+    assert.equal(canonical[0].replyToId, originalBody.replyToId);
+    assert.deepEqual(canonical[0].mentionIds, originalBody.mentionIds);
     metric.lostAckCanonical = true;
+    metric.lostAckSelectedReplyMentions = {
+      replyNonempty: true,
+      mentionCount: originalBody.mentionIds.length,
+      exactPayloadRetained: true,
+      canonicalCount: canonical.length,
+    };
     await wait(async () => (await ids()).length === 377);
     before = await position(20);
     await click("Tasks");
@@ -681,6 +726,49 @@ try {
       "base64",
     ),
   );
+  result.controlledTaskCreate = [];
+  for (const width of [320, 375, 430]) {
+    await call("Emulation.setDeviceMetricsOverride", {
+      width,
+      height: 844,
+      deviceScaleFactor: 1,
+      mobile: true,
+    });
+    let steps = 0;
+    const started = Date.now();
+    await click("Tasks");
+    steps++;
+    await click("New task");
+    steps++;
+    await wait(() => evaluate('!!document.querySelector(".task-title-input")'));
+    const title = `Controlled task ${f.run} ${width}`;
+    await fill(".task-title-input", title);
+    steps++;
+    await fill("form#task-edit-form input[type=date][required]", "2026-10-20");
+    steps++;
+    await click("Create task");
+    steps++;
+    await wait(() => evaluate('!document.querySelector(".task-title-input")'));
+    const tasks = (
+      await api(
+        `/api/companies/${f.company}/tasks`,
+        undefined,
+        "GET",
+        f.readerCookie,
+      )
+    ).value.tasks;
+    assert.equal(tasks.filter((t) => t.title === title).length, 1);
+    result.controlledTaskCreate.push({
+      width,
+      scenario: "all-day first-party browser form",
+      attempted: 1,
+      completed: 1,
+      steps,
+      elapsedMs: Date.now() - started,
+      scope:
+        "Controlled Chromium actions including Tasks navigation; no physical usability or capacity claim",
+    });
+  }
   result.status = "passed";
   result.browser = (await call("Browser.getVersion")).product;
   result.maxAnchorDeltaPx = Math.max(

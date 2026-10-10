@@ -3,7 +3,7 @@ import { Action } from "./ConnectUI";
 import PersonPicker from "./PersonPicker";
 import DeadlinePicker from "./DeadlinePicker";
 import { useRamInput } from "./ramInput";
-import { useState } from "react";
+import { useState, useRef, useEffect, useLayoutEffect } from "react";
 import { Button, Text, TextInput, View } from "react-native";
 import * as Crypto from "expo-crypto";
 import { client } from "./client";
@@ -28,47 +28,47 @@ export default function Publication({
   onClose: () => void;
 }) {
   const w = useWorkspace();
-  const [mode, setMode] = useRamInput(
+  const [mode, setMode, retireMode] = useRamInput(
     conversation.id + ":publication:" + source.id,
     "mode",
     "task",
   );
-  const [title, setTitle] = useRamInput(
+  const [title, setTitle, retireTitle] = useRamInput(
     conversation.id + ":publication:" + source.id,
     "title",
     source.body.slice(0, 200),
   );
-  const [excerpt, setExcerpt] = useRamInput(
+  const [excerpt, setExcerpt, retireExcerpt] = useRamInput(
     conversation.id + ":publication:" + source.id,
     "excerpt",
     "",
   );
-  const [owner, setOwner] = useRamInput(
+  const [owner, setOwner, retireOwner] = useRamInput(
     conversation.id + ":publication:" + source.id,
     "owner",
     w.session!.user.id,
   );
-  const [reviewer, setReviewer] = useRamInput(
+  const [reviewer, setReviewer, retireReviewer] = useRamInput(
     conversation.id + ":publication:" + source.id,
     "reviewer",
     "",
   );
-  const [department, setDepartment] = useRamInput(
+  const [department, setDepartment, retireDepartment] = useRamInput(
     conversation.id + ":publication:" + source.id,
     "department",
     w.work?.me.departmentId ?? "",
   );
-  const [dueDate, setDueDate] = useRamInput(
+  const [dueDate, setDueDate, retireDueDate] = useRamInput(
     conversation.id + ":publication:" + source.id,
     "dueDate",
     "",
   );
-  const [timed, setTimed] = useRamInput(
+  const [timed, setTimed, retireTimed] = useRamInput(
     conversation.id + ":publication:" + source.id,
     "timed",
     false,
   );
-  const [instant, setInstant] = useRamInput(
+  const [instant, setInstant, retireInstant] = useRamInput(
     conversation.id + ":publication:" + source.id,
     "instant",
     "",
@@ -78,17 +78,17 @@ export default function Publication({
     "zone",
     w.work?.company.timezone ?? "Asia/Kolkata",
   );
-  const [vendor, setVendor] = useRamInput(
+  const [vendor, setVendor, retireVendor] = useRamInput(
     conversation.id + ":publication:" + source.id,
     "vendor",
     "",
   );
-  const [amount, setAmount] = useRamInput(
+  const [amount, setAmount, retireAmount] = useRamInput(
     conversation.id + ":publication:" + source.id,
     "amount",
     "",
   );
-  const [category, setCategory] = useRamInput(
+  const [category, setCategory, retireCategory] = useRamInput(
     conversation.id + ":publication:" + source.id,
     "category",
     "",
@@ -96,24 +96,61 @@ export default function Publication({
   const [preview, setPreview] = useState<Preview | null>(null);
   const [ack, setAck] = useState(false);
   const [busy, setBusy] = useState(false);
-  const [key] = useRamInput(
+  const [key, , retireKey] = useRamInput(
     conversation.id + ":publication:" + source.id,
     "key",
     () => Crypto.randomUUID(),
   );
-  const [pending, setPending] = useRamInput<{
+  const [pending, setPending, retirePending] = useRamInput<{
     path: string;
     body: unknown;
   } | null>(conversation.id + ":publication:" + source.id, "pending", null);
   const [error, setError] = useState("");
-  const [localTime, setLocalTime] = useRamInput(
+  const [localTime, setLocalTime, retireLocalTime] = useRamInput(
     conversation.id + ":publication:" + source.id,
     "localTime",
     "",
   );
   const [choices, setChoices] = useState<string[]>([]);
+  const active = useRef(true);
+  const attemptBusy = useRef(false);
+  useEffect(() => {
+    active.current = true;
+    return () => {
+      active.current = false;
+    };
+  }, []);
   const root = `/companies/${w.company}/conversations/${conversation.id}`;
+  const ownerKey = JSON.stringify([
+    root,
+    source.id,
+    source.revision,
+    conversation.version,
+  ]);
+  const [previewOwner, setPreviewOwner] = useState(ownerKey);
+  if (previewOwner !== ownerKey) {
+    setPreviewOwner(ownerKey);
+    setPreview(null);
+    setAck(false);
+  }
+  const ownership = useRef({
+    root,
+    source: source.id,
+    revision: source.revision,
+    version: conversation.version,
+  });
+  const previewRequest = useRef(0);
+  useLayoutEffect(() => {
+    ownership.current = {
+      root,
+      source: source.id,
+      revision: source.revision,
+      version: conversation.version,
+    };
+    previewRequest.current++;
+  }, [root, source.id, source.revision, conversation.version]);
   function change() {
+    previewRequest.current++;
     setPreview(null);
     setAck(false);
   }
@@ -190,28 +227,60 @@ export default function Publication({
     };
   }
   async function perform(create: boolean) {
+    if (attemptBusy.current) return;
+    attemptBusy.current = true;
     setBusy(true);
+    const generation = client.generation;
+    const target = ownership.current;
+    const request = ++previewRequest.current;
+    const current = () =>
+      active.current &&
+      target === ownership.current &&
+      generation === client.generation;
     try {
       const attempt = pending ?? input();
       if (create) {
         setPending(attempt);
         await client.request(attempt.path, "POST", attempt.body);
+        if (generation !== client.generation) return;
+        if (retirePending(attempt)) {
+          retireMode();
+          retireTitle();
+          retireExcerpt();
+          retireOwner();
+          retireReviewer();
+          retireDepartment();
+          retireDueDate();
+          retireTimed();
+          retireInstant();
+          retireVendor();
+          retireAmount();
+          retireCategory();
+          retireLocalTime();
+          retireKey();
+          if (current()) {
+            setPreview(null);
+            setAck(false);
+            onClose();
+          }
+        }
         await w.refresh();
-        onClose();
       } else {
-        setPreview(
-          await client.request<Preview>(
-            attempt.path + "/preview",
-            "POST",
-            attempt.body,
-          ),
+        const result = await client.request<Preview>(
+          attempt.path + "/preview",
+          "POST",
+          attempt.body,
         );
+        if (current() && request === previewRequest.current) setPreview(result);
       }
     } catch (e) {
-      if (e instanceof DeadlineChoiceError) setChoices(e.candidates);
-      setError((e as Error).message);
+      if (current()) {
+        if (e instanceof DeadlineChoiceError) setChoices(e.candidates);
+        setError((e as Error).message);
+      }
     } finally {
-      setBusy(false);
+      attemptBusy.current = false;
+      if (active.current) setBusy(false);
     }
   }
   const locked = !!pending || busy;

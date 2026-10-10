@@ -1,22 +1,24 @@
 {
-  "base": "26542bfda5490826fa1f23031f0a77a5b13ff32f",
+  "base": "68cea9b00c5321c92d76b33bd57cc87216e7a418",
+  "fixRound": 1,
   "physicalGates": "unchecked",
-  "method": "Owned HTTP/WebSocket/Chromium152; no native device inference. PG precedes final cached-title filtering; SQLite checked includes it.",
-  "catchUpCost": "129 genuine browser recovery responses: metadata + two event pages +126 root hydration GETs. CDP encodedDataLength includes overhead/concurrent response traffic. Producer writes are outside measurement.",
+  "method": "Owned HTTP/WebSocket/Chromium152. Final byte/catch-up gate waits final edited-root hydration/loadingFinished. No native device inference.",
+  "replayScenario": "125 missed creates + old row7 edit + first missed root removal across100+27 pages; contextual404 reauthorizes and reconciles while retaining authored draft.",
+  "catchUpCost": "134 genuine browser recovery responses: metadata + two event pages +126 thread attempts (one contextual404) + fresh metadata reauthorization +four loaded-range pages. Producer writes precede networkStart. CDP encodedDataLength includes overhead/concurrent responses; event oracle bytes are only raw sync JSON.",
   "runs": [
     {
       "status": "passed",
       "database": "sqlite",
       "physicalGates": "unchecked",
       "fixtureRows": 750,
-      "seedAndColdPageResponseBytes": 839548,
+      "seedAndColdPageResponseBytes": 839592,
       "authorizationChecks": "private outsider404, unauth401, foreign404, actor-bound cursor409",
       "cleanup": {
         "serverStopped": true,
         "ownedSchemaDropped": false,
         "temporaryDatabaseMediaManifestRemoved": true
       },
-      "evidencePath": "/tmp/schach-task3-sqlite-checked/result.json",
+      "evidencePath": "/tmp/schach-task3-fix1-sqlite-checked/result.json",
       "browser": {
         "status": "passed",
         "physicalGates": "unchecked",
@@ -27,23 +29,59 @@
           "composerBottom": 865.984375,
           "viewportBottom": 900
         },
+        "controlledTaskCreate": [
+          {
+            "width": 320,
+            "scenario": "all-day first-party browser form",
+            "attempted": 1,
+            "completed": 1,
+            "steps": 5,
+            "elapsedMs": 88,
+            "scope": "Controlled Chromium actions including Tasks navigation; no physical usability or capacity claim"
+          },
+          {
+            "width": 375,
+            "scenario": "all-day first-party browser form",
+            "attempted": 1,
+            "completed": 1,
+            "steps": 5,
+            "elapsedMs": 75,
+            "scope": "Controlled Chromium actions including Tasks navigation; no physical usability or capacity claim"
+          },
+          {
+            "width": 430,
+            "scenario": "all-day first-party browser form",
+            "attempted": 1,
+            "completed": 1,
+            "steps": 5,
+            "elapsedMs": 72,
+            "scope": "Controlled Chromium actions including Tasks navigation; no physical usability or capacity claim"
+          }
+        ],
         "browser": "Chrome/152.0.7977.82",
-        "maxAnchorDeltaPx": 0.96875,
+        "maxAnchorDeltaPx": 0.53125,
         "scope": "Actual owned HTTP/WebSocket/Chromium; separate deterministic backend overflow required. Physical gates unchecked.",
         "widths": [
           {
             "width": 320,
             "status": "passed",
             "loadedRows": 250,
-            "liveLagMs": 613,
+            "liveLagMs": 640,
             "realHeartbeatRetained": true,
             "actualSocketClosed": true,
             "oracleReplayPages": [100, 27],
-            "oracleReplayBytes": 30652,
-            "catchUpMs": 2300,
-            "catchUpRequests": 129,
-            "catchUpWireBytes": 119292,
+            "oracleReplayBytes": 30657,
+            "catchUpMs": 2381,
+            "catchUpRequests": 134,
+            "catchUpWireBytes": 309278,
+            "crossPageDeletedRootRetainedDraft": true,
             "lostAckCanonical": true,
+            "lostAckSelectedReplyMentions": {
+              "replyNonempty": true,
+              "mentionCount": 1,
+              "exactPayloadRetained": true,
+              "canonicalCount": 1
+            },
             "moduleReturnRetained": true,
             "geometry": {
               "pageWidth": 320,
@@ -56,26 +94,33 @@
             "loadedMentionPreciseTarget": true,
             "resizedViewportGeometry": {
               "historyHeight": 20,
-              "composerBottom": 454,
+              "composerBottom": 456,
               "navTop": 455
             },
             "revokedPrivateTitleCleared": true,
             "revokedDraftAndHistoryCleared": true,
-            "anchorDeltasPx": [0.46875, 0.5, 0, 0.4375, 0.96875, 0]
+            "anchorDeltasPx": [0.46875, 0.5, 0, 0.4375, 0.53125, 0]
           },
           {
             "width": 375,
             "status": "passed",
             "loadedRows": 250,
-            "liveLagMs": 647,
+            "liveLagMs": 733,
             "realHeartbeatRetained": true,
             "actualSocketClosed": true,
             "oracleReplayPages": [100, 27],
-            "oracleReplayBytes": 30649,
-            "catchUpMs": 2341,
-            "catchUpRequests": 129,
-            "catchUpWireBytes": 119301,
+            "oracleReplayBytes": 30654,
+            "catchUpMs": 2478,
+            "catchUpRequests": 134,
+            "catchUpWireBytes": 309277,
+            "crossPageDeletedRootRetainedDraft": true,
             "lostAckCanonical": true,
+            "lostAckSelectedReplyMentions": {
+              "replyNonempty": true,
+              "mentionCount": 1,
+              "exactPayloadRetained": true,
+              "canonicalCount": 1
+            },
             "moduleReturnRetained": true,
             "geometry": {
               "pageWidth": 375,
@@ -87,27 +132,34 @@
             "sourceQuoteClearedDraftRetained": true,
             "loadedMentionPreciseTarget": true,
             "resizedViewportGeometry": {
-              "historyHeight": 23,
+              "historyHeight": 21,
               "composerBottom": 438,
               "navTop": 455
             },
             "revokedPrivateTitleCleared": true,
             "revokedDraftAndHistoryCleared": true,
-            "anchorDeltasPx": [0.140625, 0.421875, 0, 0.171875, 0.46875, 0]
+            "anchorDeltasPx": [0.140625, 0.421875, 0, 0.171875, 0.296875, 0]
           },
           {
             "width": 430,
             "status": "passed",
             "loadedRows": 250,
-            "liveLagMs": 654,
+            "liveLagMs": 667,
             "realHeartbeatRetained": true,
             "actualSocketClosed": true,
             "oracleReplayPages": [100, 27],
-            "oracleReplayBytes": 30653,
-            "catchUpMs": 2347,
-            "catchUpRequests": 129,
-            "catchUpWireBytes": 119303,
+            "oracleReplayBytes": 30651,
+            "catchUpMs": 2319,
+            "catchUpRequests": 134,
+            "catchUpWireBytes": 309282,
+            "crossPageDeletedRootRetainedDraft": true,
             "lostAckCanonical": true,
+            "lostAckSelectedReplyMentions": {
+              "replyNonempty": true,
+              "mentionCount": 1,
+              "exactPayloadRetained": true,
+              "canonicalCount": 1
+            },
             "moduleReturnRetained": true,
             "geometry": {
               "pageWidth": 430,
@@ -119,13 +171,13 @@
             "sourceQuoteClearedDraftRetained": true,
             "loadedMentionPreciseTarget": true,
             "resizedViewportGeometry": {
-              "historyHeight": 40,
+              "historyHeight": 21,
               "composerBottom": 438,
               "navTop": 455
             },
             "revokedPrivateTitleCleared": true,
             "revokedDraftAndHistoryCleared": true,
-            "anchorDeltasPx": [0.078125, 0.296875, 0, 0.21875, 0.703125, 0]
+            "anchorDeltasPx": [0.078125, 0.296875, 0, 0.21875, 0.484375, 0]
           }
         ]
       }
@@ -135,14 +187,14 @@
       "database": "postgres",
       "physicalGates": "unchecked",
       "fixtureRows": 750,
-      "seedAndColdPageResponseBytes": 839512,
+      "seedAndColdPageResponseBytes": 839582,
       "authorizationChecks": "private outsider404, unauth401, foreign404, actor-bound cursor409",
       "cleanup": {
         "serverStopped": true,
         "ownedSchemaDropped": true,
         "temporaryDatabaseMediaManifestRemoved": true
       },
-      "evidencePath": "/tmp/schach-task3-pg-final/result.json",
+      "evidencePath": "/tmp/schach-task3-fix1-pg-checked/result.json",
       "browser": {
         "status": "passed",
         "physicalGates": "unchecked",
@@ -153,23 +205,59 @@
           "composerBottom": 865.984375,
           "viewportBottom": 900
         },
+        "controlledTaskCreate": [
+          {
+            "width": 320,
+            "scenario": "all-day first-party browser form",
+            "attempted": 1,
+            "completed": 1,
+            "steps": 5,
+            "elapsedMs": 96,
+            "scope": "Controlled Chromium actions including Tasks navigation; no physical usability or capacity claim"
+          },
+          {
+            "width": 375,
+            "scenario": "all-day first-party browser form",
+            "attempted": 1,
+            "completed": 1,
+            "steps": 5,
+            "elapsedMs": 77,
+            "scope": "Controlled Chromium actions including Tasks navigation; no physical usability or capacity claim"
+          },
+          {
+            "width": 430,
+            "scenario": "all-day first-party browser form",
+            "attempted": 1,
+            "completed": 1,
+            "steps": 5,
+            "elapsedMs": 74,
+            "scope": "Controlled Chromium actions including Tasks navigation; no physical usability or capacity claim"
+          }
+        ],
         "browser": "Chrome/152.0.7977.82",
-        "maxAnchorDeltaPx": 0.96875,
+        "maxAnchorDeltaPx": 0.53125,
         "scope": "Actual owned HTTP/WebSocket/Chromium; separate deterministic backend overflow required. Physical gates unchecked.",
         "widths": [
           {
             "width": 320,
             "status": "passed",
             "loadedRows": 250,
-            "liveLagMs": 609,
+            "liveLagMs": 524,
             "realHeartbeatRetained": true,
             "actualSocketClosed": true,
             "oracleReplayPages": [100, 27],
-            "oracleReplayBytes": 30658,
-            "catchUpMs": 2267,
-            "catchUpRequests": 129,
-            "catchUpWireBytes": 119310,
+            "oracleReplayBytes": 30650,
+            "catchUpMs": 2355,
+            "catchUpRequests": 134,
+            "catchUpWireBytes": 309259,
+            "crossPageDeletedRootRetainedDraft": true,
             "lostAckCanonical": true,
+            "lostAckSelectedReplyMentions": {
+              "replyNonempty": true,
+              "mentionCount": 1,
+              "exactPayloadRetained": true,
+              "canonicalCount": 1
+            },
             "moduleReturnRetained": true,
             "geometry": {
               "pageWidth": 320,
@@ -182,25 +270,33 @@
             "loadedMentionPreciseTarget": true,
             "resizedViewportGeometry": {
               "historyHeight": 20,
-              "composerBottom": 454,
+              "composerBottom": 456,
               "navTop": 455
             },
+            "revokedPrivateTitleCleared": true,
             "revokedDraftAndHistoryCleared": true,
-            "anchorDeltasPx": [0.46875, 0.5, 0, 0.4375, 0.96875, 0]
+            "anchorDeltasPx": [0.46875, 0.5, 0, 0.4375, 0.53125, 0]
           },
           {
             "width": 375,
             "status": "passed",
             "loadedRows": 250,
-            "liveLagMs": 700,
+            "liveLagMs": 716,
             "realHeartbeatRetained": true,
             "actualSocketClosed": true,
             "oracleReplayPages": [100, 27],
-            "oracleReplayBytes": 30655,
-            "catchUpMs": 2295,
-            "catchUpRequests": 129,
-            "catchUpWireBytes": 119296,
+            "oracleReplayBytes": 30651,
+            "catchUpMs": 2393,
+            "catchUpRequests": 134,
+            "catchUpWireBytes": 309275,
+            "crossPageDeletedRootRetainedDraft": true,
             "lostAckCanonical": true,
+            "lostAckSelectedReplyMentions": {
+              "replyNonempty": true,
+              "mentionCount": 1,
+              "exactPayloadRetained": true,
+              "canonicalCount": 1
+            },
             "moduleReturnRetained": true,
             "geometry": {
               "pageWidth": 375,
@@ -212,26 +308,34 @@
             "sourceQuoteClearedDraftRetained": true,
             "loadedMentionPreciseTarget": true,
             "resizedViewportGeometry": {
-              "historyHeight": 23,
+              "historyHeight": 21,
               "composerBottom": 438,
               "navTop": 455
             },
+            "revokedPrivateTitleCleared": true,
             "revokedDraftAndHistoryCleared": true,
-            "anchorDeltasPx": [0.140625, 0.421875, 0, 0.171875, 0.46875, 0]
+            "anchorDeltasPx": [0.140625, 0.421875, 0, 0.171875, 0.296875, 0]
           },
           {
             "width": 430,
             "status": "passed",
             "loadedRows": 250,
-            "liveLagMs": 685,
+            "liveLagMs": 732,
             "realHeartbeatRetained": true,
             "actualSocketClosed": true,
             "oracleReplayPages": [100, 27],
-            "oracleReplayBytes": 30650,
-            "catchUpMs": 2392,
-            "catchUpRequests": 129,
-            "catchUpWireBytes": 119296,
+            "oracleReplayBytes": 30659,
+            "catchUpMs": 2318,
+            "catchUpRequests": 134,
+            "catchUpWireBytes": 309260,
+            "crossPageDeletedRootRetainedDraft": true,
             "lostAckCanonical": true,
+            "lostAckSelectedReplyMentions": {
+              "replyNonempty": true,
+              "mentionCount": 1,
+              "exactPayloadRetained": true,
+              "canonicalCount": 1
+            },
             "moduleReturnRetained": true,
             "geometry": {
               "pageWidth": 430,
@@ -243,38 +347,42 @@
             "sourceQuoteClearedDraftRetained": true,
             "loadedMentionPreciseTarget": true,
             "resizedViewportGeometry": {
-              "historyHeight": 40,
+              "historyHeight": 21,
               "composerBottom": 438,
               "navTop": 455
             },
+            "revokedPrivateTitleCleared": true,
             "revokedDraftAndHistoryCleared": true,
-            "anchorDeltasPx": [0.078125, 0.296875, 0, 0.21875, 0.703125, 0]
+            "anchorDeltasPx": [0.078125, 0.296875, 0, 0.21875, 0.484375, 0]
           }
         ]
       }
     }
   ],
-  "nativeBundleExport": [
+  "nativeControlledTaskCreate": [
     {
-      "platform": "android",
-      "path": "_expo/static/js/android/entry-08a870901ebc8ec408c816d2618048ad.hbc",
-      "bytes": 5199822,
-      "sha256": "3709e238ffa3a74cc0da0da1b048a62544a0eb36447dd0cc50b50e223b7ee926"
+      "platform": "native-component",
+      "scenario": "default all-day",
+      "attempted": 1,
+      "completed": 1,
+      "steps": 3,
+      "measurement": "Happy-dom controlled interaction, field edit counts one action; not physical usability"
     },
     {
-      "platform": "ios",
-      "path": "_expo/static/js/ios/entry-f0da1d5c4717c2b87d048e63c381fcb1.hbc",
-      "bytes": 4885620,
-      "sha256": "70e5680a6a15fa844a8afd172da80c6de6a316fa4bf8017b6595d33629e30fbd"
+      "platform": "native-component",
+      "scenario": "tomorrow all-day",
+      "attempted": 1,
+      "completed": 1,
+      "steps": 4,
+      "measurement": "Happy-dom controlled interaction, field edit counts one action; not physical usability"
+    },
+    {
+      "platform": "native-component",
+      "scenario": "tomorrow timed",
+      "attempted": 1,
+      "completed": 1,
+      "steps": 5,
+      "measurement": "Happy-dom controlled interaction, field edit counts one action; not physical usability"
     }
-  ],
-  "deterministicPostgresOverflow": {
-    "sockets": 100,
-    "readyP50Ms": 108.232428,
-    "readyP95Ms": 147.009906,
-    "readyMaxMs": 151.003097,
-    "atomicBurstEvents": 51,
-    "allClosedSeconds": 1.005023295,
-    "evidencePath": "/tmp/task3-overflow.log"
-  }
+  ]
 }

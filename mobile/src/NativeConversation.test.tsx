@@ -16,11 +16,14 @@ import {
 } from "./conversationDrafts";
 import NativeConversation from "./NativeConversation";
 const state = vi.hoisted(() => ({
+  target: "",
+  thread: null as any,
   offline: false,
   rows: [] as any[],
   reads: [] as number[],
   list: null as any,
   scrolls: [] as number[],
+  layouts: [] as ((e: any) => void)[],
   posts: [] as unknown[],
   w: {} as any,
 }));
@@ -28,6 +31,7 @@ vi.mock("./client", () => ({
   NativeApiError: class extends Error {},
   client: {
     endpoint: "https://fixture.test",
+    requestThread: vi.fn((path: string) => state.thread(path)),
     request: vi.fn(async (_path: string, method = "GET", body?: unknown) => {
       if (method === "POST" && _path.endsWith("/messages")) {
         state.posts.push(body);
@@ -59,7 +63,7 @@ vi.mock("./client", () => ({
   },
 }));
 vi.mock("expo-router", () => ({
-  useLocalSearchParams: () => ({}),
+  useLocalSearchParams: () => ({ messageId: state.target }),
   router: { back: vi.fn(), push: vi.fn(), replace: vi.fn() },
 }));
 vi.mock("expo-crypto", () => ({ randomUUID: () => crypto.randomUUID() }));
@@ -110,11 +114,35 @@ vi.mock("react-native", () => ({
       "div",
       {},
       ListHeaderComponent,
-      ...data.map((item: any, index: number) => renderItem({ item, index })),
+      ...data.map((item: any, index: number) =>
+        props.CellRendererComponent
+          ? createElement(
+              props.CellRendererComponent,
+              {
+                key: item.id,
+                cellKey: item.id,
+                index,
+                item,
+                onLayout: () => {},
+              },
+              renderItem({ item, index }),
+            )
+          : renderItem({ item, index }),
+      ),
     );
   }),
-  View: ({ children }: { children: ReactNode }) =>
-    createElement("div", {}, children),
+  View: ({
+    children,
+    onLayout,
+  }: {
+    children: ReactNode;
+    onLayout?: (e: any) => void;
+  }) => {
+    useLayoutEffect(() => {
+      if (onLayout) state.layouts.push(onLayout);
+    }, [onLayout]);
+    return createElement("div", {}, children);
+  },
   Text: ({ children }: { children: ReactNode }) =>
     createElement("span", {}, children),
   Pressable: ({
@@ -156,12 +184,15 @@ let container: HTMLDivElement;
 beforeEach(() => {
   vi.useFakeTimers();
   Object.assign(globalThis, { IS_REACT_ACT_ENVIRONMENT: true });
+  state.target = "";
+  state.thread = vi.fn();
   state.offline = false;
   state.posts = [];
   state.rows = [];
   state.reads = [];
   state.list = null;
   state.scrolls = [];
+  state.layouts = [];
   state.w = {
     company: "company",
     selected: "chat",
@@ -268,7 +299,7 @@ it("uses stable virtual list IDs and acknowledges the highest viewed sequence on
   expect(state.reads).toEqual([40, 100]);
 });
 
-it("restores the saved native pixel offset after fresh authorized route hydration", async () => {
+it("restores a relative native anchor after fresh wrapped row heights change", async () => {
   const scope = {
     serverOrigin: "https://fixture.test",
     companyId: "company",
@@ -289,11 +320,39 @@ it("restores the saved native pixel offset after fresh authorized route hydratio
   writeHistoryPosition(scope, {
     oldestSequence: 1,
     anchorId: "m80",
-    offset: 745,
+    offset: -15,
     atBottom: false,
   });
   await act(async () => root.render(<NativeConversation />));
+  await act(async () =>
+    state.layouts[79]({ nativeEvent: { layout: { y: 1200, height: 100 } } }),
+  );
   await act(async () => state.list.onContentSizeChange());
-  expect(state.scrolls).toEqual([745]);
+  expect(state.scrolls).toEqual([1215]);
   expect(readHistoryPosition(scope)?.oldestSequence).toBe(1);
+});
+
+it("rejects an old target result after target replacement on a mounted native route", async () => {
+  let release: (v: any) => void = () => {};
+  state.thread = vi.fn(async (path: string) =>
+    path.includes("/old/")
+      ? new Promise((r) => (release = r))
+      : {
+          root: { id: "new", body: "Current target", removed: false },
+          messages: [],
+        },
+  );
+  state.target = "old";
+  await act(async () => root.render(<NativeConversation />));
+  expect(state.thread).toHaveBeenCalled();
+  state.target = "new";
+  await act(async () => root.render(<NativeConversation />));
+  expect(container.textContent).toContain("Current target");
+  await act(async () =>
+    release({
+      root: { id: "old", body: "Old private target", removed: false },
+      messages: [],
+    }),
+  );
+  expect(container.textContent).not.toContain("Old private target");
 });

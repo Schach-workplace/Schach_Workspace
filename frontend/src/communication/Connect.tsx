@@ -109,6 +109,8 @@ function ConnectView({
   const anchor = useRef<{ id: string; offset: number } | null>(null);
   const [newCount, setNewCount] = useState(0);
   const lastSequence = useRef(0);
+  const targetRequest = useRef(0);
+  const pendingSource = useRef('');
   const draftScope = {
     serverOrigin: import.meta.env.VITE_API_URL || window.location.origin,
     companyId: workspace.companyId,
@@ -177,10 +179,27 @@ function ConnectView({
     lastSequence.current = sequence;
     captureAnchor();
   }, [chat.messages]);
+  const seenSources = useRef(0);
   useEffect(() => {
+    const change = chat.changedSources;
+    const ids = (change?.ids ?? []).filter(
+      (id) => (change?.versions?.[id] ?? change?.revision ?? 0) > seenSources.current,
+    );
+    seenSources.current = change?.revision ?? 0;
+    if (ids.includes(pendingSource.current)) {
+      targetRequest.current++;
+      pendingSource.current = '';
+    }
     const changed = (m: Message | null) =>
       m &&
-      chat.messages.some((row) => row.id === m.id && (row.removed || row.revision !== m.revision));
+      (ids.includes(m.id) ||
+        chat.messages.some(
+          (row) => row.id === m.id && (row.removed || row.revision !== m.revision),
+        ));
+    if (target && ids.includes(target.messageId)) {
+      targetRequest.current++;
+      onTarget(null);
+    }
     if (changed(reply)) setReply(null);
     if (changed(thread?.root ?? null) || thread?.messages.some(changed)) setThread(null);
     if (changed(workSource)) setWorkSource(null);
@@ -190,8 +209,10 @@ function ConnectView({
     if (changed(edit)) setEdit(null);
     if (changed(remind)) setRemind(null);
     if (changed(remove)) setRemove(null);
-  }, [chat.messages]);
+  }, [chat.messages, chat.changedSources]);
   useEffect(() => {
+    const request = ++targetRequest.current;
+    pendingSource.current = target?.messageId ?? '';
     if (!target || target.conversationId !== chat.selected || !conversation) return;
     const row = [
       ...(historyRef.current?.querySelectorAll<HTMLElement>('[data-message-id]') ?? []),
@@ -211,18 +232,21 @@ function ConnectView({
         'GET',
       )
       .then((v) => {
-        if (alive.current) {
+        if (alive.current && request === targetRequest.current) {
           setThread(v);
           onTarget(null);
         }
       })
       .catch((e) => {
-        if (alive.current) {
+        if (alive.current && request === targetRequest.current) {
           setThread(null);
           setError(e.message);
           onTarget(null);
         }
       });
+    return () => {
+      targetRequest.current++;
+    };
   }, [target, conversation?.id]);
   const alive = useRef(true);
   const shellRef = useRef<HTMLDivElement>(null);
@@ -370,15 +394,18 @@ function ConnectView({
     });
   }
   async function openThread(m: Message) {
+    const request = ++targetRequest.current;
+    pendingSource.current = m.replyToId || m.id;
     try {
       const result = await chat.command<{ root: Message; messages: Message[] }>(
         `/conversations/${chat.selected}/messages/${m.replyToId || m.id}/thread`,
         undefined,
         'GET',
       );
-      if (alive.current && !result.root.removed) setThread(result);
+      if (alive.current && request === targetRequest.current && !result.root.removed)
+        setThread(result);
     } catch (e) {
-      if (alive.current) setError((e as Error).message);
+      if (alive.current && request === targetRequest.current) setError((e as Error).message);
     }
   }
   if (workspace.mode === 'demo')
@@ -820,6 +847,7 @@ function ConnectView({
         >
           <div className="connect-dialog-body">
             <DailyTools
+              key={chat.changedSources?.revision ?? 0}
               conversation={chat.selected}
               data={data}
               command={chat.command}

@@ -165,3 +165,55 @@ it("provider hides fetched history on background but retains selected conversati
   expect(w.selected).toBe("");
   await act(async () => root.unmount());
 });
+
+it("authorizes foreground promptly after delayed session restore", async () => {
+  vi.useFakeTimers();
+  Object.assign(globalThis, { IS_REACT_ACT_ENVIRONMENT: true });
+  client.token = "token";
+  vi.spyOn(client, "restore").mockResolvedValue();
+  const session = {
+    user: { id: "u", name: "User" },
+    companies: [{ id: "c", name: "Company" }],
+  };
+  let delaySession = false,
+    release: () => void = () => {};
+  vi.spyOn(client, "request").mockImplementation(async (path: string) => {
+    if (path === "/auth/session")
+      return delaySession
+        ? await new Promise((r) => (release = () => r(session as any)))
+        : (session as any);
+    if (path === "/devices") return { id: "device" } as any;
+    if (path.endsWith("/bootstrap"))
+      return {
+        readBasis: "same",
+        me: { id: "u", role: "member" },
+        people: [],
+        tasks: [],
+        expenses: [],
+        company: { id: "c", timezone: "Asia/Kolkata" },
+      } as any;
+    if (path.includes("/conversations"))
+      return { conversations: [], cursor: "", hasMore: false } as any;
+    if (path.endsWith("/inbox")) return { events: [] } as any;
+    return { tasks: [], expenses: [], cursor: "", hasMore: false } as any;
+  });
+  const root = createRoot(document.createElement("div"));
+  try {
+    await act(async () =>
+      root.render(
+        <WorkspaceProvider>
+          <Probe />
+        </WorkspaceProvider>,
+      ),
+    );
+    expect(w.foreground).toBe(true);
+    await act(async () => env.state("background"));
+    delaySession = true;
+    await act(async () => env.state("active"));
+    expect(w.foreground).toBe(false);
+    await act(async () => release());
+    expect(w.foreground).toBe(true);
+  } finally {
+    await act(async () => root.unmount());
+  }
+});

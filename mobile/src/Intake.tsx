@@ -1,7 +1,15 @@
+import { workDeadline, DeadlineChoiceError } from "./workDates";
 import PersonPicker from "./PersonPicker";
 import DeadlinePicker from "./DeadlinePicker";
 import { useRamInput } from "./ramInput";
-import { useEffect, useEffectEvent, useState } from "react";
+import {
+  useEffect,
+  useEffectEvent,
+  useState,
+  useMemo,
+  useRef,
+  useLayoutEffect,
+} from "react";
 import { Button, Text, TextInput, View } from "react-native";
 import { client } from "./client";
 import { styles, useWorkspace } from "./Workspace";
@@ -16,20 +24,78 @@ interface Intake {
 export default function IntakeQueue() {
   const w = useWorkspace();
   const [items, setItems] = useState<Intake[]>([]);
-  const [selected, setSelected] = useState<Intake | null>(null);
-  const [owner, setOwner] = useRamInput("$intake", "owner", w.session!.user.id);
-  const [reviewer, setReviewer] = useRamInput("$intake", "reviewer", "");
-  const [due, setDue] = useRamInput("$intake", "due", "");
-  const [reason, setReason] = useRamInput("$intake", "reason", "");
+  const [selectedId, setSelectedId, retireSelected] = useRamInput(
+    "$intake",
+    "selectedId",
+    "",
+  );
+  const selected = items.find((i) => i.id === selectedId) ?? null;
+  const form = "$intake:" + selectedId;
+  const current = useRef({
+    selectedId,
+    generation: client.generation,
+    root: "",
+  });
+  const alive = useRef(true);
+  const busy = useRef(false);
+  useEffect(() => {
+    alive.current = true;
+    return () => {
+      alive.current = false;
+    };
+  }, []);
+  const [owner, setOwner, retireOwner] = useRamInput(
+    form,
+    "owner",
+    w.session!.user.id,
+  );
+  const [reviewer, setReviewer, retireReviewer] = useRamInput(
+    form,
+    "reviewer",
+    "",
+  );
+  const [due, setDue, retireDue] = useRamInput(form, "due", "");
+  const [time, setTime, retireTime] = useRamInput(form, "time", "");
+  const [instant, setInstant, retireInstant] = useRamInput(form, "instant", "");
+  const [reason, setReason, retireReason] = useRamInput(form, "reason", "");
   const [briefing, setBriefing] = useState<{
     visibleTaskCount: number;
     visibleOpenRequestCount: number;
     notice: string;
   } | null>(null);
   const root = `/companies/${w.company}/communication/requests`;
+  useLayoutEffect(() => {
+    current.current = { selectedId, generation: client.generation, root };
+  }, [selectedId, root]);
+  const deadline = useMemo(() => {
+    try {
+      return {
+        value: workDeadline(
+          due,
+          time,
+          w.work?.company.timezone ?? "Asia/Kolkata",
+          instant,
+        ),
+        error: "",
+        choices: [] as string[],
+      };
+    } catch (e) {
+      return {
+        value: null,
+        error: (e as Error).message,
+        choices: e instanceof DeadlineChoiceError ? e.candidates : [],
+      };
+    }
+  }, [due, time, instant, w.work?.company.timezone]);
   async function refresh() {
+    const generation = client.generation;
     const v = await client.request<{ requests: Intake[] }>(root);
-    setItems(v.requests);
+    if (
+      alive.current &&
+      current.current.root === root &&
+      generation === client.generation
+    )
+      setItems(v.requests);
   }
   const load = useEffectEvent(() =>
     refresh().catch((e) => w.setError(e.message)),
@@ -38,7 +104,10 @@ export default function IntakeQueue() {
     void Promise.resolve().then(() => load());
   }, [root]);
   async function assign() {
-    if (!selected) return;
+    if (!selected || busy.current || !deadline.value) return;
+    busy.current = true;
+    const generation = client.generation;
+    const target = selected.id;
     try {
       await client.request(root + "/" + selected.id + "/assign", "POST", {
         expectedVersion: selected.version,
@@ -53,8 +122,7 @@ export default function IntakeQueue() {
           parentId: "",
           priority: "medium",
           status: "todo",
-          dueDate: due,
-          deadlineMode: "all_day",
+          ...deadline.value,
           startDate: "",
           estimatedHours: 0,
           tags: [],
@@ -64,25 +132,50 @@ export default function IntakeQueue() {
           recurrence: "none",
         },
       });
-      setSelected(null);
+      if (
+        !alive.current ||
+        generation !== client.generation ||
+        current.current.selectedId !== target
+      )
+        return;
+      retireDue();
+      retireTime();
+      retireInstant();
+      retireOwner();
+      retireReviewer();
+      retireSelected(target);
       await refresh();
       await w.refresh();
     } catch (e) {
-      w.setError((e as Error).message);
+      if (alive.current) w.setError((e as Error).message);
+    } finally {
+      busy.current = false;
     }
   }
   async function close(state: string) {
-    if (!selected) return;
+    if (!selected || busy.current) return;
+    busy.current = true;
+    const generation = client.generation;
+    const target = selected.id;
+    const valid = () =>
+      alive.current &&
+      generation === client.generation &&
+      current.current.root === root &&
+      current.current.selectedId === target;
     try {
       await client.request(root + "/" + selected.id, "PATCH", {
         expectedVersion: selected.version,
         state,
         reason,
       });
-      setSelected(null);
+      if (!valid()) return;
+      retireReason();
+      retireSelected(target);
       await refresh();
     } catch (e) {
-      w.setError((e as Error).message);
+      if (valid()) w.setError((e as Error).message);
+    } finally {
+      busy.current = false;
     }
   }
   return (
@@ -116,9 +209,7 @@ export default function IntakeQueue() {
               <Button
                 title="Review intake action"
                 onPress={() => {
-                  setSelected(item);
-                  setDue("");
-                  setReason("");
+                  setSelectedId(item.id);
                 }}
               />
             )}
@@ -159,13 +250,27 @@ export default function IntakeQueue() {
                 />
                 <DeadlinePicker
                   date={due}
-                  time=""
+                  time={time}
                   timezone={w.work?.company.timezone ?? "Asia/Kolkata"}
-                  onChange={(v) => setDue(v.date)}
+                  onChange={(v) => {
+                    setDue(v.date);
+                    setTime(v.time);
+                    setInstant("");
+                  }}
                 />
+                {!!due && !!deadline.error && (
+                  <Text accessibilityRole="alert">{deadline.error}</Text>
+                )}
+                {deadline.choices.map((choice) => (
+                  <Button
+                    key={choice}
+                    title={choice}
+                    onPress={() => setInstant(choice)}
+                  />
+                ))}
                 <Button
                   title="Assign through task workflow"
-                  disabled={!due}
+                  disabled={!deadline.value}
                   onPress={() => void assign()}
                 />
               </>
@@ -189,7 +294,7 @@ export default function IntakeQueue() {
           />
           <Button
             title="Close intake review"
-            onPress={() => setSelected(null)}
+            onPress={() => setSelectedId("")}
           />
         </View>
       )}

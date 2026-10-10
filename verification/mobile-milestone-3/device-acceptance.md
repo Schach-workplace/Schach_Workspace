@@ -6,6 +6,8 @@ Record: tester/time, model/OS, build identifier, app/backend commit, origin/TLS,
 
 ## Build prerequisites
 
+The pre-review Android evaluation build from `68cea9b` is a compile-only baseline and is superseded by fix round 1 source changes. Rebuild from the accepted fix HEAD before device acceptance. Current Hermes exports do not certify that binary, organization signing, iOS compilation, or physical behavior.
+
 Dependencies/config changed: rebuild the binary; old APKs and Expo Go are insufficient. `npm run prebuild` generates projects; do not hand-edit them. Android: Java17, Android SDK36/build tools and `npm run android` or an explicitly configured EAS development profile. iOS: macOS, Xcode26.4+, iOS16.4+ and `npm run ios` or configured EAS development build. EAS project/profile/signing credentials require deployment ownership; no upload/signing is inferred. Organization-signed distribution, APNs/FCM credentials and deployed TLS/TURN are separate rollout gates.
 
 ## Device script

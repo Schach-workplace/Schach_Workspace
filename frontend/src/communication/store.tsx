@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { communicationRequest, streamURL } from './api';
 import type { Conversation, Member, Message } from './types';
 import { ApiError } from '../data/api';
-import { ConversationHistory } from './history';
+import { ConversationHistory, authorizedSource } from './history';
 import {
   clearConversationDrafts,
   clearDraftSources,
@@ -36,6 +36,37 @@ export function useCommunication(company: string, user: string, enabled = true) 
   const [listCursor, setListCursor] = useState('');
   const [listHasMore, setListHasMore] = useState(false);
   const [olderBusy, setOlderBusy] = useState(false);
+  const [foreground, setForeground] = useState(document.visibilityState !== 'hidden');
+  const commands = useRef(new Set<AbortController>());
+  const [changedSources, setChangedSources] = useState({
+    revision: 0,
+    ids: [] as string[],
+    versions: {} as Record<string, number>,
+  });
+  useEffect(() => {
+    const visibility = () => {
+      if (document.visibilityState === 'hidden') {
+        if (selected && engine.current?.messages.length)
+          writeHistoryPosition(
+            { ...navigationScope, conversationId: selected },
+            { oldestSequence: engine.current.messages[0].sequence },
+          );
+        generation.current++;
+        listGeneration.current++;
+        for (const request of commands.current) request.abort();
+        engine.current?.dispose();
+        engine.current = null;
+        setConversations([]);
+        setMessages([]);
+        setConversation(null);
+        setMembers([]);
+        setConnected(false);
+      }
+      setForeground(document.visibilityState !== 'hidden');
+    };
+    document.addEventListener('visibilitychange', visibility);
+    return () => document.removeEventListener('visibilitychange', visibility);
+  }, [key, selected]);
   const syncRef = useRef<() => Promise<void>>(async () => {});
   const refresh = useCallback(async () => syncRef.current(), []);
   useEffect(() => {
@@ -51,7 +82,7 @@ export function useCommunication(company: string, user: string, enabled = true) 
     setListHasMore(false);
     const current = listGeneration.current;
     const abort = new AbortController();
-    if (enabled && company && user)
+    if (enabled && foreground && company && user)
       communicationRequest<{ conversations: Conversation[]; cursor: string; hasMore: boolean }>(
         company,
         '/conversations',
@@ -72,7 +103,7 @@ export function useCommunication(company: string, user: string, enabled = true) 
       generation.current++;
       listGeneration.current++;
     };
-  }, [key, enabled, company, user]);
+  }, [key, enabled, company, user, foreground]);
   useEffect(() => {
     const current = ++generation.current;
     let disposed = false;
@@ -82,7 +113,11 @@ export function useCommunication(company: string, user: string, enabled = true) 
     let overflow = false;
     let lane: Promise<void> = Promise.resolve();
     let pending: Promise<void> | null = null;
-    const active = () => !disposed && current === generation.current && live.current === key;
+    const active = () =>
+      !disposed &&
+      document.visibilityState !== 'hidden' &&
+      current === generation.current &&
+      live.current === key;
     setMessages([]);
     setConversation(null);
     setMembers([]);
@@ -90,7 +125,8 @@ export function useCommunication(company: string, user: string, enabled = true) 
     setHasMore(false);
     metaRef.current = null;
     engine.current = null;
-    if (!enabled || !selected) {
+    setChangedSources({ revision: 0, ids: [], versions: {} });
+    if (!enabled || !foreground || !selected) {
       syncRef.current = async () => {};
       return () => {
         disposed = true;
@@ -129,6 +165,14 @@ export function useCommunication(company: string, user: string, enabled = true) 
         (ids) => {
           if (!active() || engine.current !== h) return;
           if (ids.length) {
+            setChangedSources((old) => ({
+              revision: old.revision + 1,
+              ids: [...new Set([...old.ids, ...ids])],
+              versions: {
+                ...old.versions,
+                ...Object.fromEntries(ids.map((id) => [id, old.revision + 1])),
+              },
+            }));
             clearDraftSources(company, user, selected, ids);
             setPrivacyEpoch((p) => p + 1);
           }
@@ -271,44 +315,40 @@ export function useCommunication(company: string, user: string, enabled = true) 
     };
     if (typeof WebSocket !== 'undefined') connect();
     const poll = setInterval(() => void schedule(), 15000);
-    const visibility = () => {
-      if (document.visibilityState === 'hidden') {
-        savePosition();
-        hide();
-        engine.current?.dispose();
-        engine.current = null;
-        socket?.close();
-      } else {
-        void schedule();
-        socket?.close();
-        connect();
-      }
-    };
-    document.addEventListener('visibilitychange', visibility);
     return () => {
       savePosition();
       disposed = true;
       abort.abort();
       clearInterval(poll);
-      document.removeEventListener('visibilitychange', visibility);
       if (reconnect) clearTimeout(reconnect);
       socket?.close();
       engine.current?.dispose();
       engine.current = null;
       generation.current++;
     };
-  }, [company, user, selected, enabled, key]);
+  }, [company, user, selected, enabled, key, foreground]);
   const command = async <T,>(path: string, body: unknown, method = 'POST'): Promise<T> => {
     const current = generation.current;
-    if (live.current !== key) throw Error('Company changed.');
+    const inForeground = () => document.visibilityState !== 'hidden';
+    if (live.current !== key || !inForeground()) throw Error('Company changed or backgrounded.');
+    const abort = new AbortController();
+    commands.current.add(abort);
     try {
-      const result = await communicationRequest<T>(company, path, { method, body });
+      const read = (p: string) =>
+        communicationRequest<T>(company, p, { method, body, signal: abort.signal });
+      const source =
+        method === 'GET' && /^\/conversations\/[^/]+\/messages\/[^/]+\/thread$/.test(path);
+      const result = source
+        ? await authorizedSource<T>(read, path, path.split('/messages/')[0])
+        : await read(path);
       if (current !== generation.current || live.current !== key)
         throw Error('Company or conversation changed.');
       const canonical = (result as { message?: Message })?.message;
       if (canonical && canonical.conversationId === selected)
         await engine.current?.merge([canonical]);
       if (method !== 'GET' && !path.endsWith('/read')) await refresh();
+      if (current !== generation.current || live.current !== key || !inForeground())
+        throw Error('Company or conversation changed.');
       return result;
     } catch (e) {
       if (
@@ -328,6 +368,8 @@ export function useCommunication(company: string, user: string, enabled = true) 
         setPrivacyEpoch((p) => p + 1);
       }
       throw e;
+    } finally {
+      commands.current.delete(abort);
     }
   };
   const loadMore = async () => {
@@ -382,6 +424,7 @@ export function useCommunication(company: string, user: string, enabled = true) 
     error,
     connected,
     privacyEpoch,
+    changedSources,
     command,
     refresh,
     hasMore,

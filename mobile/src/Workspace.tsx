@@ -167,9 +167,15 @@ function useController() {
   }
   async function restore() {
     const sequence = ++restoreSequence.current;
+    const generation = client.generation;
     try {
       const value = await client.request<Session>("/auth/session");
-      if (sequence !== restoreSequence.current) return;
+      if (
+        sequence !== restoreSequence.current ||
+        generation !== client.generation ||
+        !currentScope.current.foreground
+      )
+        return;
       const next = value.companies.some(
         (c) => c.id === currentScope.current.company,
       )
@@ -188,7 +194,11 @@ function useController() {
       setSession(value);
       setCompany(next);
     } catch (e) {
-      if (sequence !== restoreSequence.current) return;
+      if (
+        sequence !== restoreSequence.current ||
+        generation !== client.generation
+      )
+        return;
       setAuthorized(false);
       setError((e as Error).message);
       if (e instanceof NativeApiError && [401, 403, 404].includes(e.status)) {
@@ -363,6 +373,7 @@ function useController() {
       currentScope.current.foreground = state === "active";
       setForeground(state === "active");
       if (state !== "active") {
+        restoreSequence.current++;
         sessionAuthorized.current = false;
         client.clearGeneration();
         setAuthorized(false);
@@ -370,9 +381,13 @@ function useController() {
         setWork(null);
         setInbox([]);
       } else if (client.token) {
-        void restoreEvent();
-        if (Platform.OS === "android")
-          void recoverCamera().catch((e) => setError(e.message));
+        void restoreEvent()
+          .then(() => refreshEvent())
+          .then(() => {
+            if (Platform.OS === "android" && currentScope.current.foreground)
+              return recoverCamera();
+          })
+          .catch((e) => setError(e.message));
       }
     });
     const received = Notifications.addNotificationReceivedListener(() => {

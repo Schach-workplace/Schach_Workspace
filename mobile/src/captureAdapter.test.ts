@@ -7,6 +7,9 @@ import {
   clearCaptures,
 } from "./capture";
 const env = vi.hoisted(() => ({
+  fileSize: 32,
+  unreadable: false,
+  missing: false,
   granted: true,
   launchError: false,
   pending: null as any,
@@ -25,13 +28,15 @@ vi.mock("expo-image-picker", () => ({
       ? new Promise((r) => (env.resolve = r))
       : {
           canceled: env.canceled,
-          assets: [
-            {
-              uri: "camera.jpg",
-              fileName: "photo.jpg",
-              mimeType: "image/jpeg",
-            },
-          ],
+          assets: env.missing
+            ? []
+            : [
+                {
+                  uri: "camera.jpg",
+                  fileName: "photo.jpg",
+                  mimeType: "image/jpeg",
+                },
+              ],
         };
   },
   getPendingResultAsync: async () => env.pending,
@@ -44,12 +49,13 @@ vi.mock("expo-file-system", () => ({
   Paths: { cache: "cache" },
   File: class {
     uri: string;
-    size = 32;
+    size = env.fileSize;
     exists = true;
     constructor(...parts: string[]) {
       this.uri = parts.join("/");
     }
     copy(file: any) {
+      if (env.unreadable) throw Error("Unreadable selected file");
       file.exists = true;
     }
     delete() {
@@ -70,6 +76,9 @@ const scope = {
 };
 beforeEach(() => {
   clearCaptures();
+  env.fileSize = 32;
+  env.unreadable = false;
+  env.missing = false;
   env.granted = true;
   env.launchError = false;
   env.pending = null;
@@ -131,3 +140,15 @@ it("recovers Android pending output only with its original RAM destination, neve
   await expect(recoverCamera()).rejects.toThrow("original destination");
   expect(captureOwner(scope).state.file).toBeNull();
 });
+
+it.each(["missing", "unreadable", "oversize", "empty"])(
+  "refuses %s camera output without an upload preview",
+  async (kind) => {
+    env.missing = kind === "missing";
+    env.unreadable = kind === "unreadable";
+    env.fileSize =
+      kind === "oversize" ? 11 * 1024 * 1024 : kind === "empty" ? 0 : 32;
+    await expect(captureImage(scope)).rejects.toThrow();
+    expect(captureOwner(scope).state.file).toBeNull();
+  },
+);

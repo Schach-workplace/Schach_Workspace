@@ -143,3 +143,37 @@ it("sends additive evidence as multipart file with bearer auth and no JSON conte
   expect(await options.body.get("file").text()).toBe("evidence");
   expect(send.mock.calls[0][0]).not.toContain("private-token");
 });
+
+it.each([true, false])(
+  "contextual thread404 reauthorizes metadata before choosing source absence vs policy denial (%s)",
+  async (authorized) => {
+    const c = new NativeClient();
+    c.endpoint = "https://test.example";
+    c.token = "token";
+    const policy = vi.fn();
+    c.onPolicyChange = policy;
+    const gone = {
+      ok: false,
+      status: 404,
+      json: async () => ({ error: { code: "not_found", message: "Gone" } }),
+    };
+    vi.stubGlobal(
+      "fetch",
+      vi
+        .fn()
+        .mockResolvedValueOnce(gone)
+        .mockResolvedValueOnce(
+          authorized
+            ? { ok: true, json: async () => ({ conversation: { id: "a" } }) }
+            : gone,
+        ),
+    );
+    await expect(
+      c.requestThread("/companies/c/conversations/a/messages/deleted/thread"),
+    ).rejects.toMatchObject(
+      authorized ? { contextualSource: true } : { status: 404 },
+    );
+    expect(policy).toHaveBeenCalledTimes(authorized ? 0 : 1);
+    expect(c.generation).toBe(authorized ? 0 : 1);
+  },
+);

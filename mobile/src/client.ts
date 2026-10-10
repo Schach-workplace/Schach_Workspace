@@ -1,4 +1,5 @@
 import * as SecureStore from "expo-secure-store";
+import { authorizedSource } from "../../shared/communication/history";
 export interface Session {
   user: { id: string; name: string };
   companies: { id: string; name: string }[];
@@ -106,6 +107,27 @@ export class NativeClient {
     }
   }
   async request<T>(path: string, method = "GET", body?: unknown): Promise<T> {
+    return this.send<T>(path, method, body);
+  }
+  async requestThread<T>(path: string): Promise<T> {
+    if (
+      !/^\/companies\/[^/]+\/conversations\/[^/]+\/messages\/[^/]+\/thread$/.test(
+        path,
+      )
+    )
+      throw Error("Choose a conversation message source.");
+    return authorizedSource<T>(
+      (p) => this.send<T>(p, "GET", undefined, p === path),
+      path,
+      path.split("/messages/")[0],
+    );
+  }
+  private async send<T>(
+    path: string,
+    method: string,
+    body?: unknown,
+    contextual = false,
+  ): Promise<T> {
     const current = this.generation;
     const abort = new AbortController();
     this.requests.add(abort);
@@ -124,7 +146,10 @@ export class NativeClient {
       if (current !== this.generation)
         throw new Error("Account or company changed. Refresh current access.");
       if (!response.ok) {
-        if ([401, 403, 404].includes(response.status)) {
+        if (
+          [401, 403, 404].includes(response.status) &&
+          !(contextual && response.status === 404)
+        ) {
           this.clearGeneration();
           this.onPolicyChange?.(response.status);
         }

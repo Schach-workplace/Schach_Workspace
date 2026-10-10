@@ -342,3 +342,73 @@ it("routes to a task outside the loaded list and inspects all bounded evidence p
     "/tasks/target/attachments?limit=100&cursor=next",
   );
 });
+
+it("retires confirmed create input before reopening a new task", async () => {
+  await act(async () => root.render(<WorkScreen />));
+  await click("New task");
+  await fill("Task title", "Completed attempt");
+  await click("Create task");
+  await click("New task");
+  expect(
+    (
+      container.querySelector(
+        'input[aria-label="Task title"]',
+      ) as HTMLInputElement
+    ).value,
+  ).toBe("");
+});
+
+it.each([
+  { name: "default all-day", shortcut: false, timed: false, steps: 3 },
+  { name: "tomorrow all-day", shortcut: true, timed: false, steps: 4 },
+  { name: "tomorrow timed", shortcut: true, timed: true, steps: 5 },
+])("records controlled native create interaction: $name", async (scenario) => {
+  let steps = 0;
+  const step = async (action: () => Promise<unknown>) => {
+    steps++;
+    await action();
+  };
+  await act(async () => root.render(<WorkScreen />));
+  await step(() => click("New task"));
+  await step(() => fill("Task title", "Controlled " + scenario.name));
+  if (scenario.shortcut) await step(() => click("Tomorrow"));
+  if (scenario.timed) await step(() => fill("Deadline time", "16:00"));
+  await step(() => click("Create task"));
+  const creates = state.request.mock.calls.filter(
+    (c) => c[0] === "/companies/company/tasks" && c[1] === "POST",
+  );
+  const completed =
+    creates.length === 1 &&
+    container.querySelector('input[aria-label="Task title"]') === null;
+  expect(completed).toBe(true);
+  expect(steps).toBe(scenario.steps);
+  console.info(
+    "CONTROLLED_TASK_CREATE_JSON " +
+      JSON.stringify({
+        platform: "native-component",
+        scenario: scenario.name,
+        attempted: 1,
+        completed: completed ? 1 : 0,
+        steps,
+        measurement:
+          "Happy-dom controlled interaction, field edit counts one action; not physical usability",
+      }),
+  );
+});
+
+it("does not retire a newer Work form when an older unmounted create confirms", async () => {
+  let release: (v: any) => void = () => {};
+  state.request.mockImplementation(() => new Promise((r) => (release = r)));
+  await act(async () => root.render(<WorkScreen />));
+  await click("New task");
+  await fill("Task title", "Older submitted task");
+  await click("Create task");
+  await act(async () => root.render(null));
+  await act(async () => root.render(<WorkScreen />));
+  await fill("Task title", "New authored task");
+  await act(async () => release({ id: "confirmed-old" }));
+  expect(
+    container.querySelector<HTMLInputElement>('input[aria-label="Task title"]')
+      ?.value,
+  ).toBe("New authored task");
+});

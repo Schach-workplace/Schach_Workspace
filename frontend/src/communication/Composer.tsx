@@ -174,7 +174,12 @@ export default function Composer({
           </label>
         )}
       </details>
-      {error && <p role="alert">{error} Your message is waiting for a confirmed response.</p>}
+      {error && (
+        <p role="alert">
+          {error}
+          {pending && ' Your message is waiting for a confirmed response.'}
+        </p>
+      )}
       <div className="connect-send-row">
         <span className="connect-hint">Enter to send · Shift + Enter for a new line</span>
         <button className="button button-primary" disabled={disabled || busy || !draft.trim()}>

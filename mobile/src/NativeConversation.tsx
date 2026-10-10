@@ -1,4 +1,6 @@
 import {
+  createContext,
+  useContext,
   useCallback,
   useEffect,
   useEffectEvent,
@@ -7,6 +9,8 @@ import {
   useRef,
   useState,
 } from "react";
+import type { CellRendererProps } from "@react-native/virtualized-lists";
+import { ConversationViewport } from "./conversationViewport";
 import {
   KeyboardAvoidingView,
   Platform,
@@ -40,6 +44,36 @@ import Publication from "./Publication";
 import LinkedWork from "./LinkedWork";
 import Structured from "./Structured";
 import ChatControls, { type Member } from "./ChatControls";
+const ViewportContext = createContext<{
+  model: ConversationViewport;
+  measured: () => void;
+} | null>(null);
+function MeasuredCell({
+  item,
+  children,
+  onLayout,
+  style,
+  onFocusCapture,
+}: CellRendererProps<Message>) {
+  const viewport = useContext(ViewportContext);
+  return (
+    <View
+      style={style}
+      {...{ onFocusCapture }}
+      onLayout={(e) => {
+        onLayout?.(e);
+        viewport?.model.measure(
+          item.id,
+          e.nativeEvent.layout.y,
+          e.nativeEvent.layout.height,
+        );
+        viewport?.measured();
+      }}
+    >
+      {children}
+    </View>
+  );
+}
 export default function NativeConversation() {
   const w = useWorkspace();
   const root = `/companies/${w.company}/conversations/${w.selected}`;
@@ -95,6 +129,36 @@ export default function NativeConversation() {
   const atBottom = useRef(false);
   const first = useRef(true);
   const restorePosition = useRef(true);
+  const [viewport] = useState(() => new ConversationViewport());
+  const viewportCallbacks = useRef({ measured: () => {} });
+  const viewportContext = useMemo(
+    () => ({
+      model: viewport,
+      measured: () => viewportCallbacks.current.measured(),
+    }),
+    [viewport],
+  );
+  useLayoutEffect(() => {
+    viewport.reset();
+    restorePosition.current = true;
+    first.current = true;
+  }, [root, w.foreground, viewport]);
+  function restoreAnchor() {
+    const p = readHistoryPosition(draftScope);
+    if (!restorePosition.current || !p?.anchorId || p.atBottom !== false)
+      return false;
+    const offset = viewport.restore(p);
+    if (offset === null) return false;
+    restorePosition.current = false;
+    first.current = false;
+    atBottom.current = false;
+    historyView.current?.scrollToOffset({ offset, animated: false });
+    viewport.scroll(offset);
+    return true;
+  }
+  useLayoutEffect(() => {
+    viewportCallbacks.current.measured = restoreAnchor;
+  });
   const alive = useRef(true);
   useEffect(() => {
     alive.current = true;
@@ -102,6 +166,26 @@ export default function NativeConversation() {
       alive.current = false;
     };
   }, []);
+  const owner = useRef({
+    root,
+    foreground: w.foreground,
+    generation: client.generation,
+  });
+  const sourceRequest = useRef(0);
+  const pendingSource = useRef("");
+  useLayoutEffect(() => {
+    owner.current = {
+      root,
+      foreground: w.foreground,
+      generation: client.generation,
+    };
+    sourceRequest.current++;
+  }, [root, w.foreground]);
+  const current = () =>
+    alive.current &&
+    owner.current.root === root &&
+    owner.current.foreground &&
+    owner.current.generation === client.generation;
   const mine = members.find((m) => m.userId === w.session?.user.id);
   const disabled =
     !conversation ||
@@ -109,6 +193,10 @@ export default function NativeConversation() {
     mine?.role === "viewer" ||
     !!conversation.archived;
   function resetSources(ids: string[]) {
+    if (ids.includes(pendingSource.current)) {
+      sourceRequest.current++;
+      pendingSource.current = "";
+    }
     clearDraftSources(w.company, w.session?.user.id ?? "", w.selected, ids);
     if (ids.length) setSourceEpoch((n) => n + 1);
     const affected = (m: Message | null) => m && ids.includes(m.id);
@@ -129,11 +217,13 @@ export default function NativeConversation() {
   });
   async function updateHistory() {
     if (!w.selected || !w.foreground) return;
+    const ownership = owner.current;
+    const valid = () => current() && ownership === owner.current;
     const meta = await client.request<{
       conversation: Conversation;
       members: Member[];
     }>(root);
-    if (!alive.current) return;
+    if (!valid()) return;
     const me = meta.members.find((m) => m.userId === w.session?.user.id),
       old = known.current;
     if (
@@ -171,9 +261,12 @@ export default function NativeConversation() {
     let h = engine.current;
     if (!h) {
       h = new ConversationHistory<Message>(
-        (path) => client.request(root + path),
+        (path) =>
+          path.endsWith("/thread")
+            ? client.requestThread(root + path)
+            : client.request(root + path),
         (ids) => {
-          if (!alive.current) return;
+          if (!valid()) return;
           callbacks.current.resetSources(ids);
           const latest = h!.messages.at(-1)?.sequence ?? 0;
           if (
@@ -201,7 +294,7 @@ export default function NativeConversation() {
       if (restoreOldest && restoreOldest < (h.messages[0]?.sequence ?? 0))
         await h.reconcileLoadedRange(restoreOldest);
     } else await h.sync();
-    if (!alive.current) return;
+    if (!valid()) return;
     setConversation(meta.conversation);
     setMembers(meta.members);
     setError("");
@@ -218,7 +311,7 @@ export default function NativeConversation() {
     return p;
   }
   function clear(e: Error) {
-    if (!alive.current) return;
+    if (!current()) return;
     if (
       e instanceof NativeApiError &&
       e.status === 409 &&
@@ -314,6 +407,8 @@ export default function NativeConversation() {
         });
       engine.current?.dispose();
       engine.current = null;
+      historyLane.current = null;
+      known.current = null;
     };
   }, [root, w.foreground, w.selected, draftScope]);
   async function older() {
@@ -348,14 +443,16 @@ export default function NativeConversation() {
         0,
         ...viewableItems.map((v) => v.item.sequence),
       );
-      const first = viewableItems[0]?.item;
-      if (first && !restorePosition.current)
-        writeHistoryPosition(draftScope, { anchorId: first.id });
+      const anchor = viewport.capture();
+      if (anchor && !restorePosition.current)
+        writeHistoryPosition(draftScope, anchor);
       void callbacks.current.acknowledge();
     },
-    [draftScope],
+    [draftScope, viewport],
   );
   const openTarget = useEffectEvent(() => {
+    const request = ++sourceRequest.current;
+    pendingSource.current = target ?? "";
     if (!target || !conversation) return;
     const index = messages.findIndex((m) => m.id === target);
     if (index >= 0) {
@@ -363,26 +460,36 @@ export default function NativeConversation() {
       atBottom.current = false;
     } else
       void client
-        .request<{ root: Message; messages: Message[] }>(
+        .requestThread<{ root: Message; messages: Message[] }>(
           root + "/messages/" + encodeURIComponent(target) + "/thread",
         )
         .then((v) => {
-          if (alive.current) setThread(v);
+          if (current() && request === sourceRequest.current && !v.root.removed)
+            setThread(v);
         })
-        .catch(clear);
+        .catch((e) => {
+          if (current() && request === sourceRequest.current) clear(e);
+        });
   });
   useEffect(() => {
     openTarget();
   }, [target, conversation?.id]);
   async function openThread(m: Message) {
+    const request = ++sourceRequest.current;
+    pendingSource.current = m.id;
     try {
-      const result = await client.request<{
+      const result = await client.requestThread<{
         root: Message;
         messages: Message[];
       }>(root + "/messages/" + m.id + "/thread");
-      if (alive.current && !result.root.removed) setThread(result);
+      if (
+        current() &&
+        request === sourceRequest.current &&
+        !result.root.removed
+      )
+        setThread(result);
     } catch (e) {
-      clear(e as Error);
+      if (current() && request === sourceRequest.current) clear(e as Error);
     }
   }
   const names = Object.fromEntries(
@@ -434,178 +541,188 @@ export default function NativeConversation() {
             {error}
           </Text>
         )}
-        <FlatList<Message>
-          ref={historyView}
-          data={messages}
-          keyExtractor={(m) => m.id}
-          style={ui.history}
-          contentContainerStyle={ui.historyBody}
-          maintainVisibleContentPosition={{ minIndexForVisible: 0 }}
-          keyboardShouldPersistTaps="handled"
-          viewabilityConfig={{ itemVisiblePercentThreshold: 60 }}
-          onViewableItemsChanged={onViewableItemsChanged}
-          onScroll={(e) => {
-            const s = e.nativeEvent;
-            atBottom.current =
-              s.contentSize.height -
-                s.contentOffset.y -
-                s.layoutMeasurement.height <
-              70;
-            if (!restorePosition.current)
-              writeHistoryPosition(draftScope, {
-                atBottom: atBottom.current,
-                offset: s.contentOffset.y,
-              });
-            if (atBottom.current) {
-              setNewCount(0);
-              void acknowledge();
-            }
-          }}
-          scrollEventThrottle={16}
-          onContentSizeChange={() => {
-            const p = readHistoryPosition(draftScope);
-            if (
-              restorePosition.current &&
-              p?.anchorId &&
-              p.atBottom === false
-            ) {
-              const index = messages.findIndex((m) => m.id === p.anchorId);
-              if (index < 0) return;
+        <ViewportContext.Provider value={viewportContext}>
+          <FlatList<Message>
+            CellRendererComponent={MeasuredCell}
+            ref={historyView}
+            data={messages}
+            keyExtractor={(m) => m.id}
+            style={ui.history}
+            contentContainerStyle={ui.historyBody}
+            maintainVisibleContentPosition={{ minIndexForVisible: 0 }}
+            keyboardShouldPersistTaps="handled"
+            viewabilityConfig={{ itemVisiblePercentThreshold: 60 }}
+            onViewableItemsChanged={onViewableItemsChanged}
+            onScroll={(e) => {
+              const s = e.nativeEvent;
+              atBottom.current =
+                s.contentSize.height -
+                  s.contentOffset.y -
+                  s.layoutMeasurement.height <
+                70;
+              viewport.scroll(s.contentOffset.y);
+              const anchor = viewport.capture();
+              if (!restorePosition.current && anchor)
+                writeHistoryPosition(draftScope, {
+                  atBottom: atBottom.current,
+                  ...anchor,
+                });
+              if (atBottom.current) {
+                setNewCount(0);
+                void acknowledge();
+              }
+            }}
+            scrollEventThrottle={16}
+            onContentSizeChange={() => {
+              const p = readHistoryPosition(draftScope);
+              if (
+                restorePosition.current &&
+                p?.anchorId &&
+                p.atBottom === false
+              ) {
+                const index = messages.findIndex((m) => m.id === p.anchorId);
+                if (index < 0) return;
+                if (!restoreAnchor())
+                  historyView.current?.scrollToIndex({
+                    index,
+                    viewPosition: 0,
+                    viewOffset: p.offset ?? 0,
+                    animated: false,
+                  });
+                return;
+              }
               restorePosition.current = false;
-              first.current = false;
-              atBottom.current = false;
+              if (first.current || atBottom.current) {
+                historyView.current?.scrollToEnd({ animated: false });
+                first.current = false;
+              }
+            }}
+            onScrollToIndexFailed={(info) => {
               historyView.current?.scrollToOffset({
-                offset: p.offset ?? 0,
+                offset: info.averageItemLength * info.index,
                 animated: false,
               });
-              return;
-            }
-            restorePosition.current = false;
-            if (first.current || atBottom.current) {
-              historyView.current?.scrollToEnd({ animated: false });
-              first.current = false;
-            }
-          }}
-          onScrollToIndexFailed={(info) => {
-            historyView.current?.scrollToOffset({
-              offset: info.averageItemLength * info.index,
-              animated: false,
-            });
-            setTimeout(() => {
-              if (alive.current)
-                historyView.current?.scrollToIndex({
-                  index: info.index,
-                  viewPosition: 0.5,
-                });
-            }, 200);
-          }}
-          ListHeaderComponent={
-            <View>
-              {" "}
-              {hasMore && (
-                <Action
-                  title={
-                    olderBusy
-                      ? "Loading older messages…"
-                      : "Load older messages"
-                  }
-                  disabled={olderBusy}
-                  onPress={() => void older().catch((e) => setError(e.message))}
-                />
-              )}{" "}
-              {!messages.length && conversation && (
-                <View style={ui.empty}>
-                  <Text style={ui.title}>Start the conversation</Text>
-                  <Text style={ui.subtitle}>
-                    {conversation.public
-                      ? "Messages are visible to all active company members."
-                      : "Messages and files stay with conversation participants."}
-                  </Text>
-                </View>
-              )}
-            </View>
-          }
-          renderItem={({ item: m, index }) => {
-            const name = names[m.senderId] ?? "Company member";
-            const own = m.senderId === w.session?.user.id;
-            const previous = messages[index - 1];
-            return (
-              <View key={m.id}>
-                {(!previous ||
-                  new Date(previous.createdAt).toDateString() !==
-                    new Date(m.createdAt).toDateString()) && (
-                  <Text style={ui.day}>
-                    {new Date(m.createdAt).toLocaleDateString(undefined, {
-                      day: "numeric",
-                      month: "short",
-                    })}
-                  </Text>
+              setTimeout(() => {
+                if (alive.current)
+                  historyView.current?.scrollToIndex({
+                    index: info.index,
+                    viewPosition: restorePosition.current ? 0 : 0.5,
+                    viewOffset: restorePosition.current
+                      ? (readHistoryPosition(draftScope)?.offset ?? 0)
+                      : 0,
+                  });
+              }, 200);
+            }}
+            ListHeaderComponent={
+              <View>
+                {" "}
+                {hasMore && (
+                  <Action
+                    title={
+                      olderBusy
+                        ? "Loading older messages…"
+                        : "Load older messages"
+                    }
+                    disabled={olderBusy}
+                    onPress={() =>
+                      void older().catch((e) => setError(e.message))
+                    }
+                  />
+                )}{" "}
+                {!messages.length && conversation && (
+                  <View style={ui.empty}>
+                    <Text style={ui.title}>Start the conversation</Text>
+                    <Text style={ui.subtitle}>
+                      {conversation.public
+                        ? "Messages are visible to all active company members."
+                        : "Messages and files stay with conversation participants."}
+                    </Text>
+                  </View>
                 )}
-                <View style={ui.message}>
-                  <PersonAvatar name={name} />
-                  <View style={{ flex: 1 }}>
-                    <View style={ui.row}>
-                      <Text style={ui.name}>{own ? "You" : name}</Text>
-                      <Text style={ui.metadata}>
-                        {new Date(m.createdAt).toLocaleTimeString(undefined, {
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })}
-                        {m.revision > 1 && !m.removed ? " · edited" : ""}
-                      </Text>
-                    </View>
-                    <Pressable
-                      accessibilityRole="button"
-                      accessibilityLabel={
-                        m.removed
-                          ? "Message removed"
-                          : `Message from ${name}. Hold for actions.`
-                      }
-                      disabled={m.removed}
-                      onLongPress={() => setActions(m)}
-                      style={[ui.bubble, own && ui.ownBubble]}
-                    >
-                      {m.replyToId && (
-                        <Text style={ui.subtitle}>↳ In a thread</Text>
-                      )}
-                      <Text style={ui.body}>
-                        {m.removed ? "Message removed" : m.body}
-                      </Text>
-                    </Pressable>
-                    {!m.removed && (
+              </View>
+            }
+            renderItem={({ item: m, index }) => {
+              const name = names[m.senderId] ?? "Company member";
+              const own = m.senderId === w.session?.user.id;
+              const previous = messages[index - 1];
+              return (
+                <View key={m.id}>
+                  {(!previous ||
+                    new Date(previous.createdAt).toDateString() !==
+                      new Date(m.createdAt).toDateString()) && (
+                    <Text style={ui.day}>
+                      {new Date(m.createdAt).toLocaleDateString(undefined, {
+                        day: "numeric",
+                        month: "short",
+                      })}
+                    </Text>
+                  )}
+                  <View style={ui.message}>
+                    <PersonAvatar name={name} />
+                    <View style={{ flex: 1 }}>
                       <View style={ui.row}>
-                        <Action
-                          title="Reply"
-                          disabled={disabled}
-                          onPress={() => chooseReply(m)}
-                        />
-                        <Action
-                          title="Thread"
-                          onPress={() => void openThread(m)}
-                        />
-                        <Action title="More" onPress={() => setActions(m)} />
+                        <Text style={ui.name}>{own ? "You" : name}</Text>
+                        <Text style={ui.metadata}>
+                          {new Date(m.createdAt).toLocaleTimeString(undefined, {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
+                          {m.revision > 1 && !m.removed ? " · edited" : ""}
+                        </Text>
                       </View>
-                    )}
-                    {!m.removed &&
-                      m.mediaIds?.map((id) => (
-                        <Action
-                          key={id}
-                          title="Download attachment"
-                          onPress={() =>
-                            void Media.download(
-                              w.company,
-                              w.selected,
-                              id,
-                            ).catch((e) => setError(e.message))
-                          }
-                        />
-                      ))}
+                      <Pressable
+                        accessibilityRole="button"
+                        accessibilityLabel={
+                          m.removed
+                            ? "Message removed"
+                            : `Message from ${name}. Hold for actions.`
+                        }
+                        disabled={m.removed}
+                        onLongPress={() => setActions(m)}
+                        style={[ui.bubble, own && ui.ownBubble]}
+                      >
+                        {m.replyToId && (
+                          <Text style={ui.subtitle}>↳ In a thread</Text>
+                        )}
+                        <Text style={ui.body}>
+                          {m.removed ? "Message removed" : m.body}
+                        </Text>
+                      </Pressable>
+                      {!m.removed && (
+                        <View style={ui.row}>
+                          <Action
+                            title="Reply"
+                            disabled={disabled}
+                            onPress={() => chooseReply(m)}
+                          />
+                          <Action
+                            title="Thread"
+                            onPress={() => void openThread(m)}
+                          />
+                          <Action title="More" onPress={() => setActions(m)} />
+                        </View>
+                      )}
+                      {!m.removed &&
+                        m.mediaIds?.map((id) => (
+                          <Action
+                            key={id}
+                            title="Download attachment"
+                            onPress={() =>
+                              void Media.download(
+                                w.company,
+                                w.selected,
+                                id,
+                              ).catch((e) => setError(e.message))
+                            }
+                          />
+                        ))}
+                    </View>
                   </View>
                 </View>
-              </View>
-            );
-          }}
-        />
+              );
+            }}
+          />
+        </ViewportContext.Provider>
         {!!newCount && (
           <Action
             title={newCount + " new messages"}
@@ -639,11 +756,18 @@ export default function NativeConversation() {
               canMentionAll={["owner", "moderator"].includes(mine?.role ?? "")}
               onMedia={() => setMedia(true)}
               onSend={async (input) => {
+                const ownership = owner.current;
                 const result = await client.request<{ message: Message }>(
                   root + "/messages",
                   "POST",
                   input,
                 );
+                if (
+                  !current() ||
+                  ownership !== owner.current ||
+                  result.message.conversationId !== w.selected
+                )
+                  return;
                 await engine.current?.merge([result.message]);
                 await history();
               }}

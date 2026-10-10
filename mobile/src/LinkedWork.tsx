@@ -38,7 +38,7 @@ export default function LinkedWork({
         }),
       );
       if (alive.current && current === revision.current) {
-        setRows(rows);
+        setRows(rows.filter((row) => row.sources.length > 0));
         setError("");
       }
     } catch (e) {

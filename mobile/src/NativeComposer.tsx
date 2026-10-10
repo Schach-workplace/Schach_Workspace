@@ -162,7 +162,8 @@ export default function NativeComposer({
       </View>
       {error && (
         <Text accessibilityRole="alert" style={ui.error}>
-          {error} Your message is waiting for confirmation.
+          {error}
+          {pending && " Your message is waiting for confirmation."}
         </Text>
       )}
       {pending && !busy && (

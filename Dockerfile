@@ -3,6 +3,7 @@ WORKDIR /src/frontend
 COPY frontend/package.json frontend/package-lock.json ./
 RUN npm ci --no-audit --no-fund
 COPY frontend/ ./
+COPY shared/ /src/shared/
 RUN npm run build
 
 FROM golang:1.27-alpine AS api

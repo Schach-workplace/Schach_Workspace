@@ -2,7 +2,7 @@
 import { afterEach, expect, it, vi } from 'vitest';
 import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import Composer from './Composer';
-import { clearAllDrafts } from './drafts';
+import { clearAllDrafts, writeDraft, clearDraftSources } from './drafts';
 afterEach(() => {
   cleanup();
   clearAllDrafts();
@@ -33,4 +33,14 @@ it('preserves frozen lost-ACK intent across A B A navigation and ignores double 
   await waitFor(() => expect(sends).toHaveLength(2));
   expect(sends[1]).toEqual(sends[0]);
   expect((screen.getByLabelText('Message') as HTMLTextAreaElement).value).toBe('');
+});
+
+it('does not describe an unsent changed quote as an ambiguous committed send', () => {
+  const scope = { serverOrigin: 'https://test', companyId: 'c', userId: 'u', conversationId: 'a' };
+  writeDraft(scope, { body: 'Authored unsent text', replyToId: 'old' });
+  clearDraftSources('c', 'u', 'a', ['old']);
+  render(
+    <Composer scope={scope} send={vi.fn()} disabled={false} reply={null} onClearReply={() => {}} />,
+  );
+  expect(screen.getByRole('alert').textContent).not.toMatch(/frozen retry|waiting for/i);
 });
