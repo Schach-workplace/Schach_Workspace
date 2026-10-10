@@ -1,0 +1,1 @@
+DROP TABLE report_delivery_intents, report_artifacts, report_export_jobs, report_schedules, saved_report_revisions, saved_report_definitions;
