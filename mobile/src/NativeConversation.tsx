@@ -24,7 +24,7 @@ import {
 import { Action, PersonAvatar, Sheet, ui } from "./ConnectUI";
 import { conversationName, SearchSheet } from "./ConnectList";
 import NativeComposer from "./NativeComposer";
-import { ConversationHistory } from "./conversationSync";
+import { ConversationHistory, mergeMessages } from "./conversationSync";
 import {
   clearConversationDrafts,
   clearDraftSources,
@@ -233,7 +233,38 @@ export default function NativeConversation() {
     w.work?.me.role === "viewer" ||
     mine?.role === "viewer" ||
     !!conversation.archived;
-  function resetSources(ids: string[]) {
+  function resetSources(ids: string[], created?: ReadonlySet<string>) {
+    if (created) {
+      const dependencies = [
+        reply,
+        actions,
+        controls,
+        publication,
+        recordSource,
+        thread?.root,
+        ...(thread?.messages ?? []),
+      ].filter((m): m is Message => !!m);
+      const invalid = ids.filter((id) => !created.has(id));
+      for (const dependency of dependencies) {
+        const fresh = engine.current?.messages.find(
+          (m) => m.id === dependency.id,
+        );
+        if (fresh && (fresh.removed || fresh.revision !== dependency.revision))
+          invalid.push(dependency.id);
+      }
+      ids = [...new Set(invalid)];
+      if (thread && !dependencies.some((m) => ids.includes(m.id))) {
+        const additions =
+          engine.current?.messages.filter(
+            (m) => m.replyToId === thread.root.id,
+          ) ?? [];
+        if (additions.length)
+          setThread({
+            ...thread,
+            messages: mergeMessages(thread.messages, additions),
+          });
+      }
+    }
     if (ids.length) {
       const revision = ++sourceChanges.current.revision;
       for (const id of ids) sourceChanges.current.versions.set(id, revision);
@@ -310,9 +341,9 @@ export default function NativeConversation() {
           path.endsWith("/thread")
             ? client.requestThread(root + path)
             : client.request(root + path),
-        (ids) => {
+        (ids, created) => {
           if (!valid()) return;
-          callbacks.current.resetSources(ids);
+          callbacks.current.resetSources(ids, created);
           const latest = h!.messages.at(-1)?.sequence ?? 0;
           if (
             lastSequence.current > 0 &&

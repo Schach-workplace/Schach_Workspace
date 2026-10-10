@@ -59,27 +59,54 @@ export default function Structured({
     w.recordEpoch,
     w.attentionEpoch,
     w.work?.readBasis,
+    w.foreground,
+    w.session?.user.id,
+    client.generation,
   ].join(":");
   const current = useRef(scope);
+  const request = useRef(0);
   useLayoutEffect(() => {
     current.current = scope;
+    request.current++;
+    return () => {
+      current.current = "";
+    };
   }, [scope]);
   const [confirmed, setConfirmed] = useState("");
   async function refresh() {
+    if (!w.foreground || current.current !== scope) return;
+    const attempt = ++request.current;
     const generation = client.generation;
-    const v = recordId
-      ? await client
-          .request<{ record: RecordItem; responses: Response[] }>(
-            root + "/" + recordId,
-          )
-          .then((v) => ({ records: [v.record], responses: v.responses }))
-      : await client.request<{ records: RecordItem[]; responses: Response[] }>(
-          root,
-        );
-    if (current.current === scope && generation === client.generation) {
-      setRecords(v.records);
-      setResponses(v.responses);
-      setConfirmed(scope);
+    setConfirmed("");
+    setError("");
+    try {
+      const v = recordId
+        ? await client
+            .request<{ record: RecordItem; responses: Response[] }>(
+              root + "/" + recordId,
+            )
+            .then((v) => ({ records: [v.record], responses: v.responses }))
+        : await client.request<{
+            records: RecordItem[];
+            responses: Response[];
+          }>(root);
+      if (
+        current.current === scope &&
+        attempt === request.current &&
+        generation === client.generation
+      ) {
+        setRecords(v.records);
+        setResponses(v.responses);
+        setConfirmed(scope);
+        setError("");
+      }
+    } catch (e) {
+      if (
+        current.current === scope &&
+        attempt === request.current &&
+        generation === client.generation
+      )
+        throw e;
     }
   }
   const load = useEffectEvent(
@@ -95,9 +122,6 @@ export default function Structured({
   );
   useEffect(() => {
     void Promise.resolve().then(() => load());
-    return () => {
-      current.current = "";
-    };
   }, [scope]);
   async function create() {
     if (!source) return;
@@ -263,7 +287,7 @@ export default function Structured({
           />
         </>
       )}
-      {(confirmed === scope ? records : []).map((item) => {
+      {(w.foreground && confirmed === scope ? records : []).map((item) => {
         const mine = responses.find(
           (r) =>
             r.recordId === item.id &&

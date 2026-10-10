@@ -68,7 +68,7 @@ export class ConversationHistory<M extends HistoryMessage = HistoryMessage> {
   private loadingOlder: Promise<void> | null = null;
   constructor(
     private get: <T = any>(path: string) => Promise<T>,
-    private changed: (ids: string[]) => void,
+    private changed: (ids: string[], created?: ReadonlySet<string>) => void,
   ) {}
   private run(action: () => Promise<void>) {
     const p = this.lane
@@ -79,10 +79,14 @@ export class ConversationHistory<M extends HistoryMessage = HistoryMessage> {
     this.lane = p;
     return p;
   }
-  private publish(next: M[], ids: string[] = []) {
+  private publish(
+    next: M[],
+    ids: string[] = [],
+    created?: ReadonlySet<string>,
+  ) {
     if (!this.alive) return;
     this.messages = next;
-    this.changed(ids);
+    this.changed(ids, created);
   }
   dispose() {
     this.alive = false;
@@ -147,7 +151,10 @@ export class ConversationHistory<M extends HistoryMessage = HistoryMessage> {
           ].includes(e.kind)
         ) {
           const prior = changes.get(e.messageId);
-          if (!["message_removed", "content_expired"].includes(prior ?? ""))
+          if (
+            !["message_removed", "content_expired"].includes(prior ?? "") &&
+            !(prior === "message_edited" && e.kind === "message_created")
+          )
             changes.set(e.messageId, e.kind);
         } else if (
           ![
@@ -169,7 +176,15 @@ export class ConversationHistory<M extends HistoryMessage = HistoryMessage> {
           reconcile = true;
       }
       const ids = [...changes.keys()];
-      if (ids.length) this.publish(this.messages, ids);
+      // Preserve every changed ID for existing consumers; supply creation
+      // metadata so native source guards can distinguish a delayed creation
+      // from a material edit/removal, then compare freshly fetched revisions.
+      const created = new Set(
+        [...changes]
+          .filter(([, kind]) => kind === "message_created")
+          .map(([id]) => id),
+      );
+      if (ids.length) this.publish(this.messages, ids, created);
       const removed = new Set(
         [...changes]
           .filter(
@@ -235,7 +250,7 @@ export class ConversationHistory<M extends HistoryMessage = HistoryMessage> {
       }
       if (reconcile) await this.reconcileNow();
       if (!this.alive) return;
-      this.publish(mergeMessages(this.messages, roots), ids);
+      this.publish(mergeMessages(this.messages, roots), ids, created);
       this.eventsCursor = page.cursor;
     } while (page.hasMore);
   }

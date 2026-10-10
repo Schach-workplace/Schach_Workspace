@@ -31,6 +31,8 @@ const state = vi.hoisted(() => ({
   scrolls: [] as number[],
   layouts: [] as ((e: any) => void)[],
   posts: [] as unknown[],
+  loseFirstPost: true,
+  metadataGate: null as Promise<void> | null,
   w: {} as any,
 }));
 vi.mock("./client", () => ({
@@ -41,7 +43,8 @@ vi.mock("./client", () => ({
     request: vi.fn(async (_path: string, method = "GET", body?: unknown) => {
       if (method === "POST" && _path.endsWith("/messages")) {
         state.posts.push(body);
-        if (state.posts.length === 1) throw Error("Response lost");
+        if (state.loseFirstPost && state.posts.length === 1)
+          throw Error("Response lost");
         return { message: { id: "accepted" } };
       }
       if (state.offline) throw Error("Network unavailable");
@@ -53,6 +56,7 @@ vi.mock("./client", () => ({
         state.reads.push((body as any).sequence);
         return {};
       }
+      if (state.metadataGate) await state.metadataGate;
       return {
         conversation: {
           id: "chat",
@@ -99,8 +103,8 @@ vi.mock("./ConnectUI", () => ({
     disabled?: boolean;
   }) => createElement("button", { onClick: onPress, disabled }, title),
   PersonAvatar: () => null,
-  Sheet: ({ children }: { children: ReactNode }) =>
-    createElement("div", {}, children),
+  Sheet: ({ children, title }: { children: ReactNode; title: string }) =>
+    createElement("section", { "aria-label": title }, children),
 }));
 vi.mock("react-native", () => ({
   Platform: { OS: "android" },
@@ -195,6 +199,8 @@ beforeEach(() => {
   state.thread = vi.fn();
   state.offline = false;
   state.posts = [];
+  state.loseFirstPost = true;
+  state.metadataGate = null;
   state.rows = [];
   state.reads = [];
   state.list = null;
@@ -520,13 +526,27 @@ it("allows a current pending thread through unrelated source invalidation", asyn
 
 it("hydrates a confirmed thread reply and retires send despite a later thread GET outage", async () => {
   state.rows = [dependencyRoot];
-  state.posts = [{}]; // Existing provider lost-response fixture is past its first POST.
+  state.loseFirstPost = false;
+  let releaseHistory: () => void = () => {};
   state.thread = vi
     .fn()
     .mockResolvedValueOnce({ root: dependencyRoot, messages: [] })
-    .mockResolvedValueOnce({
-      root: dependencyRoot,
-      messages: [{ ...dependencyReply, body: "Confirmed thread text" }],
+    .mockImplementationOnce(async () => {
+      state.events = [
+        { kind: "message_created", messageId: dependencyReply.id },
+      ];
+      state.metadataGate = new Promise((r) => (releaseHistory = r));
+      return {
+        root: dependencyRoot,
+        messages: [{ ...dependencyReply, body: "Confirmed thread text" }],
+      };
+    })
+    .mockImplementationOnce(async () => {
+      state.events = [];
+      return {
+        root: dependencyRoot,
+        messages: [{ ...dependencyReply, body: "Confirmed thread text" }],
+      };
     })
     .mockRejectedValueOnce(Error("Thread GET unavailable"));
   await act(async () => root.render(<NativeConversation />));
@@ -552,10 +572,17 @@ it("hydrates a confirmed thread reply and retires send despite a later thread GE
     );
   }
   await send("Confirmed thread text");
-  expect(container.textContent).toContain("Confirmed thread text");
-  expect(state.thread).toHaveBeenCalledTimes(2);
+  await act(async () => {
+    state.metadataGate = null;
+    releaseHistory();
+  });
+  expect(
+    container.querySelector('[aria-label="Thread"]')?.textContent,
+  ).toContain("Confirmed thread text");
+  expect(state.thread).toHaveBeenCalledTimes(3);
+  expect(state.posts).toHaveLength(1);
   await send("Second confirmed thread text");
-  expect(state.posts).toHaveLength(3);
+  expect(state.posts).toHaveLength(2);
   expect(
     [
       ...container.querySelectorAll<HTMLTextAreaElement>(
@@ -565,3 +592,45 @@ it("hydrates a confirmed thread reply and retires send despite a later thread GE
   ).toBe("");
   expect(container.textContent).not.toContain("Retry same message");
 });
+
+it.each(["message_edited", "message_removed", "message_created"])(
+  "retains an ordinary incoming reply but invalidates a loaded thread on %s with changed source",
+  async (kind) => {
+    state.rows = [dependencyRoot];
+    state.thread = vi
+      .fn()
+      .mockResolvedValue({ root: dependencyRoot, messages: [dependencyReply] });
+    await act(async () => root.render(<NativeConversation />));
+    await act(async () => openReplyThread());
+    expect(container.querySelector('[aria-label="Thread"]')).toBeTruthy();
+    const incoming = {
+      ...dependencyReply,
+      id: "incoming",
+      sequence: 3,
+      body: "New authorized incoming reply",
+    };
+    state.thread = vi
+      .fn()
+      .mockResolvedValue({
+        root: dependencyRoot,
+        messages: [dependencyReply, incoming],
+      });
+    state.events = [{ kind: "message_created", messageId: "incoming" }];
+    await act(async () => vi.advanceTimersByTimeAsync(15000));
+    expect(
+      container.querySelector('[aria-label="Thread"]')?.textContent,
+    ).toContain(incoming.body);
+    state.events = [{ kind, messageId: "incoming" }];
+    state.thread = vi
+      .fn()
+      .mockResolvedValue({
+        root: dependencyRoot,
+        messages: [
+          dependencyReply,
+          { ...incoming, revision: 2, body: "Changed source" },
+        ],
+      });
+    await act(async () => vi.advanceTimersByTimeAsync(15000));
+    expect(container.querySelector('[aria-label="Thread"]')).toBeNull();
+  },
+);
