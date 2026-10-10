@@ -152,6 +152,11 @@ export default function AttentionInbox({
         pathname: "/intake/[id]",
         params: { id: i.sourceId, company: w.company },
       });
+    else if (i.sourceKind === "report_export")
+      router.push({
+        pathname: "/report/[id]",
+        params: { id: i.sourceId, company: w.company, kind: "job" },
+      });
     else {
       const p = new URLSearchParams(i.link.split("?")[1]);
       const conversation = p.get("conversation");

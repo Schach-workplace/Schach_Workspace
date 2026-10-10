@@ -1,3 +1,5 @@
+import { router } from "expo-router";
+import { Action } from "../../ConnectUI";
 import { useRamInput } from "../../ramInput";
 import { NativeProjects } from "../../Execution";
 import IntakeQueue from "../../Intake";
@@ -61,6 +63,7 @@ export default function More() {
   return (
     <Page>
       <Text style={styles.heading}>Account and finance</Text>
+      <Action title="Reports" onPress={() => router.push("/reports")} />
       <NativeProjects />
       <IntakeQueue />
       <Button

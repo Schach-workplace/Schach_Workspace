@@ -10,12 +10,24 @@ export default function DeadlinePicker({
   timezone,
   onChange,
   disabled = false,
+  pickerDisabled = disabled,
+  label = "Company deadline",
+  dateLabel = "Due date",
+  timeLabel = "Deadline time",
+  calendarOnly = false,
+  timeOnly = false,
 }: {
   date: string;
   time: string;
   timezone: string;
   onChange: (v: { date: string; time: string }) => void;
   disabled?: boolean;
+  pickerDisabled?: boolean;
+  label?: string;
+  dateLabel?: string;
+  timeLabel?: string;
+  calendarOnly?: boolean;
+  timeOnly?: boolean;
 }) {
   const [mode, setMode] = useState<"date" | "time" | null>(null);
   const [error, setError] = useState("");
@@ -40,46 +52,66 @@ export default function DeadlinePicker({
   }
   return (
     <View>
-      <Text>Company deadline · {timezone}</Text>
-      <TextInput
-        accessibilityLabel="Due date"
-        placeholder="YYYY-MM-DD"
-        value={date}
-        editable={!disabled}
-        onChangeText={(date) => onChange({ date, time })}
-        style={ui.input}
-      />
-      <TextInput
-        accessibilityLabel="Deadline time"
-        placeholder="HH:mm · leave empty for all day"
-        value={time}
-        editable={!disabled}
-        maxLength={5}
-        onChangeText={(time) => onChange({ date, time })}
-        style={ui.input}
-      />
+      <Text>
+        {label} · {timezone}
+      </Text>
+      {!timeOnly && (
+        <TextInput
+          accessibilityLabel={dateLabel}
+          placeholder="YYYY-MM-DD"
+          value={date}
+          editable={!disabled}
+          onChangeText={(date) => onChange({ date, time })}
+          style={ui.input}
+        />
+      )}
+      {!calendarOnly && (
+        <TextInput
+          accessibilityLabel={timeLabel}
+          placeholder="HH:mm · leave empty for all day"
+          value={time}
+          editable={!disabled}
+          maxLength={5}
+          onChangeText={(time) => onChange({ date, time })}
+          style={ui.input}
+        />
+      )}
       <View style={[ui.row, { flexWrap: "wrap" }]}>
         {Platform.OS !== "web" && (
           <>
-            <Action
-              title="Choose calendar date"
-              disabled={disabled}
-              onPress={() => open("date")}
-            />
-            <Action
-              title="Choose deadline time"
-              disabled={disabled}
-              onPress={() => open("time")}
-            />
+            {!timeOnly && (
+              <Action
+                title={
+                  dateLabel === "Due date"
+                    ? "Choose calendar date"
+                    : "Choose " + dateLabel
+                }
+                disabled={pickerDisabled}
+                onPress={() => open("date")}
+              />
+            )}
+            {!calendarOnly && (
+              <Action
+                title={
+                  timeLabel === "Deadline time"
+                    ? "Choose deadline time"
+                    : "Choose " + timeLabel
+                }
+                disabled={pickerDisabled}
+                onPress={() => open("time")}
+              />
+            )}
           </>
         )}
-        <Action
-          title={time ? "Use all-day deadline" : "Use timed deadline"}
-          disabled={disabled}
-          onPress={() => onChange({ date, time: time ? "" : "16:00" })}
-        />
+        {!calendarOnly && !timeOnly && (
+          <Action
+            title={time ? "Use all-day deadline" : "Use timed deadline"}
+            disabled={disabled}
+            onPress={() => onChange({ date, time: time ? "" : "16:00" })}
+          />
+        )}
       </View>
-      {mode && Platform.OS !== "web" && (
+      {mode && !pickerDisabled && Platform.OS !== "web" && (
         <DateTimePicker
           value={value}
           mode={mode}

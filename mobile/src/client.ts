@@ -23,6 +23,13 @@ export class NativeClient {
   generation = 0;
   onPolicyChange: ((status: number) => void) | undefined;
   private requests = new Set<AbortController>();
+  private privateCancellations = new Set<() => void>();
+  registerCancellation(cancel: () => void) {
+    this.privateCancellations.add(cancel);
+    return () => {
+      this.privateCancellations.delete(cancel);
+    };
+  }
   private vault: Promise<void> = Promise.resolve();
   private address(endpoint: string) {
     const u = new URL(endpoint);
@@ -90,6 +97,7 @@ export class NativeClient {
   }
   clearGeneration() {
     this.generation++;
+    for (const cancel of this.privateCancellations) cancel();
     for (const request of this.requests) request.abort();
     this.requests.clear();
   }

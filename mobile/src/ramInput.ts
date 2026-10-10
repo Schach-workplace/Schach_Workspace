@@ -46,5 +46,6 @@ export function useRamInput<T>(
   };
   const matches = (submitted: T = value) =>
     JSON.stringify(current()) === JSON.stringify(submitted);
-  return [value, set, retire, matches] as const;
+  const prefill = (value: T) => setBase({ owner, value });
+  return [value, set, retire, matches, prefill] as const;
 }

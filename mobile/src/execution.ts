@@ -10,6 +10,7 @@ import {
   markAttemptCommitted,
   retireAttempt,
   clearAttemptScope,
+  clearAttemptsForSource,
 } from "./businessAttempts";
 import {
   readDraft,
@@ -17,9 +18,14 @@ import {
   clearConversationDrafts,
 } from "./conversationDrafts";
 export * from "../../shared/business/types";
-export function useExecutionRead<T>(path: string, enabled = true) {
+export function useExecutionRead<T>(
+  path: string,
+  enabled = true,
+  body?: unknown,
+) {
   const w = useWorkspace();
   const [epoch, setEpoch] = useState(0);
+  const bodyKey = JSON.stringify(body);
   const scope = [
     client.endpoint,
     client.generation,
@@ -32,6 +38,7 @@ export function useExecutionRead<T>(path: string, enabled = true) {
     w.executionEpoch,
     w.foreground,
     path,
+    bodyKey,
     epoch,
     enabled,
   ].join(":");
@@ -47,7 +54,14 @@ export function useExecutionRead<T>(path: string, enabled = true) {
     if (!enabled || !w.foreground || !w.work) return;
     (async () => {
       try {
-        let data = await client.request<T>(`/companies/${w.company}${path}`);
+        let data =
+          bodyKey === undefined
+            ? await client.request<T>(`/companies/${w.company}${path}`)
+            : await client.request<T>(
+                `/companies/${w.company}${path}`,
+                "POST",
+                JSON.parse(bodyKey),
+              );
         if (data && typeof data === "object" && "nextCursor" in data) {
           let cursor = (data as { nextCursor?: string }).nextCursor;
           const seen = new Set<string>();
@@ -70,7 +84,10 @@ export function useExecutionRead<T>(path: string, enabled = true) {
           alive &&
           generation === client.generation &&
           e instanceof NativeApiError &&
-          [401, 403, 404].includes(e.status)
+          ([401, 403, 404].includes(e.status) ||
+            (path.startsWith("/reports/") &&
+              e.status === 409 &&
+              e.code === "access_changed"))
         ) {
           const project = path.match(/^\/projects\/([^/?]+)$/);
           const milestone = path.match(/^\/project-milestones\/([^/?]+)$/);
@@ -101,7 +118,11 @@ export function useExecutionRead<T>(path: string, enabled = true) {
                 ? e.message
                 : "Unable to load current access. Retry when connected.",
             denied:
-              e instanceof NativeApiError && [401, 403, 404].includes(e.status),
+              e instanceof NativeApiError &&
+              ([401, 403, 404].includes(e.status) ||
+                (path.startsWith("/reports/") &&
+                  e.status === 409 &&
+                  e.code === "access_changed")),
           });
       }
     })();
@@ -110,6 +131,7 @@ export function useExecutionRead<T>(path: string, enabled = true) {
     };
   }, [
     scope,
+    bodyKey,
     w.company,
     w.foreground,
     w.work,
@@ -117,6 +139,16 @@ export function useExecutionRead<T>(path: string, enabled = true) {
     enabled,
     path,
   ]);
+  const denied = loaded?.scope === scope && loaded.denied;
+  useEffect(() => {
+    if (denied)
+      clearAttemptsForSource(
+        client.endpoint,
+        w.company,
+        w.session?.user.id ?? "",
+        path.startsWith("/reports/") ? path.split("/rows")[0] : path,
+      );
+  }, [denied, path, w.company, w.session?.user.id]);
   const current =
     enabled && w.foreground && !!w.work && loaded?.scope === scope;
   return {
@@ -128,7 +160,7 @@ export function useExecutionRead<T>(path: string, enabled = true) {
     retry: () => setEpoch((e) => e + 1),
   };
 }
-export function useExecutionMutation(formId: string) {
+export function useExecutionMutation(formId: string, sources: string[] = []) {
   const w = useWorkspace();
   const business = useBusinessAttempt<Record<string, unknown>>(formId);
   const [busy, setBusy] = useState(false);
@@ -167,7 +199,7 @@ export function useExecutionMutation(formId: string) {
             business.scope,
             business.attempt?.payload ?? payload,
             businessKey(),
-            { path, method },
+            { path, method, ...(sources.length ? { sources } : {}) },
           )
         : undefined;
       const result = await client.request<T>(
