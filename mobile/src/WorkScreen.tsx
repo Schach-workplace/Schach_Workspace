@@ -1,3 +1,11 @@
+import {
+  useBusinessAttempt,
+  beginAttempt,
+  businessKey,
+  markAttemptCommitted,
+  retireAttempt,
+  clearAttemptScope,
+} from "./businessAttempts";
 import { router } from "expo-router";
 import DeadlinePicker from "./DeadlinePicker";
 import PersonPicker from "./PersonPicker";
@@ -30,6 +38,7 @@ export default function WorkScreen() {
   );
 }
 function WorkView({ w }: { w: ReturnType<typeof useWorkspace> }) {
+  const business = useBusinessAttempt<Record<string, unknown>>("task-create");
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState("all");
   const [creating, setCreating, retireCreating, matchesCreating] = useRamInput(
@@ -123,7 +132,7 @@ function WorkView({ w }: { w: ReturnType<typeof useWorkspace> }) {
     if (!title.trim() || !deadline.value || !w.work) return;
     const generation = client.generation;
     void run(async () => {
-      await client.request(`/companies/${w.company}/tasks`, "POST", {
+      const input = {
         title: title.trim(),
         description: "",
         ownerId: w.session!.user.id,
@@ -140,8 +149,24 @@ function WorkView({ w }: { w: ReturnType<typeof useWorkspace> }) {
         checklist: [],
         dependencies: [],
         collaborators: [],
-      });
+      };
+      const attempt =
+        business.attempt ?? beginAttempt(business.scope, input, businessKey());
+      if (attempt.state === "committed") {
+        retireAttempt(business.scope, attempt.retryKey);
+        await w.refresh("tasks");
+        return;
+      }
+      const result = await client.request<{ id: string }>(
+        `/companies/${w.company}/tasks`,
+        "POST",
+        { ...attempt.payload, retryKey: attempt.retryKey },
+      );
       if (client.generation !== generation) return;
+      markAttemptCommitted(business.scope, attempt.retryKey, {
+        ids: [result.id],
+      });
+      retireAttempt(business.scope, attempt.retryKey);
       if (
         matchesTitle() &&
         matchesDate() &&
@@ -246,10 +271,24 @@ function WorkView({ w }: { w: ReturnType<typeof useWorkspace> }) {
             One owner, a clear deadline and an independent reviewer when
             required.
           </Text>
+          {!!business.attempt && (
+            <Text accessibilityRole="alert">
+              The previous request may already have created work. Retry its
+              frozen details, or deliberately abandon it before authoring
+              another task.
+            </Text>
+          )}
+          {!!business.attempt && (
+            <Action
+              title="Abandon retry; prior work may exist"
+              onPress={() => clearAttemptScope(business.scope)}
+            />
+          )}
           <Text>Task title</Text>
           <TextInput
             accessibilityLabel="Task title"
             placeholder="What needs to be delivered?"
+            editable={!business.attempt}
             maxLength={240}
             value={title}
             onChangeText={setTitle}

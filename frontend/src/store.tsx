@@ -1,3 +1,4 @@
+import { clearAllBusinessAttempts } from '../../shared/business/attempts';
 import { clearAllDrafts as clearConnectDrafts } from './communication/drafts';
 import {
   createContext,
@@ -108,7 +109,10 @@ function Store({ children }: { children: ReactNode }) {
   const connectOwner = useRef('');
   const nextConnectOwner = (session?.user.id ?? '') + ':' + companyId;
   useLayoutEffect(() => {
-    if (connectOwner.current && connectOwner.current !== nextConnectOwner) clearConnectDrafts();
+    if (connectOwner.current && connectOwner.current !== nextConnectOwner) {
+      clearConnectDrafts();
+      clearAllBusinessAttempts();
+    }
     connectOwner.current = nextConnectOwner;
   }, [nextConnectOwner]);
   const key = ['workspace', MODE, session?.user.id ?? '', companyId];
@@ -143,8 +147,10 @@ function Store({ children }: { children: ReactNode }) {
   useLayoutEffect(() => {
     if (!authorized || !roleBasis) return;
     const previous = connectAuthorization.current;
-    if (previous && previous.owner === nextConnectOwner && previous.basis !== roleBasis)
+    if (previous && previous.owner === nextConnectOwner && previous.basis !== roleBasis) {
       clearConnectDrafts();
+      clearAllBusinessAttempts();
+    }
     connectAuthorization.current = { owner: nextConnectOwner, basis: roleBasis };
   }, [authorized, roleBasis, nextConnectOwner]);
   const tasks = useQuery({
@@ -322,7 +328,10 @@ function Store({ children }: { children: ReactNode }) {
     [client, applySession, notify],
   );
   const logout = useCallback(async () => {
-    clearConnectDrafts();
+    {
+      clearConnectDrafts();
+      clearAllBusinessAttempts();
+    }
     try {
       if (MODE === 'demo') await demoLogout();
       else await request('/auth/logout', { method: 'POST' });
@@ -351,6 +360,7 @@ function Store({ children }: { children: ReactNode }) {
       path: string,
       body: unknown = {},
       method: 'POST' | 'PATCH' = 'POST',
+      onCommitted?: (result: MutationResult) => void,
     ): Promise<MutationResult> => {
       if (!session) throw new Error('Please sign in.');
       const targetCompany = companyId;
@@ -364,7 +374,12 @@ function Store({ children }: { children: ReactNode }) {
           MODE === 'demo'
             ? await demoMutate(targetCompany, targetUser, path, body, method)
             : await request<MutationResult>(endpoint, { method, body });
-        await invalidate(path, targetUser, targetCompany);
+        onCommitted?.(result);
+        try {
+          await invalidate(path, targetUser, targetCompany);
+        } catch {
+          setError('Your change was saved. Refresh to load the current result.');
+        }
         if (path === '/companies') {
           const next = await refreshSession();
           if (result.id && next?.companies.some((c) => c.id === result.id)) {

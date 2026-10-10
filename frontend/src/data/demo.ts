@@ -52,6 +52,7 @@ interface DemoAttentionRow {
   snoozedUntil: string | null;
 }
 interface DemoDatabase {
+  businessRetries?: Record<string, { hash: string; result: MutationResult }>;
   attention?: DemoAttentionRow[];
   attentionRetries?: Record<
     string,
@@ -627,6 +628,27 @@ export async function demoMutate(
   }
   const { w, me } = context(db, companyId, userId);
   const parts = path.replace(/^\//, '').split('/').filter(Boolean);
+  const keyed = (path === '/tasks' || path === '/tasks/import') && Object.hasOwn(b, 'retryKey');
+  const retryIdentity = JSON.stringify([companyId, userId, path, b.retryKey]);
+  const retryHash = JSON.stringify(
+    Object.fromEntries(Object.entries(b).filter(([k]) => k !== 'retryKey')),
+  );
+  if (keyed) {
+    if (typeof b.retryKey !== 'string' || !b.retryKey.trim() || b.retryKey.length > 100)
+      fail('A retry key is required.');
+    if (me.role === 'viewer') fail('Read-only membership.');
+    for (const row of path === '/tasks/import' ? b.rows : [b]) {
+      if (!w.people.some((p) => p.id === row.ownerId && p.active)) fail('Owner unavailable.');
+      if (row.projectId && !scopedDemoWorkspace(w, me).projects.some((p) => p.id === row.projectId))
+        fail('Project unavailable.');
+    }
+    const old = db.businessRetries?.[retryIdentity];
+    if (old) {
+      if (old.hash !== retryHash) fail('This retry intent changed.');
+      for (const id of old.result.ids ?? (old.result.id ? [old.result.id] : [])) taskBy(w, me, id);
+      return clone(old.result);
+    }
+  }
   let result: MutationResult = { ok: true };
   if (['expense-categories', 'budgets', 'expenses'].includes(parts[0])) {
     const visible = scopedDemoWorkspace(w, me);
@@ -671,9 +693,10 @@ export async function demoMutate(
   } else if (parts[0] === 'tasks' && parts[1] === 'import') {
     if (!Array.isArray(b.rows) || !b.rows.length || b.rows.length > 200)
       fail('Import between 1 and 200 tasks.');
+    result.ids = [];
     b.rows.forEach((row: Record<string, unknown>, i: number) => {
       try {
-        createTask(w, me, row);
+        result.ids!.push(createTask(w, me, row).id);
       } catch (e) {
         fail(`Row ${i + 2}: ${(e as Error).message}`);
       }
@@ -1106,6 +1129,10 @@ export async function demoMutate(
       `${created} recurring tasks and ${reminders} reminders created`,
     );
   } else fail('This action is unavailable.');
+  if (keyed) {
+    db.businessRetries ??= {};
+    db.businessRetries[retryIdentity] = { hash: retryHash, result: clone(result) };
+  }
   saveDB(db);
   return result;
 }

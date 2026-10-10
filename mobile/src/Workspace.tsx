@@ -1,3 +1,4 @@
+import { clearAllBusinessAttempts } from "../../shared/business/attempts";
 import { router } from "expo-router";
 import { AuthorizedNotificationTarget } from "./notificationTarget";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -155,6 +156,7 @@ function useController() {
   }, [company, session?.user.id, foreground, authorized]);
   function clearPrivate() {
     clearAllDrafts();
+    clearAllBusinessAttempts();
     clearCaptures();
     confirmedBasis.current = null;
     sessionAuthorized.current = false;
@@ -228,7 +230,9 @@ function useController() {
     }
     return { conversations: rows, hasMore: more };
   }
-  async function refresh(scope: "all" | "tasks" | "finance" | "attention" = "all") {
+  async function refresh(
+    scope: "all" | "tasks" | "finance" | "attention" = "all",
+  ) {
     if (
       !company ||
       !sessionAuthorized.current ||
@@ -264,6 +268,7 @@ function useController() {
     ]);
     if (confirmedBasis.current && confirmedBasis.current !== nextBasis) {
       clearAllDrafts();
+      clearAllBusinessAttempts();
       clearCaptures();
       setPolicyEpoch((p) => p + 1);
     }
@@ -467,6 +472,7 @@ function useController() {
     recovery: string,
   ) {
     clearAllDrafts();
+    clearAllBusinessAttempts();
     clearCaptures();
     const value = await client.login(endpoint, email, password, code, recovery);
     sessionAuthorized.current = true;

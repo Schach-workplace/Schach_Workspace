@@ -1,3 +1,4 @@
+import { clearAllBusinessAttempts } from "../../shared/business/attempts";
 // @vitest-environment happy-dom
 import { act, createElement, type ReactNode } from "react";
 import { createRoot, type Root } from "react-dom/client";
@@ -5,6 +6,7 @@ import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import WorkScreen from "./WorkScreen";
 import TaskDetailScreen from "./TaskDetailScreen";
 import { clearAllDrafts } from "./conversationDrafts";
+vi.mock("expo-crypto", () => ({ randomUUID: () => crypto.randomUUID() }));
 vi.mock("expo-router", () => ({ router: { push: vi.fn(), back: vi.fn() } }));
 vi.mock("@react-native-community/datetimepicker", () => ({
   default: () => null,
@@ -148,6 +150,7 @@ afterEach(() => {
   act(() => root.unmount());
   vi.useRealTimers();
   clearAllDrafts();
+  clearAllBusinessAttempts();
 });
 it("keeps creation out of the list and supports search/status filters", async () => {
   await act(async () => root.render(createElement(WorkScreen)));
@@ -269,6 +272,7 @@ it("clears retained draft after a confirmed authorization epoch change", async (
   await click("New task");
   await fill("Task title", "Clear on confirmed access change");
   clearAllDrafts();
+  clearAllBusinessAttempts();
   state.w = { ...state.w, policyEpoch: state.w.policyEpoch + 1 };
   await act(async () => root.render(createElement(WorkScreen)));
   expect(container.querySelector('input[aria-label="Task title"]')).toBeNull();
@@ -411,4 +415,20 @@ it("does not retire a newer Work form when an older unmounted create confirms", 
     container.querySelector<HTMLInputElement>('input[aria-label="Task title"]')
       ?.value,
   ).toBe("New authored task");
+});
+
+it("retries a lost create response with the same frozen key after dismissal and remount", async () => {
+  state.request.mockRejectedValueOnce(new Error("Lost response"));
+  await act(async () => root.render(<WorkScreen />));
+  await click("New task");
+  await fill("Task title", "Canonical mobile task");
+  await click("Create task");
+  const submitted = state.request.mock.calls[0][2];
+  expect(submitted.retryKey).toEqual(expect.any(String));
+  await click("Close");
+  await act(async () => root.render(null));
+  await act(async () => root.render(<WorkScreen />));
+  await click("New task");
+  await click("Create task");
+  expect(state.request.mock.calls[1][2]).toEqual(submitted);
 });

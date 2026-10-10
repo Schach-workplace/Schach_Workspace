@@ -1,3 +1,10 @@
+import {
+  useBusinessAttempt,
+  beginAttempt,
+  businessKey,
+  markAttemptCommitted,
+  retireAttempt,
+} from '../data/businessAttempts';
 import { useRef, useState, type Dispatch, type SetStateAction } from 'react';
 import {
   ArrowDownToLine,
@@ -179,6 +186,7 @@ export default function TasksPage({
   mine?: boolean;
 }) {
   const store = useWorkspace();
+  const business = useBusinessAttempt<{ rows: CreateTaskInput[] }>('task-import');
   const data = store.data!;
   const [layout, setLayout] = useState('list');
   const [sort, setSort] = useState('deadline');
@@ -579,16 +587,34 @@ export default function TasksPage({
               {rows.length > 5 && <span>And {rows.length - 5} more</span>}
             </div>
           )}
+          {business.attempt && (
+            <p role="alert">
+              The previous import may already exist. Retry its original frozen rows; choosing
+              another CSV will not replace this attempt.
+            </p>
+          )}
           <div className="form-actions">
             <button className="button button-secondary" onClick={() => setImportOpen(false)}>
               Cancel
             </button>
             <button
               className="button button-primary"
-              disabled={!rows.length || store.saving}
+              disabled={(!rows.length && !business.attempt) || store.saving}
               onClick={async () => {
                 try {
-                  await store.mutate('/tasks/import', { rows });
+                  const attempt =
+                    business.attempt ?? beginAttempt(business.scope, { rows }, businessKey());
+                  if (attempt.state !== 'committed')
+                    await store.mutate(
+                      '/tasks/import',
+                      { ...attempt.payload, retryKey: attempt.retryKey },
+                      'POST',
+                      (result) =>
+                        markAttemptCommitted(business.scope, attempt.retryKey, {
+                          ids: result.ids ?? [],
+                        }),
+                    );
+                  retireAttempt(business.scope, attempt.retryKey);
                   setImportOpen(false);
                 } catch (e) {
                   setImportError(e instanceof Error ? e.message : 'Import failed.');

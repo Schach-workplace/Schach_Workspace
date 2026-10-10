@@ -1,3 +1,10 @@
+import {
+  useBusinessAttempt,
+  beginAttempt,
+  businessKey,
+  markAttemptCommitted,
+  retireAttempt,
+} from '../data/businessAttempts';
 import { deadlineCandidates, localDeadline, deadlineChanged } from '../data/deadlines';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
@@ -110,6 +117,7 @@ function TaskDrawerBody({
     ),
   };
   const task = resolvedTask;
+  const business = useBusinessAttempt<CreateTaskInput>('task-create');
   const makeDraft = (t?: Task): Draft =>
     t
       ? {
@@ -166,6 +174,7 @@ function TaskDrawerBody({
         };
   const [draft, setDraft] = useState<Draft>(() => ({
     ...makeDraft(task),
+    ...(!task ? business.attempt?.payload : {}),
     ...((memory.patch as Partial<Draft>) ?? {}),
   }));
   const [wallTime, setWallTime] = useUserDraftState(
@@ -239,6 +248,7 @@ function TaskDrawerBody({
     }
   }, [task, dirty]); // Retain unsaved edits when a newer version arrives.
   const set = <K extends keyof Draft>(key: K, value: Draft[K]) => {
+    if (!task && business.attempt) return;
     memory.patch = { ...((memory.patch as Partial<Draft>) ?? {}), [key]: value };
     setDraft((d) => ({ ...d, [key]: value }));
     setDirty(true);
@@ -251,8 +261,11 @@ function TaskDrawerBody({
       setError(e instanceof Error ? e.message : 'The change could not be saved. Please try again.');
     }
   }
+  const submitting = useRef(false);
   async function save(event: FormEvent) {
     event.preventDefault();
+    if (submitting.current) return;
+    submitting.current = true;
     await perform(async () => {
       let dueAt = '';
       if (draft.deadlineMode === 'timed') {
@@ -294,10 +307,26 @@ function TaskDrawerBody({
           deadlineChangeReason: _deadlineReason,
           ...input
         } = cleaned;
-        await store.mutate('/tasks', input);
+        const attempt = business.attempt ?? beginAttempt(business.scope, input, businessKey());
+        if (attempt.state === 'committed') {
+          retireAttempt(business.scope, attempt.retryKey);
+          onClose();
+          return;
+        }
+        await store.mutate(
+          '/tasks',
+          { ...attempt.payload, retryKey: attempt.retryKey },
+          'POST',
+          (result) =>
+            markAttemptCommitted(business.scope, attempt.retryKey, {
+              ids: result.id ? [result.id] : [],
+            }),
+        );
+        retireAttempt(business.scope, attempt.retryKey);
       }
       onClose();
     });
+    submitting.current = false;
   }
   async function postComment(event: FormEvent) {
     event.preventDefault();
@@ -425,6 +454,12 @@ function TaskDrawerBody({
             )}
             {tab === 'details' && (
               <form onSubmit={save} id="task-edit-form">
+                {!task && business.attempt && (
+                  <p role="alert">
+                    The previous request may already have created work. Retry the same frozen
+                    details before starting another task.
+                  </p>
+                )}
                 <fieldset
                   disabled={!writable || store.saving || task?.status === 'done'}
                   className="plain-fieldset"

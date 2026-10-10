@@ -305,6 +305,7 @@ export interface TaskFilters {
   due: string;
 }
 export interface MutationResult {
+  ids?: string[];
   ok: boolean;
   id?: string;
   created?: number;
@@ -323,7 +324,12 @@ export interface WorkspaceStore {
   logout: () => Promise<void>;
   switchCompany: (id: string) => Promise<void>;
   refresh: () => Promise<void>;
-  mutate: (path: string, body?: unknown, method?: 'POST' | 'PATCH') => Promise<MutationResult>;
+  mutate: (
+    path: string,
+    body?: unknown,
+    method?: 'POST' | 'PATCH',
+    onCommitted?: (result: MutationResult) => void,
+  ) => Promise<MutationResult>;
   upload: (taskId: string, file: File) => Promise<void>;
   downloadAttachment: (attachment: Attachment) => Promise<void>;
   uploadExpenseReceipt: (expenseId: string, file: File) => Promise<void>;
