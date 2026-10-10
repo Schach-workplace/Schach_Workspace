@@ -1,0 +1,1 @@
+DROP TABLE report_snapshot_sources, historical_report_rows, historical_report_snapshots;
