@@ -1,7 +1,7 @@
 {
   "updatedUtc": "2026-10-11T17:55:53+00:00",
   "committedPredecessor": "5004b5bcbe777d8779287c4c618c344393105529",
-  "qualification": "Path inventory only, live dirty round3 work; not a source hash/pass manifest. Exact source and evidence hashes live in named accepted handoff manifests. Private runtime contents/binaries not included.",
+  "qualification": "Path inventory only; round3 source handoff prepared and client checks complete. Exact final source and evidence hashes live in task-10-fix3 manifests. Scoped review and actual native acceptance pending. Private runtime contents/binaries excluded.",
   "sourceFilesByTopLevel": {
     "root": [
       ".dockerignore",
@@ -2195,5 +2195,7 @@
     "task-10-fix3-case-mapping.json",
     "task-10-fix3-manifest.json",
     "task-10-fix3-review.md"
-  ]
+  ],
+  "round3ProductCommit": "ca13ef32702bd583f9d90603eb84bbf205c4738b",
+  "round3HandoffSourceManifest": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-source-manifest.json"
 }

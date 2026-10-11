@@ -28,8 +28,8 @@ Read [AI_HANDOFF.md](AI_HANDOFF.md) and [AI_FILE_INDEX.json](AI_FILE_INDEX.json)
 - [x] Finish narrow fresh-review pending-action audience/Preview/Confirm gates; unknown original retry only independent proof (source owner reported owning GREEN).
 - [x] Meaningful30real-Workspace producer cases/opposite authority/source/result/candidate/edit/foreground/unmount/hard-retirement/lateerror and frozenretry reported GREEN; final hash verification pending.
 - [x] Final native287/web306/types/lint/normal+demo/bothHermes PASS; exact invocation hashes bind this handoff commit. Earlier round3 before-actions checks remain intermediate.
-- [ ] BackendEncore98b7/all58SQL equivalence; no unchanged heavy provider/Go/race reruns.
-- [ ] Include these coordination docs/index at natural clean commit; separatefix3source/SQL/build/checks/case/evidencemanifests/report/originalappendix; ownershipyield.
+- [x] BackendEncore98b7/all58SQL equivalence verified; no unchanged heavy provider/Go/race reruns.
+- [x] Coordination docs/index included with product commitca13ef3; separatefix3source/SQL/build/checks/case/evidencemanifests/report/originalappendix prepared and verified for clean ownership yield. Controller independent verification remains next.
 - [ ] Root fullread/hashverify/freezefix3; full5004→HEADpackage, noHEAD~1 truncation.
 - [ ] SAME originalreviewer scoped N1/newfixbreakage (M1onlyifaffected), written Spec+quality verdict; apply same-round rules/cap.
 
