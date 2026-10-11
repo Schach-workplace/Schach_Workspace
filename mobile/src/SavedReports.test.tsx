@@ -15,6 +15,7 @@ const env = vi.hoisted(() => ({
   submitted: [] as any[],
   picker: {} as any,
   confirm: () => {},
+  size: (_width: number, _height: number) => {},
 }));
 vi.mock("@react-native-community/datetimepicker", () => ({
   default: (props: any) => {
@@ -77,14 +78,18 @@ vi.mock("react-native", () => ({
     renderItem,
     ListHeaderComponent,
     ListFooterComponent,
-  }: any) =>
-    createElement(
+    onContentSizeChange,
+    contentContainerStyle,
+  }: any) => {
+    env.size = onContentSizeChange ?? (() => {});
+    return createElement(
       "div",
-      {},
+      { style: contentContainerStyle, "data-saved-list": true },
       ListHeaderComponent,
       ...data.map((item: any) => renderItem({ item })),
       ListFooterComponent,
-    ),
+    );
+  },
   TextInput: ({ value, onChangeText, accessibilityLabel, editable }: any) =>
     createElement("input", {
       "aria-label": accessibilityLabel,
@@ -516,6 +521,229 @@ it.each(["creation", "definition", "schedule"])(
         scheduleZone: "Asia/Kolkata",
         weekdays: [2],
       });
+    } finally {
+      await act(() => root.unmount());
+      c.remove();
+    }
+  },
+);
+
+it.each(["denied", "background", "company", "principal", "orphan"])(
+  "real provider retains tall Saved viewport through independently pending recipients and releases it on %s",
+  async (barrier) => {
+    Object.assign(globalThis, { IS_REACT_ACT_ENVIRONMENT: true });
+    let held = false;
+    let denied = false;
+    let principal = "user";
+    let finish: (value: Response) => void = () => {};
+    client.endpoint = "https://owned.test";
+    client.token = "token";
+    vi.spyOn(client, "restore").mockResolvedValue();
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async (url: string) => {
+        const path = new URL(url).pathname;
+        if (path.endsWith("/auth/session"))
+          return new Response(
+            JSON.stringify({
+              user: { id: principal, name: "User" },
+              companies: [
+                { id: "co", name: "Company" },
+                { id: "co2", name: "Other company" },
+              ],
+            }),
+          );
+        if (path.endsWith("/bootstrap"))
+          return new Response(
+            JSON.stringify({
+              readBasis: "fixed",
+              me: { id: principal, role: "founder" },
+              people: [],
+              departments: [],
+              company: {
+                id: path.includes("/co2/") ? "co2" : "co",
+                timezone: "Asia/Kolkata",
+              },
+              tasks: [],
+              expenses: [],
+            }),
+          );
+        if (path.endsWith("/recipients")) {
+          if (denied)
+            return new Response(
+              JSON.stringify({
+                error: {
+                  code: "not_found",
+                  message: "Recipient access removed",
+                },
+              }),
+              { status: 404 },
+            );
+          if (held && barrier !== "orphan")
+            return new Promise<Response>((resolve) => {
+              finish = resolve;
+            });
+          return new Response(
+            JSON.stringify({
+              recipients: Array.from({ length: 80 }, (_, i) => ({
+                id: i ? "recipient-" + i : principal,
+                name: "Tall recipient " + i,
+              })),
+            }),
+          );
+        }
+        if (path.endsWith("/orphans") && held && barrier === "orphan")
+          return new Promise<Response>((resolve) => {
+            finish = resolve;
+          });
+        return new Response(
+          JSON.stringify({
+            id: "device",
+            tasks: [],
+            expenses: [],
+            conversations: [],
+            events: [],
+            definitions: Array.from({ length: 12 }, (_, i) => ({
+              id: "definition-" + i,
+              configuration: { name: "Fresh definition " + i },
+              state: "active",
+            })),
+            orphans: [{ id: "orphan", version: 1, state: "active" }],
+            projects: [],
+            hasMore: false,
+            cursor: "",
+          }),
+        );
+      }),
+    );
+    const c = document.createElement("div");
+    document.body.append(c);
+    const root = createRoot(c);
+    const extent = () =>
+      (c.querySelector("[data-saved-list]") as HTMLElement | null)?.style
+        .minHeight ?? "";
+    try {
+      await act(async () => {
+        root.render(
+          <WorkspaceProvider>
+            <Probe />
+          </WorkspaceProvider>,
+        );
+        await new Promise((r) => setTimeout(r, 30));
+      });
+      expect(c.textContent).toContain("Tall recipient 79");
+      const input = c.querySelector<HTMLInputElement>(
+        'input[aria-label="Report name"]',
+      )!;
+      await act(async () => {
+        Object.getOwnPropertyDescriptor(
+          HTMLInputElement.prototype,
+          "value",
+        )!.set!.call(input, "Retained tall report");
+        input.dispatchEvent(new Event("input", { bubbles: true }));
+        env.size(400, 12000);
+      });
+      held = true;
+      await act(async () => {
+        await w.refresh();
+        await new Promise((r) => setTimeout(r, 5));
+      });
+      // Other reads finish independently; that must not let their shorter
+      // content measurement overwrite the last fully authorized extent.
+      expect(c.textContent).toContain("Fresh definition 11");
+      if (barrier === "orphan") {
+        expect(c.textContent).not.toContain("Definition orphan");
+        expect(c.textContent).toContain("Tall recipient 79");
+      } else expect(c.textContent).not.toContain("Tall recipient");
+      expect(c.querySelector('input[aria-label="Report name"]')).toBe(input);
+      expect(input.value).toBe("Retained tall report");
+      expect(
+        Array.from(c.querySelectorAll("button")).find(
+          (b) => b.textContent === "Review definition",
+        )!.disabled,
+      ).toBe(barrier !== "orphan");
+      await act(() => env.size(400, 900));
+      expect(extent()).toBe("12000px");
+      if (barrier === "orphan") {
+        await act(async () => {
+          finish(new Response(JSON.stringify({ orphans: [] })));
+          await new Promise((r) => setTimeout(r, 5));
+        });
+        expect(extent()).toBe("");
+        expect(input.value).toBe("Retained tall report");
+        // Freshly authorized content can establish a new extent. Invalid native
+        // measurements must never replace the finite value.
+        await act(() => {
+          env.size(400, 700);
+          env.size(400, Number.NaN);
+        });
+        await act(async () => {
+          await w.refresh();
+          await new Promise((r) => setTimeout(r, 5));
+        });
+        expect(extent()).toBe("700px");
+        return;
+      }
+      if (barrier === "denied") {
+        denied = true;
+        await act(async () => {
+          finish(
+            new Response(
+              JSON.stringify({
+                error: {
+                  code: "not_found",
+                  message: "Recipient access removed",
+                },
+              }),
+              { status: 404 },
+            ),
+          );
+          await new Promise((r) => setTimeout(r, 5));
+        });
+        expect(c.querySelector('input[aria-label="Report name"]')).toBeNull();
+      } else if (barrier === "company") {
+        held = false;
+        await act(async () => {
+          w.switchCompany("co2");
+          await new Promise((r) => setTimeout(r, 20));
+        });
+        expect(w.company).toBe("co2");
+      } else {
+        await act(() => env.state("background"));
+        expect(c.querySelector("[data-saved-list]")).toBeNull();
+        held = false;
+        if (barrier === "principal") principal = "other-user";
+        await act(async () => {
+          env.state("active");
+          await new Promise((r) => setTimeout(r, 20));
+        });
+        expect(w.session?.user.id).toBe(principal);
+      }
+      expect(extent()).toBe("");
+      const authored = readDraft({
+        serverOrigin: client.endpoint,
+        companyId: "co",
+        userId: "user",
+        conversationId: "$report-definition:new",
+        threadRootId: "input:configuration",
+      }).body;
+      if (barrier === "background")
+        expect(authored).toContain("Retained tall report");
+      else expect(authored).toBe("");
+      // An old pending response cannot revive geometry or authored state.
+      if (barrier !== "denied") {
+        await act(async () => {
+          finish(new Response(JSON.stringify({ recipients: [] })));
+          await new Promise((r) => setTimeout(r, 5));
+        });
+        expect(extent()).toBe("");
+        const nextName = (
+          c.querySelector('input[aria-label="Report name"]') as HTMLInputElement
+        )?.value;
+        if (barrier === "background")
+          expect(nextName).toBe("Retained tall report");
+        else expect(nextName).not.toBe("Retained tall report");
+      }
     } finally {
       await act(() => root.unmount());
       c.remove();

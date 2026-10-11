@@ -1,16 +1,23 @@
-import { useState } from "react";
+import { useLayoutEffect, useState } from "react";
 import { Alert, Text, View } from "react-native";
 import { useWorkspace } from "./Workspace";
 import { Action } from "./ConnectUI";
 import { useExecutionRead, useExecutionMutation } from "./execution";
 import type { OrphanDefinition } from "../../shared/reports/types";
-export default function OrphanReports() {
+export default function OrphanReports({
+  onReadState,
+}: {
+  onReadState?: (ready: boolean, denied: boolean) => void;
+} = {}) {
   const w = useWorkspace();
   const leader = ["founder", "ceo", "admin"].includes(w.work?.me.role ?? "");
   const q = useExecutionRead<{ orphans: OrphanDefinition[] }>(
     "/reports/definitions/orphans",
     leader,
   );
+  useLayoutEffect(() => {
+    onReadState?.(!leader || !!q.ready, !!q.denied);
+  }, [onReadState, leader, q.ready, q.denied]);
   if (!leader) return null;
   return (
     <View>

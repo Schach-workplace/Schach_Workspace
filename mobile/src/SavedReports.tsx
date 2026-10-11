@@ -1,7 +1,14 @@
-import { useEffect, useEffectEvent, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useEffectEvent,
+  useLayoutEffect,
+  useState,
+} from "react";
 import OrphanReports from "./OrphanReports";
 import { Alert, FlatList, Text, View } from "react-native";
 import { useWorkspace } from "./Workspace";
+import { client } from "./client";
 import { Action, ui } from "./ConnectUI";
 import { ReportField, ReportChoice } from "./ReportControls";
 import { useRamInput } from "./ramInput";
@@ -28,10 +35,80 @@ export default function SavedReports({
     "/reports/definitions",
   );
   const [selected, setSelected] = useRamInput("$saved-reports", "selected", "");
+  const geometryKey = [
+    client.endpoint,
+    client.generation,
+    scope,
+    workspace.work?.readBasis,
+    workspace.foreground,
+    selected,
+  ].join(":");
+  const [geometry, setGeometry] = useState({ key: "", height: 0 });
+  const [formRead, setFormRead] = useState({
+    key: "",
+    ready: false,
+    denied: false,
+  });
+  const [orphanRead, setOrphanRead] = useState({
+    key: "",
+    ready: false,
+    denied: false,
+  });
+  const formReadChanged = useCallback(
+    (ready: boolean, denied: boolean) => {
+      setFormRead({ key: geometryKey, ready, denied });
+    },
+    [geometryKey],
+  );
+  const orphanReadChanged = useCallback(
+    (ready: boolean, denied: boolean) => {
+      setOrphanRead({ key: geometryKey, ready, denied });
+    },
+    [geometryKey],
+  );
+  const denied =
+    !!q.denied ||
+    (formRead.key === geometryKey && formRead.denied) ||
+    (orphanRead.key === geometryKey && orphanRead.denied);
+  const measuredReady =
+    q.ready &&
+    formRead.key === geometryKey &&
+    formRead.ready &&
+    orphanRead.key === geometryKey &&
+    orphanRead.ready;
+  const holdGeometry =
+    !measuredReady &&
+    !denied &&
+    workspace.foreground &&
+    !!workspace.work &&
+    geometry.key === geometryKey &&
+    geometry.height > 0;
+  if (
+    geometry.height &&
+    (denied ||
+      !workspace.foreground ||
+      !workspace.work ||
+      geometry.key !== geometryKey)
+  )
+    setGeometry({ key: "", height: 0 });
+
   return (
     <FlatList
       style={{ flex: 1 }}
       keyboardShouldPersistTaps="handled"
+      contentContainerStyle={
+        holdGeometry ? { minHeight: geometry.height } : undefined
+      }
+      onContentSizeChange={(_width, height) => {
+        // Independent report reads can finish in different orders. Measure only
+        // the fully current structure, never its temporarily hidden disclosures.
+        if (measuredReady && !denied && Number.isFinite(height) && height > 0)
+          setGeometry((previous) =>
+            previous.key === geometryKey && previous.height === height
+              ? previous
+              : { key: geometryKey, height },
+          );
+      }}
       data={q.ready ? (q.data?.definitions ?? []) : []}
       keyExtractor={(d) => d.id}
       renderItem={({ item }) => (
@@ -59,10 +136,11 @@ export default function SavedReports({
           />
           {q.loading && <Text>Checking definitions…</Text>}
           {q.error && <Text>{q.error}</Text>}
-          <OrphanReports />
+          <OrphanReports onReadState={orphanReadChanged} />
           <DefinitionForm
             key={selected || "new"}
             id={selected}
+            onReadState={formReadChanged}
             committed={
               created?.scope === scope && created.definition.id === selected
                 ? created.definition
@@ -87,9 +165,11 @@ export function DefinitionForm({
   onCreated,
   onOpen,
   committed,
+  onReadState,
 }: {
   id: string;
   committed?: SavedDefinition;
+  onReadState?: (ready: boolean, denied: boolean) => void;
   onCreated: (
     definition: SavedDefinition,
     authored: SavedConfiguration,
@@ -183,6 +263,9 @@ export function DefinitionForm({
   }, [denied]);
   const ready =
     initialized && w.foreground && !!w.work && people.ready && (!id || q.ready);
+  useLayoutEffect(() => {
+    onReadState?.(!!ready && !!projects.ready, !!denied);
+  }, [onReadState, ready, projects.ready, denied]);
   const locked = !ready || save.busy || scheduling.busy || generate.busy;
   const authoredDisabled =
     !w.foreground || !w.work || save.busy || scheduling.busy || generate.busy;
