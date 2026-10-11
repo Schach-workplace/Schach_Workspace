@@ -1,0 +1,42 @@
+{
+  "status": "passed",
+  "checks": [
+    "Actual current Calendar complete107open/109all includes older source beyond100, accepted/closed and actual timed company-local day",
+    "Rendered authoritative recorded capacity/full overlapping weeks/unique-vs-exposure at320/375/430px without horizontal overflow",
+    "Actual human drill selection → M5 reviewed reason/preview/explicit apply; viewing cards does not mutate",
+    "Actual human report evidence picker uses labelled authorized own snapshot and current hash/audience review",
+    "Current-source reauthorization withholds fetched goal/report contents while the real authored editor retains DOM, focus and text for30.5s",
+    "Actual post-commit ACK loss retries identical key/version/observation/report hash once; optional refresh failure does not reopen intent",
+    "Actual old correction appends history and leaves current3.5 unchanged"
+  ],
+  "widths": [
+    {
+      "width": 320,
+      "scrollWidth": 320,
+      "method": true
+    },
+    {
+      "width": 375,
+      "scrollWidth": 375,
+      "method": true
+    },
+    {
+      "width": 430,
+      "scrollWidth": 430,
+      "method": true
+    }
+  ],
+  "steps": 19,
+  "calendarCounts": {
+    "open": 107,
+    "all": 109
+  },
+  "largeText": {
+    "width": 430,
+    "scrollWidth": 430,
+    "fontSize": "32px"
+  },
+  "measurementsAfter": 4,
+  "duplicateFacts": 0,
+  "elapsedSeconds": 35.932
+}

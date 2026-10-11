@@ -1,0 +1,14 @@
+{
+  "sourceCommit": "0ad8176a9b2ffa8dfb9761f1938f296fb9f8bbb6",
+  "taskId": "t-002",
+  "beforeVersion": 1,
+  "afterVersion": 2,
+  "method": "calendar_day_shift",
+  "dayOffset": 1,
+  "reason": "Owned native reviewed schedule",
+  "dueDate": "2026-10-11",
+  "originalDueDate": "2026-10-10",
+  "status": "in_review",
+  "goalCurrentUnchanged": true,
+  "actualHumanNativePreviewConfirm": true
+}

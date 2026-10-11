@@ -1,0 +1,387 @@
+{
+  "acceptedImplementation": "05159ea505e13e9a332ad4d2afaacd495d0cce1a",
+  "base": "e84d3a3735d57cb0935a04c8a5b89b93d4c2dc92",
+  "artifacts": [
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-8/final-source-manifest.json",
+      "sha256": "d53ccf8f5f12baa6a8605db0820210e0ec73f20a532c1bad7f95fcd97652df9b",
+      "bytes": 15577
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-8/evidence-manifest.json",
+      "sha256": "1f3888235fac4a312643ce079a1346c9ecc944b2c2421327381d1a1194130eb0",
+      "bytes": 42873
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-8/sql-manifest.json",
+      "sha256": "831edfb5f2d6e4f6ff1f4af7547480cbf889734ba3120ddc33ef2b346461d257",
+      "bytes": 18709
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-8/fix1-source-manifest.json",
+      "sha256": "ec1eca358487b45c805c83ee7ca75092fde52ba613642a44895c092e0335fa10",
+      "bytes": 20332
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-8/fix1-evidence-manifest.json",
+      "sha256": "7224ab273ff1309d38fdb76dfaa88ac78018d210e968ed760176757450866c2a",
+      "bytes": 47916
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-8/fix1-sql-manifest.json",
+      "sha256": "d0ad2e13716b186e3a5adac8322eff90be4886b0b31339c475c4ce14f0c5e24d",
+      "bytes": 27072
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-8/fix2-source-manifest.json",
+      "sha256": "47557b2106390eff04559254e6ec7655397e076652d3d9d455d2c96cab61be51",
+      "bytes": 121354
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-8/fix2-evidence-manifest.json",
+      "sha256": "1a8960e764cf8cf7ebf15939196bdc23e1c7af622788f28052a244dae59a28ea",
+      "bytes": 23382
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-8/fix2-sql-manifest.json",
+      "sha256": "c77c141ba4a1fa2d5c7a565b646e5793066941c7b2d031f7a85585760c8edcd4",
+      "bytes": 32146
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-8/runtime-final3/result.json",
+      "sha256": "5da7b981c3c1b11d38547133764d88e858bead8319ca43765012be13fdef098d",
+      "bytes": 620
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-8/runtime-final3/browser.json",
+      "sha256": "27ed5875bdefb106775927520b7f75516014026e0817b10ee12b6d5c2db367e5",
+      "bytes": 1206
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-8/runtime-final3/pg-api.json",
+      "sha256": "6a3a130a8e9604b7b1bd326847af2a647f6c2a54d84186d7310b5574a3ffde9b",
+      "bytes": 756
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-8/runtime-final3/sqlite-api.json",
+      "sha256": "bbe2850cdae7155671b8cd12a29c44d73344d86237ee272035c76cffbfb0910a",
+      "bytes": 756
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-8/encore-final/result.json",
+      "sha256": "8bb17922a07fb330a0d19715b6ab1e0be192a1abfa4c25625c1b38afac74542f",
+      "bytes": 257
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-8/encore-final/api.json",
+      "sha256": "b5962df1297562ec9f0e192afbcaa154bf737cd701bcac8189f3111560a13cee",
+      "bytes": 756
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-8/fix1-runtime/result.json",
+      "sha256": "5da7b981c3c1b11d38547133764d88e858bead8319ca43765012be13fdef098d",
+      "bytes": 620
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-8/fix1-runtime/browser.json",
+      "sha256": "278cdbd1edd1556751e9972938f5477465f1b23ad30165869bbd82e460b1ab3d",
+      "bytes": 1206
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-8/fix1-runtime/pg-api.json",
+      "sha256": "bbe2f21c6d5dff00961916b4ea23e9a17b17db65b892b0d687bafc5fd5c30b01",
+      "bytes": 756
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-8/fix1-runtime/sqlite-api.json",
+      "sha256": "232c166acc8e57eaef0659aab5c9a699c6dd80175a26c514823b72c4eee19e70",
+      "bytes": 756
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-8/fix1-encore/result.json",
+      "sha256": "8bb17922a07fb330a0d19715b6ab1e0be192a1abfa4c25625c1b38afac74542f",
+      "bytes": 257
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-8/fix1-encore/api.json",
+      "sha256": "f7951f2f0fec223c691228f2f3ac738110a86096e8d33dc7cb01feb7268f4661",
+      "bytes": 756
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-8/fix2-runtime/result.json",
+      "sha256": "6c99367d694e7d018b9f05e7da5eb5417bc81fd57af20c17f3ea071e081c27b0",
+      "bytes": 472
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-8/fix2-runtime/browser.json",
+      "sha256": "9a9ecfe860ed058a0108a94048e8babfc33fad27f844ee39bbc69c4d27ba4a57",
+      "bytes": 188
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-8/fix2-runtime/pg-api.json",
+      "sha256": "cd6d356137d1d3be30184cc7b9726a9402babae5dcee92146024453ef30e5b67",
+      "bytes": 1173
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-8/fix2-runtime-final/result.json",
+      "sha256": "5da7b981c3c1b11d38547133764d88e858bead8319ca43765012be13fdef098d",
+      "bytes": 620
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-8/fix2-runtime-final/browser.json",
+      "sha256": "5f491d7da85d0866031c624d8fe1e402d418dc3dfbe28467379ad7e7cd932192",
+      "bytes": 1403
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-8/fix2-runtime-final/pg-api.json",
+      "sha256": "e2278c1d15054be9f2762bc632bf210918441e6b398ff5c132884e077592c968",
+      "bytes": 1173
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-8/fix2-runtime-final/sqlite-api.json",
+      "sha256": "0adfbcda10be3ff91838a24406ac2329cba9135f000c84f1997473a8c9da0543",
+      "bytes": 1173
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-8/fix2-encore/result.json",
+      "sha256": "8bb17922a07fb330a0d19715b6ab1e0be192a1abfa4c25625c1b38afac74542f",
+      "bytes": 257
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-8/fix2-encore/api.json",
+      "sha256": "219c6d4908f9287b7212647ce2a7e76b3587ba4a24d705f0acda96e1579aaa2d",
+      "bytes": 1173
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-8-report.md",
+      "sha256": "f2be6c1715f1fb1c2032142a0d2f0aede2796bef14906baadfb88fb9477143e3",
+      "bytes": 56473
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-8-review.md",
+      "sha256": "cc396bc2b0bb14fdda1d8081b49ab7aafceaa53e77f2d4f38d228535ca77a9da",
+      "bytes": 15034
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-8-fix1-review.md",
+      "sha256": "d683db79a4ee5c765b9e8a72261c36645cf71f116019918f38c5c20be899ab4b",
+      "bytes": 10350
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-8-fix2-review.md",
+      "sha256": "82137f378090d540a1ad269a1b4fb667dc330d57da2335a8cf330e0cfcd406df",
+      "bytes": 7699
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-8-controller-runtime-findings.md",
+      "sha256": "009310ed4cc77507966811fb17e005843a5753a0f2197f3c6544ce19ddea2111",
+      "bytes": 12160
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-8/fix2-baseline-calendar-pagination-green.log",
+      "sha256": "c1ed6254acdb9e90f860ed638bef68bbfe6ee88667f1aa67e743ec322d665dd8",
+      "bytes": 646
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-8/fix2-baseline-calendar-proof.log",
+      "sha256": "630711ca7769fbb6573b523e1434262c3dcf21013ccab5f472941b4b449d060c",
+      "bytes": 1547
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-8/fix2-baseline-calendar-probe.tsx.txt",
+      "sha256": "ddfbcccf72228b133dea8a1e33409d9291b61221e67861b03aeb5097dab404ee",
+      "bytes": 5014
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-8/pg-baseline47-full-gorm-diagnostic.log",
+      "sha256": "16a1a0ed434721f71101194ed34fb3e730b6fc3716e147d43d6510a4d1bd8a62",
+      "bytes": 317
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-8/pg-numbered-then-full-gorm-diagnostic.log",
+      "sha256": "b4187bfeb300618389f9aaea593881bbcce1d7aa00745e3a115c05b66925b244",
+      "bytes": 271
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-8/native/m8-fix1-plan30.json",
+      "sha256": "e751d2dc8ed76154b034adc12691c18bbe73c7f78dc89dc46d5538698a466d13",
+      "bytes": 747
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-8/native/m8-fix1-native-schedule.json",
+      "sha256": "2c47e8fdd4e4e47671131fea9b2e5e683cc424364dcc2bd435a59fb8ca6e6aed",
+      "bytes": 389
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-8/native/m8-fix1-native-editor30.json",
+      "sha256": "458c157d586503f31d94d4e8d11394e34681f0308814f9875cf1244706eef18c",
+      "bytes": 1181
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-8/native/m8-fix1-native-canonical-measurement.json",
+      "sha256": "26ce827cab8cca2927269eab6c581407721d6a0d0af492445c225a6b36e32240",
+      "bytes": 1978
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-8/native/m8-fix1-native-older-correction.json",
+      "sha256": "93666c3ec3139843f88628d868d37ba7cc51d01fe2f44063e9deb74f75cf63f2",
+      "bytes": 688
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-8/native/m8-fix1-large-current30.json",
+      "sha256": "795ed7f049482ceba2956ca8279dd154afa3796768901b7f0e6e9468dd437585",
+      "bytes": 1034
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-8/native/m8-fix1-native-current-correction.json",
+      "sha256": "7a4d5df7f241a826243db73d9e68bb2d64517ac8d58f6230f88a7adf9484c001",
+      "bytes": 745
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-8/native/m8-fix1-native-reminder-enabled.json",
+      "sha256": "08eff94f4f8ac411de7e13465e1ecdae47de8d1a14a466a6b194d5d68bc195cd",
+      "bytes": 600
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-8/native/m8-fix1-native-reminder-disabled.json",
+      "sha256": "6defca2170d432806aa63d56d1c4d2c610be745b1eb43bac6d91b9180fbe51fa",
+      "bytes": 740
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-8/native/m8-fix1-native-private-evidence-revocation.json",
+      "sha256": "3861fe08e173246e54ffdb3a67757cadfcde751555dcf04cac7babe71c412782",
+      "bytes": 898
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-8/native/m8-fix1-native-company-switch.json",
+      "sha256": "eaa88c1002c738d58b340b4c10049d270db3e7daae9f94f782bddab5aca56e25",
+      "bytes": 302
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-8/native/m8-fix1-large-current30-held-5.png",
+      "sha256": "7e2bf12192f4ce0f6933b4c75a659bc23f76b5994b9c8353fc137a3bbffa56b0",
+      "bytes": 145061
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-8/native/m8-fix1-plan30-held-5.png",
+      "sha256": "3fd7b587a4613ed6464b8204a32b2e49b0bed36cb5dd2ce2d83b9dfed9904af2",
+      "bytes": 51336
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-8/native/m8-fix1-canonical-ack.png",
+      "sha256": "d25a58b1f7ff2bac13601ac471d0d8bdad1f6afb2233f637a14f36deaa5d16f0",
+      "bytes": 144509
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-8/native/m8-fix1-reminder-disabled.png",
+      "sha256": "380178136233df1682d01da61b1d5df1d2530f24f35d635db8f6c9e466aff347",
+      "bytes": 120499
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-8/native/m8-fix1-private-preview-authorized.png",
+      "sha256": "3632d5851bc4bd376f0678c0a37c80c20b3426e870c3d5e2b272b35ac4128062",
+      "bytes": 154733
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-8/native/m8-fix1-private-revoked-final.png",
+      "sha256": "0285ad212ca96c78b17f3eb8a94099248afe6ddf03f1e1733f73a37da96bc669",
+      "bytes": 141742
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-8/native/m8-fix1-company-meridian.png",
+      "sha256": "2c70ffe22029f2e4e00286c5d25181d779e70144ae0fd9e0155028143b9d47cf",
+      "bytes": 98397
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-8/native/m8-fix1-schedule-applied.png",
+      "sha256": "36c8133a12dc563a774e9b5c9891dcc21e4d2c7d981f1f90747cbda5d745faa6",
+      "bytes": 143094
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-8/controller-native-evidence-index.json",
+      "sha256": "aef80d95cc5725e7a65cf374e2a41d46ae5ef819455b3425e5d18b2bc110a94b",
+      "bytes": 7296
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-8/fix3-source-manifest.json",
+      "sha256": "e9a6090c4cd3c5deacb778c11ae2b168a0a91d4267b77325616fa5a01f9cfa9f",
+      "bytes": 237791
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-8/fix3-evidence-manifest.json",
+      "sha256": "9fc25320d303eb10c832283d9d2a9f9041a7ea324910afd2c18793fa31b0a6db",
+      "bytes": 15373
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-8/fix3-sql-manifest.json",
+      "sha256": "051864e03d83fe848eb69856123080724011342a60add5003a9ee7bb38226e4a",
+      "bytes": 32146
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-8/fix3-time-reference.json",
+      "sha256": "f83e8382bd2d3524cce27a702847fd2998baf2bb57c0cb1817cfcf24736579ae",
+      "bytes": 1077
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-8/fix3-calendar-sqlite-red.log",
+      "sha256": "68aaa706b5e78fb89a4d646ed215604a9ec97a08c4f360e37c452dcedebc5194",
+      "bytes": 2307
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-8/fix3-calendar-pg-red.log",
+      "sha256": "70eb7daf0046cd5d3229afcd6cf50de0db06bde2c0d18ce3cbbf422d9b57678b",
+      "bytes": 2307
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-8/fix3-calendar-sqlite-green.log",
+      "sha256": "173abb88ca5d67a8a07c10f6642f35fe2c7f3fb66dae36e99dd93261ff63b481",
+      "bytes": 2727
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-8/fix3-calendar-pg-green.log",
+      "sha256": "c198ba6060d7618aa50b3b74672a9d7d784ee9acb6ba339ebb691c91495fed84",
+      "bytes": 5613
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-8/fix3-calendar-sqlite-final-all-green.log",
+      "sha256": "ed91981727b9f69f05358eea4db088f9ed9d170845998f0217b0f042a463cd9f",
+      "bytes": 2373
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-8/fix3-calendar-pg-final-all-green.log",
+      "sha256": "f966f601aa9df5a6ac87af3eec5bb81a54af59710bc1f722bcbb84eed02ffc3a",
+      "bytes": 5260
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-8-fix3-review.md",
+      "sha256": "1c473e26fc21996f0f80038a119f5cdd8f888346c2b5439c1550ff24b5409fd7",
+      "bytes": 7681
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-8/fix3-runtime/result.json",
+      "sha256": "67f085cf8e25baf8021352c3d2d4980a45a4370754153485b165ad3737735f83",
+      "bytes": 585
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-8/fix3-runtime/pg-api.json",
+      "sha256": "8cd241f09b7b4e2bb280193fbafb52223af0a58663d5be73f569f2e3ddae5fba",
+      "bytes": 2420
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-8/fix3-runtime/sqlite-api.json",
+      "sha256": "8cd241f09b7b4e2bb280193fbafb52223af0a58663d5be73f569f2e3ddae5fba",
+      "bytes": 2420
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-8/fix3-encore/result.json",
+      "sha256": "41a899012cbd2cd260f310867c730a641ab88692923182cc626ba8505e5301ad",
+      "bytes": 188
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-8/fix3-encore/api.json",
+      "sha256": "8cd241f09b7b4e2bb280193fbafb52223af0a58663d5be73f569f2e3ddae5fba",
+      "bytes": 2420
+    }
+  ],
+  "qualification": "Owned fictional fixtures. Original/fix1/fix2 artifacts keep their original source qualifications; final fix3 targeted Calendar runtimes are current. Native evaluated source0ad8176 on development shell1d74c311 is byte-equivalent for unchanged native/shared source; not a final APK, physical Android or iOS delivery. Manifest temporary paths are historical source/build/evidence locations. No database/authentication files/private provider secrets included."
+}

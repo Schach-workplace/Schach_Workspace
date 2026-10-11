@@ -1,0 +1,22 @@
+{
+  "sourceCommit": "0ad8176a9b2ffa8dfb9761f1938f296fb9f8bbb6",
+  "fictionalPrivateSource": {
+    "sourceCommit": "0ad8176a9b2ffa8dfb9761f1938f296fb9f8bbb6",
+    "conversationId": "con_3a2f8beb9435f0fb6d335bb4cfa7acc3",
+    "messageId": "msg_27fcddec5ea39f8f6ec4dbae8efddfd4",
+    "version": 1,
+    "fictionalOnly": true,
+    "rootUserDataTouched": false
+  },
+  "nativeHumanPickPreviewAndBind": true,
+  "companyFounderPrivateRevocationWins": true,
+  "privateFetchedLabelAbsent": true,
+  "selectionClearedObservedAfterScroll": true,
+  "measurementCountUnchanged": 1,
+  "goalCurrentVersionUnchanged": [
+    1.0,
+    1
+  ],
+  "noNativeMeasurementSave": true,
+  "qualification": "First sampling assertion wrongly required offscreen zero-selection label after legitimate permission-reset scroll moved form to top. Corrected observation scrolls after revocation; no timing or stationary-scroll claim."
+}

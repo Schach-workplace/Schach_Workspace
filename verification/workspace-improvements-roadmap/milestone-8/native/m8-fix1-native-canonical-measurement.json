@@ -1,0 +1,58 @@
+{
+  "sourceCommit": "0ad8176a9b2ffa8dfb9761f1938f296fb9f8bbb6",
+  "nativeExplicitCASRecoveryBeforeSubmission": true,
+  "modalRemountNoJSReload": true,
+  "goalVersion": 3,
+  "current": 4.4,
+  "measurementCount": 2,
+  "canonicalPOSTs": [
+    {
+      "method": "POST",
+      "path": "/api/companies/c-schach/goals/g-quality/measurements",
+      "requestSHA256": "eae3013e615566d92b45713f250613065073655e9a73f8062cefb56cd4e9f196",
+      "upstreamStatus": 200,
+      "acknowledgementDropped": true
+    },
+    {
+      "method": "POST",
+      "path": "/api/companies/c-schach/goals/g-quality/measurements",
+      "requestSHA256": "eae3013e615566d92b45713f250613065073655e9a73f8062cefb56cd4e9f196",
+      "upstreamStatus": 200,
+      "acknowledgementDropped": false
+    }
+  ],
+  "measurements": [
+    {
+      "id": "measurement_2eda13405b99c5218ee4bda2fdc13a4d",
+      "company_id": "c-schach",
+      "goal_id": "g-quality",
+      "actor_id": "u-founder",
+      "value": 3.8,
+      "effective_at": "2026-10-02 00:00:00.123456+00:00",
+      "reason": "Owned concurrent canonical observation",
+      "corrects_id": "",
+      "created_at": "2026-10-11 06:08:16.427488+00:00",
+      "goal_version_after": 2,
+      "unit": "%",
+      "baseline": 8.0,
+      "target": 3.0,
+      "evidence": "[]"
+    },
+    {
+      "id": "measurement_6b8ffb6c009be014d2f2fd6e5520e5a0",
+      "company_id": "c-schach",
+      "goal_id": "g-quality",
+      "actor_id": "u-founder",
+      "value": 4.4,
+      "effective_at": "2026-10-11 06:06:00+00:00",
+      "reason": "Owned Android measured result",
+      "corrects_id": "",
+      "created_at": "2026-10-11 06:12:35.78671+00:00",
+      "goal_version_after": 3,
+      "unit": "%",
+      "baseline": 8.0,
+      "target": 3.0,
+      "evidence": "[{\"kind\":\"report_snapshot\",\"sourceId\":\"hs_3ccd0a8dbb4e7c5f9909f7110b891f39\",\"parentId\":\"\",\"revision\":1,\"contentHash\":\"22165c5b192d1c891d574e172faf0c2cda5705af3f46df0caae489822f761053\"}]"
+    }
+  ]
+}

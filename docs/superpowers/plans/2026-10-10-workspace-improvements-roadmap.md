@@ -69,7 +69,7 @@
 - Acceptance: extraction never approves/pays; exact minor-unit amounts retained; review separation and budget exceptions preserved; false-positive duplicate flags are dismissible and audited; retry yields one draft.
 
 ### Milestone 8: Planning and outcomes
-- [ ] Extend calendar/workload with transparent capacity/dependency conflict suggestions; add goal measurement history, evidence and update reminders.
+- [x] Extend calendar/workload with transparent capacity/dependency conflict suggestions; add goal measurement history, evidence and update reminders.
 - Acceptance: estimated capacity is labelled; suggestions never silently revise commitments; goal outcomes do not advance from task completion alone; company timezone used at date boundaries.
 
 ### Milestone 9: People and administration

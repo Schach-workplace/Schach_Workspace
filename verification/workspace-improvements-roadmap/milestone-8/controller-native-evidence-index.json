@@ -1,0 +1,153 @@
+{
+  "status": "native-gates-passed-source-qualified",
+  "evaluatedSource": "0ad8176a9b2ffa8dfb9761f1938f296fb9f8bbb6",
+  "shellSource": "1d74c31132b8246603dbc853556ca29b1a134e4f",
+  "device": "owned API36 emulator5574",
+  "finalAPK": false,
+  "physicalAndroidIOS": false,
+  "rootUserDataTouched": false,
+  "entries": [
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m8-fix1-plan30.json",
+      "name": "m8-fix1-plan30.json",
+      "bytes": 747,
+      "sha256": "e751d2dc8ed76154b034adc12691c18bbe73c7f78dc89dc46d5538698a466d13",
+      "sourceCommit": "0ad8176a9b2ffa8dfb9761f1938f296fb9f8bbb6"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m8-fix1-native-schedule.json",
+      "name": "m8-fix1-native-schedule.json",
+      "bytes": 389,
+      "sha256": "2c47e8fdd4e4e47671131fea9b2e5e683cc424364dcc2bd435a59fb8ca6e6aed",
+      "sourceCommit": "0ad8176a9b2ffa8dfb9761f1938f296fb9f8bbb6"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m8-fix1-native-editor30.json",
+      "name": "m8-fix1-native-editor30.json",
+      "bytes": 1181,
+      "sha256": "458c157d586503f31d94d4e8d11394e34681f0308814f9875cf1244706eef18c",
+      "sourceCommit": "0ad8176a9b2ffa8dfb9761f1938f296fb9f8bbb6"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m8-fix1-native-canonical-measurement.json",
+      "name": "m8-fix1-native-canonical-measurement.json",
+      "bytes": 1978,
+      "sha256": "26ce827cab8cca2927269eab6c581407721d6a0d0af492445c225a6b36e32240",
+      "sourceCommit": "0ad8176a9b2ffa8dfb9761f1938f296fb9f8bbb6"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m8-fix1-native-older-correction.json",
+      "name": "m8-fix1-native-older-correction.json",
+      "bytes": 688,
+      "sha256": "93666c3ec3139843f88628d868d37ba7cc51d01fe2f44063e9deb74f75cf63f2",
+      "sourceCommit": "0ad8176a9b2ffa8dfb9761f1938f296fb9f8bbb6"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m8-fix1-large-current30.json",
+      "name": "m8-fix1-large-current30.json",
+      "bytes": 1034,
+      "sha256": "795ed7f049482ceba2956ca8279dd154afa3796768901b7f0e6e9468dd437585",
+      "sourceCommit": "0ad8176a9b2ffa8dfb9761f1938f296fb9f8bbb6"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m8-fix1-native-current-correction.json",
+      "name": "m8-fix1-native-current-correction.json",
+      "bytes": 745,
+      "sha256": "7a4d5df7f241a826243db73d9e68bb2d64517ac8d58f6230f88a7adf9484c001",
+      "sourceCommit": "0ad8176a9b2ffa8dfb9761f1938f296fb9f8bbb6"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m8-fix1-native-reminder-enabled.json",
+      "name": "m8-fix1-native-reminder-enabled.json",
+      "bytes": 600,
+      "sha256": "08eff94f4f8ac411de7e13465e1ecdae47de8d1a14a466a6b194d5d68bc195cd",
+      "sourceCommit": "0ad8176a9b2ffa8dfb9761f1938f296fb9f8bbb6"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m8-fix1-native-reminder-disabled.json",
+      "name": "m8-fix1-native-reminder-disabled.json",
+      "bytes": 740,
+      "sha256": "6defca2170d432806aa63d56d1c4d2c610be745b1eb43bac6d91b9180fbe51fa",
+      "sourceCommit": "0ad8176a9b2ffa8dfb9761f1938f296fb9f8bbb6"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m8-fix1-native-private-evidence-revocation.json",
+      "name": "m8-fix1-native-private-evidence-revocation.json",
+      "bytes": 898,
+      "sha256": "3861fe08e173246e54ffdb3a67757cadfcde751555dcf04cac7babe71c412782",
+      "sourceCommit": "0ad8176a9b2ffa8dfb9761f1938f296fb9f8bbb6"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m8-fix1-native-company-switch.json",
+      "name": "m8-fix1-native-company-switch.json",
+      "bytes": 302,
+      "sha256": "eaa88c1002c738d58b340b4c10049d270db3e7daae9f94f782bddab5aca56e25",
+      "sourceCommit": "0ad8176a9b2ffa8dfb9761f1938f296fb9f8bbb6"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m8-fix1-large-current30-held-5.png",
+      "name": "m8-fix1-large-current30-held-5.png",
+      "bytes": 145061,
+      "sha256": "7e2bf12192f4ce0f6933b4c75a659bc23f76b5994b9c8353fc137a3bbffa56b0",
+      "sourceCommit": "0ad8176a9b2ffa8dfb9761f1938f296fb9f8bbb6"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m8-fix1-plan30-held-5.png",
+      "name": "m8-fix1-plan30-held-5.png",
+      "bytes": 51336,
+      "sha256": "3fd7b587a4613ed6464b8204a32b2e49b0bed36cb5dd2ce2d83b9dfed9904af2",
+      "sourceCommit": "0ad8176a9b2ffa8dfb9761f1938f296fb9f8bbb6"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m8-fix1-canonical-ack.png",
+      "name": "m8-fix1-canonical-ack.png",
+      "bytes": 144509,
+      "sha256": "d25a58b1f7ff2bac13601ac471d0d8bdad1f6afb2233f637a14f36deaa5d16f0",
+      "sourceCommit": "0ad8176a9b2ffa8dfb9761f1938f296fb9f8bbb6"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m8-fix1-reminder-disabled.png",
+      "name": "m8-fix1-reminder-disabled.png",
+      "bytes": 120499,
+      "sha256": "380178136233df1682d01da61b1d5df1d2530f24f35d635db8f6c9e466aff347",
+      "sourceCommit": "0ad8176a9b2ffa8dfb9761f1938f296fb9f8bbb6"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m8-fix1-private-preview-authorized.png",
+      "name": "m8-fix1-private-preview-authorized.png",
+      "bytes": 154733,
+      "sha256": "3632d5851bc4bd376f0678c0a37c80c20b3426e870c3d5e2b272b35ac4128062",
+      "sourceCommit": "0ad8176a9b2ffa8dfb9761f1938f296fb9f8bbb6"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m8-fix1-private-revoked-final.png",
+      "name": "m8-fix1-private-revoked-final.png",
+      "bytes": 141742,
+      "sha256": "0285ad212ca96c78b17f3eb8a94099248afe6ddf03f1e1733f73a37da96bc669",
+      "sourceCommit": "0ad8176a9b2ffa8dfb9761f1938f296fb9f8bbb6"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m8-fix1-company-meridian.png",
+      "name": "m8-fix1-company-meridian.png",
+      "bytes": 98397,
+      "sha256": "2c70ffe22029f2e4e00286c5d25181d779e70144ae0fd9e0155028143b9d47cf",
+      "sourceCommit": "0ad8176a9b2ffa8dfb9761f1938f296fb9f8bbb6"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m8-fix1-schedule-applied.png",
+      "name": "m8-fix1-schedule-applied.png",
+      "bytes": 143094,
+      "sha256": "36c8133a12dc563a774e9b5c9891dcc21e4d2c7d981f1f90747cbda5d745faa6",
+      "sourceCommit": "0ad8176a9b2ffa8dfb9761f1938f296fb9f8bbb6"
+    }
+  ],
+  "missingOptionalScreenshots": [],
+  "qualifications": [
+    "Generic cursor traversal already follows later pages; R12/truncationR13 withdrawn, bounded-calendar efficiency Ruling separate.",
+    "Ready/pending measured neutral geometry is not physical keyboard/screen-reader acceptance.",
+    "Private revoked count initially offscreen after legitimate permission reset; final observed scroll proves zero selection.",
+    "Font1.3 configuration recreation occurred only after known ACK, not RAM lifecycle proof.",
+    "Two Metro startup aborted-manifest-assets warnings remain qualified development shell limitations; no Text/nested-list/LogBox errors observed.",
+    "No auth cookie/token, database, media, or provider secret included."
+  ]
+}

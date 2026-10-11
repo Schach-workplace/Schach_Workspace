@@ -1,0 +1,22 @@
+{
+  "goVersion": "go version go1.26.1 linux/amd64",
+  "officialVersionedDocumentation": [
+    "https://pkg.go.dev/time@go1.26.1#Date",
+    "https://pkg.go.dev/time@go1.26.1#Time.ZoneBounds"
+  ],
+  "mechanism": "Date/ParseInLocation do not select an unambiguous civil midnight across gaps/overlaps; use constant-offset zone interval intersections. Local Go source confirms signed32 TZif offsets and POSIX final synthetic yearStart+365days; leap-year seam handling covers only that nonprogress case.",
+  "localSource": [
+    {
+      "path": "/home/brahma/.local/share/mise/installs/go/1.26.1/src/time/time.go",
+      "sha256": "e8b6ea9e6e7cb890aeed1d24ee7163a2237b6fa78ffc564efb8688dba717f02a"
+    },
+    {
+      "path": "/home/brahma/.local/share/mise/installs/go/1.26.1/src/time/zoneinfo.go",
+      "sha256": "03bc9ba0ed7f4657121992620a83621f2ac7c5a6eb8b559d46600829e618211c"
+    },
+    {
+      "path": "/home/brahma/.local/share/mise/installs/go/1.26.1/src/time/zoneinfo_read.go",
+      "sha256": "47e6cc315fbf5ba3eea95043fe7ec5e982d14b98574e60da22ac9b4f774f254b"
+    }
+  ]
+}

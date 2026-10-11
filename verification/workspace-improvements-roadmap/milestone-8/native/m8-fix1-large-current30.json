@@ -1,0 +1,46 @@
+{
+  "sourceCommit": "0ad8176a9b2ffa8dfb9761f1938f296fb9f8bbb6",
+  "fontScale": 1.3,
+  "actualGoalGETHeldSeconds": 33.263,
+  "readyBounds": "[50,979][1031,1227]",
+  "releasedBounds": "[50,979][1031,1227]",
+  "samples": [
+    {
+      "elapsed": 2.121,
+      "bounds": "[50,979][1031,1227]",
+      "focused": true,
+      "textUnchanged": true
+    },
+    {
+      "elapsed": 8.328,
+      "bounds": "[50,979][1031,1227]",
+      "focused": true,
+      "textUnchanged": true
+    },
+    {
+      "elapsed": 14.527,
+      "bounds": "[50,979][1031,1227]",
+      "focused": true,
+      "textUnchanged": true
+    },
+    {
+      "elapsed": 20.742,
+      "bounds": "[50,979][1031,1227]",
+      "focused": true,
+      "textUnchanged": true
+    },
+    {
+      "elapsed": 26.934,
+      "bounds": "[50,979][1031,1227]",
+      "focused": true,
+      "textUnchanged": true
+    },
+    {
+      "elapsed": 33.109,
+      "bounds": "[50,979][1031,1227]",
+      "focused": true,
+      "textUnchanged": true
+    }
+  ],
+  "noDragRouteReloadEditDuringHold": true
+}

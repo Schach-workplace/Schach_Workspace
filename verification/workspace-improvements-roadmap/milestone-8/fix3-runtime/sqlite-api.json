@@ -1,0 +1,101 @@
+{
+  "status": "passed",
+  "checks": [
+    "Actual current Calendar TCP midnight gap/overlap/skipped date/repeated date with hole/future leap-year seam",
+    "Current company timezone updated through owned API; exact microseconds and original Task deadlines/version preserved"
+  ],
+  "ranges": [
+    {
+      "zone": "America/Havana",
+      "from": "2026-03-07",
+      "to": "2026-03-07",
+      "count": 2,
+      "exactInstants": [
+        "2026-03-08T04:30:00.123456Z",
+        "2026-03-08T04:59:59.999999Z"
+      ]
+    },
+    {
+      "zone": "America/Havana",
+      "from": "2026-03-08",
+      "to": "2026-03-08",
+      "count": 3,
+      "exactInstants": [
+        "2026-03-08T05:00:00Z",
+        "2026-03-09T03:30:00.654321Z",
+        "2026-03-09T03:59:59.999999Z"
+      ]
+    },
+    {
+      "zone": "America/Havana",
+      "from": "2026-03-02",
+      "to": "2026-03-08",
+      "count": 5,
+      "exactInstants": [
+        "2026-03-08T04:30:00.123456Z",
+        "2026-03-08T04:59:59.999999Z",
+        "2026-03-08T05:00:00Z",
+        "2026-03-09T03:30:00.654321Z",
+        "2026-03-09T03:59:59.999999Z"
+      ]
+    },
+    {
+      "zone": "America/Havana",
+      "from": "2026-11-01",
+      "to": "2026-11-01",
+      "count": 2,
+      "exactInstants": [
+        "2026-11-01T04:30:00.123456Z",
+        "2026-11-01T05:30:00.654321Z"
+      ]
+    },
+    {
+      "zone": "America/Havana",
+      "from": "2040-12-31",
+      "to": "2040-12-31",
+      "count": 2,
+      "exactInstants": [
+        "2040-12-31T05:00:00Z",
+        "2041-01-01T04:59:59.999999Z"
+      ]
+    },
+    {
+      "zone": "Pacific/Apia",
+      "from": "2011-12-29",
+      "to": "2011-12-29",
+      "count": 1,
+      "exactInstants": [
+        "2011-12-30T09:59:59.999999Z"
+      ]
+    },
+    {
+      "zone": "Pacific/Apia",
+      "from": "2011-12-30",
+      "to": "2011-12-30",
+      "count": 0,
+      "exactInstants": []
+    },
+    {
+      "zone": "Pacific/Apia",
+      "from": "2011-12-29",
+      "to": "2011-12-31",
+      "count": 2,
+      "exactInstants": [
+        "2011-12-30T09:59:59.999999Z",
+        "2011-12-30T10:00:00Z"
+      ]
+    },
+    {
+      "zone": "America/St_Johns",
+      "from": "1988-10-29",
+      "to": "1988-10-29",
+      "count": 3,
+      "exactInstants": [
+        "1988-10-30T01:29:59.999999Z",
+        "1988-10-30T01:31:30.654321Z",
+        "1988-10-30T03:29:59.999999Z"
+      ]
+    }
+  ],
+  "sourceUnmutatedByCalendar": true
+}

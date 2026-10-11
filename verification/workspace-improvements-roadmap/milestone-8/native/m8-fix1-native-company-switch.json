@@ -1,0 +1,8 @@
+{
+  "sourceCommit": "0ad8176a9b2ffa8dfb9761f1938f296fb9f8bbb6",
+  "nativeHumanCompanySwitch": true,
+  "companyASourceAbsentInB": true,
+  "noJSReload": true,
+  "noBusinessMutation": true,
+  "qualification": "No delayed response or authored RAM retention claim; provider tests cover those separately."
+}

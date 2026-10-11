@@ -1,0 +1,23 @@
+{
+  "sourceCommit": "0ad8176a9b2ffa8dfb9761f1938f296fb9f8bbb6",
+  "goalCurrent": 4.4,
+  "goalVersion": 4,
+  "correction": {
+    "id": "measurement_6df9453ff8a4e6836b1bf2f124dda7fd",
+    "company_id": "c-schach",
+    "goal_id": "g-quality",
+    "actor_id": "u-founder",
+    "value": 5.1,
+    "effective_at": "2026-10-02 00:00:00.123456+00:00",
+    "reason": "Correct older owned result",
+    "corrects_id": "measurement_2eda13405b99c5218ee4bda2fdc13a4d",
+    "created_at": "2026-10-11 06:13:58.892764+00:00",
+    "goal_version_after": 4,
+    "unit": "%",
+    "baseline": 8.0,
+    "target": 3.0,
+    "evidence": "[]"
+  },
+  "originalMicrosecondsRetained": true,
+  "nativeHumanSave": true
+}

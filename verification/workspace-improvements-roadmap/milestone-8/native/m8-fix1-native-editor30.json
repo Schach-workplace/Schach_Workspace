@@ -1,0 +1,47 @@
+{
+  "sourceCommit": "0ad8176a9b2ffa8dfb9761f1938f296fb9f8bbb6",
+  "actualGoalGETHeldSeconds": 33.238,
+  "readyBounds": "[50,819][1031,1067]",
+  "releasedBounds": "[50,819][1031,1067]",
+  "samples": [
+    {
+      "elapsed": 2.119,
+      "bounds": "[50,819][1031,1067]",
+      "focused": true,
+      "textUnchanged": true
+    },
+    {
+      "elapsed": 8.332,
+      "bounds": "[50,819][1031,1067]",
+      "focused": true,
+      "textUnchanged": true
+    },
+    {
+      "elapsed": 14.517,
+      "bounds": "[50,819][1031,1067]",
+      "focused": true,
+      "textUnchanged": true
+    },
+    {
+      "elapsed": 20.724,
+      "bounds": "[50,819][1031,1067]",
+      "focused": true,
+      "textUnchanged": true
+    },
+    {
+      "elapsed": 26.922,
+      "bounds": "[50,819][1031,1067]",
+      "focused": true,
+      "textUnchanged": true
+    },
+    {
+      "elapsed": 33.123,
+      "bounds": "[50,819][1031,1067]",
+      "focused": true,
+      "textUnchanged": true
+    }
+  ],
+  "queryBarrierObservedBeforeTiming": true,
+  "noDragRouteReloadEditDuringHold": true,
+  "note": "Prior33.128s focus interval began before actual polling hold28.5s; this distinct proof times actual GET hold."
+}

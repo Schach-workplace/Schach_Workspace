@@ -1,0 +1,27 @@
+{
+  "status": "passed",
+  "company": "c-schach",
+  "goal": "goal_ca0e421c7d9752ae976a0c5277f34597",
+  "task": "t-001",
+  "snapshot": "hs_fb64656eb915de50558d15a07f84a67b",
+  "checks": [
+    "Actual TCP planning summary/drill/current inspected M5 seed",
+    "Explicit M5 preview/apply/canonical retry",
+    "Human-labelled own immutable report evidence options and exact hash",
+    "Concurrent same-key measurement one canonical fact",
+    "Native PostgreSQL/SQLite exact six-microsecond UTC read and offset-equivalent replay",
+    "Old immutable correction preserves current selector",
+    "Owner opt-in preference never changes measured current/version",
+    "Actual bounded calendar complete107open/109all task rows, original older beyond100/timed company-local date with immutable source deadline"
+  ],
+  "measurements": 3,
+  "canonicalMeasurement": "measurement_d2307dfd48da4a284aaba2f89b9c24e1",
+  "calendarOwner": "usr_6efc07ff259e9e3f9ace7527d6675b42",
+  "calendarOlder": "tsk_d08dace3d5bd0d67ad466ff6a3ec5220",
+  "calendarTimed": "tsk_7475d4b26fda65cc8973b8e314837e14",
+  "calendarCounts": {
+    "open": 107,
+    "all": 109
+  },
+  "calendarSourceUnmutated": true
+}

@@ -1,0 +1,18 @@
+{
+  "status": "passed",
+  "company": "c-schach",
+  "goal": "goal_52816d374e148ebc7ba02014469766fe",
+  "task": "t-001",
+  "snapshot": "hs_86201516978d7f81b2d4b61749a38169",
+  "checks": [
+    "Actual TCP planning summary/drill/current inspected M5 seed",
+    "Explicit M5 preview/apply/canonical retry",
+    "Human-labelled own immutable report evidence options and exact hash",
+    "Concurrent same-key measurement one canonical fact",
+    "Native PostgreSQL/SQLite exact six-microsecond UTC read and offset-equivalent replay",
+    "Old immutable correction preserves current selector",
+    "Owner opt-in preference never changes measured current/version"
+  ],
+  "measurements": 3,
+  "canonicalMeasurement": "measurement_e115b2729e54116f604a48daf2e0ef6e"
+}

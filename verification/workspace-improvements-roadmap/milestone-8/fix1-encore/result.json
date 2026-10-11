@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "checks": [
+    "Actual current Encore exporter builds current platform",
+    "Actual exported gateway TCP planning/M5 apply/goal measurement+concurrent retry/report evidence/correction/reminder endpoints pass on nativePG49"
+  ]
+}

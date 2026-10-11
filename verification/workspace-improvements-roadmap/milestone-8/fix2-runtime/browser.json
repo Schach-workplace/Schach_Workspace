@@ -1,0 +1,8 @@
+{
+  "status": "failed",
+  "checks": [],
+  "widths": [],
+  "steps": 0,
+  "error": "Error: SyntaxError: missing ) after argument list",
+  "renderedFailure": "S\nOpening your workspace…"
+}

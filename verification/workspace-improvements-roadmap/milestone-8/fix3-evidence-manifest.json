@@ -1,0 +1,332 @@
+{
+  "head": "05159ea505e13e9a332ad4d2afaacd495d0cce1a",
+  "createdAtUTC": "2026-10-11T07:07:56.032028+00:00",
+  "entries": [
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/fix3-calendar-pg-final-all-green.log",
+      "size": 5260,
+      "sha256": "f966f601aa9df5a6ac87af3eec5bb81a54af59710bc1f722bcbb84eed02ffc3a"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/fix3-calendar-pg-final-green.log",
+      "size": 4965,
+      "sha256": "199baf359e8cba143c403ca523ad48b5b4baf8f4981f757c09d8b704d1f5485f"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/fix3-calendar-pg-green.log",
+      "size": 5613,
+      "sha256": "c198ba6060d7618aa50b3b74672a9d7d784ee9acb6ba339ebb691c91495fed84"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/fix3-calendar-pg-red.log",
+      "size": 2307,
+      "sha256": "70eb7daf0046cd5d3229afcd6cf50de0db06bde2c0d18ce3cbbf422d9b57678b"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/fix3-calendar-pg-verified-green.log",
+      "size": 5143,
+      "sha256": "f67f31d63da544838ddd7c1b4f6283c003035da075439e594477f613e5ee231d"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/fix3-calendar-sqlite-final-all-green.log",
+      "size": 2373,
+      "sha256": "ed91981727b9f69f05358eea4db088f9ed9d170845998f0217b0f042a463cd9f"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/fix3-calendar-sqlite-final-green.log",
+      "size": 2079,
+      "sha256": "fef06d0735ee684f9b7df78fa67697d0c2f471303df17f503f07344689ce2b9d"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/fix3-calendar-sqlite-green.log",
+      "size": 2727,
+      "sha256": "173abb88ca5d67a8a07c10f6642f35fe2c7f3fb66dae36e99dd93261ff63b481"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/fix3-calendar-sqlite-red.log",
+      "size": 2307,
+      "sha256": "68aaa706b5e78fb89a4d646ed215604a9ec97a08c4f360e37c452dcedebc5194"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/fix3-calendar-sqlite-verified-green.log",
+      "size": 2257,
+      "sha256": "fe3d28b2be7d63ede824b730087417b8e7607c498c65af0dbb161b06dfd14e9f"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/fix3-diff-check.log",
+      "size": 7,
+      "sha256": "28d3b9e880a77975493dc7e359144c0295a4f694cfe0af4f928c22307bc5c320"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/fix3-encore/api.json",
+      "size": 2420,
+      "sha256": "8cd241f09b7b4e2bb280193fbafb52223af0a58663d5be73f569f2e3ddae5fba"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/fix3-encore/api.log",
+      "size": 1810,
+      "sha256": "9dbce4837c7dc3e315815f4ef06c0e8071446669f2bb33d4c0e45dc192424c04"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/fix3-encore/build.log",
+      "size": 1276,
+      "sha256": "6634b525c9d4b47568725326fe29c0b415cc5960d474057e19dea97ce835f4f6"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/fix3-encore/commands.log",
+      "size": 195,
+      "sha256": "e5d825f1cafdc5289ce2d158660aeec12c9eda04806f888276241ba1a9333868"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/fix3-encore/migrations.log",
+      "size": 2845,
+      "sha256": "7bb64c76b8e70835bb5c2719e0ecee275826b422c7d92c6d64ffef3a886ea9bd"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/fix3-encore/result.json",
+      "size": 188,
+      "sha256": "41a899012cbd2cd260f310867c730a641ab88692923182cc626ba8505e5301ad"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/fix3-encore/runtime.log",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/fix3-encore.log",
+      "size": 170,
+      "sha256": "8b6d3011da9cb21822690bbc95055d7b6dd41ad98fe862e5d94b0c85c8a00ca3"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/fix3-format-check.log",
+      "size": 195,
+      "sha256": "9290d2a45a3b0092571b756c350ed682ffeed992917721317b2d91e7a7753af6"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/fix3-runtime/build.log",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/fix3-runtime/pg-api.json",
+      "size": 2420,
+      "sha256": "8cd241f09b7b4e2bb280193fbafb52223af0a58663d5be73f569f2e3ddae5fba"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/fix3-runtime/pg-api.log",
+      "size": 1810,
+      "sha256": "9dbce4837c7dc3e315815f4ef06c0e8071446669f2bb33d4c0e45dc192424c04"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/fix3-runtime/pg-fresh-idempotent.log",
+      "size": 53,
+      "sha256": "d134db671d228348f5e55a7ead67267931b75d84e0663894420b3f8bb1fbffb3"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/fix3-runtime/pg-fresh-migrate.log",
+      "size": 53,
+      "sha256": "d134db671d228348f5e55a7ead67267931b75d84e0663894420b3f8bb1fbffb3"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/fix3-runtime/pg-upgrade-idempotent.log",
+      "size": 53,
+      "sha256": "d134db671d228348f5e55a7ead67267931b75d84e0663894420b3f8bb1fbffb3"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/fix3-runtime/pg-upgrade-migrate.log",
+      "size": 53,
+      "sha256": "d134db671d228348f5e55a7ead67267931b75d84e0663894420b3f8bb1fbffb3"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/fix3-runtime/result.json",
+      "size": 585,
+      "sha256": "67f085cf8e25baf8021352c3d2d4980a45a4370754153485b165ad3737735f83"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/fix3-runtime/server-0.log",
+      "size": 287,
+      "sha256": "b77a085e613529c6ad18f541dae6a605df40af282fdfee092721fe2880cc8171"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/fix3-runtime/server-1.log",
+      "size": 287,
+      "sha256": "45eb2165830ab6ee982eee2b814684423e13c8070e8109ec293586e81b563e73"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/fix3-runtime/sqlite-api.json",
+      "size": 2420,
+      "sha256": "8cd241f09b7b4e2bb280193fbafb52223af0a58663d5be73f569f2e3ddae5fba"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/fix3-runtime/sqlite-api.log",
+      "size": 1810,
+      "sha256": "9dbce4837c7dc3e315815f4ef06c0e8071446669f2bb33d4c0e45dc192424c04"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/fix3-runtime.log",
+      "size": 553,
+      "sha256": "124e429665759601bacfaa2c56bdf6554f1516342e96c8997464ab3e7f88d615"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/fix3-source-manifest.json",
+      "size": 237791,
+      "sha256": "e9a6090c4cd3c5deacb778c11ae2b168a0a91d4267b77325616fa5a01f9cfa9f"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/fix3-sql-manifest.json",
+      "size": 32146,
+      "sha256": "051864e03d83fe848eb69856123080724011342a60add5003a9ee7bb38226e4a"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/fix3-time-reference.json",
+      "size": 1077,
+      "sha256": "f83e8382bd2d3524cce27a702847fd2998baf2bb57c0cb1817cfcf24736579ae"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-report.md",
+      "size": 56473,
+      "sha256": "f2be6c1715f1fb1c2032142a0d2f0aede2796bef14906baadfb88fb9477143e3"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-controller-native-evidence-index.json",
+      "size": 7296,
+      "sha256": "aef80d95cc5725e7a65cf374e2a41d46ae5ef819455b3425e5d18b2bc110a94b"
+    }
+  ],
+  "controllerHistoricalEntries": [
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m8-fix1-plan30.json",
+      "name": "m8-fix1-plan30.json",
+      "bytes": 747,
+      "sha256": "e751d2dc8ed76154b034adc12691c18bbe73c7f78dc89dc46d5538698a466d13",
+      "sourceCommit": "0ad8176a9b2ffa8dfb9761f1938f296fb9f8bbb6"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m8-fix1-native-schedule.json",
+      "name": "m8-fix1-native-schedule.json",
+      "bytes": 389,
+      "sha256": "2c47e8fdd4e4e47671131fea9b2e5e683cc424364dcc2bd435a59fb8ca6e6aed",
+      "sourceCommit": "0ad8176a9b2ffa8dfb9761f1938f296fb9f8bbb6"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m8-fix1-native-editor30.json",
+      "name": "m8-fix1-native-editor30.json",
+      "bytes": 1181,
+      "sha256": "458c157d586503f31d94d4e8d11394e34681f0308814f9875cf1244706eef18c",
+      "sourceCommit": "0ad8176a9b2ffa8dfb9761f1938f296fb9f8bbb6"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m8-fix1-native-canonical-measurement.json",
+      "name": "m8-fix1-native-canonical-measurement.json",
+      "bytes": 1978,
+      "sha256": "26ce827cab8cca2927269eab6c581407721d6a0d0af492445c225a6b36e32240",
+      "sourceCommit": "0ad8176a9b2ffa8dfb9761f1938f296fb9f8bbb6"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m8-fix1-native-older-correction.json",
+      "name": "m8-fix1-native-older-correction.json",
+      "bytes": 688,
+      "sha256": "93666c3ec3139843f88628d868d37ba7cc51d01fe2f44063e9deb74f75cf63f2",
+      "sourceCommit": "0ad8176a9b2ffa8dfb9761f1938f296fb9f8bbb6"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m8-fix1-large-current30.json",
+      "name": "m8-fix1-large-current30.json",
+      "bytes": 1034,
+      "sha256": "795ed7f049482ceba2956ca8279dd154afa3796768901b7f0e6e9468dd437585",
+      "sourceCommit": "0ad8176a9b2ffa8dfb9761f1938f296fb9f8bbb6"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m8-fix1-native-current-correction.json",
+      "name": "m8-fix1-native-current-correction.json",
+      "bytes": 745,
+      "sha256": "7a4d5df7f241a826243db73d9e68bb2d64517ac8d58f6230f88a7adf9484c001",
+      "sourceCommit": "0ad8176a9b2ffa8dfb9761f1938f296fb9f8bbb6"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m8-fix1-native-reminder-enabled.json",
+      "name": "m8-fix1-native-reminder-enabled.json",
+      "bytes": 600,
+      "sha256": "08eff94f4f8ac411de7e13465e1ecdae47de8d1a14a466a6b194d5d68bc195cd",
+      "sourceCommit": "0ad8176a9b2ffa8dfb9761f1938f296fb9f8bbb6"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m8-fix1-native-reminder-disabled.json",
+      "name": "m8-fix1-native-reminder-disabled.json",
+      "bytes": 740,
+      "sha256": "6defca2170d432806aa63d56d1c4d2c610be745b1eb43bac6d91b9180fbe51fa",
+      "sourceCommit": "0ad8176a9b2ffa8dfb9761f1938f296fb9f8bbb6"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m8-fix1-native-private-evidence-revocation.json",
+      "name": "m8-fix1-native-private-evidence-revocation.json",
+      "bytes": 898,
+      "sha256": "3861fe08e173246e54ffdb3a67757cadfcde751555dcf04cac7babe71c412782",
+      "sourceCommit": "0ad8176a9b2ffa8dfb9761f1938f296fb9f8bbb6"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m8-fix1-native-company-switch.json",
+      "name": "m8-fix1-native-company-switch.json",
+      "bytes": 302,
+      "sha256": "eaa88c1002c738d58b340b4c10049d270db3e7daae9f94f782bddab5aca56e25",
+      "sourceCommit": "0ad8176a9b2ffa8dfb9761f1938f296fb9f8bbb6"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m8-fix1-large-current30-held-5.png",
+      "name": "m8-fix1-large-current30-held-5.png",
+      "bytes": 145061,
+      "sha256": "7e2bf12192f4ce0f6933b4c75a659bc23f76b5994b9c8353fc137a3bbffa56b0",
+      "sourceCommit": "0ad8176a9b2ffa8dfb9761f1938f296fb9f8bbb6"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m8-fix1-plan30-held-5.png",
+      "name": "m8-fix1-plan30-held-5.png",
+      "bytes": 51336,
+      "sha256": "3fd7b587a4613ed6464b8204a32b2e49b0bed36cb5dd2ce2d83b9dfed9904af2",
+      "sourceCommit": "0ad8176a9b2ffa8dfb9761f1938f296fb9f8bbb6"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m8-fix1-canonical-ack.png",
+      "name": "m8-fix1-canonical-ack.png",
+      "bytes": 144509,
+      "sha256": "d25a58b1f7ff2bac13601ac471d0d8bdad1f6afb2233f637a14f36deaa5d16f0",
+      "sourceCommit": "0ad8176a9b2ffa8dfb9761f1938f296fb9f8bbb6"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m8-fix1-reminder-disabled.png",
+      "name": "m8-fix1-reminder-disabled.png",
+      "bytes": 120499,
+      "sha256": "380178136233df1682d01da61b1d5df1d2530f24f35d635db8f6c9e466aff347",
+      "sourceCommit": "0ad8176a9b2ffa8dfb9761f1938f296fb9f8bbb6"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m8-fix1-private-preview-authorized.png",
+      "name": "m8-fix1-private-preview-authorized.png",
+      "bytes": 154733,
+      "sha256": "3632d5851bc4bd376f0678c0a37c80c20b3426e870c3d5e2b272b35ac4128062",
+      "sourceCommit": "0ad8176a9b2ffa8dfb9761f1938f296fb9f8bbb6"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m8-fix1-private-revoked-final.png",
+      "name": "m8-fix1-private-revoked-final.png",
+      "bytes": 141742,
+      "sha256": "0285ad212ca96c78b17f3eb8a94099248afe6ddf03f1e1733f73a37da96bc669",
+      "sourceCommit": "0ad8176a9b2ffa8dfb9761f1938f296fb9f8bbb6"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m8-fix1-company-meridian.png",
+      "name": "m8-fix1-company-meridian.png",
+      "bytes": 98397,
+      "sha256": "2c70ffe22029f2e4e00286c5d25181d779e70144ae0fd9e0155028143b9d47cf",
+      "sourceCommit": "0ad8176a9b2ffa8dfb9761f1938f296fb9f8bbb6"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m8-fix1-schedule-applied.png",
+      "name": "m8-fix1-schedule-applied.png",
+      "bytes": 143094,
+      "sha256": "36c8133a12dc563a774e9b5c9891dcc21e4d2c7d981f1f90747cbda5d745faa6",
+      "sourceCommit": "0ad8176a9b2ffa8dfb9761f1938f296fb9f8bbb6"
+    }
+  ],
+  "excludedSelfHash": true
+}

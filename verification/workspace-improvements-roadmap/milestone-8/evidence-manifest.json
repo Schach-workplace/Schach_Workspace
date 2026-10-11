@@ -1,0 +1,920 @@
+{
+  "head": "51dbd8cbc51afc91e28723c6037d24f909b024df",
+  "artifacts": [
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/backend-final-all.log",
+      "size": 390,
+      "sha256": "49cbc600109e8a4b2f3de32d3f03d92bbb1b0041ff1e8fbdd20ade75c18b1552"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/changed-format-check.log",
+      "size": 66,
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/changed-format-write.log",
+      "size": 174,
+      "sha256": "32719483cef230d4e118232fc1e56f57cb5bceb530923f2611adba882f813347"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/encore/api.json",
+      "size": 756,
+      "sha256": "9d5c30a0383b49c829387ba2c4b6ab3b3f1cef2c16793b7c361457b4b685da30"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/encore/api.log",
+      "size": 706,
+      "sha256": "ad1aadea80fa3de12dab29e8a3c135f20f1370d76cd523a31467dfac7f9c3f80"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/encore/build.log",
+      "size": 1276,
+      "sha256": "3527312e6069c3c1f226952257009064571dc2f1d41630f6653c07bc44d700c0"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/encore/commands.log",
+      "size": 195,
+      "sha256": "47fdb11a90236773be40cf9fe12e39f4b730b772067c05ab0296f77b8dbf4f49"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/encore/migrations.log",
+      "size": 2845,
+      "sha256": "7bb64c76b8e70835bb5c2719e0ecee275826b422c7d92c6d64ffef3a886ea9bd"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/encore/result.json",
+      "size": 257,
+      "sha256": "8bb17922a07fb330a0d19715b6ab1e0be192a1abfa4c25625c1b38afac74542f"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/encore/runtime.log",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/encore-final/api.json",
+      "size": 756,
+      "sha256": "b5962df1297562ec9f0e192afbcaa154bf737cd701bcac8189f3111560a13cee"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/encore-final/api.log",
+      "size": 706,
+      "sha256": "fe8026af0ca60f3cc6cf24f4bf5b409b5b6477bbe86fa95a7aed795611950e35"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/encore-final/build.log",
+      "size": 1276,
+      "sha256": "f06d78558f4dbe8df1182532136690c97e09ecf8aeb68a285ff36391fd4b4447"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/encore-final/commands.log",
+      "size": 195,
+      "sha256": "971ff219d37ec068b58214cb139176a5a9894d07207cda17dbcd63ed4dee6ee3"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/encore-final/migrations.log",
+      "size": 2845,
+      "sha256": "7bb64c76b8e70835bb5c2719e0ecee275826b422c7d92c6d64ffef3a886ea9bd"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/encore-final/result.json",
+      "size": 257,
+      "sha256": "8bb17922a07fb330a0d19715b6ab1e0be192a1abfa4c25625c1b38afac74542f"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/encore-final/runtime.log",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/encore-final-run.log",
+      "size": 239,
+      "sha256": "70f9ccb0403e5b20604411499cd9bd9b346105b62e3c4747418552f0f0bcc597"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/encore-run.log",
+      "size": 239,
+      "sha256": "70f9ccb0403e5b20604411499cd9bd9b346105b62e3c4747418552f0f0bcc597"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/evidence-format.log",
+      "size": 39,
+      "sha256": "9735abe968638a03c5ec1b5b607bc94dbf8a3642a2923bd60b5c6b5d0e41db8d"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/final-source-manifest.json",
+      "size": 15577,
+      "sha256": "d53ccf8f5f12baa6a8605db0820210e0ec73f20a532c1bad7f95fcd97652df9b"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/format-final-affected-test.log",
+      "size": 425,
+      "sha256": "504b8e94e2119c85592179f490abab85c02f948f43eda103f7bdb98a4d1d699f"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/format-final-type.log",
+      "size": 61,
+      "sha256": "66309dd7fe34610f6cf557dafe27940e549262bd7a328fd9807c45c21b173bbd"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/hermes-final/metadata.json",
+      "size": 3392,
+      "sha256": "23545ff47851a0d661223c393bb76eb0f4557368aeb744a20bd87f1d77eb26f6"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/late-format.log",
+      "size": 108,
+      "sha256": "37aef6ff99dcc4d38cfc2004b31b562cebcc4dded48ebe1d53578e0a079b4a41"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/m8-current-read-app-final-green.log",
+      "size": 2539,
+      "sha256": "d9e9b1e406c1f0c8b9a156994adb6ab7d5650911345c67665c3b366c4a81b9ea"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/m8-current-read-app-green.log",
+      "size": 53,
+      "sha256": "ade87011a54ffafdb8817211f118103ec4b88ad600ebeaee3bdbc8af01d760c6"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/m8-current-read-app-red.log",
+      "size": 2745,
+      "sha256": "bcda75395c2afddf25896b9c118c1ca4ef0be4f6b5bfae701cbab210d9bd5749"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/m8-expanded-sqlite.log",
+      "size": 52,
+      "sha256": "8daf5f3dcdad7001552ab9c0f1d50302ec52e5cc327961551c6d768aaec4d514"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/m8-explicit-value-green.log",
+      "size": 52,
+      "sha256": "5fc319dc5540daa038cdaf0df7d058e5c99326773acc212d13a64246e428d42a"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/m8-explicit-value-red.log",
+      "size": 352,
+      "sha256": "2f5d92e46f4830c0c1d015273d9ce2e671f2fbdf6d38881ea00400a865c97a30"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/m8-pg-final.log",
+      "size": 53,
+      "sha256": "67e1fe4249a036ad8c39ddd746ead6e3344f7e041552e6ed760407d29e2af2f8"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/m8-pg-latest.log",
+      "size": 52,
+      "sha256": "faf826ff0eb6d3d7140eaab222c7c312d21f89a27f5af735ce98db375b3d2fca"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/m8-pg-race.log",
+      "size": 53,
+      "sha256": "77b62ea5d20e583d7bbba848238aa8dacd7cccfbe9aa8fba1c245af53e9012a8"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/m8-role-matrix-sqlite.log",
+      "size": 52,
+      "sha256": "df15e17d97597c32f9dda0143eb825c7376e3aedd88920a7199e2b0f82fc0227"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/m8-sqlite-final.log",
+      "size": 53,
+      "sha256": "fc6ebc1111ca4cb621801f1b118b56f287c42f8da2fd3125f46eba388804146e"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/m8-two-company-pg.log",
+      "size": 52,
+      "sha256": "025e22a57ba0cd06f9300f98a951f8e95731e174e5870e79860d9db025a24ff2"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/m8-two-company-sqlite.log",
+      "size": 52,
+      "sha256": "f96c542e4b11592b51c42ab603df4258d558807e7d5bfe4927a8cf680acda72f"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/m8-utc-projection-green.log",
+      "size": 52,
+      "sha256": "84496efcc2d05e43fd23f4b276dabd9651f0f2568154f91bf42bb48ce1cfafba"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/m8-utc-projection-red.log",
+      "size": 356,
+      "sha256": "c743cd97845a6b9b03099a8191e7bbe1f647c81ecbc5e6802ee4be7099e92f1e"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/metadata-format.log",
+      "size": 99,
+      "sha256": "780ceee8b5b06d5116e768985d9652efb4a2b881c85184e06760e2d35d980128"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/native-late-green.log",
+      "size": 375,
+      "sha256": "8fb8ed0b4cb51df0f142b5110f9f00689f9d295590f5445fc5428162da896f54"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/pg-baseline47-full-gorm-diagnostic.log",
+      "size": 317,
+      "sha256": "16a1a0ed434721f71101194ed34fb3e730b6fc3716e147d43d6510a4d1bd8a62"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/pg-baseline47-full-gorm-probe.go.txt",
+      "size": 143,
+      "sha256": "ddeb5a5dbfc1bb63e4b20daf545a22bbb3f5e0e4d066797c449e0802279f1458"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/pg-numbered-then-full-gorm-diagnostic.log",
+      "size": 271,
+      "sha256": "b4187bfeb300618389f9aaea593881bbcce1d7aa00745e3a115c05b66925b244"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/pg-numbered-then-full-gorm-probe.go.txt",
+      "size": 135,
+      "sha256": "c5993087d4df8edfe4154f40ba11ddc9f3c1de1d1e59f1ac901fb9117029f8db"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime/browser.json",
+      "size": 449,
+      "sha256": "060ce72e05606893998781297c50172a86d07b7c832a757f919dc87d039e0215"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime/browser.log",
+      "size": 9722,
+      "sha256": "37b173c83fbe12f662c1928d181c84666a38a4ad6ab75ab7e04a3cfce0f10158"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime/build.log",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime/pg-api-before-utc-projection-failure.log",
+      "size": 592,
+      "sha256": "c7ab126fecbdcea9aac584e65c0760fe6933d0f9601174efc9afc80e7f553705"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime/pg-api.json",
+      "size": 756,
+      "sha256": "fbf00498135bf34981f76946085ab8d00df85e449aafe10b1306643aead6ef18"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime/pg-api.log",
+      "size": 2710,
+      "sha256": "af40c072f5a76b72153aad0611e6bc19c2acef1421bb59f2a20b2ef5d3741160"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime/pg-fresh-idempotent.log",
+      "size": 265,
+      "sha256": "039e39f2832256d85e69da956ddd45386d73eac0ee46030ed54d89e28825e789"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime/pg-fresh-migrate.log",
+      "size": 265,
+      "sha256": "039e39f2832256d85e69da956ddd45386d73eac0ee46030ed54d89e28825e789"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime/pg-upgrade-idempotent.log",
+      "size": 212,
+      "sha256": "d6798d1f4ab266d40814c70d528e42f8f65e5c71b724c6c6ccb854308faa17e0"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime/pg-upgrade-migrate.log",
+      "size": 212,
+      "sha256": "d6798d1f4ab266d40814c70d528e42f8f65e5c71b724c6c6ccb854308faa17e0"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime/planning-320.png",
+      "size": 67708,
+      "sha256": "34a850fbcb20387a72352644de2713260ccd43edb4bc0ac455e00cbd25428eef"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime/planning-375.png",
+      "size": 68293,
+      "sha256": "d0382f7565987c9bf4866cdf733441b15f127fa20bc718087e5a209f83807390"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime/planning-430.png",
+      "size": 67921,
+      "sha256": "7b5134eb5e0e0f3788ea815ebcb7472d2e70a2ecd05cb5ccbc5c9e1380014493"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime/result.json",
+      "size": 472,
+      "sha256": "6c99367d694e7d018b9f05e7da5eb5417bc81fd57af20c17f3ea071e081c27b0"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime/server-0.log",
+      "size": 287,
+      "sha256": "94f7425f2a56c2b0da74f09e0258ec3180ac7b8097eafc4620fc4e78fe599b75"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime-clean-head/browser.json",
+      "size": 1206,
+      "sha256": "9d135cb045720c24ec33192ff4b3eefe0206b9df32d6ed3e4252e41a256429c7"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime-clean-head/browser.log",
+      "size": 1014,
+      "sha256": "4f872ff1bdada37227fa4e534ba560979853733bd727ec8a7c8971290186616c"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime-clean-head/build.log",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime-clean-head/pg-api.json",
+      "size": 756,
+      "sha256": "052ed5d60502dcbe83eb1f1162ca5caa2afabd2df29ba6fa1f5d94501fe1f188"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime-clean-head/pg-api.log",
+      "size": 706,
+      "sha256": "f8d145e1ff6a67ddfcbc5c6398b6564fce42971d5781fd02308994688781a095"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime-clean-head/pg-fresh-idempotent.log",
+      "size": 53,
+      "sha256": "d134db671d228348f5e55a7ead67267931b75d84e0663894420b3f8bb1fbffb3"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime-clean-head/pg-fresh-migrate.log",
+      "size": 53,
+      "sha256": "d134db671d228348f5e55a7ead67267931b75d84e0663894420b3f8bb1fbffb3"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime-clean-head/pg-upgrade-idempotent.log",
+      "size": 53,
+      "sha256": "d134db671d228348f5e55a7ead67267931b75d84e0663894420b3f8bb1fbffb3"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime-clean-head/pg-upgrade-migrate.log",
+      "size": 53,
+      "sha256": "d134db671d228348f5e55a7ead67267931b75d84e0663894420b3f8bb1fbffb3"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime-clean-head/planning-320.png",
+      "size": 67708,
+      "sha256": "34a850fbcb20387a72352644de2713260ccd43edb4bc0ac455e00cbd25428eef"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime-clean-head/planning-375.png",
+      "size": 68293,
+      "sha256": "d0382f7565987c9bf4866cdf733441b15f127fa20bc718087e5a209f83807390"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime-clean-head/planning-430.png",
+      "size": 67950,
+      "sha256": "18758acd1d8e1415af990e7ee7e444b33bd010d8b026669af3d11a36b5b9a9c8"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime-clean-head/planning-large-text.png",
+      "size": 78424,
+      "sha256": "b76ff56b886485581ea83bf139331f36be14bee7a8c739b5360d0aaa81fa4ae5"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime-clean-head/result.json",
+      "size": 620,
+      "sha256": "5da7b981c3c1b11d38547133764d88e858bead8319ca43765012be13fdef098d"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime-clean-head/server-0.log",
+      "size": 836,
+      "sha256": "0a31625b6d8229499d38e528cbb783a0681a4fe3ed3506fbbd46f06be4b5e65e"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime-clean-head/server-1.log",
+      "size": 287,
+      "sha256": "9881c3c7d0f3887af118807003f01dd47605f9807f765d51875c381245bb5667"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime-clean-head/sqlite-api.json",
+      "size": 756,
+      "sha256": "bb12574235e6dff238db77260da6af774e71913dbc7d41340eb462e085f955cd"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime-clean-head/sqlite-api.log",
+      "size": 706,
+      "sha256": "1337ee5371d051b68239da4662cd51b6595230c22639618a994a221b16a04148"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime-clean-head-run.log",
+      "size": 584,
+      "sha256": "ab715ec6ddb55a3fc1a6e8aba95cd6771d7411d4bf0b27a40f2f40109c191e29"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime-final/browser.log",
+      "size": 284,
+      "sha256": "0e4c5ba7b424d006c15ecd5e018948665947493212c72b590d324cb58409c346"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime-final/build.log",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime-final/pg-api.json",
+      "size": 756,
+      "sha256": "74b7ad05f528a72635c7fbb6abb178d7280e60dfbf0b96bed37b2a8ee164ea5a"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime-final/pg-api.log",
+      "size": 706,
+      "sha256": "1a0a44158738ffeee47c510272d685641ba90ca52808a88db71a2143f6d2617c"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime-final/pg-fresh-idempotent.log",
+      "size": 53,
+      "sha256": "d134db671d228348f5e55a7ead67267931b75d84e0663894420b3f8bb1fbffb3"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime-final/pg-fresh-migrate.log",
+      "size": 53,
+      "sha256": "d134db671d228348f5e55a7ead67267931b75d84e0663894420b3f8bb1fbffb3"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime-final/pg-upgrade-idempotent.log",
+      "size": 53,
+      "sha256": "d134db671d228348f5e55a7ead67267931b75d84e0663894420b3f8bb1fbffb3"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime-final/pg-upgrade-migrate.log",
+      "size": 53,
+      "sha256": "d134db671d228348f5e55a7ead67267931b75d84e0663894420b3f8bb1fbffb3"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime-final/planning-320.png",
+      "size": 67708,
+      "sha256": "34a850fbcb20387a72352644de2713260ccd43edb4bc0ac455e00cbd25428eef"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime-final/planning-375.png",
+      "size": 68293,
+      "sha256": "12de2f1c48245546499fb0a47f16d8ec30577fac9473f3293de5a73ac254fbad"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime-final/planning-430.png",
+      "size": 67950,
+      "sha256": "18758acd1d8e1415af990e7ee7e444b33bd010d8b026669af3d11a36b5b9a9c8"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime-final/result.json",
+      "size": 472,
+      "sha256": "6c99367d694e7d018b9f05e7da5eb5417bc81fd57af20c17f3ea071e081c27b0"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime-final/server-0.log",
+      "size": 714,
+      "sha256": "2b713178d305e4d9c1d5cb8ec865d3c90a51bdcdf7c85cbd58b9f5a1487c661f"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime-final-run.log",
+      "size": 2115,
+      "sha256": "9686dbc8fb3351967b2d48d51a3d21f781af28ba0065a19e1c163da6e10e5481"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime-final2/browser.json",
+      "size": 1119,
+      "sha256": "ae2028493a51d3b396693c3df4052db0e057d363c3a3b5722a757c2865a4aeca"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime-final2/browser.log",
+      "size": 952,
+      "sha256": "656ee7d2ee24289330b2906c11076e89d32193414d89b3e2490138f118922674"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime-final2/build.log",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime-final2/pg-api.json",
+      "size": 756,
+      "sha256": "66c307113cc3d039d7621de9aedd3ede331c6004fb2c5ba50e57031c759d5842"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime-final2/pg-api.log",
+      "size": 706,
+      "sha256": "34c7d246b9cbfcd3b58f089e5967fec2c652ae6f5cafb64759826da8baf4d49d"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime-final2/pg-fresh-idempotent.log",
+      "size": 53,
+      "sha256": "d134db671d228348f5e55a7ead67267931b75d84e0663894420b3f8bb1fbffb3"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime-final2/pg-fresh-migrate.log",
+      "size": 53,
+      "sha256": "d134db671d228348f5e55a7ead67267931b75d84e0663894420b3f8bb1fbffb3"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime-final2/pg-upgrade-idempotent.log",
+      "size": 53,
+      "sha256": "d134db671d228348f5e55a7ead67267931b75d84e0663894420b3f8bb1fbffb3"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime-final2/pg-upgrade-migrate.log",
+      "size": 53,
+      "sha256": "d134db671d228348f5e55a7ead67267931b75d84e0663894420b3f8bb1fbffb3"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime-final2/planning-320.png",
+      "size": 67708,
+      "sha256": "34a850fbcb20387a72352644de2713260ccd43edb4bc0ac455e00cbd25428eef"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime-final2/planning-375.png",
+      "size": 68293,
+      "sha256": "0c9ea8427bba94b01bf16719d02f79b6461efd2b22418f158e7240b756084a5d"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime-final2/planning-430.png",
+      "size": 67921,
+      "sha256": "7b5134eb5e0e0f3788ea815ebcb7472d2e70a2ecd05cb5ccbc5c9e1380014493"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime-final2/result.json",
+      "size": 620,
+      "sha256": "5da7b981c3c1b11d38547133764d88e858bead8319ca43765012be13fdef098d"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime-final2/server-0.log",
+      "size": 714,
+      "sha256": "6c124f852cd0726f277dcde5d6b6849571e7955f732bb1ff355761529b7e7071"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime-final2/server-1.log",
+      "size": 287,
+      "sha256": "007cf2b68237a67890c5dbe473b5b863ed1158bbb90e6a61b4fcdd7bd27e73d2"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime-final2/sqlite-api.json",
+      "size": 756,
+      "sha256": "999138ba02b7f41442aeeb60d8bf28777a885d88b1a330d2b40adfca972230bb"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime-final2/sqlite-api.log",
+      "size": 706,
+      "sha256": "4f67d193d4d3317c6d68caf19f5461659202bd2c9613157b7c29d89253a944d7"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime-final2-run.log",
+      "size": 584,
+      "sha256": "ab715ec6ddb55a3fc1a6e8aba95cd6771d7411d4bf0b27a40f2f40109c191e29"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime-final3/browser.json",
+      "size": 1206,
+      "sha256": "27ed5875bdefb106775927520b7f75516014026e0817b10ee12b6d5c2db367e5"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime-final3/browser.log",
+      "size": 1014,
+      "sha256": "3bbb42dc63da41bd6a3040a7ba531225a770866ec7db19abbf80818f75b4ee63"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime-final3/build.log",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime-final3/pg-api.json",
+      "size": 756,
+      "sha256": "6a3a130a8e9604b7b1bd326847af2a647f6c2a54d84186d7310b5574a3ffde9b"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime-final3/pg-api.log",
+      "size": 706,
+      "sha256": "ab93d2151bee9ea72c6588d2fac7ebf8f75f91b1b317a7f52db8196a3f8562ce"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime-final3/pg-fresh-idempotent.log",
+      "size": 53,
+      "sha256": "d134db671d228348f5e55a7ead67267931b75d84e0663894420b3f8bb1fbffb3"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime-final3/pg-fresh-migrate.log",
+      "size": 53,
+      "sha256": "d134db671d228348f5e55a7ead67267931b75d84e0663894420b3f8bb1fbffb3"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime-final3/pg-upgrade-idempotent.log",
+      "size": 53,
+      "sha256": "d134db671d228348f5e55a7ead67267931b75d84e0663894420b3f8bb1fbffb3"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime-final3/pg-upgrade-migrate.log",
+      "size": 53,
+      "sha256": "d134db671d228348f5e55a7ead67267931b75d84e0663894420b3f8bb1fbffb3"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime-final3/planning-320.png",
+      "size": 67708,
+      "sha256": "34a850fbcb20387a72352644de2713260ccd43edb4bc0ac455e00cbd25428eef"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime-final3/planning-375.png",
+      "size": 68293,
+      "sha256": "d0382f7565987c9bf4866cdf733441b15f127fa20bc718087e5a209f83807390"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime-final3/planning-430.png",
+      "size": 67950,
+      "sha256": "18758acd1d8e1415af990e7ee7e444b33bd010d8b026669af3d11a36b5b9a9c8"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime-final3/planning-large-text.png",
+      "size": 78424,
+      "sha256": "b76ff56b886485581ea83bf139331f36be14bee7a8c739b5360d0aaa81fa4ae5"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime-final3/result.json",
+      "size": 620,
+      "sha256": "5da7b981c3c1b11d38547133764d88e858bead8319ca43765012be13fdef098d"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime-final3/server-0.log",
+      "size": 714,
+      "sha256": "6a6e7e9bb4cf6242478036cfc49c39c4edb3cd195732b96255959901e232c052"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime-final3/server-1.log",
+      "size": 287,
+      "sha256": "3007fc45cd1fa83c99e79d5387e476b03125d031fc06bd4cb7db729baf512469"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime-final3/sqlite-api.json",
+      "size": 756,
+      "sha256": "bbe2850cdae7155671b8cd12a29c44d73344d86237ee272035c76cffbfb0910a"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime-final3/sqlite-api.log",
+      "size": 706,
+      "sha256": "02ca32901d716f586d7b2b652678acc5645e077e9e2dd9366aba82bd09429e3f"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime-final3-run.log",
+      "size": 584,
+      "sha256": "ab715ec6ddb55a3fc1a6e8aba95cd6771d7411d4bf0b27a40f2f40109c191e29"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/runtime-run.log",
+      "size": 2115,
+      "sha256": "9686dbc8fb3351967b2d48d51a3d21f781af28ba0065a19e1c163da6e10e5481"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/schedule-first-edit-green.log",
+      "size": 352,
+      "sha256": "055aea27e731d904c25deba133f15df187ecf209407e1d3a7f4a70643a0474f5"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/schedule-first-edit-red.log",
+      "size": 1339,
+      "sha256": "7e297e45c3a64c0511c413ddd8b415c70c055d0c70f61e03442025989ca6e445"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/schedule-format.log",
+      "size": 48,
+      "sha256": "37f31c5fa286c9da7aaf8f6c9e79ebf4ae8948b06cf44058e5e84816ff43e3fe"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/slice1-green.log",
+      "size": 52,
+      "sha256": "b0c40f51481c57f4f42e8f5dbaae95d7eed8d7e640498390f986c638eef2bc1a"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/slice1-pg.log",
+      "size": 52,
+      "sha256": "d8ad5fbea4681e38655ef161de5129579be3faec68db94fdbd6c3dd9a6d72ce0"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/slice1-red.log",
+      "size": 659,
+      "sha256": "21e3b82c2f28bc9ce73c19ae21bdae6ac31e740f3d244f88c6c7553548d47157"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/slice2-green.log",
+      "size": 52,
+      "sha256": "43fcee471f360239bd8138a65f1751ea16e86dfdc6615d4bc35f4bf16833ae2a"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/slice2-native-type.log",
+      "size": 42,
+      "sha256": "6a5365a7bb40c3ca387f36db78409447c32d44f69ec1737ce498eae83f040589"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/slice2-native.log",
+      "size": 305,
+      "sha256": "ae9c8238a26ee896c8e8f971b4c102cf4a7fb18d567a3f34a3cd3a2932100d44"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/slice2-pg.log",
+      "size": 52,
+      "sha256": "047f82ef24f206aac287d6f98f67433316b089225721e4791bed1885b6a91f96"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/slice2-red.log",
+      "size": 377,
+      "sha256": "42b77fcc35ae763b11dc62b8338074cdcd1383a22469d2c5cbb3f981bb276ea9"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/slice2-web.log",
+      "size": 397,
+      "sha256": "da49fd4d813bf875442beb362def5b270c100c6ba4693fb9b565f9bab392c6a8"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/slice3-green.log",
+      "size": 52,
+      "sha256": "1238dadc4455b96bad279e7d1c2e67a540f557cfb69c9922fcc5739fcccfc1ba"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/slice3-pg.log",
+      "size": 52,
+      "sha256": "ccdab5c0efe5c8cbfd0cbd177928c7b0c9f6d22adbbd1977836f5f4051f6ff9d"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/slice3-red.log",
+      "size": 736,
+      "sha256": "4d01380b52c513aaca8d1be1bb98748f27b2cd143e8aaa5bb033e9bf0f801a3c"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/slice4-green.log",
+      "size": 52,
+      "sha256": "9786239a1c66aac2d02a4540561ec5888e374b8ca3c0df8523923102043fe647"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/slice4-pg.log",
+      "size": 52,
+      "sha256": "12f19d22c1eda57c7cb9c58826043a37c96d4f0cb42ef7b1dbe6f2bdd44bcf1a"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/slice4-red.log",
+      "size": 591,
+      "sha256": "f70d210f648fe7ba60f1363afb11f0349f18dbbba6fae7a67c388f03b1429b1d"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/slice5-green.log",
+      "size": 53,
+      "sha256": "55db9451de97c017cd5c9236a6ed8041d29baf90ad7869e9de5b0c9774027db6"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/slice5-pg.log",
+      "size": 53,
+      "sha256": "ae9fa0ee196326be99c1ced182ef45cc82b84518030835b17ac8ba64f2fd491c"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/slice5-red.log",
+      "size": 653,
+      "sha256": "952c4c14bfd16da39f410f4efbb85e772a1e20aeb5ed6a607b4177494d8cd9d9"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/slice6-build.log",
+      "size": 548,
+      "sha256": "4ad0b02b354574af089bb85e24d07bc3c5a9cab0993fe7786ccf262f05bdf4ff"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/slice6-demo-build.log",
+      "size": 603,
+      "sha256": "a2e8fd0e062d73ca566ae4022b262a798b1f69bb57a610720e313f5250027ce9"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/slice6-final-build.log",
+      "size": 548,
+      "sha256": "7db208d8e3dcfb44cd8b20135ce1019f8a80525afcb6a0adc0a8202acfdb7a1f"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/slice6-final-demo.log",
+      "size": 603,
+      "sha256": "9f668d4533fa4fa806dd7a6ac5ee1310f45d865148e3af3b3066b846eb972902"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/slice6-final-test.log",
+      "size": 519,
+      "sha256": "c6d41c58db3abf92e5dbbe2a2b08e6bdffee5104ef9ad97202b36e4412797ff5"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/slice6-final-type.log",
+      "size": 61,
+      "sha256": "66309dd7fe34610f6cf557dafe27940e549262bd7a328fd9807c45c21b173bbd"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/slice6-format-check.log",
+      "size": 860,
+      "sha256": "82ebb1b1d6fe84e06e7c53b2974725e6200814875c217d3de835aab11f0769e4"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/slice6-format.log",
+      "size": 579,
+      "sha256": "50da2e1340c0adea83ccf157ce83cf23c983cd54e145139f4da53798d07290ed"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/slice6-full-test.log",
+      "size": 519,
+      "sha256": "9022d153b5e5c3618a04ed18d7708f3e9d6d68e39e8ce801873ff1716385244a"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/slice6-green.log",
+      "size": 557,
+      "sha256": "3a1adb0e9817ac6e90a2eabb98ec9c0282c7aef5e47c53be6eb73cf02676287e"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/slice6-late-type.log",
+      "size": 61,
+      "sha256": "66309dd7fe34610f6cf557dafe27940e549262bd7a328fd9807c45c21b173bbd"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/slice6-red.log",
+      "size": 22382,
+      "sha256": "16c0ab8724e747c8fdc9f02096c738fc6af3538c978c4aae4811c2d89ea4e949"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/slice6-type.log",
+      "size": 61,
+      "sha256": "66309dd7fe34610f6cf557dafe27940e549262bd7a328fd9807c45c21b173bbd"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/slice7-export.log",
+      "size": 4439,
+      "sha256": "5004090bec8a760841c5b11059022ac3d915de36e9db1333ba18de33a0abb1a9"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/slice7-final-export.log",
+      "size": 1944,
+      "sha256": "d0945bb8038aacc23d320d615f8fd7220ae9ab59f876cda5dc46fe518374c1ee"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/slice7-final-lint.log",
+      "size": 1321,
+      "sha256": "0118500d6f420cc554d8f2dcfad23d5acb89219f450809cb39c6dfc55c4b8fc4"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/slice7-final-test.log",
+      "size": 553,
+      "sha256": "198a20bf9e1ab7d0d122fa881b3ad29d778e2ad7312b0610d92a0f3d1c761e8e"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/slice7-final-type.log",
+      "size": 42,
+      "sha256": "6a5365a7bb40c3ca387f36db78409447c32d44f69ec1737ce498eae83f040589"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/slice7-format.log",
+      "size": 426,
+      "sha256": "876f04ae11e84fc4806bc0406dddaca22e9fd6227e89494ec4778490efd604d7"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/slice7-full-test.log",
+      "size": 553,
+      "sha256": "849f0c4f03876d5c05fa4691a5e18840123ecaa9fd249c6b471ee199b6638373"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/slice7-green.log",
+      "size": 338,
+      "sha256": "180ea222052958a72592eacb134f8f284ad38bc262a60a1d5df956c8fc76d7b9"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/slice7-late-type.log",
+      "size": 42,
+      "sha256": "6a5365a7bb40c3ca387f36db78409447c32d44f69ec1737ce498eae83f040589"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/slice7-red.log",
+      "size": 1743,
+      "sha256": "df7830770b7b60307fee9d99bbc1baae63b7c82d1d06b676520aac401a5c01d9"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/slice7-test-format.log",
+      "size": 66,
+      "sha256": "6079039f0ab7c6fec60eb54c03dec19771073f92d5c6b2199858e9d4a6a10bb5"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/slice7-type.log",
+      "size": 42,
+      "sha256": "6a5365a7bb40c3ca387f36db78409447c32d44f69ec1737ce498eae83f040589"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/sql-manifest.json",
+      "size": 18709,
+      "sha256": "831edfb5f2d6e4f6ff1f4af7547480cbf889734ba3120ddc33ef2b346461d257"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/sqlite-full-gorm-backfill-probe.go.txt",
+      "size": 989,
+      "sha256": "5eff7348cffc98cf7729bec3230c216ccae4d489db38c608d8a7c4d5452408a0"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/sqlite-full-gorm-backfill-probe.log",
+      "size": 477,
+      "sha256": "4c2c8a47f8b7a9b9aae0ece8367b0c45c136d48b4a2f7d0aea51598472c5824d"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/test-format.log",
+      "size": 95,
+      "sha256": "7f3e9625a0a9809b918bf6f36ceac7edc8411c5ba35cb150f8826da1210a7c06"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-8-artifacts/web-late-green.log",
+      "size": 525,
+      "sha256": "62b33b475ef4710bd20f61435b11667ca62100d3aa58520eff149ab80c6af4ca"
+    }
+  ]
+}

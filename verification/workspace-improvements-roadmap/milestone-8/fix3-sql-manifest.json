@@ -1,0 +1,790 @@
+{
+  "head": "05159ea505e13e9a332ad4d2afaacd495d0cce1a",
+  "base": "e84d3a3735d57cb0935a04c8a5b89b93d4c2dc92",
+  "entries": [
+    {
+      "path": "backend/migrations/10_communication_calls.down.sql",
+      "size": 70,
+      "sha256": "9e83ce58d8829389c6d091ae47462209bb47b3720ebe701ffb5ea5d8d04500fe",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/10_communication_calls.down.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/10_communication_calls.up.sql",
+      "size": 1262,
+      "sha256": "8c70d5fbf6c1249dfc0104f94f7c77dfb418d6c5bc40e963ad2fd1a25f8f47e9",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/10_communication_calls.up.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/11_account_offboarding.down.sql",
+      "size": 41,
+      "sha256": "e31268c423a4de97b3bd49a222f765c4eaa703272f4c1076fa910cad96b6d43f",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/11_account_offboarding.down.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/11_account_offboarding.up.sql",
+      "size": 71,
+      "sha256": "6937de37c89e884cdf73b19efaa68c5c668000463b0a8f83b2a0da73224a85e6",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/11_account_offboarding.up.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/12_communication_structured.down.sql",
+      "size": 71,
+      "sha256": "5d0cf65d24ed7b3a6d68ee3408e5138050f6748300ea0b543c2e7f2c4ac6dc9a",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/12_communication_structured.down.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/12_communication_structured.up.sql",
+      "size": 1411,
+      "sha256": "6c5ab5ff77140d496e6f1052aedabad7166ad8022ceae49c245da891ec2f1563",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/12_communication_structured.up.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/13_communication_intake.down.sql",
+      "size": 35,
+      "sha256": "d8cdfed751d1463024ffbbfb0624a9984cd07373b27cf4c95b39b731a16b2152",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/13_communication_intake.down.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/13_communication_intake.up.sql",
+      "size": 977,
+      "sha256": "e5593d2f25b7e3081e00887fd38a5688a65b32ab3e05217dd1f94fa1f87b8a3e",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/13_communication_intake.up.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/14_communication_record_revisions.down.sql",
+      "size": 151,
+      "sha256": "387b500dcbd85b60cb009b8bc8a92b2d6273c4b31954bd49fa5b282ae70c3504",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/14_communication_record_revisions.down.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/14_communication_record_revisions.up.sql",
+      "size": 822,
+      "sha256": "1157bf54b775ab73d8fd0eb2dc39565d415f126a20a3dde60fa58b4261710c18",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/14_communication_record_revisions.up.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/15_communication_call_jobs.down.sql",
+      "size": 36,
+      "sha256": "46d4203ed9849f327544a84961b8a710e90e037e903186c55e022c401502b113",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/15_communication_call_jobs.down.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/15_communication_call_jobs.up.sql",
+      "size": 486,
+      "sha256": "da2bc6b6e70af4f3cb27928d264f0626e75a262e4e77c5f9375d982c14706c61",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/15_communication_call_jobs.up.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/16_communication_finance.down.sql",
+      "size": 82,
+      "sha256": "49f6db1a2e38ddb44a5a4b2dab5f4b4f5a81eb1d0186668bbb73010d3861a6bd",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/16_communication_finance.down.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/16_communication_finance.up.sql",
+      "size": 995,
+      "sha256": "797ef4aede0f31cf6787facbe95aa6a8941d1a4dc8ea3b0a2589f42b203cdc8b",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/16_communication_finance.up.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/17_communication_controls.down.sql",
+      "size": 135,
+      "sha256": "05976179a1e2784540ef50ef3853ab98660414cfd070ff8a19d5be742ecbf9bc",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/17_communication_controls.down.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/17_communication_controls.up.sql",
+      "size": 882,
+      "sha256": "d9b677ed4d5e9a6a5358b3fa900d50a904241dc06471d3b04a75adf8cda868d0",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/17_communication_controls.up.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/18_communication_bundles.down.sql",
+      "size": 75,
+      "sha256": "a3e645b2913da95baa5f84f8298d96d15b3e27be5435887a7bdcbbb147303164",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/18_communication_bundles.down.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/18_communication_bundles.up.sql",
+      "size": 1090,
+      "sha256": "1a010b775ee9a3221b16121a3058fdfe3c81c071b93c177f0eb210c0e0a2d017",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/18_communication_bundles.up.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/19_communication_upload_retries.down.sql",
+      "size": 118,
+      "sha256": "ada4480be033a792132ac3710e70fc8b17cf632cdb3ef782ae7b59d6effc4538",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/19_communication_upload_retries.down.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/19_communication_upload_retries.up.sql",
+      "size": 263,
+      "sha256": "72ab862dd1b2eb91dfa0f1a81f3505e6bb10788e62059317a919e092ca2bb58d",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/19_communication_upload_retries.up.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/1_initial.down.sql",
+      "size": 534,
+      "sha256": "2ef1edfbc7b654d00d84f061f55652fbe93124fe375d1d713c7caf4d9822ebb5",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/1_initial.down.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/1_initial.up.sql",
+      "size": 7455,
+      "sha256": "4502929647861a5abf59509dda73bc91ac2f847f190a9c37419b5627e361f8b5",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/1_initial.up.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/20_authenticator.down.sql",
+      "size": 49,
+      "sha256": "cdcb1a28388a59b9be16091031cb25879ad270cfc907d6792f75d1d95a1c2b06",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/20_authenticator.down.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/20_authenticator.up.sql",
+      "size": 378,
+      "sha256": "dbc7d66ca427c3eb394569803d91d54142ff7b983fb06b1fa5415c25bf961281",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/20_authenticator.up.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/21_communication_push.down.sql",
+      "size": 33,
+      "sha256": "e752c4bb22bad1a61559116b04e70bbe2886933f0763624d16632b860e0b8de2",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/21_communication_push.down.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/21_communication_push.up.sql",
+      "size": 550,
+      "sha256": "78e0b50cc41c146f5c83f1d24c191062876990c2f7d308858191e2c00d57e9e8",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/21_communication_push.up.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/22_communication_retention.down.sql",
+      "size": 155,
+      "sha256": "0f4e90464f1dee451289d927b955f0e08558e20e4e93710b27b19ee9a2a71b94",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/22_communication_retention.down.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/22_communication_retention.up.sql",
+      "size": 289,
+      "sha256": "2131b21c9a18b09172e126bce6f0f8fd88c17fedeacb9c55ae186a7a7b063b08",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/22_communication_retention.up.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/23_communication_call_outcomes.down.sql",
+      "size": 356,
+      "sha256": "fca11502b78bb224d05672aa6ed0b4bb3cdc863584a7e72548f91881ff72fe12",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/23_communication_call_outcomes.down.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/23_communication_call_outcomes.up.sql",
+      "size": 395,
+      "sha256": "1c1fb5a47bf6fef5bf68aba12541e69368995e83fe85f97d8c5525ba2f685d52",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/23_communication_call_outcomes.up.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/24_communication_exports.down.sql",
+      "size": 40,
+      "sha256": "e6a2e8f313c6004dac343f3cbde8372cfd9e7d9e39b15d4d2b7549baa0ad6b2f",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/24_communication_exports.down.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/24_communication_exports.up.sql",
+      "size": 532,
+      "sha256": "5c61a6ad0faa43ecfda8adf261367a55ac4119ff6b645c1f4e6bd07b807632a5",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/24_communication_exports.up.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/25_measured_task_pagination.down.sql",
+      "size": 39,
+      "sha256": "dc7e8f8fd430cf4f05d48b0930c06536a96b95541c90f61e51c99c665b810b19",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/25_measured_task_pagination.down.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/25_measured_task_pagination.up.sql",
+      "size": 247,
+      "sha256": "0e572e3e9d271feb12d8655a010af0b6c8db60b1a1ef80506125dc266f4c117e",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/25_measured_task_pagination.up.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/26_attention.down.sql",
+      "size": 124,
+      "sha256": "b9321c7bc16374b1040c3f6e15516b8e790337c3556289b538def57a6db172af",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/26_attention.down.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/26_attention.up.sql",
+      "size": 2713,
+      "sha256": "83738a2d28f4a2110ee601caeff5504ce4641d53ffff754b6e4cea21338ccf1b",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/26_attention.up.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/27_attention_delivery.down.sql",
+      "size": 33,
+      "sha256": "f8b123304f2d7674ca42cc1a6118394ee7a7fdcd439f1346428fca582c41f38d",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/27_attention_delivery.down.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/27_attention_delivery.up.sql",
+      "size": 282,
+      "sha256": "d46654fa71034d1afbc17cef5289c961e81a8b3747aa4f02721faf085f13f14d",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/27_attention_delivery.up.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/28_business_mutation_retries.down.sql",
+      "size": 38,
+      "sha256": "207c57e722dba2c264e41fe06cac028a31e8bda756f31f24d25be5a85680dbb5",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/28_business_mutation_retries.down.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/28_business_mutation_retries.up.sql",
+      "size": 341,
+      "sha256": "d9832f6a7f2ffbf8c8b38bb9bd8c0d33c2835c6432ae4cb45fee104855eec7ac",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/28_business_mutation_retries.up.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/29_task_templates.down.sql",
+      "size": 330,
+      "sha256": "c222e58301948e669711c2e45ae8f88f9459a877b237516ce49b8e56ab35a9d9",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/29_task_templates.down.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/29_task_templates.up.sql",
+      "size": 1076,
+      "sha256": "4ee1a520ca830e733c1f1ad61d052d1430b62cb21529f498725bb3301bd65245",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/29_task_templates.up.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/2_department_finance.down.sql",
+      "size": 717,
+      "sha256": "cd2fef467bd3b1124fa441fcd212fd5ffc67e9a335ae57c21ee0645f4bb41432",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/2_department_finance.down.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/2_department_finance.up.sql",
+      "size": 6618,
+      "sha256": "e0c46f3d6db61d4c85450a69314bed36f5caba84b47db4e9b3fc31be96a46646",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/2_department_finance.up.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/30_project_milestones.down.sql",
+      "size": 94,
+      "sha256": "f2087fed684713aa1d6c9e8995df5c3eff58f44324553c0e9664df43f2f39793",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/30_project_milestones.down.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/30_project_milestones.up.sql",
+      "size": 1799,
+      "sha256": "3f6ae749f49abf32ea2e692d9db207f68b70e302f338e8498744655cae129eec",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/30_project_milestones.up.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/31_task_schedule_proposals.down.sql",
+      "size": 36,
+      "sha256": "b4a1995bc9f660056c986860367bce46dd47532cd2f2af1af41a94c1a1a429a7",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/31_task_schedule_proposals.down.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/31_task_schedule_proposals.up.sql",
+      "size": 410,
+      "sha256": "00fe1294a1f8b129a5711b30e1d270532f467e303beb2383f4dc2c73a6cc264a",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/31_task_schedule_proposals.up.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/32_milestone_submission_history.down.sql",
+      "size": 183,
+      "sha256": "0eeee310b35f9e998587376a07900ca3bc3da22e4451ddb83b1dc36f86da9a89",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/32_milestone_submission_history.down.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/32_milestone_submission_history.up.sql",
+      "size": 331,
+      "sha256": "fdea426d8f62b108857ff0a46a1df74db6385e75a9e1c9a04d9088c1be3f6ca2",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/32_milestone_submission_history.up.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/33_report_history.down.sql",
+      "size": 106,
+      "sha256": "c6a28a42ee395256c7227b85bd09a3b9457bc8a3d5b97efb24118c0a471eb42d",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/33_report_history.down.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/33_report_history.up.sql",
+      "size": 2452,
+      "sha256": "1872774a6385ad69294218181f5634436542975cb1cc636186bd8243e8ad7af0",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/33_report_history.up.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/34_historical_snapshots.down.sql",
+      "size": 89,
+      "sha256": "32472f6f13590662d851325eb5c9803ec108321b971d4a8bbb338256e02ed871",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/34_historical_snapshots.down.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/34_historical_snapshots.up.sql",
+      "size": 1727,
+      "sha256": "fc35eb23c70cf65e461e32ec5c19c925b0f5ce4ccc395e80adc1b387dd3efd45",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/34_historical_snapshots.up.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/35_saved_reports_exports.down.sql",
+      "size": 142,
+      "sha256": "88e51a56c036fd2cb99892cdc3e4e054cf407fee2ac07acffc8e876ff1dfc208",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/35_saved_reports_exports.down.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/35_saved_reports_exports.up.sql",
+      "size": 3183,
+      "sha256": "84630af2ba39c92300579334231ac2f37d3870b92d7df9982664cc94cdc55d24",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/35_saved_reports_exports.up.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/36_attention_report_source.down.sql",
+      "size": 636,
+      "sha256": "8bcd75623f7e3744f1db7304eb38822b7566b19c7736d84cb6b326d59c993f69",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/36_attention_report_source.down.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/36_attention_report_source.up.sql",
+      "size": 523,
+      "sha256": "8463727f0a2d9576d7fb68f1563fa4164c750165517accf5fcac657f8c8709cb",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/36_attention_report_source.up.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/37_report_schedule_failures.down.sql",
+      "size": 262,
+      "sha256": "eae59cf56e4246c1473d459fa166bd0449797a47723904b81e12c8bdde38324c",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/37_report_schedule_failures.down.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/37_report_schedule_failures.up.sql",
+      "size": 909,
+      "sha256": "b99cdfaace0fed34e21f33b9ad8b3536220961198774da37ba9576a63a82450a",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/37_report_schedule_failures.up.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/38_finance_assistance_sources.down.sql",
+      "size": 117,
+      "sha256": "718e80ba17a9d4e1bfc872d0834036bfe0270e2d4b5e8b7597f11a7ac11ef455",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/38_finance_assistance_sources.down.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/38_finance_assistance_sources.up.sql",
+      "size": 2868,
+      "sha256": "8a558b4ff9b8aa7862dcffae56b361d4b9f18ba06f0e79a3674fbbc5fb0ab9a8",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/38_finance_assistance_sources.up.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/39_finance_receipt_results.down.sql",
+      "size": 39,
+      "sha256": "e0125a1435e1716144ce7929058ff8e4f3defc16b6a65eb325e0885178c59901",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/39_finance_receipt_results.down.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/39_finance_receipt_results.up.sql",
+      "size": 436,
+      "sha256": "93d72ab9e82d6983e608f2c83ae31e05e627a1c091271e37f5b5ed437be89b40",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/39_finance_receipt_results.up.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/3_communication_core.down.sql",
+      "size": 94,
+      "sha256": "f53ab8a277b705598e0473db48bf1477d99f77f9eb72c1a23c6bd65bd1abd87d",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/3_communication_core.down.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/3_communication_core.up.sql",
+      "size": 2388,
+      "sha256": "508fedd724b05fa93fcf0d3c867f46e200bb87449ecbdbd03840ca3bf3aab2c5",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/3_communication_core.up.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/40_finance_receipt_acceptance.down.sql",
+      "size": 43,
+      "sha256": "252a978c416b8a58c6d9356d3b46d86a86e9bb01416e486692fe20937ce405f5",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/40_finance_receipt_acceptance.down.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/40_finance_receipt_acceptance.up.sql",
+      "size": 506,
+      "sha256": "b6328bd5a5af03146dbf6f76127a5ee98e9a47d80955eeba07b376c660d7455c",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/40_finance_receipt_acceptance.up.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/41_finance_duplicates.down.sql",
+      "size": 81,
+      "sha256": "ae89d716b902bf16e660eeaa377497a62908f4375ef0454294a71610c8581655",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/41_finance_duplicates.down.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/41_finance_duplicates.up.sql",
+      "size": 1067,
+      "sha256": "abc7768aa6dd5baec5b55b49d2d2edd7a319c9c70a5f9a306abd2873aa38c0b9",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/41_finance_duplicates.up.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/42_finance_statements.down.sql",
+      "size": 149,
+      "sha256": "45cec8160089af321a3089408aa7fd3cd1c04eec18f8320e88ecd33c2449590a",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/42_finance_statements.down.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/42_finance_statements.up.sql",
+      "size": 1961,
+      "sha256": "1a692253fa2cde7d892e9004e9776e4f42c9765bd81aa164c4ab58046df29424",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/42_finance_statements.up.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/43_finance_reconciliation.down.sql",
+      "size": 92,
+      "sha256": "61beda792514a6ec7b01b471bfce817db20f65c12e49b64d830fac987f9a41d2",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/43_finance_reconciliation.down.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/43_finance_reconciliation.up.sql",
+      "size": 1157,
+      "sha256": "f16980865d0da633b4a45e4caae4f93b42a044e4141a26a5d59fa7ec75098312",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/43_finance_reconciliation.up.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/44_finance_capture_reservations.down.sql",
+      "size": 885,
+      "sha256": "666bb4863d005cea699c7760ab827a7351d260fa027756bf946a02eef80316b0",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/44_finance_capture_reservations.down.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/44_finance_capture_reservations.up.sql",
+      "size": 1485,
+      "sha256": "ffcfc89bc7f92a1e902c88856ebb644a953cb15d045dfef7a1df2c9871a5aa4b",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/44_finance_capture_reservations.up.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/45_finance_assistance_attention.down.sql",
+      "size": 716,
+      "sha256": "d6d7786854f0412af72fa8eebd9359c35a6b85d0bfef3cb4b60be46b81fe1bdb",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/45_finance_assistance_attention.down.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/45_finance_assistance_attention.up.sql",
+      "size": 1105,
+      "sha256": "317c839984cf0ed05d46e41a738c4efac7a5dc9dac3cc12f6242ca4b28b5e2b0",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/45_finance_assistance_attention.up.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/46_finance_assistance_history.down.sql",
+      "size": 41,
+      "sha256": "c648951ec31c0fe930d4d2fed845020b7af2aa275f766e373eb0d4f6430d3647",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/46_finance_assistance_history.down.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/46_finance_assistance_history.up.sql",
+      "size": 775,
+      "sha256": "3e847e044a1e9fd2782d3288f6613c7d98ec2ec954d8f67a8da2c295337e6502",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/46_finance_assistance_history.up.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/47_finance_reconciliation_attention_work.down.sql",
+      "size": 51,
+      "sha256": "4bf782c48bf636177b8be236d0fd97ab53b622b2ce24a96f9674f089aeb06973",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/47_finance_reconciliation_attention_work.down.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/47_finance_reconciliation_attention_work.up.sql",
+      "size": 685,
+      "sha256": "d3abcdf67c86fa76144561913c6465f8fc3f0e97f5e38f7d8c08d5ce48bac13d",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/47_finance_reconciliation_attention_work.up.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/48_goal_measurements.down.sql",
+      "size": 262,
+      "sha256": "9c2728be5544c9dbd412081476c3e5bdb2dfcad62bcc75c68257968dde9f6b0a",
+      "predecessorImmutable": false,
+      "mirror": "encore/api/migrations/48_goal_measurements.down.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/48_goal_measurements.up.sql",
+      "size": 1764,
+      "sha256": "29179956adedbc27990d448520008256e0715d0e466e11a36dc96bd7448de3b7",
+      "predecessorImmutable": false,
+      "mirror": "encore/api/migrations/48_goal_measurements.up.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/49_goal_attention.down.sql",
+      "size": 839,
+      "sha256": "e346184ec6fe66fea28a8e4b5747a19ae37289ffacc1e96110fcd64c20c23005",
+      "predecessorImmutable": false,
+      "mirror": "encore/api/migrations/49_goal_attention.down.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/49_goal_attention.up.sql",
+      "size": 1318,
+      "sha256": "d96fa39865703c1dfa451706e6ab08d28803cbe0cd8a442de84e854048ed4e7b",
+      "predecessorImmutable": false,
+      "mirror": "encore/api/migrations/49_goal_attention.up.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/4_communication_messages.down.sql",
+      "size": 153,
+      "sha256": "90e18d887b22062f183ae6df3ce8ee285ded7274b36b848842bd11e3b7ddd126",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/4_communication_messages.down.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/4_communication_messages.up.sql",
+      "size": 2546,
+      "sha256": "b5672c537d1ef0465a9d1b4eab4c2f39ff1f5244b01259f154b8ac73e6040708",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/4_communication_messages.up.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/5_timed_deadlines.down.sql",
+      "size": 321,
+      "sha256": "784550a142fd4ac5d55c8bbab26c12284468f4b40bcee5184664aea8b4281e37",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/5_timed_deadlines.down.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/5_timed_deadlines.up.sql",
+      "size": 1101,
+      "sha256": "366790aae9fc0c734c00cbb46ac62503f9feb04041b50af83e9b929c709f5261",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/5_timed_deadlines.up.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/6_communication_work.down.sql",
+      "size": 107,
+      "sha256": "da95d664f0101f0da7893bd54c649c901f67540b130ac299fae216f324530b39",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/6_communication_work.down.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/6_communication_work.up.sql",
+      "size": 1399,
+      "sha256": "9af28fa540f8dc2bf308a0755bf2000a0a38e931dcd0cd6c71082631b7cb2b8e",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/6_communication_work.up.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/7_communication_daily.down.sql",
+      "size": 113,
+      "sha256": "d79845e1394e64dfc045715df03d69f17710c6250ecd04584639acd1e8ab2ebf",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/7_communication_daily.down.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/7_communication_daily.up.sql",
+      "size": 1017,
+      "sha256": "03885b510c9b7b4271279ef4d64220498c74bbf10e998f391ab79ce960e6e7b3",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/7_communication_daily.up.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/8_communication_media.down.sql",
+      "size": 76,
+      "sha256": "44eea999040517ff1459cafe070a72d5c645d10d2be5e2f0ba3b7f9ef48c0eaa",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/8_communication_media.down.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/8_communication_media.up.sql",
+      "size": 842,
+      "sha256": "74bf7f94802e32fce77e58d4818941b82ceb80687c486afa79a486d1f77d6daa",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/8_communication_media.up.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/9_communication_devices.down.sql",
+      "size": 72,
+      "sha256": "9d522d264d06b37478ab09d858439787432775b970b5ebfdabac7bb2614dcb91",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/9_communication_devices.down.sql",
+      "unchangedFromFix2": true
+    },
+    {
+      "path": "backend/migrations/9_communication_devices.up.sql",
+      "size": 900,
+      "sha256": "7444081ca84c5e27f5e3b08cd39a15031abe89b7af8d48e3f5a126a05909ea8f",
+      "predecessorImmutable": true,
+      "mirror": "encore/api/migrations/9_communication_devices.up.sql",
+      "unchangedFromFix2": true
+    }
+  ]
+}

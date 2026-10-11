@@ -1,0 +1,12 @@
+{
+  "status": "passed",
+  "checks": [
+    "All SQL1\u201349 up files mirror exactly; predecessor1\u201347 unchanged checked separately against BASE",
+    "Actual numbered runner fresh schema + checksum-verified idempotent repeat",
+    "Real47\u219249 numbered upgrade preserves legacy4.8/version1/exact unit/coverage with zero fabricated facts, idempotent repeat",
+    "pg actual compiled normal startup and M8 TCP flow",
+    "Actual current web browser320/375/430px human workflow/ACK retry/source refresh",
+    "sqlite actual compiled normal startup and M8 TCP flow"
+  ],
+  "legacyUpgrade": "4.8|1||4.8|defects|t|0"
+}
