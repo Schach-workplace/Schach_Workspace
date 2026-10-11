@@ -343,11 +343,14 @@ it.each(['review', 'departure'])(
     const { default: AccessReview } = await import('./AccessReview');
     const { default: Departure } = await import('./DepartureHandover');
     const target = sample.workspaces[0].people[1];
+    const previewBodies: unknown[] = [];
     let held = false;
     let release: (() => void) | undefined;
     vi.stubGlobal(
       'fetch',
-      vi.fn(async (input: string) => {
+      vi.fn(async (input: string, init?: RequestInit) => {
+        if (String(input).endsWith('/departure/preview') && init?.body)
+          previewBodies.push(JSON.parse(String(init.body)));
         if (String(input).endsWith('/people/context') && held)
           await new Promise<void>((r) => {
             release = r;
@@ -420,6 +423,7 @@ it.each(['review', 'departure'])(
       );
       fireEvent.click(screen.getByRole('button', { name: 'Inspect current obligations' }));
       input = await screen.findByLabelText('Replacement for task owner');
+      fireEvent.change(input, { target: { value: sample.workspaces[0].people[0].id } });
     }
     input.focus();
     held = true;
@@ -427,6 +431,10 @@ it.each(['review', 'departure'])(
     await waitFor(() => expect(release).toBeTruthy());
     expect(document.contains(input)).toBe(true);
     expect(document.activeElement === input).toBe(true);
+    if (mode === 'departure') {
+      expect((input as HTMLSelectElement).value).toBe(sample.workspaces[0].people[0].id);
+      expect(input.textContent?.includes(sample.workspaces[0].people[0].name)).toBe(false);
+    }
     held = false;
     release!();
     await waitFor(() =>
@@ -436,5 +444,61 @@ it.each(['review', 'departure'])(
           ?.parentElement?.getAttribute('aria-hidden') !== 'false',
       ).toBe(true),
     );
+    if (mode === 'departure') {
+      expect((input as HTMLSelectElement).value).toBe(sample.workspaces[0].people[0].id);
+      expect(document.activeElement === input).toBe(true);
+      fireEvent.click(screen.getByRole('button', { name: 'Review selected replacements' }));
+      await waitFor(() => expect(previewBodies.length).toBe(2));
+      expect(previewBodies[1]).toMatchObject({
+        replacements: [
+          {
+            kind: 'task_owner',
+            sourceId: 'task',
+            expectedVersion: 7,
+            action: 'transfer',
+            newUserId: sample.workspaces[0].people[0].id,
+          },
+        ],
+      });
+    }
   },
 );
+
+it('keeps authored role, department and manager select values with neutral pending labels', async () => {
+  const { default: MembershipFields } = await import('./PeopleMembershipFields');
+  const person = sample.workspaces[0].people[0];
+  const department = sample.workspaces[0].departments[0];
+  const value = {
+    role: 'member' as const,
+    departmentId: department.id,
+    managerId: person.id,
+    title: 'Authored',
+    capacityHours: 40,
+  };
+  const context = {
+    readBasis: 'fictional-basis',
+    companyPermissionEpoch: 1,
+    people: [person],
+    departments: [department],
+    roles: ['member' as const],
+  };
+  const onChange = vi.fn();
+  const view = render(<MembershipFields value={value} context={context} onChange={onChange} />);
+  const selects = ['Company role', 'Department', 'Reporting manager'].map(
+    (label) => screen.getByLabelText(label) as HTMLSelectElement,
+  );
+  const before = selects.map((select) => select.value);
+  view.rerender(<MembershipFields value={value} disabled onChange={onChange} />);
+  expect(selects.map((select) => select.value)).toEqual(before);
+  expect(selects.every((select) => document.contains(select) && select.disabled)).toBe(true);
+  expect(
+    selects.every(
+      (select) =>
+        !select.textContent?.includes(person.name) &&
+        !select.textContent?.includes(department.name),
+    ),
+  ).toBe(true);
+  view.rerender(<MembershipFields value={value} context={context} onChange={onChange} />);
+  expect(selects.map((select) => select.value)).toEqual(before);
+  expect(onChange).not.toHaveBeenCalled();
+});

@@ -255,17 +255,32 @@ export default function DepartureHandover({
                           setStage(1);
                         }}
                       >
-                        <option value="__choose" disabled>
-                          Choose eligible replacement
-                        </option>
-                        {item.allowsNoManager && (
-                          <option value="">No manager — explicit reviewed choice</option>
-                        )}
-                        {(ready ? item.candidates : []).map((p) => (
-                          <option key={p.id} value={p.id}>
-                            {p.name} · {p.role}
+                        {!ready && (
+                          <option
+                            value={
+                              draft.replacements.find(
+                                (r) => r.kind === item.kind && r.sourceId === item.sourceId,
+                              )?.newUserId ?? '__choose'
+                            }
+                          >
+                            Checking selected replacement…
                           </option>
-                        ))}
+                        )}
+                        {ready && (
+                          <>
+                            <option value="__choose" disabled>
+                              Choose eligible replacement
+                            </option>
+                            {item.allowsNoManager && (
+                              <option value="">No manager — explicit reviewed choice</option>
+                            )}
+                            {item.candidates.map((p) => (
+                              <option key={p.id} value={p.id}>
+                                {p.name} · {p.role}
+                              </option>
+                            ))}
+                          </>
+                        )}
                       </select>
                     </Field>
                     {item.kind === 'expense_review_route' && (
