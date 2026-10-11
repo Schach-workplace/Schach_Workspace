@@ -1,0 +1,88 @@
+{
+  "sourceCommit": "31b50a8272b769b5724b563ceff8c1c7b8af8430",
+  "backendCompiledCommit": "31b50a8272b769b5724b563ceff8c1c7b8af8430",
+  "backendAndSQLByteEquivalent": true,
+  "initialAnchorBounds": [
+    50,
+    1992,
+    1031,
+    2113
+  ],
+  "noActionsDuringHold": true,
+  "samples": [
+    {
+      "elapsedSeconds": 1.97,
+      "readyAnchorBounds": [
+        [
+          50,
+          1992,
+          1031,
+          2113
+        ]
+      ],
+      "formReturnedToViewport": []
+    },
+    {
+      "elapsedSeconds": 7.97,
+      "readyAnchorBounds": [
+        [
+          50,
+          1992,
+          1031,
+          2113
+        ]
+      ],
+      "formReturnedToViewport": []
+    },
+    {
+      "elapsedSeconds": 13.97,
+      "readyAnchorBounds": [
+        [
+          50,
+          1992,
+          1031,
+          2113
+        ]
+      ],
+      "formReturnedToViewport": []
+    },
+    {
+      "elapsedSeconds": 20.68,
+      "readyAnchorBounds": [
+        [
+          50,
+          1992,
+          1031,
+          2113
+        ]
+      ],
+      "formReturnedToViewport": []
+    },
+    {
+      "elapsedSeconds": 25.96,
+      "readyAnchorBounds": [
+        [
+          50,
+          1992,
+          1031,
+          2113
+        ]
+      ],
+      "formReturnedToViewport": []
+    },
+    {
+      "elapsedSeconds": 31.96,
+      "readyAnchorBounds": [
+        [
+          50,
+          1992,
+          1031,
+          2113
+        ]
+      ],
+      "formReturnedToViewport": []
+    }
+  ],
+  "passed": true,
+  "qualification": "Owned Android API36 development shell; sampled viewport restoration across ordinary checks, not every pending frame or physical/iOS devices."
+}

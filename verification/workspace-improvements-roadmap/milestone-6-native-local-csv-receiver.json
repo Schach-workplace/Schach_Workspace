@@ -1,0 +1,12 @@
+{
+  "sourceCommit": "1f974c3b304e2647e2228b58f8ad78e170400997",
+  "receiverPackage": "in.schach.fixturecsv",
+  "receiverNetworkPermission": false,
+  "resultText": [
+    "Local CSV read failed\nFileNotFoundException\nopen failed: ENOENT (No such file or directory)"
+  ],
+  "elapsedFromConfirmedShareSeconds": 5.62,
+  "expectedBytes": 8329,
+  "expectedSHA256": "1f4864c8c1834ac8917b543f72450c323871abc1567072acfc5b7bc27c30f2e3",
+  "qualification": "Owned virtual Android devshell plus local checksum-only ACTION_SEND receiver; no external destination or physical/iOS/finalAPK proof."
+}

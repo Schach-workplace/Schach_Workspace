@@ -1,0 +1,30 @@
+{
+  "sourceCommit": "1f974c3b304e2647e2228b58f8ad78e170400997",
+  "device": "owned emulator-5574 API36",
+  "control": "Saved start date",
+  "selectedDate": "2026-10-10",
+  "samples": [
+    {
+      "elapsedSeconds": 1.99,
+      "dialogOpen": true,
+      "selectedHeaderPreserved": true
+    },
+    {
+      "elapsedSeconds": 7.99,
+      "dialogOpen": false,
+      "selectedHeaderPreserved": false
+    },
+    {
+      "elapsedSeconds": 13.99,
+      "dialogOpen": false,
+      "selectedHeaderPreserved": false
+    },
+    {
+      "elapsedSeconds": 19.99,
+      "dialogOpen": false,
+      "selectedHeaderPreserved": false
+    }
+  ],
+  "passed": false,
+  "scope": "Local calendar choice before confirmation across ordinary15s polling; no business save."
+}

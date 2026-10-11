@@ -1,0 +1,10 @@
+{
+  "sourceCommit": "31b50a8272b769b5724b563ceff8c1c7b8af8430",
+  "beforeReturn": [
+    "cache/report-private-v1/7f8aa1c3-b65d-43f1-b30b-406a57225a58.csv"
+  ],
+  "afterReturn": [],
+  "elapsedAfterReturnSeconds": 0.04,
+  "causalQualification": "One URI-backed private copy observed during unresolved handoff; absent after receiver returns. This establishes observed cleanup across return, not hard wall-clock erasure during OS suspension.",
+  "passed": true
+}

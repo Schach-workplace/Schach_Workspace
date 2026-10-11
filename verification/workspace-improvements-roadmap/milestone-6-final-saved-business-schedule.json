@@ -1,0 +1,31 @@
+{
+  "sourceCommit": "96f7240273510abf04ef8ec9fb8000f8e3aa3282",
+  "boundary": "explicit current native Confirm delivery schedule; schedule commit deliberately advances definition revision",
+  "schedules": [
+    {
+      "id": "rs_05944cdeeaf7b9e6d8cc6263da987e5e",
+      "company_id": "c-schach",
+      "definition_id": "rd_667a97882da4be160b54eddf37984a4d",
+      "definition_revision": 2,
+      "version": 1,
+      "weekdays": "[1]",
+      "local_minute": "09:00",
+      "schedule_zone": "Asia/Kolkata",
+      "next_occurrence_utc": "2026-10-12 03:30:00+00:00",
+      "last_occurrence_utc": null,
+      "skipped_from": null,
+      "skipped_to": null,
+      "state": "active",
+      "failure_code": "",
+      "failure_count": 0,
+      "attempt_count": 0,
+      "next_attempt_at": null
+    }
+  ],
+  "definitionVersions": [
+    1,
+    2
+  ],
+  "harnessQualification": "First assertion incorrectly expected unchanged definition revision1; schema/source check corrected to intentional revision2. No extra mutation/retry was made.",
+  "fictionalOwnedSQLiteOnly": true
+}

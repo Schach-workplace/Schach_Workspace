@@ -1,0 +1,29 @@
+{
+  "sourceCommit": "96f7240273510abf04ef8ec9fb8000f8e3aa3282",
+  "boundary": "observed review summary expected version 0; explicit native confirm",
+  "definitions": [
+    {
+      "id": "rd_667a97882da4be160b54eddf37984a4d",
+      "company_id": "c-schach",
+      "owner_id": "u-founder",
+      "version": 1,
+      "state": "active",
+      "schema_version": 1,
+      "basis": "task_history_v1",
+      "configuration": "{\"name\":\"NativeM6Final\",\"basis\":\"task_history_v1\",\"filters\":{\"ownerId\":\"\",\"departmentId\":\"\",\"projectId\":\"\"},\"periodRule\":\"fixed\",\"from\":\"2026-09-01\",\"to\":\"2026-09-30\",\"timezonePolicy\":\"company_at_resolution\",\"reportZone\":\"\",\"recipientIds\":[\"u-founder\"]}",
+      "created_at": "2026-10-11 01:22:46.281190651+00:00",
+      "updated_at": "2026-10-11 01:22:46.281190651+00:00"
+    }
+  ],
+  "revisions": [
+    {
+      "company_id": "c-schach",
+      "definition_id": "rd_667a97882da4be160b54eddf37984a4d",
+      "version": 1,
+      "state": "active",
+      "configuration": "{\"name\":\"NativeM6Final\",\"basis\":\"task_history_v1\",\"filters\":{\"ownerId\":\"\",\"departmentId\":\"\",\"projectId\":\"\"},\"periodRule\":\"fixed\",\"from\":\"2026-09-01\",\"to\":\"2026-09-30\",\"timezonePolicy\":\"company_at_resolution\",\"reportZone\":\"\",\"recipientIds\":[\"u-founder\"]}",
+      "created_at": "2026-10-11 01:22:46.281190651+00:00"
+    }
+  ],
+  "fictionalOwnedSQLiteOnly": true
+}

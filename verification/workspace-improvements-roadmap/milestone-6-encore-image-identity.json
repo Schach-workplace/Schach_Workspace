@@ -1,0 +1,8 @@
+{
+  "id": "sha256:d10ac72b93087e156ad4afb79d9605719c5fd49c627612fc6b217d9e0d9934dc",
+  "tag": "task6-fix1-export:89c82c3f",
+  "entrypoint": [
+    "/artifacts/0/build/encore_app_out"
+  ],
+  "encore": "v1.58.6"
+}

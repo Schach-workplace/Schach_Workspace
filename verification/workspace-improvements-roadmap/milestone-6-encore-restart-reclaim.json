@@ -1,0 +1,17 @@
+{
+  "jobs": [
+    {
+      "id": "rj_d125c3d58d9f59601d37d220ddd8c692",
+      "state": "ready",
+      "attemptCount": 2,
+      "artifactId": "ra_22103f3a953babe4da8a9cec48637a6f"
+    },
+    {
+      "id": "rj_f19e167d4491ac7c1f3a6a7875127842",
+      "state": "ready",
+      "attemptCount": 2,
+      "artifactId": "ra_740a176e8930b3cd2adaf8cb042352ca"
+    }
+  ],
+  "cronSpoofStatus": 404
+}

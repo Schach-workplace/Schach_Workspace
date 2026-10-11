@@ -1,0 +1,67 @@
+{
+  "company": "c-schach",
+  "snapshot": "hs_ab6d261a5b08572b1ae0acd91285a4cf",
+  "job": "rj_f9070c656548f514555c1debf6dbb19c",
+  "artifact": "ra_956c78b5fe6b858402b9c1e7d9eb84db",
+  "events": [
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "status": 200,
+      "bytes": 564,
+      "ms": 77.39
+    },
+    {
+      "method": "GET",
+      "path": "/companies",
+      "status": 200,
+      "bytes": 464,
+      "ms": 2.81
+    },
+    {
+      "method": "POST",
+      "path": "/companies/c-schach/reports/history/snapshots",
+      "status": 200,
+      "bytes": 6945,
+      "ms": 19.28
+    },
+    {
+      "method": "POST",
+      "path": "/companies/c-schach/reports/exports",
+      "status": 200,
+      "bytes": 611,
+      "ms": 3.66
+    },
+    {
+      "method": "GET",
+      "path": "/companies/c-schach/reports/exports/rj_f9070c656548f514555c1debf6dbb19c",
+      "status": 200,
+      "bytes": 627,
+      "ms": 2.86
+    },
+    {
+      "method": "GET",
+      "path": "/companies/c-schach/reports/exports/rj_f9070c656548f514555c1debf6dbb19c",
+      "status": 200,
+      "bytes": 627,
+      "ms": 6.06
+    },
+    {
+      "method": "GET",
+      "path": "/companies/c-schach/reports/exports/rj_f9070c656548f514555c1debf6dbb19c",
+      "status": 200,
+      "bytes": 627,
+      "ms": 5.95
+    },
+    {
+      "method": "GET",
+      "path": "/companies/c-schach/reports/exports/rj_f9070c656548f514555c1debf6dbb19c",
+      "status": 200,
+      "bytes": 1006,
+      "ms": 8.58
+    },
+    {
+      "downloadBytes": 7893
+    }
+  ]
+}

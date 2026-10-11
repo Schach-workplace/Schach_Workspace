@@ -1,0 +1,71 @@
+{
+  "sourceCommit": "85b17e57e04a880a547e4d7c506f4f38e12b24f2",
+  "backendCompiledCommit": "31b50a8272b769b5724b563ceff8c1c7b8af8430",
+  "backendProductionAndSQLByteEquivalent": true,
+  "excludedGoTestOnlyDifferences": [
+    "backend/platform/report_history_test.go"
+  ],
+  "initialAnchorBounds": [
+    50,
+    2045,
+    1031,
+    2166
+  ],
+  "noActionsDuringHold": true,
+  "samples": [
+    {
+      "elapsedSeconds": 1.97,
+      "readyAnchorBounds": [
+        [
+          50,
+          2045,
+          1031,
+          2166
+        ]
+      ],
+      "formReturnedToViewport": []
+    },
+    {
+      "elapsedSeconds": 8.01,
+      "readyAnchorBounds": [],
+      "formReturnedToViewport": [
+        "2026-09-01",
+        "2026-09-30"
+      ]
+    },
+    {
+      "elapsedSeconds": 13.99,
+      "readyAnchorBounds": [],
+      "formReturnedToViewport": [
+        "2026-09-01",
+        "2026-09-30"
+      ]
+    },
+    {
+      "elapsedSeconds": 20.12,
+      "readyAnchorBounds": [],
+      "formReturnedToViewport": [
+        "2026-09-01",
+        "2026-09-30"
+      ]
+    },
+    {
+      "elapsedSeconds": 26.02,
+      "readyAnchorBounds": [],
+      "formReturnedToViewport": [
+        "2026-09-01",
+        "2026-09-30"
+      ]
+    },
+    {
+      "elapsedSeconds": 31.97,
+      "readyAnchorBounds": [],
+      "formReturnedToViewport": [
+        "2026-09-01",
+        "2026-09-30"
+      ]
+    }
+  ],
+  "passed": false,
+  "qualification": "Owned Android API36 development shell; sampled viewport restoration across ordinary checks, not every pending frame or physical/iOS devices."
+}

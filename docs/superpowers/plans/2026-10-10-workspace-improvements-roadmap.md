@@ -60,8 +60,8 @@
 - Acceptance: templates cannot suppress review/evidence; cycles rejected; source links authorized separately; repeated application yields no duplicate work.
 
 ### Milestone 6: Historical and saved reports
-- [ ] Add immutable acceptance/deadline/ownership facts and explicit versioned snapshots; legacy records show history coverage instead of invented facts.
-- [ ] Add saved definitions, period comparisons and asynchronous CSV generation; recheck access before scheduled exports/delivery.
+- [x] Add immutable acceptance/deadline/ownership facts and explicit versioned snapshots; legacy records show history coverage instead of invented facts.
+- [x] Add saved definitions, period comparisons and asynchronous CSV generation; recheck access before scheduled exports/delivery.
 - Acceptance: reopen/reassign cannot rewrite an existing snapshot; current-state reports remain labelled; revoked users cannot fetch output; all figures drill down to included facts.
 
 ### Milestone 7: Finance assistance

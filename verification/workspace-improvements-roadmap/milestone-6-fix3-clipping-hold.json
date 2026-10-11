@@ -1,0 +1,30 @@
+{
+  "diagnosticOnly": true,
+  "noActionsDuringHold": true,
+  "samples": [
+    {
+      "elapsed": 1.97,
+      "review": []
+    },
+    {
+      "elapsed": 7.97,
+      "review": []
+    },
+    {
+      "elapsed": 13.99,
+      "review": []
+    },
+    {
+      "elapsed": 19.97,
+      "review": []
+    },
+    {
+      "elapsed": 25.97,
+      "review": []
+    },
+    {
+      "elapsed": 31.98,
+      "review": []
+    }
+  ]
+}

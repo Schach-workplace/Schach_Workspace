@@ -1,0 +1,12 @@
+{
+  "sourceCommit": "31b50a8272b769b5724b563ceff8c1c7b8af8430",
+  "finalProductionEquivalentCommit": "d0ce150a3d20d48b2b478db586d17138a0747635",
+  "snapshotId": "hs_577502183007d60969063f7eef0cba77",
+  "explicitMetricAction": "Unknown earlier state: 42",
+  "coverageRowsObservedInDrilldown": 9,
+  "coverageTextSamples": [
+    "coverage \u00b7 version 0 \u00b7  unknown before   "
+  ],
+  "passed": true,
+  "qualification": "Actual metric action and rendered unknown-before coverage rows on owned Android API36 devshell. Not all42 rows inspected, pagination beyond100, physical/iOS, or a fabricated native acceptance history."
+}

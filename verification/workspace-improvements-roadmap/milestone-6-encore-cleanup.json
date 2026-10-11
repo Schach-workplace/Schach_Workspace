@@ -1,0 +1,10 @@
+{
+  "removedContainers": [
+    "task6-fix1-app-89c82c3f",
+    "task6-fix1-pg-89c82c3f"
+  ],
+  "removedNetwork": "task6-fix1-net-89c82c3f",
+  "appExit": 0,
+  "pgExit": 0,
+  "shutdownHookJoined": true
+}

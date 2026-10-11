@@ -1,0 +1,778 @@
+{
+  "sourceCommit": "1f974c3b304e2647e2228b58f8ad78e170400997",
+  "noActionsDuringHold": true,
+  "samples": [
+    {
+      "elapsed": 1.9889578269794583,
+      "visible": [
+        {
+          "value": "Tools",
+          "bounds": "[929,146][1001,218]"
+        },
+        {
+          "value": "Schach \u00b7 Rohan Mehta",
+          "bounds": "[49,154][1030,236]"
+        },
+        {
+          "value": "SCHACH ENGINEERS \u2713",
+          "bounds": "[50,275][509,407]"
+        },
+        {
+          "value": "SCHACH ENGINEERS \u2713",
+          "bounds": "[72,297][487,351]"
+        },
+        {
+          "value": "MERIDIAN WORKS",
+          "bounds": "[509,275][879,407]"
+        },
+        {
+          "value": "MERIDIAN WORKS",
+          "bounds": "[531,297][857,350]"
+        },
+        {
+          "value": "\u2039 Back",
+          "bounds": "[50,407][213,528]"
+        },
+        {
+          "value": "\u2039 Back",
+          "bounds": "[85,445][177,489]"
+        },
+        {
+          "value": "Current state",
+          "bounds": "[241,407][506,528]"
+        },
+        {
+          "value": "Current state",
+          "bounds": "[276,445][470,489]"
+        },
+        {
+          "value": "Historical reports",
+          "bounds": "[534,407][863,528]"
+        },
+        {
+          "value": "Historical reports",
+          "bounds": "[569,445][827,489]"
+        },
+        {
+          "value": "Saved reports",
+          "bounds": "[50,556][327,677]"
+        },
+        {
+          "value": "Saved reports",
+          "bounds": "[85,594][291,638]"
+        },
+        {
+          "value": "Observed time coverage: 0",
+          "bounds": "[50,677][1031,4]"
+        },
+        {
+          "value": "Unknown earlier state: 42",
+          "bounds": "[50,677][1031,125]"
+        },
+        {
+          "value": "Unknown earlier state: 42",
+          "bounds": "[351,677][729,86]"
+        },
+        {
+          "value": "Dated logged hours: 0 hours",
+          "bounds": "[50,677][1031,246]"
+        },
+        {
+          "value": "Dated logged hours: 0 hours",
+          "bounds": "[331,677][749,207]"
+        },
+        {
+          "value": "Observed imported hours: 0 hours",
+          "bounds": "[50,677][1031,367]"
+        },
+        {
+          "value": "Observed imported hours: 0 hours",
+          "bounds": "[288,677][793,328]"
+        },
+        {
+          "value": "Accumulated hours as of period end: 0 hours",
+          "bounds": "[50,677][1031,488]"
+        },
+        {
+          "value": "Accumulated hours as of period end: 0 hours",
+          "bounds": "[208,677][872,449]"
+        },
+        {
+          "value": "Blocked as of period end: 0",
+          "bounds": "[50,677][1031,609]"
+        },
+        {
+          "value": "Blocked as of period end: 0",
+          "bounds": "[339,677][741,570]"
+        },
+        {
+          "value": "Tasks due as of period end: 0",
+          "bounds": "[50,677][1031,730]"
+        },
+        {
+          "value": "Tasks due as of period end: 0",
+          "bounds": "[324,677][757,691]"
+        },
+        {
+          "value": "Changed commitments: 0",
+          "bounds": "[50,730][1031,851]"
+        },
+        {
+          "value": "Changed commitments: 0",
+          "bounds": "[349,768][731,812]"
+        },
+        {
+          "value": "Done as of period end: 0",
+          "bounds": "[50,851][1031,972]"
+        },
+        {
+          "value": "Done as of period end: 0",
+          "bounds": "[360,889][720,933]"
+        },
+        {
+          "value": "Overdue at period end: 0",
+          "bounds": "[50,972][1031,1093]"
+        },
+        {
+          "value": "Overdue at period end: 0",
+          "bounds": "[359,1010][721,1054]"
+        },
+        {
+          "value": "Pending review as of period end: 0",
+          "bounds": "[50,1093][1031,1214]"
+        },
+        {
+          "value": "Pending review as of period end: 0",
+          "bounds": "[286,1131][795,1175]"
+        },
+        {
+          "value": "Metric membership: Contributing facts",
+          "bounds": "[50,1214][1031,1335]"
+        },
+        {
+          "value": "Metric membership: Contributing facts",
+          "bounds": "[253,1252][827,1296]"
+        },
+        {
+          "value": "Tasks due as of period end",
+          "bounds": "[50,1334][1031,1405]"
+        },
+        {
+          "value": "Queue private CSV export",
+          "bounds": "[50,1406][1031,1527]"
+        },
+        {
+          "value": "Queue private CSV export",
+          "bounds": "[350,1444][731,1488]"
+        },
+        {
+          "value": "Private export",
+          "bounds": "[50,1526][1031,1597]"
+        },
+        {
+          "value": "ready \u00b7 ",
+          "bounds": "[50,1597][1031,1650]"
+        },
+        {
+          "value": "Recheck export",
+          "bounds": "[50,1651][1031,1772]"
+        },
+        {
+          "value": "Recheck export",
+          "bounds": "[425,1689][656,1733]"
+        },
+        {
+          "value": "Cancel export and delivery",
+          "bounds": "[50,1772][1031,1893]"
+        },
+        {
+          "value": "Cancel export and delivery",
+          "bounds": "[344,1810][737,1854]"
+        },
+        {
+          "value": "Expires 10/18/2026, 5:35:38\u202fAM. Exported copies cannot be recalled.",
+          "bounds": "[50,1892][1031,1991]"
+        },
+        {
+          "value": "Download and share authorized CSV",
+          "bounds": "[50,1992][1031,2113]"
+        },
+        {
+          "value": "Download and share authorized CSV",
+          "bounds": "[271,2030][809,2074]"
+        },
+        {
+          "value": "No facts contribute to this metric membership.",
+          "bounds": "[50,2112][1031,2165]"
+        }
+      ]
+    },
+    {
+      "elapsed": 7.959378127998207,
+      "visible": [
+        {
+          "value": "Tools",
+          "bounds": "[929,146][1001,218]"
+        },
+        {
+          "value": "Schach \u00b7 Rohan Mehta",
+          "bounds": "[49,154][1030,236]"
+        },
+        {
+          "value": "SCHACH ENGINEERS \u2713",
+          "bounds": "[50,275][509,407]"
+        },
+        {
+          "value": "SCHACH ENGINEERS \u2713",
+          "bounds": "[72,297][487,351]"
+        },
+        {
+          "value": "MERIDIAN WORKS",
+          "bounds": "[509,275][879,407]"
+        },
+        {
+          "value": "MERIDIAN WORKS",
+          "bounds": "[531,297][857,350]"
+        },
+        {
+          "value": "\u2039 Back",
+          "bounds": "[50,407][213,528]"
+        },
+        {
+          "value": "\u2039 Back",
+          "bounds": "[85,445][177,489]"
+        },
+        {
+          "value": "Current state",
+          "bounds": "[241,407][506,528]"
+        },
+        {
+          "value": "Current state",
+          "bounds": "[276,445][470,489]"
+        },
+        {
+          "value": "Historical reports",
+          "bounds": "[534,407][863,528]"
+        },
+        {
+          "value": "Historical reports",
+          "bounds": "[569,445][827,489]"
+        },
+        {
+          "value": "Saved reports",
+          "bounds": "[50,556][327,677]"
+        },
+        {
+          "value": "Saved reports",
+          "bounds": "[85,594][291,638]"
+        },
+        {
+          "value": "Observed time coverage: 0",
+          "bounds": "[50,677][1031,4]"
+        },
+        {
+          "value": "Unknown earlier state: 42",
+          "bounds": "[50,677][1031,125]"
+        },
+        {
+          "value": "Unknown earlier state: 42",
+          "bounds": "[351,677][729,86]"
+        },
+        {
+          "value": "Dated logged hours: 0 hours",
+          "bounds": "[50,677][1031,246]"
+        },
+        {
+          "value": "Dated logged hours: 0 hours",
+          "bounds": "[331,677][749,207]"
+        },
+        {
+          "value": "Observed imported hours: 0 hours",
+          "bounds": "[50,677][1031,367]"
+        },
+        {
+          "value": "Observed imported hours: 0 hours",
+          "bounds": "[288,677][793,328]"
+        },
+        {
+          "value": "Accumulated hours as of period end: 0 hours",
+          "bounds": "[50,677][1031,488]"
+        },
+        {
+          "value": "Accumulated hours as of period end: 0 hours",
+          "bounds": "[208,677][872,449]"
+        },
+        {
+          "value": "Blocked as of period end: 0",
+          "bounds": "[50,677][1031,609]"
+        },
+        {
+          "value": "Blocked as of period end: 0",
+          "bounds": "[339,677][741,570]"
+        },
+        {
+          "value": "Tasks due as of period end: 0",
+          "bounds": "[50,677][1031,730]"
+        },
+        {
+          "value": "Tasks due as of period end: 0",
+          "bounds": "[324,677][757,691]"
+        },
+        {
+          "value": "Changed commitments: 0",
+          "bounds": "[50,730][1031,851]"
+        },
+        {
+          "value": "Changed commitments: 0",
+          "bounds": "[349,768][731,812]"
+        },
+        {
+          "value": "Done as of period end: 0",
+          "bounds": "[50,851][1031,972]"
+        },
+        {
+          "value": "Done as of period end: 0",
+          "bounds": "[360,889][720,933]"
+        },
+        {
+          "value": "Overdue at period end: 0",
+          "bounds": "[50,972][1031,1093]"
+        },
+        {
+          "value": "Overdue at period end: 0",
+          "bounds": "[359,1010][721,1054]"
+        },
+        {
+          "value": "Pending review as of period end: 0",
+          "bounds": "[50,1093][1031,1214]"
+        },
+        {
+          "value": "Pending review as of period end: 0",
+          "bounds": "[286,1131][795,1175]"
+        },
+        {
+          "value": "Metric membership: Contributing facts",
+          "bounds": "[50,1214][1031,1335]"
+        },
+        {
+          "value": "Metric membership: Contributing facts",
+          "bounds": "[253,1252][827,1296]"
+        },
+        {
+          "value": "Tasks due as of period end",
+          "bounds": "[50,1334][1031,1405]"
+        },
+        {
+          "value": "Queue private CSV export",
+          "bounds": "[50,1406][1031,1527]"
+        },
+        {
+          "value": "Queue private CSV export",
+          "bounds": "[350,1444][731,1488]"
+        },
+        {
+          "value": "Private export",
+          "bounds": "[50,1526][1031,1597]"
+        },
+        {
+          "value": "ready \u00b7 ",
+          "bounds": "[50,1597][1031,1650]"
+        },
+        {
+          "value": "Recheck export",
+          "bounds": "[50,1651][1031,1772]"
+        },
+        {
+          "value": "Recheck export",
+          "bounds": "[425,1689][656,1733]"
+        },
+        {
+          "value": "Cancel export and delivery",
+          "bounds": "[50,1772][1031,1893]"
+        },
+        {
+          "value": "Cancel export and delivery",
+          "bounds": "[344,1810][737,1854]"
+        },
+        {
+          "value": "Expires 10/18/2026, 5:35:38\u202fAM. Exported copies cannot be recalled.",
+          "bounds": "[50,1892][1031,1991]"
+        },
+        {
+          "value": "Download and share authorized CSV",
+          "bounds": "[50,1992][1031,2113]"
+        },
+        {
+          "value": "Download and share authorized CSV",
+          "bounds": "[271,2030][809,2074]"
+        },
+        {
+          "value": "No facts contribute to this metric membership.",
+          "bounds": "[50,2112][1031,2165]"
+        }
+      ]
+    },
+    {
+      "elapsed": 13.95945483900141,
+      "visible": [
+        {
+          "value": "Tools",
+          "bounds": "[929,146][1001,218]"
+        },
+        {
+          "value": "Schach \u00b7 Rohan Mehta",
+          "bounds": "[49,154][1030,236]"
+        },
+        {
+          "value": "SCHACH ENGINEERS \u2713",
+          "bounds": "[50,275][509,407]"
+        },
+        {
+          "value": "SCHACH ENGINEERS \u2713",
+          "bounds": "[72,297][487,351]"
+        },
+        {
+          "value": "MERIDIAN WORKS",
+          "bounds": "[509,275][879,407]"
+        },
+        {
+          "value": "MERIDIAN WORKS",
+          "bounds": "[531,297][857,350]"
+        },
+        {
+          "value": "\u2039 Back",
+          "bounds": "[50,407][213,528]"
+        },
+        {
+          "value": "\u2039 Back",
+          "bounds": "[85,445][177,489]"
+        },
+        {
+          "value": "Current state",
+          "bounds": "[241,407][506,528]"
+        },
+        {
+          "value": "Current state",
+          "bounds": "[276,445][470,489]"
+        },
+        {
+          "value": "Historical reports",
+          "bounds": "[534,407][863,528]"
+        },
+        {
+          "value": "Historical reports",
+          "bounds": "[569,445][827,489]"
+        },
+        {
+          "value": "Saved reports",
+          "bounds": "[50,556][327,677]"
+        },
+        {
+          "value": "Saved reports",
+          "bounds": "[85,594][291,638]"
+        },
+        {
+          "value": "Observed time coverage: 0",
+          "bounds": "[50,677][1031,4]"
+        },
+        {
+          "value": "Unknown earlier state: 42",
+          "bounds": "[50,677][1031,125]"
+        },
+        {
+          "value": "Unknown earlier state: 42",
+          "bounds": "[351,677][729,86]"
+        },
+        {
+          "value": "Dated logged hours: 0 hours",
+          "bounds": "[50,677][1031,246]"
+        },
+        {
+          "value": "Dated logged hours: 0 hours",
+          "bounds": "[331,677][749,207]"
+        },
+        {
+          "value": "Observed imported hours: 0 hours",
+          "bounds": "[50,677][1031,367]"
+        },
+        {
+          "value": "Observed imported hours: 0 hours",
+          "bounds": "[288,677][793,328]"
+        },
+        {
+          "value": "Accumulated hours as of period end: 0 hours",
+          "bounds": "[50,677][1031,488]"
+        },
+        {
+          "value": "Accumulated hours as of period end: 0 hours",
+          "bounds": "[208,677][872,449]"
+        },
+        {
+          "value": "Blocked as of period end: 0",
+          "bounds": "[50,677][1031,609]"
+        },
+        {
+          "value": "Blocked as of period end: 0",
+          "bounds": "[339,677][741,570]"
+        },
+        {
+          "value": "Tasks due as of period end: 0",
+          "bounds": "[50,677][1031,730]"
+        },
+        {
+          "value": "Tasks due as of period end: 0",
+          "bounds": "[324,677][757,691]"
+        },
+        {
+          "value": "Changed commitments: 0",
+          "bounds": "[50,730][1031,851]"
+        },
+        {
+          "value": "Changed commitments: 0",
+          "bounds": "[349,768][731,812]"
+        },
+        {
+          "value": "Done as of period end: 0",
+          "bounds": "[50,851][1031,972]"
+        },
+        {
+          "value": "Done as of period end: 0",
+          "bounds": "[360,889][720,933]"
+        },
+        {
+          "value": "Overdue at period end: 0",
+          "bounds": "[50,972][1031,1093]"
+        },
+        {
+          "value": "Overdue at period end: 0",
+          "bounds": "[359,1010][721,1054]"
+        },
+        {
+          "value": "Pending review as of period end: 0",
+          "bounds": "[50,1093][1031,1214]"
+        },
+        {
+          "value": "Pending review as of period end: 0",
+          "bounds": "[286,1131][795,1175]"
+        },
+        {
+          "value": "Metric membership: Contributing facts",
+          "bounds": "[50,1214][1031,1335]"
+        },
+        {
+          "value": "Metric membership: Contributing facts",
+          "bounds": "[253,1252][827,1296]"
+        },
+        {
+          "value": "Tasks due as of period end",
+          "bounds": "[50,1334][1031,1405]"
+        },
+        {
+          "value": "Queue private CSV export",
+          "bounds": "[50,1406][1031,1527]"
+        },
+        {
+          "value": "Queue private CSV export",
+          "bounds": "[350,1444][731,1488]"
+        },
+        {
+          "value": "Private export",
+          "bounds": "[50,1526][1031,1597]"
+        },
+        {
+          "value": "ready \u00b7 ",
+          "bounds": "[50,1597][1031,1650]"
+        },
+        {
+          "value": "Recheck export",
+          "bounds": "[50,1651][1031,1772]"
+        },
+        {
+          "value": "Recheck export",
+          "bounds": "[425,1689][656,1733]"
+        },
+        {
+          "value": "Cancel export and delivery",
+          "bounds": "[50,1772][1031,1893]"
+        },
+        {
+          "value": "Cancel export and delivery",
+          "bounds": "[344,1810][737,1854]"
+        },
+        {
+          "value": "Expires 10/18/2026, 5:35:38\u202fAM. Exported copies cannot be recalled.",
+          "bounds": "[50,1892][1031,1991]"
+        },
+        {
+          "value": "Download and share authorized CSV",
+          "bounds": "[50,1992][1031,2113]"
+        },
+        {
+          "value": "Download and share authorized CSV",
+          "bounds": "[271,2030][809,2074]"
+        },
+        {
+          "value": "No facts contribute to this metric membership.",
+          "bounds": "[50,2112][1031,2165]"
+        }
+      ]
+    },
+    {
+      "elapsed": 19.960693759989226,
+      "visible": [
+        {
+          "value": "Tools",
+          "bounds": "[929,146][1001,218]"
+        },
+        {
+          "value": "Schach \u00b7 Rohan Mehta",
+          "bounds": "[49,154][1030,236]"
+        },
+        {
+          "value": "SCHACH ENGINEERS \u2713",
+          "bounds": "[50,275][509,407]"
+        },
+        {
+          "value": "SCHACH ENGINEERS \u2713",
+          "bounds": "[72,297][487,351]"
+        },
+        {
+          "value": "MERIDIAN WORKS",
+          "bounds": "[509,275][879,407]"
+        },
+        {
+          "value": "MERIDIAN WORKS",
+          "bounds": "[531,297][857,350]"
+        },
+        {
+          "value": "\u2039 Back",
+          "bounds": "[50,407][213,528]"
+        },
+        {
+          "value": "\u2039 Back",
+          "bounds": "[85,445][177,489]"
+        },
+        {
+          "value": "Current state",
+          "bounds": "[241,407][506,528]"
+        },
+        {
+          "value": "Current state",
+          "bounds": "[276,445][470,489]"
+        },
+        {
+          "value": "Historical reports",
+          "bounds": "[534,407][863,528]"
+        },
+        {
+          "value": "Historical reports",
+          "bounds": "[569,445][827,489]"
+        },
+        {
+          "value": "Saved reports",
+          "bounds": "[50,556][327,677]"
+        },
+        {
+          "value": "Saved reports",
+          "bounds": "[85,594][291,638]"
+        },
+        {
+          "value": "Historical reports",
+          "bounds": "[50,677][1031,506]"
+        },
+        {
+          "value": "Immutable state at period end, genuine acceptance episodes and dated effort. Labels reflect generation time. Choose a completed period.",
+          "bounds": "[50,677][1031,651]"
+        },
+        {
+          "value": "Historical start date YYYY-MM-DD \u00b7 Asia/Kolkata",
+          "bounds": "[50,677][1031,704]"
+        },
+        {
+          "value": "2026-09-01",
+          "bounds": "[50,726][1031,851]"
+        },
+        {
+          "value": "Choose Historical start date YYYY-MM-DD",
+          "bounds": "[50,873][748,994]"
+        },
+        {
+          "value": "Choose Historical start date YYYY-MM-DD",
+          "bounds": "[85,911][712,955]"
+        },
+        {
+          "value": "Historical end date YYYY-MM-DD \u00b7 Asia/Kolkata",
+          "bounds": "[50,994][1031,1047]"
+        },
+        {
+          "value": "2026-09-30",
+          "bounds": "[50,1069][1031,1194]"
+        },
+        {
+          "value": "Choose Historical end date YYYY-MM-DD",
+          "bounds": "[50,1216][734,1337]"
+        },
+        {
+          "value": "Choose Historical end date YYYY-MM-DD",
+          "bounds": "[85,1254][698,1298]"
+        },
+        {
+          "value": "Report timezone",
+          "bounds": "[50,1336][1031,1389]"
+        },
+        {
+          "value": "Asia/Kolkata",
+          "bounds": "[50,1411][1031,1536]"
+        },
+        {
+          "value": "Historical owner: All authorized sources",
+          "bounds": "[50,1558][1031,1679]"
+        },
+        {
+          "value": "Historical owner: All authorized sources",
+          "bounds": "[245,1596][835,1640]"
+        },
+        {
+          "value": "Historical department: All authorized sources",
+          "bounds": "[50,1679][1031,1800]"
+        },
+        {
+          "value": "Historical department: All authorized sources",
+          "bounds": "[205,1717][876,1761]"
+        },
+        {
+          "value": "Historical project: All authorized sources",
+          "bounds": "[50,1800][1031,1921]"
+        },
+        {
+          "value": "Historical project: All authorized sources",
+          "bounds": "[239,1838][841,1882]"
+        },
+        {
+          "value": "Generate historical report",
+          "bounds": "[50,1921][1031,2042]"
+        },
+        {
+          "value": "Generate historical report",
+          "bounds": "[351,1959][730,2003]"
+        },
+        {
+          "value": "Immutable snapshot \u00b7 Asia/Kolkata \u00b7 42 facts",
+          "bounds": "[50,2041][1031,2094]"
+        },
+        {
+          "value": "Earlier history is unknown for some sources. Unavailable values are not perfect performance.",
+          "bounds": "[50,2094][1031,2166]"
+        },
+        {
+          "value": "Current commitment on time: Unavailable",
+          "bounds": "[50,2194][1031,2166]"
+        },
+        {
+          "value": "Current commitment on time: Unavailable",
+          "bounds": "[232,2232][848,2166]"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "sourceCommit": "31b50a8272b769b5724b563ceff8c1c7b8af8430",
+  "finalProductionEquivalentCommit": "d0ce150a3d20d48b2b478db586d17138a0747635",
+  "receiverPackage": "in.schach.fixturecsv",
+  "receiverNetworkPermission": false,
+  "receiverPersistsReportText": false,
+  "explicitWarningAndConfirmationObserved": true,
+  "chooserHeldBeforeSelectingSeconds": 20,
+  "elapsedFromConfirmedShareSeconds": 27.61,
+  "expectedBytes": 8329,
+  "expectedSHA256": "1f4864c8c1834ac8917b543f72450c323871abc1567072acfc5b7bc27c30f2e3",
+  "resultText": "Local CSV read OK\nBytes: 8329\nSHA256: 1f4864c8c1834ac8917b543f72450c323871abc1567072acfc5b7bc27c30f2e3",
+  "passed": true,
+  "qualification": "Owned virtual Android API36 config-matched development shell/local checksum-only ACTION_SEND receiver. Actual readable handoff after background/20s chooser; no external destination, physical/iOS/finalAPK or hard suspended-process erasure claim."
+}

@@ -1,0 +1,73 @@
+{
+  "sourceCommit": "31b50a8272b769b5724b563ceff8c1c7b8af8430",
+  "backendCompiledCommit": "31b50a8272b769b5724b563ceff8c1c7b8af8430",
+  "backendAndSQLByteEquivalent": true,
+  "initialAnchorBounds": [
+    50,
+    2045,
+    1031,
+    2166
+  ],
+  "noActionsDuringHold": true,
+  "samples": [
+    {
+      "elapsedSeconds": 1.97,
+      "readyAnchorBounds": [
+        [
+          50,
+          2045,
+          1031,
+          2166
+        ]
+      ],
+      "formReturnedToViewport": []
+    },
+    {
+      "elapsedSeconds": 7.97,
+      "readyAnchorBounds": [],
+      "formReturnedToViewport": [
+        "NativeM6Fixed",
+        "2026-10-10",
+        "2026-10-10"
+      ]
+    },
+    {
+      "elapsedSeconds": 13.98,
+      "readyAnchorBounds": [],
+      "formReturnedToViewport": [
+        "NativeM6Fixed",
+        "2026-10-10",
+        "2026-10-10"
+      ]
+    },
+    {
+      "elapsedSeconds": 19.97,
+      "readyAnchorBounds": [],
+      "formReturnedToViewport": [
+        "NativeM6Fixed",
+        "2026-10-10",
+        "2026-10-10"
+      ]
+    },
+    {
+      "elapsedSeconds": 25.96,
+      "readyAnchorBounds": [],
+      "formReturnedToViewport": [
+        "NativeM6Fixed",
+        "2026-10-10",
+        "2026-10-10"
+      ]
+    },
+    {
+      "elapsedSeconds": 31.96,
+      "readyAnchorBounds": [],
+      "formReturnedToViewport": [
+        "NativeM6Fixed",
+        "2026-10-10",
+        "2026-10-10"
+      ]
+    }
+  ],
+  "passed": false,
+  "qualification": "Owned Android API36 development shell; sampled viewport restoration across ordinary checks, not every pending frame or physical/iOS devices."
+}

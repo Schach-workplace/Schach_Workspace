@@ -1,0 +1,49 @@
+{
+  "sourceCommit": "96f7240273510abf04ef8ec9fb8000f8e3aa3282",
+  "backendCompiledCommit": "31b50a8272b769b5724b563ceff8c1c7b8af8430",
+  "backendProductionAndSQLByteEquivalentToSource": true,
+  "excludedGoTestOnlyDifferences": [
+    "backend/platform/report_history_test.go"
+  ],
+  "platform": "owned Android API36 virtual device emulator-5574; development shell",
+  "samples": [
+    {
+      "elapsedSeconds": 2.08,
+      "uniqueInputPresent": true,
+      "authoredTextMatches": true,
+      "focused": true
+    },
+    {
+      "elapsedSeconds": 8.14,
+      "uniqueInputPresent": true,
+      "authoredTextMatches": true,
+      "focused": true
+    },
+    {
+      "elapsedSeconds": 13.99,
+      "uniqueInputPresent": true,
+      "authoredTextMatches": true,
+      "focused": true
+    },
+    {
+      "elapsedSeconds": 19.97,
+      "uniqueInputPresent": true,
+      "authoredTextMatches": true,
+      "focused": true
+    },
+    {
+      "elapsedSeconds": 25.98,
+      "uniqueInputPresent": true,
+      "authoredTextMatches": true,
+      "focused": true
+    },
+    {
+      "elapsedSeconds": 31.98,
+      "uniqueInputPresent": true,
+      "authoredTextMatches": true,
+      "focused": true
+    }
+  ],
+  "passed": true,
+  "qualification": "Sampled authored focus across ordinary polling. Does not prove every pending privacy frame, physical device behavior, or a final APK build. Screenshot requires separate visual inspection for keyboard."
+}

@@ -1,0 +1,113 @@
+{
+  "saved_report_definitions": {
+    "count": 0,
+    "columns": [
+      "id",
+      "company_id",
+      "owner_id",
+      "version",
+      "state",
+      "schema_version",
+      "basis",
+      "configuration",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "saved_report_revisions": {
+    "count": 0,
+    "columns": [
+      "company_id",
+      "definition_id",
+      "version",
+      "state",
+      "configuration",
+      "created_at"
+    ]
+  },
+  "report_schedules": {
+    "count": 0,
+    "columns": [
+      "id",
+      "company_id",
+      "definition_id",
+      "definition_revision",
+      "version",
+      "weekdays",
+      "local_minute",
+      "schedule_zone",
+      "next_occurrence_utc",
+      "last_occurrence_utc",
+      "skipped_from",
+      "skipped_to",
+      "state",
+      "failure_code",
+      "failure_count",
+      "attempt_count",
+      "next_attempt_at"
+    ]
+  },
+  "report_export_jobs": {
+    "count": 1,
+    "columns": [
+      "id",
+      "company_id",
+      "request_actor_id",
+      "recipient_id",
+      "definition_id",
+      "definition_revision",
+      "schedule_id",
+      "schedule_version",
+      "occurrence_utc",
+      "scheduled_identity",
+      "payload_hash",
+      "csv_schema_version",
+      "period",
+      "state",
+      "lease_token",
+      "lease_until",
+      "attempt_count",
+      "next_attempt_at",
+      "failure_code",
+      "snapshot_id",
+      "artifact_id",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "historical_report_snapshots": {
+    "count": 1,
+    "columns": [
+      "id",
+      "company_id",
+      "requester_id",
+      "schema_version",
+      "metric_version",
+      "basis",
+      "request_hash",
+      "request",
+      "period",
+      "generated_at",
+      "definition_id",
+      "definition_revision",
+      "content_hash",
+      "serialized_bytes",
+      "row_count",
+      "summary",
+      "membership"
+    ]
+  },
+  "report_delivery_intents": {
+    "count": 1,
+    "columns": [
+      "id",
+      "company_id",
+      "job_id",
+      "recipient_id",
+      "state",
+      "attention_item_id",
+      "created_at",
+      "updated_at"
+    ]
+  }
+}

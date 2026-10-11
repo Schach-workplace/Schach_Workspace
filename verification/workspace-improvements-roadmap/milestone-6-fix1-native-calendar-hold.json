@@ -1,0 +1,48 @@
+{
+  "sourceCommit": "31b50a8272b769b5724b563ceff8c1c7b8af8430",
+  "backendCompiledCommit": "31b50a8272b769b5724b563ceff8c1c7b8af8430",
+  "backendAndSQLByteEquivalent": true,
+  "selectedDay": "10 October 2026",
+  "selectedHeader": "Sat, Oct 10",
+  "noActionsDuringHold": true,
+  "samples": [
+    {
+      "elapsedSeconds": 1.99,
+      "dialogOpen": true,
+      "selectionHeaderRetained": true,
+      "confirmButtonPresent": true
+    },
+    {
+      "elapsedSeconds": 7.99,
+      "dialogOpen": true,
+      "selectionHeaderRetained": true,
+      "confirmButtonPresent": true
+    },
+    {
+      "elapsedSeconds": 13.96,
+      "dialogOpen": true,
+      "selectionHeaderRetained": true,
+      "confirmButtonPresent": true
+    },
+    {
+      "elapsedSeconds": 19.96,
+      "dialogOpen": true,
+      "selectionHeaderRetained": true,
+      "confirmButtonPresent": true
+    },
+    {
+      "elapsedSeconds": 25.96,
+      "dialogOpen": true,
+      "selectionHeaderRetained": true,
+      "confirmButtonPresent": true
+    },
+    {
+      "elapsedSeconds": 31.96,
+      "dialogOpen": true,
+      "selectionHeaderRetained": true,
+      "confirmButtonPresent": true
+    }
+  ],
+  "passed": true,
+  "qualification": "Owned Android API36 development shell; sampled calendar continuity, not every pending frame, actual business confirmation, physical device, iOS or final APK."
+}
