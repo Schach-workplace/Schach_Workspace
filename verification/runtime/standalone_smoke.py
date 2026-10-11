@@ -8,7 +8,7 @@ if not a.allow_demo_mutations:p.error('explicit --allow-demo-mutations is requir
 if not os.environ.get('TEST_CLAMAV_ADDRESS'):p.error('TEST_CLAMAV_ADDRESS is required for real media scan/restore acceptance')
 a.output.mkdir(parents=True,exist_ok=True);out=a.output.resolve();checks=[];processes=[];schema='schach_runtime_'+secrets.token_hex(8);restore_db='schach_restore_'+secrets.token_hex(8)
 parsed=urllib.parse.urlsplit(os.environ['TEST_DATABASE_URL']);source_db=parsed.path.lstrip('/');query=urllib.parse.parse_qs(parsed.query);query['search_path']=[schema];dsn=urllib.parse.urlunsplit(parsed._replace(query=urllib.parse.urlencode(query,doseq=True)))
-result={'status':'failed','checks':checks};created_restore=False
+result={'status':'failed','checks':checks};created_restore=False;created_schema=False
 
 def cmd(args,cwd=ROOT,env=None,stdin=None,log='commands.log'):
  with (out/log).open('ab') as f:return subprocess.run(args,cwd=cwd,env=env,input=stdin,stdout=f,stderr=subprocess.STDOUT,check=True,timeout=180)
@@ -38,7 +38,7 @@ def start(binary,env):
   time.sleep(.1)
  raise RuntimeError('server startup timed out')
 try:
- sql(f'CREATE SCHEMA {schema};')
+ sql(f'CREATE SCHEMA {schema};');created_schema=True
  with tempfile.TemporaryDirectory(prefix='schach-standalone-runtime-') as tmp:
   temp=Path(tmp);binary=temp/'server';env=dict(os.environ)
   for name in list(env):
@@ -86,5 +86,5 @@ try:
 finally:
  for proc in processes:stop(proc)
  if created_restore:sql(f'DROP DATABASE {restore_db};',source_db)
- sql(f'DROP SCHEMA IF EXISTS {schema} CASCADE;')
+ if created_schema:sql(f'DROP SCHEMA {schema} CASCADE;')
  (out/'result.json').write_text(json.dumps(result,indent=2)+'\n');print(json.dumps(result))
