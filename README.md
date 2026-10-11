@@ -4,6 +4,8 @@ Package version **1.1.0** (the finance-release version; no new release version h
 
 Communication development adds Connect, timed commitments, native clients and self-hosted calls. See [current implementation and verification](docs/COMMUNICATION_IMPLEMENTATION.md) and [rollout operations](docs/COMMUNICATION_OPERATIONS.md) for tested behavior and remaining launch gates.
 
+All ten workspace improvement milestones and the current final client/build checks are recorded in [verification](docs/VERIFICATION.md). The [final evidence publication](verification/workspace-improvements-roadmap/final-integration/publication-report.md) binds the product source, command inputs, bounded runtime checks and Android evaluation APK; physical, protected-TLS and deployment acceptance remain separate.
+
 **A multi-company work and department finance application for founders, CEOs, department heads and their teams.**
 
 **Finance upgrade:** department budgets, categorized expenses, independent review, receipt evidence, payment records and financial-year reporting are now part of each company environment. See [the inspection and design decisions](docs/FINANCE_UPGRADE.md) and [finance guide](docs/FINANCE_GUIDE.md).

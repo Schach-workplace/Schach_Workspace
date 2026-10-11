@@ -1,0 +1,15 @@
+{
+  "name": "final-native-structured-red",
+  "cwd": "mobile",
+  "command": [
+    "npm",
+    "test",
+    "--",
+    "src/Structured.test.tsx"
+  ],
+  "head": "47bfbae52166a91fdb971357c039b27d65b3ade6",
+  "exitCode": 1,
+  "elapsedSeconds": 0.47,
+  "log": "final-native-structured-red.log",
+  "inputManifest": "final-native-structured-red-inputs.json"
+}

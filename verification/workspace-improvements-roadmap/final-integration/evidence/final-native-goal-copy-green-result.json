@@ -1,0 +1,17 @@
+{
+  "name": "final-native-goal-copy-green",
+  "cwd": "mobile",
+  "command": [
+    "npm",
+    "test",
+    "--",
+    "src/PlanningGoals.test.tsx",
+    "-t",
+    "metadata|preference|numeric text"
+  ],
+  "head": "bc3b7c71f840b78f277d70d55b8d2674257af01f",
+  "exitCode": 0,
+  "elapsedSeconds": 1.007,
+  "log": "final-native-goal-copy-green.log",
+  "inputManifest": "final-native-goal-copy-green-inputs.json"
+}

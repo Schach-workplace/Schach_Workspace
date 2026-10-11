@@ -1,0 +1,14 @@
+{
+  "name": "final-offline-preview-owning",
+  "cwd": "frontend",
+  "command": [
+    "npm",
+    "run",
+    "verify:preview"
+  ],
+  "head": "47bfbae52166a91fdb971357c039b27d65b3ade6",
+  "exitCode": 0,
+  "elapsedSeconds": 1.201,
+  "log": "final-offline-preview-owning.log",
+  "inputManifest": "final-offline-preview-owning-inputs.json"
+}

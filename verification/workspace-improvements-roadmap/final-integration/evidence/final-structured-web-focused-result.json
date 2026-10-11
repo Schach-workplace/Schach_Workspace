@@ -1,0 +1,17 @@
+{
+  "name": "final-structured-web-focused",
+  "cwd": "frontend",
+  "command": [
+    "npm",
+    "test",
+    "--",
+    "src/communication/Structured.test.tsx",
+    "src/communication/store.test.tsx",
+    "src/communication/SourceActions.test.tsx"
+  ],
+  "head": "47bfbae52166a91fdb971357c039b27d65b3ade6",
+  "exitCode": 0,
+  "elapsedSeconds": 0.801,
+  "log": "final-structured-web-focused.log",
+  "inputManifest": "final-structured-web-focused-inputs.json"
+}

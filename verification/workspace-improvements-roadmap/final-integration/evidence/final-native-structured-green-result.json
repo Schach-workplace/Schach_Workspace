@@ -1,0 +1,17 @@
+{
+  "name": "final-native-structured-green",
+  "cwd": "mobile",
+  "command": [
+    "npm",
+    "test",
+    "--",
+    "src/Structured.test.tsx",
+    "src/workDates.test.ts",
+    "src/DeadlinePicker.test.tsx"
+  ],
+  "head": "47bfbae52166a91fdb971357c039b27d65b3ade6",
+  "exitCode": 0,
+  "elapsedSeconds": 0.509,
+  "log": "final-native-structured-green.log",
+  "inputManifest": "final-native-structured-green-inputs.json"
+}

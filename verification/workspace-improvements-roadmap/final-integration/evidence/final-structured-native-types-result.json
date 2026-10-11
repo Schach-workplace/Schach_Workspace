@@ -1,0 +1,14 @@
+{
+  "name": "final-structured-native-types",
+  "cwd": "mobile",
+  "command": [
+    "npm",
+    "run",
+    "typecheck"
+  ],
+  "head": "47bfbae52166a91fdb971357c039b27d65b3ade6",
+  "exitCode": 0,
+  "elapsedSeconds": 2.715,
+  "log": "final-structured-native-types.log",
+  "inputManifest": "final-structured-native-types-inputs.json"
+}

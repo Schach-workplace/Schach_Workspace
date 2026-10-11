@@ -1,0 +1,17 @@
+{
+  "name": "final-native-onboarding-reentry-owning-red",
+  "cwd": "mobile",
+  "command": [
+    "npm",
+    "test",
+    "--",
+    "src/PeopleFlows.test.tsx",
+    "-t",
+    "identity reentry"
+  ],
+  "head": "bc3b7c71f840b78f277d70d55b8d2674257af01f",
+  "exitCode": 1,
+  "elapsedSeconds": 0.625,
+  "log": "final-native-onboarding-reentry-owning-red.log",
+  "inputManifest": "final-native-onboarding-reentry-owning-red-inputs.json"
+}

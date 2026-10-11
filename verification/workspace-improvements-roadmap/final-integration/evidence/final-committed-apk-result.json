@@ -1,0 +1,17 @@
+{
+  "name": "final-committed-apk",
+  "cwd": ".",
+  "command": [
+    "python3",
+    ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/final_apk_build.py"
+  ],
+  "head": "74e6474b8ea80c86d2505de1561de56453c7356f",
+  "runnerSHA256": "7833e80f7331a6c92fa511789d39ee44abd092bd87f771cd5bd8351d9926b6dc",
+  "commandFileInputs": {
+    ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/final_apk_build.py": "a63ef12c56bb4cf246a652aa60948c2f6cb41a4bdc8fe5b131f3555ed083b2d9"
+  },
+  "exitCode": 1,
+  "elapsedSeconds": 27.581,
+  "log": "final-committed-apk.log",
+  "inputManifest": "final-committed-apk-inputs.json"
+}

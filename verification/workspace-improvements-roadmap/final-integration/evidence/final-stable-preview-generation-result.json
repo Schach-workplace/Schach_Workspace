@@ -1,0 +1,17 @@
+{
+  "name": "final-stable-preview-generation",
+  "cwd": ".",
+  "command": [
+    "node",
+    "scripts/make-preview.mjs"
+  ],
+  "head": "47bfbae52166a91fdb971357c039b27d65b3ade6",
+  "runnerSHA256": "7833e80f7331a6c92fa511789d39ee44abd092bd87f771cd5bd8351d9926b6dc",
+  "commandFileInputs": {
+    "scripts/make-preview.mjs": "2f64137f79285c543e01a12b30765eabc629f70ab387051cb25668fa794b775f"
+  },
+  "exitCode": 0,
+  "elapsedSeconds": 0.064,
+  "log": "final-stable-preview-generation.log",
+  "inputManifest": "final-stable-preview-generation-inputs.json"
+}

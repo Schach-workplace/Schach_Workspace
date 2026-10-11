@@ -1,0 +1,16 @@
+{
+  "name": "final-web-target-green",
+  "cwd": "frontend",
+  "command": [
+    "npm",
+    "test",
+    "--",
+    "src/components/TaskDrawer.retry.test.tsx",
+    "src/components/TaskDrawer.test.tsx"
+  ],
+  "head": "bc3b7c71f840b78f277d70d55b8d2674257af01f",
+  "exitCode": 0,
+  "elapsedSeconds": 1.005,
+  "log": "final-web-target-green.log",
+  "inputManifest": "final-web-target-green-inputs.json"
+}

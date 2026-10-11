@@ -4,6 +4,13 @@ import { afterEach, expect, it, vi } from 'vitest';
 import Structured from './Structured';
 vi.mock('../components/IntelligenceLauncher', () => ({ default: () => null }));
 afterEach(cleanup);
+const held = () => {
+  let resolve!: (value: unknown) => void;
+  const promise = new Promise((done) => {
+    resolve = done;
+  });
+  return { promise, resolve };
+};
 const people = [
   { id: 'actor', name: 'Actor', active: true, role: 'member' },
   { id: 'eligible', name: 'Eligible', active: true, role: 'member' },
@@ -89,4 +96,45 @@ it('leaves an omitted deadline empty and withholds fresh creation while source a
   fireEvent.click(screen.getByText('Create structured record'));
   await waitFor(() => expect(command.mock.calls.some((c) => c[1]?.retryKey)).toBe(true));
   expect(command.mock.calls.find((c) => c[1]?.retryKey)![1].dueAt).toBe('');
+});
+it('accepts a known canonical ACK after temporary readiness checking with unchanged semantic owner', async () => {
+  const ack = held();
+  const command = vi
+    .fn()
+    .mockImplementation((_path, _body, method) =>
+      method === 'GET' ? Promise.resolve({ records: [], responses: [] }) : ack.promise,
+    );
+  const p = props(command);
+  const view = render(<Structured {...p} />);
+  fireEvent.change(screen.getByLabelText('Title'), { target: { value: 'Held known ACK' } });
+  fireEvent.click(screen.getByLabelText('Eligible'));
+  fireEvent.click(screen.getByText('Create structured record'));
+  await waitFor(() => expect(command.mock.calls.filter((c) => c[1]?.retryKey)).toHaveLength(1));
+  view.rerender(<Structured {...p} sourceReady={false} />);
+  expect((screen.getByText('Retry same structured record') as HTMLButtonElement).disabled).toBe(
+    true,
+  );
+  view.rerender(<Structured {...p} />);
+  ack.resolve({});
+  await waitFor(() => expect(p.onClose).toHaveBeenCalledTimes(1));
+  expect(command.mock.calls.filter((c) => c[1]?.retryKey)).toHaveLength(1);
+});
+it('still fences a late known ACK when the semantic read authority changes', async () => {
+  const ack = held();
+  const command = vi
+    .fn()
+    .mockImplementation((_path, _body, method) =>
+      method === 'GET' ? Promise.resolve({ records: [], responses: [] }) : ack.promise,
+    );
+  const p = props(command);
+  const view = render(<Structured {...p} />);
+  fireEvent.change(screen.getByLabelText('Title'), { target: { value: 'Original authority' } });
+  fireEvent.click(screen.getByLabelText('Eligible'));
+  fireEvent.click(screen.getByText('Create structured record'));
+  await waitFor(() => expect(command.mock.calls.filter((c) => c[1]?.retryKey)).toHaveLength(1));
+  view.rerender(<Structured {...p} data={{ ...p.data, readBasis: 'changed-authority' }} />);
+  ack.resolve({});
+  await new Promise((resolve) => setTimeout(resolve, 20));
+  expect(p.onClose).not.toHaveBeenCalled();
+  expect(command.mock.calls.filter((c) => c[1]?.retryKey)).toHaveLength(1);
 });

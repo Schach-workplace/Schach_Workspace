@@ -1,0 +1,14 @@
+{
+  "name": "final-native-lint-identity",
+  "cwd": "mobile",
+  "command": [
+    "npm",
+    "run",
+    "lint"
+  ],
+  "head": "47bfbae52166a91fdb971357c039b27d65b3ade6",
+  "exitCode": 0,
+  "elapsedSeconds": 2.572,
+  "log": "final-native-lint-identity.log",
+  "inputManifest": "final-native-lint-identity-inputs.json"
+}

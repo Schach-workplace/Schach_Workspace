@@ -1,0 +1,14 @@
+{
+  "name": "final-web-format",
+  "cwd": "frontend",
+  "command": [
+    "npm",
+    "run",
+    "format:check"
+  ],
+  "head": "47bfbae52166a91fdb971357c039b27d65b3ade6",
+  "exitCode": 1,
+  "elapsedSeconds": 5.715,
+  "log": "final-web-format.log",
+  "inputManifest": "final-web-format-inputs.json"
+}

@@ -1,0 +1,16 @@
+
+> schach-workspace-frontend@1.1.0 test
+> vitest run
+
+
+ RUN  v5.0.3 /home/brahma/Projects/Schach_Workspace/.worktrees/workspace-improvements/frontend
+
+
+ Test Files  71 passed (71)
+      Tests  346 passed (346)
+   Start at  02:47:24
+   Duration  7.06s (tests 36%, environment 25%, transform 24%, import 14%, worker 1%)
+
+    Isolate  71 workers spawned · ~593ms startup each (spawn + environment, per file)
+             at least ~765ms faster with isolate: false — reuses workers across files instead of one per file
+

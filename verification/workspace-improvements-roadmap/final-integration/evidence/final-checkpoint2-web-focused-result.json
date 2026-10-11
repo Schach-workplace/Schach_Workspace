@@ -1,0 +1,19 @@
+{
+  "name": "final-checkpoint2-web-focused",
+  "cwd": "frontend",
+  "command": [
+    "npm",
+    "test",
+    "--",
+    "src/components/GoalRecovery.test.tsx",
+    "src/components/IntelligenceLauncher.test.tsx",
+    "src/communication/Structured.test.tsx"
+  ],
+  "head": "47bfbae52166a91fdb971357c039b27d65b3ade6",
+  "runnerSHA256": "7833e80f7331a6c92fa511789d39ee44abd092bd87f771cd5bd8351d9926b6dc",
+  "commandFileInputs": {},
+  "exitCode": 0,
+  "elapsedSeconds": 1.054,
+  "log": "final-checkpoint2-web-focused.log",
+  "inputManifest": "final-checkpoint2-web-focused-inputs.json"
+}

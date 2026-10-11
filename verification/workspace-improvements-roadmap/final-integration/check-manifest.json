@@ -1,0 +1,1765 @@
+{
+  "productSourceCommit": "74e6474b8ea80c86d2505de1561de56453c7356f",
+  "checks": [
+    {
+      "name": "final-all-owned-client-format",
+      "cwd": "frontend",
+      "command": [
+        "npx",
+        "prettier",
+        "--check",
+        "../frontend/src/App.tsx",
+        "../frontend/src/communication/Connect.tsx",
+        "../frontend/src/communication/Structured.test.tsx",
+        "../frontend/src/communication/Structured.tsx",
+        "../frontend/src/components/AsyncView.tsx",
+        "../frontend/src/components/GoalMeasurementForm.tsx",
+        "../frontend/src/components/GoalMetadataForm.tsx",
+        "../frontend/src/components/GoalRecovery.test.tsx",
+        "../frontend/src/components/GoalReminderPreferences.tsx",
+        "../frontend/src/components/IntelligenceDraftReview.tsx",
+        "../frontend/src/components/IntelligenceLauncher.test.tsx",
+        "../frontend/src/components/IntelligenceLauncher.tsx",
+        "../frontend/src/components/IntelligencePanel.test.tsx",
+        "../frontend/src/components/PeopleOnboarding.test.tsx",
+        "../frontend/src/components/PeopleOnboarding.tsx",
+        "../frontend/src/components/PeoplePresetEditor.tsx",
+        "../frontend/src/components/StatementImportRecovery.test.tsx",
+        "../frontend/src/components/StatementImportReview.tsx",
+        "../frontend/src/components/TaskDrawer.retry.test.tsx",
+        "../frontend/src/components/TaskDrawer.tsx",
+        "../frontend/vite.config.ts",
+        "../mobile/src/ConnectUI.tsx",
+        "../mobile/src/FinanceStatementRecovery.test.tsx",
+        "../mobile/src/FinanceStatementReview.tsx",
+        "../mobile/src/GoalEvidencePicker.tsx",
+        "../mobile/src/GoalMeasurementForm.tsx",
+        "../mobile/src/GoalMetadataForm.tsx",
+        "../mobile/src/GoalReminderPreferences.tsx",
+        "../mobile/src/IntelligenceDraftReview.tsx",
+        "../mobile/src/IntelligenceLifetime.test.tsx",
+        "../mobile/src/IntelligenceScreen.test.tsx",
+        "../mobile/src/NativeConversation.tsx",
+        "../mobile/src/PeopleFlows.test.tsx",
+        "../mobile/src/PeopleOnboarding.tsx",
+        "../mobile/src/PeoplePresetEditor.tsx",
+        "../mobile/src/PlanningGoals.test.tsx",
+        "../mobile/src/ReportControls.tsx",
+        "../mobile/src/Structured.test.tsx",
+        "../mobile/src/Structured.tsx",
+        "../mobile/src/TaskDetailScreen.tsx",
+        "../mobile/src/WorkScreen.test.tsx",
+        "../mobile/src/app/login.tsx",
+        "../shared/business/recoveryCopy.ts",
+        "../shared/communication/structuredPeople.ts",
+        "../shared/finance/labels.ts"
+      ],
+      "head": "74e6474b8ea80c86d2505de1561de56453c7356f",
+      "runnerSHA256": "7833e80f7331a6c92fa511789d39ee44abd092bd87f771cd5bd8351d9926b6dc",
+      "commandFileInputs": {},
+      "exitCode": 0,
+      "elapsedSeconds": 1.028,
+      "log": "final-all-owned-client-format.log",
+      "inputManifest": "final-all-owned-client-format-inputs.json",
+      "rawLogSHA256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-browser-offline-chunks-owning",
+      "cwd": ".",
+      "command": [
+        "node",
+        ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/final_browser_offline_chunks.mjs",
+        "http://127.0.0.1:54123"
+      ],
+      "head": "47bfbae52166a91fdb971357c039b27d65b3ade6",
+      "exitCode": 1,
+      "elapsedSeconds": 30.611,
+      "log": "final-browser-offline-chunks-owning.log",
+      "inputManifest": "final-browser-offline-chunks-owning-inputs.json",
+      "rawLogSHA256": "6ddc971cee08c107fc16627cd03f51bdae3ba499df314c4afc34ef1eeb0ae462",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-browser-offline-chunks",
+      "cwd": ".",
+      "command": [
+        "node",
+        ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/final_browser_offline_chunks.mjs",
+        "http://127.0.0.1:54123"
+      ],
+      "head": "47bfbae52166a91fdb971357c039b27d65b3ade6",
+      "exitCode": 1,
+      "elapsedSeconds": 0.365,
+      "log": "final-browser-offline-chunks.log",
+      "inputManifest": "final-browser-offline-chunks-inputs.json",
+      "rawLogSHA256": "11df7988d7cd1c521eda8ea6213d1e48529a9f8b76277dcedb2cef992ff3f27f",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-browser-owned-lifetime",
+      "cwd": ".",
+      "command": [
+        "python3",
+        ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/final_browser_runtime.py",
+        "/tmp/schach-final-integration-runtime-20261012-2228110"
+      ],
+      "head": "47bfbae52166a91fdb971357c039b27d65b3ade6",
+      "runnerSHA256": "7833e80f7331a6c92fa511789d39ee44abd092bd87f771cd5bd8351d9926b6dc",
+      "commandFileInputs": {
+        ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/final_browser_runtime.py": "3a375a3f287b6d60b7ed7ab74cc6db9a768f742907fcf8d7c8c7269f1c022967"
+      },
+      "exitCode": 0,
+      "elapsedSeconds": 3.608,
+      "log": "final-browser-owned-lifetime.log",
+      "inputManifest": "final-browser-owned-lifetime-inputs.json",
+      "rawLogSHA256": "4d77fd9c8d01f5652682bcd24c3f6a952404d3f378293adbb870407835e9c0c4",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-checkpoint2-native-focused",
+      "cwd": "mobile",
+      "command": [
+        "npm",
+        "test",
+        "--",
+        "src/PlanningGoals.test.tsx",
+        "src/TaskRoute.test.tsx",
+        "src/WorkScreen.test.tsx",
+        "src/IntelligenceLifetime.test.tsx",
+        "src/Structured.test.tsx"
+      ],
+      "head": "47bfbae52166a91fdb971357c039b27d65b3ade6",
+      "runnerSHA256": "7833e80f7331a6c92fa511789d39ee44abd092bd87f771cd5bd8351d9926b6dc",
+      "commandFileInputs": {},
+      "exitCode": 0,
+      "elapsedSeconds": 63.443,
+      "log": "final-checkpoint2-native-focused.log",
+      "inputManifest": "final-checkpoint2-native-focused-inputs.json",
+      "rawLogSHA256": "aeb4a5873b88b924f3ffce410336cb87419cac9d73a6baf7a55991e8dad9f86c",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-checkpoint2-native-types",
+      "cwd": "mobile",
+      "command": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "head": "47bfbae52166a91fdb971357c039b27d65b3ade6",
+      "runnerSHA256": "7833e80f7331a6c92fa511789d39ee44abd092bd87f771cd5bd8351d9926b6dc",
+      "commandFileInputs": {},
+      "exitCode": 0,
+      "elapsedSeconds": 2.681,
+      "log": "final-checkpoint2-native-types.log",
+      "inputManifest": "final-checkpoint2-native-types-inputs.json",
+      "rawLogSHA256": "6a5365a7bb40c3ca387f36db78409447c32d44f69ec1737ce498eae83f040589",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-checkpoint2-owned-format",
+      "cwd": "frontend",
+      "command": [
+        "npx",
+        "prettier",
+        "--check",
+        "../frontend/src/App.tsx",
+        "../frontend/src/communication/Connect.tsx",
+        "../frontend/src/communication/Structured.test.tsx",
+        "../frontend/src/communication/Structured.tsx",
+        "../frontend/src/components/AsyncView.tsx",
+        "../frontend/src/components/IntelligenceLauncher.test.tsx",
+        "../frontend/src/components/IntelligenceLauncher.tsx",
+        "../frontend/vite.config.ts",
+        "../mobile/src/ConnectUI.tsx",
+        "../mobile/src/GoalEvidencePicker.tsx",
+        "../mobile/src/IntelligenceLifetime.test.tsx",
+        "../mobile/src/NativeConversation.tsx",
+        "../mobile/src/Structured.test.tsx",
+        "../mobile/src/Structured.tsx",
+        "../mobile/src/TaskDetailScreen.tsx",
+        "../mobile/src/app/login.tsx",
+        "../shared/business/recoveryCopy.ts",
+        "../shared/communication/structuredPeople.ts"
+      ],
+      "head": "47bfbae52166a91fdb971357c039b27d65b3ade6",
+      "runnerSHA256": "7833e80f7331a6c92fa511789d39ee44abd092bd87f771cd5bd8351d9926b6dc",
+      "commandFileInputs": {},
+      "exitCode": 0,
+      "elapsedSeconds": 0.553,
+      "log": "final-checkpoint2-owned-format.log",
+      "inputManifest": "final-checkpoint2-owned-format-inputs.json",
+      "rawLogSHA256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-checkpoint2-web-focused",
+      "cwd": "frontend",
+      "command": [
+        "npm",
+        "test",
+        "--",
+        "src/components/GoalRecovery.test.tsx",
+        "src/components/IntelligenceLauncher.test.tsx",
+        "src/communication/Structured.test.tsx"
+      ],
+      "head": "47bfbae52166a91fdb971357c039b27d65b3ade6",
+      "runnerSHA256": "7833e80f7331a6c92fa511789d39ee44abd092bd87f771cd5bd8351d9926b6dc",
+      "commandFileInputs": {},
+      "exitCode": 0,
+      "elapsedSeconds": 1.054,
+      "log": "final-checkpoint2-web-focused.log",
+      "inputManifest": "final-checkpoint2-web-focused-inputs.json",
+      "rawLogSHA256": "db5e84621592dace41cdf4fcdbe3bd9350d4a555048e440645ae25ee1ab49e0f",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-committed-apk-owning",
+      "cwd": ".",
+      "command": [
+        "python3",
+        ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/final_apk_resume.py"
+      ],
+      "head": "74e6474b8ea80c86d2505de1561de56453c7356f",
+      "runnerSHA256": "7833e80f7331a6c92fa511789d39ee44abd092bd87f771cd5bd8351d9926b6dc",
+      "commandFileInputs": {
+        ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/final_apk_resume.py": "b606619694feb4f0fce7c90c97094a8853b13c35efae3bfc23f4fb86e3e8be26"
+      },
+      "exitCode": 1,
+      "elapsedSeconds": 59.688,
+      "log": "final-committed-apk-owning.log",
+      "inputManifest": "final-committed-apk-owning-inputs.json",
+      "rawLogSHA256": "6255bdf8576876e66b1a09d0a69e703c4d9616059deb61da87a59141b5a0fd66",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-committed-apk",
+      "cwd": ".",
+      "command": [
+        "python3",
+        ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/final_apk_build.py"
+      ],
+      "head": "74e6474b8ea80c86d2505de1561de56453c7356f",
+      "runnerSHA256": "7833e80f7331a6c92fa511789d39ee44abd092bd87f771cd5bd8351d9926b6dc",
+      "commandFileInputs": {
+        ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/final_apk_build.py": "a63ef12c56bb4cf246a652aa60948c2f6cb41a4bdc8fe5b131f3555ed083b2d9"
+      },
+      "exitCode": 1,
+      "elapsedSeconds": 27.581,
+      "log": "final-committed-apk.log",
+      "inputManifest": "final-committed-apk-inputs.json",
+      "rawLogSHA256": "1574561fbbe2385a8574f2ad98c385c3c6c2535de0173444fef22dd8cdf95394",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-committed-apk-ssd",
+      "cwd": ".",
+      "command": [
+        "python3",
+        ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/final_apk_resume.py"
+      ],
+      "head": "74e6474b8ea80c86d2505de1561de56453c7356f",
+      "runnerSHA256": "7833e80f7331a6c92fa511789d39ee44abd092bd87f771cd5bd8351d9926b6dc",
+      "commandFileInputs": {
+        ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/final_apk_resume.py": "e86c1db62117b7f947854967a1c04e569e7b29b99882df4c2cd84cd0237055f8"
+      },
+      "exitCode": 0,
+      "elapsedSeconds": 121.376,
+      "log": "final-committed-apk-ssd.log",
+      "inputManifest": "final-committed-apk-ssd-inputs.json",
+      "rawLogSHA256": "b86cb8bbbefea7feffde6fbefc2d2da9592f092b06fb8a10c653bf4323bf044b",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-current-browser",
+      "cwd": ".",
+      "command": [
+        "python3",
+        ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/final_browser_runtime.py",
+        "/tmp/schach-final-integration-runtime-20261012-2228110"
+      ],
+      "head": "74e6474b8ea80c86d2505de1561de56453c7356f",
+      "runnerSHA256": "7833e80f7331a6c92fa511789d39ee44abd092bd87f771cd5bd8351d9926b6dc",
+      "commandFileInputs": {
+        ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/final_browser_runtime.py": "3a375a3f287b6d60b7ed7ab74cc6db9a768f742907fcf8d7c8c7269f1c022967"
+      },
+      "exitCode": 0,
+      "elapsedSeconds": 3.503,
+      "log": "final-current-browser.log",
+      "inputManifest": "final-current-browser-inputs.json",
+      "rawLogSHA256": "5367ffe2cb952f272061cd154b2bc5a1ad9333aa8115caabe100372b8dd5e87f",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-current-demo-build",
+      "cwd": "frontend",
+      "command": [
+        "npm",
+        "run",
+        "build:demo"
+      ],
+      "head": "74e6474b8ea80c86d2505de1561de56453c7356f",
+      "runnerSHA256": "7833e80f7331a6c92fa511789d39ee44abd092bd87f771cd5bd8351d9926b6dc",
+      "commandFileInputs": {},
+      "exitCode": 0,
+      "elapsedSeconds": 1.498,
+      "log": "final-current-demo-build.log",
+      "inputManifest": "final-current-demo-build-inputs.json",
+      "rawLogSHA256": "90190ea708dfe37683e28ec2a2280827d2b0232a7d4ba0dde24d128ffddf6823",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-current-normal-build",
+      "cwd": "frontend",
+      "command": [
+        "npm",
+        "run",
+        "build"
+      ],
+      "head": "74e6474b8ea80c86d2505de1561de56453c7356f",
+      "runnerSHA256": "7833e80f7331a6c92fa511789d39ee44abd092bd87f771cd5bd8351d9926b6dc",
+      "commandFileInputs": {},
+      "exitCode": 0,
+      "elapsedSeconds": 1.322,
+      "log": "final-current-normal-build.log",
+      "inputManifest": "final-current-normal-build-inputs.json",
+      "rawLogSHA256": "408a4bcbc55a59d715d0a980ddd1c4c535553f369e97f92d262acffd024e4198",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-current-preview-generation",
+      "cwd": ".",
+      "command": [
+        "node",
+        "scripts/make-preview.mjs"
+      ],
+      "head": "74e6474b8ea80c86d2505de1561de56453c7356f",
+      "runnerSHA256": "7833e80f7331a6c92fa511789d39ee44abd092bd87f771cd5bd8351d9926b6dc",
+      "commandFileInputs": {
+        "scripts/make-preview.mjs": "2f64137f79285c543e01a12b30765eabc629f70ab387051cb25668fa794b775f"
+      },
+      "exitCode": 0,
+      "elapsedSeconds": 0.065,
+      "log": "final-current-preview-generation.log",
+      "inputManifest": "final-current-preview-generation-inputs.json",
+      "rawLogSHA256": "e66eb6c536e84fb1f943adf2e4945a710bc4300ca53c310c912d06a5cc8262be",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-current-preview",
+      "cwd": "frontend",
+      "command": [
+        "npm",
+        "run",
+        "verify:preview"
+      ],
+      "head": "74e6474b8ea80c86d2505de1561de56453c7356f",
+      "runnerSHA256": "7833e80f7331a6c92fa511789d39ee44abd092bd87f771cd5bd8351d9926b6dc",
+      "commandFileInputs": {},
+      "exitCode": 0,
+      "elapsedSeconds": 1.21,
+      "log": "final-current-preview.log",
+      "inputManifest": "final-current-preview-inputs.json",
+      "rawLogSHA256": "e00dffbcc54cb82e44cac5ec5ea54de8f4556bcd7898b8bf36f222459839363c",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-current-web",
+      "cwd": "frontend",
+      "command": [
+        "npm",
+        "test"
+      ],
+      "head": "74e6474b8ea80c86d2505de1561de56453c7356f",
+      "runnerSHA256": "7833e80f7331a6c92fa511789d39ee44abd092bd87f771cd5bd8351d9926b6dc",
+      "commandFileInputs": {},
+      "exitCode": 0,
+      "elapsedSeconds": 6.057,
+      "log": "final-current-web.log",
+      "inputManifest": "final-current-web-inputs.json",
+      "rawLogSHA256": "fe1207ddf14d4ed0e488bcb1a717622901339b02801d61e351b173031a96f4f7",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-full-native",
+      "cwd": "mobile",
+      "command": [
+        "npm",
+        "test"
+      ],
+      "head": "47bfbae52166a91fdb971357c039b27d65b3ade6",
+      "exitCode": 1,
+      "elapsedSeconds": 66.24,
+      "log": "final-full-native.log",
+      "inputManifest": "final-full-native-inputs.json",
+      "rawLogSHA256": "b40b60a397ce293d85ab394967072df16961e3df70b26ac4dd86dfacfba22ea9",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-full-web",
+      "cwd": "frontend",
+      "command": [
+        "npm",
+        "test"
+      ],
+      "head": "47bfbae52166a91fdb971357c039b27d65b3ade6",
+      "exitCode": 0,
+      "elapsedSeconds": 8.139,
+      "log": "final-full-web.log",
+      "inputManifest": "final-full-web-inputs.json",
+      "rawLogSHA256": "752caf4d6b4259039b7a8387d9751c1908928656d3089ea49d8fada8754cb797",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-goal-copy-green",
+      "cwd": "frontend",
+      "command": [
+        "npm",
+        "test",
+        "--",
+        "src/components/GoalRecovery.test.tsx"
+      ],
+      "head": "bc3b7c71f840b78f277d70d55b8d2674257af01f",
+      "exitCode": 0,
+      "elapsedSeconds": 1.012,
+      "log": "final-goal-copy-green.log",
+      "inputManifest": "final-goal-copy-green-inputs.json",
+      "rawLogSHA256": "1a420f2ded851d231f428c5e23d19a78cfb7136a90a128613c9f31850cc746de",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-goal-copy-red",
+      "cwd": "frontend",
+      "command": [
+        "npm",
+        "test",
+        "--",
+        "src/components/GoalRecovery.test.tsx",
+        "-t",
+        "rejected metadata"
+      ],
+      "head": "bc3b7c71f840b78f277d70d55b8d2674257af01f",
+      "exitCode": 1,
+      "elapsedSeconds": 1.953,
+      "log": "final-goal-copy-red.log",
+      "inputManifest": "final-goal-copy-red-inputs.json",
+      "rawLogSHA256": "1affdd70e1075cb041bfcdbdc2caf86fdc3cccaa4283ab4c651784dcf3b32610",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-hermes-export",
+      "cwd": "mobile",
+      "command": [
+        "npm",
+        "run",
+        "export"
+      ],
+      "head": "47bfbae52166a91fdb971357c039b27d65b3ade6",
+      "exitCode": 0,
+      "elapsedSeconds": 34.732,
+      "log": "final-hermes-export.log",
+      "inputManifest": "final-hermes-export-inputs.json",
+      "rawLogSHA256": "efdc1a261a800ed62a1f5be500896f3983f1d5370e66d4367b4c4208d657ab6b",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-inline-preview",
+      "cwd": ".",
+      "command": [
+        "node",
+        "scripts/make-preview.mjs"
+      ],
+      "head": "47bfbae52166a91fdb971357c039b27d65b3ade6",
+      "exitCode": 0,
+      "elapsedSeconds": 0.056,
+      "log": "final-inline-preview.log",
+      "inputManifest": "final-inline-preview-inputs.json",
+      "rawLogSHA256": "bd12e6fc196d2f52291c71f5201eb001c62486a24037d18faa852983222622da",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-launcher-lazy-green",
+      "cwd": "frontend",
+      "command": [
+        "npm",
+        "test",
+        "--",
+        "src/components/IntelligenceLauncher.test.tsx",
+        "src/communication/Structured.test.tsx"
+      ],
+      "head": "47bfbae52166a91fdb971357c039b27d65b3ade6",
+      "exitCode": 0,
+      "elapsedSeconds": 0.795,
+      "log": "final-launcher-lazy-green.log",
+      "inputManifest": "final-launcher-lazy-green-inputs.json",
+      "rawLogSHA256": "9aa7e673b14d7e298f526a0c061d855172abc0fc2c854391d36dc120b9959873",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-launcher-lazy-red",
+      "cwd": "frontend",
+      "command": [
+        "npm",
+        "test",
+        "--",
+        "src/components/IntelligenceLauncher.test.tsx"
+      ],
+      "head": "47bfbae52166a91fdb971357c039b27d65b3ade6",
+      "exitCode": 1,
+      "elapsedSeconds": 0.497,
+      "log": "final-launcher-lazy-red.log",
+      "inputManifest": "final-launcher-lazy-red-inputs.json",
+      "rawLogSHA256": "e7c08afda99092065a8d3f82e05fe06e6465097d32461156bcec5f135735fa20",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-lazy-demo-build",
+      "cwd": "frontend",
+      "command": [
+        "npm",
+        "run",
+        "build:demo"
+      ],
+      "head": "47bfbae52166a91fdb971357c039b27d65b3ade6",
+      "exitCode": 0,
+      "elapsedSeconds": 0.769,
+      "log": "final-lazy-demo-build.log",
+      "inputManifest": "final-lazy-demo-build-inputs.json",
+      "rawLogSHA256": "0415754c23dc2611c03f8d2de27349a134428920d0391168b6eb17fefd2d0ab6",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-lazy-normal-build",
+      "cwd": "frontend",
+      "command": [
+        "npm",
+        "run",
+        "build"
+      ],
+      "head": "47bfbae52166a91fdb971357c039b27d65b3ade6",
+      "exitCode": 0,
+      "elapsedSeconds": 0.651,
+      "log": "final-lazy-normal-build.log",
+      "inputManifest": "final-lazy-normal-build-inputs.json",
+      "rawLogSHA256": "1f268bec27373af26d2d291604a3e7ea7341b3968036ccb9c9407cf95966ec6d",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-native-goal-copy-green",
+      "cwd": "mobile",
+      "command": [
+        "npm",
+        "test",
+        "--",
+        "src/PlanningGoals.test.tsx",
+        "-t",
+        "metadata|preference|numeric text"
+      ],
+      "head": "bc3b7c71f840b78f277d70d55b8d2674257af01f",
+      "exitCode": 0,
+      "elapsedSeconds": 1.007,
+      "log": "final-native-goal-copy-green.log",
+      "inputManifest": "final-native-goal-copy-green-inputs.json",
+      "rawLogSHA256": "32ccdd503181cf62387553643c07ea8721d2329a781c9f3b5cafb1d58a616b7d",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-native-goal-copy-owning-red",
+      "cwd": "mobile",
+      "command": [
+        "npm",
+        "test",
+        "--",
+        "src/PlanningGoals.test.tsx",
+        "-t",
+        "rejected native metadata"
+      ],
+      "head": "bc3b7c71f840b78f277d70d55b8d2674257af01f",
+      "exitCode": 1,
+      "elapsedSeconds": 0.71,
+      "log": "final-native-goal-copy-owning-red.log",
+      "inputManifest": "final-native-goal-copy-owning-red-inputs.json",
+      "rawLogSHA256": "29c8211f13b80edb9c4a0e25bc27b291f14177d82f67d346823376fdfae652db",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-native-goal-copy-red",
+      "cwd": "mobile",
+      "command": [
+        "npm",
+        "test",
+        "--",
+        "src/PlanningGoals.test.tsx",
+        "-t",
+        "rejected native metadata"
+      ],
+      "head": "bc3b7c71f840b78f277d70d55b8d2674257af01f",
+      "exitCode": 1,
+      "elapsedSeconds": 0.817,
+      "log": "final-native-goal-copy-red.log",
+      "inputManifest": "final-native-goal-copy-red-inputs.json",
+      "rawLogSHA256": "5657e49d8da6e0e191ff74a02ce4a873c1af29dab1b477da8dd67a3e3ffee10e",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-native-lifetime-label-green",
+      "cwd": "mobile",
+      "command": [
+        "npm",
+        "test",
+        "--",
+        "src/IntelligenceLifetime.test.tsx"
+      ],
+      "head": "47bfbae52166a91fdb971357c039b27d65b3ade6",
+      "exitCode": 0,
+      "elapsedSeconds": 1.166,
+      "log": "final-native-lifetime-label-green.log",
+      "inputManifest": "final-native-lifetime-label-green-inputs.json",
+      "rawLogSHA256": "33f73962b0a38bee14af455b8d47a84b7ce99077b39bc25a2a5559111b435035",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-native-lint-identity",
+      "cwd": "mobile",
+      "command": [
+        "npm",
+        "run",
+        "lint"
+      ],
+      "head": "47bfbae52166a91fdb971357c039b27d65b3ade6",
+      "exitCode": 0,
+      "elapsedSeconds": 2.572,
+      "log": "final-native-lint-identity.log",
+      "inputManifest": "final-native-lint-identity-inputs.json",
+      "rawLogSHA256": "d3f78a60c2585717d1813a084d3a7b86d56cf287b70dcab02fb5917698dc6d0c",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-native-lint-owning",
+      "cwd": "mobile",
+      "command": [
+        "npm",
+        "run",
+        "lint"
+      ],
+      "head": "47bfbae52166a91fdb971357c039b27d65b3ade6",
+      "exitCode": 0,
+      "elapsedSeconds": 1.33,
+      "log": "final-native-lint-owning.log",
+      "inputManifest": "final-native-lint-owning-inputs.json",
+      "rawLogSHA256": "ee5cefb8cf8e429a6a61775d1df4d35868075872eec34c5698575c19196bae0f",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-native-lint",
+      "cwd": "mobile",
+      "command": [
+        "npm",
+        "run",
+        "lint"
+      ],
+      "head": "47bfbae52166a91fdb971357c039b27d65b3ade6",
+      "exitCode": 1,
+      "elapsedSeconds": 6.7,
+      "log": "final-native-lint.log",
+      "inputManifest": "final-native-lint-inputs.json",
+      "rawLogSHA256": "b9f55451230799fac923ca1313267d7892e124aa8e29d9d38df2ba0ccafb20f0",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-native-onboarding-reentry-green",
+      "cwd": "mobile",
+      "command": [
+        "npm",
+        "test",
+        "--",
+        "src/PeopleFlows.test.tsx"
+      ],
+      "head": "bc3b7c71f840b78f277d70d55b8d2674257af01f",
+      "exitCode": 0,
+      "elapsedSeconds": 1.463,
+      "log": "final-native-onboarding-reentry-green.log",
+      "inputManifest": "final-native-onboarding-reentry-green-inputs.json",
+      "rawLogSHA256": "f98795adebd48898a6f135cc25768c72956715ff9d10af410bc30ac4fd570c76",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-native-onboarding-reentry-owning-red",
+      "cwd": "mobile",
+      "command": [
+        "npm",
+        "test",
+        "--",
+        "src/PeopleFlows.test.tsx",
+        "-t",
+        "identity reentry"
+      ],
+      "head": "bc3b7c71f840b78f277d70d55b8d2674257af01f",
+      "exitCode": 1,
+      "elapsedSeconds": 0.625,
+      "log": "final-native-onboarding-reentry-owning-red.log",
+      "inputManifest": "final-native-onboarding-reentry-owning-red-inputs.json",
+      "rawLogSHA256": "549c725e0d4eff5c403024921f06c246d620f33708452ce11cbd983b443712b3",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-native-onboarding-reentry-red",
+      "cwd": "mobile",
+      "command": [
+        "npm",
+        "test",
+        "--",
+        "src/PeopleFlows.test.tsx",
+        "-t",
+        "identity reentry"
+      ],
+      "head": "bc3b7c71f840b78f277d70d55b8d2674257af01f",
+      "exitCode": 1,
+      "elapsedSeconds": 0.619,
+      "log": "final-native-onboarding-reentry-red.log",
+      "inputManifest": "final-native-onboarding-reentry-red-inputs.json",
+      "rawLogSHA256": "38a9fdcda4d9600841c6656f8cffaaf8f705f769f1acd2f5e6e7483a54e2eb57",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-native-picker-covering",
+      "cwd": "mobile",
+      "command": [
+        "npm",
+        "test",
+        "--",
+        "src/PlanningGoals.test.tsx",
+        "src/GoalScreen.test.tsx",
+        "src/Structured.test.tsx"
+      ],
+      "head": "47bfbae52166a91fdb971357c039b27d65b3ade6",
+      "runnerSHA256": "7833e80f7331a6c92fa511789d39ee44abd092bd87f771cd5bd8351d9926b6dc",
+      "commandFileInputs": {},
+      "exitCode": 0,
+      "elapsedSeconds": 63.554,
+      "log": "final-native-picker-covering.log",
+      "inputManifest": "final-native-picker-covering-inputs.json",
+      "rawLogSHA256": "bb6c2d6b91fd216d2aacefa2e60cb809ccf0f26f4a9d4f1d3e458ad8e94203a5",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-native-picker-lint",
+      "cwd": "mobile",
+      "command": [
+        "npm",
+        "run",
+        "lint"
+      ],
+      "head": "47bfbae52166a91fdb971357c039b27d65b3ade6",
+      "runnerSHA256": "7833e80f7331a6c92fa511789d39ee44abd092bd87f771cd5bd8351d9926b6dc",
+      "commandFileInputs": {},
+      "exitCode": 0,
+      "elapsedSeconds": 1.147,
+      "log": "final-native-picker-lint.log",
+      "inputManifest": "final-native-picker-lint-inputs.json",
+      "rawLogSHA256": "d3f78a60c2585717d1813a084d3a7b86d56cf287b70dcab02fb5917698dc6d0c",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-native-picker-types",
+      "cwd": "mobile",
+      "command": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "head": "47bfbae52166a91fdb971357c039b27d65b3ade6",
+      "runnerSHA256": "7833e80f7331a6c92fa511789d39ee44abd092bd87f771cd5bd8351d9926b6dc",
+      "commandFileInputs": {},
+      "exitCode": 0,
+      "elapsedSeconds": 2.653,
+      "log": "final-native-picker-types.log",
+      "inputManifest": "final-native-picker-types-inputs.json",
+      "rawLogSHA256": "6a5365a7bb40c3ca387f36db78409447c32d44f69ec1737ce498eae83f040589",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-native-structured-green",
+      "cwd": "mobile",
+      "command": [
+        "npm",
+        "test",
+        "--",
+        "src/Structured.test.tsx",
+        "src/workDates.test.ts",
+        "src/DeadlinePicker.test.tsx"
+      ],
+      "head": "47bfbae52166a91fdb971357c039b27d65b3ade6",
+      "exitCode": 0,
+      "elapsedSeconds": 0.509,
+      "log": "final-native-structured-green.log",
+      "inputManifest": "final-native-structured-green-inputs.json",
+      "rawLogSHA256": "5dc27c10ec083b9c733b0cd546b4666c6d297df4e1871c3bf1865c595e1edd65",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-native-structured-owning-red",
+      "cwd": "mobile",
+      "command": [
+        "npm",
+        "test",
+        "--",
+        "src/Structured.test.tsx"
+      ],
+      "head": "47bfbae52166a91fdb971357c039b27d65b3ade6",
+      "exitCode": 1,
+      "elapsedSeconds": 0.465,
+      "log": "final-native-structured-owning-red.log",
+      "inputManifest": "final-native-structured-owning-red-inputs.json",
+      "rawLogSHA256": "8ff6a40283fb771f3e4633d20d6b5a8f3abc0b7b8f2d78a44c69cad840d1ce10",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-native-structured-red",
+      "cwd": "mobile",
+      "command": [
+        "npm",
+        "test",
+        "--",
+        "src/Structured.test.tsx"
+      ],
+      "head": "47bfbae52166a91fdb971357c039b27d65b3ade6",
+      "exitCode": 1,
+      "elapsedSeconds": 0.47,
+      "log": "final-native-structured-red.log",
+      "inputManifest": "final-native-structured-red-inputs.json",
+      "rawLogSHA256": "1b07135aadddc6147995fbada9c23d7cb178131b5b4da6d8b9b366b0127fb8fb",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-native-target-green",
+      "cwd": "mobile",
+      "command": [
+        "npm",
+        "test",
+        "--",
+        "src/WorkScreen.test.tsx",
+        "src/TaskRoute.test.tsx"
+      ],
+      "head": "bc3b7c71f840b78f277d70d55b8d2674257af01f",
+      "exitCode": 0,
+      "elapsedSeconds": 0.789,
+      "log": "final-native-target-green.log",
+      "inputManifest": "final-native-target-green-inputs.json",
+      "rawLogSHA256": "9d16cfb333f5ef3f8cdaf8957e1918819951ce4a5fab541fd83be7debcedbc9c",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-native-target-identity-green",
+      "cwd": "mobile",
+      "command": [
+        "npm",
+        "test",
+        "--",
+        "src/WorkScreen.test.tsx",
+        "src/TaskRoute.test.tsx"
+      ],
+      "head": "47bfbae52166a91fdb971357c039b27d65b3ade6",
+      "exitCode": 0,
+      "elapsedSeconds": 0.717,
+      "log": "final-native-target-identity-green.log",
+      "inputManifest": "final-native-target-identity-green-inputs.json",
+      "rawLogSHA256": "7473fb959db903d765791a7ddeeff76e99b3f61da420b82f9a0a018ff9298835",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-native-target-lint-correction",
+      "cwd": "mobile",
+      "command": [
+        "npm",
+        "test",
+        "--",
+        "src/WorkScreen.test.tsx",
+        "src/TaskRoute.test.tsx"
+      ],
+      "head": "47bfbae52166a91fdb971357c039b27d65b3ade6",
+      "exitCode": 0,
+      "elapsedSeconds": 0.863,
+      "log": "final-native-target-lint-correction.log",
+      "inputManifest": "final-native-target-lint-correction-inputs.json",
+      "rawLogSHA256": "5fd140fcb433b6d8face1af0bdf4a9670b40c56cbbf9d0b9ac548f2189434537",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-native-target-red",
+      "cwd": "mobile",
+      "command": [
+        "npm",
+        "test",
+        "--",
+        "src/WorkScreen.test.tsx",
+        "-t",
+        "already submitted A"
+      ],
+      "head": "bc3b7c71f840b78f277d70d55b8d2674257af01f",
+      "exitCode": 1,
+      "elapsedSeconds": 0.581,
+      "log": "final-native-target-red.log",
+      "inputManifest": "final-native-target-red-inputs.json",
+      "rawLogSHA256": "8453b5b3076d5b759cdc6b8eba60db1a2311ae7ba73ac5c7f03ec125b87a52fd",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-native-types",
+      "cwd": "mobile",
+      "command": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "head": "47bfbae52166a91fdb971357c039b27d65b3ade6",
+      "exitCode": 0,
+      "elapsedSeconds": 6.149,
+      "log": "final-native-types.log",
+      "inputManifest": "final-native-types-inputs.json",
+      "rawLogSHA256": "6a5365a7bb40c3ca387f36db78409447c32d44f69ec1737ce498eae83f040589",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-offline-preview-owning",
+      "cwd": "frontend",
+      "command": [
+        "npm",
+        "run",
+        "verify:preview"
+      ],
+      "head": "47bfbae52166a91fdb971357c039b27d65b3ade6",
+      "exitCode": 0,
+      "elapsedSeconds": 1.201,
+      "log": "final-offline-preview-owning.log",
+      "inputManifest": "final-offline-preview-owning-inputs.json",
+      "rawLogSHA256": "28c48b7693f05bc5b4a57edf89617272c2c30cc19fed1318cbcaaadb50c34fe9",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-offline-preview",
+      "cwd": "frontend",
+      "command": [
+        "npm",
+        "run",
+        "verify:preview"
+      ],
+      "head": "47bfbae52166a91fdb971357c039b27d65b3ade6",
+      "exitCode": 1,
+      "elapsedSeconds": 0.847,
+      "log": "final-offline-preview.log",
+      "inputManifest": "final-offline-preview-inputs.json",
+      "rawLogSHA256": "27273506c8a477a10e5e5f1de915c2b487fb89390e5f6477f00b026f5492be42",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-onboarding-reentry-green",
+      "cwd": "frontend",
+      "command": [
+        "npm",
+        "test",
+        "--",
+        "src/components/PeopleOnboarding.test.tsx"
+      ],
+      "head": "bc3b7c71f840b78f277d70d55b8d2674257af01f",
+      "exitCode": 0,
+      "elapsedSeconds": 1.192,
+      "log": "final-onboarding-reentry-green.log",
+      "inputManifest": "final-onboarding-reentry-green-inputs.json",
+      "rawLogSHA256": "6c8a65edb0e42ba78d207a84d8bb605dddcb7fd7ff27eb10d3fd9f3982e80e9f",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-onboarding-reentry-owning-red",
+      "cwd": "frontend",
+      "command": [
+        "npm",
+        "test",
+        "--",
+        "src/components/PeopleOnboarding.test.tsx",
+        "-t",
+        "identity reentry"
+      ],
+      "head": "bc3b7c71f840b78f277d70d55b8d2674257af01f",
+      "exitCode": 1,
+      "elapsedSeconds": 0.837,
+      "log": "final-onboarding-reentry-owning-red.log",
+      "inputManifest": "final-onboarding-reentry-owning-red-inputs.json",
+      "rawLogSHA256": "28539afbc81384423895548156c5d1c81ef49ee846ff3b01ceb71543df7aa529",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-onboarding-reentry-red",
+      "cwd": "frontend",
+      "command": [
+        "npm",
+        "test",
+        "--",
+        "src/components/PeopleOnboarding.test.tsx",
+        "-t",
+        "identity reentry"
+      ],
+      "head": "bc3b7c71f840b78f277d70d55b8d2674257af01f",
+      "exitCode": 1,
+      "elapsedSeconds": 1.832,
+      "log": "final-onboarding-reentry-red.log",
+      "inputManifest": "final-onboarding-reentry-red-inputs.json",
+      "rawLogSHA256": "673a4c95393b767d2001ba91443c0f2fc369521be4ee56f0eddc4329711cc3b5",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-owned-client-format",
+      "cwd": ".",
+      "command": [
+        "./frontend/node_modules/.bin/prettier",
+        "--check",
+        "frontend/src/App.tsx",
+        "frontend/src/communication/Connect.tsx",
+        "frontend/src/communication/Structured.test.tsx",
+        "frontend/src/communication/Structured.tsx",
+        "frontend/src/components/AsyncView.tsx",
+        "frontend/src/components/GoalMeasurementForm.tsx",
+        "frontend/src/components/GoalMetadataForm.tsx",
+        "frontend/src/components/GoalRecovery.test.tsx",
+        "frontend/src/components/GoalReminderPreferences.tsx",
+        "frontend/src/components/IntelligenceDraftReview.tsx",
+        "frontend/src/components/IntelligenceLauncher.test.tsx",
+        "frontend/src/components/IntelligenceLauncher.tsx",
+        "frontend/src/components/IntelligencePanel.test.tsx",
+        "frontend/src/components/PeopleOnboarding.test.tsx",
+        "frontend/src/components/PeopleOnboarding.tsx",
+        "frontend/src/components/PeoplePresetEditor.tsx",
+        "frontend/src/components/StatementImportRecovery.test.tsx",
+        "frontend/src/components/StatementImportReview.tsx",
+        "frontend/src/components/TaskDrawer.retry.test.tsx",
+        "frontend/src/components/TaskDrawer.tsx",
+        "mobile/src/FinanceStatementRecovery.test.tsx",
+        "mobile/src/FinanceStatementReview.tsx",
+        "mobile/src/GoalMeasurementForm.tsx",
+        "mobile/src/GoalMetadataForm.tsx",
+        "mobile/src/GoalReminderPreferences.tsx",
+        "mobile/src/IntelligenceDraftReview.tsx",
+        "mobile/src/IntelligenceLifetime.test.tsx",
+        "mobile/src/IntelligenceScreen.test.tsx",
+        "mobile/src/NativeConversation.tsx",
+        "mobile/src/PeopleFlows.test.tsx",
+        "mobile/src/PeopleOnboarding.tsx",
+        "mobile/src/PeoplePresetEditor.tsx",
+        "mobile/src/PlanningGoals.test.tsx",
+        "mobile/src/ReportControls.tsx",
+        "mobile/src/Structured.test.tsx",
+        "mobile/src/Structured.tsx",
+        "mobile/src/TaskDetailScreen.tsx",
+        "mobile/src/WorkScreen.test.tsx",
+        "mobile/src/app/login.tsx",
+        "shared/business/recoveryCopy.ts",
+        "shared/communication/structuredPeople.ts",
+        "shared/finance/labels.ts"
+      ],
+      "head": "47bfbae52166a91fdb971357c039b27d65b3ade6",
+      "runnerSHA256": "7833e80f7331a6c92fa511789d39ee44abd092bd87f771cd5bd8351d9926b6dc",
+      "commandFileInputs": {},
+      "exitCode": 0,
+      "elapsedSeconds": 0.817,
+      "log": "final-owned-client-format.log",
+      "inputManifest": "final-owned-client-format-inputs.json",
+      "rawLogSHA256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-people-harness-actual",
+      "cwd": ".",
+      "command": [
+        "python3",
+        "verification/runtime/people_runtime.py",
+        "--output",
+        "/tmp/schach-final-integration-runtime-20261012-2228110/people",
+        "--allow-demo-mutations",
+        "--browser"
+      ],
+      "head": "47bfbae52166a91fdb971357c039b27d65b3ade6",
+      "exitCode": 0,
+      "elapsedSeconds": 205.879,
+      "log": "final-people-harness-actual.log",
+      "inputManifest": "final-people-harness-actual-inputs.json",
+      "rawLogSHA256": "1e1a1d4dd91338f8b03ac9f6f446a5bcab761255bd8ed99f80e0b5882c90158c",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-planning-harness-actual",
+      "cwd": ".",
+      "command": [
+        "python3",
+        "verification/runtime/planning_goals_runtime.py",
+        "--output",
+        "/tmp/schach-final-integration-runtime-20261012-2228110/planning",
+        "--allow-demo-mutations",
+        "--browser"
+      ],
+      "head": "47bfbae52166a91fdb971357c039b27d65b3ade6",
+      "exitCode": 1,
+      "elapsedSeconds": 54.537,
+      "log": "final-planning-harness-actual.log",
+      "inputManifest": "final-planning-harness-actual-inputs.json",
+      "rawLogSHA256": "d341aeb0cb3daf88d1a739f9e16bc1223d7b8d3493b722790f6246ec623617f9",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-planning-harness-owning-actual",
+      "cwd": ".",
+      "command": [
+        "python3",
+        "verification/runtime/planning_goals_runtime.py",
+        "--output",
+        "/tmp/schach-final-integration-runtime-20261012-2228110/planning-civil-correction",
+        "--allow-demo-mutations",
+        "--browser"
+      ],
+      "head": "47bfbae52166a91fdb971357c039b27d65b3ade6",
+      "exitCode": 0,
+      "elapsedSeconds": 40.396,
+      "log": "final-planning-harness-owning-actual.log",
+      "inputManifest": "final-planning-harness-owning-actual-inputs.json",
+      "rawLogSHA256": "9123328ec71552ee17e3a2004f8b173f6449ce681ca66908f13f9939639510d8",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-runtime-command-env-green",
+      "cwd": ".",
+      "command": [
+        "python3",
+        "-m",
+        "unittest",
+        "verification/runtime/test_runtime_contract.py"
+      ],
+      "head": "47bfbae52166a91fdb971357c039b27d65b3ade6",
+      "runnerSHA256": "7833e80f7331a6c92fa511789d39ee44abd092bd87f771cd5bd8351d9926b6dc",
+      "commandFileInputs": {
+        "verification/runtime/test_runtime_contract.py": "a10214e072fbbf727f8afcd0b8261c07526f5673be7513b9a9d16fd90e794933"
+      },
+      "exitCode": 1,
+      "elapsedSeconds": 0.1,
+      "log": "final-runtime-command-env-green.log",
+      "inputManifest": "final-runtime-command-env-green-inputs.json",
+      "rawLogSHA256": "fd42ac71d512882b2a09e4c0e05aa68286b65570c9d52787250fc148be386d22",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-runtime-command-env-owning-green",
+      "cwd": ".",
+      "command": [
+        "python3",
+        "-m",
+        "unittest",
+        "verification/runtime/test_runtime_contract.py"
+      ],
+      "head": "47bfbae52166a91fdb971357c039b27d65b3ade6",
+      "runnerSHA256": "7833e80f7331a6c92fa511789d39ee44abd092bd87f771cd5bd8351d9926b6dc",
+      "commandFileInputs": {
+        "verification/runtime/test_runtime_contract.py": "f9bf75ae1bb2582072950fe68b8010fae88bc19f39e14a46193295aee10313d8"
+      },
+      "exitCode": 0,
+      "elapsedSeconds": 0.139,
+      "log": "final-runtime-command-env-owning-green.log",
+      "inputManifest": "final-runtime-command-env-owning-green-inputs.json",
+      "rawLogSHA256": "07ec3ce1b9540572902844b57ec5f467690dfccd6f12c85e02e6e4d61d0df98b",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-runtime-command-env-owning-red",
+      "cwd": ".",
+      "command": [
+        "python3",
+        "-m",
+        "unittest",
+        "verification/runtime/test_runtime_contract.py"
+      ],
+      "head": "47bfbae52166a91fdb971357c039b27d65b3ade6",
+      "runnerSHA256": "7833e80f7331a6c92fa511789d39ee44abd092bd87f771cd5bd8351d9926b6dc",
+      "commandFileInputs": {
+        "verification/runtime/test_runtime_contract.py": "f9bf75ae1bb2582072950fe68b8010fae88bc19f39e14a46193295aee10313d8"
+      },
+      "exitCode": 1,
+      "elapsedSeconds": 0.135,
+      "log": "final-runtime-command-env-owning-red.log",
+      "inputManifest": "final-runtime-command-env-owning-red-inputs.json",
+      "rawLogSHA256": "a6563fdda59e9f3bbdcad884458fc71d8556deb3ebd3814e0c2cffc277b38363",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-runtime-command-env-red",
+      "cwd": ".",
+      "command": [
+        "python3",
+        "-m",
+        "unittest",
+        "verification/runtime/test_runtime_contract.py"
+      ],
+      "head": "47bfbae52166a91fdb971357c039b27d65b3ade6",
+      "runnerSHA256": "7833e80f7331a6c92fa511789d39ee44abd092bd87f771cd5bd8351d9926b6dc",
+      "commandFileInputs": {
+        "verification/runtime/test_runtime_contract.py": "a10214e072fbbf727f8afcd0b8261c07526f5673be7513b9a9d16fd90e794933"
+      },
+      "exitCode": 1,
+      "elapsedSeconds": 0.102,
+      "log": "final-runtime-command-env-red.log",
+      "inputManifest": "final-runtime-command-env-red-inputs.json",
+      "rawLogSHA256": "1847d11dafa763a1c38f3e2388de91c1fb8c44d52d35f0b3e769ab7aaece5b6e",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-runtime-contract-green",
+      "cwd": ".",
+      "command": [
+        "python3",
+        "verification/runtime/test_runtime_contract.py"
+      ],
+      "head": "47bfbae52166a91fdb971357c039b27d65b3ade6",
+      "exitCode": 1,
+      "elapsedSeconds": 0.102,
+      "log": "final-runtime-contract-green.log",
+      "inputManifest": "final-runtime-contract-green-inputs.json",
+      "rawLogSHA256": "cd0ed8f0f554d20a6bb96ffbe420761fc3b2a7fc9fd8e5f5de2e585035748e5d",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-runtime-contract-owning-green",
+      "cwd": ".",
+      "command": [
+        "python3",
+        "verification/runtime/test_runtime_contract.py"
+      ],
+      "head": "47bfbae52166a91fdb971357c039b27d65b3ade6",
+      "exitCode": 0,
+      "elapsedSeconds": 0.093,
+      "log": "final-runtime-contract-owning-green.log",
+      "inputManifest": "final-runtime-contract-owning-green-inputs.json",
+      "rawLogSHA256": "3a172c55de7c4fc985c2eec12502fa584b176585174d269e7bf8844dda63959f",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-runtime-contract-red",
+      "cwd": ".",
+      "command": [
+        "python3",
+        "verification/runtime/test_runtime_contract.py"
+      ],
+      "head": "47bfbae52166a91fdb971357c039b27d65b3ade6",
+      "exitCode": 1,
+      "elapsedSeconds": 0.095,
+      "log": "final-runtime-contract-red.log",
+      "inputManifest": "final-runtime-contract-red-inputs.json",
+      "rawLogSHA256": "03f281e02ad2c4a578b0513cbf08e319647f53d7a2651bd6fd35cba11a6a07d4",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-scopes1-4-native-focused",
+      "cwd": "mobile",
+      "command": [
+        "npm",
+        "test",
+        "--",
+        "src/WorkScreen.test.tsx",
+        "src/TaskRoute.test.tsx",
+        "src/PeopleFlows.test.tsx",
+        "src/PlanningGoals.test.tsx",
+        "src/FinanceStatementRecovery.test.tsx",
+        "src/IntelligenceScreen.test.tsx"
+      ],
+      "head": "bc3b7c71f840b78f277d70d55b8d2674257af01f",
+      "exitCode": 0,
+      "elapsedSeconds": 63.532,
+      "log": "final-scopes1-4-native-focused.log",
+      "inputManifest": "final-scopes1-4-native-focused-inputs.json",
+      "rawLogSHA256": "6bfcc1f61bc3656caa16e9fdc9f865db6be12a459339b3c63bf9a52b25684d45",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-scopes1-4-native-typecheck",
+      "cwd": "mobile",
+      "command": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "head": "bc3b7c71f840b78f277d70d55b8d2674257af01f",
+      "exitCode": 0,
+      "elapsedSeconds": 2.608,
+      "log": "final-scopes1-4-native-typecheck.log",
+      "inputManifest": "final-scopes1-4-native-typecheck-inputs.json",
+      "rawLogSHA256": "6a5365a7bb40c3ca387f36db78409447c32d44f69ec1737ce498eae83f040589",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-scopes1-4-web-focused",
+      "cwd": "frontend",
+      "command": [
+        "npm",
+        "test",
+        "--",
+        "src/components/TaskDrawer.retry.test.tsx",
+        "src/components/GoalRecovery.test.tsx",
+        "src/components/PeopleOnboarding.test.tsx",
+        "src/components/StatementImportRecovery.test.tsx",
+        "src/components/StatementImportReview.test.tsx",
+        "src/components/IntelligencePanel.test.tsx"
+      ],
+      "head": "bc3b7c71f840b78f277d70d55b8d2674257af01f",
+      "exitCode": 0,
+      "elapsedSeconds": 1.653,
+      "log": "final-scopes1-4-web-focused.log",
+      "inputManifest": "final-scopes1-4-web-focused-inputs.json",
+      "rawLogSHA256": "f3f85bcbc72a6235514696d067a984f4dfd99766cf7033549aa4793c43887fab",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-scopes1-4-web-typecheck",
+      "cwd": "frontend",
+      "command": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "head": "bc3b7c71f840b78f277d70d55b8d2674257af01f",
+      "exitCode": 0,
+      "elapsedSeconds": 0.426,
+      "log": "final-scopes1-4-web-typecheck.log",
+      "inputManifest": "final-scopes1-4-web-typecheck-inputs.json",
+      "rawLogSHA256": "66309dd7fe34610f6cf557dafe27940e549262bd7a328fd9807c45c21b173bbd",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-stable-demo-build",
+      "cwd": "frontend",
+      "command": [
+        "npm",
+        "run",
+        "build:demo"
+      ],
+      "head": "47bfbae52166a91fdb971357c039b27d65b3ade6",
+      "runnerSHA256": "7833e80f7331a6c92fa511789d39ee44abd092bd87f771cd5bd8351d9926b6dc",
+      "commandFileInputs": {},
+      "exitCode": 0,
+      "elapsedSeconds": 2.249,
+      "log": "final-stable-demo-build.log",
+      "inputManifest": "final-stable-demo-build-inputs.json",
+      "rawLogSHA256": "51ab6caba89cb5c87d8e37cadd7ef1f6df7e7dbd551051270b9268f8f3d0750c",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-stable-hermes",
+      "cwd": "mobile",
+      "command": [
+        "npm",
+        "run",
+        "export",
+        "--",
+        "--output-dir",
+        "/tmp/schach-final-integration-hermes-20261012"
+      ],
+      "head": "47bfbae52166a91fdb971357c039b27d65b3ade6",
+      "runnerSHA256": "7833e80f7331a6c92fa511789d39ee44abd092bd87f771cd5bd8351d9926b6dc",
+      "commandFileInputs": {},
+      "exitCode": 0,
+      "elapsedSeconds": 27.163,
+      "log": "final-stable-hermes.log",
+      "inputManifest": "final-stable-hermes-inputs.json",
+      "rawLogSHA256": "ea156a5287a5c12efd2f8fb438e683ab78cd57523ec6e15eeb81e0ab3c08b34a",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-stable-native",
+      "cwd": "mobile",
+      "command": [
+        "npm",
+        "test"
+      ],
+      "head": "47bfbae52166a91fdb971357c039b27d65b3ade6",
+      "runnerSHA256": "7833e80f7331a6c92fa511789d39ee44abd092bd87f771cd5bd8351d9926b6dc",
+      "commandFileInputs": {},
+      "exitCode": 0,
+      "elapsedSeconds": 66.254,
+      "log": "final-stable-native.log",
+      "inputManifest": "final-stable-native-inputs.json",
+      "rawLogSHA256": "c873bd2f87823e5b38f042c8544872a4bedfdc58f10d0924a05745f07434684d",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-stable-normal-build",
+      "cwd": "frontend",
+      "command": [
+        "npm",
+        "run",
+        "build"
+      ],
+      "head": "47bfbae52166a91fdb971357c039b27d65b3ade6",
+      "runnerSHA256": "7833e80f7331a6c92fa511789d39ee44abd092bd87f771cd5bd8351d9926b6dc",
+      "commandFileInputs": {},
+      "exitCode": 0,
+      "elapsedSeconds": 1.985,
+      "log": "final-stable-normal-build.log",
+      "inputManifest": "final-stable-normal-build-inputs.json",
+      "rawLogSHA256": "2085855233f7d9861be29d68ba7ed1592abd4ce51122df877947b28c8a28d8fb",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-stable-preview-generation",
+      "cwd": ".",
+      "command": [
+        "node",
+        "scripts/make-preview.mjs"
+      ],
+      "head": "47bfbae52166a91fdb971357c039b27d65b3ade6",
+      "runnerSHA256": "7833e80f7331a6c92fa511789d39ee44abd092bd87f771cd5bd8351d9926b6dc",
+      "commandFileInputs": {
+        "scripts/make-preview.mjs": "2f64137f79285c543e01a12b30765eabc629f70ab387051cb25668fa794b775f"
+      },
+      "exitCode": 0,
+      "elapsedSeconds": 0.064,
+      "log": "final-stable-preview-generation.log",
+      "inputManifest": "final-stable-preview-generation-inputs.json",
+      "rawLogSHA256": "a54c5ebce7b921558dcf3cd7f7989c5a6248e455f81526ec792401570ff8cd36",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-stable-preview",
+      "cwd": "frontend",
+      "command": [
+        "npm",
+        "run",
+        "verify:preview"
+      ],
+      "head": "47bfbae52166a91fdb971357c039b27d65b3ade6",
+      "runnerSHA256": "7833e80f7331a6c92fa511789d39ee44abd092bd87f771cd5bd8351d9926b6dc",
+      "commandFileInputs": {},
+      "exitCode": 0,
+      "elapsedSeconds": 1.449,
+      "log": "final-stable-preview.log",
+      "inputManifest": "final-stable-preview-inputs.json",
+      "rawLogSHA256": "79c337be67603c74a6edbff1d849dba4bbe023305c9e66af96eb4304a2a1b8e2",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-stable-web",
+      "cwd": "frontend",
+      "command": [
+        "npm",
+        "test"
+      ],
+      "head": "47bfbae52166a91fdb971357c039b27d65b3ade6",
+      "runnerSHA256": "7833e80f7331a6c92fa511789d39ee44abd092bd87f771cd5bd8351d9926b6dc",
+      "commandFileInputs": {},
+      "exitCode": 0,
+      "elapsedSeconds": 7.397,
+      "log": "final-stable-web.log",
+      "inputManifest": "final-stable-web-inputs.json",
+      "rawLogSHA256": "dafa92655ee7ff9acc2c31296a97ea6885af6c32dbb202d27286eea41a463ec7",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-structured-native-focused",
+      "cwd": "mobile",
+      "command": [
+        "npm",
+        "test",
+        "--",
+        "src/Structured.test.tsx",
+        "src/workDates.test.ts",
+        "src/DeadlinePicker.test.tsx",
+        "src/NativeConversation.test.tsx"
+      ],
+      "head": "47bfbae52166a91fdb971357c039b27d65b3ade6",
+      "exitCode": 0,
+      "elapsedSeconds": 0.819,
+      "log": "final-structured-native-focused.log",
+      "inputManifest": "final-structured-native-focused-inputs.json",
+      "rawLogSHA256": "0d633d32acb47d80bbe691da03b188b43ab04f30e16c0100e2ad30ef24960367",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-structured-native-types",
+      "cwd": "mobile",
+      "command": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "head": "47bfbae52166a91fdb971357c039b27d65b3ade6",
+      "exitCode": 0,
+      "elapsedSeconds": 2.715,
+      "log": "final-structured-native-types.log",
+      "inputManifest": "final-structured-native-types-inputs.json",
+      "rawLogSHA256": "6a5365a7bb40c3ca387f36db78409447c32d44f69ec1737ce498eae83f040589",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-structured-web-focused",
+      "cwd": "frontend",
+      "command": [
+        "npm",
+        "test",
+        "--",
+        "src/communication/Structured.test.tsx",
+        "src/communication/store.test.tsx",
+        "src/communication/SourceActions.test.tsx"
+      ],
+      "head": "47bfbae52166a91fdb971357c039b27d65b3ade6",
+      "exitCode": 0,
+      "elapsedSeconds": 0.801,
+      "log": "final-structured-web-focused.log",
+      "inputManifest": "final-structured-web-focused-inputs.json",
+      "rawLogSHA256": "e524540255377f0d5f592de075bb2e9b857d917d33e68fab88f4fec01671708c",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-structured-web-types",
+      "cwd": "frontend",
+      "command": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "head": "47bfbae52166a91fdb971357c039b27d65b3ade6",
+      "exitCode": 1,
+      "elapsedSeconds": 0.494,
+      "log": "final-structured-web-types.log",
+      "inputManifest": "final-structured-web-types-inputs.json",
+      "rawLogSHA256": "a15e8f73cb869865b89e870c0f42563afb5af865594b5c56c3cdbaf89132d0f8",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-web-format",
+      "cwd": "frontend",
+      "command": [
+        "npm",
+        "run",
+        "format:check"
+      ],
+      "head": "47bfbae52166a91fdb971357c039b27d65b3ade6",
+      "exitCode": 1,
+      "elapsedSeconds": 5.715,
+      "log": "final-web-format.log",
+      "inputManifest": "final-web-format-inputs.json",
+      "rawLogSHA256": "56252f85533917b5de9d8f45182719d6226ec8c5ac2760c926f445a6de095ff9",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-web-structured-green",
+      "cwd": "frontend",
+      "command": [
+        "npm",
+        "test",
+        "--",
+        "src/communication/Structured.test.tsx"
+      ],
+      "head": "47bfbae52166a91fdb971357c039b27d65b3ade6",
+      "exitCode": 0,
+      "elapsedSeconds": 0.584,
+      "log": "final-web-structured-green.log",
+      "inputManifest": "final-web-structured-green-inputs.json",
+      "rawLogSHA256": "12128e4f656fc63fed039efa56f4b1ec42825ee0a5fef88974e28a8b6afa9926",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-web-structured-readiness-format",
+      "cwd": "frontend",
+      "command": [
+        "npx",
+        "prettier",
+        "--check",
+        "src/communication/Structured.tsx",
+        "src/communication/Structured.test.tsx"
+      ],
+      "head": "74e6474b8ea80c86d2505de1561de56453c7356f",
+      "runnerSHA256": "7833e80f7331a6c92fa511789d39ee44abd092bd87f771cd5bd8351d9926b6dc",
+      "commandFileInputs": {},
+      "exitCode": 0,
+      "elapsedSeconds": 0.291,
+      "log": "final-web-structured-readiness-format.log",
+      "inputManifest": "final-web-structured-readiness-format-inputs.json",
+      "rawLogSHA256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-web-structured-readiness-green",
+      "cwd": "frontend",
+      "command": [
+        "npm",
+        "test",
+        "--",
+        "src/communication/Structured.test.tsx"
+      ],
+      "head": "74e6474b8ea80c86d2505de1561de56453c7356f",
+      "runnerSHA256": "7833e80f7331a6c92fa511789d39ee44abd092bd87f771cd5bd8351d9926b6dc",
+      "commandFileInputs": {},
+      "exitCode": 0,
+      "elapsedSeconds": 1.167,
+      "log": "final-web-structured-readiness-green.log",
+      "inputManifest": "final-web-structured-readiness-green-inputs.json",
+      "rawLogSHA256": "44629692f10702b70f3b423d81f9a76cae29387cb947e337f46ac8591e455f9b",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-web-structured-readiness-red",
+      "cwd": "frontend",
+      "command": [
+        "npm",
+        "test",
+        "--",
+        "src/communication/Structured.test.tsx"
+      ],
+      "head": "74e6474b8ea80c86d2505de1561de56453c7356f",
+      "runnerSHA256": "7833e80f7331a6c92fa511789d39ee44abd092bd87f771cd5bd8351d9926b6dc",
+      "commandFileInputs": {},
+      "exitCode": 1,
+      "elapsedSeconds": 1.8,
+      "log": "final-web-structured-readiness-red.log",
+      "inputManifest": "final-web-structured-readiness-red-inputs.json",
+      "rawLogSHA256": "282ef3519d46057a17b081a4553f0a43b4b6a6777ace191b20be591055f7ea8a",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-web-structured-red",
+      "cwd": "frontend",
+      "command": [
+        "npm",
+        "test",
+        "--",
+        "src/communication/Structured.test.tsx"
+      ],
+      "head": "47bfbae52166a91fdb971357c039b27d65b3ade6",
+      "exitCode": 1,
+      "elapsedSeconds": 0.529,
+      "log": "final-web-structured-red.log",
+      "inputManifest": "final-web-structured-red-inputs.json",
+      "rawLogSHA256": "f7a8a1e7761723ed71ff76fe30bddcbafa891eb902ca5b980f8104295a8693e4",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-web-target-green",
+      "cwd": "frontend",
+      "command": [
+        "npm",
+        "test",
+        "--",
+        "src/components/TaskDrawer.retry.test.tsx",
+        "src/components/TaskDrawer.test.tsx"
+      ],
+      "head": "bc3b7c71f840b78f277d70d55b8d2674257af01f",
+      "exitCode": 0,
+      "elapsedSeconds": 1.005,
+      "log": "final-web-target-green.log",
+      "inputManifest": "final-web-target-green-inputs.json",
+      "rawLogSHA256": "5830a5bac356a4b7d43630eedb71cb661b827b07d14a5970163303efbc29fd89",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    },
+    {
+      "name": "final-web-target-red",
+      "cwd": "frontend",
+      "command": [
+        "npm",
+        "test",
+        "--",
+        "src/components/TaskDrawer.retry.test.tsx",
+        "-t",
+        "newly selected B"
+      ],
+      "head": "bc3b7c71f840b78f277d70d55b8d2674257af01f",
+      "exitCode": 1,
+      "elapsedSeconds": 0.822,
+      "log": "final-web-target-red.log",
+      "inputManifest": "final-web-target-red-inputs.json",
+      "rawLogSHA256": "8834c438bad3673d4a58b0fed9e031cef1dbaea16e919baeef218740f4a5bcfd",
+      "rawLogPublished": false,
+      "qualification": "Exact before-command source manifest; earlier invocations retain their original source, exit and failed predicate. Raw failed logs remain private; no relabelling as current acceptance."
+    }
+  ],
+  "environmentCaptured": false
+}

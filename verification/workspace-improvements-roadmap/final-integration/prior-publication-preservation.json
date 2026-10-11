@@ -1,0 +1,6 @@
+{
+  "baseCommit": "bc3b7c71f840b78f277d70d55b8d2674257af01f",
+  "files": 535,
+  "mismatch": [],
+  "qualification": "Existing M10 publication exact byte preservation; no reclassification of historical source/provider/native bounds."
+}

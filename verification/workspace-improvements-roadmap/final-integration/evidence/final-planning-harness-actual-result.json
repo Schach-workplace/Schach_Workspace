@@ -1,0 +1,17 @@
+{
+  "name": "final-planning-harness-actual",
+  "cwd": ".",
+  "command": [
+    "python3",
+    "verification/runtime/planning_goals_runtime.py",
+    "--output",
+    "/tmp/schach-final-integration-runtime-20261012-2228110/planning",
+    "--allow-demo-mutations",
+    "--browser"
+  ],
+  "head": "47bfbae52166a91fdb971357c039b27d65b3ade6",
+  "exitCode": 1,
+  "elapsedSeconds": 54.537,
+  "log": "final-planning-harness-actual.log",
+  "inputManifest": "final-planning-harness-actual-inputs.json"
+}

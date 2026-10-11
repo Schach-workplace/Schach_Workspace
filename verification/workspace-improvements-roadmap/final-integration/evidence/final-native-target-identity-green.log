@@ -1,0 +1,13 @@
+
+> mobile@1.0.0 test
+> vitest run src/WorkScreen.test.tsx src/TaskRoute.test.tsx
+
+
+ RUN  v5.0.3 /home/brahma/Projects/Schach_Workspace/.worktrees/workspace-improvements/mobile
+
+
+ Test Files  2 passed (2)
+      Tests  22 passed (22)
+   Start at  02:41:00
+   Duration  471ms (environment 35%, tests 33%, transform 21%, import 11%, worker 1%)
+

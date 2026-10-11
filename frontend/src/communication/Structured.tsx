@@ -75,7 +75,6 @@ export default function Structured({
       conversation.version,
       source?.id,
       source?.revision,
-      sourceReady,
     ],
   );
   const active = useRef<object | null>(null);

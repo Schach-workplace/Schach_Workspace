@@ -1,0 +1,67 @@
+[
+  {
+    "path": "frontend/src/communication/api.ts",
+    "unchangedAcceptedBASE": true,
+    "sha256": "4ea2df644331c60ed0cd52c5ee2fa614254f53906f020d88acf3f2a6aefc3c5c"
+  },
+  {
+    "path": "frontend/src/communication/Calls.test.tsx",
+    "unchangedAcceptedBASE": true,
+    "sha256": "fb39d9c35ca26747849ac21d4fc70ac950f23fbd0b13782c2c0a93067ea7d546"
+  },
+  {
+    "path": "frontend/src/communication/Calls.tsx",
+    "unchangedAcceptedBASE": true,
+    "sha256": "75df804e04d699a61ceada9db1e4ba5a05e946f2f5345b63dc14e7d1a65e1f67"
+  },
+  {
+    "path": "frontend/src/components/AuthenticatorSettings.tsx",
+    "unchangedAcceptedBASE": true,
+    "sha256": "7a2a6f2e1edcb293e8f158898799b2e9586dc5dc121cbff09fb4ef6368a3ee45"
+  },
+  {
+    "path": "frontend/src/components/CommitmentFields.tsx",
+    "unchangedAcceptedBASE": true,
+    "sha256": "ffae050906f1750a6c9a01ed5fc0a730a928653d20ecb53a713014c8d3a9f590"
+  },
+  {
+    "path": "frontend/src/components/DeviceSessions.tsx",
+    "unchangedAcceptedBASE": true,
+    "sha256": "dace185cdacee757f7f69b22488d60cd5c8d11add1d2c4c312e76133d1decf49"
+  },
+  {
+    "path": "frontend/src/components/MessageTaskConversion.test.tsx",
+    "unchangedAcceptedBASE": true,
+    "sha256": "0e1988e805549fe77ad35da4bc5dc8ad28077f86d9265b3461730c4038ede32a"
+  },
+  {
+    "path": "frontend/src/data/deadlines.test.ts",
+    "unchangedAcceptedBASE": true,
+    "sha256": "751bb9900867e4f08f4fe67d10f36bf64fd7dff065241efc905624600a0b7e64"
+  },
+  {
+    "path": "frontend/src/data/deadlines.ts",
+    "unchangedAcceptedBASE": true,
+    "sha256": "92344102c36ba9da02436f67952ff073c0e75812b6fecb2e77d3e8c76d9bdc4a"
+  },
+  {
+    "path": "frontend/src/data/imports.test.ts",
+    "unchangedAcceptedBASE": true,
+    "sha256": "802f1bb3db5fb1b947af05bfd35c74c52dd11ae56ea5d34c40d31405d11ea075"
+  },
+  {
+    "path": "frontend/src/data/imports.ts",
+    "unchangedAcceptedBASE": true,
+    "sha256": "3ce12fb78212f1e83f5e3a86666e53a4db57bed4c11b1c66672122930df1889e"
+  },
+  {
+    "path": "frontend/src/data/metrics.ts",
+    "unchangedAcceptedBASE": true,
+    "sha256": "a3b28a79653fd5fa37d849b328cc4fc280ee49bd0bd9b0269429de73e00844a2"
+  },
+  {
+    "path": "frontend/src/finance.ui.test.tsx",
+    "unchangedAcceptedBASE": true,
+    "sha256": "946cd7c614d9d126846f58ae0fa039c6a0b73518abed9457297571765f14d141"
+  }
+]

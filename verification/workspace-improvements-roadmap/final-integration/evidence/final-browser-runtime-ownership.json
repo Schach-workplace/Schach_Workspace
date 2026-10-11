@@ -1,0 +1,14 @@
+{
+  "status": "passed",
+  "scope": "New fictional SQLite read fixture; scheduler/providers/external delivery disabled; no retained database or device access",
+  "schemasCreated": 0,
+  "server": {
+    "pid": 2490382,
+    "port": 44683,
+    "binarySHA256": "324b71ebb8aa8e5676f13b1bc22a53b8bbbe05ecc8ff20b8349a808b403d2ce7"
+  },
+  "cleanup": {
+    "ownedServerJoined": true,
+    "exitCode": 0
+  }
+}

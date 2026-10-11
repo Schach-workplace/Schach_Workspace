@@ -1,0 +1,19 @@
+{
+  "name": "final-runtime-command-env-owning-green",
+  "cwd": ".",
+  "command": [
+    "python3",
+    "-m",
+    "unittest",
+    "verification/runtime/test_runtime_contract.py"
+  ],
+  "head": "47bfbae52166a91fdb971357c039b27d65b3ade6",
+  "runnerSHA256": "7833e80f7331a6c92fa511789d39ee44abd092bd87f771cd5bd8351d9926b6dc",
+  "commandFileInputs": {
+    "verification/runtime/test_runtime_contract.py": "f9bf75ae1bb2582072950fe68b8010fae88bc19f39e14a46193295aee10313d8"
+  },
+  "exitCode": 0,
+  "elapsedSeconds": 0.139,
+  "log": "final-runtime-command-env-owning-green.log",
+  "inputManifest": "final-runtime-command-env-owning-green-inputs.json"
+}

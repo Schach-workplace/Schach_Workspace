@@ -1,0 +1,58 @@
+{
+  "status": "passed",
+  "scope": "New fictional fixture route/code reads and self-contained file preview; no provider/inference/device claim",
+  "normal": {
+    "initialModules": [
+      "/assets/index-BXXJPnX8.js",
+      "/assets/api-BBytNeRx.js",
+      "/assets/store-4UyzfX3B.js"
+    ],
+    "afterConnectModules": [
+      "/assets/index-BXXJPnX8.js",
+      "/assets/api-BBytNeRx.js",
+      "/assets/store-4UyzfX3B.js",
+      "/assets/Connect-DpZFqmn8.js"
+    ],
+    "afterAssistanceModules": [
+      "/assets/index-BXXJPnX8.js",
+      "/assets/api-BBytNeRx.js",
+      "/assets/store-4UyzfX3B.js",
+      "/assets/Connect-DpZFqmn8.js",
+      "/assets/IntelligencePanel-B97PnnMJ.js"
+    ]
+  },
+  "offline": {
+    "widths": [
+      {
+        "width": 320,
+        "body": 320,
+        "dialogClient": 294,
+        "dialogScroll": 294,
+        "focused": true,
+        "largeText": "20px"
+      },
+      {
+        "width": 375,
+        "body": 375,
+        "dialogClient": 349,
+        "dialogScroll": 349,
+        "focused": true,
+        "largeText": "20px"
+      },
+      {
+        "width": 430,
+        "body": 430,
+        "dialogClient": 404,
+        "dialogScroll": 404,
+        "focused": true,
+        "largeText": "20px"
+      }
+    ],
+    "externalRequests": [],
+    "moduleRequests": []
+  },
+  "checks": [
+    "Actual normal entry omits Connect/Panel modules; each module loads only on its own current navigation/open",
+    "Actual file-preview Connect/manual assistance at320/375/430+20px with no horizontal overflow or external/module request"
+  ]
+}

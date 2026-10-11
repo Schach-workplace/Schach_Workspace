@@ -1,0 +1,31 @@
+{
+  "sourceCommit": "74e6474b8ea80c86d2505de1561de56453c7356f",
+  "backendProductCommit": "98b7fb6",
+  "clientProductCommit": "74e6474",
+  "nativeShell": "1d74c31132b8246603dbc853556ca29b1a134e4f",
+  "status": "passed",
+  "allTypedM9GoalHistoryTimedTask22ExpensesCreatedTaskPublicTaskUnchanged": true,
+  "bootstrapActorExactlyUnchanged": true,
+  "sixJobsThreePublicationsZeroActive": true,
+  "noFinalMeasurementCommit": true,
+  "private5AuthorityNotRevived": true,
+  "keyringHashUnchanged": true,
+  "fontRestored1": true,
+  "originalAuthenticatedChatsRestored": true,
+  "currentServicePIDsBackendProxyUnchanged": {
+    "server.pid": 1871279,
+    "metro.pid": 2398357,
+    "current-read-barrier-proxy.pid": 1855813
+  },
+  "oneAuthorizedRetainedEmulatorRelaunchPID": 2427642,
+  "old660FrozenSourceAnd636M10And94REDArtifactsUnchanged": true,
+  "candidate207TrackedSourcesMatch": true,
+  "threeOwningLayoutHashesStillMatchWorktree": true,
+  "privateBackupIntegrityAndCurrentIntegrity": "ok",
+  "capabilitiesRemainDisabled": true,
+  "proxyRemainedClearUntouched": true,
+  "sourceAndSecureLabelsRedactedBeforePersistence": true,
+  "knownCredentialMatches": 0,
+  "deviceTemporaryXMLAbsent": true,
+  "noAPKOrTLSOrPhysicalClaim": true
+}

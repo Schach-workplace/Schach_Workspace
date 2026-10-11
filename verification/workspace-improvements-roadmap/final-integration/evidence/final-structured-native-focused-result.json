@@ -1,0 +1,18 @@
+{
+  "name": "final-structured-native-focused",
+  "cwd": "mobile",
+  "command": [
+    "npm",
+    "test",
+    "--",
+    "src/Structured.test.tsx",
+    "src/workDates.test.ts",
+    "src/DeadlinePicker.test.tsx",
+    "src/NativeConversation.test.tsx"
+  ],
+  "head": "47bfbae52166a91fdb971357c039b27d65b3ade6",
+  "exitCode": 0,
+  "elapsedSeconds": 0.819,
+  "log": "final-structured-native-focused.log",
+  "inputManifest": "final-structured-native-focused-inputs.json"
+}

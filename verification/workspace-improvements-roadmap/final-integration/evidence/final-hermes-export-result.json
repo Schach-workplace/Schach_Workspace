@@ -1,0 +1,14 @@
+{
+  "name": "final-hermes-export",
+  "cwd": "mobile",
+  "command": [
+    "npm",
+    "run",
+    "export"
+  ],
+  "head": "47bfbae52166a91fdb971357c039b27d65b3ade6",
+  "exitCode": 0,
+  "elapsedSeconds": 34.732,
+  "log": "final-hermes-export.log",
+  "inputManifest": "final-hermes-export-inputs.json"
+}

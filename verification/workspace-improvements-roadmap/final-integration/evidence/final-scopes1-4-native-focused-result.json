@@ -1,0 +1,20 @@
+{
+  "name": "final-scopes1-4-native-focused",
+  "cwd": "mobile",
+  "command": [
+    "npm",
+    "test",
+    "--",
+    "src/WorkScreen.test.tsx",
+    "src/TaskRoute.test.tsx",
+    "src/PeopleFlows.test.tsx",
+    "src/PlanningGoals.test.tsx",
+    "src/FinanceStatementRecovery.test.tsx",
+    "src/IntelligenceScreen.test.tsx"
+  ],
+  "head": "bc3b7c71f840b78f277d70d55b8d2674257af01f",
+  "exitCode": 0,
+  "elapsedSeconds": 63.532,
+  "log": "final-scopes1-4-native-focused.log",
+  "inputManifest": "final-scopes1-4-native-focused-inputs.json"
+}

@@ -1,0 +1,13 @@
+{
+  "name": "final-inline-preview",
+  "cwd": ".",
+  "command": [
+    "node",
+    "scripts/make-preview.mjs"
+  ],
+  "head": "47bfbae52166a91fdb971357c039b27d65b3ade6",
+  "exitCode": 0,
+  "elapsedSeconds": 0.056,
+  "log": "final-inline-preview.log",
+  "inputManifest": "final-inline-preview-inputs.json"
+}

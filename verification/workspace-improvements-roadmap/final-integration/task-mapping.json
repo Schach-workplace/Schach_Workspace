@@ -1,0 +1,216 @@
+{
+  "productSourceCommit": "74e6474b8ea80c86d2505de1561de56453c7356f",
+  "acceptedBase": "bc3b7c71f840b78f277d70d55b8d2674257af01f",
+  "areas": [
+    {
+      "area": 1,
+      "requirement": "Release selector privacy",
+      "sourceFiles": [
+        "scripts/package_release.py",
+        "scripts/test_package_release.py"
+      ],
+      "evidence": [
+        "final-selector-green.log"
+      ],
+      "disposition": "Complete:5synthetic tests, symlink refusal before content reads; actualZIP remains rootcutover-owned"
+    },
+    {
+      "area": 2,
+      "requirement": "Human labels and decimal input",
+      "sourceFiles": [
+        "shared/finance/labels.ts",
+        "frontend/src/components/StatementImportReview.tsx",
+        "mobile/src/FinanceStatementReview.tsx",
+        "mobile/src/ReportControls.tsx"
+      ],
+      "evidence": [
+        "final-labels-green.log",
+        "final-native-labels-green.log"
+      ],
+      "disposition": "Complete: internal payload keys/body/frozen retry unchanged"
+    },
+    {
+      "area": 3,
+      "requirement": "Entity conflicts and deliberate onboarding reentry",
+      "sourceFiles": [
+        "shared/business/recoveryCopy.ts",
+        "frontend/src/components/PeopleOnboarding.tsx",
+        "mobile/src/PeopleOnboarding.tsx"
+      ],
+      "evidence": [
+        "final-goal-copy-green.log",
+        "final-onboarding-reentry-green.log",
+        "final-native-onboarding-reentry-green.log"
+      ],
+      "disposition": "Complete: goal/preset409 copy; graph clear requires new Name/Email before freshpreview, unknown password intent preserved"
+    },
+    {
+      "area": 4,
+      "requirement": "Current target completion ownership",
+      "sourceFiles": [
+        "frontend/src/components/TaskDrawer.tsx",
+        "mobile/src/TaskDetailScreen.tsx"
+      ],
+      "evidence": [
+        "final-web-target-green.log",
+        "final-native-target-identity-green.log"
+      ],
+      "disposition": "Complete: actual heldA\u2192B tests preserve correctly addressed A write and fence Brefresh/close/error/busy effects"
+    },
+    {
+      "area": 5,
+      "requirement": "Current source Structured choices and optional deadlines",
+      "sourceFiles": [
+        "shared/communication/structuredPeople.ts",
+        "frontend/src/communication/Structured.tsx",
+        "mobile/src/Structured.tsx",
+        "frontend/src/communication/Connect.tsx",
+        "mobile/src/NativeConversation.tsx"
+      ],
+      "evidence": [
+        "final-web-structured-green.log",
+        "final-structured-native-focused.log",
+        "final-web-structured-readiness-green.log",
+        "final-native-current-product-equivalence.json"
+      ],
+      "disposition": "Complete: current private/public membership/history/decisionrole advisory choices, search, company-zone DST-aware optional deadline, frozenunknown body/key/UTC; serverACL unchanged; self-review heldACK readiness false\u2192true owningRED1\u2192GREEN6, semantic fences/freshready gates preserved. Native counterpart source-only unchanged."
+    },
+    {
+      "area": 6,
+      "requirement": "Native app-owned Auth and evidence targets",
+      "sourceFiles": [
+        "mobile/src/app/login.tsx",
+        "mobile/src/GoalEvidencePicker.tsx",
+        "mobile/src/ConnectUI.tsx"
+      ],
+      "evidence": [
+        "final-native-picker-covering-result.json",
+        "final-native-picker-types-result.json",
+        "final-native-picker-lint-result.json",
+        "native-goal-010-010-geometry-current-rows.json",
+        "native-goal-015-015-restored-typed-preservation.json",
+        "task-final-native-goal-affected-controller-proof.json"
+      ],
+      "disposition": "Complete qualified Goal composite:27 actual enabled owner intersections >=44dp/font1+1.3 accepted independently. Global44 unchanged/local45 correction. Exact74 isolated APK Auth pendingROOT, no protectedTLS/physical claim."
+    },
+    {
+      "area": 7,
+      "requirement": "Authentication-safe lazy normal client boundaries",
+      "sourceFiles": [
+        "frontend/src/App.tsx",
+        "frontend/src/components/IntelligenceLauncher.tsx",
+        "frontend/src/components/AsyncView.tsx"
+      ],
+      "evidence": [
+        "final-launcher-lazy-green.log",
+        "final-browser-offline-chunks.json"
+      ],
+      "disposition": "Complete: closedmodule absent, currentkeyed props, neutralmanual/reload fallback; actualnormalchunks delayeduntilownnavigation/open"
+    },
+    {
+      "area": 8,
+      "requirement": "Coherent single-entry demo and offline preview",
+      "sourceFiles": [
+        "frontend/vite.config.ts",
+        "scripts/make-preview.mjs",
+        "frontend/scripts/verify-preview.mjs",
+        "preview.html"
+      ],
+      "evidence": [
+        "final-stable-demo-build.log",
+        "final-stable-preview.log",
+        "final-browser-offline-chunks.json"
+      ],
+      "disposition": "Complete: singleJS/CSS inlineDEMO,14HappyDOM cases and actualfileChromium320375430+20px/nooverflow/0externalmodule requests;1.64MBdemo900warning retained"
+    },
+    {
+      "area": 9,
+      "requirement": "Runtime flags, isolation and complete SQL inventories",
+      "sourceFiles": [
+        "verification/runtime/runtime_contract.py",
+        "verification/runtime/test_runtime_contract.py",
+        "verification/runtime/planning_goals_runtime.py",
+        "verification/runtime/people_runtime.py",
+        "verification/runtime/intelligence_standalone.py",
+        "verification/runtime/intelligence_encore.py"
+      ],
+      "evidence": [
+        "final-runtime-command-env-owning-green.log",
+        "planning-actual-runtime.json",
+        "people-actual-runtime.json",
+        "final-current-sql-inventory.json"
+      ],
+      "disposition": "Complete:4synthetic contracts, current58pairs/idempotent fresh+legacy47/49upgrades, APIs/actualselectedbrowser and explicitcleanup. Helper defaultenv correction sourcequalified; no intelligence/provider/Encore rerun"
+    },
+    {
+      "area": 10,
+      "requirement": "Current docs and historical evidence distinctions",
+      "sourceFiles": [
+        "README.md",
+        "docs/VERIFICATION.md",
+        "docs/API_CONTRACT.md",
+        "docs/SECURITY_AND_LIMITATIONS.md",
+        "docs/OPERATIONS.md",
+        "mobile/README.md",
+        "docs/PLANNING_AND_GOALS.md",
+        "docs/PEOPLE_ADMINISTRATION.md",
+        "docs/reports-storage.md"
+      ],
+      "evidence": [
+        "final-owning-doc-links.json"
+      ],
+      "disposition": "Complete source/docs; finalbinary/device/evidence bindings appended without inventing releaseversion, restore/India/quality/capacity targets remain unmeasured"
+    },
+    {
+      "area": 11,
+      "requirement": "Full clients and actual build/browser/export checks",
+      "sourceFiles": [],
+      "evidence": [
+        "final-stable-web.log",
+        "final-stable-native.log",
+        "final-native-picker-types.log",
+        "final-native-picker-lint.log",
+        "final-all-owned-client-format.log",
+        "final-stable-normal-build.log",
+        "final-stable-demo-build.log",
+        "final-stable-preview.log",
+        "final-stable-hermes.log",
+        "final-browser-offline-chunks.json",
+        "final-backend-encore-equivalence.json",
+        "final-current-web.log",
+        "final-current-normal-build.log",
+        "final-current-demo-build.log",
+        "final-current-preview.log",
+        "final-web-readiness-check-input-equivalence.json"
+      ],
+      "disposition": "Complete:348web/352native,0lint errors/warnings,45ownedformatted.13exactbaseline fullformat failures;2Hermescolor warnings; demo900warning qualified.475backend/Encore bytes==98b7 avoids heavy repeats"
+    },
+    {
+      "area": 12,
+      "requirement": "Exact committed dual-ABI evaluation APK",
+      "sourceFiles": [],
+      "evidence": [
+        "final-apk-build.json",
+        "final-apk-source-manifest.json",
+        "final-apk-signature.log",
+        "final-apk-permissions.log",
+        "final-apk-badging.log"
+      ],
+      "disposition": "Buildcomplete:74gitarchive/897lock-matching installed packages/generatedconfig/dualABI/releasebundle/cert/permissions actualPASS; JAVApath/tmpusrquota failures retained. ROOTisolatedAVD launch/Auth pending, releaseprotectedTLS absenttrustedtarget unverified"
+    },
+    {
+      "area": 13,
+      "requirement": "Safe publication, source manifests, report and clean yield",
+      "sourceFiles": [],
+      "evidence": [
+        "../source-manifest.json",
+        "../check-manifest.json",
+        "../build-manifest.json",
+        "../safe-artifact-manifest.json",
+        "../prior-publication-preservation.json"
+      ],
+      "disposition": "Inprogress: curatedfinal proofs only,535publishedM10 bytepreserved, acceptednative proofs/report and finalcleancoordinationcapture/commit/yield pending"
+    }
+  ],
+  "resolvedHistory": "AcceptedM1/N1/N2/N2b unchanged; no duplicatefix or inference. Earlier48action-row publication and97historicalfullrulings remain in M10 publication; root appends subsequentrulings separately."
+}

@@ -1,0 +1,13 @@
+
+> mobile@1.0.0 test
+> vitest run src/Structured.test.tsx src/workDates.test.ts src/DeadlinePicker.test.tsx src/NativeConversation.test.tsx
+
+
+ RUN  v5.0.3 /home/brahma/Projects/Schach_Workspace/.worktrees/workspace-improvements/mobile
+
+
+ Test Files  4 passed (4)
+      Tests  21 passed (21)
+   Start at  02:23:54
+   Duration  551ms (environment 37%, tests 31%, transform 20%, import 11%, worker 1%)
+

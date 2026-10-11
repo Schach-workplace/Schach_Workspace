@@ -1,0 +1,17 @@
+{
+  "name": "final-native-target-red",
+  "cwd": "mobile",
+  "command": [
+    "npm",
+    "test",
+    "--",
+    "src/WorkScreen.test.tsx",
+    "-t",
+    "already submitted A"
+  ],
+  "head": "bc3b7c71f840b78f277d70d55b8d2674257af01f",
+  "exitCode": 1,
+  "elapsedSeconds": 0.581,
+  "log": "final-native-target-red.log",
+  "inputManifest": "final-native-target-red-inputs.json"
+}

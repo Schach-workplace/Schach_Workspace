@@ -1,0 +1,14 @@
+{
+  "name": "final-scopes1-4-web-typecheck",
+  "cwd": "frontend",
+  "command": [
+    "npm",
+    "run",
+    "typecheck"
+  ],
+  "head": "bc3b7c71f840b78f277d70d55b8d2674257af01f",
+  "exitCode": 0,
+  "elapsedSeconds": 0.426,
+  "log": "final-scopes1-4-web-typecheck.log",
+  "inputManifest": "final-scopes1-4-web-typecheck-inputs.json"
+}

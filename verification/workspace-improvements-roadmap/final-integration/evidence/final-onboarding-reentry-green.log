@@ -1,0 +1,13 @@
+
+> schach-workspace-frontend@1.1.0 test
+> vitest run src/components/PeopleOnboarding.test.tsx
+
+
+ RUN  v5.0.3 /home/brahma/Projects/Schach_Workspace/.worktrees/workspace-improvements/frontend
+
+
+ Test Files  1 passed (1)
+      Tests  11 passed (11)
+   Start at  02:12:08
+   Duration  929ms (tests 46%, transform 23%, import 18%, environment 12%)
+

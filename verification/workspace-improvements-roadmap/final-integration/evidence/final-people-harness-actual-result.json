@@ -1,0 +1,17 @@
+{
+  "name": "final-people-harness-actual",
+  "cwd": ".",
+  "command": [
+    "python3",
+    "verification/runtime/people_runtime.py",
+    "--output",
+    "/tmp/schach-final-integration-runtime-20261012-2228110/people",
+    "--allow-demo-mutations",
+    "--browser"
+  ],
+  "head": "47bfbae52166a91fdb971357c039b27d65b3ade6",
+  "exitCode": 0,
+  "elapsedSeconds": 205.879,
+  "log": "final-people-harness-actual.log",
+  "inputManifest": "final-people-harness-actual-inputs.json"
+}

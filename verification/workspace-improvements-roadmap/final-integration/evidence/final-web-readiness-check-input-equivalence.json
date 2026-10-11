@@ -1,0 +1,27 @@
+{
+  "final-current-web": {
+    "relevantInputs": 217,
+    "mismatch": [],
+    "otherChanges": "Generatedpreview/results, ownsafeproofpublication androotcoordinationdocs only"
+  },
+  "final-current-normal-build": {
+    "relevantInputs": 217,
+    "mismatch": [],
+    "otherChanges": "Generatedpreview/results, ownsafeproofpublication androotcoordinationdocs only"
+  },
+  "final-current-demo-build": {
+    "relevantInputs": 217,
+    "mismatch": [],
+    "otherChanges": "Generatedpreview/results, ownsafeproofpublication androotcoordinationdocs only"
+  },
+  "final-current-preview": {
+    "relevantInputs": 217,
+    "mismatch": [],
+    "otherChanges": "Generatedpreview/results, ownsafeproofpublication androotcoordinationdocs only"
+  },
+  "final-current-browser": {
+    "relevantInputs": 217,
+    "mismatch": [],
+    "otherChanges": "Generatedpreview/results, ownsafeproofpublication androotcoordinationdocs only"
+  }
+}

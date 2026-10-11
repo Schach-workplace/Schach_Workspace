@@ -1,0 +1,15 @@
+{
+  "name": "final-native-lifetime-label-green",
+  "cwd": "mobile",
+  "command": [
+    "npm",
+    "test",
+    "--",
+    "src/IntelligenceLifetime.test.tsx"
+  ],
+  "head": "47bfbae52166a91fdb971357c039b27d65b3ade6",
+  "exitCode": 0,
+  "elapsedSeconds": 1.166,
+  "log": "final-native-lifetime-label-green.log",
+  "inputManifest": "final-native-lifetime-label-green-inputs.json"
+}

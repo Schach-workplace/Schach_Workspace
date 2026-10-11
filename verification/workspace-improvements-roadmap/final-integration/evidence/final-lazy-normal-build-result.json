@@ -1,0 +1,14 @@
+{
+  "name": "final-lazy-normal-build",
+  "cwd": "frontend",
+  "command": [
+    "npm",
+    "run",
+    "build"
+  ],
+  "head": "47bfbae52166a91fdb971357c039b27d65b3ade6",
+  "exitCode": 0,
+  "elapsedSeconds": 0.651,
+  "log": "final-lazy-normal-build.log",
+  "inputManifest": "final-lazy-normal-build-inputs.json"
+}

@@ -1,0 +1,16 @@
+{
+  "name": "final-current-preview",
+  "cwd": "frontend",
+  "command": [
+    "npm",
+    "run",
+    "verify:preview"
+  ],
+  "head": "74e6474b8ea80c86d2505de1561de56453c7356f",
+  "runnerSHA256": "7833e80f7331a6c92fa511789d39ee44abd092bd87f771cd5bd8351d9926b6dc",
+  "commandFileInputs": {},
+  "exitCode": 0,
+  "elapsedSeconds": 1.21,
+  "log": "final-current-preview.log",
+  "inputManifest": "final-current-preview-inputs.json"
+}

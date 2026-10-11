@@ -1,0 +1,14 @@
+{
+  "name": "final-browser-offline-chunks",
+  "cwd": ".",
+  "command": [
+    "node",
+    ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/final_browser_offline_chunks.mjs",
+    "http://127.0.0.1:54123"
+  ],
+  "head": "47bfbae52166a91fdb971357c039b27d65b3ade6",
+  "exitCode": 1,
+  "elapsedSeconds": 0.365,
+  "log": "final-browser-offline-chunks.log",
+  "inputManifest": "final-browser-offline-chunks-inputs.json"
+}

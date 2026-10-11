@@ -1,0 +1,19 @@
+{
+  "name": "final-runtime-command-env-red",
+  "cwd": ".",
+  "command": [
+    "python3",
+    "-m",
+    "unittest",
+    "verification/runtime/test_runtime_contract.py"
+  ],
+  "head": "47bfbae52166a91fdb971357c039b27d65b3ade6",
+  "runnerSHA256": "7833e80f7331a6c92fa511789d39ee44abd092bd87f771cd5bd8351d9926b6dc",
+  "commandFileInputs": {
+    "verification/runtime/test_runtime_contract.py": "a10214e072fbbf727f8afcd0b8261c07526f5673be7513b9a9d16fd90e794933"
+  },
+  "exitCode": 1,
+  "elapsedSeconds": 0.102,
+  "log": "final-runtime-command-env-red.log",
+  "inputManifest": "final-runtime-command-env-red-inputs.json"
+}

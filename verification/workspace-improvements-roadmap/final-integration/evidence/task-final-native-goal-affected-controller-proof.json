@@ -1,0 +1,18 @@
+{
+  "verifiedUTC": "2026-10-11T21:45:10.701033+00:00",
+  "reportFullRead": true,
+  "manifestSHA256": "86b3ede4f27abd0ebf771be0e9a2c816c1aab0ef39439a548bce28ef4c9e89af",
+  "counts": {
+    "newRecords": 113,
+    "committedCandidateSources": 207,
+    "installedFiles": 93887,
+    "installedLinks": 55,
+    "oldREDRecords": 96,
+    "oldM10FrozenRecords": 639,
+    "actualEnabledOwners": 27
+  },
+  "issues": [],
+  "status": "PASS_QUALIFIED_COMPOSITE",
+  "qualification": "Exact74 JS/historical1d74 shell/backend98b7; measured owning geometry only. FinalAPK/TLS/physical separate. Native owner typed preservation attestation independently read; no private values published. Current README-only drift separately qualified.",
+  "frozenRecords": 113
+}

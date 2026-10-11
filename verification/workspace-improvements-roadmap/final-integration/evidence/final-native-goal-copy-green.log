@@ -1,0 +1,13 @@
+
+> mobile@1.0.0 test
+> vitest run src/PlanningGoals.test.tsx -t metadata|preference|numeric text
+
+
+ RUN  v5.0.3 /home/brahma/Projects/Schach_Workspace/.worktrees/workspace-improvements/mobile
+
+
+ Test Files  1 passed (1)
+      Tests  5 passed | 10 skipped (15)
+   Start at  02:10:43
+   Duration  749ms (tests 58%, transform 20%, environment 15%, import 6%)
+

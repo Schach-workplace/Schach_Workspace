@@ -1,0 +1,16 @@
+{
+  "name": "final-launcher-lazy-green",
+  "cwd": "frontend",
+  "command": [
+    "npm",
+    "test",
+    "--",
+    "src/components/IntelligenceLauncher.test.tsx",
+    "src/communication/Structured.test.tsx"
+  ],
+  "head": "47bfbae52166a91fdb971357c039b27d65b3ade6",
+  "exitCode": 0,
+  "elapsedSeconds": 0.795,
+  "log": "final-launcher-lazy-green.log",
+  "inputManifest": "final-launcher-lazy-green-inputs.json"
+}

@@ -1,0 +1,2550 @@
+{
+  "status": "affected_geometry_passed",
+  "qualification": "AFFECTED_74E6474_JS_OLD_SHELL_COMPOSITE",
+  "rows": [
+    {
+      "role": "entry",
+      "nodeClass": "android.widget.Button",
+      "enabled": true,
+      "clickable": true,
+      "boundsPx": [
+        50,
+        951,
+        1031,
+        1072
+      ],
+      "widthDp": 356.72727272727275,
+      "heightDp": 44.0,
+      "ancestorIntersectionPx": [
+        50,
+        951,
+        1031,
+        1072
+      ],
+      "effectiveWidthDp": 356.72727272727275,
+      "effectiveHeightDp": 44.0,
+      "textChildBoundsPx": [
+        [
+          363,
+          989,
+          717,
+          1033
+        ]
+      ],
+      "ancestors": [
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[50,407][1031,1616]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[50,407][1031,2165]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.ScrollView",
+          "bounds": "[50,407][1031,2165]",
+          "clickable": "false",
+          "scrollable": "true"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.ScrollView",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.LinearLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.LinearLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        }
+      ],
+      "meets44dp": true,
+      "fontScale": "1.0"
+    },
+    {
+      "role": "kind-report",
+      "nodeClass": "android.widget.Button",
+      "enabled": true,
+      "clickable": true,
+      "boundsPx": [
+        50,
+        1684,
+        429,
+        1808
+      ],
+      "widthDp": 137.8181818181818,
+      "heightDp": 45.09090909090909,
+      "ancestorIntersectionPx": [
+        50,
+        1684,
+        429,
+        1808
+      ],
+      "effectiveWidthDp": 137.8181818181818,
+      "effectiveHeightDp": 45.09090909090909,
+      "textChildBoundsPx": [
+        [
+          85,
+          1723,
+          392,
+          1767
+        ]
+      ],
+      "ancestors": [
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[50,306][1031,1958]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[50,306][1031,2165]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.ScrollView",
+          "bounds": "[50,306][1031,2165]",
+          "clickable": "false",
+          "scrollable": "true"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.LinearLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        }
+      ],
+      "meets44dp": true,
+      "fontScale": "1.0"
+    },
+    {
+      "role": "kind-task",
+      "nodeClass": "android.widget.Button",
+      "enabled": true,
+      "clickable": true,
+      "boundsPx": [
+        456,
+        1684,
+        592,
+        1808
+      ],
+      "widthDp": 49.45454545454545,
+      "heightDp": 45.09090909090909,
+      "ancestorIntersectionPx": [
+        456,
+        1684,
+        592,
+        1808
+      ],
+      "effectiveWidthDp": 49.45454545454545,
+      "effectiveHeightDp": 45.09090909090909,
+      "textChildBoundsPx": [
+        [
+          491,
+          1723,
+          555,
+          1767
+        ]
+      ],
+      "ancestors": [
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[50,306][1031,1958]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[50,306][1031,2165]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.ScrollView",
+          "bounds": "[50,306][1031,2165]",
+          "clickable": "false",
+          "scrollable": "true"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.LinearLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        }
+      ],
+      "meets44dp": true,
+      "fontScale": "1.0"
+    },
+    {
+      "role": "kind-task-comment",
+      "nodeClass": "android.widget.Button",
+      "enabled": true,
+      "clickable": true,
+      "boundsPx": [
+        619,
+        1684,
+        903,
+        1808
+      ],
+      "widthDp": 103.27272727272727,
+      "heightDp": 45.09090909090909,
+      "ancestorIntersectionPx": [
+        619,
+        1684,
+        903,
+        1808
+      ],
+      "effectiveWidthDp": 103.27272727272727,
+      "effectiveHeightDp": 45.09090909090909,
+      "textChildBoundsPx": [
+        [
+          654,
+          1723,
+          866,
+          1767
+        ]
+      ],
+      "ancestors": [
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[50,306][1031,1958]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[50,306][1031,2165]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.ScrollView",
+          "bounds": "[50,306][1031,2165]",
+          "clickable": "false",
+          "scrollable": "true"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.LinearLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        }
+      ],
+      "meets44dp": true,
+      "fontScale": "1.0"
+    },
+    {
+      "role": "kind-message",
+      "nodeClass": "android.widget.Button",
+      "enabled": true,
+      "clickable": true,
+      "boundsPx": [
+        50,
+        1835,
+        257,
+        1958
+      ],
+      "widthDp": 75.27272727272727,
+      "heightDp": 44.72727272727273,
+      "ancestorIntersectionPx": [
+        50,
+        1835,
+        257,
+        1958
+      ],
+      "effectiveWidthDp": 75.27272727272727,
+      "effectiveHeightDp": 44.72727272727273,
+      "textChildBoundsPx": [
+        [
+          85,
+          1874,
+          220,
+          1918
+        ]
+      ],
+      "ancestors": [
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[50,306][1031,1958]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[50,306][1031,2165]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.ScrollView",
+          "bounds": "[50,306][1031,2165]",
+          "clickable": "false",
+          "scrollable": "true"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.LinearLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        }
+      ],
+      "meets44dp": true,
+      "fontScale": "1.0"
+    },
+    {
+      "role": "kind-task-comment-selected",
+      "nodeClass": "android.widget.Button",
+      "enabled": true,
+      "clickable": true,
+      "boundsPx": [
+        619,
+        1684,
+        903,
+        1808
+      ],
+      "widthDp": 103.27272727272727,
+      "heightDp": 45.09090909090909,
+      "ancestorIntersectionPx": [
+        619,
+        1684,
+        903,
+        1808
+      ],
+      "effectiveWidthDp": 103.27272727272727,
+      "effectiveHeightDp": 45.09090909090909,
+      "textChildBoundsPx": [
+        [
+          654,
+          1723,
+          866,
+          1767
+        ]
+      ],
+      "ancestors": [
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[50,306][1031,1958]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[50,306][1031,2165]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.ScrollView",
+          "bounds": "[50,306][1031,2165]",
+          "clickable": "false",
+          "scrollable": "true"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.LinearLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        }
+      ],
+      "meets44dp": true,
+      "fontScale": "1.0"
+    },
+    {
+      "role": "public-task-parent",
+      "nodeClass": "android.widget.Button",
+      "enabled": true,
+      "clickable": true,
+      "boundsPx": [
+        50,
+        756,
+        1031,
+        877
+      ],
+      "widthDp": 356.72727272727275,
+      "heightDp": 44.0,
+      "ancestorIntersectionPx": [
+        50,
+        756,
+        1031,
+        877
+      ],
+      "effectiveWidthDp": 356.72727272727275,
+      "effectiveHeightDp": 44.0,
+      "textChildBoundsPx": [
+        [
+          344,
+          794,
+          736,
+          838
+        ]
+      ],
+      "ancestors": [
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[50,306][1031,2165]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.ScrollView",
+          "bounds": "[50,306][1031,2165]",
+          "clickable": "false",
+          "scrollable": "true"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.LinearLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        }
+      ],
+      "meets44dp": true,
+      "fontScale": "1.0"
+    },
+    {
+      "role": "parent-return",
+      "nodeClass": "android.widget.Button",
+      "enabled": true,
+      "clickable": true,
+      "boundsPx": [
+        50,
+        1547,
+        1031,
+        1671
+      ],
+      "widthDp": 356.72727272727275,
+      "heightDp": 45.09090909090909,
+      "ancestorIntersectionPx": [
+        50,
+        1547,
+        1031,
+        1671
+      ],
+      "effectiveWidthDp": 356.72727272727275,
+      "effectiveHeightDp": 45.09090909090909,
+      "textChildBoundsPx": [
+        [
+          317,
+          1586,
+          764,
+          1630
+        ]
+      ],
+      "ancestors": [
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[50,306][1031,1671]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[50,306][1031,2165]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.ScrollView",
+          "bounds": "[50,306][1031,2165]",
+          "clickable": "false",
+          "scrollable": "true"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.LinearLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        }
+      ],
+      "meets44dp": true,
+      "fontScale": "1.0"
+    },
+    {
+      "role": "kind-task-selected",
+      "nodeClass": "android.widget.Button",
+      "enabled": true,
+      "clickable": true,
+      "boundsPx": [
+        456,
+        1550,
+        592,
+        1674
+      ],
+      "widthDp": 49.45454545454545,
+      "heightDp": 45.09090909090909,
+      "ancestorIntersectionPx": [
+        456,
+        1550,
+        592,
+        1674
+      ],
+      "effectiveWidthDp": 49.45454545454545,
+      "effectiveHeightDp": 45.09090909090909,
+      "textChildBoundsPx": [
+        [
+          491,
+          1589,
+          555,
+          1633
+        ]
+      ],
+      "ancestors": [
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[50,306][1031,1824]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[50,306][1031,2165]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.ScrollView",
+          "bounds": "[50,306][1031,2165]",
+          "clickable": "false",
+          "scrollable": "true"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.LinearLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        }
+      ],
+      "meets44dp": true,
+      "fontScale": "1.0"
+    },
+    {
+      "role": "public-task-source",
+      "nodeClass": "android.widget.Button",
+      "enabled": true,
+      "clickable": true,
+      "boundsPx": [
+        50,
+        756,
+        1031,
+        877
+      ],
+      "widthDp": 356.72727272727275,
+      "heightDp": 44.0,
+      "ancestorIntersectionPx": [
+        50,
+        756,
+        1031,
+        877
+      ],
+      "effectiveWidthDp": 356.72727272727275,
+      "effectiveHeightDp": 44.0,
+      "textChildBoundsPx": [
+        [
+          344,
+          794,
+          736,
+          838
+        ]
+      ],
+      "ancestors": [
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[50,306][1031,2165]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.ScrollView",
+          "bounds": "[50,306][1031,2165]",
+          "clickable": "false",
+          "scrollable": "true"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.LinearLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        }
+      ],
+      "meets44dp": true,
+      "fontScale": "1.0"
+    },
+    {
+      "role": "preview-add-local",
+      "nodeClass": "android.widget.Button",
+      "enabled": true,
+      "clickable": true,
+      "boundsPx": [
+        50,
+        1929,
+        1031,
+        2050
+      ],
+      "widthDp": 356.72727272727275,
+      "heightDp": 44.0,
+      "ancestorIntersectionPx": [
+        50,
+        1929,
+        1031,
+        2050
+      ],
+      "effectiveWidthDp": 356.72727272727275,
+      "effectiveHeightDp": 44.0,
+      "textChildBoundsPx": [
+        [
+          375,
+          1967,
+          706,
+          2011
+        ]
+      ],
+      "ancestors": [
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[50,306][1031,2165]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.ScrollView",
+          "bounds": "[50,306][1031,2165]",
+          "clickable": "false",
+          "scrollable": "true"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.LinearLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        }
+      ],
+      "meets44dp": true,
+      "fontScale": "1.0"
+    },
+    {
+      "role": "preview-add-local-current-resume",
+      "nodeClass": "android.widget.Button",
+      "enabled": true,
+      "clickable": true,
+      "boundsPx": [
+        50,
+        1576,
+        1031,
+        1697
+      ],
+      "widthDp": 356.72727272727275,
+      "heightDp": 44.0,
+      "ancestorIntersectionPx": [
+        50,
+        1576,
+        1031,
+        1697
+      ],
+      "effectiveWidthDp": 356.72727272727275,
+      "effectiveHeightDp": 44.0,
+      "textChildBoundsPx": [
+        [
+          375,
+          1614,
+          706,
+          1658
+        ]
+      ],
+      "ancestors": [
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[50,306][1031,2165]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.ScrollView",
+          "bounds": "[50,306][1031,2165]",
+          "clickable": "false",
+          "scrollable": "true"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.LinearLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        }
+      ],
+      "meets44dp": true,
+      "fontScale": "1.0"
+    },
+    {
+      "role": "remove-local",
+      "nodeClass": "android.widget.Button",
+      "enabled": true,
+      "clickable": true,
+      "boundsPx": [
+        50,
+        1508,
+        1031,
+        1629
+      ],
+      "widthDp": 356.72727272727275,
+      "heightDp": 44.0,
+      "ancestorIntersectionPx": [
+        50,
+        1508,
+        1031,
+        1629
+      ],
+      "effectiveWidthDp": 356.72727272727275,
+      "effectiveHeightDp": 44.0,
+      "textChildBoundsPx": [
+        [
+          410,
+          1546,
+          671,
+          1590
+        ]
+      ],
+      "ancestors": [
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[50,306][1031,2165]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.ScrollView",
+          "bounds": "[50,306][1031,2165]",
+          "clickable": "false",
+          "scrollable": "true"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.LinearLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        }
+      ],
+      "meets44dp": true,
+      "fontScale": "1.0"
+    },
+    {
+      "role": "final-write-control-only-no-tap",
+      "nodeClass": "android.widget.Button",
+      "enabled": true,
+      "clickable": true,
+      "boundsPx": [
+        50,
+        1891,
+        1031,
+        2012
+      ],
+      "widthDp": 356.72727272727275,
+      "heightDp": 44.0,
+      "ancestorIntersectionPx": [
+        50,
+        1891,
+        1031,
+        2012
+      ],
+      "effectiveWidthDp": 356.72727272727275,
+      "effectiveHeightDp": 44.0,
+      "textChildBoundsPx": [
+        [
+          380,
+          2083,
+          700,
+          2127
+        ]
+      ],
+      "ancestors": [
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[50,306][1031,2165]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.ScrollView",
+          "bounds": "[50,306][1031,2165]",
+          "clickable": "false",
+          "scrollable": "true"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.LinearLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        }
+      ],
+      "meets44dp": true,
+      "fontScale": "1.0"
+    },
+    {
+      "role": "large-entry",
+      "nodeClass": "android.widget.Button",
+      "enabled": true,
+      "clickable": true,
+      "boundsPx": [
+        50,
+        1080,
+        1031,
+        1201
+      ],
+      "widthDp": 356.72727272727275,
+      "heightDp": 44.0,
+      "ancestorIntersectionPx": [
+        50,
+        1080,
+        1031,
+        1201
+      ],
+      "effectiveWidthDp": 356.72727272727275,
+      "effectiveHeightDp": 44.0,
+      "textChildBoundsPx": [
+        [
+          310,
+          1111,
+          771,
+          1169
+        ]
+      ],
+      "ancestors": [
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[50,417][1031,1852]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[50,417][1031,2165]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.ScrollView",
+          "bounds": "[50,417][1031,2165]",
+          "clickable": "false",
+          "scrollable": "true"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.ScrollView",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.LinearLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.LinearLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        }
+      ],
+      "meets44dp": true,
+      "fontScale": "1.3"
+    },
+    {
+      "role": "large-kind-report",
+      "nodeClass": "android.widget.Button",
+      "enabled": true,
+      "clickable": true,
+      "boundsPx": [
+        50,
+        1516,
+        521,
+        1640
+      ],
+      "widthDp": 171.27272727272728,
+      "heightDp": 45.09090909090909,
+      "ancestorIntersectionPx": [
+        50,
+        1516,
+        521,
+        1640
+      ],
+      "effectiveWidthDp": 171.27272727272728,
+      "effectiveHeightDp": 45.09090909090909,
+      "textChildBoundsPx": [
+        [
+          85,
+          1548,
+          484,
+          1606
+        ]
+      ],
+      "ancestors": [
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[50,306][1031,1791]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[50,306][1031,2165]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.ScrollView",
+          "bounds": "[50,306][1031,2165]",
+          "clickable": "false",
+          "scrollable": "true"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.LinearLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        }
+      ],
+      "meets44dp": true,
+      "fontScale": "1.3"
+    },
+    {
+      "role": "large-kind-task",
+      "nodeClass": "android.widget.Button",
+      "enabled": true,
+      "clickable": true,
+      "boundsPx": [
+        548,
+        1516,
+        703,
+        1640
+      ],
+      "widthDp": 56.36363636363637,
+      "heightDp": 45.09090909090909,
+      "ancestorIntersectionPx": [
+        548,
+        1516,
+        703,
+        1640
+      ],
+      "effectiveWidthDp": 56.36363636363637,
+      "effectiveHeightDp": 45.09090909090909,
+      "textChildBoundsPx": [
+        [
+          583,
+          1548,
+          666,
+          1606
+        ]
+      ],
+      "ancestors": [
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[50,306][1031,1791]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[50,306][1031,2165]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.ScrollView",
+          "bounds": "[50,306][1031,2165]",
+          "clickable": "false",
+          "scrollable": "true"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.LinearLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        }
+      ],
+      "meets44dp": true,
+      "fontScale": "1.3"
+    },
+    {
+      "role": "large-kind-task-comment",
+      "nodeClass": "android.widget.Button",
+      "enabled": true,
+      "clickable": true,
+      "boundsPx": [
+        50,
+        1667,
+        399,
+        1791
+      ],
+      "widthDp": 126.9090909090909,
+      "heightDp": 45.09090909090909,
+      "ancestorIntersectionPx": [
+        50,
+        1667,
+        399,
+        1791
+      ],
+      "effectiveWidthDp": 126.9090909090909,
+      "effectiveHeightDp": 45.09090909090909,
+      "textChildBoundsPx": [
+        [
+          85,
+          1699,
+          362,
+          1757
+        ]
+      ],
+      "ancestors": [
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[50,306][1031,1791]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[50,306][1031,2165]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.ScrollView",
+          "bounds": "[50,306][1031,2165]",
+          "clickable": "false",
+          "scrollable": "true"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.LinearLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        }
+      ],
+      "meets44dp": true,
+      "fontScale": "1.3"
+    },
+    {
+      "role": "large-kind-message",
+      "nodeClass": "android.widget.Button",
+      "enabled": true,
+      "clickable": true,
+      "boundsPx": [
+        426,
+        1667,
+        674,
+        1791
+      ],
+      "widthDp": 90.18181818181819,
+      "heightDp": 45.09090909090909,
+      "ancestorIntersectionPx": [
+        426,
+        1667,
+        674,
+        1791
+      ],
+      "effectiveWidthDp": 90.18181818181819,
+      "effectiveHeightDp": 45.09090909090909,
+      "textChildBoundsPx": [
+        [
+          461,
+          1699,
+          637,
+          1757
+        ]
+      ],
+      "ancestors": [
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[50,306][1031,1791]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[50,306][1031,2165]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.ScrollView",
+          "bounds": "[50,306][1031,2165]",
+          "clickable": "false",
+          "scrollable": "true"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.LinearLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        }
+      ],
+      "meets44dp": true,
+      "fontScale": "1.3"
+    },
+    {
+      "role": "large-kind-task-comment-select",
+      "nodeClass": "android.widget.Button",
+      "enabled": true,
+      "clickable": true,
+      "boundsPx": [
+        50,
+        1667,
+        399,
+        1791
+      ],
+      "widthDp": 126.9090909090909,
+      "heightDp": 45.09090909090909,
+      "ancestorIntersectionPx": [
+        50,
+        1667,
+        399,
+        1791
+      ],
+      "effectiveWidthDp": 126.9090909090909,
+      "effectiveHeightDp": 45.09090909090909,
+      "textChildBoundsPx": [
+        [
+          85,
+          1699,
+          362,
+          1757
+        ]
+      ],
+      "ancestors": [
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[50,306][1031,1791]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[50,306][1031,2165]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.ScrollView",
+          "bounds": "[50,306][1031,2165]",
+          "clickable": "false",
+          "scrollable": "true"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.LinearLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        }
+      ],
+      "meets44dp": true,
+      "fontScale": "1.3"
+    },
+    {
+      "role": "large-public-parent",
+      "nodeClass": "android.widget.Button",
+      "enabled": true,
+      "clickable": true,
+      "boundsPx": [
+        50,
+        739,
+        1031,
+        860
+      ],
+      "widthDp": 356.72727272727275,
+      "heightDp": 44.0,
+      "ancestorIntersectionPx": [
+        50,
+        739,
+        1031,
+        860
+      ],
+      "effectiveWidthDp": 356.72727272727275,
+      "effectiveHeightDp": 44.0,
+      "textChildBoundsPx": [
+        [
+          285,
+          770,
+          795,
+          828
+        ]
+      ],
+      "ancestors": [
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[50,306][1031,2165]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.ScrollView",
+          "bounds": "[50,306][1031,2165]",
+          "clickable": "false",
+          "scrollable": "true"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.LinearLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        }
+      ],
+      "meets44dp": true,
+      "fontScale": "1.3"
+    },
+    {
+      "role": "large-parent-return",
+      "nodeClass": "android.widget.Button",
+      "enabled": true,
+      "clickable": true,
+      "boundsPx": [
+        50,
+        1513,
+        1031,
+        1636
+      ],
+      "widthDp": 356.72727272727275,
+      "heightDp": 44.72727272727273,
+      "ancestorIntersectionPx": [
+        50,
+        1513,
+        1031,
+        1636
+      ],
+      "effectiveWidthDp": 356.72727272727275,
+      "effectiveHeightDp": 44.72727272727273,
+      "textChildBoundsPx": [
+        [
+          249,
+          1545,
+          831,
+          1603
+        ]
+      ],
+      "ancestors": [
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[50,306][1031,1636]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[50,306][1031,2165]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.ScrollView",
+          "bounds": "[50,306][1031,2165]",
+          "clickable": "false",
+          "scrollable": "true"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.LinearLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        }
+      ],
+      "meets44dp": true,
+      "fontScale": "1.3"
+    },
+    {
+      "role": "large-kind-task-select",
+      "nodeClass": "android.widget.Button",
+      "enabled": true,
+      "clickable": true,
+      "boundsPx": [
+        548,
+        1364,
+        703,
+        1488
+      ],
+      "widthDp": 56.36363636363637,
+      "heightDp": 45.09090909090909,
+      "ancestorIntersectionPx": [
+        548,
+        1364,
+        703,
+        1488
+      ],
+      "effectiveWidthDp": 56.36363636363637,
+      "effectiveHeightDp": 45.09090909090909,
+      "textChildBoundsPx": [
+        [
+          583,
+          1396,
+          666,
+          1454
+        ]
+      ],
+      "ancestors": [
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[50,306][1031,1639]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[50,306][1031,2165]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.ScrollView",
+          "bounds": "[50,306][1031,2165]",
+          "clickable": "false",
+          "scrollable": "true"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.LinearLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        }
+      ],
+      "meets44dp": true,
+      "fontScale": "1.3"
+    },
+    {
+      "role": "large-public-source",
+      "nodeClass": "android.widget.Button",
+      "enabled": true,
+      "clickable": true,
+      "boundsPx": [
+        50,
+        739,
+        1031,
+        860
+      ],
+      "widthDp": 356.72727272727275,
+      "heightDp": 44.0,
+      "ancestorIntersectionPx": [
+        50,
+        739,
+        1031,
+        860
+      ],
+      "effectiveWidthDp": 356.72727272727275,
+      "effectiveHeightDp": 44.0,
+      "textChildBoundsPx": [
+        [
+          285,
+          770,
+          795,
+          828
+        ]
+      ],
+      "ancestors": [
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[50,306][1031,2165]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.ScrollView",
+          "bounds": "[50,306][1031,2165]",
+          "clickable": "false",
+          "scrollable": "true"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.LinearLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        }
+      ],
+      "meets44dp": true,
+      "fontScale": "1.3"
+    },
+    {
+      "role": "large-preview-add-local",
+      "nodeClass": "android.widget.Button",
+      "enabled": true,
+      "clickable": true,
+      "boundsPx": [
+        50,
+        1558,
+        1031,
+        1679
+      ],
+      "widthDp": 356.72727272727275,
+      "heightDp": 44.0,
+      "ancestorIntersectionPx": [
+        50,
+        1558,
+        1031,
+        1679
+      ],
+      "effectiveWidthDp": 356.72727272727275,
+      "effectiveHeightDp": 44.0,
+      "textChildBoundsPx": [
+        [
+          324,
+          1589,
+          756,
+          1647
+        ]
+      ],
+      "ancestors": [
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[50,306][1031,2165]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.ScrollView",
+          "bounds": "[50,306][1031,2165]",
+          "clickable": "false",
+          "scrollable": "true"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.LinearLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        }
+      ],
+      "meets44dp": true,
+      "fontScale": "1.3"
+    },
+    {
+      "role": "large-remove-local",
+      "nodeClass": "android.widget.Button",
+      "enabled": true,
+      "clickable": true,
+      "boundsPx": [
+        50,
+        1508,
+        1031,
+        1629
+      ],
+      "widthDp": 356.72727272727275,
+      "heightDp": 44.0,
+      "ancestorIntersectionPx": [
+        50,
+        1508,
+        1031,
+        1629
+      ],
+      "effectiveWidthDp": 356.72727272727275,
+      "effectiveHeightDp": 44.0,
+      "textChildBoundsPx": [
+        [
+          370,
+          1539,
+          710,
+          1597
+        ]
+      ],
+      "ancestors": [
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[50,306][1031,2165]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.ScrollView",
+          "bounds": "[50,306][1031,2165]",
+          "clickable": "false",
+          "scrollable": "true"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.LinearLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        }
+      ],
+      "meets44dp": true,
+      "fontScale": "1.3"
+    },
+    {
+      "role": "large-write-control-only-no-tap",
+      "nodeClass": "android.widget.Button",
+      "enabled": true,
+      "clickable": true,
+      "boundsPx": [
+        50,
+        1891,
+        1031,
+        2012
+      ],
+      "widthDp": 356.72727272727275,
+      "heightDp": 44.0,
+      "ancestorIntersectionPx": [
+        50,
+        1891,
+        1031,
+        2012
+      ],
+      "effectiveWidthDp": 356.72727272727275,
+      "effectiveHeightDp": 44.0,
+      "textChildBoundsPx": [
+        [
+          332,
+          1922,
+          749,
+          1980
+        ]
+      ],
+      "ancestors": [
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[50,306][1031,2165]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.ScrollView",
+          "bounds": "[50,306][1031,2165]",
+          "clickable": "false",
+          "scrollable": "true"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.view.ViewGroup",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.LinearLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        },
+        {
+          "class": "android.widget.FrameLayout",
+          "bounds": "[0,0][1080,2280]",
+          "clickable": "false",
+          "scrollable": "false"
+        }
+      ],
+      "meets44dp": true,
+      "fontScale": "1.3"
+    }
+  ]
+}

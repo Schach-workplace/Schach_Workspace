@@ -1,0 +1,13 @@
+{
+  "name": "final-full-web",
+  "cwd": "frontend",
+  "command": [
+    "npm",
+    "test"
+  ],
+  "head": "47bfbae52166a91fdb971357c039b27d65b3ade6",
+  "exitCode": 0,
+  "elapsedSeconds": 8.139,
+  "log": "final-full-web.log",
+  "inputManifest": "final-full-web-inputs.json"
+}

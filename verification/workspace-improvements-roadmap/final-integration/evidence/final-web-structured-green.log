@@ -1,0 +1,13 @@
+
+> schach-workspace-frontend@1.1.0 test
+> vitest run src/communication/Structured.test.tsx
+
+
+ RUN  v5.0.3 /home/brahma/Projects/Schach_Workspace/.worktrees/workspace-improvements/frontend
+
+
+ Test Files  1 passed (1)
+      Tests  4 passed (4)
+   Start at  02:22:08
+   Duration  338ms (environment 38%, tests 31%, import 17%, transform 13%, worker 1%)
+

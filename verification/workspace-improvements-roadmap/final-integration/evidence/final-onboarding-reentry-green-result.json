@@ -1,0 +1,15 @@
+{
+  "name": "final-onboarding-reentry-green",
+  "cwd": "frontend",
+  "command": [
+    "npm",
+    "test",
+    "--",
+    "src/components/PeopleOnboarding.test.tsx"
+  ],
+  "head": "bc3b7c71f840b78f277d70d55b8d2674257af01f",
+  "exitCode": 0,
+  "elapsedSeconds": 1.192,
+  "log": "final-onboarding-reentry-green.log",
+  "inputManifest": "final-onboarding-reentry-green-inputs.json"
+}

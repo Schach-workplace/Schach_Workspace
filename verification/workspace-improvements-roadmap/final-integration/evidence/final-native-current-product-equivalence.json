@@ -1,0 +1,10 @@
+{
+  "APKSourceCommit": "74e6474b8ea80c86d2505de1561de56453c7356f",
+  "nativeAndSharedTotalSnapshotInputs": 207,
+  "nativeAndSharedNonMarkdownInputs": 205,
+  "mismatch": [],
+  "nonCompiledDocumentationDrift": [
+    "mobile/README.md"
+  ],
+  "qualification": "NewwebStructured readiness completion correction andmobileREADME binarymetadata only; allnative/shared nonMarkdownbytes identical to exactAPK source. Root ruling permits no native/Hermes/APK repeats."
+}

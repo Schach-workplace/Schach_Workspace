@@ -1,0 +1,16 @@
+{
+  "name": "final-stable-normal-build",
+  "cwd": "frontend",
+  "command": [
+    "npm",
+    "run",
+    "build"
+  ],
+  "head": "47bfbae52166a91fdb971357c039b27d65b3ade6",
+  "runnerSHA256": "7833e80f7331a6c92fa511789d39ee44abd092bd87f771cd5bd8351d9926b6dc",
+  "commandFileInputs": {},
+  "exitCode": 0,
+  "elapsedSeconds": 1.985,
+  "log": "final-stable-normal-build.log",
+  "inputManifest": "final-stable-normal-build-inputs.json"
+}

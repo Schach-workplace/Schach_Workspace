@@ -1,6 +1,6 @@
 # Schach Workspace implementation and handoff checklist
 
-Updated UTC 2026-10-11T20:35:35.453058+00:00. Read [AI_HANDOFF.md](AI_HANDOFF.md) and [AI_FILE_INDEX.json](AI_FILE_INDEX.json) first. The active ledger is `.superpowers/sdd/2026-10-10-workspace-improvements-roadmap/progress.md`. Historical failures and source-only evidence remain qualified there; a checked source gate does not certify an installed client or production rollout.
+Updated UTC 2026-10-11T21:46:47.399418+00:00. Read [AI_HANDOFF.md](AI_HANDOFF.md) and [AI_FILE_INDEX.json](AI_FILE_INDEX.json) first. The active ledger is `.superpowers/sdd/2026-10-10-workspace-improvements-roadmap/progress.md`. Historical failures and source-only evidence remain qualified there; a checked source gate does not certify an installed client or production rollout.
 
 ## Accepted roadmap milestones
 
@@ -54,13 +54,17 @@ Saved requirements/reports: `task-final-integration-brief-preparation.md`, `task
 - [x] Goal/preset409 resource-specific guidance and deliberate latest inspection; onboarding hard-clear honest reentry/fresh preview; no stale CAS rebase/unknown-body rewrite.
 - [x] Fast A/B held-response owning regression before any current-target/authority callback fix; preserve original legitimate canonical commits.
 - [x] Structured current eligible conversation members/historyFromSeq/public roles/reviewer exclusions; native searchable choices/company-zone deadline fold-gap/optional blank/frozen unknown payload.
-- [ ] Measure app-owned Auth and Goal evidence actual44dp hit areas/clipping before minimal fix; no OS-calendar certification/global threshold bump.
+- [x] Goal geometry: real owning RED, narrow local margin, independently verified27 enabled owners at font1/1.3 after full ancestor intersections;113 records frozen and preservation read. Qualified exact74JS/old-shell composite.
+- [ ] Public Auth geometry in exact embedded APK on a separate new private SSD AVD; protected TLS and physical checks remain open.
 - [x] Source/focused gate only: auth-safe Connect/assistance lazy loading and manual recovery; measure normal chunks against unchanged900kB warning threshold.
 - [x] Source/HappyDOM gate only: coherent single-entry offline DEMO using installed Vite8/Rolldown configuration; regenerate preview, actual offline Connect/manual assistance zero external requests; honest intentional inline-DEMO warning.
 - [x] Source/synthetic gate only: harness invalid flags exit2 before side effects; derive contiguous58 SQL/mirror/checksum/legacy inventory; safe environment scrub/color setup and actual executed-proof labels.
 - [x] Draft source gate only, final evidence reconciliation pending: README/VERIFICATION/API/SECURITY/OPERATIONS/mobile/module documentation: actual APIs, dated qualified results, provider pins/limits, key backup, history and rollout gates. Clean attached audio is distinct from disabled call recording/transcription.
-- [ ] Final affected full clients/types/lint/normal/demo/offline/Hermes/current browser320/375/430 and20px focus/scroll/pending/unknown evidence. Reuse unchanged heavy backend proofs only with exact source equivalence.
-- [ ] Fresh Android evaluation APK from EXACT committed isolated source, SDK57 lock/config/prebuild, embedded Hermes, ABIs/certificate/permissions/provenance. SAME native owner actual launch/Auth hit areas; release HTTPS requirement remains, physical/iOS/signing gates qualified.
+- [x] Validated checkpoint74e6474: final affected full clients/types/lint/normal/demo/offline/Hermes/current browser320/375/430 and20px focus/scroll/pending/unknown evidence. Reuse unchanged heavy backend proofs only with exact source equivalence.
+- [x] Exact74 isolated-source Android evaluation APK independently verified:1772 committed/207 compiled inputs, embedded Hermes, dualABI, fresh evaluation signature/config/permissions. First Java/quota failures and third-party warnings retained.
+- [ ] SAME original native owner exact APK standalone launch/Auth hit areas on new private SSD AVD. ACTIVE brief task-final-release-isolated-avd-brief.md; no release install on retained HTTP fixture.
+- [x] Root verified Structured readiness-identity RED→GREEN6/full348/type/build/preview14/Chromium,1738currentinputs across8checks0mismatch. Native compiled inputs unchanged; README-only drift qualified.
+- [ ] Capture3 natural source checkpoint independently compared; three coordination docs frozen until then.
 - [ ] Final clean source/build/check/evidence manifests, full report/self-review and exclusive ownership yield.
 
 Partial checkpoint47bfbae: ROOTverified7060inputhashes/3captured docs,focusedweb59/native87/typespass; wholeintegration/fullchecks/finalreview remainpending. Areas5–13 active, task-final-integration-resume.md current. ReleaseAPK must useisolatedAVD: retainedHTTPsession can be erased by release restore; trustedHTTPSauthgap explicit, noTLSbypass.
@@ -125,3 +129,23 @@ Latest instrumentation boundary 2026-10-11T19:44:27.903754+00:00: `task-10-nativ
 2026-10-11T21:10:04.460200+00:00 — Final scopes5–10 checkpoint validation ACTIVE. Fullweb346/71 reportedPASS; native351PASS/1 stale lowercaselabel query corrected, affected/full rerun pending. Native busy-layout lint corrected owner-bound state and owninglint reportedPASS. Thirteen webformat failures independently source-owner matched unchanged acceptedBASE; baseline qualification retained, no unrelated formatting. Corrected actualplanning fresh58/legacy47→58/idempotent/API/browser7/320375430/30.5s/exactretry and owncleanup reportedPASS; people owningruntime ACTIVE. Root full log/hash/source independent verification stillpending.
 
 Native actual owning geometry reports Message kind and Choose another parent source120px=43.636dp at440dpi/font1.0, no ancestor clipping. Remaining font1.3/preservation/restoration observation pending; wait owner yield before narrowly fixing picker layout. Actual existing GoalScreen binding replaces nonexistent PlanningGoals shorthand; all3 owninglayout bytes independently matched4420 in task-final-native-goal-controller-owning-source-proof.json. No globaltarget bump/inference/install/provider/canonical mutation.
+
+
+## Current continuation boundary (2026-10-11T21:23:20.196952+00:00)
+
+- [x] Checkpoint `74e6474b8ea80c86d2505de1561de56453c7356f` independently bound: exact capture2 docs, 17,720 invocation inputs, unchanged 475 backend/Encore files, zero unqualified mismatch. Full web346/native352; native types/lint clean; scoped format passes, thirteen unchanged baseline full-format failures retained. Current Android/iOS Hermes export still has two color warnings; no iOS binary claim.
+- [x] Initial Goal geometry report read,96 records verified/frozen; 636 accepted proofs and actual3 owner hashes preserved. Local picker margin committed, global44 default unchanged.
+- [ ] Original native owner ACTIVE exact-checkpoint JS/dev-shell Goal geometry GREEN and typed preservation/restore under task-final-native-goal-affected-brief.md. No inference or canonical writes.
+- [ ] Exact committed-source isolated APK build ACTIVE. Initial missing Java environment classified; existing Temurin17 verified. APK config/signature/ABIs/bundle + ROOT isolated AVD activation pending.
+- [ ] Final source-owner report/manifests/clean yield, whole-branch review, safe exhaustive ruling publication, preserved-data main/NORMAL rerun/private push still pending.
+
+Root3-doc updates resumed after independently verifying capture2 in committed74e6474. Native current affected owner and sole product/Git owner have separate scopes; successor must not launch duplicate writers or repeat accepted milestones. Read current AI_HANDOFF and source/device/controller resume files before continuing.
+
+
+2026-10-11T21:26:46.227947+00:00 — Environment recovery ACTIVE (Ruling105): `/tmp` userquota EDQUOT hit own APK after558tasks and new candidateMetro exit7 before UIreload. Both owners may relocate ONLY their new exactsource/dependency/build/cache copies into separate private0700 root-filesystem directories; fullhashverify before one scoped relaunch/resume, retainfailedlogs and acceptedproofs. OldMetro gracefullyjoined; backend/proxy/auth/data unchanged. No application fix or installed acceptance inferred. See task-final-owned-storage-relocation-ruling.md and each active resume file.
+
+
+2026-10-11T21:32:14.972832+00:00 — Exact74 Android evaluation APK built and independently verified:98,206,840bytes/b6418f127e03b8dec0ba2bccb550cf305c807ee95cd2261e489b7924b2e5e3a5;1772Git/207compiled/4config hashes, lockedconfig, embeddedHermes/dualABI/freshv2signature pass. Actual launch/Auth remainspending separatefreshSSD AVD; notorganizationsigning/iOS/TLS/deviceacceptance. RetainedownedQEMU SIGABRT confirmed bycoredumpctl beforecurrentJSUIreload; originalcauseunproven/concurrentreporterEDQUOT/noappcrashclaim. Ruling106 permitsONE sameAVD no-wipeboot withpreservation/currentauthority checks; nativeowner ACTIVE. No rawcore extracted/published.
+
+
+2026-10-11T21:40:52.333812+00:00 — Native affected bothfont ownerreport:27enabledancestor-intersectedrows≥44dp, finalpreservation/report/yield pending; nofinalwrite. Newscope5 webStructured readiness/completion BUG foundbyactualselfreview RED1fail5pass; minimaltransientidentityfix/currentwebchecks ACTIVE, semanticfences retained. Native207/APK74 unchangedatreport; counterpartsourceinspection requested. Root3docscapture3 NOTyielded, LIVEupdates.

@@ -1,0 +1,55 @@
+{
+  "expectedOwningRED": [
+    "final-selector-red",
+    "final-labels-owning-red",
+    "final-native-labels-red",
+    "final-goal-copy-red",
+    "final-native-goal-copy-owning-red",
+    "final-onboarding-reentry-owning-red",
+    "final-native-onboarding-reentry-owning-red",
+    "final-web-target-red",
+    "final-native-target-red",
+    "final-web-structured-red",
+    "final-native-structured-owning-red",
+    "final-launcher-lazy-red",
+    "final-runtime-contract-red",
+    "final-runtime-command-env-owning-red",
+    "final-web-structured-readiness-red"
+  ],
+  "preliminaryCorrections": {
+    "final-labels-red": "Path-edit command ran from frontendcwd and failed to edit; unchanged suite passed. Corrected actualowningRED retained.",
+    "final-native-goal-copy-red": "Test checked afterunmount; correctedowningRED retained.",
+    "final-onboarding-reentry-red/final-native-onboarding-reentry-red": "Synthetic preview DTO/account grant setup corrected beforeowningRED.",
+    "final-native-structured-red": "Uninstalled testing-library import corrected to existing nativeact/createRoot helpers; no newdependency.",
+    "final-runtime-contract-green": "Test wrongly required INTELLIGENCE_ENABLEDabsent instead of explicitfalse; correctedsemanticassertion.",
+    "final-runtime-command-env-red/green": "NewAST subprocessmock omitted STDOUT constant; corrected before actualenvNone assertionRED\u2192GREEN.",
+    "final-structured-web-types": "Two testfind() nullability errors fixed; finalbuild tscPASS.",
+    "final-offline-preview": "New predicate named Localassistance button instead of actual Localassistancehistory; correctedowningpredicate.",
+    "final-planning-harness-actual": "RenderedOct12 agenda differed from107-rowOct11fixture; browserharness nowexplicitly selects fixturecivil day, no Calendarproductfix.",
+    "final-full-native": "351passed/1failed lowercaseamount query afterhumanAmountlabel. Only3existing testqueries corrected, acceptedN2bguard unchanged; current352PASS.",
+    "final-native-lint": "Owninglayout-effect busysetState caught bylint, replacedowner-boundbusyidentity; unnecessaryuseMemo depswarning then eliminated byexplicitidentity binding object. Current0errors0warnings.",
+    "final-browser-offline-chunks": "Harness Runtime.evaluate selectorquoting error; corrected.",
+    "final-browser-offline-chunks-owning": "Incorrectly assumedjoinedPeoplechild54123stillrunning. Newprivatefictional SQLite readserver wraps lifetime/joins; actualbrowserPASS.",
+    "final-committed-apk": "InitialGradle immediate missingJAVA_HOME/java beforecompilation; existing authorizedTemurin17 toolpath supplied.",
+    "final-committed-apk-owning": "558tasks then Diskquotaexceeded on tmpfsusrquota, not productfailure; onlyowncopy/toolcache relocated toSSD and regenerated absolute-path intermediates; finalSSDbuildPASS."
+  },
+  "currentWarnings": {
+    "fullWebFormat": "13files exactacceptedBASEunchanged fail fullformat; Ruling102 permits qualification plus45ownedsource formatPASS, no unrelatedchurn.",
+    "demoBuild": "Intentionallyinline singleentry1641.21kB exceeds900kB warning, currentnormalentry663.83kB anddeferredConnect57.38/Panel23.97 no900warning.",
+    "Hermes": "FinalAndroid+iOS exportPASS; runner scrub applied butMetrochildren still emit2NO_COLOR/FORCE_COLORignoredwarnings. Export isnotiOSbinary/device.",
+    "preview": "ExperimentalVMmodule warning retained; actual14HappyDOM +fileChromium checksPASS.",
+    "APKPrebuild": "expo-system-ui advisory forlightstyle; no dependency installation or configworkaround.",
+    "APKGradle": "Inherited dependency Java/Kotlin deprecation/unchecked/parameter/manifest-plugin notices andGradle10deprecation warnings retained; compiled releasePASS. DefaultAndroidDebug evaluationcert, not organization/store signing.",
+    "nativeComposite": "Accepted affected Goal27 actual owning intersections >=44dp atfont1/1.3 is exact74JS/historical1d74shell/backend98b7 composite. Font recreation deliberately reentered known human text; no old-node continuity/30s claim. Initial local evidence tap did not settle; deliberate current-preview retap then local add/remove passed, no canonical write. RetainedQEMU SIGABRT and concurrent quota reporter error have unproven original cause, not Schach app crash."
+  },
+  "externalGates": [
+    "ActualprotectedTLSauthenticatedrelease absenttrustedtarget",
+    "physicalAndroid/iOS andiOSbinary/signing",
+    "organization/store signing",
+    "IndiaHTTPS/TURN/push",
+    "RPO15minutes/RTO4hours/35dayretentionrestore objectives unmeasured",
+    "Hindi/privatebusinessmodel quality andproductionlatency/capacity",
+    "Finalwholebranchreview/maincutover/privatepush ownedROOT, not performed by sourcewriter"
+  ],
+  "rawFailedLogs": "Preserved privately in planSDD with published originalcommand/exit/input manifests andSHA256; rawrequest/credential/privatefixture/providerstderr are not published."
+}

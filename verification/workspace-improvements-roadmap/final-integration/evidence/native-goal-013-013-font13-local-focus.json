@@ -1,0 +1,21 @@
+{
+  "sourceCommit": "74e6474b8ea80c86d2505de1561de56453c7356f",
+  "backendProductCommit": "98b7fb6",
+  "clientProductCommit": "74e6474",
+  "nativeShell": "1d74c31132b8246603dbc853556ca29b1a134e4f",
+  "status": "passed",
+  "font": "1.3",
+  "knownHumanValueMatches": true,
+  "focused": true,
+  "selectionStart": 8,
+  "selectionEnd": 8,
+  "bounds": [
+    50,
+    887,
+    1031,
+    1136
+  ],
+  "imeShown": true,
+  "freshLocalDraftAfterFontRouteRecreation": true,
+  "noCanonicalWrite": true
+}

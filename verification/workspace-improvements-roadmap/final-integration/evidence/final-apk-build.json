@@ -1,0 +1,300 @@
+{
+  "status": "passed",
+  "sourceCommit": "74e6474b8ea80c86d2505de1561de56453c7356f",
+  "sourceMethod": "git archive of exact committed source; fresh copy of current installed SDK57 dependencies bound to lock",
+  "ownedBuildRoot": "/home/brahma/.cache/schach-final-integration-android-74e6474/source",
+  "commands": [
+    {
+      "name": "final-apk-copy-dependencies",
+      "command": [
+        "cp",
+        "-a",
+        "--reflink=auto",
+        "/home/brahma/Projects/Schach_Workspace/.worktrees/workspace-improvements/mobile/node_modules",
+        "/tmp/schach-final-android-zed2wtoe/mobile/node_modules"
+      ],
+      "cwd": "/tmp/schach-final-android-zed2wtoe",
+      "startedUTC": "2026-10-11T21:21:02Z",
+      "exitCode": 0,
+      "elapsedSeconds": 24.3,
+      "log": "final-apk-copy-dependencies.log"
+    },
+    {
+      "name": "final-apk-prebuild",
+      "command": [
+        "npx",
+        "expo",
+        "prebuild",
+        "--no-install"
+      ],
+      "cwd": "/tmp/schach-final-android-zed2wtoe/mobile",
+      "startedUTC": "2026-10-11T21:21:27Z",
+      "exitCode": 0,
+      "elapsedSeconds": 1.371,
+      "log": "final-apk-prebuild.log"
+    },
+    {
+      "name": "final-apk-config-check",
+      "command": [
+        "python3",
+        "verification/mobile-milestone-3/check-native-config.py"
+      ],
+      "cwd": "/tmp/schach-final-android-zed2wtoe",
+      "startedUTC": "2026-10-11T21:21:28Z",
+      "exitCode": 0,
+      "elapsedSeconds": 0.023,
+      "log": "final-apk-config-check.log"
+    },
+    {
+      "name": "final-apk-gradle",
+      "command": [
+        "./gradlew",
+        "assembleRelease",
+        "-PreactNativeArchitectures=arm64-v8a,x86_64",
+        "--max-workers=4",
+        "--no-daemon",
+        "--offline",
+        "-Dorg.gradle.jvmargs=-Xmx6g -XX:MaxMetaspaceSize=1g"
+      ],
+      "cwd": "/tmp/schach-final-android-zed2wtoe/mobile/android",
+      "startedUTC": "2026-10-11T21:21:28Z",
+      "exitCode": 1,
+      "elapsedSeconds": 0.003,
+      "log": "final-apk-gradle.log"
+    },
+    {
+      "name": "final-apk-java-version",
+      "command": [
+        "/home/brahma/Projects/Schach_Workspace/.superpowers/sdd/2026-10-10-communication-implementation/tools/jdk-17.0.20.1+1/bin/java",
+        "-version"
+      ],
+      "cwd": "/tmp/schach-final-android-zed2wtoe",
+      "startedUTC": "2026-10-11T21:23:21Z",
+      "exitCode": 0,
+      "elapsedSeconds": 0.016,
+      "log": "final-apk-java-version.log"
+    },
+    {
+      "name": "final-apk-gradle-owning",
+      "command": [
+        "./gradlew",
+        "assembleRelease",
+        "-PreactNativeArchitectures=arm64-v8a,x86_64",
+        "--max-workers=4",
+        "--no-daemon",
+        "--offline",
+        "-Dorg.gradle.jvmargs=-Xmx6g -XX:MaxMetaspaceSize=1g"
+      ],
+      "cwd": "/tmp/schach-final-android-zed2wtoe/mobile/android",
+      "startedUTC": "2026-10-11T21:23:21Z",
+      "exitCode": 1,
+      "elapsedSeconds": 59.626,
+      "log": "final-apk-gradle-owning.log"
+    },
+    {
+      "name": "final-apk-java-version",
+      "command": [
+        "/home/brahma/Projects/Schach_Workspace/.superpowers/sdd/2026-10-10-communication-implementation/tools/jdk-17.0.20.1+1/bin/java",
+        "-version"
+      ],
+      "cwd": "/home/brahma/.cache/schach-final-integration-android-74e6474/source",
+      "startedUTC": "2026-10-11T21:26:21Z",
+      "exitCode": 0,
+      "elapsedSeconds": 0.017,
+      "log": "final-apk-java-version.log"
+    },
+    {
+      "name": "final-apk-gradle-ssd",
+      "command": [
+        "./gradlew",
+        "assembleRelease",
+        "-PreactNativeArchitectures=arm64-v8a,x86_64",
+        "--max-workers=4",
+        "--no-daemon",
+        "--offline",
+        "-Dorg.gradle.jvmargs=-Xmx6g -XX:MaxMetaspaceSize=1g -Djava.io.tmpdir=/home/brahma/.cache/schach-final-integration-android-74e6474/tmp"
+      ],
+      "cwd": "/home/brahma/.cache/schach-final-integration-android-74e6474/source/mobile/android",
+      "startedUTC": "2026-10-11T21:26:21Z",
+      "exitCode": 0,
+      "elapsedSeconds": 121.102,
+      "log": "final-apk-gradle-ssd.log"
+    },
+    {
+      "name": "final-apk-signature",
+      "command": [
+        "/tmp/schach-communication-tools-20261010/android-sdk/build-tools/36.0.0/apksigner",
+        "verify",
+        "--verbose",
+        "--print-certs",
+        "/home/brahma/.cache/schach-final-integration-android-74e6474/source/mobile/android/app/build/outputs/apk/release/app-release.apk"
+      ],
+      "cwd": "/home/brahma/.cache/schach-final-integration-android-74e6474/source",
+      "startedUTC": "2026-10-11T21:28:23Z",
+      "exitCode": 0,
+      "elapsedSeconds": 0.166,
+      "log": "final-apk-signature.log"
+    },
+    {
+      "name": "final-apk-badging",
+      "command": [
+        "/tmp/schach-communication-tools-20261010/android-sdk/build-tools/36.0.0/aapt",
+        "dump",
+        "badging",
+        "/home/brahma/.cache/schach-final-integration-android-74e6474/source/mobile/android/app/build/outputs/apk/release/app-release.apk"
+      ],
+      "cwd": "/home/brahma/.cache/schach-final-integration-android-74e6474/source",
+      "startedUTC": "2026-10-11T21:28:23Z",
+      "exitCode": 0,
+      "elapsedSeconds": 0.004,
+      "log": "final-apk-badging.log"
+    },
+    {
+      "name": "final-apk-permissions",
+      "command": [
+        "/tmp/schach-communication-tools-20261010/android-sdk/build-tools/36.0.0/aapt",
+        "dump",
+        "permissions",
+        "/home/brahma/.cache/schach-final-integration-android-74e6474/source/mobile/android/app/build/outputs/apk/release/app-release.apk"
+      ],
+      "cwd": "/home/brahma/.cache/schach-final-integration-android-74e6474/source",
+      "startedUTC": "2026-10-11T21:28:23Z",
+      "exitCode": 0,
+      "elapsedSeconds": 0.001,
+      "log": "final-apk-permissions.log"
+    }
+  ],
+  "physicalDevice": false,
+  "iOSBinary": false,
+  "organizationSigning": false,
+  "deviceActions": false,
+  "archiveSHA256": "165929414dae6aab684ad5c89bca9b8de8164abe96e874279f8955a87ae2d47b",
+  "sourceManifestSHA256": "e9c24ceaa7984dfff142f616b9f9407c3f719ef6ed7f44876680a20468e6df66",
+  "lockSHA256": "c5f6eb506c30dd3270af880f7fcc898413df22ecd0850a90c598c32777854818",
+  "appConfigSHA256": "d916ac5b57ccef6ffe89f994a4524c0682e2ac6605ebad43d4a66c2556bfc29e",
+  "dependencyProof": {
+    "installedPackageEntries": 897,
+    "mismatch": [],
+    "omittedOptionalEntries": [
+      "node_modules/@emnapi/core",
+      "node_modules/@emnapi/runtime",
+      "node_modules/@emnapi/wasi-threads",
+      "node_modules/@napi-rs/wasm-runtime",
+      "node_modules/@rolldown/binding-android-arm-eabi",
+      "node_modules/@rolldown/binding-android-arm64",
+      "node_modules/@rolldown/binding-darwin-arm64",
+      "node_modules/@rolldown/binding-darwin-x64",
+      "node_modules/@rolldown/binding-freebsd-x64",
+      "node_modules/@rolldown/binding-linux-arm-gnueabihf",
+      "node_modules/@rolldown/binding-linux-arm64-gnu",
+      "node_modules/@rolldown/binding-linux-arm64-musl",
+      "node_modules/@rolldown/binding-linux-ppc64-gnu",
+      "node_modules/@rolldown/binding-linux-s390x-gnu",
+      "node_modules/@rolldown/binding-openharmony-arm64",
+      "node_modules/@rolldown/binding-win32-arm64-msvc",
+      "node_modules/@rolldown/binding-win32-x64-msvc",
+      "node_modules/@tybys/wasm-util",
+      "node_modules/@unrs/resolver-binding-android-arm-eabi",
+      "node_modules/@unrs/resolver-binding-android-arm64",
+      "node_modules/@unrs/resolver-binding-darwin-arm64",
+      "node_modules/@unrs/resolver-binding-darwin-x64",
+      "node_modules/@unrs/resolver-binding-freebsd-x64",
+      "node_modules/@unrs/resolver-binding-linux-arm-gnueabihf",
+      "node_modules/@unrs/resolver-binding-linux-arm-musleabihf",
+      "node_modules/@unrs/resolver-binding-linux-arm64-gnu",
+      "node_modules/@unrs/resolver-binding-linux-arm64-musl",
+      "node_modules/@unrs/resolver-binding-linux-loong64-gnu",
+      "node_modules/@unrs/resolver-binding-linux-loong64-musl",
+      "node_modules/@unrs/resolver-binding-linux-ppc64-gnu",
+      "node_modules/@unrs/resolver-binding-linux-riscv64-gnu",
+      "node_modules/@unrs/resolver-binding-linux-riscv64-musl",
+      "node_modules/@unrs/resolver-binding-linux-s390x-gnu",
+      "node_modules/@unrs/resolver-binding-openharmony-arm64",
+      "node_modules/@unrs/resolver-binding-wasm32-wasi",
+      "node_modules/@unrs/resolver-binding-win32-arm64-msvc",
+      "node_modules/@unrs/resolver-binding-win32-ia32-msvc",
+      "node_modules/@unrs/resolver-binding-win32-x64-msvc",
+      "node_modules/fsevents",
+      "node_modules/lightningcss-android-arm64",
+      "node_modules/lightningcss-darwin-arm64",
+      "node_modules/lightningcss-darwin-x64",
+      "node_modules/lightningcss-freebsd-x64",
+      "node_modules/lightningcss-linux-arm-gnueabihf",
+      "node_modules/lightningcss-linux-arm64-gnu",
+      "node_modules/lightningcss-linux-arm64-musl",
+      "node_modules/lightningcss-win32-arm64-msvc",
+      "node_modules/lightningcss-win32-x64-msvc"
+    ],
+    "installedLockSHA256": "1ff0efc35caf973b4a599dada616b6cb6d51de8bd3c2011c925dc338e5864a9e"
+  },
+  "generatedConfigSHA256": {
+    "mobile/android/app/src/main/AndroidManifest.xml": "15af515f1c890f19787df2d49a59ce8848c59411f1e6cd0b651c4a5ede6d5532",
+    "mobile/android/app/build.gradle": "5a8f821a40a2d1e9a3eaf2f9375e2247afaa1a7e95827c561f1b8ba94d1ba558",
+    "mobile/android/gradle.properties": "d02b52da10bf3abb24279fd102df47694b8130a6b7fe6110cc47a9476ac8673c",
+    "mobile/ios/SchachWorkspace/Info.plist": "b00ed20b3a8f714e9c6b12d4ab3dcdc3b92dbeeb3cb0844b64e69ab5a302baee"
+  },
+  "elapsedSeconds": 27.541,
+  "toolchain": {
+    "jdkRoot": "/home/brahma/Projects/Schach_Workspace/.superpowers/sdd/2026-10-10-communication-implementation/tools/jdk-17.0.20.1+1",
+    "jdkJavaSHA256": "f5aed21d3a0b0f4b05d3a3f9fe71263916d5bc0d47b53aa52a3340b90f0b4805",
+    "sdkRoot": "/tmp/schach-communication-tools-20261010/android-sdk",
+    "gradleCache": "/home/brahma/.cache/schach-final-integration-android-74e6474/gradle-cache"
+  },
+  "resumeElapsedSeconds": 121.35,
+  "relocation": {
+    "reason": "Own/tmp compilation failed Disk quota exceeded; SSD has523Gfree",
+    "previousRoot": "/tmp/schach-final-android-zed2wtoe",
+    "ownedGeneratedIntermediatesRemoved": [
+      "mobile/android/build",
+      "mobile/android/.gradle",
+      "mobile/android/app/build",
+      "mobile/node_modules/react-native-worklets/android/build",
+      "mobile/node_modules/react-native-worklets/android/.cxx",
+      "mobile/node_modules/react-native-screens/android/build",
+      "mobile/node_modules/react-native-screens/android/.cxx",
+      "mobile/node_modules/react-native-safe-area-context/android/build",
+      "mobile/node_modules/react-native-reanimated/android/build",
+      "mobile/node_modules/react-native-reanimated/android/.cxx",
+      "mobile/node_modules/react-native-gesture-handler/android/build",
+      "mobile/node_modules/expo-updates-interface/android/build",
+      "mobile/node_modules/expo-modules-core/android/build",
+      "mobile/node_modules/expo-modules-core/android/.cxx",
+      "mobile/node_modules/expo-manifests/android/build",
+      "mobile/node_modules/expo-json-utils/android/build",
+      "mobile/node_modules/expo-dev-launcher/android/build",
+      "mobile/node_modules/expo-dev-menu-interface/android/build",
+      "mobile/node_modules/expo-dev-menu/android/build",
+      "mobile/node_modules/expo-dev-client/android/build",
+      "mobile/node_modules/expo-constants/android/build",
+      "mobile/node_modules/expo/android/build",
+      "mobile/node_modules/@react-native-community/datetimepicker/android/build",
+      "mobile/node_modules/@expo/log-box/android/build",
+      "mobile/node_modules/@react-native-masked-view/masked-view/android/build",
+      "mobile/node_modules/@livekit/react-native-expo-plugin/android/build",
+      "mobile/node_modules/@livekit/react-native/android/build",
+      "mobile/node_modules/@livekit/react-native-webrtc/android/build",
+      "mobile/node_modules/@livekit/react-native-webrtc/android/.gradle"
+    ],
+    "cacheCopy": "Authorized existing tool cache copied to private SSD root; original retained",
+    "javaTempRoot": "/home/brahma/.cache/schach-final-integration-android-74e6474/tmp",
+    "gradleCacheRoot": "/home/brahma/.cache/schach-final-integration-android-74e6474/gradle-cache"
+  },
+  "apk": "/home/brahma/.cache/schach-final-integration-android-74e6474/source/mobile/android/app/build/outputs/apk/release/app-release.apk",
+  "apkBytes": 98206840,
+  "apkSHA256": "b6418f127e03b8dec0ba2bccb550cf305c807ee95cd2261e489b7924b2e5e3a5",
+  "abis": [
+    "arm64-v8a",
+    "x86_64"
+  ],
+  "embeddedBundle": {
+    "path": "assets/index.android.bundle",
+    "bytes": 4618132,
+    "sha256": "b78fe096f4a810d45e5de10674417be5b81fa1721a205319a030b8eb6218e994",
+    "magicHex": "c61fbc03c103191f"
+  },
+  "signing": "Android Debug evaluation certificate; not organization/store signing",
+  "signerCertificateSHA256": "fac61745dc0903786fb9ede62a962b399f7348f0bb6f899b8332667591033b9c",
+  "package": "in.schach.workspace",
+  "versionName": "1.0.0",
+  "releaseDebuggable": false
+}

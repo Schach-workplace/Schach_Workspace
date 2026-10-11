@@ -1,0 +1,14 @@
+{
+  "name": "final-lazy-demo-build",
+  "cwd": "frontend",
+  "command": [
+    "npm",
+    "run",
+    "build:demo"
+  ],
+  "head": "47bfbae52166a91fdb971357c039b27d65b3ade6",
+  "exitCode": 0,
+  "elapsedSeconds": 0.769,
+  "log": "final-lazy-demo-build.log",
+  "inputManifest": "final-lazy-demo-build-inputs.json"
+}

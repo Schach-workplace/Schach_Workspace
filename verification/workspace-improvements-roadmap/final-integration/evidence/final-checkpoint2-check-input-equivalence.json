@@ -1,0 +1,61 @@
+{
+  "headBeforeCommit": "47bfbae52166a91fdb971357c039b27d65b3ade6",
+  "checks": {
+    "final-stable-web": {
+      "relevantInputs": 217,
+      "mismatch": [],
+      "otherDrift": [
+        "preview.html",
+        "verification/preview-result.json"
+      ]
+    },
+    "final-stable-native": {
+      "relevantInputs": 207,
+      "mismatch": [],
+      "otherDrift": [
+        "preview.html",
+        "verification/preview-result.json"
+      ]
+    },
+    "final-native-picker-types": {
+      "relevantInputs": 207,
+      "mismatch": [],
+      "otherDrift": [
+        "preview.html",
+        "verification/preview-result.json"
+      ]
+    },
+    "final-native-picker-lint": {
+      "relevantInputs": 207,
+      "mismatch": [],
+      "otherDrift": [
+        "preview.html",
+        "verification/preview-result.json"
+      ]
+    },
+    "final-runtime-command-env-owning-green": {
+      "relevantInputs": 39,
+      "mismatch": [],
+      "otherDrift": [
+        "preview.html",
+        "verification/preview-result.json"
+      ]
+    },
+    "final-stable-normal-build": {
+      "relevantInputs": 217,
+      "mismatch": [],
+      "otherDrift": [
+        "preview.html",
+        "verification/preview-result.json"
+      ]
+    },
+    "final-stable-demo-build": {
+      "relevantInputs": 217,
+      "mismatch": [],
+      "otherDrift": [
+        "preview.html",
+        "verification/preview-result.json"
+      ]
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "name": "final-current-browser",
+  "cwd": ".",
+  "command": [
+    "python3",
+    ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/final_browser_runtime.py",
+    "/tmp/schach-final-integration-runtime-20261012-2228110"
+  ],
+  "head": "74e6474b8ea80c86d2505de1561de56453c7356f",
+  "runnerSHA256": "7833e80f7331a6c92fa511789d39ee44abd092bd87f771cd5bd8351d9926b6dc",
+  "commandFileInputs": {
+    ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/final_browser_runtime.py": "3a375a3f287b6d60b7ed7ab74cc6db9a768f742907fcf8d7c8c7269f1c022967"
+  },
+  "exitCode": 0,
+  "elapsedSeconds": 3.503,
+  "log": "final-current-browser.log",
+  "inputManifest": "final-current-browser-inputs.json"
+}

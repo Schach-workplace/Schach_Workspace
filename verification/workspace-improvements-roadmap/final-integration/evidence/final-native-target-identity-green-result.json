@@ -1,0 +1,16 @@
+{
+  "name": "final-native-target-identity-green",
+  "cwd": "mobile",
+  "command": [
+    "npm",
+    "test",
+    "--",
+    "src/WorkScreen.test.tsx",
+    "src/TaskRoute.test.tsx"
+  ],
+  "head": "47bfbae52166a91fdb971357c039b27d65b3ade6",
+  "exitCode": 0,
+  "elapsedSeconds": 0.717,
+  "log": "final-native-target-identity-green.log",
+  "inputManifest": "final-native-target-identity-green-inputs.json"
+}

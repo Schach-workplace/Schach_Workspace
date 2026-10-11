@@ -4,6 +4,23 @@
 
 Local acceptance does not certify physical Android/iOS, an iOS binary, organizational signing, India HTTPS/TURN/push deployment, disaster-recovery objectives, production capacity or Hindi/private-business model quality. Existing failing preliminary predicates, limited native positive cases and raw neutral200 versus an expected404 remain in their source-qualified records. No new inference is required for final client/doc/harness changes.
 
+### Final integration source and build record — 12 October 2026
+
+Native/APK checkpoint `74e6474b8ea80c86d2505de1561de56453c7356f` and the subsequent web readiness correction have [source, command, build and safe evidence manifests](../verification/workspace-improvements-roadmap/final-integration/publication-report.md). Exact before-command inputs and earlier failures are retained; the final checks below used equivalent owning product bytes.
+
+| Executed check | Actual result and scope |
+| --- | --- |
+| Full clients, types and lint | 348 tests in 71 web files and 352 tests in 52 native files passed. Web build's `tsc --noEmit`, native typecheck and lint passed; final lint has zero errors and warnings. |
+| Formatting | All 45 changed client/shared sources passed. Full web formatting fails on 13 files byte-identical to the accepted base; this inherited failure is qualified, not a clean full-format gate. |
+| Normal build and actual chunks | Entry 663.83 kB, deferred Connect 57.38 kB and assistance Panel 23.97 kB. Chromium requests load those modules only on their own navigation/open; no chunk exceeds the configured 900 kB threshold. |
+| Demo and offline preview | Intentionally single-entry demo 1,641.21 kB retains the 900 kB warning. Fourteen compiled Happy DOM checks and actual file-preview Chromium Connect/manual assistance at 320/375/430 px with 20 px root text passed without horizontal overflow or external/module requests. |
+| Planning / People runtime | Fresh current-58/checksum-idempotent repeats, populated 47→58 / 49→58 upgrades, PostgreSQL and SQLite APIs, and selected real Chromium cases passed (20 / 29 steps). Each harness joined two owned children and dropped only its two disposable schemas. |
+| Backend / Encore / SQL | All 475 backend/Encore files are byte-identical to accepted `98b7`; all 58 up/down SQL pairs mirror exactly. Stable broad race/provider/Encore runtime checks were not repeated for client/document changes. |
+| Hermes exports | Android and iOS exports passed. Metro children still emitted two `NO_COLOR`/`FORCE_COLOR` warnings despite runner scrub; these exports do not establish an iOS binary or device result. |
+| Android evaluation binary | [Exact-source APK manifest](../verification/workspace-improvements-roadmap/final-integration/evidence/final-apk-build.json): 98,206,840 bytes, SHA-256 `b6418f127e03b8dec0ba2bccb550cf305c807ee95cd2261e489b7924b2e5e3a5`, arm64-v8a/x86_64, embedded Hermes and verified Android Debug evaluation certificate. Missing-Java/tmpfs user-quota failures precede the successful isolated SSD build. Dependency/Gradle and `expo-system-ui` advisories remain qualified. |
+
+Actual current Goal geometry and isolated release launch/Auth acceptance are separate controller-owned results. Release restore rejects a retained HTTP origin and can delete its stored token, so release evaluation uses a separate isolated AVD. Protected HTTPS authentication remains unverified without an authorized trusted target. A current-JS development-shell Goal geometry result is a composite result, not release APK authentication evidence.
+
 
 **Local continuation, 10 October 2026:** [Fresh native baseline and failures](LOCAL_BASELINE_2026-10-10.md) records successful PostgreSQL, TCP, browser and Compose checks on the current host, plus three Encore adapter source defects. The original environment limits below are historical; the new record distinguishes the unchanged adapter from its disposable corrected diagnostic copy.
 

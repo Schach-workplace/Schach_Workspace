@@ -1,0 +1,15 @@
+{
+  "name": "final-launcher-lazy-red",
+  "cwd": "frontend",
+  "command": [
+    "npm",
+    "test",
+    "--",
+    "src/components/IntelligenceLauncher.test.tsx"
+  ],
+  "head": "47bfbae52166a91fdb971357c039b27d65b3ade6",
+  "exitCode": 1,
+  "elapsedSeconds": 0.497,
+  "log": "final-launcher-lazy-red.log",
+  "inputManifest": "final-launcher-lazy-red-inputs.json"
+}

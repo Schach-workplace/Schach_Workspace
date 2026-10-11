@@ -1,0 +1,16 @@
+{
+  "name": "final-native-target-lint-correction",
+  "cwd": "mobile",
+  "command": [
+    "npm",
+    "test",
+    "--",
+    "src/WorkScreen.test.tsx",
+    "src/TaskRoute.test.tsx"
+  ],
+  "head": "47bfbae52166a91fdb971357c039b27d65b3ade6",
+  "exitCode": 0,
+  "elapsedSeconds": 0.863,
+  "log": "final-native-target-lint-correction.log",
+  "inputManifest": "final-native-target-lint-correction-inputs.json"
+}

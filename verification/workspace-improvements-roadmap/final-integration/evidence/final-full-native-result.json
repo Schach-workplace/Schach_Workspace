@@ -1,0 +1,13 @@
+{
+  "name": "final-full-native",
+  "cwd": "mobile",
+  "command": [
+    "npm",
+    "test"
+  ],
+  "head": "47bfbae52166a91fdb971357c039b27d65b3ade6",
+  "exitCode": 1,
+  "elapsedSeconds": 66.24,
+  "log": "final-full-native.log",
+  "inputManifest": "final-full-native-inputs.json"
+}

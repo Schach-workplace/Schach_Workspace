@@ -1,0 +1,17 @@
+{
+  "name": "final-goal-copy-red",
+  "cwd": "frontend",
+  "command": [
+    "npm",
+    "test",
+    "--",
+    "src/components/GoalRecovery.test.tsx",
+    "-t",
+    "rejected metadata"
+  ],
+  "head": "bc3b7c71f840b78f277d70d55b8d2674257af01f",
+  "exitCode": 1,
+  "elapsedSeconds": 1.953,
+  "log": "final-goal-copy-red.log",
+  "inputManifest": "final-goal-copy-red-inputs.json"
+}

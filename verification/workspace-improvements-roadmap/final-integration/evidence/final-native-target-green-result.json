@@ -1,0 +1,16 @@
+{
+  "name": "final-native-target-green",
+  "cwd": "mobile",
+  "command": [
+    "npm",
+    "test",
+    "--",
+    "src/WorkScreen.test.tsx",
+    "src/TaskRoute.test.tsx"
+  ],
+  "head": "bc3b7c71f840b78f277d70d55b8d2674257af01f",
+  "exitCode": 0,
+  "elapsedSeconds": 0.789,
+  "log": "final-native-target-green.log",
+  "inputManifest": "final-native-target-green-inputs.json"
+}

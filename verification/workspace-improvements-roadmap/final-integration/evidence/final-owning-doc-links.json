@@ -1,0 +1,15 @@
+{
+  "checkedFiles": [
+    "README.md",
+    "mobile/README.md",
+    "docs/API_CONTRACT.md",
+    "docs/OPERATIONS.md",
+    "docs/PEOPLE_ADMINISTRATION.md",
+    "docs/SECURITY_AND_LIMITATIONS.md",
+    "docs/VERIFICATION.md",
+    "docs/reports-storage.md",
+    "docs/PLANNING_AND_GOALS.md"
+  ],
+  "localLinks": 73,
+  "missing": []
+}

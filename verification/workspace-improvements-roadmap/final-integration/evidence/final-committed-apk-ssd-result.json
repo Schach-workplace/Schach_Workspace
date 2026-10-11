@@ -1,0 +1,17 @@
+{
+  "name": "final-committed-apk-ssd",
+  "cwd": ".",
+  "command": [
+    "python3",
+    ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/final_apk_resume.py"
+  ],
+  "head": "74e6474b8ea80c86d2505de1561de56453c7356f",
+  "runnerSHA256": "7833e80f7331a6c92fa511789d39ee44abd092bd87f771cd5bd8351d9926b6dc",
+  "commandFileInputs": {
+    ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/final_apk_resume.py": "e86c1db62117b7f947854967a1c04e569e7b29b99882df4c2cd84cd0237055f8"
+  },
+  "exitCode": 0,
+  "elapsedSeconds": 121.376,
+  "log": "final-committed-apk-ssd.log",
+  "inputManifest": "final-committed-apk-ssd-inputs.json"
+}

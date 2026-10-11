@@ -1,0 +1,220 @@
+{
+  "verifiedUTC": "2026-10-11T21:47:33.455180+00:00",
+  "status": "PASS_CURRENT_AFFECTED_WEB_SOURCE",
+  "currentHEAD": "74e6474b8ea80c86d2505de1561de56453c7356f",
+  "checks": [
+    {
+      "name": "final-current-web",
+      "exitCode": 0,
+      "currentRelevantInputs": 217,
+      "logSHA256": "fe1207ddf14d4ed0e488bcb1a717622901339b02801d61e351b173031a96f4f7"
+    },
+    {
+      "name": "final-current-normal-build",
+      "exitCode": 0,
+      "currentRelevantInputs": 217,
+      "logSHA256": "408a4bcbc55a59d715d0a980ddd1c4c535553f369e97f92d262acffd024e4198"
+    },
+    {
+      "name": "final-current-demo-build",
+      "exitCode": 0,
+      "currentRelevantInputs": 217,
+      "logSHA256": "90190ea708dfe37683e28ec2a2280827d2b0232a7d4ba0dde24d128ffddf6823"
+    },
+    {
+      "name": "final-current-preview-generation",
+      "exitCode": 0,
+      "currentRelevantInputs": 218,
+      "logSHA256": "e66eb6c536e84fb1f943adf2e4945a710bc4300ca53c310c912d06a5cc8262be"
+    },
+    {
+      "name": "final-current-preview",
+      "exitCode": 0,
+      "currentRelevantInputs": 217,
+      "logSHA256": "e00dffbcc54cb82e44cac5ec5ea54de8f4556bcd7898b8bf36f222459839363c"
+    },
+    {
+      "name": "final-current-browser",
+      "exitCode": 0,
+      "currentRelevantInputs": 218,
+      "logSHA256": "5367ffe2cb952f272061cd154b2bc5a1ad9333aa8115caabe100372b8dd5e87f"
+    },
+    {
+      "name": "final-web-structured-readiness-green",
+      "exitCode": 0,
+      "currentRelevantInputs": 217,
+      "logSHA256": "44629692f10702b70f3b423d81f9a76cae29387cb947e337f46ac8591e455f9b"
+    },
+    {
+      "name": "final-web-structured-readiness-format",
+      "exitCode": 0,
+      "currentRelevantInputs": 217,
+      "logSHA256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+    }
+  ],
+  "inputComparisons": 1738,
+  "errors": [],
+  "nativeCompiledSourcesUnchanged": 205,
+  "nativeDocumentationDrift": [
+    "mobile/README.md"
+  ],
+  "artifacts": [
+    {
+      "path": "frontend/dist/assets/Calls-C7z1-d2S.css",
+      "bytes": 19294,
+      "sha256": "54beb6fa5d06a09fa3ee837b8c1cc5543666ddf317e7859b91167c15a977edb7"
+    },
+    {
+      "path": "frontend/dist/assets/Calls-CHo4iss1.js",
+      "bytes": 649390,
+      "sha256": "79d387c9eeb041060c9bb019b78b2a0424ce8d6d10511f290c3a9f3096f52d3e"
+    },
+    {
+      "path": "frontend/dist/assets/Connect-BeKoMNCw.css",
+      "bytes": 14202,
+      "sha256": "1a3e159a14e03844233491e7c545b445d5e4e02ed944cfc78698b6a3a2c622c0"
+    },
+    {
+      "path": "frontend/dist/assets/Connect-DpZFqmn8.js",
+      "bytes": 57386,
+      "sha256": "3d4ea57d77d7082d81bce266ff19a4115bfcef1f5ea211fe818ff0088009ef51"
+    },
+    {
+      "path": "frontend/dist/assets/IntelligencePanel-B97PnnMJ.js",
+      "bytes": 23971,
+      "sha256": "b875dc02ff763ca1d849466b9b1eb9ff333381874bad8fa98f1d734f81dff0b2"
+    },
+    {
+      "path": "frontend/dist/assets/api-BBytNeRx.js",
+      "bytes": 14145,
+      "sha256": "0b850ee181f10e891b16dabf1b539c579f78e5d7d59ecaed5256348cda13f614"
+    },
+    {
+      "path": "frontend/dist/assets/index-BXXJPnX8.js",
+      "bytes": 663835,
+      "sha256": "4a1662b09872bda6857f27feb40b12cec79f38b7f7bfe28023884ca3965bbf02"
+    },
+    {
+      "path": "frontend/dist/assets/index-XiXHNXPQ.css",
+      "bytes": 148018,
+      "sha256": "c09bc8d9dd2309c3aac313274df2e65362eab9b40f644a16f1c74b7434c3cd8a"
+    },
+    {
+      "path": "frontend/dist/assets/store-4UyzfX3B.js",
+      "bytes": 172759,
+      "sha256": "09c2913328045dccc1472cc1f75315b1d482e07e2d7ae7715c242be0d5485f54"
+    },
+    {
+      "path": "frontend/dist/favicon.svg",
+      "bytes": 183,
+      "sha256": "ed1551c8e4a888081ab0b4b9d2a7d29c2b07e314e44519ba785b3370572be705"
+    },
+    {
+      "path": "frontend/dist/fonts/README.md",
+      "bytes": 2531,
+      "sha256": "e6fea2391466c9ce75d3954dd7e9a946f8457be65641347d265bf2787a221ae3"
+    },
+    {
+      "path": "frontend/dist/fonts/chivo-OFL.txt",
+      "bytes": 4385,
+      "sha256": "c9b69fa18c372df2b187b49efc57b1ea643b86a938e5af32f6b5a7af1017c891"
+    },
+    {
+      "path": "frontend/dist/fonts/chivo-latin-variable.woff2",
+      "bytes": 33252,
+      "sha256": "4b1f32027ce991997893f63a6b3bfd6ed887f1628b7baa2d3390d86bc67f6e28"
+    },
+    {
+      "path": "frontend/dist/fonts/ibm-plex-sans-OFL.txt",
+      "bytes": 4456,
+      "sha256": "7e6b2818edbd8f6a01ae80641cc8f16a51080d08fb4e532be3a0b6f74adb07da"
+    },
+    {
+      "path": "frontend/dist/fonts/ibm-plex-sans-latin-variable.woff2",
+      "bytes": 40240,
+      "sha256": "056e4e2459f57a0033c8c9c844ff19d6e42ac8602027803d4345823bcc939818"
+    },
+    {
+      "path": "frontend/dist/index.html",
+      "bytes": 824,
+      "sha256": "00d3873229bd1c7002fe3ed000960db7f2db8def9fb7946adcb9fa2d7864d282"
+    },
+    {
+      "path": "frontend/dist/schach-logo.webp",
+      "bytes": 12890,
+      "sha256": "ae8586a0dedf0c3ee3ee3f7802105f32756036a658a73016855b2379aa32fa13"
+    },
+    {
+      "path": "frontend/dist-demo/assets/index-BdqKRPzs.js",
+      "bytes": 1641213,
+      "sha256": "921d3c172a0dbb125cbb1e59ed214ef906673caaac7ccca854d17148bc45d51d"
+    },
+    {
+      "path": "frontend/dist-demo/assets/style-DucA98Ah.css",
+      "bytes": 181524,
+      "sha256": "e0f6f626f4bb8ffed21366479a21a691796243f953d3c40a60b83ee756a9fb14"
+    },
+    {
+      "path": "frontend/dist-demo/favicon.svg",
+      "bytes": 183,
+      "sha256": "ed1551c8e4a888081ab0b4b9d2a7d29c2b07e314e44519ba785b3370572be705"
+    },
+    {
+      "path": "frontend/dist-demo/fonts/README.md",
+      "bytes": 2531,
+      "sha256": "e6fea2391466c9ce75d3954dd7e9a946f8457be65641347d265bf2787a221ae3"
+    },
+    {
+      "path": "frontend/dist-demo/fonts/chivo-OFL.txt",
+      "bytes": 4385,
+      "sha256": "c9b69fa18c372df2b187b49efc57b1ea643b86a938e5af32f6b5a7af1017c891"
+    },
+    {
+      "path": "frontend/dist-demo/fonts/chivo-latin-variable.woff2",
+      "bytes": 33252,
+      "sha256": "4b1f32027ce991997893f63a6b3bfd6ed887f1628b7baa2d3390d86bc67f6e28"
+    },
+    {
+      "path": "frontend/dist-demo/fonts/ibm-plex-sans-OFL.txt",
+      "bytes": 4456,
+      "sha256": "7e6b2818edbd8f6a01ae80641cc8f16a51080d08fb4e532be3a0b6f74adb07da"
+    },
+    {
+      "path": "frontend/dist-demo/fonts/ibm-plex-sans-latin-variable.woff2",
+      "bytes": 40240,
+      "sha256": "056e4e2459f57a0033c8c9c844ff19d6e42ac8602027803d4345823bcc939818"
+    },
+    {
+      "path": "frontend/dist-demo/index.html",
+      "bytes": 672,
+      "sha256": "48c49000926b7c3048f4cf05458ad3a959d6ce2e1e01d638ca2f200e31bd3b82"
+    },
+    {
+      "path": "frontend/dist-demo/schach-logo.webp",
+      "bytes": 12890,
+      "sha256": "ae8586a0dedf0c3ee3ee3f7802105f32756036a658a73016855b2379aa32fa13"
+    },
+    {
+      "path": "preview.html",
+      "bytes": 1955936,
+      "sha256": "dc445cca55ba218643e256e0e27a92953756d22bf332a7eb9fc189ff9fc2a747"
+    },
+    {
+      "path": "verification/preview-result.json",
+      "bytes": 1148,
+      "sha256": "7cfe70bf4d0cbbfaab2c0375fc130a8cb49d20ba6fb92ccb9cfd767060683c10"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/final-browser-offline-chunks.json",
+      "bytes": 1564,
+      "sha256": "2ba6a9af61fd98e9fdcbe8b101a13acaeaf2c50817e9d10b587b4b575c9f9a3c"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/final-browser-runtime-ownership.json",
+      "bytes": 397,
+      "sha256": "eb02ebeff69822a1d69de135666879e17301b35b8ba6524493d79a9444a60998"
+    }
+  ],
+  "fullLogsRead": true,
+  "qualification": "Current source+producer checks verified before natural committedcheckpoint; currentweb348/71+scoped6/typesvia builds/preview14/actualChromium2. Native/APK unchanged207source with README-only drift; no repeatedbackend/nativechecks. Demo900KB/VMmoduleswarning retained. Not finalreview/installedAPK/TLS/cutover."
+}

@@ -1,0 +1,14 @@
+{
+  "name": "final-native-lint-owning",
+  "cwd": "mobile",
+  "command": [
+    "npm",
+    "run",
+    "lint"
+  ],
+  "head": "47bfbae52166a91fdb971357c039b27d65b3ade6",
+  "exitCode": 0,
+  "elapsedSeconds": 1.33,
+  "log": "final-native-lint-owning.log",
+  "inputManifest": "final-native-lint-owning-inputs.json"
+}
