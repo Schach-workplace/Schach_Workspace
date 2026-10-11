@@ -1,0 +1,18 @@
+{
+  "updatedUtc": "2026-10-11T23:08:40.306399+00:00",
+  "reviewedFixBase": "2e8fb06b5f62abb550df0e7aa8e8de0fac4be028",
+  "reviewedFixHead": "dff8ddc045b7bec32b41ac3e4f8847938c4f3de3",
+  "productSourceHead": "ebc994dc6c2be442db595e468a716139b56ed721",
+  "reportFullyRead": true,
+  "spec": "PASS",
+  "quality": "PASS",
+  "findings": {
+    "I1": "ADDRESSED",
+    "I2": "ADDRESSED",
+    "I3": "ADDRESSED"
+  },
+  "newFindings": [],
+  "readyToMerge": true,
+  "retainedBehaviorDispositions": "../final-review/evidence/controller-final-review-declined-behavior-dispositions.json",
+  "qualification": "All17 separately retained:12external gates/4qualifiedlimits/1pending rootcutover. Current CSV already-written/in-flight copies unrecalled. This disposition accepts frozen source and safe proof; actual backup/main/runtime/push remains pending."
+}

@@ -1,0 +1,18 @@
+{
+  "updatedUtc": "2026-10-11T23:02:43.036556+00:00",
+  "sameUidConfiguredConsumers": [],
+  "sameUidUnreadableEnvironments": 2,
+  "departedDuringRead": 1,
+  "historicalNativeProcessesAbsent": true,
+  "qualification": "Read-only configuration/process observation; completed native fixture remains absent. Does not certify production capacity or external consumers; recheck immediately before own optional-provider activation. First scan process disappeared while reading environ; ordinary observation race, not application crash.",
+  "unreadableEnvironmentDispositions": [
+    {
+      "process": "systemd user manager",
+      "reason": "not an application/provider worker; comm and short launcher argument shape inspected read-only"
+    },
+    {
+      "process": "sd-pam user session",
+      "reason": "not an application/provider worker; comm and short launcher argument shape inspected read-only"
+    }
+  ]
+}

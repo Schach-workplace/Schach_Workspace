@@ -1,0 +1,26 @@
+{
+  "total": 110,
+  "order": [
+    {
+      "first": 1,
+      "last": 97,
+      "path": "../milestone-10/evidence/controller-rulings-current-extract.md"
+    },
+    {
+      "first": 98,
+      "last": 108,
+      "path": "../final-integration/evidence/controller-final-integration-rulings-public-addendum.md"
+    },
+    {
+      "first": 109,
+      "last": 109,
+      "path": "../final-review/evidence/controller-final-review-ruling-109-public.md"
+    },
+    {
+      "first": 110,
+      "last": 110,
+      "path": "ruling-110-local-runtime-configuration.md"
+    }
+  ],
+  "qualification": "Every ordered ruling, with rationale and cost, preserved in approved immutable publications plus this appended configuration ruling. Full private ledger will be archived before only-this-plan cleanup."
+}

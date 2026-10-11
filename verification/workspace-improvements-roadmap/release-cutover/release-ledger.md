@@ -1,0 +1,7 @@
+# Durable Schach release and recovery ledger
+
+Updated UTC 2026-10-11T23:08:40.306399+00:00. Root owns authorized final integration; all source/reviewer owners yielded. All10features accepted qualified; final fix dff8ddc/productebc994d scoped review PASS/mergeYES. Current Go/PG/race/standalone/Encore/vet input-bound checks and fresh private Go/NORMAL builds pass. Existing app/main still d200/8080 until preserved-data cutover.
+
+Read scoped-review.md, scoped-review-disposition.json, fix-controller-proof.json, current-build-proof.json, ordered-rulings-index.json and docs/AI_HANDOFF.md/AI_CHECKLIST.md/AI_FILE_INDEX.json. Next complete private ownSDD recovery archive/everyfilecompare, repoint recoverydocs, only-own-SDD cleanup after all110orderedrulings safely published; fresh private stopped-user backup/fulltypedcompare/MigrateONLYcopyfirst/actual/mainFF/NORMALstart/authbrowser/data checks/safeZIP/privatefeature+mainpush. No seed/reset/secretoutput/providerinference.
+
+All17original declined behaviors remain individually disposed in ../final-review/evidence/controller-final-review-declined-behavior-dispositions.json. Physical/iOS/orgsigning/IndiaTLS/TURN/APNSFCM/RPOrestore/Hindiquality/productioncapacity remain unverified. Metadata after dff is outside frozen review and does not change product code. Keep user stashes and useful feature worktree/branch. Historical process IDs require fresh identity checks before signals.

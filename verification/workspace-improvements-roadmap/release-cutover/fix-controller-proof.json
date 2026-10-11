@@ -1,0 +1,15 @@
+{
+  "updatedUtc": "2026-10-11T22:59:57.143923+00:00",
+  "head": "dff8ddc045b7bec32b41ac3e4f8847938c4f3de3",
+  "fixBase": "2e8fb06b5f62abb550df0e7aa8e8de0fac4be028",
+  "productSourceCommit": "ebc994dc6c2be442db595e468a716139b56ed721",
+  "safeRecords": 74,
+  "sourceRecords": 516,
+  "originalCheckRecordsReadAndHashed": 27,
+  "finalCurrentChecks": 6,
+  "priorImmutablePublishedFiles": 785,
+  "compiledNativeEquivalentFiles": 205,
+  "immutableMirroredSQLFiles": 116,
+  "errors": [],
+  "qualification": "Controller independent committed-byte/input/output/preservation/resource audit. Source-qualified original failures retained. Scoped reviewer verdict and root runtime/data/main/push cutover remain separate pending gates."
+}
