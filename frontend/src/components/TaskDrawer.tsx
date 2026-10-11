@@ -13,7 +13,7 @@ import {
   retireAttempt,
 } from '../data/businessAttempts';
 import { deadlineCandidates, localDeadline, deadlineChanged } from '../data/deadlines';
-import { useEffect, useRef, useState, type FormEvent } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState, type FormEvent } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 import {
   ArrowDownToLine,
@@ -141,7 +141,7 @@ function TaskDrawerBody({
   resolvedTask,
   resolvedPeople,
   taskId,
-  onClose,
+  onClose: closeCaller,
   initialProject = '',
 }: {
   onAssist: () => void;
@@ -154,6 +154,18 @@ function TaskDrawerBody({
   initialProject?: string;
 }) {
   const store = useWorkspace();
+  const completionOwner = useMemo(() => ({}), [memory, taskId]);
+  const activeCompletionOwner = useRef<object | null>(null);
+  useLayoutEffect(() => {
+    activeCompletionOwner.current = completionOwner;
+    return () => {
+      if (activeCompletionOwner.current === completionOwner) activeCompletionOwner.current = null;
+    };
+  }, [completionOwner]);
+  const currentCompletion = () => activeCompletionOwner.current === completionOwner;
+  const onClose = () => {
+    if (currentCompletion()) closeCaller();
+  };
   const data = {
     ...store.data!,
     people: Array.from(
@@ -304,7 +316,10 @@ function TaskDrawerBody({
     } catch (e) {
       if (!task && e instanceof ApiError && [401, 403, 404].includes(e.status))
         clearAttemptScope(business.scope);
-      setError(e instanceof Error ? e.message : 'The change could not be saved. Please try again.');
+      if (currentCompletion())
+        setError(
+          e instanceof Error ? e.message : 'The change could not be saved. Please try again.',
+        );
     }
   }
   const submitting = useRef(false);
@@ -384,7 +399,7 @@ function TaskDrawerBody({
     if (!task || !comment.trim()) return;
     await perform(async () => {
       await store.mutate(`/tasks/${task.id}/comments`, { body: comment.trim() });
-      setComment('');
+      if (currentCompletion()) setComment('');
     });
   }
   async function logTime(event: FormEvent) {
@@ -396,8 +411,10 @@ function TaskDrawerBody({
         date: timeDate,
         note: timeNote,
       });
-      setTimeNote('');
-      setHours('1');
+      if (currentCompletion()) {
+        setTimeNote('');
+        setHours('1');
+      }
     });
   }
   const activity = task
@@ -1096,7 +1113,7 @@ function TaskDrawerBody({
                           comment: reviewComment,
                           version: task.version,
                         });
-                        setReviewComment('');
+                        if (currentCompletion()) setReviewComment('');
                       })
                     }
                   >
@@ -1112,7 +1129,7 @@ function TaskDrawerBody({
                           comment: reviewComment,
                           version: task.version,
                         });
-                        setReviewComment('');
+                        if (currentCompletion()) setReviewComment('');
                       })
                     }
                   >

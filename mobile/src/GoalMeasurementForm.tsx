@@ -1,3 +1,4 @@
+import { entityRecoveryError } from "../../shared/business/recoveryCopy";
 import { frozenGoalDraft } from "../../shared/goals/recovery";
 import { useEffect, useEffectEvent, useState } from "react";
 import { Text, TextInput, View } from "react-native";
@@ -129,7 +130,7 @@ export default function GoalMeasurementForm({
         },
       );
     } catch (e) {
-      setError((e as Error).message);
+      setError(entityRecoveryError(e, "goal"));
     }
   }
   const header = (

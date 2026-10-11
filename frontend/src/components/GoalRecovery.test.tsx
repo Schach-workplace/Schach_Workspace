@@ -71,7 +71,9 @@ afterEach(() => {
 it('discards rejected metadata explicitly, then loads fresh fields and version across remount without implicit rebase', async () => {
   s.mutate
     .mockRejectedValueOnce(new ApiError('Invalid metadata', 422, 'validation'))
-    .mockRejectedValueOnce(new ApiError('Stale goal', 409, 'conflict'))
+    .mockRejectedValueOnce(
+      new ApiError('This task changed since you opened it.', 409, 'version_conflict'),
+    )
     .mockResolvedValue({ ok: true, id: 'recovery' });
   const item = { ...s.goal };
   mount(<GoalMetadataForm item={item} ready onClose={() => {}} />);
@@ -84,6 +86,7 @@ it('discards rejected metadata explicitly, then loads fresh fields and version a
   fireEvent.change(screen.getByLabelText('Goal name'), { target: { value: 'Corrected' } });
   fireEvent.submit(screen.getByLabelText('Goal name').closest('form')!);
   await waitFor(() => expect(s.mutate).toHaveBeenCalledTimes(2));
+  expect(await screen.findByText(/This goal changed/)).toBeTruthy();
   expect(s.mutate.mock.calls[1][1].name).toBe('Corrected');
   expect(s.mutate.mock.calls[1][1].retryKey).not.toBe(first.retryKey);
   cleanup();

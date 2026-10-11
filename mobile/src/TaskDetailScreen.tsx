@@ -2,7 +2,13 @@ import IntelligenceLauncher from "./IntelligenceLauncher";
 import { NativeImpact, NativeSchedule, NativeTemplates } from "./Execution";
 import { readNativeDetail } from "./readScopes";
 import CaptureControl from "./CaptureControl";
-import { useEffect, useEffectEvent, useRef, useState } from "react";
+import {
+  useEffect,
+  useEffectEvent,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import { Text, TextInput, View } from "react-native";
 import { router } from "expo-router";
 import { Page, useWorkspace, type WorkTask } from "./Workspace";
@@ -20,11 +26,28 @@ export default function TaskDetailScreen({ id }: { id: string }) {
     "templates" | "impact" | "schedule" | ""
   >("");
   const [reason, setReason] = useRamInput("$task:" + id, "reason", "");
-  const pending = useRef(false);
+  const pending = useRef<object | null>(null);
+  const completionOwner = useRef<object | null>(null);
   const alive = useRef(true);
   const requestRevision = useRef(0);
   const editable = !!w.work && w.work.me.role !== "viewer";
   const zone = w.work?.company.timezone ?? "Asia/Kolkata";
+  useLayoutEffect(() => {
+    const owner = {};
+    completionOwner.current = owner;
+    pending.current = null;
+    setBusy(false);
+    return () => {
+      if (completionOwner.current === owner) completionOwner.current = null;
+    };
+  }, [
+    id,
+    w.company,
+    w.session?.user.id,
+    w.work?.readBasis,
+    w.policyEpoch,
+    w.foreground,
+  ]);
   async function load() {
     if (!w.foreground || !w.work) return;
     const revision = ++requestRevision.current;
@@ -76,7 +99,14 @@ export default function TaskDetailScreen({ id }: { id: string }) {
   }
   function actOnTask(current: WorkTask, status: string, review = false) {
     if (pending.current || !editable) return;
-    pending.current = true;
+    const attempt = {};
+    const owner = completionOwner.current;
+    const generation = client.generation;
+    const currentAttempt = () =>
+      owner !== null &&
+      completionOwner.current === owner &&
+      client.generation === generation;
+    pending.current = attempt;
     setBusy(true);
     setError("");
     void (async () => {
@@ -85,6 +115,7 @@ export default function TaskDetailScreen({ id }: { id: string }) {
         `/companies/${w.company}/tasks/${id}`,
         "task",
       );
+      if (!currentAttempt()) return;
       if (fresh.task.version !== current.version) {
         setTask(fresh.task);
         await w.refresh("tasks");
@@ -103,15 +134,18 @@ export default function TaskDetailScreen({ id }: { id: string }) {
           version: current.version,
           status,
         });
+      if (!currentAttempt()) return;
       await w.refresh("tasks");
-      await load();
+      if (currentAttempt()) await load();
     })()
       .catch((e) => {
-        if (alive.current) setError(e.message);
+        if (currentAttempt()) setError(e.message);
       })
       .finally(() => {
-        pending.current = false;
-        if (alive.current) setBusy(false);
+        if (pending.current === attempt) {
+          pending.current = null;
+          if (currentAttempt()) setBusy(false);
+        }
       });
   }
   return (

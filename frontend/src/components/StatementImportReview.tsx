@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { statementLabels } from '../../../shared/finance/labels';
 import { useWorkspace } from '../store';
 import { useExecutionRead, useExecutionMutation } from '../data/execution';
 import { useExecutionInput } from '../data/executionInput';
@@ -91,7 +92,7 @@ export default function StatementImportReview({
           groupingSeparator: ['none', 'comma', 'dot', 'space'],
         }).map(([key, values]) => (
           <label key={key}>
-            {key}
+            {statementLabels[key]}
             <select
               value={choices[key as keyof typeof choices]}
               onChange={(e) => set(key as keyof typeof choices, e.target.value)}
@@ -115,7 +116,7 @@ export default function StatementImportReview({
           ] as (keyof typeof choices)[]
         ).map((key) => (
           <label key={key}>
-            {key} (file column number, optional where noted)
+            {statementLabels[key]} (file column number, optional where noted)
             <input
               inputMode="numeric"
               min="1"

@@ -1,3 +1,4 @@
+import { entityRecoveryError } from "../../shared/business/recoveryCopy";
 import { frozenGoalDraft } from "../../shared/goals/recovery";
 import { useState } from "react";
 import { Text, TextInput, View } from "react-native";
@@ -167,7 +168,7 @@ export default function GoalMetadataForm({
         },
       );
     } catch (e) {
-      setError((e as Error).message);
+      setError(entityRecoveryError(e, "goal"));
     }
   }
   return (

@@ -1,4 +1,5 @@
 import { router } from "expo-router";
+import { expenseLabels } from "../../shared/finance/labels";
 import { client } from "./client";
 import {
   Fragment,
@@ -406,7 +407,8 @@ export default function IntelligenceDraftReview({
                 (key) => (
                   <ReportField
                     key={key}
-                    label={key}
+                    label={expenseLabels[key]}
+                    keyboardType={key === "amount" ? "decimal-pad" : undefined}
                     value={authored[key]}
                     calendar={key === "expenseDate" ? "date" : undefined}
                     onChange={(v) => write(key, v)}

@@ -1,5 +1,6 @@
 import { Fragment, useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import type { IntelligenceJob } from '../data/intelligence';
+import { expenseLabels } from '../../../shared/finance/labels';
 import { useWorkspace } from '../store';
 import { useExecutionInput, clearExecutionForm } from '../data/executionInput';
 import { executionRead, useExecutionMutation, useExecutionRead } from '../data/execution';
@@ -390,10 +391,11 @@ export default function IntelligenceDraftReview({
               </label>
               {(['vendor', 'amount', 'currency', 'expenseDate'] as const).map((key) => (
                 <label key={key}>
-                  {key}
+                  {expenseLabels[key]}
                   <input
                     value={authored[key]}
                     type={key === 'expenseDate' ? 'date' : 'text'}
+                    inputMode={key === 'amount' ? 'decimal' : undefined}
                     onChange={(e) => write(key, e.target.value)}
                   />
                 </label>

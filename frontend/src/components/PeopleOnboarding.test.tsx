@@ -29,6 +29,64 @@ afterEach(() => {
   cleanup();
   vi.unstubAllGlobals();
 });
+it('requires identity reentry after graph clearing before a fresh onboarding preview', async () => {
+  let previews = 0;
+  vi.stubGlobal(
+    'fetch',
+    vi.fn(async (input: string) => {
+      if (String(input).endsWith('/onboarding/preview')) {
+        previews++;
+        return new Response(
+          JSON.stringify({
+            id: 'preview',
+            version: 1,
+            accountMode: 'existing_account',
+            grants: [],
+            taskPreviews: [],
+            unresolved: [],
+            person: { name: 'Starter', email: 'starter@example.invalid' },
+          }),
+          { status: 200 },
+        );
+      }
+      return new Response(
+        JSON.stringify(
+          String(input).endsWith('/people/context')
+            ? {
+                people: sample.workspaces[0].people,
+                departments: [],
+                roles: ['member'],
+                readBasis: 'current',
+              }
+            : String(input).includes('presets')
+              ? { items: [] }
+              : { templates: [], projects: [] },
+        ),
+        { status: 200 },
+      );
+    }),
+  );
+  render(
+    <QueryClientProvider client={new QueryClient()}>
+      <PeopleOnboarding onClose={() => {}} />
+    </QueryClientProvider>,
+  );
+  fireEvent.change(await screen.findByLabelText('Name'), { target: { value: 'Starter' } });
+  fireEvent.change(screen.getByLabelText('Email'), {
+    target: { value: 'starter@example.invalid' },
+  });
+  fireEvent.click(screen.getByText('Continue to access'));
+  fireEvent.click(screen.getByText('Continue to starting work'));
+  fireEvent.click(screen.getByText('Review onboarding'));
+  const fresh = await screen.findByText('Create fresh preview');
+  expect(previews).toBe(1);
+  clearAllDrafts();
+  await waitFor(() => expect(screen.getByLabelText('Name')).toHaveProperty('value', ''));
+  expect(fresh).toHaveProperty('disabled', true);
+  fireEvent.click(screen.getByText('Edit reviewed choices'));
+  expect(screen.getByText('Continue to access').closest('[hidden]')).toBeNull();
+  expect(previews).toBe(1);
+});
 it('opens a complete guided onboarding flow from Add person', async () => {
   vi.stubGlobal(
     'fetch',

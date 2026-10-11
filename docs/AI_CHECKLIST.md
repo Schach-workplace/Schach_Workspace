@@ -1,6 +1,6 @@
 # Schach Workspace implementation and handoff checklist
 
-Updated UTC 2026-10-11T19:44:08.778074+00:00. Read [AI_HANDOFF.md](AI_HANDOFF.md) and [AI_FILE_INDEX.json](AI_FILE_INDEX.json) first. The active ledger is `.superpowers/sdd/2026-10-10-workspace-improvements-roadmap/progress.md`. Historical failures and source-only evidence remain qualified there; a checked source gate does not certify an installed client or production rollout.
+Updated UTC 2026-10-11T20:35:35.453058+00:00. Read [AI_HANDOFF.md](AI_HANDOFF.md) and [AI_FILE_INDEX.json](AI_FILE_INDEX.json) first. The active ledger is `.superpowers/sdd/2026-10-10-workspace-improvements-roadmap/progress.md`. Historical failures and source-only evidence remain qualified there; a checked source gate does not certify an installed client or production rollout.
 
 ## Accepted roadmap milestones
 
@@ -13,7 +13,7 @@ Updated UTC 2026-10-11T19:44:08.778074+00:00. Read [AI_HANDOFF.md](AI_HANDOFF.md
 - [x] M7: reviewed finance assistance.
 - [x] M8: planning and outcomes.
 - [x] M9: People/admin, scoped approval and qualified native evidence.
-- [ ] M10: complete grounded local intelligence acceptance and safe publication.
+- [x] M10: grounded local intelligence reviewed/qualified bounded local acceptance, all48 rows and safe publication independently verified atbc3b7c7.
 
 ## M10 source gate — reviewed4420, formal repair round4 of5
 
@@ -26,26 +26,28 @@ Updated UTC 2026-10-11T19:44:08.778074+00:00. Read [AI_HANDOFF.md](AI_HANDOFF.md
 - [x] Backend/Encore98b7 and all58 migrations unchanged; accepted full/PG/race/runtime/provider proofs reused with exact equivalence, not rerun for client-only fixes.
 - [x] SAME scoped reviewer: Spec PASS / Quality Approved, N2 and N2b addressed, no new findings. Full `task-10-fix4-review.md` and controller disposition bind4420.
 
-## M10 native affected gate — ACTIVE original owner
+## M10 native affected gate — accepted qualified, owner yielded
 
-Owner `/root/people_native_acceptance`; requirements `task-10-native-fix4-refresh-active.md` and its preparation. Historical development shell plus reviewed JS/backend is a COMPOSITE. Six permitted generations consumed: no new inference, source/TTL restoration or fabricated candidate.
+Owner `/root/people_native_acceptance` yielded cleared manual-disabled fixture; requirements `task-10-native-fix4-refresh-active.md` and its preparation. Historical development shell plus reviewed JS/backend is a COMPOSITE. Six permitted generations consumed: no new inference, source/TTL restoration or fabricated candidate.
 
 - [x] Predecessor native537 safe artifacts+2 reports independently verified and frozen539 records; qualified N1 ACK/pending/current replay and32.960s focus/cursor/IME/value/bounds proof retained.
 - [x] Real audio→transcript2→derived summary3, report4 ready facts/history, private5 ready candidate, cancel6/font/quiescent Stop observations preserved with their limits. Historical N2/N2b failures remain failures.
 - [x] SAME owner activated only after written4420 scoped source approval; no product/Git ownership.
 - [x] Reviewed JS refresh/source660/bundle binding; original session/private DB/keyring and M9 values preserved; composite qualified.
-- [ ] N2: fresh actual current-report selection/inspection/consent/open Sheet across multiple ordinary15s refreshes; current proof of EXACT original snapshot; pending withholding and positive restoration. No Generate. Report4 naturally expired historical running→ready evidence stays separate.
-- [ ] N2: original expiry/denial does not silently select latest/extend TTL; deliberate latest choice requires fresh inspection/consent.
-- [ ] N2b: SAME genuinely current private5 first still-unchosen anchor picker survives actual pending reads, with current options/prose/Preview withheld and restored only on positive authorization.
-- [ ] Private5: deliberate human fields/source instruction, real canonical expense200/ACK loss, exact original RAM-only body/key/target retry, genuine private-interval loss/current source404, no resurrection/duplicate/autoapproval/payment or changes to21 retained expenses. If genuinely expired, record unavailable boundary; never restore/regenerate.
-- [ ] If inspection requires capability: same verified324b binary/config/pins/no-seed bounded toggle only after private backup/integrity/six terminal jobs/zero queue or leases. No new inference/shared-provider restart. Return manual-disabled/quiescent before yielding.
-- [ ] Clear/release all proxy arms/selectors/sensitive RAM; font1.0; privacy redaction before persistence; full affected report plus distinct manifest/current ownership/typed preservation.
+- [x] N2: fresh actual current-report selection/inspection/consent/open Sheet across multiple ordinary15s refreshes; current proof of EXACT original snapshot; pending withholding and positive restoration. No Generate. Report4 naturally expired historical running→ready evidence stays separate.
+- [x] N2: original expiry/denial does not silently select latest/extend TTL; deliberate latest choice requires fresh inspection/consent.
+- [x] N2b: SAME genuinely current private5 first still-unchosen anchor picker survives actual pending reads, with current options/prose/Preview withheld and restored only on positive authorization.
+- [x] Private5: deliberate human fields/source instruction, real canonical expense200/ACK loss, exact original RAM-only body/key/target retry, genuine private-interval loss/current source404, no resurrection/duplicate/autoapproval/payment or changes to21 retained expenses. If genuinely expired, record unavailable boundary; never restore/regenerate.
+- [x] If inspection requires capability: same verified324b binary/config/pins/no-seed bounded toggle only after private backup/integrity/six terminal jobs/zero queue or leases. No new inference/shared-provider restart. Return manual-disabled/quiescent before yielding.
+- [x] Clear/release all proxy arms/selectors/sensitive RAM; font1.0; privacy redaction before persistence; full affected report plus distinct manifest/current ownership/typed preservation.
 - [x] Root FULL-read current/affected reports, independently verified660 sources/639 safe+reports/537 predecessor+539 frozen unchanged and froze639 records; accepted bounded local gates with explicit qualifications.
-- [ ] Source owner safely publishes M10 reports/proofs/reviews and marks all48 action rows across10 slices only after their acceptance gates; captures3 live coordination documents and yields new clean BASE.
+- [x] Source owner safely publishes M10 reports/proofs/reviews and marks all48 action rows across10 slices only after their acceptance gates; captures3 live coordination documents and yields new clean BASE.
 
-## Final integration — PREPARED, not activated
+Current accepted boundary:660 source hashes/636safe+3reports639 independently verified/frozen. Private canonical3150draftV1 ACK loss→genuine loss/current source404/publication-access403/editor+Retry retirement/exact-original transport404. Later raw200invalidated differs retained expected404 harness. No separate positive native expense replay; source/browser/priorM9 lifecycle, numeric-scroll/partial text/composite/physical limitations remain. Publication535safe/48rows/97rulings independently verified and frozen547 records.
 
-Saved requirements/reports: `task-final-integration-brief-preparation.md`, `task-final-integration-readonly-preparation-report.md`, `task-final-integration-current-dispositions-preparation.md`, current exhaustive ledger/ruling/observation extracts. Activate one exclusive product/Git writer at acceptedM10 cleanBASE; never redispatch completed read-only preparation.
+## Final integration — ACTIVE exclusive source/Git owner
+
+Saved requirements/reports: `task-final-integration-brief-preparation.md`, `task-final-integration-readonly-preparation-report.md`, `task-final-integration-current-dispositions-preparation.md`, current exhaustive ledger/ruling/observation extracts. Active /root/final_integration at exactacceptedbc3b7c7 BASE, task-final-integration-brief.md. Never redispatch completed read-only preparation. Root separately activates native owner after exactAPK signature/data check.
 
 - [ ] Release selector: .git FILE/nested .worktrees exclusion and selected file/directory symlink preflight BEFORE environment/config/mirror reads; synthetic GREEN and required inclusions before actual ZIP.
 - [ ] Human CSV/expense labels and native amount keyboard; retain exact API/currency/frozen retry payload.
@@ -104,3 +106,6 @@ Latest instrumentation boundary 2026-10-11T19:44:27.903754+00:00: `task-10-nativ
 
 
 2026-10-11T20:08:26.816248+00:00 — M10 bounded local implementation/acceptance ACCEPTED under task-10-controller-bounded-acceptance-disposition.json; source publication/48-row mapping still pending. Publication-only /root/intelligence_lifetime_fix4 ACTIVE, root3doc FINALCAPTURE YIELDED. Native fixture explicitly cleared/manual-disabled/yielded; physical/final package/production qualifications unchanged. Pending native checkboxes above must be reconciled from this exact source-qualified evidence by publication owner, not inferred from prose or silently promoted to physical passes.
+
+
+2026-10-11T20:37:42.619268+00:00 — Final integration owner reports selector owning RED→GREEN5tests; incomplete partial checkpoint, not final release acceptance. Root3docs FINALCAPTURE YIELDED for first natural source commit. Resume active task-final-integration-brief.md and owner-written task-final-integration-resume.md; no duplicate writer.

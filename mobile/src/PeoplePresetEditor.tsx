@@ -1,3 +1,4 @@
+import { entityRecoveryError } from "../../shared/business/recoveryCopy";
 import { capacityValid, membershipForSubmission } from "./peopleCapacity";
 import PeopleProjection from "./PeopleProjection";
 import { useState } from "react";
@@ -81,7 +82,7 @@ export default function PeoplePresetEditor() {
       );
       list.retry();
     } catch (e) {
-      setError((e as Error).message);
+      setError(entityRecoveryError(e, "preset"));
     }
   }
   return (

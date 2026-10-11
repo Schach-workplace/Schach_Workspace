@@ -86,18 +86,18 @@ it("retains the original unknown native import and freezes every re-preview/rema
     [...node.querySelectorAll("button")].find((b) => b.textContent === title)!;
   await act(async () => render());
   for (const title of [
-    "headerRow: yes",
-    "delimiter: comma",
-    "dateFormat: YYYY-MM-DD",
-    "amountMode: signed",
-    "decimalSeparator: dot",
-    "groupingSeparator: none",
+    "Header row: yes",
+    "Delimiter: comma",
+    "Date format: YYYY-MM-DD",
+    "Amount format: signed",
+    "Decimal separator: dot",
+    "Grouping separator: none",
   ])
     await act(async () => button(title).click());
   // Drive the actual input callbacks with React's DOM value tracker.
   for (const [label, value] of [
-    ["dateColumn", "1"],
-    ["signedAmountColumn", "2"],
+    ["Date column", "1"],
+    ["Amount column", "2"],
   ])
     await act(async () => {
       const input = node.querySelector(
@@ -116,7 +116,7 @@ it("retains the original unknown native import and freezes every re-preview/rema
   await act(async () => button("Import reviewed statement").click());
   expect(h.posts).toHaveLength(1);
   expect(button("Preview exact statement rows").disabled).toBe(true);
-  expect(button("dateFormat: DD/MM/YYYY").disabled).toBe(true);
+  expect(button("Date format: DD/MM/YYYY").disabled).toBe(true);
   await act(async () => button("Preview exact statement rows").click());
   expect(h.preview).toBe(1);
   await act(async () => root.unmount());

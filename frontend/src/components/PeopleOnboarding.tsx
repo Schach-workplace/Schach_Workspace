@@ -59,12 +59,18 @@ export default function PeopleOnboarding({ onClose }: { onClose: () => void }) {
     setPreview(undefined);
   }
   const ready = context.ready && !action.busy && !w.authorizing;
+  const identityReady = !!draft.name.trim() && draft.email.includes('@');
   const change = () => {
     setPreview(undefined);
     setError('');
   };
   async function inspect() {
     if (!ready) return;
+    if (!identityReady) {
+      setStage(0);
+      setError('Re-enter name and email, then review current access and starting work.');
+      return;
+    }
     setError('');
     previewAction.abandon();
     try {
@@ -466,14 +472,23 @@ export default function PeopleOnboarding({ onClose }: { onClose: () => void }) {
                 className="button"
                 disabled={action.busy}
                 onClick={() => {
-                  setStage(2);
+                  setStage(identityReady ? 2 : 0);
                   setPassword('');
                   setPreview(undefined);
                 }}
               >
                 Edit reviewed choices
               </button>
-              <button className="button" disabled={!ready} onClick={() => void inspect()}>
+              {!identityReady && (
+                <p role="status">
+                  Re-enter name and email, then review current access and starting work.
+                </p>
+              )}
+              <button
+                className="button"
+                disabled={!ready || !identityReady}
+                onClick={() => void inspect()}
+              >
                 Create fresh preview
               </button>
             </div>

@@ -59,14 +59,14 @@ function setup(company: string) {
 }
 async function mapAndPreview() {
   for (const [label, value] of [
-    ['headerRow', 'yes'],
-    ['delimiter', 'comma'],
-    ['dateFormat', 'YYYY-MM-DD'],
-    ['amountMode', 'signed'],
-    ['decimalSeparator', 'dot'],
-    ['groupingSeparator', 'none'],
-    ['dateColumn', '1'],
-    ['signedAmountColumn', '2'],
+    ['Header row', 'yes'],
+    ['Delimiter', 'comma'],
+    ['Date format', 'YYYY-MM-DD'],
+    ['Amount format', 'signed'],
+    ['Decimal separator', 'dot'],
+    ['Grouping separator', 'none'],
+    ['Date column', '1'],
+    ['Amount column', '2'],
   ]) {
     fireEvent.change(screen.getByLabelText(new RegExp('^' + label)), { target: { value } });
   }
@@ -105,7 +105,7 @@ it('resets a source-bound page cursor when deliberately remapping into a new pre
   await mapAndPreview();
   fireEvent.click(screen.getByRole('button', { name: 'Review next rows' }));
   expect(h.reads.at(-1)).toContain('cursor=old-page');
-  fireEvent.change(screen.getByLabelText('dateFormat'), { target: { value: 'DD/MM/YYYY' } });
+  fireEvent.change(screen.getByLabelText('Date format'), { target: { value: 'DD/MM/YYYY' } });
   fireEvent.click(screen.getByRole('button', { name: 'Preview exact statement rows' }));
   await vi.waitFor(() => expect(h.preview).toBe(2));
   expect(h.reads.at(-1)).toBe('/finance/statement-previews/remap-cursor-preview-2?cursor=');

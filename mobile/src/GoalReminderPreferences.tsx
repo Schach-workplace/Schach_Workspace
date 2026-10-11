@@ -1,3 +1,4 @@
+import { entityRecoveryError } from "../../shared/business/recoveryCopy";
 import { frozenGoalDraft } from "../../shared/goals/recovery";
 import { useWorkspace } from "./Workspace";
 import { useEffect, useEffectEvent, useState } from "react";
@@ -90,7 +91,7 @@ export default function GoalReminderPreferences({
         },
       );
     } catch (e) {
-      setError((e as Error).message);
+      setError(entityRecoveryError(e, "goal"));
     }
   }
   return (

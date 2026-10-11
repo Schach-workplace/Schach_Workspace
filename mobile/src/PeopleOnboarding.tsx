@@ -65,6 +65,7 @@ export default function PeopleOnboarding() {
   );
   const basis = usePeopleEditorBasis(w.work?.readBasis);
   const ready = context.ready && w.foreground;
+  const identityReady = !!draft.name.trim() && draft.email.includes("@");
   const presented = preview?.basis === basis ? preview.value : undefined;
   const current = ready ? presented : undefined;
   const unknown = action.attempt?.state === "unknown";
@@ -84,6 +85,15 @@ export default function PeopleOnboarding() {
     setPreview(undefined);
   }
   async function inspect() {
+    if (!ready || !identityReady) {
+      if (ready) {
+        setStage(0);
+        setError(
+          "Re-enter name and email, then review current access and starting work.",
+        );
+      }
+      return;
+    }
     if (!capacityValid(draft.membership)) return;
     previewAction.abandon();
     try {
@@ -440,14 +450,20 @@ export default function PeopleOnboarding() {
               title="Edit reviewed choices"
               disabled={action.busy}
               onPress={() => {
-                setStage(2);
+                setStage(identityReady ? 2 : 0);
                 setPassword("");
                 setPreview(undefined);
               }}
             />
+            {!identityReady && (
+              <Text>
+                Re-enter name and email, then review current access and starting
+                work.
+              </Text>
+            )}
             <Action
               title="Create fresh preview"
-              disabled={!ready || previewAction.busy}
+              disabled={!ready || !identityReady || previewAction.busy}
               onPress={() => void inspect()}
             />
           </View>

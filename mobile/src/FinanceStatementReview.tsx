@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { statementLabels } from "../../shared/finance/labels";
 import { FlatList, Text, TextInput, View } from "react-native";
 import { useWorkspace, styles } from "./Workspace";
 import { Sheet, Action } from "./ConnectUI";
@@ -80,11 +81,11 @@ export default function FinanceStatementReview({
         groupingSeparator: ["none", "comma", "dot", "space"],
       }).map(([key, values]) => (
         <View key={key}>
-          <Text>{key}</Text>
+          <Text>{statementLabels[key]}</Text>
           {values.map((v) => (
             <Action
               key={v}
-              title={key + ": " + v}
+              title={statementLabels[key] + ": " + v}
               selected={choices[key as keyof typeof choices] === v}
               disabled={frozen}
               onPress={() => set(key as keyof typeof choices, v)}
@@ -107,8 +108,8 @@ export default function FinanceStatementReview({
           key={key}
           style={styles.input}
           keyboardType="number-pad"
-          accessibilityLabel={key + " (file column 1–32)"}
-          placeholder={key + " (column 1–32)"}
+          accessibilityLabel={statementLabels[key] + " (file column 1–32)"}
+          placeholder={statementLabels[key] + " (column 1–32)"}
           value={choices[key]}
           editable={!frozen}
           onChangeText={(v) => set(key, v)}

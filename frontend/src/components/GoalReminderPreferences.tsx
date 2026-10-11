@@ -1,3 +1,4 @@
+import { entityRecoveryError } from '../../../shared/business/recoveryCopy';
 import { frozenGoalDraft } from '../../../shared/goals/recovery';
 import { useEffect, useState } from 'react';
 import { useGoalRead, useGoalMutation, type GoalReminderPreference } from '../data/goals';
@@ -84,7 +85,7 @@ function ReminderEditor({
         qRefresh();
       });
     } catch (e) {
-      setError((e as Error).message);
+      setError(entityRecoveryError(e, 'goal'));
     }
   }
   function qRefresh() {

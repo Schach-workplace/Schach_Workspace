@@ -218,13 +218,13 @@ it('preserves expense fields and focused authored amount during current-source r
   mount();
   await screen.findByText('Generated seed');
   fireEvent.click(screen.getByText('Review expense draft'));
-  const amount = screen.getByLabelText('amount');
+  const amount = screen.getByLabelText('Amount');
   fireEvent.change(amount, { target: { value: '1300.50' } });
   amount.focus();
   held = new Promise((r) => (release = r));
   fireEvent.click(screen.getByText('Recheck current result'));
   await waitFor(() => expect(screen.queryByText('Selected source suggestion')).toBeNull());
-  expect(screen.getByLabelText('amount')).toBe(amount);
+  expect(screen.getByLabelText('Amount')).toBe(amount);
   expect(amount).toHaveProperty('value', '1300.50');
   expect(document.activeElement).toBe(amount);
   expect(screen.getByText('Confirm reviewed creation')).toHaveProperty('disabled', true);

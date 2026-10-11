@@ -345,7 +345,7 @@ it("keeps the selected expense amount editor mounted through a current fetch", a
   await render(<IntelligenceScreen initialJob="job" />);
   await render(<IntelligenceScreen initialJob="job" />);
   await click("Review expense draft");
-  const amount = c.querySelector<HTMLInputElement>('[aria-label="amount"]')!;
+  const amount = c.querySelector<HTMLInputElement>('[aria-label="Amount"]')!;
   expect(amount).not.toBeNull();
   await act(async () => {
     amount.value = "1300.50";
@@ -355,7 +355,7 @@ it("keeps the selected expense amount editor mounted through a current fetch", a
   hold = true;
   await click("Recheck current result");
   expect(c.textContent).not.toContain("Selected source suggestion");
-  expect(c.querySelector('[aria-label="amount"]')).toBe(amount);
+  expect(c.querySelector('[aria-label="Amount"]')).toBe(amount);
   expect(amount.value).toBe("1300.50");
   expect(document.activeElement).toBe(amount);
 });

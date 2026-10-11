@@ -1,3 +1,4 @@
+import { entityRecoveryError } from '../../../shared/business/recoveryCopy';
 import { frozenGoalDraft } from '../../../shared/goals/recovery';
 import { useState } from 'react';
 import { useWorkspace } from '../store';
@@ -138,7 +139,7 @@ export default function GoalMetadataForm({
         },
       );
     } catch (e) {
-      setError((e as Error).message);
+      setError(entityRecoveryError(e, 'goal'));
     }
   }
   return (

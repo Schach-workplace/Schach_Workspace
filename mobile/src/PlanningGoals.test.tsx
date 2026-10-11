@@ -429,7 +429,11 @@ it("recovers rejected native metadata fields and CAS by explicit discard/load ac
         if (posts.length === 1)
           throw new NativeApiError(422, "validation", "Invalid metadata");
         if (posts.length === 2)
-          throw new NativeApiError(409, "conflict", "Current goal changed");
+          throw new NativeApiError(
+            409,
+            "version_conflict",
+            "This task changed since you opened it.",
+          );
         return { ok: true };
       }
       return { goal: latest, canEdit: true, canMeasure: true, options: [] };
@@ -450,6 +454,7 @@ it("recovers rejected native metadata fields and CAS by explicit discard/load ac
   await press("Save reviewed goal");
   expect(posts[1].name).toBe("Corrected intent");
   expect(posts[1].retryKey).not.toBe(posts[0].retryKey);
+  expect(c.textContent).toContain("This goal changed");
   await render(null);
   latest = { ...goal, name: "Fresh authorized", unit: "new-unit", version: 9 };
   await render(

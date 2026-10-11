@@ -648,6 +648,46 @@ it("discloses every ordered checklist requirement from the actual server preview
   ).toBe(true);
 });
 
+it("requires identity reentry after graph clearing before a fresh native preview", async () => {
+  let previews = 0;
+  state.request.mockImplementation(async (path: string) => {
+    const r = reads(path);
+    if (r) return r;
+    if (path.endsWith("/onboarding/preview")) {
+      previews++;
+      return {
+        id: "preview",
+        version: 1,
+        accountMode: "existing_account",
+        person: { name: "Starter", email: "starter@example.invalid" },
+        grants: [],
+        taskPreviews: [],
+        unresolved: [],
+      };
+    }
+    throw Error("Unexpected request");
+  });
+  await render(createElement(PeopleOnboarding));
+  await enter("Name", "Starter");
+  await enter("Email", "starter@example.invalid");
+  await press("Continue to access");
+  await press("Continue to starting work");
+  await press("Review onboarding");
+  await act(async () => clearAllDrafts());
+  expect(
+    (c.querySelector('[aria-label="Name"]') as HTMLInputElement).value,
+  ).toBe("");
+  const fresh = [...c.querySelectorAll("button")].find(
+    (b) => b.textContent === "Create fresh preview",
+  )!;
+  expect(fresh.disabled).toBe(true);
+  await press("Edit reviewed choices");
+  expect(
+    c.querySelector('[aria-label="Name"]')?.closest('[style*="display: none"]'),
+  ).toBeNull();
+  expect(previews).toBe(1);
+});
+
 it.each([422, 409])(
   "captures corrected preview after explicit same-stack abandonment of HTTP %s",
   async (status) => {

@@ -1,7 +1,13 @@
 import DeadlinePicker from "./DeadlinePicker";
 import { companyDate } from "./workDates";
 import { useState } from "react";
-import { FlatList, Text, TextInput, View } from "react-native";
+import {
+  FlatList,
+  Text,
+  TextInput,
+  View,
+  type TextInputProps,
+} from "react-native";
 import { Action, Sheet, ui } from "./ConnectUI";
 export function ReportField({
   label,
@@ -11,6 +17,7 @@ export function ReportField({
   pickerDisabled = disabled,
   calendar,
   timezone = "Asia/Kolkata",
+  keyboardType,
 }: {
   label: string;
   value: string;
@@ -19,6 +26,7 @@ export function ReportField({
   pickerDisabled?: boolean;
   calendar?: "date" | "time";
   timezone?: string;
+  keyboardType?: TextInputProps["keyboardType"];
 }) {
   if (calendar) {
     let date = "";
@@ -51,6 +59,7 @@ export function ReportField({
       <Text>{label}</Text>
       <TextInput
         accessibilityLabel={label}
+        keyboardType={keyboardType}
         value={value}
         onChangeText={onChange}
         editable={!disabled}

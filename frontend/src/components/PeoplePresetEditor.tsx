@@ -1,3 +1,4 @@
+import { entityRecoveryError } from '../../../shared/business/recoveryCopy';
 import PeopleProjection from './PeopleProjection';
 import { useState } from 'react';
 import {
@@ -64,7 +65,7 @@ export default function PeoplePresetEditor({ onClose }: { onClose: () => void })
       });
       await list.retry();
     } catch (e) {
-      setError((e as Error).message);
+      setError(entityRecoveryError(e, 'preset'));
     }
   }
   return (

@@ -243,6 +243,38 @@ it("requires reviewing changed task details before a versioned write", async () 
   expect(state.w.refresh).toHaveBeenCalled();
   expect(container.textContent).toContain("Task changed or access changed");
 });
+it("keeps an already submitted A write separate from B after a fast route jump", async () => {
+  let finish!: (v: unknown) => void;
+  const taskA = state.w.work.tasks[0];
+  const taskB = { ...taskA, id: "second", title: "Independent B work" };
+  state.request.mockImplementation(async (path: string, method: string) => {
+    if (method === "PATCH")
+      return new Promise((r) => {
+        finish = r;
+      });
+    return { task: path.endsWith("/second") ? taskB : taskA };
+  });
+  await act(async () =>
+    root.render(
+      createElement(TaskDetailScreen, { key: "company:me:A", id: "open" }),
+    ),
+  );
+  await click("Submit for review / complete");
+  expect(finish).toBeTypeOf("function");
+  await act(async () =>
+    root.render(
+      createElement(TaskDetailScreen, { key: "company:me:B", id: "second" }),
+    ),
+  );
+  const before = state.request.mock.calls.length;
+  await act(async () => finish({ ok: true }));
+  expect(
+    state.request.mock.calls.find((call) => call[1] === "PATCH")?.[0],
+  ).toBe("/companies/company/tasks/open");
+  expect(state.w.refresh).not.toHaveBeenCalled();
+  expect(state.request).toHaveBeenCalledTimes(before);
+  expect(container.textContent).toContain("Independent B work");
+});
 it("retains the draft across temporary workspace absence and recovery", async () => {
   await act(async () => root.render(createElement(WorkScreen)));
   await click("New task");
