@@ -1,3 +1,4 @@
+import { capacityValid, membershipForSubmission } from "./peopleCapacity";
 import PeopleProjection from "./PeopleProjection";
 import { useState } from "react";
 import { Text, View } from "react-native";
@@ -66,12 +67,21 @@ export default function AccessReview() {
       ),
     });
   }
+  const capacitiesValid = draft.decisions.every(
+    (d) => d.action !== "change" || capacityValid(d.fields ?? {}),
+  );
   async function preview() {
+    if (!capacitiesValid) return;
     previewAction.abandon();
     try {
       const value = await previewAction.execute<AccessReviewView>(
         "/people/access-reviews/preview",
-        draft,
+        {
+          ...draft,
+          decisions: draft.decisions.map((d) =>
+            d.fields ? { ...d, fields: membershipForSubmission(d.fields) } : d,
+          ),
+        },
       );
       setReview({ basis, value });
     } catch (e) {
@@ -256,7 +266,8 @@ export default function AccessReview() {
               !ready ||
               previewAction.busy ||
               !draft.reason.trim() ||
-              draft.decisions.length === 0
+              draft.decisions.length === 0 ||
+              !capacitiesValid
             }
             onPress={() => void preview()}
           />

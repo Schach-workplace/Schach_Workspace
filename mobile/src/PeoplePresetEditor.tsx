@@ -1,3 +1,4 @@
+import { capacityValid, membershipForSubmission } from "./peopleCapacity";
 import PeopleProjection from "./PeopleProjection";
 import { useState } from "react";
 import { Text, View } from "react-native";
@@ -59,6 +60,7 @@ export default function PeoplePresetEditor() {
     setSaved(false);
   }
   async function save() {
+    if (!action.attempt && !capacityValid(draft.membership)) return;
     try {
       await action.execute(
         action.attempt?.target?.path ??
@@ -66,7 +68,7 @@ export default function PeoplePresetEditor() {
         action.attempt?.payload ?? {
           name: draft.name,
           description: draft.description,
-          membership: draft.membership,
+          membership: membershipForSubmission(draft.membership),
           templateIds: draft.templateIds,
           archived: draft.archived,
           ...(draft.id ? { expectedVersion: draft.version } : {}),
@@ -170,7 +172,10 @@ export default function PeoplePresetEditor() {
           }
           primary
           disabled={
-            !ready || action.busy || (!action.attempt && !draft.name.trim())
+            !ready ||
+            action.busy ||
+            (!action.attempt &&
+              (!draft.name.trim() || !capacityValid(draft.membership)))
           }
           onPress={() => void save()}
         />

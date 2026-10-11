@@ -1,3 +1,4 @@
+import { capacityValid, type CapacityDraft } from "./peopleCapacity";
 import PeopleProjection from "./PeopleProjection";
 import { useState } from "react";
 import { FlatList, Text, TextInput, View } from "react-native";
@@ -125,8 +126,8 @@ export function PeopleMembershipFields({
   disabled = false,
   authoredDisabled = false,
 }: {
-  value: MembershipDefaults;
-  onChange: (v: MembershipDefaults) => void;
+  value: MembershipDefaults & CapacityDraft;
+  onChange: (v: MembershipDefaults & CapacityDraft) => void;
   context?: PeopleContext;
   disabled?: boolean;
   authoredDisabled?: boolean;
@@ -176,10 +177,21 @@ export function PeopleMembershipFields({
       <PeopleField
         disabled={authoredDisabled}
         label="Weekly capacity"
-        value={String(value.capacityHours)}
-        onChange={(v) => set("capacityHours", Number(v))}
+        value={value.capacityInput ?? String(value.capacityHours)}
+        onChange={(capacityInput) =>
+          onChange({
+            ...value,
+            capacityInput,
+            capacityHours: capacityValid({ capacityInput })
+              ? Number(capacityInput)
+              : value.capacityHours,
+          })
+        }
         numeric
       />
+      {!capacityValid(value) && (
+        <Text>Enter complete weekly hours from 0 to 168.</Text>
+      )}
     </View>
   );
 }

@@ -1,3 +1,4 @@
+import { capacityValid, membershipForSubmission } from "./peopleCapacity";
 import { useState } from "react";
 import { Text } from "react-native";
 import { useWorkspace } from "./Workspace";
@@ -32,7 +33,7 @@ export default function PeopleMembershipEditor({
   const [error, setError] = useState("");
   const [reactivate, setReactivate] = useState(false);
   async function save() {
-    if (!context.ready || busy) return;
+    if (!context.ready || busy || !capacityValid(draft)) return;
     setBusy(true);
     const generation = client.generation;
     const authority = businessAttemptGeneration();
@@ -40,7 +41,10 @@ export default function PeopleMembershipEditor({
       await client.request(
         "/companies/" + w.company + "/people/" + person.id,
         "PATCH",
-        { ...draft, ...(!person.active && reactivate ? { active: true } : {}) },
+        {
+          ...membershipForSubmission(draft),
+          ...(!person.active && reactivate ? { active: true } : {}),
+        },
       );
       if (
         generation !== client.generation ||
@@ -111,7 +115,7 @@ export default function PeopleMembershipEditor({
       <Action
         title="Save reviewed company access"
         primary
-        disabled={!context.ready || busy}
+        disabled={!context.ready || busy || !capacityValid(draft)}
         onPress={() => void save()}
       />
       <Action

@@ -348,11 +348,13 @@ it("holds authored access and password nodes while current reads are pending", a
   await enter("Email", "held@example.invalid");
   await press("Continue to access");
   for (const label of ["Title", "Weekly capacity"]) {
-    await enter(label, label === "Title" ? "Authored title" : "31");
+    await enter(label, label === "Title" ? "Authored title" : "31.");
     const field = c.querySelector(
       `[aria-label="${label}"]`,
     ) as HTMLInputElement;
     field.focus();
+    field.setSelectionRange(1, 2);
+    const typed = field.value;
     held = true;
     state.w.recordEpoch++;
     await render(createElement(PeopleOnboarding));
@@ -360,6 +362,8 @@ it("holds authored access and password nodes while current reads are pending", a
     expect(c.querySelector(`[aria-label="${label}"]`)).toBe(field);
     expect(field.disabled).toBe(false);
     expect(document.activeElement).toBe(field);
+    expect(field.value).toBe(typed);
+    expect([field.selectionStart, field.selectionEnd]).toEqual([1, 2]);
     held = false;
     await act(async () => {
       release!();
@@ -367,6 +371,7 @@ it("holds authored access and password nodes while current reads are pending", a
     });
     release = undefined;
   }
+  await enter("Weekly capacity", "31.5");
   await press("Continue to starting work");
   await press("Review onboarding");
   await enter("New account password", "fictional-held-secret");
@@ -467,5 +472,129 @@ it.each(["review", "departure"])(
       await new Promise((r) => setTimeout(r, 10));
     });
     await render(node());
+  },
+);
+
+it("preserves sequential decimal and blank capacity drafts, validates sends, and reloads current membership", async () => {
+  const { default: MembershipEditor } =
+    await import("./PeopleMembershipEditor");
+  state.request.mockImplementation(
+    async (path: string) => reads(path) ?? { id: "saved" },
+  );
+  await render(
+    createElement(MembershipEditor, { person: people[1], onClose: vi.fn() }),
+  );
+  const field = c.querySelector(
+    '[aria-label="Weekly capacity"]',
+  ) as HTMLInputElement;
+  field.focus();
+  for (const text of ["3", "31", "31.", "31.5"]) {
+    await enter("Weekly capacity", text);
+    expect(field.value).toBe(text);
+    expect(c.querySelector('[aria-label="Weekly capacity"]')).toBe(field);
+    expect(document.activeElement).toBe(field);
+  }
+  const save = () =>
+    Array.from(c.querySelectorAll("button")).find(
+      (b) => b.textContent === "Save reviewed company access",
+    )!;
+  for (const text of ["", "31.", "169", "Infinity", "-1"]) {
+    await enter("Weekly capacity", text);
+    expect(field.value).toBe(text);
+    expect(save().disabled).toBe(true);
+  }
+  await enter("Weekly capacity", "40");
+  await enter("Weekly capacity", "40.");
+  await press("Load current membership and version");
+  expect(field.value).toBe("40");
+  await enter("Weekly capacity", "31.");
+  clearAllDrafts();
+  await render(
+    createElement(MembershipEditor, { person: people[1], onClose: vi.fn() }),
+  );
+  expect(field.value).toBe("40");
+  for (const text of ["0", "168", ".5", "31.5"]) {
+    await enter("Weekly capacity", text);
+    expect(save().disabled).toBe(false);
+  }
+  await press("Save reviewed company access");
+  const call = state.request.mock.calls.find(
+    ([, method]) => method === "PATCH",
+  );
+  expect(call?.[2]).toMatchObject({
+    capacityHours: 31.5,
+    expectedVersion: people[1].membershipVersion,
+  });
+  expect(Object.hasOwn(call?.[2] ?? {}, "capacityInput")).toBe(false);
+});
+
+it.each(["onboarding", "preset", "review"])(
+  "guards %s capacity and sends only a complete finite number",
+  async (mode) => {
+    const { default: Preset } = await import("./PeoplePresetEditor");
+    state.request.mockImplementation(async (path: string, method: string) =>
+      !method || method === "GET"
+        ? reads(path)
+        : {
+            id: "result",
+            version: 1,
+            decisions: [],
+            person: {},
+            grants: [],
+            taskPreviews: [],
+            unresolved: [],
+          },
+    );
+    if (mode === "onboarding") {
+      await render(createElement(PeopleOnboarding));
+      await enter("Name", "Fictional numeric");
+      await enter("Email", "numeric@example.invalid");
+      await press("Continue to access");
+    } else if (mode === "preset") {
+      await render(createElement(Preset));
+      await enter("Preset name", "Fictional numeric preset");
+    } else {
+      await render(createElement(AccessReview));
+      await press("Capture current company memberships");
+      await enter("Review reason", "Fictional numeric review");
+      await act(async () => {
+        Array.from(c.querySelectorAll("button"))
+          .filter((b) => b.textContent === "Access decision: Keep access")[1]
+          .click();
+      });
+      await press("Change reviewed access");
+    }
+    const title =
+      mode === "onboarding"
+        ? "Continue to starting work"
+        : mode === "preset"
+          ? "Save reviewed preset"
+          : "Preview access decisions";
+    const submit = () =>
+      Array.from(c.querySelectorAll("button")).find(
+        (b) => b.textContent === title,
+      )!;
+    for (const text of ["", "31.", "168.1", "1e999"]) {
+      await enter("Weekly capacity", text);
+      expect(submit().disabled).toBe(true);
+      expect(
+        state.request.mock.calls.filter(
+          ([, method]) => !!method && method !== "GET",
+        ).length,
+      ).toBe(0);
+    }
+    await enter("Weekly capacity", "31.5");
+    expect(submit().disabled).toBe(false);
+    await press(title);
+    if (mode === "onboarding") await press("Review onboarding");
+    const payload = state.request.mock.calls.find(
+      ([, method]) => method === "POST",
+    )?.[2];
+    const membership =
+      mode === "review"
+        ? payload.decisions.find((d: any) => d.action === "change").fields
+        : payload.membership;
+    expect(membership.capacityHours).toBe(31.5);
+    expect(Object.hasOwn(membership, "capacityInput")).toBe(false);
   },
 );

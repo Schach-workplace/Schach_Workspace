@@ -1,3 +1,4 @@
+import { capacityValid, membershipForSubmission } from "./peopleCapacity";
 import PeopleProjection from "./PeopleProjection";
 import { businessAttemptGeneration } from "./businessAttempts";
 import { onboardingTaskReview } from "../../shared/people/taskReview";
@@ -83,11 +84,12 @@ export default function PeopleOnboarding() {
     setPreview(undefined);
   }
   async function inspect() {
+    if (!capacityValid(draft.membership)) return;
     previewAction.abandon();
     try {
       const value = await previewAction.execute<OnboardingPreview>(
         "/people/onboarding/preview",
-        draft as unknown as Record<string, unknown>,
+        { ...draft, membership: membershipForSubmission(draft.membership) },
       );
       setPreview({ basis, value });
       setStage(3);
@@ -246,12 +248,7 @@ export default function PeopleOnboarding() {
             <Action title="Back to person" onPress={() => setStage(0)} />
             <Action
               title="Continue to starting work"
-              disabled={
-                !ready ||
-                !Number.isFinite(draft.membership.capacityHours) ||
-                draft.membership.capacityHours < 0 ||
-                draft.membership.capacityHours > 168
-              }
+              disabled={!ready || !capacityValid(draft.membership)}
               onPress={() => setStage(2)}
             />
           </View>
@@ -369,6 +366,7 @@ export default function PeopleOnboarding() {
               title="Review onboarding"
               disabled={
                 !ready ||
+                !capacityValid(draft.membership) ||
                 previewAction.busy ||
                 draft.tasks.some(
                   (t) => !t.anchorDate || t.expectedTemplateVersion < 1,
