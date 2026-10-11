@@ -226,8 +226,19 @@ func (s *Server) RunReportSchedules(ctx context.Context, now time.Time, limit in
 	created := 0
 	var failures []error
 	for _, candidate := range schedules {
+		// Reserve part of the maintenance budget for a durable diagnostic and later
+		// candidates. A single capture must not consume every tick indefinitely.
+		budget := 5 * time.Second
+		if deadline, ok := ctx.Deadline(); ok {
+			remaining := time.Until(deadline)
+			if remaining <= 0 {
+				return created, errors.Join(append(failures, ctx.Err())...)
+			}
+			budget = min(budget, remaining-min(500*time.Millisecond, remaining/2))
+		}
+		scheduleCtx, cancel := context.WithTimeout(ctx, budget)
 		perSchedule := 0
-		e := s.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
+		e := s.db.WithContext(scheduleCtx).Transaction(func(tx *gorm.DB) error {
 			if e := lockCompany(tx, candidate.CompanyID); e != nil {
 				return e
 			}
@@ -363,6 +374,7 @@ func (s *Server) RunReportSchedules(ctx context.Context, now time.Time, limit in
 			schedule.NextOccurrenceUTC = next
 			return tx.Save(&schedule).Error
 		}, s.reportCaptureOptions())
+		cancel()
 		if e != nil {
 			failures = append(failures, e)
 			if ctx.Err() != nil {
@@ -376,7 +388,12 @@ func (s *Server) RunReportSchedules(ctx context.Context, now time.Time, limit in
 			if attempt >= 5 {
 				state = "paused"
 			}
-			if diagnosticError := s.db.WithContext(ctx).Model(&ReportSchedule{}).Where("id=? AND version=? AND state='active'", candidate.ID, candidate.Version).Updates(map[string]any{"failure_code": "transient_failure", "attempt_count": attempt, "next_attempt_at": next, "state": state}).Error; diagnosticError != nil {
+			if diagnosticError := s.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
+				if e := lockCompany(tx, candidate.CompanyID); e != nil {
+					return e
+				}
+				return tx.Model(&ReportSchedule{}).Where("id=? AND version=? AND state='active' AND next_occurrence_utc=? AND attempt_count=?", candidate.ID, candidate.Version, candidate.NextOccurrenceUTC, candidate.AttemptCount).Updates(map[string]any{"failure_code": "transient_failure", "attempt_count": attempt, "next_attempt_at": next, "state": state}).Error
+			}); diagnosticError != nil {
 				failures = append(failures, diagnosticError)
 			}
 			continue

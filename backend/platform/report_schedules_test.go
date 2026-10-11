@@ -458,3 +458,60 @@ func TestReportSchedulesTransientCaptureHasBoundedBackoff(t *testing.T) {
 		t.Fatal("failed capture persisted partial snapshot", snapshots)
 	}
 }
+
+func TestReportSchedulesTimedOutFirstLeavesBackoffAndLaterWork(t *testing.T) {
+	s, db := testServer(t)
+	// SQLite cancellation discards the active connection; an owned keeper retains
+	// this in-memory fixture while the next transaction acquires a new connection.
+	raw, _ := db.DB()
+	if db.Dialector.Name() == "sqlite" {
+		raw.SetMaxOpenConns(2)
+		keeper, e := raw.Conn(context.Background())
+		if e != nil {
+			t.Fatal(e)
+		}
+		defer keeper.Close()
+	}
+	c := login(t, s, "founder@example.com")
+	cid := firstCompany(t, s, c)
+	owner := me(t, s, c)
+	root := "/api/companies/" + cid + "/reports/definitions"
+	ids := []string{}
+	now := time.Now().UTC()
+	for i := 0; i < 2; i++ {
+		st, b, w := req(t, s, "POST", root, map[string]any{"retryKey": fmt.Sprintf("timeout-def-%d", i), "configuration": savedConfig(owner)}, c)
+		if st != 200 {
+			t.Fatal(w.Body.String())
+		}
+		id := b["definition"].(map[string]any)["id"].(string)
+		ids = append(ids, id)
+		st, _, w = req(t, s, "PATCH", root+"/"+id+"/schedule", map[string]any{"retryKey": fmt.Sprintf("timeout-schedule-%d", i), "expectedDefinitionVersion": 1, "expectedScheduleVersion": 0, "weekdays": []int{0, 1, 2, 3, 4, 5, 6}, "localMinute": "00:00", "scheduleZone": "UTC", "state": "active"}, c)
+		if st != 200 {
+			t.Fatal(w.Body.String())
+		}
+		db.Model(&ReportSchedule{}).Where("definition_id=?", id).Update("next_occurrence_utc", now.Add(-time.Duration(72-i*24)*time.Hour))
+	}
+	db.Callback().Create().Before("gorm:create").Register("timeout-first-capture", func(tx *gorm.DB) {
+		if snap, ok := tx.Statement.Dest.(*HistoricalReportSnapshot); ok && snap.DefinitionID == ids[0] {
+			<-tx.Statement.Context.Done()
+			tx.AddError(tx.Statement.Context.Err())
+		}
+	})
+	defer db.Callback().Create().Remove("timeout-first-capture")
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+	n, e := s.RunReportSchedules(ctx, now, 100)
+	if n != 1 || e == nil {
+		t.Fatal("timed-out first schedule starved later work", n, e)
+	}
+	var first ReportSchedule
+	if e := db.First(&first, "definition_id=?", ids[0]).Error; e != nil {
+		t.Fatal(e)
+	}
+	if first.AttemptCount != 1 || first.FailureCode != "transient_failure" || first.NextAttemptAt == nil || !first.NextAttemptAt.After(now) {
+		t.Fatal("deadline failure did not persist bounded backoff", first)
+	}
+	if n, e := s.RunReportSchedules(context.Background(), now, 100); n != 0 || e != nil {
+		t.Fatal("deadline backoff ignored", n, e)
+	}
+}
