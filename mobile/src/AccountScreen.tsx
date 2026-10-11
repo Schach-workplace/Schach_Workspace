@@ -1,4 +1,10 @@
-import { useState, useEffect, useEffectEvent, useRef, useLayoutEffect } from "react";
+import {
+  useState,
+  useEffect,
+  useEffectEvent,
+  useRef,
+  useLayoutEffect,
+} from "react";
 import { Text, TextInput, View } from "react-native";
 import { Page, useWorkspace, styles } from "./Workspace";
 import { Action } from "./ConnectUI";
@@ -12,8 +18,11 @@ export default function AccountScreen() {
     w.foreground,
     w.policyEpoch,
   ].join(":");
+  const [disclosedScope, setDisclosedScope] = useState(scope);
   const current = useRef(scope);
-  useLayoutEffect(()=>{current.current=scope},[scope]);
+  useLayoutEffect(() => {
+    current.current = scope;
+  }, [scope]);
   async function guardedRequest<T>(
     path: string,
     method = "GET",
@@ -44,8 +53,17 @@ export default function AccountScreen() {
     setCode("");
   });
   useEffect(() => {
-    void Promise.resolve().then(() => scrubFetched());
-  }, [w.foreground, w.company, w.session?.user.id, w.policyEpoch]);
+    void Promise.resolve().then(() => {
+      scrubFetched();
+      setDisclosedScope(scope);
+    });
+  }, [scope]);
+  if (!w.foreground || disclosedScope !== scope)
+    return (
+      <Page>
+        <Text>Checking current account access.</Text>
+      </Page>
+    );
   return (
     <Page>
       <Text style={styles.heading}>Account</Text>{" "}

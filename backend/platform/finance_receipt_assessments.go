@@ -48,7 +48,7 @@ func (s *Server) assessFinanceReceipt(w http.ResponseWriter, r *http.Request) er
 			return e
 		}
 		var e error
-		result, e = businessMutation(tx, a, "receipt_assess", key, map[string]any{"receiptId": r.PathValue("id"), "fields": f}, auth, func(out BusinessResult) error {
+		result, e = financeBusinessMutation(tx, a, "receipt_assess", key, map[string]any{"receiptId": r.PathValue("id"), "fields": f}, auth, func(out BusinessResult) error {
 			var job FinanceAssistanceJob
 			if e := tx.First(&job, "id=? AND requester_id=?", out.IDs[0], a.User.ID).Error; e != nil {
 				return missing()

@@ -55,6 +55,8 @@ func authorizeFinanceIntakeContext(tx *gorm.DB, a *access, id string, allowTombs
 	if e := tx.First(&i, "company_id=? AND id=? AND owner_id=?", a.Company.ID, id, a.User.ID).Error; e != nil {
 		return i, missing()
 	}
+	i.CreatedAt = i.CreatedAt.UTC()
+	i.ExpiresAt = i.ExpiresAt.UTC()
 	if !allowTombstone && (!time.Now().Before(i.ExpiresAt) || in(i.State, "cancelled", "expired", "purged", "rejected")) {
 		return i, missing()
 	}
@@ -143,7 +145,7 @@ func (s *Server) reserveFinanceIntake(w http.ResponseWriter, r *http.Request) er
 			}
 			return nil
 		}
-		result, e := businessMutation(tx, a, "finance_intake_reserve", key, f, auth, func(result BusinessResult) error {
+		result, e := financeBusinessMutation(tx, a, "finance_intake_reserve", key, f, auth, func(result BusinessResult) error {
 			var e error
 			out, e = authorizeFinanceIntake(tx, a, result.IDs[0])
 			return e
@@ -163,7 +165,7 @@ func (s *Server) reserveFinanceIntake(w http.ResponseWriter, r *http.Request) er
 			if actor+charge > s.opts.FinanceActorQuotaBytes || company+charge > s.opts.FinanceCompanyQuotaBytes {
 				return BusinessResult{}, invalid("Private finance intake capacity reached; cancel an unused intake.")
 			}
-			now := time.Now().UTC()
+			now := time.Now().UTC().Truncate(time.Microsecond)
 			out = FinanceAssistanceIntake{ID: newID("fin"), CompanyID: a.Company.ID, OwnerID: a.User.ID, Purpose: input.Purpose, SessionRef: ref, StoreKey: newID("med"), FileName: input.FileName, Size: input.Size, InternalSHA256: input.SHA256, State: "reserved", Version: 1, ContentGeneration: 1, DestinationDepartmentID: input.DestinationDepartmentID, CreatedAt: now, ExpiresAt: now.Add(s.opts.FinanceIntakeTTL)}
 			if input.Capture {
 				out.State = "capture_reserved"
@@ -323,7 +325,7 @@ func (s *Server) mutateFinanceIntake(w http.ResponseWriter, r *http.Request, can
 			return e
 		}
 		var e error
-		result, e = businessMutation(tx, a, op, key, intent, auth, func(out BusinessResult) error { return nil }, func() (BusinessResult, error) {
+		result, e = financeBusinessMutation(tx, a, op, key, intent, auth, func(out BusinessResult) error { return nil }, func() (BusinessResult, error) {
 			if i.Version != input.ExpectedVersion {
 				return BusinessResult{}, financeConflict()
 			}

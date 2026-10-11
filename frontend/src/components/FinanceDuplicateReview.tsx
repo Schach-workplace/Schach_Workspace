@@ -43,12 +43,25 @@ function Candidate({ id }: { id: string }) {
     </section>
   );
 }
-export default function FinanceDuplicateReview() {
+export default function FinanceDuplicateReview({
+  initialCandidate = '',
+}: {
+  initialCandidate?: string;
+}) {
   const w = useWorkspace();
   const q = useExecutionRead<{ items: FinanceDuplicate[] }>('/finance/duplicate-candidates');
   const [source, setSource] = useExecutionInput('$duplicate-review', 'source', '');
-  const [selected, setSelected] = useExecutionInput('$duplicate-review', 'selected', '');
+  const [selected, setSelected] = useExecutionInput(
+    '$duplicate-review',
+    'selected',
+    initialCandidate,
+  );
   const m = useExecutionMutation('$duplicate-review');
+  const [comparisonCursor, setComparisonCursor] = useExecutionInput(
+    '$duplicate-review',
+    'comparisonCursor',
+    '',
+  );
   const expense = w.data?.expenses.find((e) => e.id === source);
   return (
     <section>
@@ -62,7 +75,10 @@ export default function FinanceDuplicateReview() {
         <select
           disabled={!!m.attempt || m.busy}
           value={source}
-          onChange={(e) => setSource(e.target.value)}
+          onChange={(e) => {
+            setSource(e.target.value);
+            setComparisonCursor('');
+          }}
         >
           <option value="">Choose an authorized expense</option>
           {w.data?.expenses.map((e) => (
@@ -76,13 +92,15 @@ export default function FinanceDuplicateReview() {
         disabled={!expense || m.busy}
         onClick={() =>
           void m
-            .execute(
+            .execute<{ nextComparisonCursor: string }>(
               '/finance/duplicate-candidates/review',
               m.attempt?.payload ?? {
                 sourceKind: 'expense',
                 sourceId: expense!.id,
                 expectedVersion: expense!.version,
               },
+              'POST',
+              (r) => setComparisonCursor(r.nextComparisonCursor),
             )
             .then(() => q.retry())
             .catch(() => {})
@@ -90,6 +108,29 @@ export default function FinanceDuplicateReview() {
       >
         Review duplicate suggestions
       </button>
+      {comparisonCursor && (
+        <button
+          disabled={!expense || m.busy || !!m.attempt}
+          onClick={() =>
+            void m
+              .execute<{ nextComparisonCursor: string }>(
+                '/finance/duplicate-candidates/review',
+                {
+                  sourceKind: 'expense',
+                  sourceId: expense!.id,
+                  expectedVersion: expense!.version,
+                  comparisonCursor,
+                },
+                'POST',
+                (r) => setComparisonCursor(r.nextComparisonCursor),
+              )
+              .then(() => q.retry())
+              .catch(() => {})
+          }
+        >
+          Compare next expenses
+        </button>
+      )}
       {q.loading && <p>Checking current pair access…</p>}
       {q.data?.items.map((c) => (
         <button key={c.id} onClick={() => setSelected(c.id)}>

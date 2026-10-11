@@ -23,7 +23,7 @@ try:
  sql(f'CREATE DATABASE {db};');db_created=True
  env=dict(os.environ)
  for key in list(env):
-  if key.startswith(('COMMUNICATION_','LIVEKIT_','APNS_','FCM_','MFA_')) or key in ('MEDIA_ROOT','CLAMAV_ADDRESS','SEED_DEMO'):env.pop(key)
+  if key.startswith(('COMMUNICATION_','LIVEKIT_','APNS_','FCM_','MFA_','BOOTSTRAP_','FINANCE_','REPORT_','INTELLIGENCE_','PEOPLE_')) or key in ('MEDIA_ROOT','CLAMAV_ADDRESS','SEED_DEMO','DATABASE_URL','BOOTSTRAP_PASSWORD','SECURE_COOKIES','ENVIRONMENT','ALLOWED_ORIGINS','SESSION_TTL_DAYS','SESSION_HOURS'):env.pop(key)
  env['DATABASE_URL']=urllib.parse.urlunsplit(parsed._replace(path='/'+db))
  cmd(['go','run','./cmd/migrate'],ROOT/'backend',env)
  cmd(['docker','network','create',network]);network_created=True;cmd(['docker','network','connect',network,a.postgres_container])
@@ -37,7 +37,7 @@ try:
   config={'metadata':{'app_id':'schach-runtime-smoke','env_name':'disposable-local','env_type':'development','cloud':'local','base_url':base},'auth':[{'type':'key','id':1,'key':{'$env':'SERVICE_API_KEY'}}],'sql_servers':[{'host':a.postgres_container+':5432','tls_config':{'disabled':True},'databases':{'workspace':{'name':db,'username':'schach','password':'disposable-trust-connection','min_connections':1,'max_connections':20}}}],'secrets':{'BootstrapPassword':{'$env':'BOOTSTRAP_PASSWORD'}},'log_config':'warn'}
   infra=root/'infra.json';infra.write_text(json.dumps(config))
   cmd(['encore','build','docker',tag,'--config',str(infra),'--base','alpine:3'],root/'encore',env,log='build.log');checks.append('Actual Encore exporter builds current code without a development watcher')
-  ef=root/'runtime.env';ef.write_text('SERVICE_API_KEY='+base64.b64encode(secrets.token_bytes(32)).decode()+'\nBOOTSTRAP_PASSWORD='+secrets.token_urlsafe(32)+'\nSEED_DEMO=true\n');ef.chmod(0o600)
+  ef=root/'runtime.env';ef.write_text('SERVICE_API_KEY='+base64.b64encode(secrets.token_bytes(32)).decode()+'\nBOOTSTRAP_PASSWORD='+secrets.token_urlsafe(32)+'\nSEED_DEMO=true\nFINANCE_INTAKE_ROOT=/tmp/owned-finance-intakes\nFINANCE_OCR_ENABLED=false\nFINANCE_PDF_ENABLED=false\nSESSION_HOURS=72\n');ef.chmod(0o600)
   cmd(['docker','run','-d','--name',name,'--network',network,'--env-file',str(ef),'-p',f'127.0.0.1:{port}:8080',tag]);started=True
   for _ in range(150):
    try:
@@ -48,7 +48,8 @@ try:
   checks.append('Exported Encore boots against native PostgreSQL with all numbered migrations')
   for headers in ({},{'X-Encore-Cron-Execution':'spoof'}):assert call(base,'POST','/api.RunScheduled',{},headers)[0] in (401,403,404)
   checks.append('Unauthenticated and spoofed scheduled invocations rejected by exported private boundary')
-  cmd(['python3',str(ROOT/'verification/runtime/tcp_scenarios.py'),'--url',base,'--api-only','--allow-demo-mutations','--report',str(out/'api-result.json')],log='api.log');checks.append('Original 38 workspace + 53 finance assertions pass on actual exported Encore TCP')
+  cmd(['python3',str(ROOT/'verification/runtime/tcp_scenarios.py'),'--url',base,'--api-only','--allow-demo-mutations','--report',str(out/'api-result.json')],log='api.log');api_report=json.loads((out/'api-result.json').read_text());checks.append(f"Original {api_report['workspaceChecks']} workspace + {api_report['financeChecks']} finance assertions pass on actual exported Encore TCP")
+  cmd(['python3',str(ROOT/'verification/runtime/finance_assistance_fixture.py'),'--url',base,'--output',str(out/'finance'),'--allow-demo-mutations'],log='finance.log');checks.append('Actual exported finance capture reservation/bind/upload/canonical replay; OCR disabled and scanner unavailable are explicit')
   status,body,headers=call(base,'POST','/api/auth/login',{'email':'founder@schach.demo','password':'SchachDemo!2026'});assert status==200;cookie=headers.get('Set-Cookie').split(';')[0];value=json.loads(body);cid=value['companies'][0]['id'];owner=value['user']['id'];password=secrets.token_urlsafe(24)
   status,body,_=call(base,'POST',f'/api/companies/{cid}/people',{'name':'Export runtime participant','email':'export-chat@example.invalid','password':password,'role':'member','capacityHours':40},{'Cookie':cookie});assert status==200;member=json.loads(body)['id']
   status,_,headers=call(base,'POST','/api/auth/login',{'email':'export-chat@example.invalid','password':password});assert status==200;mc=headers.get('Set-Cookie').split(';')[0]

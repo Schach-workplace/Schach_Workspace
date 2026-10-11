@@ -12,6 +12,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"strings"
+	"time"
 	"unicode/utf8"
 )
 
@@ -61,7 +62,9 @@ func (p *TesseractReceiptOCR) Extract(ctx context.Context, in ReceiptOCRInput) (
 	if e = os.WriteFile(path, data, 0600); e != nil {
 		return out, e
 	}
-	cmd := exec.CommandContext(ctx, p.Executable, path, "stdout", "-l", "eng", "--psm", "6")
+	bounded, cancel := context.WithTimeout(ctx, 45*time.Second)
+	defer cancel()
+	cmd := exec.CommandContext(bounded, "/usr/bin/prlimit", "--as=536870912", "--cpu=45", "--fsize=67108864", "--", p.Executable, path, "stdout", "--tessdata-dir", "/usr/share/tessdata", "-l", "eng", "--psm", "6")
 	cmd.Env = append(os.Environ(), "OMP_THREAD_LIMIT=1")
 	stdout := &financeBoundedOutput{Limit: 64 << 10}
 	stderr := &financeBoundedOutput{Limit: 8 << 10}

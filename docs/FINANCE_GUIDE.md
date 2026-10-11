@@ -146,3 +146,17 @@ The inspection register also retains two older work-module gaps: auditable time-
 - [Stripe currency documentation](https://docs.stripe.com/currencies): an example of integer minor-unit amount conventions. No Stripe integration is included.
 
 These are design references, not certifications of this application. Executed evidence is in `VERIFICATION.md` and the reproducible verification harnesses.
+
+## Optional receipt and statement assistance
+
+Manual expense entry remains available. Finance → Receipt extraction stages a private file; reserve, reselect the same bytes, stage and request scanning. After clean assessment, opt into local extraction. Existing expense receipts offer clean assessment and extraction separately. Review candidates as suggestions: type or select the title/vendor/invoice/date/amount, choose the actual category and destination, resolve each listed uncertainty and review linked work. Review the current finance audience and explicitly publish an independent evidence copy before creating/updating a **draft**. Submission, independent approval and payment remain separate controls.
+
+A camera first reserves a real private receipt source, then binds the freshly authorized camera bytes once. Cancelled camera capture cancels that reservation. A confirmation failure offers retry of the same frozen intent; prior work may exist. Open current private sources after refresh failure. Never recapture merely to replay an already bound reservation. Fetched candidates/source details disappear during current-access rechecks; same-principal authored review stays in session RAM and expires on denial/logout/policy change.
+
+Duplicate review compares only accessible current source pairs. Similar invoices/content/vendor amounts are suggestions requiring judgment. Explain a false positive before dismissing it. The original exact non-void vendor/invoice rule still applies after dismissal.
+
+Finance authority can import UTF8 CSV with an explicitly selected header/delimiter/date/decimal/grouping/amount mode and column numbers. Debits are negative, credits positive; unsupported formats/errors require correction/remapping. Review every normalized record before importing. Two equal records remain two occurrences. Reimporting the same file requires a deliberate explanation; retained rows and totals remain independent of scratch expiry.
+
+Reconciliation links one full negative statement row to an already recorded paid expense. Select the expense deliberately and explain the review. Credits, partial amounts and ambiguities stay visible as discrepancies. Unmatch preserves the association history and recorded payment. None of these controls initiates an external transfer or edits paid economics. Individual and aggregate amounts use exact minor units, including totals above JavaScript's safe integer limit.
+
+Native More includes Finance, Projects, Reports, Requests and Account. Account retains notification hints/device controls/quiet hours/MFA/password/recovery/sign-out. Private account outputs are withheld on current-scope changes. Camera/photo/files/physical keyboard, accessibility and iOS signing require actual device qualification; bundle export alone does not certify those paths.

@@ -2,6 +2,7 @@ package platform
 
 import (
 	"encoding/json"
+	"fmt"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 	"net/http"
@@ -35,6 +36,7 @@ type FinanceDuplicateBasis struct {
 	SourceVersion                          int64
 	ReviewedFields                         map[string]json.RawMessage
 	InternalSourceHash, ReviewedFieldsHash string
+	ComparisonCursor                       string
 }
 
 func duplicateSource(tx *gorm.DB, a *access, b FinanceDuplicateBasis) (Expense, error) {
@@ -61,7 +63,7 @@ func duplicateSource(tx *gorm.DB, a *access, b FinanceDuplicateBasis) (Expense, 
 	if result == nil || result.Revision != b.SourceVersion {
 		return Expense{}, financeConflict()
 	}
-	return prepareExpenseCreate(tx, a, b.ReviewedFields)
+	return prepareExpenseReviewedFields(tx, a, b.ReviewedFields, false)
 }
 func duplicateDateDistance(a, b string) int {
 	da, e := time.Parse("2006-01-02", a)
@@ -118,25 +120,49 @@ func expenseCleanHashes(tx *gorm.DB, cid, id string) ([]string, error) {
 	return hashes, e
 }
 func computeFinanceDuplicateCandidates(tx *gorm.DB, a *access, b FinanceDuplicateBasis) ([]FinanceDuplicateCandidate, error) {
+	items, _, e := computeFinanceDuplicatePage(tx, a, b)
+	return items, e
+}
+func computeFinanceDuplicatePage(tx *gorm.DB, a *access, b FinanceDuplicateBasis) ([]FinanceDuplicateCandidate, string, error) {
 	source, e := duplicateSource(tx, a, b)
 	if e != nil {
-		return nil, e
+		return nil, "", e
+	}
+	if b.SourceKind == "extraction" {
+		job, _, err := authorizeReceiptExtraction(tx, a, b.SourceID)
+		if err != nil {
+			return nil, "", err
+		}
+		b.InternalSourceHash = job.InternalHash
 	}
 	sourceHash, e := businessHash([]any{b.SourceKind, b.SourceID, b.SourceVersion, b.ReviewedFieldsHash, b.InternalSourceHash})
 	if e != nil {
-		return nil, e
+		return nil, "", e
 	}
 	var peers []Expense
 	q := expenseReadQuery(tx, a).Where("status<>'void'")
 	if b.SourceKind == "expense" {
 		q = q.Where("id<>?", source.ID)
 	}
-	if e = q.Order("id").Limit(100).Find(&peers).Error; e != nil {
-		return nil, e
+	basis := payloadHash([]string{accessBasis(a), "duplicate-comparison", b.SourceKind, b.SourceID, fmt.Sprint(b.SourceVersion), sourceHash})
+	if b.ComparisonCursor != "" {
+		c, err := decodeReadCursor(b.ComparisonCursor, basis)
+		if err != nil {
+			return nil, "", err
+		}
+		q = q.Where("id>?", c.ID)
+	}
+	if e = q.Order("id").Limit(101).Find(&peers).Error; e != nil {
+		return nil, "", e
+	}
+	nextCursor := ""
+	if len(peers) > 100 {
+		peers = peers[:100]
+		nextCursor = encodeReadCursor(readCursor{basis, "", peers[len(peers)-1].ID})
 	}
 	sourceHashes, e := expenseCleanHashes(tx, a.Company.ID, source.ID)
 	if e != nil {
-		return nil, e
+		return nil, "", e
 	}
 	if b.InternalSourceHash != "" {
 		sourceHashes = append(sourceHashes, b.InternalSourceHash)
@@ -150,7 +176,7 @@ func computeFinanceDuplicateCandidates(tx *gorm.DB, a *access, b FinanceDuplicat
 		if reason == "" {
 			hashes, e := expenseCleanHashes(tx, a.Company.ID, peer.ID)
 			if e != nil {
-				return nil, e
+				return nil, "", e
 			}
 			for _, h := range hashes {
 				if in(h, sourceHashes...) {
@@ -183,11 +209,11 @@ func computeFinanceDuplicateCandidates(tx *gorm.DB, a *access, b FinanceDuplicat
 		}
 		basis, e := businessHash(basisIntent)
 		if e != nil {
-			return nil, e
+			return nil, "", e
 		}
 		out = append(out, FinanceDuplicateCandidate{ID: newID("fdup"), CompanyID: a.Company.ID, SourceKind: kind, SourceID: id, SourceVersion: version, SourceBasisHash: basis, ComparedExpenseID: other, ComparedVersion: otherVersion, AlgorithmVersion: 1, Reason: reason, State: "open", Version: 1, CreatedAt: time.Now().UTC()})
 	}
-	return out, nil
+	return out, nextCursor, nil
 }
 func persistFinanceDuplicateCandidates(tx *gorm.DB, a *access, items []FinanceDuplicateCandidate) error {
 	for index := range items {
@@ -220,7 +246,7 @@ func authorizeFinanceDuplicate(tx *gorm.DB, a *access, id string) (FinanceDuplic
 		}
 	} else {
 		_, result, e := authorizeReceiptExtraction(tx, a, c.SourceID)
-		if e != nil || result == nil || result.Revision != c.SourceVersion {
+		if e != nil || result == nil || result.Revision != c.SourceVersion || result.AcceptanceID != "" {
 			return c, missing()
 		}
 	}
@@ -239,7 +265,7 @@ func (s *Server) reviewFinanceDuplicates(w http.ResponseWriter, r *http.Request)
 	if e != nil {
 		return e
 	}
-	f, e := readFields(w, r, "retryKey", "sourceKind", "sourceId", "expectedVersion", "fields")
+	f, e := readFields(w, r, "retryKey", "sourceKind", "sourceId", "expectedVersion", "fields", "comparisonCursor")
 	if e != nil {
 		return e
 	}
@@ -249,6 +275,7 @@ func (s *Server) reviewFinanceDuplicates(w http.ResponseWriter, r *http.Request)
 	}
 	var input struct {
 		SourceKind, SourceID string
+		ComparisonCursor     string
 		ExpectedVersion      int64
 		Fields               map[string]json.RawMessage
 	}
@@ -264,12 +291,18 @@ func (s *Server) reviewFinanceDuplicates(w http.ResponseWriter, r *http.Request)
 			return invalid("Unknown reviewed field.")
 		}
 	}
-	b := FinanceDuplicateBasis{CompanyID: a.Company.ID, SourceKind: input.SourceKind, SourceID: input.SourceID, SourceVersion: input.ExpectedVersion, ReviewedFields: input.Fields}
+	b := FinanceDuplicateBasis{CompanyID: a.Company.ID, SourceKind: input.SourceKind, SourceID: input.SourceID, SourceVersion: input.ExpectedVersion, ReviewedFields: input.Fields, ComparisonCursor: input.ComparisonCursor}
 	b.ReviewedFieldsHash, _ = businessHash(input.Fields)
 	var items []FinanceDuplicateCandidate
+	nextCursor := ""
 	e = s.withAccessTransaction(r, a, func(tx *gorm.DB) error {
+		prepared, next, err := computeFinanceDuplicatePage(tx, a, b)
+		if err != nil {
+			return err
+		}
+		nextCursor = next
 		auth := func() error { _, e := duplicateSource(tx, a, b); return e }
-		result, e := businessMutation(tx, a, "duplicate_review", key, f, auth, func(out BusinessResult) error {
+		result, e := financeBusinessMutation(tx, a, "duplicate_review", key, f, auth, func(out BusinessResult) error {
 			for _, id := range out.IDs {
 				c, e := authorizeFinanceDuplicate(tx, a, id)
 				if e != nil {
@@ -279,12 +312,8 @@ func (s *Server) reviewFinanceDuplicates(w http.ResponseWriter, r *http.Request)
 			}
 			return nil
 		}, func() (BusinessResult, error) {
-			var e error
-			items, e = computeFinanceDuplicateCandidates(tx, a, b)
-			if e != nil {
-				return BusinessResult{}, e
-			}
-			if e = persistFinanceDuplicateCandidates(tx, a, items); e != nil {
+			items = prepared
+			if e := persistFinanceDuplicateCandidates(tx, a, items); e != nil {
 				return BusinessResult{}, e
 			}
 			out := BusinessResult{Kind: "finance_duplicates", IDs: []string{}, Versions: []int64{}}
@@ -300,19 +329,20 @@ func (s *Server) reviewFinanceDuplicates(w http.ResponseWriter, r *http.Request)
 	if e != nil {
 		return e
 	}
-	return respond(w, 200, map[string]any{"items": items})
+	return respond(w, 200, map[string]any{"items": items, "nextComparisonCursor": nextCursor, "hasMoreComparisons": nextCursor != ""})
 }
 func (s *Server) previewFinanceDuplicates(w http.ResponseWriter, r *http.Request) error {
 	a, e := s.access(r)
 	if e != nil {
 		return e
 	}
-	f, e := readFields(w, r, "sourceExtractionId", "expectedResultRevision", "fields")
+	f, e := readFields(w, r, "sourceExtractionId", "expectedResultRevision", "fields", "comparisonCursor")
 	if e != nil {
 		return e
 	}
 	var input struct {
 		SourceExtractionID     string
+		ComparisonCursor       string
 		ExpectedResultRevision int64
 		Fields                 map[string]json.RawMessage
 	}
@@ -324,14 +354,19 @@ func (s *Server) previewFinanceDuplicates(w http.ResponseWriter, r *http.Request
 			return invalid("Unknown reviewed field.")
 		}
 	}
-	b := FinanceDuplicateBasis{CompanyID: a.Company.ID, SourceKind: "extraction", SourceID: input.SourceExtractionID, SourceVersion: input.ExpectedResultRevision, ReviewedFields: input.Fields}
+	b := FinanceDuplicateBasis{CompanyID: a.Company.ID, SourceKind: "extraction", SourceID: input.SourceExtractionID, SourceVersion: input.ExpectedResultRevision, ReviewedFields: input.Fields, ComparisonCursor: input.ComparisonCursor}
 	b.ReviewedFieldsHash, _ = businessHash(input.Fields)
 	var items []FinanceDuplicateCandidate
-	e = s.withAccessTransaction(r, a, func(tx *gorm.DB) error { var e error; items, e = computeFinanceDuplicateCandidates(tx, a, b); return e })
+	nextCursor := ""
+	e = s.withAccessTransaction(r, a, func(tx *gorm.DB) error {
+		var e error
+		items, nextCursor, e = computeFinanceDuplicatePage(tx, a, b)
+		return e
+	})
 	if e != nil {
 		return e
 	}
-	return respond(w, 200, map[string]any{"items": items})
+	return respond(w, 200, map[string]any{"items": items, "nextComparisonCursor": nextCursor, "hasMoreComparisons": nextCursor != ""})
 }
 func (s *Server) getFinanceDuplicate(w http.ResponseWriter, r *http.Request) error {
 	a, e := s.access(r)
@@ -362,8 +397,6 @@ func (s *Server) listFinanceDuplicates(w http.ResponseWriter, r *http.Request) e
 	cursor := ""
 	more := false
 	e = s.withAccessTransaction(r, a, func(tx *gorm.DB) error {
-		parents := expenseReadQuery(tx, a).Select("id")
-		jobs := financeExtractionReadQuery(tx, a).Select("id")
 		state := r.URL.Query().Get("state")
 		if state == "" {
 			state = "open"
@@ -372,7 +405,7 @@ func (s *Server) listFinanceDuplicates(w http.ResponseWriter, r *http.Request) e
 			return invalid("Choose open or dismissed suggestions.")
 		}
 		basis := payloadHash([]string{accessBasis(a), "finance_duplicates", state})
-		q := tx.Model(&FinanceDuplicateCandidate{}).Where("company_id=? AND state=? AND compared_expense_id IN (?) AND EXISTS(SELECT 1 FROM expenses p WHERE p.id=finance_duplicate_candidates.compared_expense_id AND p.company_id=finance_duplicate_candidates.company_id AND p.version=finance_duplicate_candidates.compared_version) AND ((source_kind='expense' AND source_id IN (?) AND EXISTS(SELECT 1 FROM expenses x WHERE x.id=finance_duplicate_candidates.source_id AND x.company_id=finance_duplicate_candidates.company_id AND x.version=finance_duplicate_candidates.source_version)) OR (source_kind='extraction' AND source_id IN (?)))", a.Company.ID, state, parents, parents, jobs)
+		q := financeDuplicateReadQuery(tx, a).Where("state=?", state)
 		if raw := r.URL.Query().Get("cursor"); raw != "" {
 			c, e := decodeReadCursor(raw, basis)
 			if e != nil {
@@ -424,7 +457,7 @@ func (s *Server) dismissFinanceDuplicate(w http.ResponseWriter, r *http.Request)
 		var item FinanceDuplicateCandidate
 		auth := func() error { var e error; item, e = authorizeFinanceDuplicate(tx, a, r.PathValue("id")); return e }
 		var e error
-		result, e = businessMutation(tx, a, "duplicate_dismiss", key, map[string]any{"id": r.PathValue("id"), "fields": f}, auth, func(out BusinessResult) error { return nil }, func() (BusinessResult, error) {
+		result, e = financeBusinessMutation(tx, a, "duplicate_dismiss", key, map[string]any{"id": r.PathValue("id"), "fields": f}, auth, func(out BusinessResult) error { return nil }, func() (BusinessResult, error) {
 			if item.Version != input.ExpectedVersion || item.State != "open" {
 				return BusinessResult{}, financeConflict()
 			}

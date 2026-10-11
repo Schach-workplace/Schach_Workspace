@@ -103,7 +103,10 @@ export function useExecutionRead<T>(path: string, enabled = true, body?: unknown
     };
   }, [company, user, store.mode, queryClient]);
   const query = useQuery({
-    queryKey: [...prefix, store.data?.readBasis, path, JSON.stringify(body)],
+    queryKey:
+      body === undefined
+        ? [...prefix, store.data?.readBasis, path]
+        : [...prefix, store.data?.readBasis, path, JSON.stringify(body)],
     enabled: enabled && foreground && !!store.data,
     staleTime: 0,
     retry: false,

@@ -137,7 +137,7 @@ function Intake({
             </>
           )}
           {q.data.state === 'clean' && q.data.purpose === 'statement' && (
-            <StatementImportReview intakeId={id} onImported={onImported} />
+            <StatementImportReview intakeId={id} intake={q.data} onImported={onImported} />
           )}
           <button
             disabled={cancel.busy}
@@ -173,6 +173,7 @@ export default function FinanceAssistance({
   );
   const [intake, setIntake] = useExecutionInput('$finance-assistance', 'intake', initialIntake);
   const [job, setJob] = useExecutionInput('$finance-assistance', 'job', initialJob);
+  const [importId, setImport] = useExecutionInput('$finance-assistance', 'import', '');
   const [department, setDepartment] = useExecutionInput('$finance-assistance', 'destination', '');
   const [file, setFile] = useState<File>();
   const [error, setError] = useState('');
@@ -296,7 +297,10 @@ export default function FinanceAssistance({
               key={intake}
               id={intake}
               onExtracted={setJob}
-              onImported={() => setTab('reconciliation')}
+              onImported={(id) => {
+                setImport(id);
+                setTab('reconciliation');
+              }}
             />
           )}
           <h3>Your extraction requests</h3>
@@ -308,8 +312,14 @@ export default function FinanceAssistance({
           {job && <ReceiptExtractionReview key={job} jobId={job} onCreated={onCreated} />}
         </>
       )}
-      {tab === 'duplicates' && <FinanceDuplicateReview />}
-      {authority && tab === 'reconciliation' && <FinanceReconciliation />}
+      {tab === 'duplicates' && (
+        <FinanceDuplicateReview
+          initialCandidate={
+            new URLSearchParams(window.location.hash.split('?')[1]).get('candidate') ?? ''
+          }
+        />
+      )}
+      {authority && tab === 'reconciliation' && <FinanceReconciliation initialImport={importId} />}
     </section>
   );
 }

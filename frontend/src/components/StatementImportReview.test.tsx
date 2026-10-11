@@ -3,6 +3,7 @@ import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, expect, it, vi } from 'vitest';
 import * as React from 'react';
 const h = vi.hoisted(() => ({ execute: vi.fn().mockResolvedValue({}) }));
+vi.mock('../store', () => ({ useWorkspace: () => ({ data: { company: { currency: 'USD' } } }) }));
 vi.mock('../data/execution', () => ({
   useExecutionRead: (_path: string, enabled = true) =>
     enabled

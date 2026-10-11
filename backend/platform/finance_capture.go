@@ -39,7 +39,7 @@ func (s *Server) bindFinanceIntake(w http.ResponseWriter, r *http.Request) error
 	var out FinanceAssistanceIntake
 	e = s.withAccessTransaction(r, a, func(tx *gorm.DB) error {
 		auth := func() error { var e error; out, e = authorizeFinanceIntake(tx, a, r.PathValue("id")); return e }
-		_, e := businessMutation(tx, a, "finance_intake_bind", key, map[string]any{"id": r.PathValue("id"), "fields": f}, auth, func(result BusinessResult) error {
+		_, e := financeBusinessMutation(tx, a, "finance_intake_bind", key, map[string]any{"id": r.PathValue("id"), "fields": f}, auth, func(result BusinessResult) error {
 			if len(result.IDs) != 1 || result.IDs[0] != out.ID {
 				return financeConflict()
 			}
@@ -118,6 +118,10 @@ func (s *Server) listFinanceIntakes(w http.ResponseWriter, r *http.Request) erro
 	if more {
 		last := rows[len(rows)-1]
 		cursor = encodeReadCursor(readCursor{payloadHash([]string{accessBasis(a), "private_finance_intakes"}), last.CreatedAt.Format(time.RFC3339Nano), last.ID})
+	}
+	for index := range rows {
+		rows[index].CreatedAt = rows[index].CreatedAt.UTC()
+		rows[index].ExpiresAt = rows[index].ExpiresAt.UTC()
 	}
 	return respond(w, 200, map[string]any{"items": rows, "nextCursor": cursor, "hasMore": more})
 }

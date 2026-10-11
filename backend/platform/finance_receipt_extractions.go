@@ -180,7 +180,7 @@ func (s *Server) createReceiptExtraction(w http.ResponseWriter, r *http.Request)
 			return authorizeFinanceJobSource(tx, a, job, false)
 		}
 		var e error
-		result, e = businessMutation(tx, a, "receipt_extract", key, f, auth, func(out BusinessResult) error {
+		result, e = financeBusinessMutation(tx, a, "receipt_extract", key, f, auth, func(out BusinessResult) error {
 			var old FinanceAssistanceJob
 			if e := tx.First(&old, "company_id=? AND id=?", a.Company.ID, out.IDs[0]).Error; e != nil {
 				return missing()
@@ -297,7 +297,7 @@ func (s *Server) cancelReceiptExtraction(w http.ResponseWriter, r *http.Request)
 		var j FinanceAssistanceJob
 		auth := func() error { var e error; j, _, e = authorizeReceiptExtraction(tx, a, r.PathValue("id")); return e }
 		var e error
-		result, e = businessMutation(tx, a, "receipt_extract_cancel", key, map[string]any{"id": r.PathValue("id"), "fields": f}, auth, func(out BusinessResult) error { return nil }, func() (BusinessResult, error) {
+		result, e = financeBusinessMutation(tx, a, "receipt_extract_cancel", key, map[string]any{"id": r.PathValue("id"), "fields": f}, auth, func(out BusinessResult) error { return nil }, func() (BusinessResult, error) {
 			if j.Version != input.ExpectedVersion || j.Status == "accepted" {
 				return BusinessResult{}, financeConflict()
 			}
@@ -320,7 +320,11 @@ func financeExtractionReadQuery(tx *gorm.DB, a *access) *gorm.DB {
 	sessions := tx.Model(&SessionRecord{}).Select("token_hash").Where("user_id=? AND expires_at>?", a.User.ID, now)
 	departments := []string{}
 	var ds []Department
-	tx.Where("company_id=?", a.Company.ID).Find(&ds)
+	if e := tx.Where("company_id=?", a.Company.ID).Find(&ds).Error; e != nil {
+		q := tx.Model(&FinanceAssistanceJob{})
+		q.AddError(e)
+		return q
+	}
 	for _, d := range ds {
 		if a.canCreateExpense(d.ID) {
 			departments = append(departments, d.ID)
@@ -330,5 +334,7 @@ func financeExtractionReadQuery(tx *gorm.DB, a *access) *gorm.DB {
 	parents := expenseReadQuery(tx, a).Select("id")
 	receipts := tx.Model(&ExpenseReceipt{}).Select("id").Where("company_id=? AND expense_id IN (?)", a.Company.ID, parents)
 	targets := expenseReadQuery(tx, a).Select("id").Where("created_by=? AND department_id IN ?", a.User.ID, departments)
-	return tx.Model(&FinanceAssistanceJob{}).Where("company_id=? AND requester_id=? AND operation='extract_receipt' AND expires_at>? AND session_ref IN (?) AND status NOT IN ? AND destination_department_id IN ? AND company_currency=? AND (target_expense_id='' OR target_expense_id IN (?)) AND ((source_kind='intake' AND source_id IN (?)) OR (source_kind='expense_receipt' AND source_id IN (?) AND source_parent_id IN (?)))", a.Company.ID, a.User.ID, now, sessions, []string{"cancelled", "stale"}, departments, a.Company.Currency, targets, intakes, receipts, parents)
+	return tx.Model(&FinanceAssistanceJob{}).
+		Where("(target_expense_id='' OR EXISTS(SELECT 1 FROM expenses target WHERE target.id=finance_assistance_jobs.target_expense_id AND target.company_id=finance_assistance_jobs.company_id AND target.created_by=finance_assistance_jobs.requester_id AND target.department_id=finance_assistance_jobs.destination_department_id))").
+		Where("((source_kind='intake' AND EXISTS(SELECT 1 FROM finance_assistance_intakes source WHERE source.id=finance_assistance_jobs.source_id AND source.company_id=finance_assistance_jobs.company_id AND source.internal_sha256=finance_assistance_jobs.internal_hash AND source.content_generation=finance_assistance_jobs.content_generation AND source.clean_generation=finance_assistance_jobs.clean_generation)) OR (source_kind='expense_receipt' AND EXISTS(SELECT 1 FROM expense_receipts receipt JOIN receipt_evidence_fingerprints fingerprint ON fingerprint.receipt_id=receipt.id AND fingerprint.company_id=receipt.company_id WHERE receipt.id=finance_assistance_jobs.source_id AND receipt.company_id=finance_assistance_jobs.company_id AND receipt.expense_id=finance_assistance_jobs.source_parent_id AND fingerprint.state='clean' AND fingerprint.sha256=finance_assistance_jobs.internal_hash AND fingerprint.generation=finance_assistance_jobs.clean_generation)))").Where("company_id=? AND requester_id=? AND operation='extract_receipt' AND expires_at>? AND session_ref IN (?) AND status NOT IN ? AND destination_department_id IN ? AND company_currency=? AND (target_expense_id='' OR target_expense_id IN (?)) AND ((source_kind='intake' AND source_id IN (?)) OR (source_kind='expense_receipt' AND source_id IN (?) AND source_parent_id IN (?)))", a.Company.ID, a.User.ID, now, sessions, []string{"cancelled", "stale"}, departments, a.Company.Currency, targets, intakes, receipts, parents)
 }

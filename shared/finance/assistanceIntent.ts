@@ -164,6 +164,7 @@ export interface StatementPreview {
   rowCount: number;
   hasMore: boolean;
   nextOffset: number;
+  nextPageCursor: string;
 }
 export interface ReconciliationAllocation {
   id: string;
@@ -184,6 +185,7 @@ export interface ReconciliationRead {
     }[];
     suggestionBasis: string;
     history: { action: string; reason: string }[];
+    hasMoreHistory?: boolean;
   }[];
   unallocatedExpenses: {
     id: string;
@@ -269,4 +271,11 @@ export function statementMapping(v: StatementMappingChoices): StatementMapping {
       v.groupingSeparator as StatementMapping["groupingSeparator"],
     debitSign: "negative",
   };
+}
+
+export interface ReconciliationHistory {
+  items: { id: string; action: string; reason: string }[];
+  allocations: ReconciliationAllocation[];
+  cursor: string;
+  hasMore: boolean;
 }

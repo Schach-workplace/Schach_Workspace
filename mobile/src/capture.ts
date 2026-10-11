@@ -13,7 +13,7 @@ const owners = new Map<string, CaptureOwner>();
 let epoch = 0;
 let context = { serverOrigin: "", companyId: "", userId: "", ready: false };
 let pendingCamera: CaptureScope | null = null;
-let pendingChooser=false;
+let pendingChooser = false;
 let recoverableCamera: { scope: CaptureScope; generation: number } | null =
   null;
 const waits = new Set<() => void>();
@@ -79,7 +79,7 @@ async function adopt(
     name?: string;
   },
   generation: number,
-  cameraReservation=false,
+  cameraReservation = false,
 ): Promise<PreviewFile> {
   const name =
     asset.fileName ??
@@ -114,8 +114,13 @@ async function adopt(
       },
     };
     if (generation !== epoch) throw Error("Capture access changed.");
-    const source=await authorizeCapture(scope);
-    if(cameraReservation&&scope.targetKind==="finance_intake"&&source.state!=="capture_reserved")throw Error("Capture reservation changed before camera return.");
+    const source = await authorizeCapture(scope);
+    if (
+      cameraReservation &&
+      scope.targetKind === "finance_intake" &&
+      source.state !== "capture_reserved"
+    )
+      throw Error("Capture reservation changed before camera return.");
     if (generation !== epoch) throw Error("Capture access changed.");
     const owner = captureOwner(scope);
     owner.select(preview);
@@ -126,7 +131,8 @@ async function adopt(
   }
 }
 export async function captureImage(scope: CaptureScope) {
-  if (pendingCamera||pendingChooser) throw Error("Finish the current camera capture first.");
+  if (pendingCamera || pendingChooser)
+    throw Error("Finish the current camera capture first.");
   const generation = epoch;
   pendingCamera = scope;
   try {
@@ -153,31 +159,35 @@ export async function captureImage(scope: CaptureScope) {
     });
     recoverableCamera = null;
     if (result.canceled) return null;
-    return await adopt(scope, result.assets[0], generation,true);
+    return await adopt(scope, result.assets[0], generation, true);
   } finally {
     pendingCamera = null;
   }
 }
 export async function chooseCapture(scope: CaptureScope) {
-  if(pendingCamera||pendingChooser)throw Error("Finish the current camera or file selection first.");
-  pendingChooser=true;try{
-  const generation = epoch;
-  await authorizeCapture(scope);
-  const result = await DocumentPicker.getDocumentAsync({
-    copyToCacheDirectory: true,
-    multiple: false,
-    type: [
-      "image/jpeg",
-      "image/png",
-      "image/webp",
-      "application/pdf",
-      "text/plain",
-      "text/csv",
-    ],
-  });
-  if (result.canceled) return null;
-  return await adopt(scope, result.assets[0], generation);
- }finally{pendingChooser=false}
+  if (pendingCamera || pendingChooser)
+    throw Error("Finish the current camera or file selection first.");
+  pendingChooser = true;
+  try {
+    const generation = epoch;
+    await authorizeCapture(scope);
+    const result = await DocumentPicker.getDocumentAsync({
+      copyToCacheDirectory: true,
+      multiple: false,
+      type: [
+        "image/jpeg",
+        "image/png",
+        "image/webp",
+        "application/pdf",
+        "text/plain",
+        "text/csv",
+      ],
+    });
+    if (result.canceled) return null;
+    return await adopt(scope, result.assets[0], generation);
+  } finally {
+    pendingChooser = false;
+  }
 }
 export async function recoverCamera() {
   const result = await ImagePicker.getPendingResultAsync();
@@ -188,7 +198,7 @@ export async function recoverCamera() {
     throw Error(
       "Camera returned without its original destination. Choose the destination and capture again.",
     );
-  return adopt(pending.scope, result.assets[0], pending.generation,true);
+  return adopt(pending.scope, result.assets[0], pending.generation, true);
 }
 export async function appendCapture(scope: CaptureScope, file: PreviewFile) {
   if (scope.targetKind === "finance_intake")
@@ -209,7 +219,8 @@ export async function chooseFinanceFile(
   userId: string,
   purpose: "receipt" | "statement",
 ) {
-  if (pendingCamera||pendingChooser) throw Error("Finish the current camera capture first.");
+  if (pendingCamera || pendingChooser)
+    throw Error("Finish the current camera capture first.");
   const generation = epoch,
     clientGeneration = client.generation;
   const current = () =>
@@ -220,44 +231,49 @@ export async function chooseFinanceFile(
     generation === epoch &&
     clientGeneration === client.generation;
   if (!current()) throw Error("Check current company access first.");
-  pendingChooser=true;try{
-  const result = await DocumentPicker.getDocumentAsync({
-    copyToCacheDirectory: true,
-    multiple: false,
-    type:
-      purpose === "statement"
-        ? ["text/csv", "text/comma-separated-values", "application/csv"]
-        : ["image/jpeg", "image/png", "application/pdf"],
-  });
-  if (result.canceled) return null;
-  const asset = result.assets[0],
-    name = asset.name;
-  const file = new File(
-    Paths.cache,
-    "schach-capture-" + Crypto.randomUUID() + "." + name.split(".").at(-1),
-  );
+  pendingChooser = true;
   try {
-    new File(asset.uri).copy(file);
-    if (!current())
-      throw Error("Company access changed while choosing the file.");
-    if (
-      file.size < 1 ||
-      file.size > (purpose === "statement" ? 8 : 10) * 1048576
-    )
-      throw Error("Choose a nonempty bounded file.");
-    return {
-      uri: file.uri,
-      name,
-      mime:
-        purpose==="statement"?"text/csv":asset.mimeType ?? "application/octet-stream",
-      size: file.size,
-      delete: () => {
-        if (file.exists) file.delete();
-      },
-    } as PreviewFile;
-  } catch (e) {
-    if (file.exists) file.delete();
-    throw e;
+    const result = await DocumentPicker.getDocumentAsync({
+      copyToCacheDirectory: true,
+      multiple: false,
+      type:
+        purpose === "statement"
+          ? ["text/csv", "text/comma-separated-values", "application/csv"]
+          : ["image/jpeg", "image/png", "application/pdf"],
+    });
+    if (result.canceled) return null;
+    const asset = result.assets[0],
+      name = asset.name;
+    const file = new File(
+      Paths.cache,
+      "schach-capture-" + Crypto.randomUUID() + "." + name.split(".").at(-1),
+    );
+    try {
+      new File(asset.uri).copy(file);
+      if (!current())
+        throw Error("Company access changed while choosing the file.");
+      if (
+        file.size < 1 ||
+        file.size > (purpose === "statement" ? 8 : 10) * 1048576
+      )
+        throw Error("Choose a nonempty bounded file.");
+      return {
+        uri: file.uri,
+        name,
+        mime:
+          purpose === "statement"
+            ? "text/csv"
+            : (asset.mimeType ?? "application/octet-stream"),
+        size: file.size,
+        delete: () => {
+          if (file.exists) file.delete();
+        },
+      } as PreviewFile;
+    } catch (e) {
+      if (file.exists) file.delete();
+      throw e;
+    }
+  } finally {
+    pendingChooser = false;
   }
- }finally{pendingChooser=false}
 }

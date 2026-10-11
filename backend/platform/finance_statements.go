@@ -372,7 +372,7 @@ func (s *Server) createFinanceStatementPreview(w http.ResponseWriter, r *http.Re
 		return e
 	}
 	if existing != nil {
-		return respond(w, 200, financePreviewPage(*existing, 0, 100))
+		return respond(w, 200, financePreviewPage(*existing, 0, 100, a))
 	}
 	data, e := s.readFinanceIntakeBytes(r.Context(), intake)
 	if e != nil {
@@ -398,7 +398,7 @@ func (s *Server) createFinanceStatementPreview(w http.ResponseWriter, r *http.Re
 			intake = fresh
 			return nil
 		}
-		_, e := businessMutation(tx, a, "statement_preview", key, f, auth, func(out BusinessResult) error {
+		_, e := financeBusinessMutation(tx, a, "statement_preview", key, f, auth, func(out BusinessResult) error {
 			var e error
 			preview, e = authorizeFinanceStatementPreview(tx, a, out.IDs[0])
 			return e
@@ -418,12 +418,19 @@ func (s *Server) createFinanceStatementPreview(w http.ResponseWriter, r *http.Re
 	if e != nil {
 		return e
 	}
-	return respond(w, 200, financePreviewPage(preview, 0, 100))
+	return respond(w, 200, financePreviewPage(preview, 0, 100, a))
 }
-func financePreviewPage(p FinanceStatementPreview, offset, limit int) map[string]any {
+func financePreviewPage(p FinanceStatementPreview, offset, limit int, a *access) map[string]any {
 	end := min(offset+limit, len(p.Rows))
 	offset = min(offset, end)
-	return map[string]any{"preview": p, "rows": p.Rows[offset:end], "rowCount": len(p.Rows), "hasMore": end < len(p.Rows), "nextOffset": end}
+	nextCursor := ""
+	if end < len(p.Rows) {
+		nextCursor = encodeReadCursor(readCursor{financePreviewBasis(a, p), "", strconv.Itoa(end)})
+	}
+	return map[string]any{"nextPageCursor": nextCursor, "preview": p, "rows": p.Rows[offset:end], "rowCount": len(p.Rows), "hasMore": end < len(p.Rows), "nextOffset": end}
+}
+func financePreviewBasis(a *access, p FinanceStatementPreview) string {
+	return payloadHash([]string{accessBasis(a), "statement-preview", p.ID, strconv.FormatInt(p.Revision, 10), p.MappingHash, p.InternalHash})
 }
 func (s *Server) getFinanceStatementPreview(w http.ResponseWriter, r *http.Request) error {
 	a, e := s.access(r)
@@ -434,24 +441,33 @@ func (s *Server) getFinanceStatementPreview(w http.ResponseWriter, r *http.Reque
 	if e != nil {
 		return e
 	}
-	offset, e := strconv.Atoi(r.URL.Query().Get("offset"))
-	if r.URL.Query().Get("offset") == "" {
-		offset = 0
-		e = nil
-	}
-	if e != nil || offset < 0 || offset > 10000 {
-		return invalid("Invalid preview offset.")
+	offset := 0
+	if r.URL.Query().Has("offset") {
+		return invalid("Use the current preview page cursor.")
 	}
 	var p FinanceStatementPreview
 	e = s.withAccessTransaction(r, a, func(tx *gorm.DB) error {
 		var e error
 		p, e = authorizeFinanceStatementPreview(tx, a, r.PathValue("id"))
-		return e
+		if e != nil {
+			return e
+		}
+		if raw := r.URL.Query().Get("cursor"); raw != "" {
+			c, err := decodeReadCursor(raw, financePreviewBasis(a, p))
+			if err != nil {
+				return err
+			}
+			offset, err = strconv.Atoi(c.ID)
+			if err != nil || offset < 1 || offset > len(p.Rows) {
+				return invalid("Invalid preview cursor.")
+			}
+		}
+		return nil
 	})
 	if e != nil {
 		return e
 	}
-	return respond(w, 200, financePreviewPage(p, offset, limit))
+	return respond(w, 200, financePreviewPage(p, offset, limit, a))
 }
 func (s *Server) importFinanceStatement(w http.ResponseWriter, r *http.Request) error {
 	a, e := s.access(r)
@@ -479,7 +495,7 @@ func (s *Server) importFinanceStatement(w http.ResponseWriter, r *http.Request) 
 		auth := func() error { var e error; p, e = authorizeFinanceStatementPreview(tx, a, r.PathValue("id")); return e }
 		replay := func(out BusinessResult) error { _, e := authorizeFinanceStatementImport(tx, a, out.IDs[0]); return e }
 		var e error
-		canonical, e = businessMutation(tx, a, "statement_import", key, map[string]any{"previewId": r.PathValue("id"), "fields": f}, auth, replay, func() (BusinessResult, error) {
+		canonical, e = financeBusinessMutation(tx, a, "statement_import", key, map[string]any{"previewId": r.PathValue("id"), "fields": f}, auth, replay, func() (BusinessResult, error) {
 			if p.Revision != input.ExpectedPreviewRevision || len(p.Errors) > 0 {
 				return BusinessResult{}, invalid("Resolve every row error and review the complete preview before import.")
 			}
@@ -510,9 +526,9 @@ func (s *Server) importFinanceStatement(w http.ResponseWriter, r *http.Request) 
 				row.CompanyID = a.Company.ID
 				row.ImportID = imported.ID
 				importRows = append(importRows, row)
-				if e := tx.Create(&row).Error; e != nil {
-					return BusinessResult{}, e
-				}
+			}
+			if e := tx.CreateInBatches(importRows, 100).Error; e != nil {
+				return BusinessResult{}, e
 			}
 			if e := initialFinanceStatementAttention(tx, a, importRows); e != nil {
 				return BusinessResult{}, e
@@ -680,6 +696,9 @@ func (s *Server) exportFinanceStatement(w http.ResponseWriter, r *http.Request) 
 		return e
 	}
 	data := buffer.Bytes()
+	if len(data) > 16<<20 {
+		return invalid("Statement export exceeds 16 MiB.")
+	}
 	for offset := 0; offset < len(data); offset += 16384 {
 		e = s.withAccessTransaction(r, a, func(tx *gorm.DB) error { _, e := authorizeFinanceStatementImport(tx, a, r.PathValue("id")); return e })
 		if e != nil {
@@ -687,6 +706,7 @@ func (s *Server) exportFinanceStatement(w http.ResponseWriter, r *http.Request) 
 		}
 		if offset == 0 {
 			w.Header().Set("Content-Type", "text/csv; charset=utf-8")
+			w.Header().Set("Content-Length", strconv.Itoa(len(data)))
 			w.Header().Set("Content-Disposition", "attachment; filename=statement.csv")
 			w.Header().Set("Cache-Control", "no-store")
 		}

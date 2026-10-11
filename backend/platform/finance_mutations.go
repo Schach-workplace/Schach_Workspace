@@ -64,6 +64,9 @@ func authorizeExpenseResults(tx *gorm.DB, a *access, result BusinessResult) erro
 	return nil
 }
 func prepareExpenseCreate(tx *gorm.DB, a *access, f map[string]json.RawMessage) (Expense, error) {
+	return prepareExpenseReviewedFields(tx, a, f, true)
+}
+func prepareExpenseReviewedFields(tx *gorm.DB, a *access, f map[string]json.RawMessage, enforceInvoice bool) (Expense, error) {
 	e := Expense{CompanyID: a.Company.ID, CreatedBy: a.User.ID, Status: "draft", Version: 1, Receipts: []ExpenseReceipt{}}
 	if err := authorizeExpenseCreation(tx, a, f); err != nil {
 		return e, err
@@ -71,7 +74,7 @@ func prepareExpenseCreate(tx *gorm.DB, a *access, f map[string]json.RawMessage) 
 	if err := applyFields(f, &e); err != nil {
 		return e, err
 	}
-	if err := validateExpense(tx, a, &e); err != nil {
+	if err := validateExpenseReview(tx, a, &e, enforceInvoice); err != nil {
 		return e, err
 	}
 	e.Currency = a.Company.Currency

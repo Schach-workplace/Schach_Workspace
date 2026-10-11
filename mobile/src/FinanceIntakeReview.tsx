@@ -94,7 +94,7 @@ export default function FinanceIntakeReview({
     try {
       const file = state.file;
       const current = await authorizeCapture(scope);
-      if (current.state === "capture_reserved") {
+      if (bind.attempt || current.state === "capture_reserved") {
         const sha256 = await financePreviewHash(file.uri);
         await authorizeCapture(scope);
         await bind.execute(

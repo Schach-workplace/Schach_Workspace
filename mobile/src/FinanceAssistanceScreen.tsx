@@ -50,7 +50,11 @@ export default function FinanceAssistanceScreen({
     "",
   );
   const [tool, setTool] = useState(initialTool);
-  const [importId, setImport] = useState(initialImport);
+  const [importId, setImport] = useRamInput(
+    "$finance-assistance",
+    "import",
+    initialImport,
+  );
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   const pendingFile = useRef<PreviewFile | undefined>(undefined);
@@ -71,12 +75,24 @@ export default function FinanceAssistanceScreen({
     w.policyEpoch,
   ].join(":");
   const current = useRef(captured);
-  useLayoutEffect(()=>{current.current=captured},[captured]);
-  useEffect(()=>{const clear=()=>{pendingFile.current?.delete();pendingFile.current=undefined};const stop=client.registerCancellation(clear);return()=>{stop();clear()}},[]);
+  useLayoutEffect(() => {
+    current.current = captured;
+  }, [captured]);
+  useEffect(() => {
+    const clear = () => {
+      pendingFile.current?.delete();
+      pendingFile.current = undefined;
+    };
+    const stop = client.registerCancellation(clear);
+    return () => {
+      stop();
+      clear();
+    };
+  }, []);
   useEffect(() => {
     if (!w.foreground) {
       pendingFile.current?.delete();
-      pendingFile.current=undefined;
+      pendingFile.current = undefined;
     }
   }, [w.foreground]);
   async function reserve(capture: boolean, purpose: "receipt" | "statement") {
@@ -139,7 +155,6 @@ export default function FinanceAssistanceScreen({
         await authorizeCapture(scope);
         captureOwner(scope).select(selectedFile);
         pendingFile.current = undefined;
-        pendingFile.current=undefined;
       }
     } catch (e) {
       setError((e as Error).message);

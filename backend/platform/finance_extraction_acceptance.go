@@ -252,7 +252,7 @@ func (s *Server) acceptReceiptExtraction(w http.ResponseWriter, r *http.Request)
 			return authorizeExpenseResults(tx, a, BusinessResult{IDs: out.IDs[:1]})
 		}
 		var e error
-		canonical, e = businessMutation(tx, a, "receipt_accept", key, map[string]any{"jobId": r.PathValue("id"), "fields": f}, auth, replay, func() (BusinessResult, error) {
+		canonical, e = financeBusinessMutation(tx, a, "receipt_accept", key, map[string]any{"jobId": r.PathValue("id"), "fields": f}, auth, replay, func() (BusinessResult, error) {
 			var claim FinanceExtractionAcceptance
 			err := tx.First(&claim, "company_id=? AND result_id=?", a.Company.ID, result.ID).Error
 			if err == nil {
@@ -311,6 +311,9 @@ func (s *Server) acceptReceiptExtraction(w http.ResponseWriter, r *http.Request)
 				return BusinessResult{}, e
 			}
 			if e = tx.Model(result).Update("acceptance_id", claim.ID).Error; e != nil {
+				return BusinessResult{}, e
+			}
+			if e = tx.Model(&FinanceDuplicateCandidate{}).Where("company_id=? AND source_kind='extraction' AND source_id=? AND state<>'stale'", a.Company.ID, j.ID).Update("state", "stale").Error; e != nil {
 				return BusinessResult{}, e
 			}
 			if e = tx.Model(&j).Update("status", "accepted").Error; e != nil {

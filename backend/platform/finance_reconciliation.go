@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"gorm.io/gorm"
 	"net/http"
-	"strconv"
 	"time"
 )
 
@@ -73,20 +72,26 @@ func authorizeReconciliationAllocation(tx *gorm.DB, a *access, id string) (Finan
 	}
 	return allocation, nil
 }
-func reconciliationSuggestions(tx *gorm.DB, a *access, row FinanceStatementRow) ([]FinanceReconciliationSuggestion, string, error) {
-	suggestions := []FinanceReconciliationSuggestion{}
+func reconciliationPaidCandidates(tx *gorm.DB, a *access, row FinanceStatementRow) ([]Expense, error) {
 	if row.SignedAmountMinor >= 0 {
-		basis, _ := businessHash([]any{row.ID, row.Version, "credit"})
-		return suggestions, basis, nil
+		return []Expense{}, nil
 	}
 	date, e := time.Parse("2006-01-02", row.BookedDate)
 	if e != nil {
-		return nil, "", e
+		return nil, e
 	}
 	active := tx.Model(&FinanceReconciliationAllocation{}).Select("expense_id").Where("company_id=? AND active=true", a.Company.ID)
 	var expenses []Expense
 	if e := expenseReadQuery(tx, a).Where("status='paid' AND amount_minor=? AND currency=? AND paid_date>=? AND paid_date<=? AND id NOT IN (?)", -row.SignedAmountMinor, row.CompanyCurrency, date.AddDate(0, 0, -7).Format("2006-01-02"), date.AddDate(0, 0, 7).Format("2006-01-02"), active).Order("paid_date,id").Limit(100).Find(&expenses).Error; e != nil {
-		return nil, "", e
+		return nil, e
+	}
+	return expenses, nil
+}
+func reconciliationSuggestionsForCandidates(row FinanceStatementRow, expenses []Expense) ([]FinanceReconciliationSuggestion, string, error) {
+	suggestions := []FinanceReconciliationSuggestion{}
+	if row.SignedAmountMinor >= 0 {
+		basis, e := businessHash([]any{row.ID, row.Version, "credit"})
+		return suggestions, basis, e
 	}
 	for _, expense := range expenses {
 		reason := "exact_amount_date"
@@ -98,9 +103,17 @@ func reconciliationSuggestions(tx *gorm.DB, a *access, row FinanceStatementRow) 
 	basis, e := businessHash([]any{row.ID, row.Version, suggestions})
 	return suggestions, basis, e
 }
+func reconciliationSuggestions(tx *gorm.DB, a *access, row FinanceStatementRow) ([]FinanceReconciliationSuggestion, string, error) {
+	expenses, e := reconciliationPaidCandidates(tx, a, row)
+	if e != nil {
+		return nil, "", e
+	}
+	return reconciliationSuggestionsForCandidates(row, expenses)
+}
 func (s *Server) financeReconciliationRoutes() {
 	base := "/api/companies/{cid}/finance/reconciliation"
 	s.route("GET "+base, s.getFinanceReconciliation)
+	s.route("GET "+base+"/rows/{id}/history", s.getFinanceReconciliationHistory)
 	s.route("POST "+base+"/matches", s.matchFinanceReconciliation)
 	s.route("POST "+base+"/rows/{id}/dismiss", s.dismissFinanceReconciliation)
 	s.route("POST "+base+"/matches/{id}/unmatch", s.unmatchFinanceReconciliation)
@@ -150,7 +163,7 @@ func (s *Server) matchFinanceReconciliation(w http.ResponseWriter, r *http.Reque
 		}
 		replay := func(out BusinessResult) error { _, e := authorizeReconciliationAllocation(tx, a, out.IDs[0]); return e }
 		var e error
-		canonical, e = businessMutation(tx, a, "reconciliation_match", key, f, auth, replay, func() (BusinessResult, error) {
+		canonical, e = financeBusinessMutation(tx, a, "reconciliation_match", key, f, auth, replay, func() (BusinessResult, error) {
 			var existing FinanceReconciliationAllocation
 			err := tx.First(&existing, "company_id=? AND row_id=? AND expense_id=? AND request_hash=?", a.Company.ID, row.ID, expense.ID, hash).Error
 			if err == nil {
@@ -224,7 +237,7 @@ func (s *Server) unmatchFinanceReconciliation(w http.ResponseWriter, r *http.Req
 			return e
 		}
 		var e error
-		canonical, e = businessMutation(tx, a, "reconciliation_unmatch", key, map[string]any{"id": r.PathValue("id"), "fields": f}, auth, func(out BusinessResult) error { return nil }, func() (BusinessResult, error) {
+		canonical, e = financeBusinessMutation(tx, a, "reconciliation_unmatch", key, map[string]any{"id": r.PathValue("id"), "fields": f}, auth, func(out BusinessResult) error { return nil }, func() (BusinessResult, error) {
 			if !allocation.Active || allocation.Version != input.ExpectedVersion {
 				return BusinessResult{}, financeConflict()
 			}
@@ -282,7 +295,7 @@ func (s *Server) dismissFinanceReconciliation(w http.ResponseWriter, r *http.Req
 		var row FinanceStatementRow
 		auth := func() error { var e error; row, e = authorizeStatementRow(tx, a, r.PathValue("id")); return e }
 		var e error
-		canonical, e = businessMutation(tx, a, "reconciliation_dismiss", key, map[string]any{"id": r.PathValue("id"), "fields": f}, auth, func(out BusinessResult) error { return nil }, func() (BusinessResult, error) {
+		canonical, e = financeBusinessMutation(tx, a, "reconciliation_dismiss", key, map[string]any{"id": r.PathValue("id"), "fields": f}, auth, func(out BusinessResult) error { return nil }, func() (BusinessResult, error) {
 			if row.Version != input.ExpectedRowVersion {
 				return BusinessResult{}, financeConflict()
 			}
@@ -354,12 +367,18 @@ func (s *Server) getFinanceReconciliation(w http.ResponseWriter, r *http.Request
 			decisions := tx.Model(&FinanceReconciliationDecision{}).Select("row_id").Where("company_id=? AND action='dismiss'", a.Company.ID)
 			q = q.Where("id IN (?)", decisions)
 		}
+		rowAfter, expenseAfter := "", ""
 		if raw := r.URL.Query().Get("cursor"); raw != "" {
-			c, e := decodeReadCursor(raw, basis)
-			if e != nil {
-				return e
+			c, err := decodeReadCursor(raw, basis)
+			if err != nil {
+				return err
 			}
-			q = q.Where("id<?", c.ID)
+			rowAfter, expenseAfter = c.Created, c.ID
+		}
+		if rowAfter == "end" {
+			q = q.Where("1=0")
+		} else if rowAfter != "" {
+			q = q.Where("id<?", rowAfter)
 		}
 		var rows []FinanceStatementRow
 		if e := q.Order("id DESC").Limit(limit + 1).Find(&rows).Error; e != nil {
@@ -369,7 +388,10 @@ func (s *Server) getFinanceReconciliation(w http.ResponseWriter, r *http.Request
 		if more {
 			rows = rows[:limit]
 			last := rows[len(rows)-1]
-			cursor = encodeReadCursor(readCursor{basis, strconv.Itoa(last.RecordOrdinal), last.ID})
+			rowAfter = last.ID
+		}
+		if !more {
+			rowAfter = "end"
 		}
 		for _, row := range rows {
 			suggestions, basis, e := reconciliationSuggestions(tx, a, row)
@@ -377,18 +399,38 @@ func (s *Server) getFinanceReconciliation(w http.ResponseWriter, r *http.Request
 				return e
 			}
 			var history []FinanceReconciliationDecision
-			if e := tx.Where("company_id=? AND row_id=?", a.Company.ID, row.ID).Order("created_at,id").Find(&history).Error; e != nil {
+			if e := tx.Where("company_id=? AND row_id=?", a.Company.ID, row.ID).Order("created_at DESC,id DESC").Limit(21).Find(&history).Error; e != nil {
 				return e
 			}
-			items = append(items, map[string]any{"row": row, "suggestions": suggestions, "suggestionBasis": basis, "history": history})
+			items = append(items, map[string]any{"row": row, "suggestions": suggestions, "suggestionBasis": basis, "history": history[:min(20, len(history))], "hasMoreHistory": len(history) > 20})
 			var attached []FinanceReconciliationAllocation
-			if e := tx.Where("company_id=? AND row_id=?", a.Company.ID, row.ID).Find(&attached).Error; e != nil {
+			if e := tx.Where("company_id=? AND row_id=?", a.Company.ID, row.ID).Order("active DESC,created_at DESC,id DESC").Limit(20).Find(&attached).Error; e != nil {
 				return e
 			}
 			allocations = append(allocations, attached...)
 		}
 		activeExpenses := tx.Model(&FinanceReconciliationAllocation{}).Select("expense_id").Where("company_id=? AND active=true", a.Company.ID)
-		return expenseReadQuery(tx, a).Where("status='paid' AND id NOT IN (?)", activeExpenses).Order("paid_date,id").Limit(limit).Find(&expenses).Error
+		paidQuery := expenseReadQuery(tx, a).Where("status='paid' AND id NOT IN (?)", activeExpenses)
+		if expenseAfter == "end" {
+			paidQuery = paidQuery.Where("1=0")
+		} else if expenseAfter != "" {
+			paidQuery = paidQuery.Where("id<?", expenseAfter)
+		}
+		if err := paidQuery.Order("id DESC").Limit(limit + 1).Find(&expenses).Error; err != nil {
+			return err
+		}
+		paidMore := len(expenses) > limit
+		if paidMore {
+			expenses = expenses[:limit]
+			expenseAfter = expenses[len(expenses)-1].ID
+		} else {
+			expenseAfter = "end"
+		}
+		more = more || paidMore
+		if more {
+			cursor = encodeReadCursor(readCursor{basis, rowAfter, expenseAfter})
+		}
+		return nil
 	})
 	if e != nil {
 		return e

@@ -1,0 +1,1 @@
+DROP TABLE finance_assistance_histories;

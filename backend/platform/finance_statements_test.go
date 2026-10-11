@@ -36,7 +36,7 @@ func TestFinanceStatementBoundsAndExactTotals(t *testing.T) {
 		t.Fatal("10001 rows")
 	}
 }
-func readyStatementPreview(t *testing.T, f financeFixture) string {
+func readyStatementPreview(t *testing.T, f financeFixture, selected ...[]byte) string {
 	t.Helper()
 	store, e := NewFileMediaStore(t.TempDir())
 	if e != nil {
@@ -45,18 +45,21 @@ func readyStatementPreview(t *testing.T, f financeFixture) string {
 	f.s.opts.FinanceIntakeStore = store
 	f.s.opts.FinanceScanner = financeCleanScanner{}
 	data := []byte("date,amount,reference\n2026-10-10,-1300.50,UTR-FICTIONAL\n2026-10-10,-1300.50,UTR-FICTIONAL\n")
+	if len(selected) > 0 {
+		data = selected[0]
+	}
 	id := reserveFinanceIntake(t, f, data, "statement")
 	if st := uploadFinanceIntake(t, f, id, data); st != 200 {
 		t.Fatal(st)
 	}
-	financeOK(t, f.s, "POST", f.base()+"/finance/intakes/"+id+"/finalize", map[string]any{"retryKey": "scan", "expectedVersion": 2}, f.cookie)
+	financeOK(t, f.s, "POST", f.base()+"/finance/intakes/"+id+"/finalize", map[string]any{"retryKey": "scan-statement:" + id, "expectedVersion": 2}, f.cookie)
 	if _, e := f.s.RunFinanceAssistanceJobs(t.Context(), time.Now(), 1); e != nil {
 		t.Fatal(e)
 	}
 	mapping := FinanceStatementMapping{HeaderRow: true, Delimiter: "comma", DateColumn: 0, DateFormat: "YYYY-MM-DD", ReferenceColumn: intPointer(2), AmountMode: "signed", SignedAmountColumn: intPointer(1), DebitSign: "negative", DecimalSeparator: "dot", GroupingSeparator: "none"}
-	body := map[string]any{"retryKey": "preview", "intakeId": id, "expectedIntakeVersion": 4, "mapping": mapping}
+	body := map[string]any{"retryKey": "preview-statement:" + id, "intakeId": id, "expectedIntakeVersion": 4, "mapping": mapping}
 	out := financeOK(t, f.s, "POST", f.base()+"/finance/statement-previews", body, f.cookie)
-	if len(out["rows"].([]any)) != 2 {
+	if len(out["rows"].([]any)) == 0 {
 		t.Fatal(out)
 	}
 	return out["preview"].(map[string]any)["id"].(string)

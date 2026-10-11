@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useWorkspace } from '../store';
 import { useExecutionRead, useExecutionMutation } from '../data/execution';
 import { useExecutionInput } from '../data/executionInput';
 import {
@@ -11,18 +12,22 @@ import {
 export default function StatementImportReview({
   intakeId,
   onImported,
+  intake,
 }: {
   intakeId: string;
   onImported: (id: string) => void;
+  intake?: FinanceIntake;
 }) {
-  const q = useExecutionRead<FinanceIntake>('/finance/intakes/' + intakeId);
+  const w = useWorkspace();
+  const ownQuery = useExecutionRead<FinanceIntake>('/finance/intakes/' + intakeId, !intake);
+  const q = intake ? { data: intake, ready: true, error: null } : ownQuery;
   const [choices, setChoices] = useExecutionInput(
     '$statement-map:' + intakeId,
     'mapping',
     blankStatementMapping,
   );
   const [preview, setPreview] = useExecutionInput('$statement-map:' + intakeId, 'preview', '');
-  const [offset, setOffset] = useState(0);
+  const [pageCursor, setPageCursor] = useState('');
   const [confirmed, setConfirmed] = useState(false);
   const [reason, setReason] = useExecutionInput(
     '$statement-map:' + intakeId,
@@ -37,7 +42,7 @@ export default function StatementImportReview({
     '/finance/statement-previews/' + preview,
   ]);
   const p = useExecutionRead<StatementPreview>(
-    '/finance/statement-previews/' + preview + '?offset=' + offset,
+    '/finance/statement-previews/' + preview + '?cursor=' + encodeURIComponent(pageCursor),
     !!preview,
   );
   const set = (key: keyof typeof choices, value: string) => {
@@ -123,14 +128,9 @@ export default function StatementImportReview({
       {p.data && (
         <>
           <p>
-            Debit{' '}
-            {formatExactMoney(
-              p.data.preview.totals.debit,
-              q.data?.purpose === 'statement' ? (p.data.rows[0]?.currency ?? 'INR') : 'INR',
-            )}{' '}
-            · credit{' '}
-            {formatExactMoney(p.data.preview.totals.credit, p.data.rows[0]?.currency ?? 'INR')} ·
-            net {formatExactMoney(p.data.preview.totals.net, p.data.rows[0]?.currency ?? 'INR')}.{' '}
+            Debit {formatExactMoney(p.data.preview.totals.debit, w.data!.company.currency)} · credit{' '}
+            {formatExactMoney(p.data.preview.totals.credit, w.data!.company.currency)} · net{' '}
+            {formatExactMoney(p.data.preview.totals.net, w.data!.company.currency)}.{' '}
             {p.data.rowCount} distinct records.
           </p>
           {p.data.preview.errors.slice(0, 100).map((e) => (
@@ -145,9 +145,9 @@ export default function StatementImportReview({
             </p>
           ))}
           {p.data.hasMore && (
-            <button onClick={() => setOffset(p.data!.nextOffset)}>Review next rows</button>
+            <button onClick={() => setPageCursor(p.data!.nextPageCursor)}>Review next rows</button>
           )}
-          {offset > 0 && <button onClick={() => setOffset(0)}>First rows</button>}
+          {!!pageCursor && <button onClick={() => setPageCursor('')}>First rows</button>}
           <label>
             <input
               type="checkbox"

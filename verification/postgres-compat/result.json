@@ -1,6 +1,6 @@
 {
   "kind": "PGlite migration compatibility check",
-  "executedAt": "2026-10-10T12:27:00.923Z",
+  "executedAt": "2026-10-11T02:27:16.553Z",
   "nodeVersion": "v24.14.0",
   "pgliteVersion": "0.5.8",
   "migrationSha256": {
@@ -175,6 +175,160 @@
       "downFile": "24_communication_exports.down.sql",
       "upSha256": "5c61a6ad0faa43ecfda8adf261367a55ac4119ff6b645c1f4e6bd07b807632a5",
       "downSha256": "e6a2e8f313c6004dac343f3cbde8372cfd9e7d9e39b15d4d2b7549baa0ad6b2f"
+    },
+    {
+      "version": 25,
+      "upFile": "25_measured_task_pagination.up.sql",
+      "downFile": "25_measured_task_pagination.down.sql",
+      "upSha256": "0e572e3e9d271feb12d8655a010af0b6c8db60b1a1ef80506125dc266f4c117e",
+      "downSha256": "dc7e8f8fd430cf4f05d48b0930c06536a96b95541c90f61e51c99c665b810b19"
+    },
+    {
+      "version": 26,
+      "upFile": "26_attention.up.sql",
+      "downFile": "26_attention.down.sql",
+      "upSha256": "83738a2d28f4a2110ee601caeff5504ce4641d53ffff754b6e4cea21338ccf1b",
+      "downSha256": "b9321c7bc16374b1040c3f6e15516b8e790337c3556289b538def57a6db172af"
+    },
+    {
+      "version": 27,
+      "upFile": "27_attention_delivery.up.sql",
+      "downFile": "27_attention_delivery.down.sql",
+      "upSha256": "d46654fa71034d1afbc17cef5289c961e81a8b3747aa4f02721faf085f13f14d",
+      "downSha256": "f8b123304f2d7674ca42cc1a6118394ee7a7fdcd439f1346428fca582c41f38d"
+    },
+    {
+      "version": 28,
+      "upFile": "28_business_mutation_retries.up.sql",
+      "downFile": "28_business_mutation_retries.down.sql",
+      "upSha256": "d9832f6a7f2ffbf8c8b38bb9bd8c0d33c2835c6432ae4cb45fee104855eec7ac",
+      "downSha256": "207c57e722dba2c264e41fe06cac028a31e8bda756f31f24d25be5a85680dbb5"
+    },
+    {
+      "version": 29,
+      "upFile": "29_task_templates.up.sql",
+      "downFile": "29_task_templates.down.sql",
+      "upSha256": "4ee1a520ca830e733c1f1ad61d052d1430b62cb21529f498725bb3301bd65245",
+      "downSha256": "c222e58301948e669711c2e45ae8f88f9459a877b237516ce49b8e56ab35a9d9"
+    },
+    {
+      "version": 30,
+      "upFile": "30_project_milestones.up.sql",
+      "downFile": "30_project_milestones.down.sql",
+      "upSha256": "3f6ae749f49abf32ea2e692d9db207f68b70e302f338e8498744655cae129eec",
+      "downSha256": "f2087fed684713aa1d6c9e8995df5c3eff58f44324553c0e9664df43f2f39793"
+    },
+    {
+      "version": 31,
+      "upFile": "31_task_schedule_proposals.up.sql",
+      "downFile": "31_task_schedule_proposals.down.sql",
+      "upSha256": "00fe1294a1f8b129a5711b30e1d270532f467e303beb2383f4dc2c73a6cc264a",
+      "downSha256": "b4a1995bc9f660056c986860367bce46dd47532cd2f2af1af41a94c1a1a429a7"
+    },
+    {
+      "version": 32,
+      "upFile": "32_milestone_submission_history.up.sql",
+      "downFile": "32_milestone_submission_history.down.sql",
+      "upSha256": "fdea426d8f62b108857ff0a46a1df74db6385e75a9e1c9a04d9088c1be3f6ca2",
+      "downSha256": "0eeee310b35f9e998587376a07900ca3bc3da22e4451ddb83b1dc36f86da9a89"
+    },
+    {
+      "version": 33,
+      "upFile": "33_report_history.up.sql",
+      "downFile": "33_report_history.down.sql",
+      "upSha256": "1872774a6385ad69294218181f5634436542975cb1cc636186bd8243e8ad7af0",
+      "downSha256": "c6a28a42ee395256c7227b85bd09a3b9457bc8a3d5b97efb24118c0a471eb42d"
+    },
+    {
+      "version": 34,
+      "upFile": "34_historical_snapshots.up.sql",
+      "downFile": "34_historical_snapshots.down.sql",
+      "upSha256": "fc35eb23c70cf65e461e32ec5c19c925b0f5ce4ccc395e80adc1b387dd3efd45",
+      "downSha256": "32472f6f13590662d851325eb5c9803ec108321b971d4a8bbb338256e02ed871"
+    },
+    {
+      "version": 35,
+      "upFile": "35_saved_reports_exports.up.sql",
+      "downFile": "35_saved_reports_exports.down.sql",
+      "upSha256": "84630af2ba39c92300579334231ac2f37d3870b92d7df9982664cc94cdc55d24",
+      "downSha256": "88e51a56c036fd2cb99892cdc3e4e054cf407fee2ac07acffc8e876ff1dfc208"
+    },
+    {
+      "version": 36,
+      "upFile": "36_attention_report_source.up.sql",
+      "downFile": "36_attention_report_source.down.sql",
+      "upSha256": "8463727f0a2d9576d7fb68f1563fa4164c750165517accf5fcac657f8c8709cb",
+      "downSha256": "8bcd75623f7e3744f1db7304eb38822b7566b19c7736d84cb6b326d59c993f69"
+    },
+    {
+      "version": 37,
+      "upFile": "37_report_schedule_failures.up.sql",
+      "downFile": "37_report_schedule_failures.down.sql",
+      "upSha256": "b99cdfaace0fed34e21f33b9ad8b3536220961198774da37ba9576a63a82450a",
+      "downSha256": "eae59cf56e4246c1473d459fa166bd0449797a47723904b81e12c8bdde38324c"
+    },
+    {
+      "version": 38,
+      "upFile": "38_finance_assistance_sources.up.sql",
+      "downFile": "38_finance_assistance_sources.down.sql",
+      "upSha256": "8a558b4ff9b8aa7862dcffae56b361d4b9f18ba06f0e79a3674fbbc5fb0ab9a8",
+      "downSha256": "718e80ba17a9d4e1bfc872d0834036bfe0270e2d4b5e8b7597f11a7ac11ef455"
+    },
+    {
+      "version": 39,
+      "upFile": "39_finance_receipt_results.up.sql",
+      "downFile": "39_finance_receipt_results.down.sql",
+      "upSha256": "93d72ab9e82d6983e608f2c83ae31e05e627a1c091271e37f5b5ed437be89b40",
+      "downSha256": "e0125a1435e1716144ce7929058ff8e4f3defc16b6a65eb325e0885178c59901"
+    },
+    {
+      "version": 40,
+      "upFile": "40_finance_receipt_acceptance.up.sql",
+      "downFile": "40_finance_receipt_acceptance.down.sql",
+      "upSha256": "b6328bd5a5af03146dbf6f76127a5ee98e9a47d80955eeba07b376c660d7455c",
+      "downSha256": "252a978c416b8a58c6d9356d3b46d86a86e9bb01416e486692fe20937ce405f5"
+    },
+    {
+      "version": 41,
+      "upFile": "41_finance_duplicates.up.sql",
+      "downFile": "41_finance_duplicates.down.sql",
+      "upSha256": "abc7768aa6dd5baec5b55b49d2d2edd7a319c9c70a5f9a306abd2873aa38c0b9",
+      "downSha256": "ae89d716b902bf16e660eeaa377497a62908f4375ef0454294a71610c8581655"
+    },
+    {
+      "version": 42,
+      "upFile": "42_finance_statements.up.sql",
+      "downFile": "42_finance_statements.down.sql",
+      "upSha256": "1a692253fa2cde7d892e9004e9776e4f42c9765bd81aa164c4ab58046df29424",
+      "downSha256": "45cec8160089af321a3089408aa7fd3cd1c04eec18f8320e88ecd33c2449590a"
+    },
+    {
+      "version": 43,
+      "upFile": "43_finance_reconciliation.up.sql",
+      "downFile": "43_finance_reconciliation.down.sql",
+      "upSha256": "f16980865d0da633b4a45e4caae4f93b42a044e4141a26a5d59fa7ec75098312",
+      "downSha256": "61beda792514a6ec7b01b471bfce817db20f65c12e49b64d830fac987f9a41d2"
+    },
+    {
+      "version": 44,
+      "upFile": "44_finance_capture_reservations.up.sql",
+      "downFile": "44_finance_capture_reservations.down.sql",
+      "upSha256": "ffcfc89bc7f92a1e902c88856ebb644a953cb15d045dfef7a1df2c9871a5aa4b",
+      "downSha256": "666bb4863d005cea699c7760ab827a7351d260fa027756bf946a02eef80316b0"
+    },
+    {
+      "version": 45,
+      "upFile": "45_finance_assistance_attention.up.sql",
+      "downFile": "45_finance_assistance_attention.down.sql",
+      "upSha256": "317c839984cf0ed05d46e41a738c4efac7a5dc9dac3cc12f6242ca4b28b5e2b0",
+      "downSha256": "d6d7786854f0412af72fa8eebd9359c35a6b85d0bfef3cb4b60be46b81fe1bdb"
+    },
+    {
+      "version": 46,
+      "upFile": "46_finance_assistance_history.up.sql",
+      "downFile": "46_finance_assistance_history.down.sql",
+      "upSha256": "3e847e044a1e9fd2782d3288f6613c7d98ec2ec954d8f67a8da2c295337e6502",
+      "downSha256": "c648951ec31c0fe930d4d2fed845020b7af2aa275f766e373eb0d4f6430d3647"
     }
   ],
   "checks": [

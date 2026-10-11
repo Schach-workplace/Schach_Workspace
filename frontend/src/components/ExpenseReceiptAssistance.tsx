@@ -1,18 +1,18 @@
 import { useState } from 'react';
 import { useWorkspace } from '../store';
 import { useExecutionInput } from '../data/executionInput';
-import { useExecutionRead, useExecutionMutation } from '../data/execution';
+import { useExecutionMutation } from '../data/execution';
 import type { Expense } from '../types';
 import ReceiptExtractionReview from './ReceiptExtractionReview';
 export default function ExpenseReceiptAssistance({
-  expenseId,
+  expense,
   receiptId,
 }: {
-  expenseId: string;
+  expense: Expense;
   receiptId: string;
 }) {
   const w = useWorkspace();
-  const q = useExecutionRead<{ expense: Expense }>('/expenses/' + expenseId);
+  const expenseId = expense.id;
   const [job, setJob] = useExecutionInput('$existing-receipt:' + receiptId, 'job', '');
   const [department, setDepartment] = useExecutionInput(
     '$existing-receipt:' + receiptId,
@@ -24,11 +24,11 @@ export default function ExpenseReceiptAssistance({
   const assess = useExecutionMutation('$receipt-assess:' + receiptId, ['/expenses/' + expenseId]);
   const extract = useExecutionMutation('$receipt-extract:' + receiptId, ['/expenses/' + expenseId]);
   const authority = ['founder', 'ceo', 'admin', 'finance'].includes(w.data?.me.role ?? '');
-  const current = q.data?.expense;
+  const current = expense;
   const exists = current?.receipts.some((r) => r.id === receiptId);
   return (
     <section>
-      {q.ready && exists && (
+      {exists && (
         <>
           <label>
             Reviewed extraction destination
@@ -113,7 +113,7 @@ export default function ExpenseReceiptAssistance({
           }}
         />
       )}
-      <p role="alert">{assess.error || extract.error || q.error?.message}</p>
+      <p role="alert">{assess.error || extract.error}</p>
     </section>
   );
 }

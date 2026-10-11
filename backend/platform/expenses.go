@@ -49,6 +49,13 @@ func validateExpenseDate(c Company, date string) error {
 	return nil
 }
 func validateExpense(tx *gorm.DB, a *access, e *Expense) error {
+	return validateExpenseReview(tx, a, e, true)
+}
+
+// The read-only pair preview validates the same reviewed fields and authority.
+// Only ordinary/create/accept mutation validation enforces the company-wide
+// invoice collision rule; peer disclosure remains scoped by its read query.
+func validateExpenseReview(tx *gorm.DB, a *access, e *Expense, enforceInvoice bool) error {
 	e.Title = strings.TrimSpace(e.Title)
 	e.Description = strings.TrimSpace(e.Description)
 	e.Vendor = normalizeWords(e.Vendor)
@@ -117,7 +124,7 @@ func validateExpense(tx *gorm.DB, a *access, e *Expense) error {
 		}
 	}
 	e.VendorKey, e.InvoiceKey = invoiceKey(e.Vendor), invoiceKey(e.InvoiceNumber)
-	if e.InvoiceKey != "" {
+	if enforceInvoice && e.InvoiceKey != "" {
 		var n int64
 		if err := tx.Model(&Expense{}).Where("company_id = ? AND id <> ? AND vendor_key = ? AND invoice_key = ? AND status <> ?", a.Company.ID, e.ID, e.VendorKey, e.InvoiceKey, "void").Count(&n).Error; err != nil {
 			return err

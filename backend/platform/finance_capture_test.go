@@ -34,7 +34,7 @@ func TestFinanceCaptureReservationAndCanonicalBinding(t *testing.T) {
 	bind := map[string]any{"retryKey": "bind-lost-ack", "expectedVersion": 1, "fileName": "captured.png", "size": len(data), "sha256": financeDigest(data)}
 	for n := 0; n < 2; n++ {
 		got := financeOK(t, f.s, "POST", root+"/"+id+"/bind-content", bind, f.cookie)
-		if got["version"] != float64(2) || got["state"] != "reserved" {
+		if got["version"] != float64(2) || got["state"] != "reserved" || got["expiresAt"] != out["expiresAt"] {
 			t.Fatal(got)
 		}
 	}

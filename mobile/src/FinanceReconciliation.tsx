@@ -7,6 +7,7 @@ import { useExecutionRead, useExecutionMutation } from "./execution";
 import type {
   ReconciliationRead,
   StatementImport,
+  ReconciliationHistory,
 } from "../../shared/finance/assistanceIntent";
 import { formatExactMoney } from "../../shared/finance/money";
 function RowDecision({
@@ -34,6 +35,11 @@ function RowDecision({
     "/finance/statement-imports/" + item.row.importId,
   ]);
   const expense = expenses.find((e) => e.id === selected);
+  const [showHistory, setShowHistory] = useState(false);
+  const history = useExecutionRead<ReconciliationHistory>(
+    "/finance/reconciliation/rows/" + item.row.id + "/history",
+    showHistory,
+  );
   return (
     <Sheet
       title="Review full recorded-payment association"
@@ -121,9 +127,26 @@ function RowDecision({
             .catch(() => {})
         }
       />
-      {item.history.map((h, i) => (
-        <Text key={i}>
-          {h.action}: {h.reason}
+      <Action
+        title={
+          showHistory
+            ? "Close complete history"
+            : "Review complete association history"
+        }
+        onPress={() => setShowHistory(!showHistory)}
+      />
+      <Text accessibilityRole="alert">{history.error}</Text>
+      {(showHistory ? (history.data?.items ?? []) : item.history).map(
+        (h, i) => (
+          <Text key={i}>
+            {h.action}: {h.reason}
+          </Text>
+        ),
+      )}
+      {history.data?.allocations.map((a) => (
+        <Text key={a.id}>
+          {a.active ? "Active full association" : "Reversed association"}:{" "}
+          {a.reason}
         </Text>
       ))}
       <Text accessibilityRole="alert">{m.error}</Text>

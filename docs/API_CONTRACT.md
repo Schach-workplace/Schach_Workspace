@@ -167,3 +167,41 @@ Snapshots are process-local, expire after five minutes, and are bounded to64 sna
 The current web task/finance boards assemble every bounded authorized list page. Confirmed record absence immediately withholds open details and clears affected RAM drafts; list-version changes reauthorize them, with additional detail polling/event invalidation for evidence changes. A record outside the first page remains available after the complete list is confirmed. Native routes may reauthorize individual details independently. Live task/finance keyset lists do not promise snapshot totals; report rows/export do.
 
 Selected detail reauthorization may temporarily hide fetched content. Only user-authored edits are preserved in mounted RAM across same-scope version changes; they retain the optimistic version inspected when editing began. Task stale-edit/409 handling and finance changed-during-decision gates require deliberate reconciliation. Record exclusion or confirmed detail denial clears both fetched content and affected edits; no automatic replay against a newer version.
+
+## Finance assistance
+
+Ordinary `POST /api/companies/{cid}/expenses` accepts optional `retryKey` for existing clients; first-party creates always supply it. Each new finance mutation requires a nonblank scoped key (maximum100 characters). An identical retry returns its canonical identifiers after current source/actor authorization; changed intent conflicts. A first write uses inspected versions. Retry keys do not extend source expiry or create a new session grant.
+
+All following paths are under `/api/companies/{cid}`:
+
+| Route | Contract |
+|---|---|
+| POST `/finance/intakes` | Exact `{retryKey,purpose:receipt\|statement,fileName,size,sha256,destinationDepartmentId?}`. Receipt≤10MiB; statement≤8MiB and finance authority. Receipt-only `{retryKey,purpose:receipt,capture:true,destinationDepartmentId}` reserves real zero-byte identity and charges10MiB until bound/cancelled/expired. |
+| GET `/finance/intakes`, `/{id}` | Original live session/current owner and destination rights; paged recovery metadata. No quarantined bytes. |
+| POST `/finance/intakes/{id}/bind-content` | `{retryKey,expectedVersion,fileName,size,sha256}` binds one real camera return. Canonical replay uses same key and payload, never recaptures/rebinds/renews expiry. |
+| POST `/finance/intakes/{id}/upload` | Raw exact bytes; original scope before and after storage, exact hash/size, bounded MIME. Same-content stage recovery only. Unbound capture409. |
+| POST `/finance/intakes/{id}/finalize`, `/cancel` | `{retryKey,expectedVersion}`. Finalize queues scanner; clean required before extraction/CSV. Cancel denies scratch immediately. |
+| GET `/finance/intakes/{id}/download` | Current clean private source only, attachment/no-store/sandbox and repeated access checks. |
+| POST `/expense-receipts/{id}/assessment` | `{retryKey,expectedExpenseVersion}` inspects the actual current parent and asynchronously scans existing independently retained bytes. |
+| POST `/finance/receipt-extractions` | `{retryKey,optIn:true,source:{kind:intake\|expense_receipt,id,expectedVersion},destinationDepartmentId,targetExpenseId?,expectedTargetVersion?}`. Both target fields required together; target current own draft/same department. |
+| GET `/finance/receipt-extractions`, `/{id}` | Requester/original-session private current-source jobs/results. Failed extraction is recoverable/manual; candidates have no authority. |
+| POST `/finance/receipt-extractions/{id}/cancel` | `{retryKey,expectedVersion}`; cancels job and private result disclosure. |
+| POST `/finance/receipt-extractions/{id}/accept-preview` | Read-only current source/review validation and current finance audience; no retryKey/business write. |
+| POST `/finance/receipt-extractions/{id}/accept` | Key plus `{expectedResultRevision,sourceKind,sourceId,destinationDepartmentId,fields,confirmedUncertainties,copyEvidence:true}`. Explicit original expense fields, exact integer `amountMinor`, actual category/department/date/work links. One unique reviewed-result claim creates/updates a draft and separately retained selected receipt copy atomically. No submit/approve/pay. |
+| POST `/finance/duplicates/preview` | Read-only `{sourceExtractionId,expectedResultRevision,fields}`; authorized pair comparison only. |
+| POST `/finance/duplicate-candidates/review` | Key plus `{sourceKind:expense\|extraction,sourceId,expectedVersion,fields?,comparisonCursor?}`. Persists deterministic reviewed current pair candidates in current-authorized100-peer batches; `nextComparisonCursor` advances deliberate comparison and remains source/review/basis-bound. |
+| GET `/finance/duplicate-candidates`, `/{id}` | Both sources/current basis before paging/detail. No hidden peer data/count/hash. |
+| POST `/finance/duplicate-candidates/{id}/dismiss` | Key, inspected candidate version and meaningful12–4000 Unicode reason. Dismissal never waives original exact vendor/invoice validator. |
+| POST `/finance/statement-previews` | Key, intake ID/version and explicit zero-based mapping; no inferred locale/date/sign/column defaults. UTF8/RFC4180≤8MiB/10k records/32 columns/4KiB cell/32KiB record. Every error blocks import. Original logical record ordinals preserve equal occurrences. |
+| GET `/finance/statement-previews/{id}` | Owner/original live source; bounded normalized rows (`cursor` bound to current principal/company/basis/preview revision, maximum100; `nextPageCursor` advances deliberate review), private errors and exact totals. |
+| POST `/finance/statement-previews/{id}/import` | Key, `expectedPreviewRevision`, optional deliberate repeated-file `duplicateReason`. Atomically retained import/rows/audit/claim. Changed accepted intent409; same preview cannot create another import. |
+| GET `/finance/statement-imports`, `/{id}`, `/{id}/rows`, `/{id}/export` | Current company finance only. Independent normalized evidence, bounded rows and ≤16MiB formula-safe exact CSV export. |
+| GET `/finance/reconciliation` | Current finance rows/import/paid expense projections; filters `state=all\|unmatched\|matched\|dismissed`, `importId`, basis-bound cursor advancing both rows and unallocated paid expenses independently. Deterministic suggestions require deliberate selection. |
+| GET `/finance/reconciliation/rows/{id}/history` | Current row/import/finance authorization before independent100-item cursor pages for decisions and retained allocations. Queue embeds only latest20 decisions/allocations; complete history is deliberate selected drilldown. |
+| POST `/finance/reconciliation/matches` | Key, row/expense IDs and original versions, meaningful reason. Only one exact full negative row/current paid expense/currency. DB unique active row AND expense. Never invokes payment or changes expense economics. |
+| POST `/finance/reconciliation/rows/{id}/dismiss` | Key, inspected row version/suggestion basis/reason; retains accounting totals and discrepancy history. |
+| POST `/finance/reconciliation/matches/{id}/unmatch` | Key, allocation version/reason; deactivates association with immutable history, preserves payment. Replay does not reactivate. |
+
+Signed individual amounts remain bounded exact integers≤1e12 minor. Statement debit/credit/net are JSON **decimal integer strings**, checked in int64 and formatted by the shared exact string/BigInt formatter; consumers must not coerce aggregate strings to Number. Company currency is authoritative and no FX inference occurs. Receipt candidates, filenames, source hashes, leases/session references and raw bank cells never enter the company workspace or general communication hints. Source expiry/revocation suppresses detail/export/provider work independently of physical-delete retry.
+
+New attention sources are `finance_extraction/receipt_review` (requester), `finance_duplicate/duplicate_review` (both sources), and `finance_reconciliation/reconciliation_review` (finance). IDs-only intents and current SQL/detail predicates apply. Resolve/snooze changes attention only; domain acceptance/dismiss/match supersedes episodes. There is no route/decide permission for these sources.

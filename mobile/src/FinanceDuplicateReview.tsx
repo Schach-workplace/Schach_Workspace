@@ -70,6 +70,15 @@ export default function FinanceDuplicateReview({
   const w = useWorkspace();
   const [selected, setSelected] = useState(initialCandidate);
   const source = useExecutionMutation("$duplicates-review");
+  const [comparison, setComparison] = useRamInput<{
+    sourceId: string;
+    version: number;
+    cursor: string;
+  }>("$duplicates-review", "comparison", {
+    sourceId: "",
+    version: 0,
+    cursor: "",
+  });
   const q = useExecutionRead<{ items: FinanceDuplicate[] }>(
     "/finance/duplicate-candidates",
   );
@@ -95,19 +104,52 @@ export default function FinanceDuplicateReview({
                   }
                   onPress={() =>
                     void source
-                      .execute(
+                      .execute<{ nextComparisonCursor: string }>(
                         "/finance/duplicate-candidates/review",
                         source.attempt?.payload ?? {
                           sourceKind: "expense",
                           sourceId: e.id,
                           expectedVersion: e.version ?? 1,
                         },
+                        "POST",
+                        (r) =>
+                          setComparison({
+                            sourceId: e.id,
+                            version: e.version ?? 1,
+                            cursor: r.nextComparisonCursor,
+                          }),
                       )
                       .then(() => q.retry())
                       .catch(() => {})
                   }
                 />
               ))}
+            {comparison.cursor && (
+              <Action
+                title="Compare next expenses"
+                disabled={source.busy || !!source.attempt}
+                onPress={() =>
+                  void source
+                    .execute<{ nextComparisonCursor: string }>(
+                      "/finance/duplicate-candidates/review",
+                      {
+                        sourceKind: "expense",
+                        sourceId: comparison.sourceId,
+                        expectedVersion: comparison.version,
+                        comparisonCursor: comparison.cursor,
+                      },
+                      "POST",
+                      (r) =>
+                        setComparison({
+                          ...comparison,
+                          cursor: r.nextComparisonCursor,
+                        }),
+                    )
+                    .then(() => q.retry())
+                    .catch(() => {})
+                }
+              />
+            )}
             <Text accessibilityRole="alert">{source.error || q.error}</Text>
           </View>
         }

@@ -168,20 +168,26 @@ describe('budget and expense totals', () => {
   });
 });
 
-
 describe('exact aggregate display', () => {
   it('keeps cents on the real bounded 9008-row summary and rejects an unsafe summary', () => {
-    const rows = Array.from({length:9007}, (_,i) => expense(String(i), 'submitted', 1_000_000_000_000));
-    rows.push(expense('last','submitted',199254740991));
-    const data = {company:{currency:'INR'}, financeScope:'company', budgets:[],expenses:rows} as unknown as WorkspaceData;
-    const summary = financeSummary(data,'2026-04-01','2027-03-31');
+    const rows = Array.from({ length: 9007 }, (_, i) =>
+      expense(String(i), 'submitted', 1_000_000_000_000),
+    );
+    rows.push(expense('last', 'submitted', 199254740991));
+    const data = {
+      company: { currency: 'INR' },
+      financeScope: 'company',
+      budgets: [],
+      expenses: rows,
+    } as unknown as WorkspaceData;
+    const summary = financeSummary(data, '2026-04-01', '2027-03-31');
     expect(summary.pendingMinor).toBe(9007199254740991);
-    expect(formatMoney(summary.pendingMinor,'USD')).toBe('$90,071,992,547,409.91');
-    expect(formatMoney(summary.pendingMinor,'INR')).toBe('₹9,00,71,99,25,47,409.91');
-    expect(formatMoney('-9007199254740993','USD')).toBe('-$90,071,992,547,409.93');
-    expect(formatMoney('-1','USD')).toBe('-$0.01');
-    expect(formatMoney('-0','USD')).toBe('$0.00');
-    rows[9007].amountMinor=199254740993;
-    expect(()=>financeSummary(data,'2026-04-01','2027-03-31')).toThrow('supported total');
+    expect(formatMoney(summary.pendingMinor, 'USD')).toBe('$90,071,992,547,409.91');
+    expect(formatMoney(summary.pendingMinor, 'INR')).toBe('₹9,00,71,99,25,47,409.91');
+    expect(formatMoney('-9007199254740993', 'USD')).toBe('-$90,071,992,547,409.93');
+    expect(formatMoney('-1', 'USD')).toBe('-$0.01');
+    expect(formatMoney('-0', 'USD')).toBe('$0.00');
+    rows[9007].amountMinor = 199254740993;
+    expect(() => financeSummary(data, '2026-04-01', '2027-03-31')).toThrow('supported total');
   });
 });

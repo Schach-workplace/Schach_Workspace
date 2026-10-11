@@ -141,8 +141,23 @@ func syncFinanceReconciliationAttention(tx *gorm.DB, a *access, row FinanceState
 func initialFinanceStatementAttention(tx *gorm.DB, a *access, rows []FinanceStatementRow) error {
 	now := time.Now().UTC()
 	items := []AttentionItem{}
+	type queryKey struct {
+		amount         int64
+		currency, date string
+	}
+	candidatePages := map[queryKey][]Expense{}
 	for _, row := range rows {
-		_, basis, e := reconciliationSuggestions(tx, a, row)
+		key := queryKey{row.SignedAmountMinor, row.CompanyCurrency, row.BookedDate}
+		expenses, ok := candidatePages[key]
+		if !ok {
+			var e error
+			expenses, e = reconciliationPaidCandidates(tx, a, row)
+			if e != nil {
+				return e
+			}
+			candidatePages[key] = expenses
+		}
+		_, basis, e := reconciliationSuggestionsForCandidates(row, expenses)
 		if e != nil {
 			return e
 		}

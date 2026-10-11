@@ -6,6 +6,7 @@ import {
   formatExactMoney,
   type ReconciliationRead,
   type StatementImport,
+  type ReconciliationHistory,
 } from '../data/financeAssistance';
 function RowReview({
   item,
@@ -22,6 +23,11 @@ function RowReview({
     '/finance/statement-imports/' + item.row.importId,
   ]);
   const expense = expenses.find((e) => e.id === selected);
+  const [showHistory, setShowHistory] = useState(false);
+  const history = useExecutionRead<ReconciliationHistory>(
+    '/finance/reconciliation/rows/' + item.row.id + '/history',
+    showHistory,
+  );
   return (
     <section>
       <p>
@@ -58,7 +64,12 @@ function RowReview({
         />
       </label>
       <button
-        disabled={!expense || m.busy || reason.trim().length < 12}
+        disabled={
+          !expense ||
+          m.busy ||
+          reason.trim().length < 12 ||
+          (!!m.attempt && m.attempt.target?.path !== '/finance/reconciliation/matches')
+        }
         onClick={() =>
           void m
             .execute(
@@ -78,7 +89,12 @@ function RowReview({
         Match full recorded payment
       </button>
       <button
-        disabled={m.busy || reason.trim().length < 12}
+        disabled={
+          m.busy ||
+          reason.trim().length < 12 ||
+          (!!m.attempt &&
+            m.attempt.target?.path !== '/finance/reconciliation/rows/' + item.row.id + '/dismiss')
+        }
         onClick={() =>
           void m
             .execute(
@@ -95,10 +111,25 @@ function RowReview({
       >
         Record discrepancy / dismiss suggestion
       </button>
-      {item.history.map((h, i) => (
+      <button onClick={() => setShowHistory(!showHistory)}>
+        {showHistory ? 'Close complete history' : 'Review complete association history'}
+      </button>
+      {history.loading && <p>Checking current history access…</p>}
+      {history.error && <p role="alert">{history.error.message}</p>}
+      {(showHistory ? (history.data?.items ?? []) : item.history).map((h, i) => (
         <p key={i}>
           {h.action}: {h.reason}
         </p>
+      ))}
+      {history.data?.allocations.map((a) => (
+        <Allocation
+          key={a.id}
+          allocation={a}
+          onChanged={() => {
+            void history.retry();
+            onChanged();
+          }}
+        />
       ))}
       {m.error && <p role="alert">{m.error}. Retry the same frozen decision.</p>}
     </section>
@@ -149,9 +180,11 @@ function Allocation({
     </section>
   );
 }
-export default function FinanceReconciliation() {
+export default function FinanceReconciliation({ initialImport = '' }: { initialImport?: string }) {
   const w = useWorkspace();
-  const [importId, setImport] = useState('');
+  const [importId, setImport] = useState(
+    initialImport || new URLSearchParams(window.location.hash.split('?')[1]).get('import') || '',
+  );
   const [state, setState] = useState('all');
   const list = useExecutionRead<{ items: StatementImport[] }>('/finance/statement-imports');
   const q = useExecutionRead<ReconciliationRead>(

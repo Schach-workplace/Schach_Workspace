@@ -110,3 +110,5 @@ TEST_DATABASE_URL='postgres://test_operator@localhost:5432/schach_test?sslmode=d
 ```
 
 Supply a password securely through `PGPASSWORD` when necessary. This opt-in test path creates a randomly named schema per test, applies all numbered up migrations in order in separate transactions, permits multiple connections, and removes only the schemas it created. The test role needs CREATE SCHEMA permission. Do not use a production database for test execution. The native PostgreSQL path is supplied for your deployment gate; it could not be executed in this workspace. The implementation report distinguishes SQLite tests, PostgreSQL WASM migration checks and Encore typechecks from unexecuted native deployment tests.
+
+Finance assistance uses `ConfigureFinanceAssistance` and the separately joined finance worker from `StartBackgroundWorkers`. See `docs/API_CONTRACT.md` and `docs/OPERATIONS.md` for exact source-bound retry/capture/provider/retention limits and SQL38–46. English JPEG/PNG extraction requires explicitly qualified fixed Tesseract/traineddata/prlimit and ClamAV; disabled/provider failure leaves manual draft and retained evidence flows available.

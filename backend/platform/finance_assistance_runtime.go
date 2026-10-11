@@ -2,6 +2,7 @@ package platform
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"gorm.io/gorm"
 	"os"
@@ -71,8 +72,12 @@ func ConfigureFinanceAssistance(o *Options) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	cmd := exec.CommandContext(ctx, path, "--version")
-	version, e := cmd.Output()
-	if e != nil || len(version) > 8192 {
+	versionOutput := &financeBoundedOutput{Limit: 8192}
+	cmd.Stdout = versionOutput
+	cmd.Stderr = &financeBoundedOutput{Limit: 1024}
+	e := cmd.Run()
+	version := versionOutput.Bytes()
+	if e != nil {
 		return errors.New("Configured OCR executable is unavailable")
 	}
 	trained, e := os.ReadFile("/usr/share/tessdata/eng.traineddata")
@@ -83,7 +88,11 @@ func ConfigureFinanceAssistance(o *Options) error {
 	if e != nil {
 		return e
 	}
-	identity := financeDigest(binary) + ":" + financeDigest(trained) + ":eng:psm6:omp1"
+	limiter, e := os.ReadFile("/usr/bin/prlimit")
+	if e != nil {
+		return errors.New("Configured OCR resource limiter unavailable")
+	}
+	identity := financeDigest(binary) + ":" + financeDigest(trained) + ":" + financeDigest(limiter) + ":eng:psm6:omp1:memory512MiB:cpu45s"
 	o.FinanceOCRFingerprint = financeDigest([]byte(identity))
 	o.ReceiptOCRProvider = &TesseractReceiptOCR{Executable: path, Language: language, Version: strings.SplitN(string(version), "\n", 2)[0], Fingerprint: o.FinanceOCRFingerprint}
 	return nil
@@ -122,17 +131,47 @@ func (s *Server) RunFinanceAssistanceCleanup(ctx context.Context, now time.Time,
 	if limit < 1 || limit > 100 {
 		limit = 100
 	}
-	var rows []FinanceAssistanceIntake
-	if e := s.db.WithContext(ctx).Where("state<>'purged' AND (expires_at<=? OR state IN ?)", now, []string{"cancelled", "expired", "rejected"}).Order("expires_at,id").Limit(limit).Find(&rows).Error; e != nil {
-		return 0, e
-	}
 	n := 0
+	// Erase expired private review text before any fallible file deletion.
+	// Each processed scratch record consumes the shared pass budget.
+	var results []ReceiptExtractionResult
+	if e := s.db.WithContext(ctx).Where("expires_at<=? AND candidates<>?", now, "{\"fields\":{},\"unresolved\":[]}").Order("expires_at,id").Limit(limit - n).Find(&results).Error; e != nil {
+		return n, e
+	}
+	for _, result := range results {
+		empty, _ := json.Marshal(ReceiptCandidates{Fields: map[string][]string{}, Unresolved: []string{}})
+		if e := s.db.WithContext(ctx).Model(&result).Update("candidates", string(empty)).Error; e != nil {
+			return n, e
+		}
+		n++
+	}
+	if n == limit {
+		return n, nil
+	}
+	var previews []string
+	if e := s.db.WithContext(ctx).Model(&FinanceStatementPreview{}).Where("expires_at<=? AND (rows<>? OR errors<>?)", now, "[]", "[]").Order("expires_at,id").Limit(limit-n).Pluck("id", &previews).Error; e != nil {
+		return n, e
+	}
+	if len(previews) > 0 {
+		if e := s.db.WithContext(ctx).Model(&FinanceStatementPreview{}).Where("id IN ?", previews).Updates(map[string]any{"rows": "[]", "errors": "[]"}).Error; e != nil {
+			return n, e
+		}
+		n += len(previews)
+	}
+	if n == limit {
+		return n, nil
+	}
+	var deleteError error
+	var rows []FinanceAssistanceIntake
+	if e := s.db.WithContext(ctx).Where("state<>'purged' AND (expires_at<=? OR state IN ?)", now, []string{"cancelled", "expired", "rejected"}).Order("expires_at,id").Limit(limit - n).Find(&rows).Error; e != nil {
+		return n, e
+	}
 	for _, i := range rows {
 		e := s.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
 			if e := lockCompany(tx, i.CompanyID); e != nil {
 				return e
 			}
-			if e := tx.Model(&FinanceAssistanceIntake{}).Where("id=? AND state<>'purged'", i.ID).Updates(map[string]any{"state": "expired", "content_generation": gorm.Expr("content_generation+1")}).Error; e != nil {
+			if e := tx.Model(&FinanceAssistanceIntake{}).Where("id=? AND state NOT IN ?", i.ID, []string{"expired", "purged"}).Updates(map[string]any{"state": "expired", "content_generation": gorm.Expr("content_generation+1")}).Error; e != nil {
 				return e
 			}
 			return tx.Model(&FinanceAssistanceJob{}).Where("source_kind='intake' AND source_id=? AND status<>'accepted'", i.ID).Update("status", "cancelled").Error
@@ -140,25 +179,18 @@ func (s *Server) RunFinanceAssistanceCleanup(ctx context.Context, now time.Time,
 		if e != nil {
 			return n, e
 		}
+		n++
 		if s.opts.FinanceIntakeStore == nil {
 			return n, nil
 		}
 		if e := s.opts.FinanceIntakeStore.Delete(ctx, i.StoreKey); e != nil {
-			return n, e
+			deleteError = errors.Join(deleteError, e)
+			continue
 		}
 		if e := s.db.WithContext(ctx).Model(&FinanceAssistanceIntake{}).Where("id=?", i.ID).Update("state", "purged").Error; e != nil {
 			return n, e
 		}
-		n++
 	}
-	var results []ReceiptExtractionResult
-	if e := s.db.WithContext(ctx).Where("expires_at<=?", now).Order("expires_at,id").Limit(limit).Find(&results).Error; e != nil {
-		return n, e
-	}
-	for _, result := range results {
-		if e := s.db.WithContext(ctx).Model(&result).Update("candidates", ReceiptCandidates{Fields: map[string][]string{}, Unresolved: []string{}}).Error; e != nil {
-			return n, e
-		}
-	}
-	return n, nil
+
+	return n, deleteError
 }

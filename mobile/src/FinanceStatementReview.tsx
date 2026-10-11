@@ -32,7 +32,7 @@ export default function FinanceStatementReview({
     "preview",
     "",
   );
-  const [offset, setOffset] = useState(0);
+  const [pageCursor, setPageCursor] = useState("");
   const [confirmed, setConfirmed] = useRamInput(
     "$statement-map:" + intakeId,
     "confirmed",
@@ -51,7 +51,10 @@ export default function FinanceStatementReview({
     "/finance/statement-previews/" + preview,
   ]);
   const p = useExecutionRead<StatementPreview>(
-    "/finance/statement-previews/" + preview + "?offset=" + offset,
+    "/finance/statement-previews/" +
+      preview +
+      "?cursor=" +
+      encodeURIComponent(pageCursor),
     !!preview,
   );
   const frozen = !!m.attempt || m.busy || !!imported.attempt || imported.busy;
@@ -59,7 +62,7 @@ export default function FinanceStatementReview({
     setChoices((v) => ({ ...v, [key]: value }));
     setPreview("");
     setConfirmed(false);
-    setOffset(0);
+    setPageCursor("");
   };
   const header = (
     <View>
@@ -194,10 +197,10 @@ export default function FinanceStatementReview({
                 {p.data.hasMore && (
                   <Action
                     title="Review next rows"
-                    onPress={() => setOffset(p.data!.nextOffset)}
+                    onPress={() => setPageCursor(p.data!.nextPageCursor)}
                   />
                 )}
-                <Action title="First rows" onPress={() => setOffset(0)} />
+                <Action title="First rows" onPress={() => setPageCursor("")} />
                 <Action
                   title="I reviewed the full mapping and all normalized rows"
                   selected={confirmed}

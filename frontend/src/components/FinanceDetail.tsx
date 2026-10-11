@@ -806,7 +806,7 @@ function FinanceDetailBody({
                       <Download size={16} />
                     </button>
                   </div>
-                  <ExpenseReceiptAssistance expenseId={expense.id} receiptId={receipt.id} />
+                  <ExpenseReceiptAssistance expense={expense} receiptId={receipt.id} />
                 </div>
               ))}
             </div>

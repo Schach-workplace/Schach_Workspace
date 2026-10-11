@@ -21,6 +21,10 @@ func (s *Server) withFinanceJobAccess(ctx context.Context, job FinanceAssistance
 		if e != nil {
 			return e
 		}
+		var owned FinanceAssistanceJob
+		if e := tx.Select("id").First(&owned, "id=? AND company_id=? AND requester_id=? AND lease_token=? AND status='running' AND lease_until>?", job.ID, job.CompanyID, job.RequesterID, job.LeaseToken, time.Now()).Error; e != nil {
+			return missing()
+		}
 		if e = authorizeFinanceJobSource(tx, a, job, true); e != nil {
 			return e
 		}
@@ -132,6 +136,9 @@ func (s *Server) financeJobBytes(ctx context.Context, j FinanceAssistanceJob) ([
 	}
 	if j.SourceKind == "intake" {
 		data, e := s.readFinanceIntakeBytes(ctx, i)
+		if e == nil {
+			e = s.withFinanceJobAccess(ctx, j, func(*gorm.DB, *access) error { return nil })
+		}
 		return data, i.MimeType, e
 	}
 	if receipt.Size > 10<<20 || int64(len(receipt.Data)) != receipt.Size {
@@ -179,7 +186,14 @@ func (s *Server) RunFinanceAssistanceJobs(ctx context.Context, now time.Time, li
 				var release func()
 				release, e = s.opts.LocalProviderBudget.Acquire(work)
 				if e == nil {
-					extracted, e = s.opts.ReceiptOCRProvider.Extract(work, ReceiptOCRInput{Reader: bytes.NewReader(data), Size: int64(len(data)), MIME: mime, Language: "eng", ConfigFingerprint: j.ProviderFingerprint})
+					latest, _, err := s.financeJobBytes(work, j)
+					if err != nil {
+						e = err
+					} else if financeDigest(latest) != financeDigest(data) || s.opts.FinanceOCRFingerprint != j.ProviderFingerprint {
+						e = missing()
+					} else {
+						extracted, e = s.opts.ReceiptOCRProvider.Extract(work, ReceiptOCRInput{Reader: bytes.NewReader(data), Size: int64(len(data)), MIME: mime, Language: "eng", ConfigFingerprint: j.ProviderFingerprint})
+					}
 					release()
 					if e == nil {
 						candidates, e = parseReceiptCandidates(extracted.Text, j.CompanyCurrency)
