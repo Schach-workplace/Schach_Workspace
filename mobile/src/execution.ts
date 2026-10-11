@@ -62,8 +62,14 @@ export function useExecutionRead<T>(
                 "POST",
                 JSON.parse(bodyKey),
               );
-        if (data && typeof data === "object" && "nextCursor" in data) {
-          let cursor = (data as { nextCursor?: string }).nextCursor;
+        if (
+          data &&
+          typeof data === "object" &&
+          ("nextCursor" in data || "cursor" in data)
+        ) {
+          let cursor =
+            (data as { nextCursor?: string; cursor?: string }).nextCursor ??
+            (data as { cursor?: string }).cursor;
           const seen = new Set<string>();
           while (cursor && !seen.has(cursor)) {
             seen.add(cursor);
@@ -74,7 +80,9 @@ export function useExecutionRead<T>(
               data as Record<string, unknown>,
               next as Record<string, unknown>,
             );
-            cursor = (next as { nextCursor?: string }).nextCursor;
+            cursor =
+              (next as { nextCursor?: string; cursor?: string }).nextCursor ??
+              (next as { cursor?: string }).cursor;
           }
         }
         if (alive && generation === client.generation)
@@ -89,6 +97,31 @@ export function useExecutionRead<T>(
               e.status === 409 &&
               e.code === "access_changed"))
         ) {
+          clearAttemptsForSource(
+            client.endpoint,
+            w.company,
+            w.session?.user.id ?? "",
+            path.split("?")[0],
+          );
+          const finance = path.match(
+            /^\/finance\/(receipt-extractions|intakes|duplicate-candidates|statement-previews)\/([^/?]+)/,
+          );
+          if (finance) {
+            const family = finance[1],
+              id = finance[2];
+            for (const form of family === "receipt-extractions"
+              ? ["$receipt-review:", "$receipt-accept:"]
+              : family === "intakes"
+                ? ["$intake:", "$statement-map:"]
+                : family === "duplicate-candidates"
+                  ? ["$duplicate:"]
+                  : ["$statement-map:"])
+              clearConversationDrafts(
+                w.company,
+                w.session?.user.id ?? "",
+                form + id,
+              );
+          }
           const project = path.match(/^\/projects\/([^/?]+)$/);
           const milestone = path.match(/^\/project-milestones\/([^/?]+)$/);
           if (project) {
@@ -219,7 +252,15 @@ export function useExecutionMutation(formId: string, sources: string[] = []) {
       onCommitted?.(result);
       if (!path.endsWith("/preview")) {
         try {
-          await w.refresh(path.includes("task") ? "tasks" : "attention");
+          await w.refresh(
+            path.startsWith("/finance") ||
+              path.startsWith("/expenses") ||
+              path.startsWith("/expense-receipts")
+              ? "finance"
+              : path.includes("task")
+                ? "tasks"
+                : "attention",
+          );
         } catch {
           if (alive.current)
             setError("Saved. Refresh to inspect the current result.");

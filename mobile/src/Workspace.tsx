@@ -82,6 +82,7 @@ export interface NativeExpense {
   receipts: { id: string; fileName: string }[];
 }
 export interface WorkTask {
+  departmentId?: string;
   code?: string;
   projectId?: string;
   startDate?: string;

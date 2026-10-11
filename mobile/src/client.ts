@@ -210,6 +210,46 @@ export class NativeClient {
       this.requests.delete(abort);
     }
   }
+  async stageFinanceFile(company: string, id: string, file: Blob) {
+    const current = this.generation;
+    const abort = new AbortController();
+    this.requests.add(abort);
+    try {
+      const { fetch: send } = await import("expo/fetch");
+      const response = await send(
+        this.endpoint +
+          `/api/companies/${company}/finance/intakes/${id}/upload`,
+        {
+          method: "POST",
+          signal: abort.signal,
+          headers: {
+            Authorization: "Bearer " + this.token,
+            "Content-Type": "application/octet-stream",
+          },
+          body: file,
+        },
+      );
+      const value = (await response.json().catch(() => ({}))) as {
+        error?: { message?: string; code?: string };
+      };
+      if (current !== this.generation)
+        throw Error("Company changed during file staging.");
+      if (!response.ok) {
+        if ([401, 403, 404].includes(response.status)) {
+          this.clearGeneration();
+          this.onPolicyChange?.(response.status);
+        }
+        throw new NativeApiError(
+          response.status,
+          value.error?.code ?? "",
+          value.error?.message ?? "Unable to stage the same reserved file.",
+        );
+      }
+      return value;
+    } finally {
+      this.requests.delete(abort);
+    }
+  }
   async upload(company: string, conversation: string, id: string, file: Blob) {
     const current = this.generation;
     const abort = new AbortController();

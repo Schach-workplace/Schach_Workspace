@@ -28,7 +28,7 @@ func (s *Server) withFinanceJobAccess(ctx context.Context, job FinanceAssistance
 	})
 }
 func authorizeFinanceJobSource(tx *gorm.DB, a *access, j FinanceAssistanceJob, versions bool) error {
-	if j.CompanyID != a.Company.ID || j.RequesterID != a.User.ID || !time.Now().Before(j.ExpiresAt) || in(j.Status, "cancelled", "stale", "failed") {
+	if j.CompanyID != a.Company.ID || j.RequesterID != a.User.ID || !time.Now().Before(j.ExpiresAt) || in(j.Status, "cancelled", "stale") {
 		return missing()
 	}
 	if e := financeOriginalSession(tx, j.CompanyID, j.RequesterID, j.SessionRef); e != nil {
@@ -143,6 +143,15 @@ func (s *Server) RunFinanceAssistanceJobs(ctx context.Context, now time.Time, li
 	if limit < 1 || limit > 100 {
 		limit = 1
 	}
+	var exhausted []string
+	if e := s.db.WithContext(ctx).Model(&FinanceAssistanceJob{}).Where("status='running' AND attempts>=3 AND lease_until<=?", now).Order("id").Limit(limit).Pluck("id", &exhausted).Error; e != nil {
+		return 0, e
+	}
+	if len(exhausted) > 0 {
+		if e := s.db.WithContext(ctx).Model(&FinanceAssistanceJob{}).Where("id IN ? AND status='running' AND attempts>=3 AND lease_until<=?", exhausted, now).Updates(map[string]any{"status": "failed", "error_code": "retry_exhausted", "updated_at": now}).Error; e != nil {
+			return 0, e
+		}
+	}
 	done := 0
 	for n := 0; n < limit; n++ {
 		j, e := s.claimFinanceJob(ctx, now)
@@ -203,6 +212,9 @@ func (s *Server) RunFinanceAssistanceJobs(ctx context.Context, now time.Time, li
 				}
 				result := ReceiptExtractionResult{ID: newID("fres"), CompanyID: j.CompanyID, JobID: j.ID, RequesterID: j.RequesterID, Revision: 1, Engine: extracted.Engine, EngineVersion: extracted.Version, Language: extracted.Language, Candidates: candidates, CreatedAt: time.Now().UTC(), ExpiresAt: j.ExpiresAt}
 				if e := tx.Create(&result).Error; e != nil {
+					return e
+				}
+				if e := syncFinanceExtractionAttention(tx, j, result.Revision); e != nil {
 					return e
 				}
 				fresh.ResultID = result.ID

@@ -1,3 +1,5 @@
+import { useExecutionMutation } from '../data/execution';
+import { useExecutionInput } from '../data/executionInput';
 import { useEffect, useState, type FormEvent } from 'react';
 import { ArrowLeft, CircleAlert, Pencil, Plus, ReceiptText, ShieldCheck, Tags } from 'lucide-react';
 import { useWorkspace } from '../store';
@@ -85,7 +87,9 @@ export function ExpenseForm({
     taskId: expense?.taskId || '',
     receiptExceptionReason: expense?.receiptExceptionReason || '',
   });
-  const [draft, setDraft] = useState<ExpenseDraft>(() => makeDraft(item));
+  const formId = '$finance-draft:' + (item?.id ?? 'new');
+  const [draft, setDraft] = useExecutionInput<ExpenseDraft>(formId, 'draft', () => makeDraft(item));
+  const create = useExecutionMutation(formId);
   const [version, setVersion] = useState(item?.version || 0);
   const [error, setError] = useState('');
   const [reloadRequested, setReloadRequested] = useState(false);
@@ -133,7 +137,7 @@ export function ExpenseForm({
       )
         throw new Error('Explain the receipt exception in at least 12 characters.');
       const { amount: _amount, ...input } = draft;
-      const result = await store.mutate(
+      const result = await (item ? store.mutate : create.execute)(
         item ? `/expenses/${item.id}` : '/expenses',
         {
           ...input,
@@ -144,7 +148,7 @@ export function ExpenseForm({
         },
         item ? 'PATCH' : 'POST',
       );
-      onSaved(item?.id || result.id || '');
+      onSaved(item?.id || String(result.id ?? ''));
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Unable to save this expense.');
     }
@@ -159,207 +163,223 @@ export function ExpenseForm({
     >
       <form className="entity-form finance-form" onSubmit={submit}>
         <ErrorMessage error={error} />
-        {(stale || error.toLowerCase().includes('changed')) && item && (
-          <div className="finance-notice finance-notice-warning">
-            <CircleAlert size={18} />
-            <div>
-              <strong>Review the latest version</strong>
-              <p>Loading it replaces the edits in this form.</p>
-              <button
-                className="text-button"
-                type="button"
-                onClick={async () => {
-                  try {
-                    await store.refresh();
-                    setReloadRequested(true);
-                  } catch (err) {
-                    setError(
-                      err instanceof Error ? err.message : 'Unable to refresh this expense.',
-                    );
-                  }
-                }}
-              >
-                Load latest version
-              </button>
-            </div>
-          </div>
+        {create.attempt && !item && (
+          <p role="alert">
+            Result unknown. Retry the same frozen draft, or reconcile the company ledger before
+            abandoning it. Prior work may already exist.
+          </p>
         )}
-        <Field label="Expense title">
-          <input
-            required
-            maxLength={240 * 2}
-            value={draft.title}
-            onChange={(event) => set('title', event.target.value)}
-            placeholder="What was this expense for?"
-            autoFocus
-          />
-        </Field>
-        <div className="form-grid">
-          <Field label="Vendor / payee">
+        <fieldset
+          disabled={(!item && !!create.attempt) || create.busy}
+          style={{ border: 0, padding: 0, minWidth: 0 }}
+        >
+          {(stale || error.toLowerCase().includes('changed')) && item && (
+            <div className="finance-notice finance-notice-warning">
+              <CircleAlert size={18} />
+              <div>
+                <strong>Review the latest version</strong>
+                <p>Loading it replaces the edits in this form.</p>
+                <button
+                  className="text-button"
+                  type="button"
+                  onClick={async () => {
+                    try {
+                      await store.refresh();
+                      setReloadRequested(true);
+                    } catch (err) {
+                      setError(
+                        err instanceof Error ? err.message : 'Unable to refresh this expense.',
+                      );
+                    }
+                  }}
+                >
+                  Load latest version
+                </button>
+              </div>
+            </div>
+          )}
+          <Field label="Expense title">
             <input
               required
               maxLength={240 * 2}
-              value={draft.vendor}
-              onChange={(event) => set('vendor', event.target.value)}
-              placeholder="Supplier or person paid"
+              value={draft.title}
+              onChange={(event) => set('title', event.target.value)}
+              placeholder="What was this expense for?"
+              autoFocus
             />
           </Field>
-          <Field label="Invoice / bill number" hint="Leave blank if no invoice number was issued.">
-            <input
-              maxLength={160 * 2}
-              value={draft.invoiceNumber}
-              onChange={(event) => set('invoiceNumber', event.target.value)}
-              placeholder="e.g. INV-1048"
-            />
-          </Field>
-          <Field
-            label={`Amount (${data.company.currency})`}
-            hint="Use up to two decimal places; include the full expense amount."
-          >
-            <input
-              required
-              inputMode="decimal"
-              maxLength={24}
-              value={draft.amount}
-              onChange={(event) => set('amount', event.target.value)}
-              placeholder="0.00"
-            />
-          </Field>
-          <Field label="Expense date" hint="This date determines the budget period.">
-            <input
-              required
-              type="date"
-              max={today(data.company.timezone)}
-              value={draft.expenseDate}
-              onChange={(event) => set('expenseDate', event.target.value)}
-            />
-          </Field>
-          <Field label="Expense department">
-            <select
-              required
-              value={draft.departmentId}
-              onChange={(event) =>
-                setDraft((current) => ({
-                  ...current,
-                  departmentId: event.target.value,
-                  projectId: '',
-                  taskId: '',
-                }))
-              }
-            >
-              {!departments.length && <option value="">No eligible department</option>}
-              {departments.map((department) => (
-                <option key={department.id} value={department.id}>
-                  {department.name}
-                </option>
-              ))}
-            </select>
-          </Field>
-          <Field label="Expense category">
-            <select
-              required
-              value={draft.categoryId}
-              onChange={(event) => set('categoryId', event.target.value)}
-            >
-              {!data.expenseCategories.some((entry) => entry.active) && (
-                <option value="">No active categories</option>
-              )}
-              {data.expenseCategories
-                .filter((entry) => entry.active || entry.id === draft.categoryId)
-                .map((entry) => (
-                  <option key={entry.id} value={entry.id} disabled={!entry.active}>
-                    {entry.name}
-                    {entry.active ? '' : ' (inactive)'}
-                  </option>
-                ))}
-            </select>
-          </Field>
-        </div>
-        <Field label="Business purpose / details">
-          <textarea
-            rows={3}
-            maxLength={8000 * 2}
-            value={draft.description}
-            onChange={(event) => set('description', event.target.value)}
-            placeholder="Add context an independent reviewer will need."
-          />
-        </Field>
-        <div className="form-grid">
-          <Field label="Related project (optional)">
-            <select
-              value={draft.projectId}
-              onChange={(event) =>
-                setDraft((current) => ({ ...current, projectId: event.target.value, taskId: '' }))
-              }
-            >
-              <option value="">No project</option>
-              {projects.map((project) => (
-                <option key={project.id} value={project.id}>
-                  {project.name}
-                </option>
-              ))}
-            </select>
-          </Field>
-          <Field
-            label="Related task (optional)"
-            hint="Only accessible work in this department is listed."
-          >
-            <select
-              value={draft.taskId}
-              onChange={(event) => {
-                const task = tasks.find((entry) => entry.id === event.target.value);
-                setDraft((current) => ({
-                  ...current,
-                  taskId: event.target.value,
-                  projectId: task
-                    ? projects.some((project) => project.id === task.projectId)
-                      ? task.projectId
-                      : ''
-                    : current.projectId,
-                }));
-              }}
-            >
-              <option value="">No task</option>
-              {tasks.map((task) => (
-                <option key={task.id} value={task.id}>
-                  {task.code} · {task.title}
-                </option>
-              ))}
-            </select>
-          </Field>
-        </div>
-        {(category?.receiptRequired || draft.receiptExceptionReason) && (
-          <div className="finance-receipt-guidance">
-            <div className="finance-inline-heading">
-              <ReceiptText size={18} />
-              <h3>Supporting receipt</h3>
-            </div>
-            <p>
-              {item?.receipts.length
-                ? `${item.receipts.length} receipt(s) already attached.`
-                : 'Save this draft, then attach a receipt in the expense details.'}{' '}
-              A missing receipt needs a recorded exception and an explicit approval note.
-            </p>
-            <Field
-              label="Receipt exception reason (optional)"
-              hint="Use only when a receipt cannot be supplied. Explain why in at least 12 characters."
-            >
-              <textarea
-                rows={2}
-                maxLength={4000 * 2}
-                value={draft.receiptExceptionReason}
-                onChange={(event) => set('receiptExceptionReason', event.target.value)}
-                placeholder="Why is the receipt unavailable?"
+          <div className="form-grid">
+            <Field label="Vendor / payee">
+              <input
+                required
+                maxLength={240 * 2}
+                value={draft.vendor}
+                onChange={(event) => set('vendor', event.target.value)}
+                placeholder="Supplier or person paid"
               />
             </Field>
+            <Field
+              label="Invoice / bill number"
+              hint="Leave blank if no invoice number was issued."
+            >
+              <input
+                maxLength={160 * 2}
+                value={draft.invoiceNumber}
+                onChange={(event) => set('invoiceNumber', event.target.value)}
+                placeholder="e.g. INV-1048"
+              />
+            </Field>
+            <Field
+              label={`Amount (${data.company.currency})`}
+              hint="Use up to two decimal places; include the full expense amount."
+            >
+              <input
+                required
+                inputMode="decimal"
+                maxLength={24}
+                value={draft.amount}
+                onChange={(event) => set('amount', event.target.value)}
+                placeholder="0.00"
+              />
+            </Field>
+            <Field label="Expense date" hint="This date determines the budget period.">
+              <input
+                required
+                type="date"
+                max={today(data.company.timezone)}
+                value={draft.expenseDate}
+                onChange={(event) => set('expenseDate', event.target.value)}
+              />
+            </Field>
+            <Field label="Expense department">
+              <select
+                required
+                value={draft.departmentId}
+                onChange={(event) =>
+                  setDraft((current) => ({
+                    ...current,
+                    departmentId: event.target.value,
+                    projectId: '',
+                    taskId: '',
+                  }))
+                }
+              >
+                {!departments.length && <option value="">No eligible department</option>}
+                {departments.map((department) => (
+                  <option key={department.id} value={department.id}>
+                    {department.name}
+                  </option>
+                ))}
+              </select>
+            </Field>
+            <Field label="Expense category">
+              <select
+                required
+                value={draft.categoryId}
+                onChange={(event) => set('categoryId', event.target.value)}
+              >
+                {!data.expenseCategories.some((entry) => entry.active) && (
+                  <option value="">No active categories</option>
+                )}
+                {data.expenseCategories
+                  .filter((entry) => entry.active || entry.id === draft.categoryId)
+                  .map((entry) => (
+                    <option key={entry.id} value={entry.id} disabled={!entry.active}>
+                      {entry.name}
+                      {entry.active ? '' : ' (inactive)'}
+                    </option>
+                  ))}
+              </select>
+            </Field>
           </div>
-        )}
+          <Field label="Business purpose / details">
+            <textarea
+              rows={3}
+              maxLength={8000 * 2}
+              value={draft.description}
+              onChange={(event) => set('description', event.target.value)}
+              placeholder="Add context an independent reviewer will need."
+            />
+          </Field>
+          <div className="form-grid">
+            <Field label="Related project (optional)">
+              <select
+                value={draft.projectId}
+                onChange={(event) =>
+                  setDraft((current) => ({ ...current, projectId: event.target.value, taskId: '' }))
+                }
+              >
+                <option value="">No project</option>
+                {projects.map((project) => (
+                  <option key={project.id} value={project.id}>
+                    {project.name}
+                  </option>
+                ))}
+              </select>
+            </Field>
+            <Field
+              label="Related task (optional)"
+              hint="Only accessible work in this department is listed."
+            >
+              <select
+                value={draft.taskId}
+                onChange={(event) => {
+                  const task = tasks.find((entry) => entry.id === event.target.value);
+                  setDraft((current) => ({
+                    ...current,
+                    taskId: event.target.value,
+                    projectId: task
+                      ? projects.some((project) => project.id === task.projectId)
+                        ? task.projectId
+                        : ''
+                      : current.projectId,
+                  }));
+                }}
+              >
+                <option value="">No task</option>
+                {tasks.map((task) => (
+                  <option key={task.id} value={task.id}>
+                    {task.code} · {task.title}
+                  </option>
+                ))}
+              </select>
+            </Field>
+          </div>
+          {(category?.receiptRequired || draft.receiptExceptionReason) && (
+            <div className="finance-receipt-guidance">
+              <div className="finance-inline-heading">
+                <ReceiptText size={18} />
+                <h3>Supporting receipt</h3>
+              </div>
+              <p>
+                {item?.receipts.length
+                  ? `${item.receipts.length} receipt(s) already attached.`
+                  : 'Save this draft, then attach a receipt in the expense details.'}{' '}
+                A missing receipt needs a recorded exception and an explicit approval note.
+              </p>
+              <Field
+                label="Receipt exception reason (optional)"
+                hint="Use only when a receipt cannot be supplied. Explain why in at least 12 characters."
+              >
+                <textarea
+                  rows={2}
+                  maxLength={4000 * 2}
+                  value={draft.receiptExceptionReason}
+                  onChange={(event) => set('receiptExceptionReason', event.target.value)}
+                  placeholder="Why is the receipt unavailable?"
+                />
+              </Field>
+            </div>
+          )}
+        </fieldset>
         <div className="form-actions">
           <span>Drafts do not reserve budget.</span>
           <button className="button button-secondary" type="button" onClick={onClose}>
             Cancel
           </button>
-          <SaveButton saving={store.saving}>{item ? 'Save changes' : 'Save draft'}</SaveButton>
+          <SaveButton saving={store.saving}>
+            {item ? 'Save changes' : create.attempt ? 'Retry same draft' : 'Save draft'}
+          </SaveButton>
         </div>
       </form>
     </Modal>

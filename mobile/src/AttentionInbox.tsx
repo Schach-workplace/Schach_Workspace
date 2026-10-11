@@ -152,7 +152,20 @@ export default function AttentionInbox({
         pathname: "/intake/[id]",
         params: { id: i.sourceId, company: w.company },
       });
-    else if (i.sourceKind === "report_export")
+    else if (i.sourceKind.startsWith("finance_")) {
+      const p = new URLSearchParams(i.link.split("?")[1]);
+      router.push({
+        pathname: "/finance/assistance",
+        params: {
+          company: w.company,
+          extraction: p.get("extraction") ?? "",
+          tool: p.get("tool") ?? "",
+          candidate: p.get("candidate") ?? "",
+          row: p.get("row") ?? "",
+          import: p.get("import") ?? "",
+        },
+      });
+    } else if (i.sourceKind === "report_export")
       router.push({
         pathname: "/report/[id]",
         params: { id: i.sourceId, company: w.company, kind: "job" },

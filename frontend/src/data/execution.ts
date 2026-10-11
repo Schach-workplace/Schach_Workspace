@@ -51,8 +51,15 @@ export async function executionRead<T>(
     body,
     signal,
   });
-  if (body === undefined && result && typeof result === 'object' && 'nextCursor' in result) {
-    let cursor = (result as { nextCursor?: string }).nextCursor;
+  if (
+    body === undefined &&
+    result &&
+    typeof result === 'object' &&
+    ('nextCursor' in result || 'cursor' in result)
+  ) {
+    let cursor =
+      (result as { nextCursor?: string; cursor?: string }).nextCursor ??
+      (result as { cursor?: string }).cursor;
     const seen = new Set<string>();
     while (cursor && !seen.has(cursor)) {
       seen.add(cursor);
@@ -62,12 +69,12 @@ export async function executionRead<T>(
       );
       const rows = result as Record<string, unknown>;
       mergeExecutionPage(rows, page);
-      cursor = String(page.nextCursor ?? '');
+      cursor = String(page.nextCursor ?? page.cursor ?? '');
     }
   }
   return result;
 }
-export function useExecutionRead<T>(path: string, enabled = true) {
+export function useExecutionRead<T>(path: string, enabled = true, body?: unknown) {
   const store = useWorkspace();
   const queryClient = useQueryClient();
   const [foreground, setForeground] = useState(document.visibilityState !== 'hidden');
@@ -96,11 +103,11 @@ export function useExecutionRead<T>(path: string, enabled = true) {
     };
   }, [company, user, store.mode, queryClient]);
   const query = useQuery({
-    queryKey: [...prefix, store.data?.readBasis, path],
+    queryKey: [...prefix, store.data?.readBasis, path, JSON.stringify(body)],
     enabled: enabled && foreground && !!store.data,
     staleTime: 0,
     retry: false,
-    queryFn: ({ signal }) => executionRead<T>(store.mode, company, user, path, undefined, signal),
+    queryFn: ({ signal }) => executionRead<T>(store.mode, company, user, path, body, signal),
   });
   const ready =
     enabled &&
@@ -127,6 +134,21 @@ export function useExecutionRead<T>(path: string, enabled = true) {
       user,
       path.startsWith('/reports/') ? path.split('/rows')[0] : path,
     );
+    const finance = path.match(
+      /^\/finance\/(receipt-extractions|intakes|duplicate-candidates|statement-previews)\/([^/?]+)/,
+    );
+    if (finance) {
+      const family = finance[1],
+        id = finance[2];
+      for (const form of family === 'receipt-extractions'
+        ? ['$receipt-review:', '$receipt-accept:']
+        : family === 'intakes'
+          ? ['$intake:', '$statement-map:']
+          : family === 'duplicate-candidates'
+            ? ['$duplicate:']
+            : ['$statement-map:'])
+        clearExecutionForm(company, user, form + id);
+    }
     const project = path.match(/^\/projects\/([^/?]+)$/),
       milestone = path.match(/^\/project-milestones\/([^/?]+)$/),
       template = path.match(/^\/task-templates\/([^/?]+)$/);
@@ -172,7 +194,7 @@ export function useExecutionMutation(formId: string, sources: string[] = []) {
     onCommitted?: (result: T) => void,
   ): Promise<T> {
     if (pending.current) throw Error('This action is already being submitted.');
-    if (store.mode === 'demo')
+    if (store.mode === 'demo' && path !== '/expenses')
       throw Error('This execution tool is available on a connected company server.');
     pending.current = true;
     setBusy(true);

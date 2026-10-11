@@ -2,7 +2,7 @@ export interface CaptureScope {
   serverOrigin: string;
   companyId: string;
   userId: string;
-  targetKind: "chat" | "task" | "expense";
+  targetKind: "chat" | "task" | "expense" | "finance_intake";
   targetId: string;
 }
 export interface PreviewFile {
@@ -61,6 +61,15 @@ export class CaptureOwner {
     )
       throw Error(
         "Unsupported image/file. Choose JPEG, PNG, WebP, PDF, text or CSV. HEIC cannot be renamed.",
+      );
+    if (
+      this.scope.targetKind === "finance_intake" &&
+      !["image/jpeg", "image/png", "application/pdf", "text/csv"].includes(
+        file.mime,
+      )
+    )
+      throw Error(
+        "Finance intake requires JPEG, PNG, PDF or CSV actual bytes.",
       );
     this.clear();
     this.state = { file, phase: "preview", error: "" };

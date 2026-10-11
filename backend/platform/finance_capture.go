@@ -75,6 +75,10 @@ func (s *Server) listFinanceIntakes(w http.ResponseWriter, r *http.Request) erro
 	if e != nil {
 		return e
 	}
+	limit, e := pageLimit(r)
+	if e != nil {
+		return e
+	}
 	var rows []FinanceAssistanceIntake
 	e = s.withAccessTransaction(r, a, func(tx *gorm.DB) error {
 		q := tx.Model(&FinanceAssistanceIntake{}).Where("company_id=? AND owner_id=? AND expires_at>? AND state NOT IN ?", a.Company.ID, a.User.ID, time.Now(), []string{"cancelled", "expired", "purged", "rejected"}).Where("EXISTS (SELECT 1 FROM sessions sess WHERE sess.token_hash=finance_assistance_intakes.session_ref AND sess.user_id=? AND sess.expires_at>?)", a.User.ID, time.Now())
@@ -94,20 +98,26 @@ func (s *Server) listFinanceIntakes(w http.ResponseWriter, r *http.Request) erro
 			q = q.Where("purpose='receipt' AND destination_department_id IN ?", departments)
 		}
 		if cursor := r.URL.Query().Get("cursor"); cursor != "" {
-			q = q.Where("id>?", cursor)
+			basis := payloadHash([]string{accessBasis(a), "private_finance_intakes"})
+			c, e := decodeReadCursor(cursor, basis)
+			if e != nil {
+				return e
+			}
+			q = q.Where("created_at<? OR(created_at=? AND id<?)", c.Created, c.Created, c.ID)
 		}
-		return q.Order("id ASC").Limit(101).Find(&rows).Error
+		return q.Order("created_at DESC,id DESC").Limit(limit + 1).Find(&rows).Error
 	})
 	if e != nil {
 		return e
 	}
-	more := len(rows) > 100
+	more := len(rows) > limit
 	if more {
-		rows = rows[:100]
+		rows = rows[:limit]
 	}
 	cursor := ""
 	if more {
-		cursor = rows[len(rows)-1].ID
+		last := rows[len(rows)-1]
+		cursor = encodeReadCursor(readCursor{payloadHash([]string{accessBasis(a), "private_finance_intakes"}), last.CreatedAt.Format(time.RFC3339Nano), last.ID})
 	}
 	return respond(w, 200, map[string]any{"items": rows, "nextCursor": cursor, "hasMore": more})
 }

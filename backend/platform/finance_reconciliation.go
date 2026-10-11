@@ -180,6 +180,9 @@ func (s *Server) matchFinanceReconciliation(w http.ResponseWriter, r *http.Reque
 			if e := tx.Create(&FinanceReconciliationDecision{ID: newID("frd"), CompanyID: a.Company.ID, RowID: row.ID, AllocationID: allocation.ID, ActorID: a.User.ID, Reason: input.Reason, Action: "match", RetryKey: key, ReviewedVersion: expense.Version, CreatedAt: time.Now().UTC()}).Error; e != nil {
 				return BusinessResult{}, e
 			}
+			if e := syncFinanceReconciliationAttention(tx, a, row); e != nil {
+				return BusinessResult{}, e
+			}
 			return BusinessResult{Kind: "reconciliation_allocation", IDs: []string{allocation.ID}, Versions: []int64{1}}, nil
 		})
 		return e
@@ -235,6 +238,13 @@ func (s *Server) unmatchFinanceReconciliation(w http.ResponseWriter, r *http.Req
 			if e := tx.Create(&FinanceReconciliationDecision{ID: newID("frd"), CompanyID: a.Company.ID, RowID: allocation.RowID, AllocationID: allocation.ID, ActorID: a.User.ID, Reason: input.Reason, Action: "unmatch", RetryKey: key, ReviewedVersion: input.ExpectedVersion, CreatedAt: now}).Error; e != nil {
 				return BusinessResult{}, e
 			}
+			row, e := authorizeStatementRow(tx, a, allocation.RowID)
+			if e != nil {
+				return BusinessResult{}, e
+			}
+			if e := syncFinanceReconciliationAttention(tx, a, row); e != nil {
+				return BusinessResult{}, e
+			}
 			return BusinessResult{Kind: "reconciliation_allocation", IDs: []string{allocation.ID}, Versions: []int64{allocation.Version}}, nil
 		})
 		return e
@@ -285,6 +295,9 @@ func (s *Server) dismissFinanceReconciliation(w http.ResponseWriter, r *http.Req
 			}
 			decision := FinanceReconciliationDecision{ID: newID("frd"), CompanyID: a.Company.ID, RowID: row.ID, SuggestionBasis: basis, ActorID: a.User.ID, Reason: input.Reason, Action: "dismiss", RetryKey: key, ReviewedVersion: row.Version, CreatedAt: time.Now().UTC()}
 			if e := tx.Create(&decision).Error; e != nil {
+				return BusinessResult{}, e
+			}
+			if e := syncFinanceReconciliationAttention(tx, a, row); e != nil {
 				return BusinessResult{}, e
 			}
 			return BusinessResult{Kind: "reconciliation_decision", IDs: []string{decision.ID}, Versions: []int64{1}}, nil

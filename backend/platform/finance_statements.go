@@ -324,6 +324,15 @@ func (s *Server) createFinanceStatementPreview(w http.ResponseWriter, r *http.Re
 		ExpectedIntakeVersion int64                   `json:"expectedIntakeVersion"`
 		Mapping               FinanceStatementMapping `json:"mapping"`
 	}
+	var mappingFields map[string]json.RawMessage
+	if e := json.Unmarshal(f["mapping"], &mappingFields); e != nil {
+		return invalid("Choose an explicit statement mapping.")
+	}
+	for _, name := range []string{"headerRow", "delimiter", "dateColumn", "dateFormat", "amountMode", "debitSign", "decimalSeparator", "groupingSeparator"} {
+		if value, ok := mappingFields[name]; !ok || string(value) == "null" {
+			return invalid("Choose every statement mapping explicitly.")
+		}
+	}
 	raw, _ := json.Marshal(f)
 	if e = strictJSON(raw, &input); e != nil {
 		return e
@@ -369,6 +378,7 @@ func (s *Server) createFinanceStatementPreview(w http.ResponseWriter, r *http.Re
 	if e != nil {
 		return missing()
 	}
+	parsedCurrency := a.Company.Currency
 	ctx, cancel := context.WithTimeout(r.Context(), 5*time.Second)
 	rows, totals, errs, e := parseFinanceStatement(ctx, data, input.Mapping, a.Company)
 	cancel()
@@ -382,9 +392,10 @@ func (s *Server) createFinanceStatementPreview(w http.ResponseWriter, r *http.Re
 			if e != nil {
 				return e
 			}
-			if !financeAuthority(a.Member.Role) || fresh.State != "clean" || fresh.Purpose != "statement" || fresh.InternalSHA256 != intake.InternalSHA256 {
+			if !financeAuthority(a.Member.Role) || fresh.State != "clean" || fresh.Purpose != "statement" || fresh.InternalSHA256 != intake.InternalSHA256 || fresh.ContentGeneration != intake.ContentGeneration || a.Company.Currency != parsedCurrency {
 				return missing()
 			}
+			intake = fresh
 			return nil
 		}
 		_, e := businessMutation(tx, a, "statement_preview", key, f, auth, func(out BusinessResult) error {
@@ -473,6 +484,13 @@ func (s *Server) importFinanceStatement(w http.ResponseWriter, r *http.Request) 
 				return BusinessResult{}, invalid("Resolve every row error and review the complete preview before import.")
 			}
 			if p.ImportID != "" {
+				var accepted FinanceStatementImport
+				if e := tx.First(&accepted, "id=? AND company_id=?", p.ImportID, a.Company.ID).Error; e != nil {
+					return BusinessResult{}, missing()
+				}
+				if accepted.DuplicateReason != input.DuplicateReason || input.ExpectedPreviewRevision != p.Revision {
+					return BusinessResult{}, financeConflict()
+				}
 				return BusinessResult{Kind: "statement_import", IDs: []string{p.ImportID}, Versions: []int64{1}}, nil
 			}
 			var prior int64
@@ -486,13 +504,18 @@ func (s *Server) importFinanceStatement(w http.ResponseWriter, r *http.Request) 
 			if e := tx.Create(&imported).Error; e != nil {
 				return BusinessResult{}, e
 			}
+			importRows := []FinanceStatementRow{}
 			for _, row := range p.Rows {
 				row.ID = newID("fsr")
 				row.CompanyID = a.Company.ID
 				row.ImportID = imported.ID
+				importRows = append(importRows, row)
 				if e := tx.Create(&row).Error; e != nil {
 					return BusinessResult{}, e
 				}
+			}
+			if e := initialFinanceStatementAttention(tx, a, importRows); e != nil {
+				return BusinessResult{}, e
 			}
 			if e := tx.Model(&p).Update("import_id", imported.ID).Error; e != nil {
 				return BusinessResult{}, e

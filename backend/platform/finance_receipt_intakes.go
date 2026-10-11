@@ -45,6 +45,9 @@ func financeOriginalSession(tx *gorm.DB, cid, uid, ref string) error {
 	return nil
 }
 func authorizeFinanceIntake(tx *gorm.DB, a *access, id string) (FinanceAssistanceIntake, error) {
+	return authorizeFinanceIntakeContext(tx, a, id, false)
+}
+func authorizeFinanceIntakeContext(tx *gorm.DB, a *access, id string, allowTombstone bool) (FinanceAssistanceIntake, error) {
 	if !a.Member.Active || a.Users[a.User.ID].Suspended {
 		return FinanceAssistanceIntake{}, missing()
 	}
@@ -52,7 +55,7 @@ func authorizeFinanceIntake(tx *gorm.DB, a *access, id string) (FinanceAssistanc
 	if e := tx.First(&i, "company_id=? AND id=? AND owner_id=?", a.Company.ID, id, a.User.ID).Error; e != nil {
 		return i, missing()
 	}
-	if !time.Now().Before(i.ExpiresAt) || in(i.State, "cancelled", "expired", "purged", "rejected") {
+	if !allowTombstone && (!time.Now().Before(i.ExpiresAt) || in(i.State, "cancelled", "expired", "purged", "rejected")) {
 		return i, missing()
 	}
 	if e := financeOriginalSession(tx, i.CompanyID, i.OwnerID, i.SessionRef); e != nil {
@@ -268,6 +271,14 @@ func (s *Server) uploadFinanceIntake(w http.ResponseWriter, r *http.Request) err
 		return nil
 	})
 	if e != nil {
+		if cleanupErr := s.opts.FinanceIntakeStore.Delete(r.Context(), i.StoreKey); cleanupErr != nil {
+			s.db.WithContext(r.Context()).Transaction(func(tx *gorm.DB) error {
+				if e := lockCompany(tx, i.CompanyID); e != nil {
+					return e
+				}
+				return tx.Model(&FinanceAssistanceIntake{}).Where("id=? AND state='purged'", i.ID).Update("state", "expired").Error
+			})
+		}
 		return e
 	}
 	return respond(w, 200, i)
@@ -308,13 +319,7 @@ func (s *Server) mutateFinanceIntake(w http.ResponseWriter, r *http.Request, can
 		var i FinanceAssistanceIntake
 		auth := func() error {
 			var e error
-			i, e = authorizeFinanceIntake(tx, a, r.PathValue("id"))
-			if cancel && e != nil {
-				e = tx.First(&i, "id=? AND company_id=? AND owner_id=?", r.PathValue("id"), a.Company.ID, a.User.ID).Error
-				if e == nil {
-					e = financeOriginalSession(tx, i.CompanyID, i.OwnerID, i.SessionRef)
-				}
-			}
+			i, e = authorizeFinanceIntakeContext(tx, a, r.PathValue("id"), cancel)
 			return e
 		}
 		var e error
@@ -323,6 +328,9 @@ func (s *Server) mutateFinanceIntake(w http.ResponseWriter, r *http.Request, can
 				return BusinessResult{}, financeConflict()
 			}
 			if cancel {
+				if in(i.State, "cancelled", "expired", "purged", "rejected") {
+					return BusinessResult{}, financeConflict()
+				}
 				i.State = "cancelled"
 				i.ContentGeneration++
 				if e := tx.Model(&FinanceAssistanceJob{}).Where("company_id=? AND source_kind='intake' AND source_id=?", a.Company.ID, i.ID).Updates(map[string]any{"status": "cancelled", "updated_at": time.Now()}).Error; e != nil {

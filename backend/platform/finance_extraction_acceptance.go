@@ -146,6 +146,7 @@ func (s *Server) previewReceiptAcceptance(w http.ResponseWriter, r *http.Request
 		return e
 	}
 	var audience []string
+	var actualSourceVersion int64
 	e = s.withAccessTransaction(r, a, func(tx *gorm.DB) error {
 		j, result, e := authorizeReceiptExtraction(tx, a, r.PathValue("id"))
 		if e != nil {
@@ -158,13 +159,14 @@ func (s *Server) previewReceiptAcceptance(w http.ResponseWriter, r *http.Request
 		if e != nil {
 			return e
 		}
+		actualSourceVersion = j.SourceVersion
 		audience = financeReceiptAudience(a, draft)
 		return nil
 	})
 	if e != nil {
 		return e
 	}
-	return respond(w, 200, map[string]any{"fields": input.Fields, "sourceVersion": input.ExpectedResultRevision, "targetVersion": input.ExpectedTargetVersion, "audienceUserIds": audience, "evidenceNotice": "Selected evidence becomes an independently retained finance receipt. Future role and department changes can change its audience."})
+	return respond(w, 200, map[string]any{"fields": input.Fields, "sourceVersion": actualSourceVersion, "targetVersion": input.ExpectedTargetVersion, "audienceUserIds": audience, "evidenceNotice": "Selected evidence becomes an independently retained finance receipt. Future role and department changes can change its audience."})
 }
 func (s *Server) acceptReceiptExtraction(w http.ResponseWriter, r *http.Request) error {
 	a, e := s.access(r)
@@ -257,6 +259,9 @@ func (s *Server) acceptReceiptExtraction(w http.ResponseWriter, r *http.Request)
 				if claim.ActorID != a.User.ID || claim.ReviewedHash != hash {
 					return BusinessResult{}, &apiError{409, "accepted_result_conflict", "This result already has a different accepted review.", nil}
 				}
+				if e := supersedeAttention(tx, a.Company.ID, "finance_extraction", j.ID, "receipt_review", ""); e != nil {
+					return BusinessResult{}, e
+				}
 				out := BusinessResult{Kind: "receipt_acceptance", IDs: []string{claim.ExpenseID}, Versions: []int64{claim.ResultingVersion}}
 				if claim.ReceiptID != "" {
 					out.IDs = append(out.IDs, claim.ReceiptID)
@@ -312,6 +317,9 @@ func (s *Server) acceptReceiptExtraction(w http.ResponseWriter, r *http.Request)
 				return BusinessResult{}, e
 			}
 			if e = syncExpenseAttention(tx, a, draft, draft); e != nil {
+				return BusinessResult{}, e
+			}
+			if e := supersedeAttention(tx, a.Company.ID, "finance_extraction", j.ID, "receipt_review", ""); e != nil {
 				return BusinessResult{}, e
 			}
 			out := BusinessResult{Kind: "receipt_acceptance", IDs: []string{draft.ID}, Versions: []int64{draft.Version}}

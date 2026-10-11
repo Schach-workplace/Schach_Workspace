@@ -4,6 +4,9 @@ export function mergeExecutionPage(
   page: Record<string, unknown>,
 ) {
   for (const key of [
+    "items",
+    "allocations",
+    "unallocatedExpenses",
     "templates",
     "projects",
     "milestones",
@@ -19,11 +22,13 @@ export function mergeExecutionPage(
           ? JSON.stringify([value.from, value.to])
           : key === "paths"
             ? JSON.stringify(value)
-            : value.id;
+            : (value.id ?? value.row?.id);
       if (seen.has(identity)) return false;
       seen.add(identity);
       return true;
     });
   }
   target.nextCursor = page.nextCursor;
+  target.cursor = page.cursor;
+  target.hasMore = page.hasMore;
 }

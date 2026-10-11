@@ -10,7 +10,15 @@ export interface AttentionView {
   companyId: string;
   recipientId: string;
   sourceKind:
-    "task" | "expense" | "record" | "intake" | "bookmark" | "report_export";
+    | "task"
+    | "expense"
+    | "record"
+    | "intake"
+    | "bookmark"
+    | "report_export"
+    | "finance_extraction"
+    | "finance_duplicate"
+    | "finance_reconciliation";
   sourceId: string;
   kind:
     | "task_review"
@@ -21,7 +29,10 @@ export interface AttentionView {
     | "saved_reminder"
     | "blocker"
     | "update"
-    | "report_ready";
+    | "report_ready"
+    | "receipt_review"
+    | "duplicate_review"
+    | "reconciliation_review";
   state: "open" | "resolved" | "routed" | "superseded";
   version: number;
   sourceVersion: number;

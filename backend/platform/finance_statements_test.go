@@ -84,3 +84,12 @@ func TestFinanceStatementCanonicalImport(t *testing.T) {
 		t.Fatal(st, out)
 	}
 }
+func TestFinanceStatementAcceptedReviewCannotChange(t *testing.T) {
+	f := newFinanceFixture(t)
+	preview := readyStatementPreview(t, f)
+	path := f.base() + "/finance/statement-previews/" + preview + "/import"
+	financeOK(t, f.s, "POST", path, map[string]any{"retryKey": "original-import", "expectedPreviewRevision": 1}, f.cookie)
+	if st, _, _ := req(t, f.s, "POST", path, map[string]any{"retryKey": "changed-reason", "expectedPreviewRevision": 1, "duplicateReason": "A changed accounting review cannot replace the accepted review"}, f.cookie); st != 409 {
+		t.Fatal("accepted immutable intent", st)
+	}
+}

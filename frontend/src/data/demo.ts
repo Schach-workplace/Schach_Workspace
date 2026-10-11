@@ -635,7 +635,9 @@ export async function demoMutate(
     p.defaultRequiresApproval ??= false;
   }
   const parts = path.replace(/^\//, '').split('/').filter(Boolean);
-  const keyed = (path === '/tasks' || path === '/tasks/import') && Object.hasOwn(b, 'retryKey');
+  const keyed =
+    (path === '/tasks' || path === '/tasks/import' || path === '/expenses') &&
+    Object.hasOwn(b, 'retryKey');
   const retryIdentity = JSON.stringify([companyId, userId, path, b.retryKey]);
   const retryHash = JSON.stringify(
     Object.fromEntries(Object.entries(b).filter(([k]) => k !== 'retryKey')),
@@ -644,7 +646,7 @@ export async function demoMutate(
     if (typeof b.retryKey !== 'string' || !b.retryKey.trim() || b.retryKey.length > 100)
       fail('A retry key is required.');
     if (me.role === 'viewer') fail('Read-only membership.');
-    for (const row of path === '/tasks/import' ? b.rows : [b]) {
+    for (const row of path === '/tasks/import' ? b.rows : path === '/expenses' ? [] : [b]) {
       if (!w.people.some((p) => p.id === row.ownerId && p.active)) fail('Owner unavailable.');
       if (row.projectId && !scopedDemoWorkspace(w, me).projects.some((p) => p.id === row.projectId))
         fail('Project unavailable.');
@@ -652,7 +654,12 @@ export async function demoMutate(
     const old = db.businessRetries?.[retryIdentity];
     if (old) {
       if (old.hash !== retryHash) fail('This retry intent changed.');
-      for (const id of old.result.ids ?? (old.result.id ? [old.result.id] : [])) taskBy(w, me, id);
+      for (const id of old.result.ids ?? (old.result.id ? [old.result.id] : [])) {
+        if (path === '/expenses') {
+          const e = w.expenses.find((e) => e.id === id);
+          if (!e || !canReadExpense(me, e) || e.createdBy !== me.id) fail('Expense unavailable.');
+        } else taskBy(w, me, id);
+      }
       return clone(old.result);
     }
   }
@@ -663,6 +670,10 @@ export async function demoMutate(
       taskIds: new Set(visible.tasks.map((t) => t.id)),
       projectIds: new Set(visible.projects.map((p) => p.id)),
     });
+    if (keyed) {
+      db.businessRetries ??= {};
+      db.businessRetries[retryIdentity] = { hash: retryHash, result: clone(result) };
+    }
     saveDB(db);
     return result;
   }

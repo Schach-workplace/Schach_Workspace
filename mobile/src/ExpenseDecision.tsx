@@ -1,3 +1,5 @@
+import ExpenseReceiptAssistance from "./ExpenseReceiptAssistance";
+import { formatExactMoney } from "../../shared/finance/money";
 import CaptureControl from "./CaptureControl";
 import { useRamInput } from "./ramInput";
 import { useEffect, useState } from "react";
@@ -144,23 +146,25 @@ function ExpenseDecisionBody({
         {expense.title} · {expense.status} · reviewed version {expense.version}
       </Text>
       <Text>
-        {expense.currency} {expense.amountMinor / 100} · {expense.vendor} ·{" "}
-        {expense.expenseDate}
+        {formatExactMoney(expense.amountMinor, expense.currency)} ·{" "}
+        {expense.vendor} · {expense.expenseDate}
       </Text>
       <Text>Invoice: {expense.invoiceNumber || "None"}</Text>
       <Text>{expense.description}</Text>
       <Text>Receipt exception: {expense.receiptExceptionReason || "None"}</Text>
       {expense.receipts.map((r) => (
-        <Button
-          key={r.id}
-          title={`Inspect receipt: ${r.fileName}`}
-          onPress={() =>
-            void NativeMedia.downloadPath(
-              `/companies/${w.company}/expense-receipts/${r.id}`,
-              r.id,
-            ).catch((e) => w.setError(e.message))
-          }
-        />
+        <View key={r.id}>
+          <Button
+            title={`Inspect receipt: ${r.fileName}`}
+            onPress={() =>
+              void NativeMedia.downloadPath(
+                `/companies/${w.company}/expense-receipts/${r.id}`,
+                r.id,
+              ).catch((e) => w.setError(e.message))
+            }
+          />
+          <ExpenseReceiptAssistance expenseId={expense.id} receiptId={r.id} />
+        </View>
       ))}
       {writable && (mine || authority) && (
         <CaptureControl

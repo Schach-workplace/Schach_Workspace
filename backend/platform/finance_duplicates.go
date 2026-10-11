@@ -198,6 +198,9 @@ func persistFinanceDuplicateCandidates(tx *gorm.DB, a *access, items []FinanceDu
 		if e := tx.First(item, "company_id=? AND source_kind=? AND source_id=? AND source_basis_hash=? AND compared_expense_id=? AND algorithm_version=?", a.Company.ID, item.SourceKind, item.SourceID, item.SourceBasisHash, item.ComparedExpenseID, item.AlgorithmVersion).Error; e != nil {
 			return e
 		}
+		if e := syncFinanceDuplicateAttention(tx, a, *item); e != nil {
+			return e
+		}
 	}
 	return nil
 }
@@ -432,6 +435,9 @@ func (s *Server) dismissFinanceDuplicate(w http.ResponseWriter, r *http.Request)
 			}
 			decision := FinanceDuplicateDecision{ID: newID("fdd"), CompanyID: a.Company.ID, CandidateID: item.ID, ActorID: a.User.ID, Reason: input.Reason, RetryKey: key, CandidateVersion: input.ExpectedVersion, CreatedAt: time.Now().UTC()}
 			if e := tx.Create(&decision).Error; e != nil {
+				return BusinessResult{}, e
+			}
+			if e := syncFinanceDuplicateAttention(tx, a, item); e != nil {
 				return BusinessResult{}, e
 			}
 			return BusinessResult{Kind: "finance_duplicate", IDs: []string{item.ID}, Versions: []int64{item.Version}}, nil

@@ -1,3 +1,4 @@
+import FinanceAssistance from '../components/FinanceAssistance';
 import { useEffect, useRef, useState } from 'react';
 import {
   ArrowLeft,
@@ -1222,6 +1223,17 @@ export function FinancePage({
         </div>
       </div>
 
+      {canCreate && (
+        <FinanceAssistance
+          onCreated={setSelectedId}
+          initialJob={
+            new URLSearchParams(window.location.hash.split('?')[1]).get('extraction') ?? ''
+          }
+          initialIntake={
+            new URLSearchParams(window.location.hash.split('?')[1]).get('intake') ?? ''
+          }
+        />
+      )}
       {editingExpense && (
         <ExpenseForm
           key={editingExpense === 'new' ? 'new' : editingExpense.id}

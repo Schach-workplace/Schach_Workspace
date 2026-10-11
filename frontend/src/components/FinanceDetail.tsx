@@ -1,3 +1,4 @@
+import ExpenseReceiptAssistance from './ExpenseReceiptAssistance';
 import { useRef, useState, type FormEvent } from 'react';
 import {
   ArrowRight,
@@ -776,33 +777,36 @@ function FinanceDetailBody({
           {expense.receipts.length ? (
             <div className="finance-receipt-list">
               {expense.receipts.map((receipt) => (
-                <div className="finance-receipt-row" key={receipt.id}>
-                  <span className="finance-file-icon">
-                    <FileText size={20} />
-                  </span>
-                  <div>
-                    <strong>{receipt.fileName}</strong>
-                    <span>
-                      {Math.max(1, Math.ceil(receipt.size / 1024))} KB ·{' '}
-                      {personName(data, receipt.uploadedBy)} · {relativeTime(receipt.createdAt)}
+                <div key={receipt.id}>
+                  <div className="finance-receipt-row">
+                    <span className="finance-file-icon">
+                      <FileText size={20} />
                     </span>
+                    <div>
+                      <strong>{receipt.fileName}</strong>
+                      <span>
+                        {Math.max(1, Math.ceil(receipt.size / 1024))} KB ·{' '}
+                        {personName(data, receipt.uploadedBy)} · {relativeTime(receipt.createdAt)}
+                      </span>
+                    </div>
+                    <button
+                      className="icon-button bordered"
+                      aria-label={`Download ${receipt.fileName}`}
+                      onClick={async () => {
+                        setError('');
+                        try {
+                          await store.downloadExpenseReceipt(receipt);
+                        } catch (err) {
+                          setError(
+                            err instanceof Error ? err.message : 'Unable to download this receipt.',
+                          );
+                        }
+                      }}
+                    >
+                      <Download size={16} />
+                    </button>
                   </div>
-                  <button
-                    className="icon-button bordered"
-                    aria-label={`Download ${receipt.fileName}`}
-                    onClick={async () => {
-                      setError('');
-                      try {
-                        await store.downloadExpenseReceipt(receipt);
-                      } catch (err) {
-                        setError(
-                          err instanceof Error ? err.message : 'Unable to download this receipt.',
-                        );
-                      }
-                    }}
-                  >
-                    <Download size={16} />
-                  </button>
+                  <ExpenseReceiptAssistance expenseId={expense.id} receiptId={receipt.id} />
                 </div>
               ))}
             </div>
