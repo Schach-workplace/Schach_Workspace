@@ -3,24 +3,30 @@ package platform
 import "time"
 
 // Scratch records never authorize their independently retained destination evidence.
+type FinanceIntakeAssessment struct {
+	Status    string `json:"status"`
+	ErrorCode string `json:"errorCode,omitempty"`
+	Retryable bool   `json:"retryable"`
+}
 type FinanceAssistanceIntake struct {
-	ID                      string    `json:"id" gorm:"primaryKey"`
-	CompanyID               string    `json:"-" gorm:"index"`
-	OwnerID                 string    `json:"-"`
-	Purpose                 string    `json:"purpose"`
-	SessionRef              string    `json:"-"`
-	StoreKey                string    `json:"-"`
-	FileName                string    `json:"fileName"`
-	Size                    int64     `json:"size"`
-	MimeType                string    `json:"mimeType"`
-	InternalSHA256          string    `json:"-"`
-	State                   string    `json:"state"`
-	ContentGeneration       int64     `json:"-"`
-	CleanGeneration         int64     `json:"-"`
-	Version                 int64     `json:"version"`
-	DestinationDepartmentID string    `json:"destinationDepartmentId,omitempty"`
-	CreatedAt               time.Time `json:"createdAt"`
-	ExpiresAt               time.Time `json:"expiresAt" gorm:"index"`
+	Assessment              *FinanceIntakeAssessment `json:"assessment,omitempty" gorm:"-"`
+	ID                      string                   `json:"id" gorm:"primaryKey"`
+	CompanyID               string                   `json:"-" gorm:"index"`
+	OwnerID                 string                   `json:"-"`
+	Purpose                 string                   `json:"purpose"`
+	SessionRef              string                   `json:"-"`
+	StoreKey                string                   `json:"-"`
+	FileName                string                   `json:"fileName"`
+	Size                    int64                    `json:"size"`
+	MimeType                string                   `json:"mimeType"`
+	InternalSHA256          string                   `json:"-"`
+	State                   string                   `json:"state"`
+	ContentGeneration       int64                    `json:"-"`
+	CleanGeneration         int64                    `json:"-"`
+	Version                 int64                    `json:"version"`
+	DestinationDepartmentID string                   `json:"destinationDepartmentId,omitempty"`
+	CreatedAt               time.Time                `json:"createdAt"`
+	ExpiresAt               time.Time                `json:"expiresAt" gorm:"index"`
 }
 type ReceiptEvidenceFingerprint struct {
 	ID             string    `json:"id" gorm:"primaryKey"`

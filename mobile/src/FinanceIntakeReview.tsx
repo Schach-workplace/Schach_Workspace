@@ -14,9 +14,10 @@ import { useWorkspace } from "./Workspace";
 import { Sheet, Action } from "./ConnectUI";
 import { useRamInput } from "./ramInput";
 import { useExecutionRead, useExecutionMutation } from "./execution";
-import type {
-  FinanceIntake,
-  ReceiptJob,
+import {
+  financeAssessmentMessage,
+  type FinanceIntake,
+  type ReceiptJob,
 } from "../../shared/finance/assistanceIntent";
 export async function financePreviewHash(uri: string) {
   const bytes = await new File(uri).bytes();
@@ -57,6 +58,10 @@ export default function FinanceIntakeReview({
   const bind = useExecutionMutation("$intake-bind:" + id, [path]);
   const finalize = useExecutionMutation("$intake-finalize:" + id, [path]);
   const cancel = useExecutionMutation("$intake-cancel:" + id, [path]);
+  const assessmentRetry = useExecutionMutation(
+    "$intake-assessment-retry:" + id,
+    [path],
+  );
   const extract = useExecutionMutation("$intake-extract:" + id, [path]);
   const [optIn, setOptIn] = useRamInput("$intake:" + id, "optIn", false);
   const [error, setError] = useState("");
@@ -122,7 +127,14 @@ export default function FinanceIntakeReview({
     <Sheet
       title="Private finance intake"
       onClose={onClose}
-      busy={busy || bind.busy || cancel.busy || finalize.busy || extract.busy}
+      busy={
+        busy ||
+        bind.busy ||
+        cancel.busy ||
+        finalize.busy ||
+        assessmentRetry.busy ||
+        extract.busy
+      }
     >
       {q.data && (
         <>
@@ -169,7 +181,7 @@ export default function FinanceIntakeReview({
               />
             </>
           )}
-          {q.data.state === "uploaded" && (
+          {(q.data.state === "uploaded" || !!finalize.attempt) && (
             <Action
               title={
                 finalize.attempt
@@ -190,10 +202,37 @@ export default function FinanceIntakeReview({
               }
             />
           )}
-          {q.data.state === "scanning" && (
+          {q.data.state === "scanning" && !financeAssessmentMessage(q.data) && (
             <Action
               title="Check clean assessment"
               onPress={() => void q.retry()}
+            />
+          )}
+          {financeAssessmentMessage(q.data) && (
+            <Text accessibilityRole="alert">
+              {financeAssessmentMessage(q.data)}
+            </Text>
+          )}
+          {(q.data.assessment?.retryable || assessmentRetry.attempt) && (
+            <Action
+              title={
+                assessmentRetry.attempt
+                  ? "Retry same clean assessment request"
+                  : "Retry unavailable clean assessment"
+              }
+              disabled={!q.ready || assessmentRetry.busy || !!finalize.attempt}
+              onPress={() =>
+                void assessmentRetry
+                  .execute(
+                    path + "/finalize",
+                    assessmentRetry.attempt?.payload ?? {
+                      expectedVersion: q.data!.version,
+                      retryAssessment: true,
+                    },
+                  )
+                  .then(() => q.retry())
+                  .catch(() => {})
+              }
             />
           )}
           {q.data.state === "clean" && q.data.purpose === "receipt" && (
@@ -263,6 +302,7 @@ export default function FinanceIntakeReview({
         {error ||
           bind.error ||
           finalize.error ||
+          assessmentRetry.error ||
           cancel.error ||
           extract.error ||
           q.error}

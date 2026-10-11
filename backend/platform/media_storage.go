@@ -18,6 +18,10 @@ type MediaStore interface {
 	Open(context.Context, string) (io.ReadCloser, error)
 	Delete(context.Context, string) error
 }
+
+// ErrMediaScanRejected distinguishes a positive scanner rejection from unavailable assessment.
+var ErrMediaScanRejected = errors.New("media scan rejected")
+
 type MediaScanner interface {
 	Scan(context.Context, io.Reader) error
 }
@@ -151,8 +155,12 @@ func (s ClamAVScanner) Scan(ctx context.Context, reader io.Reader) error {
 	if e != nil {
 		return e
 	}
-	if !strings.HasSuffix(strings.TrimRight(string(result), "\x00\n"), ": OK") {
-		return errors.New("media scan rejected or unavailable")
+	verdict := strings.TrimRight(string(result), "\x00\n")
+	if strings.HasSuffix(verdict, " FOUND") {
+		return ErrMediaScanRejected
+	}
+	if !strings.HasSuffix(verdict, ": OK") {
+		return errors.New("media scan unavailable")
 	}
 	return nil
 }

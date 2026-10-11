@@ -193,6 +193,10 @@ func (s *Server) getFinanceIntake(w http.ResponseWriter, r *http.Request) error 
 	e = s.withAccessTransaction(r, a, func(tx *gorm.DB) error {
 		var e error
 		i, e = authorizeFinanceIntake(tx, a, r.PathValue("id"))
+		if e != nil {
+			return e
+		}
+		i.Assessment, e = financeIntakeAssessment(tx, i)
 		return e
 	})
 	if e != nil {
@@ -223,12 +227,18 @@ func (s *Server) uploadFinanceIntake(w http.ResponseWriter, r *http.Request) err
 	e = s.withAccessTransaction(r, a, func(tx *gorm.DB) error {
 		var e error
 		i, e = authorizeFinanceIntake(tx, a, r.PathValue("id"))
+		if e == nil {
+			i.Assessment, e = financeIntakeAssessment(tx, i)
+		}
 		return e
 	})
 	if e != nil {
 		return e
 	}
 	if i.State == "capture_reserved" || i.Size < 1 || i.InternalSHA256 == "" {
+		return financeConflict()
+	}
+	if i.Assessment != nil && in(i.Assessment.Status, "failed", "rejected", "stale") {
 		return financeConflict()
 	}
 	data, e := io.ReadAll(io.LimitReader(r.Body, i.Size+1))
@@ -296,7 +306,7 @@ func (s *Server) mutateFinanceIntake(w http.ResponseWriter, r *http.Request, can
 	if e != nil {
 		return e
 	}
-	f, e := readFields(w, r, "retryKey", "expectedVersion", "reason")
+	f, e := readFields(w, r, "retryKey", "expectedVersion", "reason", "retryAssessment")
 	if e != nil {
 		return e
 	}
@@ -307,9 +317,13 @@ func (s *Server) mutateFinanceIntake(w http.ResponseWriter, r *http.Request, can
 	var input struct {
 		ExpectedVersion int64
 		Reason          string
+		RetryAssessment bool
 	}
 	if e = applyFields(f, &input); e != nil {
 		return e
+	}
+	if cancel && input.RetryAssessment {
+		return invalid("Assessment retry is supported only by finalize.")
 	}
 	var result BusinessResult
 	op := "finance_intake_finalize"
@@ -339,7 +353,15 @@ func (s *Server) mutateFinanceIntake(w http.ResponseWriter, r *http.Request, can
 					return BusinessResult{}, e
 				}
 			} else {
-				if i.State != "uploaded" {
+				if input.RetryAssessment {
+					assessment, err := financeIntakeAssessment(tx, i)
+					if err != nil {
+						return BusinessResult{}, err
+					}
+					if i.State != "scanning" || assessment == nil || !assessment.Retryable {
+						return BusinessResult{}, invalid("Only a failed unavailable assessment may be deliberately retried. Rejected bytes remain quarantined.")
+					}
+				} else if i.State != "uploaded" {
 					return BusinessResult{}, invalid("Upload the reserved file before requesting a clean assessment.")
 				}
 				i.State = "scanning"
@@ -425,4 +447,28 @@ func (s *Server) readFinanceIntakeBytes(ctx context.Context, i FinanceAssistance
 		return nil, missing()
 	}
 	return data, nil
+}
+
+// Observable assessment is a projection of the current source's exact scan job,
+// never an alternate byte authorization or a result from another generation.
+func financeIntakeAssessment(tx *gorm.DB, i FinanceAssistanceIntake) (*FinanceIntakeAssessment, error) {
+	if i.State != "scanning" {
+		return nil, nil
+	}
+	var job FinanceAssistanceJob
+	e := tx.Where("company_id=? AND requester_id=? AND session_ref=? AND operation='scan_intake' AND source_kind='intake' AND source_id=? AND source_version=? AND content_generation=? AND internal_hash=?", i.CompanyID, i.OwnerID, i.SessionRef, i.ID, i.Version, i.ContentGeneration, i.InternalSHA256).Order("created_at DESC,id DESC").First(&job).Error
+	if e == gorm.ErrRecordNotFound {
+		return nil, nil
+	}
+	if e != nil {
+		return nil, e
+	}
+	status, code := job.Status, ""
+	if in(job.ErrorCode, "scan_rejected", "scan_unavailable", "retry_exhausted", "source_unavailable") {
+		code = job.ErrorCode
+	}
+	if code == "scan_rejected" {
+		status = "rejected"
+	}
+	return &FinanceIntakeAssessment{Status: status, ErrorCode: code, Retryable: job.Status == "failed" && in(code, "scan_unavailable", "retry_exhausted")}, nil
 }

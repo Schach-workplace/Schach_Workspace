@@ -8,6 +8,19 @@ export interface FinanceIntake {
   size: number;
   expiresAt: string;
   destinationDepartmentId?: string;
+  assessment?: { status: string; errorCode?: string; retryable: boolean };
+}
+export function financeAssessmentMessage(intake: FinanceIntake): string {
+  const assessment = intake.assessment;
+  if (assessment?.status === "rejected")
+    return "Scanner rejected this file. It remains quarantined and cannot be retried or used as evidence. Cancel this intake.";
+  if (assessment?.status === "failed")
+    return assessment.retryable
+      ? "Clean assessment failed or was unavailable. The file remains quarantined. Deliberately retry the assessment or cancel this intake."
+      : "Clean assessment failed. The file remains quarantined. Cancel this intake.";
+  if (assessment?.status === "stale")
+    return "This assessment stopped because its source changed. The file remains quarantined. Cancel this intake and inspect the current source.";
+  return "";
 }
 export interface ReceiptJob {
   id: string;

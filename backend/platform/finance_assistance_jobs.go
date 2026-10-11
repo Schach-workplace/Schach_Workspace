@@ -3,6 +3,7 @@ package platform
 import (
 	"bytes"
 	"context"
+	"errors"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 	"time"
@@ -10,6 +11,9 @@ import (
 
 // Company/session/directory precede source locks. External work never holds these locks.
 func (s *Server) withFinanceJobAccess(ctx context.Context, job FinanceAssistanceJob, fn func(*gorm.DB, *access) error) error {
+	return s.withFinanceClaimAccess(ctx, job, false, fn)
+}
+func (s *Server) withFinanceClaimAccess(ctx context.Context, job FinanceAssistanceJob, exhausted bool, fn func(*gorm.DB, *access) error) error {
 	return s.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
 		if e := lockCompany(tx, job.CompanyID); e != nil {
 			return e
@@ -22,8 +26,17 @@ func (s *Server) withFinanceJobAccess(ctx context.Context, job FinanceAssistance
 			return e
 		}
 		var owned FinanceAssistanceJob
-		if e := tx.Select("id").First(&owned, "id=? AND company_id=? AND requester_id=? AND lease_token=? AND status='running' AND lease_until>?", job.ID, job.CompanyID, job.RequesterID, job.LeaseToken, time.Now()).Error; e != nil {
-			return missing()
+		claim := lockCommunicationRow(tx, "UPDATE").Select("id").Where("id=? AND company_id=? AND requester_id=? AND lease_token=? AND status='running'", job.ID, job.CompanyID, job.RequesterID, job.LeaseToken)
+		if exhausted {
+			claim = claim.Where("attempts>=3 AND lease_until<=?", time.Now())
+		} else {
+			claim = claim.Where("lease_until>?", time.Now())
+		}
+		if e := claim.First(&owned).Error; e != nil {
+			if e == gorm.ErrRecordNotFound {
+				return missing()
+			}
+			return e
 		}
 		if e = authorizeFinanceJobSource(tx, a, job, true); e != nil {
 			return e
@@ -150,15 +163,16 @@ func (s *Server) RunFinanceAssistanceJobs(ctx context.Context, now time.Time, li
 	if limit < 1 || limit > 100 {
 		limit = 1
 	}
-	var exhausted []string
-	if e := s.db.WithContext(ctx).Model(&FinanceAssistanceJob{}).Where("status='running' AND attempts>=3 AND lease_until<=?", now).Order("id").Limit(limit).Pluck("id", &exhausted).Error; e != nil {
+	var exhausted []FinanceAssistanceJob
+	if e := s.db.WithContext(ctx).Where("status='running' AND attempts>=3 AND lease_until<=?", now).Order("id").Limit(limit).Find(&exhausted).Error; e != nil {
 		return 0, e
 	}
-	if len(exhausted) > 0 {
-		if e := s.db.WithContext(ctx).Model(&FinanceAssistanceJob{}).Where("id IN ? AND status='running' AND attempts>=3 AND lease_until<=?", exhausted, now).Updates(map[string]any{"status": "failed", "error_code": "retry_exhausted", "updated_at": now}).Error; e != nil {
+	for _, job := range exhausted {
+		if e := s.publishFinanceFailure(ctx, job, "failed", "retry_exhausted", true); e != nil {
 			return 0, e
 		}
 	}
+
 	done := 0
 	for n := 0; n < limit; n++ {
 		j, e := s.claimFinanceJob(ctx, now)
@@ -211,7 +225,9 @@ func (s *Server) RunFinanceAssistanceJobs(ctx context.Context, now time.Time, li
 		}
 		cancel()
 		if e != nil {
-			s.failFinanceJob(ctx, j, e)
+			if failure := s.failFinanceJob(ctx, j, e); failure != nil {
+				return done, failure
+			}
 			done++
 			continue
 		}
@@ -256,26 +272,85 @@ func (s *Server) RunFinanceAssistanceJobs(ctx context.Context, now time.Time, li
 					return e
 				}
 			}
-			return tx.Model(&fresh).Updates(map[string]any{"status": "ready", "version": gorm.Expr("version+1"), "updated_at": time.Now()}).Error
+			result := tx.Model(&fresh).Where("lease_token=? AND status='running' AND lease_until>?", j.LeaseToken, time.Now()).Updates(map[string]any{"status": "ready", "version": gorm.Expr("version+1"), "updated_at": time.Now()})
+			if result.Error != nil {
+				return result.Error
+			}
+			if result.RowsAffected != 1 {
+				return missing()
+			}
+			return nil
 		})
 		if e != nil {
-			s.failFinanceJob(ctx, j, e)
+			if failure := s.failFinanceJob(ctx, j, e); failure != nil {
+				return done, failure
+			}
+			if _, expected := e.(*apiError); !expected {
+				return done, e
+			}
 		}
 		done++
 	}
 	return done, nil
 }
-func (s *Server) failFinanceJob(ctx context.Context, j FinanceAssistanceJob, cause error) {
+func (s *Server) failFinanceJob(ctx context.Context, j FinanceAssistanceJob, cause error) error {
 	state, code := "queued", "provider_unavailable"
-	if a, ok := cause.(*apiError); ok && (a.Status == 401 || a.Status == 403 || a.Status == 404 || a.Status == 409) {
-		state, code = "stale", "source_unavailable"
+	if in(j.Operation, "scan_intake", "scan_receipt") {
+		code = "scan_unavailable"
 	}
 	if j.Attempts >= 3 {
 		state = "failed"
 	}
+	if errors.Is(cause, ErrMediaScanRejected) {
+		state, code = "failed", "scan_rejected"
+	}
+	if a, ok := cause.(*apiError); ok && inStatus(a.Status, 401, 403, 404, 409) {
+		state, code = "stale", "source_unavailable"
+	}
+	return s.publishFinanceFailure(ctx, j, state, code, false)
+}
+func inStatus(status int, values ...int) bool {
+	for _, v := range values {
+		if v == status {
+			return true
+		}
+	}
+	return false
+}
+func (s *Server) publishFinanceFailure(ctx context.Context, j FinanceAssistanceJob, state, code string, exhausted bool) error {
 	delay := 5 * time.Second
 	if j.Attempts >= 2 {
 		delay = 30 * time.Second
 	}
-	s.db.WithContext(ctx).Model(&FinanceAssistanceJob{}).Where("id=? AND lease_token=? AND status='running' AND lease_until>?", j.ID, j.LeaseToken, time.Now()).Updates(map[string]any{"status": state, "error_code": code, "available_at": time.Now().Add(delay), "updated_at": time.Now(), "version": gorm.Expr("version+1")})
+	e := s.withFinanceClaimAccess(ctx, j, exhausted, func(tx *gorm.DB, _ *access) error {
+		q := tx.Model(&FinanceAssistanceJob{}).Where("id=? AND lease_token=? AND status='running'", j.ID, j.LeaseToken)
+		if exhausted {
+			q = q.Where("attempts>=3 AND lease_until<=?", time.Now())
+		} else {
+			q = q.Where("lease_until>?", time.Now())
+		}
+		result := q.Updates(map[string]any{"status": state, "error_code": code, "available_at": time.Now().Add(delay), "updated_at": time.Now().UTC(), "version": gorm.Expr("version+1")})
+		if result.Error != nil {
+			return result.Error
+		}
+		if result.RowsAffected != 1 {
+			return missing()
+		}
+		return nil
+	})
+	if e == nil {
+		return nil
+	}
+	// Authorization/old-claim loss can only retire the still-owned claim as stale;
+	// it cannot publish a scan verdict or change the current source.
+	if a, ok := e.(*apiError); !ok || !inStatus(a.Status, 401, 403, 404, 409) {
+		return e
+	}
+	q := s.db.WithContext(ctx).Model(&FinanceAssistanceJob{}).Where("id=? AND lease_token=? AND status='running'", j.ID, j.LeaseToken)
+	if exhausted {
+		q = q.Where("attempts>=3 AND lease_until<=?", time.Now())
+	} else {
+		q = q.Where("lease_until>?", time.Now())
+	}
+	return q.Updates(map[string]any{"status": "stale", "error_code": "source_unavailable", "updated_at": time.Now().UTC(), "version": gorm.Expr("version+1")}).Error
 }

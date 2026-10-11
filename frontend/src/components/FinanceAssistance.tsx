@@ -4,6 +4,7 @@ import { useExecutionInput } from '../data/executionInput';
 import { useExecutionRead, useExecutionMutation } from '../data/execution';
 import {
   financeFileHash,
+  financeAssessmentMessage,
   uploadFinanceFile,
   type FinanceIntake,
   type ReceiptJob,
@@ -27,6 +28,7 @@ function Intake({
   const q = useExecutionRead<FinanceIntake>(path);
   const finalize = useExecutionMutation('$intake-finalize:' + id, [path]);
   const cancel = useExecutionMutation('$intake-cancel:' + id, [path]);
+  const assessmentRetry = useExecutionMutation('$intake-assessment-retry:' + id, [path]);
   const extract = useExecutionMutation('$intake-extract:' + id, [path]);
   const [file, setFile] = useState<File>();
   const [error, setError] = useState('');
@@ -88,12 +90,15 @@ function Intake({
               </button>
             </>
           )}
-          {q.data.state === 'uploaded' && (
+          {(q.data.state === 'uploaded' || !!finalize.attempt) && (
             <button
               disabled={finalize.busy}
               onClick={() =>
                 void finalize
-                  .execute(path + '/finalize', { expectedVersion: q.data!.version })
+                  .execute(
+                    path + '/finalize',
+                    finalize.attempt?.payload ?? { expectedVersion: q.data!.version },
+                  )
                   .then(() => q.retry())
                   .catch(() => {})
               }
@@ -101,8 +106,32 @@ function Intake({
               {finalize.attempt ? 'Retry same clean request' : 'Request clean assessment'}
             </button>
           )}
-          {q.data.state === 'scanning' && (
+          {q.data.state === 'scanning' && !financeAssessmentMessage(q.data) && (
             <button onClick={() => void q.retry()}>Check clean assessment</button>
+          )}
+          {financeAssessmentMessage(q.data) && (
+            <p role="alert">{financeAssessmentMessage(q.data)}</p>
+          )}
+          {(q.data.assessment?.retryable || assessmentRetry.attempt) && (
+            <button
+              disabled={!q.ready || assessmentRetry.busy || !!finalize.attempt}
+              onClick={() =>
+                void assessmentRetry
+                  .execute(
+                    path + '/finalize',
+                    assessmentRetry.attempt?.payload ?? {
+                      expectedVersion: q.data!.version,
+                      retryAssessment: true,
+                    },
+                  )
+                  .then(() => q.retry())
+                  .catch(() => {})
+              }
+            >
+              {assessmentRetry.attempt
+                ? 'Retry same clean assessment request'
+                : 'Retry unavailable clean assessment'}
+            </button>
           )}
           {q.data.state === 'clean' && q.data.purpose === 'receipt' && (
             <>
@@ -153,7 +182,12 @@ function Intake({
         </>
       )}
       <p role="alert">
-        {error || finalize.error || cancel.error || extract.error || q.error?.message}
+        {error ||
+          finalize.error ||
+          assessmentRetry.error ||
+          cancel.error ||
+          extract.error ||
+          q.error?.message}
       </p>
     </section>
   );
