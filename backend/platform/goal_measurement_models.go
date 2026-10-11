@@ -10,6 +10,7 @@ type GoalEvidenceInput struct {
 	ContentHash string `json:"contentHash"`
 }
 type GoalEvidenceBinding struct {
+	ViewerEpochs map[string]int64 `json:"viewerEpochs,omitempty"`
 	GoalEvidenceInput
 	HistoryEpoch int64 `json:"historyEpoch,omitempty"`
 	Sequence     int64 `json:"sequence,omitempty"`

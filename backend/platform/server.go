@@ -256,6 +256,8 @@ func (s *Server) routes() {
 	s.route("GET /api/companies/{cid}/planning/tasks", s.planningTasks)
 	s.route("GET /api/companies/{cid}/goals", s.goalsList)
 	s.route("GET /api/companies/{cid}/goals/{id}", s.goalDetail)
+	s.route("GET /api/companies/{cid}/goals/{id}/evidence-preview", s.goalEvidencePreview)
+	s.route("GET /api/companies/{cid}/goals/{id}/evidence-options", s.goalEvidenceOptions)
 	s.route("GET /api/companies/{cid}/goals/{id}/measurements", s.goalHistory)
 	s.route("POST /api/companies/{cid}/goals/{id}/measurements", s.goalMeasurement)
 	s.route("POST /api/companies/{cid}/goals", s.saveGoal)

@@ -77,18 +77,6 @@ func normalizeGoalMeasurement(i *GoalMeasurementInput) error {
 	i.EffectiveAt = t.UTC().Format(time.RFC3339Nano)
 	return nil
 }
-func goalEvidenceAuthority(tx *gorm.DB, a *access, g Goal, input []GoalEvidenceInput) error {
-	if len(input) > 0 {
-		return invalid("Evidence selection is not available yet.")
-	}
-	return nil
-}
-func bindGoalEvidence(tx *gorm.DB, a *access, g Goal, input []GoalEvidenceInput) ([]GoalEvidenceBinding, error) {
-	if e := goalEvidenceAuthority(tx, a, g, input); e != nil {
-		return nil, e
-	}
-	return []GoalEvidenceBinding{}, nil
-}
 func recordGoalRevision(tx *gorm.DB, a *access, before, after Goal, reason, action string) error {
 	now := time.Now().UTC().Truncate(time.Microsecond)
 	if e := tx.Create(&GoalRevision{ID: newID("goalrev"), CompanyID: a.Company.ID, GoalID: after.ID, ActorID: a.User.ID, Reason: reason, CreatedAt: now, Version: after.Version, Before: before, After: after}).Error; e != nil {
@@ -182,7 +170,21 @@ func authorizeGoalResult(tx *gorm.DB, a *access, result BusinessResult) error {
 	if e != nil {
 		return e
 	}
-	return measureAuthority(tx, a, g)
+	if e := measureAuthority(tx, a, g); e != nil {
+		return e
+	}
+	if len(result.IDs) > 1 && result.IDs[1] != "" {
+		var m GoalMeasurement
+		if e := tx.First(&m, "id=? AND company_id=? AND goal_id=?", result.IDs[1], a.Company.ID, g.ID).Error; e != nil {
+			return missing()
+		}
+		for _, b := range m.Evidence {
+			if e := authorizeStoredGoalEvidence(tx, a, b); e != nil {
+				return e
+			}
+		}
+	}
+	return nil
 }
 func goalMutationResponse(tx *gorm.DB, a *access, result BusinessResult) (map[string]any, error) {
 	if e := authorizeGoalResult(tx, a, result); e != nil {
@@ -537,7 +539,11 @@ func goalMeasurementView(tx *gorm.DB, a *access, m GoalMeasurement) map[string]a
 		name = u.Name
 	}
 	out["actorName"] = name
-	out["evidence"] = []any{}
+	evidence := []map[string]any{}
+	for _, binding := range m.Evidence {
+		evidence = append(evidence, projectGoalEvidence(tx, a, binding))
+	}
+	out["evidence"] = evidence
 	return out
 }
 func (s *Server) goalHistory(w http.ResponseWriter, r *http.Request) error {
