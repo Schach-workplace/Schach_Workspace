@@ -109,6 +109,10 @@ func (p *LocalOllama) Verify(ctx context.Context) error {
 	if e != nil {
 		return e
 	}
+	var versionMetadata map[string]any
+	if json.Unmarshal(raw, &versionMetadata) != nil || intelligenceRemoteMetadata(versionMetadata) {
+		return intelligenceError(503, "provider_unavailable")
+	}
 	var version struct {
 		Version string `json:"version"`
 	}
@@ -118,6 +122,10 @@ func (p *LocalOllama) Verify(ctx context.Context) error {
 	raw, e = p.request(ctx, "/api/tags", nil)
 	if e != nil {
 		return e
+	}
+	var tagsMetadata map[string]any
+	if json.Unmarshal(raw, &tagsMetadata) != nil || intelligenceRemoteMetadata(tagsMetadata) {
+		return intelligenceError(503, "provider_unavailable")
 	}
 	var tags struct {
 		Models []map[string]any `json:"models"`

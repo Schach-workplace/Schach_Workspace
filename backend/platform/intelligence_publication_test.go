@@ -106,3 +106,23 @@ func TestIntelligenceReviewedPublicationAndPublishedRetry(t *testing.T) {
 		t.Fatal("canonical result disclosed after source loss")
 	}
 }
+
+func TestIntelligenceReviewedPublicationCompletePrivateScope(t *testing.T) {
+	source := func(conv, id string) BoundIntelligenceSource {
+		return BoundIntelligenceSource{Request: IntelligenceSourceRequest{Kind: "message", ID: id, ConversationID: conv}}
+	}
+	m := SourceManifest{Sources: []BoundIntelligenceSource{source("one", "a"), source("one", "b")}}
+	if e := intelligencePublicationScope(m, "", nil); e == nil {
+		t.Fatal("private source escaped through ordinary task create")
+	}
+	if e := intelligencePublicationScope(m, "one", []string{"a"}); e == nil {
+		t.Fatal("partial source publication")
+	}
+	if e := intelligencePublicationScope(m, "one", []string{"b", "a"}); e != nil {
+		t.Fatal(e)
+	}
+	m.Sources = append(m.Sources, source("two", "c"))
+	if e := intelligencePublicationScope(m, "one", []string{"a", "b", "c"}); e == nil {
+		t.Fatal("cross-private composite published")
+	}
+}

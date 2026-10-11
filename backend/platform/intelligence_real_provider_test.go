@@ -228,3 +228,48 @@ func TestIntelligenceRealContextBoundaryAndCancellation(t *testing.T) {
 	}
 	t.Log("actual adapter request cancellation joined without output")
 }
+
+func TestIntelligenceRealOverflowIsTerminalInApplication(t *testing.T) {
+	if os.Getenv("TEST_INTELLIGENCE_REAL") != "1" {
+		t.Skip("explicit owned pinned-provider acceptance")
+	}
+	p, e := NewLocalOllama("http://127.0.0.1:11435")
+	if e != nil {
+		t.Fatal(e)
+	}
+	p.ContextTokens = 512
+	p.OutputTokens = 1
+	s, db := testServer(t)
+	c := login(t, s, "founder@example.com")
+	cid := firstCompany(t, s, c)
+	uid := me(t, s, c)
+	body := taskBody(uid)
+	body["description"] = strings.Repeat("Fictional context supports a pending review. ", 250)
+	id := createTask(t, s, c, cid, body)
+	s.opts.Intelligence = &IntelligenceConfig{Summary: p, Identity: p.Identity}
+	source := []map[string]any{{"kind": "task_fields", "id": id, "selectedFieldSet": "narrative"}}
+	_, preview := intelligencePreview(t, s, c, cid, source)
+	st, j, _ := req(t, s, "POST", "/api/companies/"+cid+"/intelligence/jobs", map[string]any{"operation": "summary", "sources": source, "selectionHash": preview["selectionHash"], "retryKey": "real-bounded-context", "optIn": map[string]any{"accepted": true, "policyVersion": intelligencePolicy}}, c)
+	if st != 202 {
+		t.Fatal(st, j)
+	}
+	var before, after int64
+	db.Model(&Task{}).Count(&before)
+	lease, e := s.claimIntelligence(t.Context())
+	if e != nil || lease == nil {
+		t.Fatal(e)
+	}
+	_ = s.runIntelligenceLease(t.Context(), *lease)
+	var row IntelligenceJob
+	db.First(&row, "id=?", j["jobId"])
+	db.Model(&Task{}).Count(&after)
+	if row.State != "failed" || row.ReasonCode != "source_too_large" || row.ResultJSON != "" || row.Attempts != 1 || before != after {
+		t.Fatal("actual overflow did not fail without output/retry/mutation", row.State, row.ReasonCode, row.Attempts)
+	}
+	var publications int64
+	db.Model(&IntelligencePublication{}).Count(&publications)
+	if publications != 0 {
+		t.Fatal("overflow publication")
+	}
+	t.Log("actual adapter overflow → terminal source_too_large; one attempt, zero result bytes, zero publications and unchanged business rows")
+}
