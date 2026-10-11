@@ -1,0 +1,16 @@
+
+> schach-workspace-frontend@1.1.0 test
+> vitest run src/pages/CalendarBaselineProbe.test.tsx -t baseline correctly --silent=false
+
+
+ RUN  v5.0.3 /home/brahma/Projects/Schach_Workspace/.worktrees/workspace-improvements/frontend
+
+stdout | src/pages/CalendarBaselineProbe.test.tsx > baseline correctly traverses valid Task pages and shows older/timed/accepted work beyond100
+{"baseline":"0ad8176","pages":2,"open107":true,"all109":true,"older":true,"timedLocal":true,"accepted":true}
+
+
+ Test Files  1 passed (1)
+      Tests  1 passed | 1 skipped (2)
+   Start at  12:01:29
+   Duration  669ms (tests 40%, import 23%, transform 21%, environment 17%)
+

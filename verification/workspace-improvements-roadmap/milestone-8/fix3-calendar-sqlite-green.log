@@ -1,0 +1,36 @@
+=== RUN   TestPlanningCalendarCompleteCurrentRange
+--- PASS: TestPlanningCalendarCompleteCurrentRange (0.40s)
+=== RUN   TestPlanningCalendarBoundsAfterSourceFilters
+--- PASS: TestPlanningCalendarBoundsAfterSourceFilters (0.38s)
+=== RUN   TestPlanningCalendarExactBoundaryAndDST
+    planning_calendar_test.go:155: 422 map[error:map[code:validation message:Calendar timezone transitions are unavailable.]]
+--- FAIL: TestPlanningCalendarExactBoundaryAndDST (0.24s)
+=== RUN   TestPlanningCalendarAfterCompanyLockWait
+    planning_calendar_test.go:175: native independent connections
+--- SKIP: TestPlanningCalendarAfterCompanyLockWait (0.09s)
+=== RUN   TestPlanningCalendarCivilMidnightTransitions
+=== RUN   TestPlanningCalendarCivilMidnightTransitions/HavanaBeforeGap
+    planning_calendar_test.go:249: 422 map[error:map[code:validation message:Calendar timezone transitions are unavailable.]]
+=== RUN   TestPlanningCalendarCivilMidnightTransitions/HavanaGapDay
+    planning_calendar_test.go:249: 422 map[error:map[code:validation message:Calendar timezone transitions are unavailable.]]
+=== RUN   TestPlanningCalendarCivilMidnightTransitions/HavanaWeekEndingGap
+    planning_calendar_test.go:249: 422 map[error:map[code:validation message:Calendar timezone transitions are unavailable.]]
+=== RUN   TestPlanningCalendarCivilMidnightTransitions/HavanaMidnightOverlap
+    planning_calendar_test.go:249: 422 map[error:map[code:validation message:Calendar timezone transitions are unavailable.]]
+=== RUN   TestPlanningCalendarCivilMidnightTransitions/ApiaBeforeSkippedDate
+=== RUN   TestPlanningCalendarCivilMidnightTransitions/ApiaSkippedDate
+=== RUN   TestPlanningCalendarCivilMidnightTransitions/ApiaRangeAcrossSkippedDate
+--- FAIL: TestPlanningCalendarCivilMidnightTransitions (1.68s)
+    --- FAIL: TestPlanningCalendarCivilMidnightTransitions/HavanaBeforeGap (0.23s)
+    --- FAIL: TestPlanningCalendarCivilMidnightTransitions/HavanaGapDay (0.23s)
+    --- FAIL: TestPlanningCalendarCivilMidnightTransitions/HavanaWeekEndingGap (0.23s)
+    --- FAIL: TestPlanningCalendarCivilMidnightTransitions/HavanaMidnightOverlap (0.23s)
+    --- PASS: TestPlanningCalendarCivilMidnightTransitions/ApiaBeforeSkippedDate (0.26s)
+    --- PASS: TestPlanningCalendarCivilMidnightTransitions/ApiaSkippedDate (0.25s)
+    --- PASS: TestPlanningCalendarCivilMidnightTransitions/ApiaRangeAcrossSkippedDate (0.25s)
+=== RUN   TestPlanningCalendarCivilDateBeforeCap
+    planning_calendar_test.go:307: previous civil day exhausted selected-date cap 422 map[error:map[code:validation message:Calendar timezone transitions are unavailable.]]
+--- FAIL: TestPlanningCalendarCivilDateBeforeCap (0.37s)
+FAIL
+FAIL	schach.local/workspace/backend/platform	3.156s
+FAIL

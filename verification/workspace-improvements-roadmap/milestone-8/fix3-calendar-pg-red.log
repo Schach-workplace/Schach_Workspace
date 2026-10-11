@@ -1,0 +1,26 @@
+=== RUN   TestPlanningCalendarCivilMidnightTransitions
+=== RUN   TestPlanningCalendarCivilMidnightTransitions/HavanaBeforeGap
+    planning_calendar_test.go:266: range 2026-03-07..2026-03-07: want [2026-03-08T04:30:00.123456Z], actual map[]
+=== RUN   TestPlanningCalendarCivilMidnightTransitions/HavanaGapDay
+    planning_calendar_test.go:262: unselected civil date in complete response map[code:civil-0 deadlineMode:timed departmentId: dependencies:[] dueAt:2026-03-08T04:59:59.999999Z dueDate:2026-03-07 dueTimezone:UTC id:civil-0 ownerId:usr_7ae47694875a175ca59664de3154f39c parentId: priority:medium progress:0 projectId: status:todo title:civil-0 version:1]
+=== RUN   TestPlanningCalendarCivilMidnightTransitions/HavanaWeekEndingGap
+    planning_calendar_test.go:266: range 2026-03-02..2026-03-08: want [2026-03-09T03:30:00.654321Z], actual map[]
+=== RUN   TestPlanningCalendarCivilMidnightTransitions/HavanaMidnightOverlap
+=== RUN   TestPlanningCalendarCivilMidnightTransitions/ApiaBeforeSkippedDate
+    planning_calendar_test.go:266: range 2011-12-29..2011-12-29: want [2011-12-30T09:59:59.999999Z], actual map[]
+=== RUN   TestPlanningCalendarCivilMidnightTransitions/ApiaSkippedDate
+=== RUN   TestPlanningCalendarCivilMidnightTransitions/ApiaRangeAcrossSkippedDate
+--- FAIL: TestPlanningCalendarCivilMidnightTransitions (3.13s)
+    --- FAIL: TestPlanningCalendarCivilMidnightTransitions/HavanaBeforeGap (0.53s)
+    --- FAIL: TestPlanningCalendarCivilMidnightTransitions/HavanaGapDay (0.43s)
+    --- FAIL: TestPlanningCalendarCivilMidnightTransitions/HavanaWeekEndingGap (0.44s)
+    --- PASS: TestPlanningCalendarCivilMidnightTransitions/HavanaMidnightOverlap (0.44s)
+    --- FAIL: TestPlanningCalendarCivilMidnightTransitions/ApiaBeforeSkippedDate (0.44s)
+    --- PASS: TestPlanningCalendarCivilMidnightTransitions/ApiaSkippedDate (0.42s)
+    --- PASS: TestPlanningCalendarCivilMidnightTransitions/ApiaRangeAcrossSkippedDate (0.43s)
+=== RUN   TestPlanningCalendarCivilDateBeforeCap
+    planning_calendar_test.go:307: previous civil day exhausted selected-date cap 422 map[error:map[code:range_too_large message:Calendar exceeds 10000 tasks or 8 MiB. Narrow its dates or filters.]]
+--- FAIL: TestPlanningCalendarCivilDateBeforeCap (0.83s)
+FAIL
+FAIL	schach.local/workspace/backend/platform	3.967s
+FAIL

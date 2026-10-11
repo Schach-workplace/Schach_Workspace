@@ -1,0 +1,6 @@
+=== RUN   TestM8BaselineGORMPathProbe
+    m8_baseline_gorm_probe_test.go:3: ERROR: constraint "uni_finance_statement_imports_preview_id" of relation "finance_statement_imports" does not exist (SQLSTATE 42704)
+--- FAIL: TestM8BaselineGORMPathProbe (0.83s)
+FAIL
+FAIL	schach.local/workspace/backend/platform	0.839s
+FAIL

@@ -1,0 +1,44 @@
+=== RUN   TestM8CurrentPlanningAfterCompanyLockWait
+    m8_current_read_race_test.go:59: Observed actual application source fence wait: [{WaitEventType:Lock WaitEvent:transactionid Query:SELECT * FROM "companies" WHERE id =  'cmp_ba1b98d9f99f204e196d67d8af7f7beb'  ORDER BY "companies"."id" LIMIT  '1'  FOR UPDATE}]
+    m8_current_read_race_test.go:68: Post-fence actual HTTP planning response: 200 {"method":"visible_remaining_overlap_v1","methodDescription":"Authorized work in this view. Full remaining estimate is counted once per overlapping week against the whole recorded weekly capacity, including partial weeks. Unique effort differs from weekly exposure; recorded zero is possibly unestimated. Capacity is not attendance or free time.","timezone":"UTC","generatedAt":"2026-10-11T07:05:18.055630839Z","readBasis":"f6e43d4aea26d8141deea4c93d08cc82f2275628428b195a41a5ef03e806ed00","projectionBasis":"9d64dfe3c472fdefeb05cf553e1c276ac731ec9837e5bd714af77a6c922a3eb0","filters":{"from":"2026-10-12","to":"2026-10-25","departmentId":"","ownerId":"","projectId":""},"weeks":[{"from":"2026-10-12","to":"2026-10-18","selectedFrom":"2026-10-12","selectedTo":"2026-10-18","partial":false,"remainingHours":0,"positiveCapacityHours":0,"positiveCapacityEffort":0,"utilization":null,"excludedCapacityRows":0,"people":[],"drill":{"category":"scheduled","week":"2026-10-12"}},{"from":"2026-10-19","to":"2026-10-25","selectedFrom":"2026-10-19","selectedTo":"2026-10-25","partial":false,"remainingHours":0,"positiveCapacityHours":0,"positiveCapacityEffort":0,"utilization":null,"excludedCapacityRows":0,"people":[],"drill":{"category":"scheduled","week":"2026-10-19"}}],"coverage":{"uniqueSelectedRemainingHours":0,"weeklyExposureHours":0,"undated":0,"invalidInterval":0,"recordedZeroEstimate":0,"missingOwner":0,"invalidNumeric":0,"visibleTasks":0}}
+--- PASS: TestM8CurrentPlanningAfterCompanyLockWait (0.68s)
+=== RUN   TestM8CurrentPrivateEvidenceAfterMembershipLockWait
+    m8_current_read_race_test.go:100: Observed actual application source fence wait: [{WaitEventType:Lock WaitEvent:transactionid Query:SELECT * FROM "memberships" WHERE company_id =  'cmp_9759405e9f6cde797336e0d164ff0af4'  ORDER BY user_id FOR UPDATE}]
+    m8_current_read_race_test.go:109: Post-fence actual HTTP private evidence response: 404 {"error":{"code":"not_found","message":"This resource was not found in your accessible workspace."}}
+--- PASS: TestM8CurrentPrivateEvidenceAfterMembershipLockWait (0.66s)
+=== RUN   TestPlanningCalendarCompleteCurrentRange
+--- PASS: TestPlanningCalendarCompleteCurrentRange (1.01s)
+=== RUN   TestPlanningCalendarBoundsAfterSourceFilters
+--- PASS: TestPlanningCalendarBoundsAfterSourceFilters (1.10s)
+=== RUN   TestPlanningCalendarExactBoundaryAndDST
+--- PASS: TestPlanningCalendarExactBoundaryAndDST (0.50s)
+=== RUN   TestPlanningCalendarAfterCompanyLockWait
+    planning_calendar_test.go:196: Observed actual application source fence wait: [{WaitEventType:Lock WaitEvent:transactionid Query:SELECT * FROM "companies" WHERE id =  'cmp_b2a290fb83738aa5abf3d2cdc479277d'  ORDER BY "companies"."id" LIMIT  '1'  FOR UPDATE}]
+    planning_calendar_test.go:205: Actual current calendar after company wait: 200 {"tasks":[],"complete":true,"timezone":"UTC","readBasis":"1b3e73cc13b2ceeb91ebff027b2d2af2405ee9a6163645163d66f321086004c8"}
+--- PASS: TestPlanningCalendarAfterCompanyLockWait (0.71s)
+=== RUN   TestPlanningCalendarCivilMidnightTransitions
+=== RUN   TestPlanningCalendarCivilMidnightTransitions/HavanaBeforeGap
+=== RUN   TestPlanningCalendarCivilMidnightTransitions/HavanaGapDay
+=== RUN   TestPlanningCalendarCivilMidnightTransitions/HavanaWeekEndingGap
+=== RUN   TestPlanningCalendarCivilMidnightTransitions/HavanaMidnightOverlap
+=== RUN   TestPlanningCalendarCivilMidnightTransitions/ApiaBeforeSkippedDate
+=== RUN   TestPlanningCalendarCivilMidnightTransitions/ApiaSkippedDate
+=== RUN   TestPlanningCalendarCivilMidnightTransitions/ApiaRangeAcrossSkippedDate
+=== RUN   TestPlanningCalendarCivilMidnightTransitions/StJohnsRepeatedDateWithHole
+=== RUN   TestPlanningCalendarCivilMidnightTransitions/FutureLeapYearSeam
+--- PASS: TestPlanningCalendarCivilMidnightTransitions (4.77s)
+    --- PASS: TestPlanningCalendarCivilMidnightTransitions/HavanaBeforeGap (0.60s)
+    --- PASS: TestPlanningCalendarCivilMidnightTransitions/HavanaGapDay (0.52s)
+    --- PASS: TestPlanningCalendarCivilMidnightTransitions/HavanaWeekEndingGap (0.51s)
+    --- PASS: TestPlanningCalendarCivilMidnightTransitions/HavanaMidnightOverlap (0.56s)
+    --- PASS: TestPlanningCalendarCivilMidnightTransitions/ApiaBeforeSkippedDate (0.57s)
+    --- PASS: TestPlanningCalendarCivilMidnightTransitions/ApiaSkippedDate (0.52s)
+    --- PASS: TestPlanningCalendarCivilMidnightTransitions/ApiaRangeAcrossSkippedDate (0.56s)
+    --- PASS: TestPlanningCalendarCivilMidnightTransitions/StJohnsRepeatedDateWithHole (0.47s)
+    --- PASS: TestPlanningCalendarCivilMidnightTransitions/FutureLeapYearSeam (0.45s)
+=== RUN   TestPlanningCalendarCivilDateBeforeCap
+--- PASS: TestPlanningCalendarCivilDateBeforeCap (0.95s)
+=== RUN   TestPlanningCalendarSkippedCivilAllDayLabel
+--- PASS: TestPlanningCalendarSkippedCivilAllDayLabel (0.47s)
+PASS
+ok  	schach.local/workspace/backend/platform	10.868s

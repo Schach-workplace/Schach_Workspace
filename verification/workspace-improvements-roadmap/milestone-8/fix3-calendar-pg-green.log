@@ -1,0 +1,45 @@
+=== RUN   TestM8CurrentPlanningAfterCompanyLockWait
+    m8_current_read_race_test.go:59: Observed actual application source fence wait: [{WaitEventType:Lock WaitEvent:transactionid Query:SELECT * FROM "companies" WHERE id =  'cmp_cc0739c1bbaf800b0da55681e94cd047'  ORDER BY "companies"."id" LIMIT  '1'  FOR UPDATE}]
+    m8_current_read_race_test.go:68: Post-fence actual HTTP planning response: 200 {"method":"visible_remaining_overlap_v1","methodDescription":"Authorized work in this view. Full remaining estimate is counted once per overlapping week against the whole recorded weekly capacity, including partial weeks. Unique effort differs from weekly exposure; recorded zero is possibly unestimated. Capacity is not attendance or free time.","timezone":"UTC","generatedAt":"2026-10-11T07:01:03.496496232Z","readBasis":"6a4f0620ff9233f95d2e6a887e46e6201697747162a140dd1ba9cad62b36ec09","projectionBasis":"9d64dfe3c472fdefeb05cf553e1c276ac731ec9837e5bd714af77a6c922a3eb0","filters":{"from":"2026-10-12","to":"2026-10-25","departmentId":"","ownerId":"","projectId":""},"weeks":[{"from":"2026-10-12","to":"2026-10-18","selectedFrom":"2026-10-12","selectedTo":"2026-10-18","partial":false,"remainingHours":0,"positiveCapacityHours":0,"positiveCapacityEffort":0,"utilization":null,"excludedCapacityRows":0,"people":[],"drill":{"category":"scheduled","week":"2026-10-12"}},{"from":"2026-10-19","to":"2026-10-25","selectedFrom":"2026-10-19","selectedTo":"2026-10-25","partial":false,"remainingHours":0,"positiveCapacityHours":0,"positiveCapacityEffort":0,"utilization":null,"excludedCapacityRows":0,"people":[],"drill":{"category":"scheduled","week":"2026-10-19"}}],"coverage":{"uniqueSelectedRemainingHours":0,"weeklyExposureHours":0,"undated":0,"invalidInterval":0,"recordedZeroEstimate":0,"missingOwner":0,"invalidNumeric":0,"visibleTasks":0}}
+--- PASS: TestM8CurrentPlanningAfterCompanyLockWait (0.62s)
+=== RUN   TestM8CurrentPrivateEvidenceAfterMembershipLockWait
+    m8_current_read_race_test.go:100: Observed actual application source fence wait: [{WaitEventType:Lock WaitEvent:transactionid Query:SELECT * FROM "memberships" WHERE company_id =  'cmp_4c142c96f253b25ad7a090cb1690f414'  ORDER BY user_id FOR UPDATE}]
+    m8_current_read_race_test.go:109: Post-fence actual HTTP private evidence response: 404 {"error":{"code":"not_found","message":"This resource was not found in your accessible workspace."}}
+--- PASS: TestM8CurrentPrivateEvidenceAfterMembershipLockWait (0.53s)
+=== RUN   TestPlanningCalendarCompleteCurrentRange
+--- PASS: TestPlanningCalendarCompleteCurrentRange (0.59s)
+=== RUN   TestPlanningCalendarBoundsAfterSourceFilters
+--- PASS: TestPlanningCalendarBoundsAfterSourceFilters (0.95s)
+=== RUN   TestPlanningCalendarExactBoundaryAndDST
+    planning_calendar_test.go:155: 422 map[error:map[code:validation message:Calendar timezone transitions are unavailable.]]
+--- FAIL: TestPlanningCalendarExactBoundaryAndDST (0.47s)
+=== RUN   TestPlanningCalendarAfterCompanyLockWait
+    planning_calendar_test.go:196: Observed actual application source fence wait: [{WaitEventType:Lock WaitEvent:transactionid Query:SELECT * FROM "companies" WHERE id =  'cmp_e82a782940e8d65a590008feb1b270c0'  ORDER BY "companies"."id" LIMIT  '1'  FOR UPDATE}]
+    planning_calendar_test.go:205: Actual current calendar after company wait: 200 {"tasks":[],"complete":true,"timezone":"UTC","readBasis":"dec11513167f881defc293de1f7d5e0d59abf53f50af77357e40f06f4c666845"}
+--- PASS: TestPlanningCalendarAfterCompanyLockWait (0.62s)
+=== RUN   TestPlanningCalendarCivilMidnightTransitions
+=== RUN   TestPlanningCalendarCivilMidnightTransitions/HavanaBeforeGap
+    planning_calendar_test.go:249: 422 map[error:map[code:validation message:Calendar timezone transitions are unavailable.]]
+=== RUN   TestPlanningCalendarCivilMidnightTransitions/HavanaGapDay
+    planning_calendar_test.go:249: 422 map[error:map[code:validation message:Calendar timezone transitions are unavailable.]]
+=== RUN   TestPlanningCalendarCivilMidnightTransitions/HavanaWeekEndingGap
+    planning_calendar_test.go:249: 422 map[error:map[code:validation message:Calendar timezone transitions are unavailable.]]
+=== RUN   TestPlanningCalendarCivilMidnightTransitions/HavanaMidnightOverlap
+    planning_calendar_test.go:249: 422 map[error:map[code:validation message:Calendar timezone transitions are unavailable.]]
+=== RUN   TestPlanningCalendarCivilMidnightTransitions/ApiaBeforeSkippedDate
+=== RUN   TestPlanningCalendarCivilMidnightTransitions/ApiaSkippedDate
+=== RUN   TestPlanningCalendarCivilMidnightTransitions/ApiaRangeAcrossSkippedDate
+--- FAIL: TestPlanningCalendarCivilMidnightTransitions (4.30s)
+    --- FAIL: TestPlanningCalendarCivilMidnightTransitions/HavanaBeforeGap (0.61s)
+    --- FAIL: TestPlanningCalendarCivilMidnightTransitions/HavanaGapDay (0.53s)
+    --- FAIL: TestPlanningCalendarCivilMidnightTransitions/HavanaWeekEndingGap (0.56s)
+    --- FAIL: TestPlanningCalendarCivilMidnightTransitions/HavanaMidnightOverlap (0.56s)
+    --- PASS: TestPlanningCalendarCivilMidnightTransitions/ApiaBeforeSkippedDate (0.69s)
+    --- PASS: TestPlanningCalendarCivilMidnightTransitions/ApiaSkippedDate (0.69s)
+    --- PASS: TestPlanningCalendarCivilMidnightTransitions/ApiaRangeAcrossSkippedDate (0.67s)
+=== RUN   TestPlanningCalendarCivilDateBeforeCap
+    planning_calendar_test.go:307: previous civil day exhausted selected-date cap 422 map[error:map[code:validation message:Calendar timezone transitions are unavailable.]]
+--- FAIL: TestPlanningCalendarCivilDateBeforeCap (1.26s)
+FAIL
+FAIL	schach.local/workspace/backend/platform	9.343s
+FAIL

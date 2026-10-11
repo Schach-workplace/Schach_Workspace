@@ -1,0 +1,35 @@
+=== RUN   TestPlanningCalendarCompleteCurrentRange
+--- PASS: TestPlanningCalendarCompleteCurrentRange (0.51s)
+=== RUN   TestPlanningCalendarBoundsAfterSourceFilters
+--- PASS: TestPlanningCalendarBoundsAfterSourceFilters (0.45s)
+=== RUN   TestPlanningCalendarExactBoundaryAndDST
+--- PASS: TestPlanningCalendarExactBoundaryAndDST (0.27s)
+=== RUN   TestPlanningCalendarAfterCompanyLockWait
+    planning_calendar_test.go:175: native independent connections
+--- SKIP: TestPlanningCalendarAfterCompanyLockWait (0.14s)
+=== RUN   TestPlanningCalendarCivilMidnightTransitions
+=== RUN   TestPlanningCalendarCivilMidnightTransitions/HavanaBeforeGap
+=== RUN   TestPlanningCalendarCivilMidnightTransitions/HavanaGapDay
+=== RUN   TestPlanningCalendarCivilMidnightTransitions/HavanaWeekEndingGap
+=== RUN   TestPlanningCalendarCivilMidnightTransitions/HavanaMidnightOverlap
+=== RUN   TestPlanningCalendarCivilMidnightTransitions/ApiaBeforeSkippedDate
+=== RUN   TestPlanningCalendarCivilMidnightTransitions/ApiaSkippedDate
+=== RUN   TestPlanningCalendarCivilMidnightTransitions/ApiaRangeAcrossSkippedDate
+=== RUN   TestPlanningCalendarCivilMidnightTransitions/StJohnsRepeatedDateWithHole
+=== RUN   TestPlanningCalendarCivilMidnightTransitions/FutureLeapYearSeam
+--- PASS: TestPlanningCalendarCivilMidnightTransitions (2.58s)
+    --- PASS: TestPlanningCalendarCivilMidnightTransitions/HavanaBeforeGap (0.38s)
+    --- PASS: TestPlanningCalendarCivilMidnightTransitions/HavanaGapDay (0.34s)
+    --- PASS: TestPlanningCalendarCivilMidnightTransitions/HavanaWeekEndingGap (0.28s)
+    --- PASS: TestPlanningCalendarCivilMidnightTransitions/HavanaMidnightOverlap (0.26s)
+    --- PASS: TestPlanningCalendarCivilMidnightTransitions/ApiaBeforeSkippedDate (0.26s)
+    --- PASS: TestPlanningCalendarCivilMidnightTransitions/ApiaSkippedDate (0.27s)
+    --- PASS: TestPlanningCalendarCivilMidnightTransitions/ApiaRangeAcrossSkippedDate (0.27s)
+    --- PASS: TestPlanningCalendarCivilMidnightTransitions/StJohnsRepeatedDateWithHole (0.26s)
+    --- PASS: TestPlanningCalendarCivilMidnightTransitions/FutureLeapYearSeam (0.26s)
+=== RUN   TestPlanningCalendarCivilDateBeforeCap
+--- PASS: TestPlanningCalendarCivilDateBeforeCap (0.41s)
+=== RUN   TestPlanningCalendarSkippedCivilAllDayLabel
+--- PASS: TestPlanningCalendarSkippedCivilAllDayLabel (0.27s)
+PASS
+ok  	schach.local/workspace/backend/platform	4.625s
