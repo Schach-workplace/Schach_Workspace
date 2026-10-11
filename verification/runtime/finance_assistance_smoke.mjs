@@ -9,6 +9,12 @@ assert(process.argv.includes('--allow-demo-mutations'),'Explicit --allow-demo-mu
 assert(['localhost','127.0.0.1','[::1]'].includes(new URL(base).hostname));
 const output=process.env.SCHACH_SMOKE_RESULT;assert(output,'Set SCHACH_SMOKE_RESULT');
 const fixture=JSON.parse(await readFile(process.env.SCHACH_FINANCE_FIXTURE,'utf8'));assert.equal(fixture.status,'passed');
+const statementOnly=process.argv.includes('--statement-preview-only');
+const financeRoutes=await readFile(new URL('../../backend/platform/finance_statements.go',import.meta.url),'utf8');
+const financeBase=financeRoutes.match(/func \(s \*Server\) financeStatementRoutes\(\) \{\s*base := "([^"]+)"/)[1];
+const previewSuffix=financeRoutes.match(/s.route\("POST "\+base\+"([^"]+)", s.createFinanceStatementPreview\)/)[1];
+const createPreviewPath=financeBase.replace('{cid}',fixture.company)+previewSuffix;
+
 const profile=await mkdtemp(join(tmpdir(),'schach-report-browser-'));
 const browser=spawn('chromium',['--headless=new','--no-sandbox','--disable-dev-shm-usage','--remote-debugging-port=0',`--user-data-dir=${profile}`,'about:blank'],{stdio:['ignore','ignore','pipe']});
 let endpoint='',socket,run;browser.stderr.on('data',b=>{const m=String(b).match(/DevTools listening on (ws:\/\/\S+)/);if(m)endpoint=m[1]});
@@ -29,6 +35,7 @@ try{
 
  const set=async(label,value,tag='input')=>run(`(()=>{const label=Array.from(document.querySelectorAll('label')).find(l=>l.textContent.trim().startsWith(${JSON.stringify(label)}));if(!label)throw Error('Missing label '+${JSON.stringify(label)});const el=label.querySelector(${JSON.stringify(tag)});Object.getOwnPropertyDescriptor(${tag==='select'?'HTMLSelectElement':'HTMLInputElement'}.prototype,'value').set.call(el,${JSON.stringify(value)});el.dispatchEvent(new Event(${JSON.stringify(tag==='select'?'change':'input')},{bubbles:true}))})()`);
  const check=async(label)=>run(`(()=>{const el=Array.from(document.querySelectorAll('label')).find(l=>l.textContent.includes(${JSON.stringify(label)})).querySelector('input[type=checkbox]');if(!el.checked)el.click()})()`);
+ if(!statementOnly){
  if(fixture.rejectedIntake){
   await call('Page.navigate',{url:base+'/#finance?intake='+encodeURIComponent(fixture.rejectedIntake)});
   await wait(()=>run('document.body.innerText.includes("Scanner rejected this file")'));
@@ -59,27 +66,35 @@ try{
  result.checks.push('Rendered human fields/category/destination/uncertainty/evidence/audience review creates one draft130050; actual post-commit lost ACK retries identical payload/key');
  // Close detail then open the real clean staged CSV using the current private list.
  await run(`Array.from(document.querySelectorAll('button')).find(b=>b.getAttribute('aria-label')?.startsWith('Close')||b.textContent.trim()==='Close')?.click()`);
+ }else{
+  await call('Page.navigate',{url:base+'/#finance'});
+  await wait(()=>run('document.body.innerText.includes("Finance assistance")'));
+ }
  await click('Import bank CSV');await wait(()=>run('document.body.innerText.includes("fictional-bank.csv")'));
  await run(`Array.from(document.querySelectorAll('button')).find(b=>b.textContent.includes('fictional-bank.csv')).click()`);
  await wait(()=>run('document.body.innerText.includes("Map and review bank CSV")'));
  for(const [label,value] of [['headerRow','yes'],['delimiter','comma'],['dateFormat','YYYY-MM-DD'],['amountMode','signed'],['decimalSeparator','dot'],['groupingSeparator','none']])await set(label,value,'select');
  for(const [label,value] of [['dateColumn','1'],['signedAmountColumn','2'],['referenceColumn','3'],['descriptionColumn','4']])await set(label,value);
+ await run(`window.statementPosts=[];window.loseImportAck=true;window.previewPosts=0;window.previewRequests=[];window.refreshFault=false;window.refreshFaultConsumed=false;window.beforeStatementFetch=window.fetch;window.fetch=async(...args)=>{const path=String(args[0]);if(new URL(path,location.href).pathname===${JSON.stringify(createPreviewPath)}&&args[1]?.method==='POST'){window.previewPosts++;window.previewRequests.push({path:new URL(path,location.href).pathname,body:JSON.parse(args[1].body)})}const r=await window.beforeStatementFetch(...args);if(path.endsWith('/import')&&args[1]?.method==='POST'&&r.ok){window.statementPosts.push(JSON.parse(args[1].body));if(window.loseImportAck){window.loseImportAck=false;throw new TypeError('Fictional import ACK lost after real commit')}window.refreshFault=true}if(window.refreshFault&&(!args[1]?.method||args[1]?.method==='GET')&&path.includes('/expenses?')){window.refreshFault=false;window.refreshFaultConsumed=true;throw new TypeError('Fictional refresh read acknowledgement lost after real import')}return r}`);
  await click('Preview exact statement rows');await wait(()=>run('document.body.innerText.includes("4 distinct records")'));
  assert(await run('document.body.innerText.includes("Record 3")&&document.body.innerText.includes("Record 4")'));
+ const initialPreviewCount=await run('window.previewPosts');assert.equal(initialPreviewCount,1,'Counter must observe the actual initial statement preview POST');
+ result.previewCounter={path:createPreviewPath,initialCount:initialPreviewCount};
  await check('I reviewed the complete mapping and all normalized rows');
- await run(`window.statementPosts=[];window.loseImportAck=true;window.previewPosts=0;window.refreshFault=false;window.refreshFaultConsumed=false;window.beforeStatementFetch=window.fetch;window.fetch=async(...args)=>{const path=String(args[0]);if(path.endsWith('/preview')&&args[1]?.method==='POST')window.previewPosts++;const r=await window.beforeStatementFetch(...args);if(path.endsWith('/import')&&args[1]?.method==='POST'&&r.ok){window.statementPosts.push(JSON.parse(args[1].body));if(window.loseImportAck){window.loseImportAck=false;throw new TypeError('Fictional import ACK lost after real commit')}window.refreshFault=true}if(window.refreshFault&&(!args[1]?.method||args[1]?.method==='GET')&&path.includes('/expenses?')){window.refreshFault=false;window.refreshFaultConsumed=true;throw new TypeError('Fictional refresh read acknowledgement lost after real import')}return r}`);
  await click('Import reviewed statement');
  await wait(()=>run('window.statementPosts.length===1&&Array.from(document.querySelectorAll("button")).some(b=>b.textContent==="Retry same statement import"&&!b.disabled)'));
  assert(await run('Array.from(document.querySelectorAll("fieldset")).some(f=>f.disabled)&&Array.from(document.querySelectorAll("button")).find(b=>b.textContent==="Preview exact statement rows").disabled'));
  await run(`Array.from(document.querySelectorAll('button')).find(b=>b.textContent==='Preview exact statement rows').click()`);
- await set('dateColumn','2');assert.equal(await run('window.previewPosts'),0);
+ await set('dateColumn','2');const frozenPreviewCount=await run('window.previewPosts');assert.equal(frozenPreviewCount,initialPreviewCount);result.previewCounter={...result.previewCounter,afterFrozenAttempts:frozenPreviewCount,additionalRequests:frozenPreviewCount-initialPreviewCount,requests:await run('window.previewRequests')};
  await click('Retry same statement import');
  await wait(()=>run('window.refreshFaultConsumed'));
  await run(`document.querySelector('button[aria-label="Refresh workspace"]').click()`);
 
  await wait(()=>run('document.body.innerText.includes("Statement reconciliation")&&document.body.innerText.includes("Record 2")'));
  const statementProof=await run(`(async()=>{const r=await fetch('/api/companies/'+${JSON.stringify(fixture.company)}+'/finance/statement-imports',{credentials:'include'});return {items:(await r.json()).items,posts:window.statementPosts}})()`);assert.equal(statementProof.items.length,1);assert.equal(statementProof.items[0].rowCount,4);result.statementRetry={importId:statementProof.items[0].id,rows:4,requests:statementProof.posts,sameKeySamePayload:true};
+ const finalPreviewCount=await run('window.previewPosts');assert.equal(finalPreviewCount,initialPreviewCount);result.previewCounter.afterCanonicalRetry=finalPreviewCount;
  assert.equal(await run('window.statementPosts.length'),2);assert(await run('JSON.stringify(window.statementPosts[0])===JSON.stringify(window.statementPosts[1])'));result.checks.push('Rendered CSV lost postcommit import ACK freezes mapping/re-preview; identical key/body retry yields one canonical four-occurrence import, then actual refresh-loss recovers it');
+ if(!statementOnly){
  if(fixture.paidExpense){
   const paidBefore=await run(`(async()=>{const r=await fetch('/api/companies/'+${JSON.stringify(fixture.company)}+'/expenses/'+${JSON.stringify(fixture.paidExpense)},{credentials:'include'});return (await r.json()).expense})()`);
   // Select a real full paid expense deliberately for the exact matching row.
@@ -119,6 +134,10 @@ try{
  await run(`document.documentElement.style.fontSize='24px'`);await call('Emulation.setDeviceMetricsOverride',{width:375,height:1000,deviceScaleFactor:1,mobile:true});await delay(200);assert(await run('document.documentElement.scrollWidth<=innerWidth'),'Large-text finance overflow');
  result.checks.push('Actual rendered 320/375/430/1440px and 150% text finance layout has no horizontal overflow');
  result.measurements=await run(`(async()=>{const root='/api/companies/'+${JSON.stringify(fixture.company)};const out={};for(const path of ['/finance/intakes','/finance/receipt-extractions/'+${JSON.stringify(fixture.job)},'/finance/reconciliation?state=all']){const samples=[];for(let n=0;n<5;n++){const start=performance.now();const r=await fetch(root+path,{credentials:'include'});const bytes=new TextEncoder().encode(await r.text()).length;if(!r.ok)throw Error('Measurement read failed');samples.push({milliseconds:performance.now()-start,bytes})}const sorted=samples.map(s=>s.milliseconds).sort((a,b)=>a-b);out[path]={requests:5,bytes:samples[0].bytes,p50:sorted[2],p95:sorted[4]}}return out})()`);
+ }else{
+  result.completed={statementImports:'1/1',method:'Owned SQLite actual preview positive control and unknown committed import recovery only'};
+  result.checks.push('Counter observed the real initial preview POST and no extra preview during frozen remap/re-preview; identical import retry retains one canonical import');
+ }
  assert.deepEqual(errors,[]);result.status='passed';result.browser=(await call('Browser.getVersion')).product;result.scope='Owned fictional actual HTTP and Chromium UI; single-user local measurements are not production capacity, native or physical certification.';
  console.log(JSON.stringify({status:result.status,checks:result.checks.length}));
 }catch(e){result.error=e.message;try{result.rendered=await run('document.body.innerText');result.lastResources=await run('performance.getEntriesByType(\"resource\").slice(-15).map(e=>e.name)')}catch{}process.exitCode=1;console.error(e.stack)}finally{await writeFile(output,JSON.stringify(result,null,2)+'\n');socket?.close();browser.kill('SIGTERM');await delay(200);await rm(profile,{recursive:true,force:true})}
