@@ -1,0 +1,13 @@
+{
+  "updatedUtc": "2026-10-11T23:09:20.006502+00:00",
+  "privateArchive": "/home/brahma/.local/state/schach-workspace-cutover-20261012-uoxlpfcw/complete-plan-recovery-final-dff8ddc",
+  "regularFilesVerified": 8357,
+  "totalBytesVerified": 871373847,
+  "symlinks": 0,
+  "missingOrChangedFiles": 0,
+  "allFileBytesCompared": true,
+  "privateInventoryMode": "0600",
+  "archiveDirectoryMode": "0700",
+  "orderedRulings": 110,
+  "qualification": "Complete own-plan recovery, including original private evidence, is preserved only in private SSD archive and every file was compared. No private filenames/digests/content published. Safe reports and all ordered rulings remain independently committed in Git. Original current state is archived; later cutover continues durable release ledger."
+}
