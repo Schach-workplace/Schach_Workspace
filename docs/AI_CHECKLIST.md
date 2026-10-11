@@ -1,6 +1,6 @@
 # Schach Workspace live implementation checklist
 
-Updated UTC 2026-10-11T23:20:30.872155+00:00. Read [AI_HANDOFF.md](AI_HANDOFF.md), [AI_FILE_INDEX.json](AI_FILE_INDEX.json) and [durable ledger](../verification/workspace-improvements-roadmap/release-cutover/release-ledger.md). Check marks represent the named gate, not production/device certification.
+Updated UTC 2026-10-11T23:22:05.037463+00:00. Read [AI_HANDOFF.md](AI_HANDOFF.md), [AI_FILE_INDEX.json](AI_FILE_INDEX.json) and [durable ledger](../verification/workspace-improvements-roadmap/release-cutover/release-ledger.md). Check marks represent the named gate, not production/device certification.
 
 ## Ten implementation milestones
 
@@ -33,7 +33,7 @@ Updated UTC 2026-10-11T23:20:30.872155+00:00. Read [AI_HANDOFF.md](AI_HANDOFF.md
 - [x] Pin/verify optional local providers with other known consumers quiescent; no new inference during checks.
 - [x] Actual APIhealth JSON/currentbinary/auth/browser13modules/8APIreads/320375430widths PASS; fulltyped old business/finance/deadline/media/auth preserved. Local operations4available/noinference; legacyInbox12batches/66items.
 - [x] Unique safe source ZIP/privacy/integrity/manifest/inclusions; genericlogs excluded, full proof remains Git.
-- [x] Non-force private feature+main push748a verified; app remains running. Final documentation sync must be confirmed against private final-state.json/live refs if this last publication was interrupted.
+- [x] Non-force private feature+main push748a verified; app remains running. Final documentation syncd263 and exact remote refs verified; private final-state.json is the latest controller receipt. Reverify live state at future resume.
 - [x] Update this checklist, handoff, index and durable ledger with final source/process/artifact and remaining limits.
 
 ## External rollout gates
