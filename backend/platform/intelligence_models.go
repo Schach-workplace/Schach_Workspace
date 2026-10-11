@@ -172,12 +172,14 @@ type IntelligenceExplanation struct {
 	Text            string   `json:"text,omitempty"`
 }
 type IntelligenceJobView struct {
-	JobID         string           `json:"jobId"`
-	State         string           `json:"state"`
-	ReasonCode    string           `json:"reasonCode,omitempty"`
-	ExpiresAt     time.Time        `json:"expiresAt"`
-	ResultHash    string           `json:"resultHash,omitempty"`
-	SourceSetHash string           `json:"sourceSetHash,omitempty"`
-	Result        json.RawMessage  `json:"result,omitempty"`
-	Sources       []map[string]any `json:"sources,omitempty"`
+	Operation     IntelligenceOperation `json:"operation"`
+	Publication   map[string]any        `json:"publication,omitempty"`
+	JobID         string                `json:"jobId"`
+	State         string                `json:"state"`
+	ReasonCode    string                `json:"reasonCode,omitempty"`
+	ExpiresAt     time.Time             `json:"expiresAt"`
+	ResultHash    string                `json:"resultHash,omitempty"`
+	SourceSetHash string                `json:"sourceSetHash,omitempty"`
+	Result        json.RawMessage       `json:"result,omitempty"`
+	Sources       []map[string]any      `json:"sources,omitempty"`
 }

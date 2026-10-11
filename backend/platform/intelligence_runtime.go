@@ -94,6 +94,14 @@ func (s *Server) checkIntelligenceLease(tx *gorm.DB, a *access, lease Intelligen
 	return job, manifest, nil
 }
 func (s *Server) runIntelligenceLease(parent context.Context, lease IntelligenceLease) error {
+	release, e := s.opts.LocalProviderBudget.Acquire(parent)
+	if e != nil {
+		return e
+	}
+	defer release()
+	return s.runIntelligenceLeaseAdmitted(parent, lease)
+}
+func (s *Server) runIntelligenceLeaseAdmitted(parent context.Context, lease IntelligenceLease) error {
 	timeout := 120 * time.Second
 	if lease.Job.Operation == "transcript" {
 		timeout = 180 * time.Second
@@ -141,15 +149,9 @@ func (s *Server) runIntelligenceLease(parent context.Context, lease Intelligence
 		}
 	}()
 	defer func() { close(watchDone); cancel(); <-watchExit }()
-	release, e := s.opts.LocalProviderBudget.Acquire(ctx)
-	if e != nil {
-		s.failIntelligenceLease(lease, e)
-		return e
-	}
-	defer release()
 	var manifest SourceManifest
 	facts := DeterministicFacts{}
-	e = s.withIntelligenceWorkerFence(ctx, lease.Job, func(tx *gorm.DB, a *access) error {
+	e := s.withIntelligenceWorkerFence(ctx, lease.Job, func(tx *gorm.DB, a *access) error {
 		job, _, e := s.checkIntelligenceLease(tx, a, lease)
 		if e != nil {
 			return e
@@ -173,7 +175,11 @@ func (s *Server) runIntelligenceLease(parent context.Context, lease Intelligence
 	} else {
 		sources := []GroundedSource{}
 		for _, b := range manifest.Sources {
-			sources = append(sources, GroundedSource{Key: b.SourceKey, Text: b.Label + "\n" + b.Text})
+			text := b.Label + "\n" + b.Text
+			if lease.Job.Operation == "report_explanation" {
+				text = b.Label
+			} // The complete deterministic facts are supplied separately.
+			sources = append(sources, GroundedSource{Key: b.SourceKey, Text: text})
 		}
 		var output ProviderOutput
 		output, e = s.opts.Intelligence.Summary.Generate(ctx, GroundedInput{Operation: lease.Job.Operation, Sources: sources, Language: lease.Job.Selection.Language, Facts: facts})
@@ -262,31 +268,52 @@ func (s *Server) RunIntelligenceWorker(ctx context.Context) {
 	}
 	ticker := time.NewTicker(time.Second)
 	defer ticker.Stop()
-	maintenance := time.NewTicker(60 * time.Second)
-	defer maintenance.Stop()
+	maintenanceCtx, stopMaintenance := context.WithCancel(ctx)
+	maintenanceDone := make(chan struct{})
+	go func() {
+		defer close(maintenanceDone)
+		ticker := time.NewTicker(60 * time.Second)
+		defer ticker.Stop()
+		for {
+			select {
+			case <-maintenanceCtx.Done():
+				return
+			case <-ticker.C:
+				_, _ = s.RunIntelligenceMaintenance(maintenanceCtx, time.Now().UTC(), 100)
+			}
+		}
+	}()
+	defer func() { stopMaintenance(); <-maintenanceDone }()
 	for {
 		select {
 		case <-ctx.Done():
 			return
 		default:
 		}
+		release, admissionErr := s.opts.LocalProviderBudget.Acquire(ctx)
+		if admissionErr != nil {
+			return
+		}
 		claimCtx, cancel := context.WithTimeout(ctx, 10*time.Second)
 		lease, e := s.claimIntelligence(claimCtx)
 		cancel()
 		if e == nil && lease != nil {
-			_ = s.runIntelligenceLease(ctx, *lease)
+			_ = s.runIntelligenceLeaseAdmitted(ctx, *lease)
+			release()
 			continue
 		}
+		release()
 		select {
 		case <-ctx.Done():
 			return
 		case <-ticker.C:
-		case <-maintenance.C:
-			_, _ = s.RunIntelligenceMaintenance(ctx, time.Now().UTC(), 100)
 		}
 	}
 }
 func (s *Server) RunIntelligenceMaintenance(ctx context.Context, now time.Time, limit int) (int, error) {
+	if e := s.sweepIntelligenceScratch(ctx, now); e != nil {
+		return 0, e
+	}
 	if limit < 1 || limit > 100 {
 		limit = 100
 	}
@@ -296,7 +323,27 @@ func (s *Server) RunIntelligenceMaintenance(ctx context.Context, now time.Time, 
 	}
 	n := 0
 	for _, job := range rows {
-		e := s.withIntelligenceWorkerFence(ctx, job, func(tx *gorm.DB, a *access) error {
+		e := s.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
+			if e := lockCompany(tx, job.CompanyID); e != nil {
+				return e
+			}
+			var current IntelligenceJob
+			if e := tx.Omit("result_json").First(&current, "id=?", job.ID).Error; e != nil {
+				return e
+			}
+			job = current
+			if !inString(job.State, "queued", "running", "retry_wait", "ready") {
+				return nil
+			}
+			a, e := currentAttentionActorLocked(tx, job.CompanyID, job.ActorID)
+			if e != nil {
+				var api *apiError
+				if errors.As(e, &api) && api.Status < 500 {
+					n++
+					return retireIntelligenceJob(tx, job.ID, "invalidated", "source_unavailable")
+				}
+				return e
+			}
 			if !job.ExpiresAt.After(now) {
 				n++
 				return retireIntelligenceJob(tx, job.ID, "expired", "expired")

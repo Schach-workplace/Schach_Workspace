@@ -9,6 +9,7 @@ import (
 )
 
 func (s *Server) intelligenceCapabilities(w http.ResponseWriter, r *http.Request) error {
+	w.Header().Set("Cache-Control", "no-store")
 	if _, e := s.access(r); e != nil {
 		return e
 	}
@@ -26,6 +27,7 @@ func (s *Server) intelligenceCapabilities(w http.ResponseWriter, r *http.Request
 	return respond(w, 200, out)
 }
 func (s *Server) intelligenceRead(w http.ResponseWriter, r *http.Request) error {
+	w.Header().Set("Cache-Control", "no-store")
 	a, e := s.access(r)
 	if e != nil {
 		return e
@@ -37,7 +39,7 @@ func (s *Server) intelligenceRead(w http.ResponseWriter, r *http.Request) error 
 		if e := tx.Omit("result_json").First(&job, "id=? AND company_id=? AND actor_id=?", r.PathValue("id"), a.Company.ID, a.User.ID).Error; e != nil {
 			return missing()
 		}
-		out = IntelligenceJobView{JobID: job.ID, State: job.State, ReasonCode: job.ReasonCode, ExpiresAt: job.ExpiresAt}
+		out = IntelligenceJobView{Operation: job.Operation, JobID: job.ID, State: job.State, ReasonCode: job.ReasonCode, ExpiresAt: job.ExpiresAt}
 		if inString(job.State, "cancelled", "invalidated", "expired", "failed") {
 			return nil
 		}
@@ -64,6 +66,13 @@ func (s *Server) intelligenceRead(w http.ResponseWriter, r *http.Request) error 
 			return fail("invalidated", "source_unavailable")
 		}
 		out.Sources = intelligencePublicSources(current)
+		if job.Operation == "action_draft" && job.State == "ready" {
+			flat, e := flattenIntelligenceManifest(tx, current)
+			if e != nil {
+				return e
+			}
+			out.Publication = intelligencePublicationView(tx, a, flat)
+		}
 		if job.State == "ready" {
 			if e := tx.Select("result_json").First(&job, "id=?", job.ID).Error; e != nil {
 				return e
@@ -84,6 +93,7 @@ func (s *Server) intelligenceRead(w http.ResponseWriter, r *http.Request) error 
 	return respond(w, 200, out)
 }
 func (s *Server) intelligenceList(w http.ResponseWriter, r *http.Request) error {
+	w.Header().Set("Cache-Control", "no-store")
 	a, e := s.access(r)
 	if e != nil {
 		return e
@@ -101,7 +111,7 @@ func (s *Server) intelligenceList(w http.ResponseWriter, r *http.Request) error 
 	}
 	var rows []IntelligenceJob
 	e = s.withAccessTransaction(r, a, func(tx *gorm.DB) error {
-		q := tx.Select("id,state,reason_code,expires_at").Where("company_id=? AND actor_id=?", a.Company.ID, a.User.ID)
+		q := tx.Select("id,operation,state,reason_code,expires_at").Where("company_id=? AND actor_id=?", a.Company.ID, a.User.ID)
 		if cursor != "" {
 			q = q.Where("id < ?", cursor)
 		}
@@ -117,12 +127,13 @@ func (s *Server) intelligenceList(w http.ResponseWriter, r *http.Request) error 
 	}
 	out := []IntelligenceJobView{}
 	for _, j := range rows {
-		out = append(out, IntelligenceJobView{JobID: j.ID, State: j.State, ReasonCode: j.ReasonCode, ExpiresAt: j.ExpiresAt})
+		out = append(out, IntelligenceJobView{Operation: j.Operation, JobID: j.ID, State: j.State, ReasonCode: j.ReasonCode, ExpiresAt: j.ExpiresAt})
 	}
 	w.Header().Set("Cache-Control", "no-store")
 	return respond(w, 200, map[string]any{"jobs": out, "cursor": next})
 }
 func (s *Server) intelligenceCancel(w http.ResponseWriter, r *http.Request) error {
+	w.Header().Set("Cache-Control", "no-store")
 	a, e := s.access(r)
 	if e != nil {
 		return e

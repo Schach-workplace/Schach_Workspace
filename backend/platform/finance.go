@@ -80,6 +80,11 @@ func moneyLabel(currency string, amount int64) string {
 	return fmt.Sprintf("%s %d.%02d", currency, amount/100, amount%100)
 }
 func financeEvent(tx *gorm.DB, cid, department, entityType, entityID, uid, action, detail string) error {
+	if entityType == "expense" {
+		if e := invalidateIntelligenceBusinessSource(tx, cid, "expense_fields", entityID); e != nil {
+			return e
+		}
+	}
 	return tx.Create(&FinanceEvent{ID: newID("fev"), CompanyID: cid, DepartmentID: department, EntityType: entityType, EntityID: entityID, UserID: uid, Action: action, Detail: detail, CreatedAt: nowString()}).Error
 }
 func financialChanges(fields map[string]json.RawMessage, before, after any) string {

@@ -55,6 +55,7 @@ func (s *Server) previewExpenseConversion(w http.ResponseWriter, r *http.Request
 		return e
 	}
 	audience := []string{}
+	reviewHash := ""
 	e := s.conversionTransaction(r, func(tx *gorm.DB, a *access, scope *conversationScope) error {
 		if e := verifyConversionSources(tx, scope, input.ConversionInput, true); e != nil {
 			return e
@@ -71,12 +72,22 @@ func (s *Server) previewExpenseConversion(w http.ResponseWriter, r *http.Request
 				audience = append(audience, uid)
 			}
 		}
+		if input.IntelligenceBasis != nil {
+			m, e := s.intelligencePublicationManifest(tx, a, input.IntelligenceBasis, true)
+			if e != nil {
+				return e
+			}
+			if e = intelligencePublicationScope(m, scope.Conversation.ID, conversionIntelligenceMessages(input.ConversionInput)); e != nil {
+				return e
+			}
+		}
+		reviewHash = intelligenceReviewedHash(a, input.IntelligenceBasis, input, audience)
 		return nil
 	})
 	if e != nil {
 		return e
 	}
-	return respond(w, 200, map[string]any{"audienceUserIds": audience, "notice": "Selected fields, excerpt and evidence become an independent incurred-expense draft in the finance audience. Review the amount, date, vendor and category. Submission, receipt policy, budget checks, independent approval and payment remain separate finance actions; future roles can change this audience."})
+	return respond(w, 200, map[string]any{"intelligenceReviewHash": reviewHash, "audienceUserIds": audience, "notice": "Selected fields, excerpt and evidence become an independent incurred-expense draft in the finance audience. Review the amount, date, vendor and category. Submission, receipt policy, budget checks, independent approval and payment remain separate finance actions; future roles can change this audience."})
 }
 func (s *Server) convertMessageToExpense(w http.ResponseWriter, r *http.Request) error {
 	var input expenseConversionInput
@@ -86,6 +97,9 @@ func (s *Server) convertMessageToExpense(w http.ResponseWriter, r *http.Request)
 	id := ""
 	e := s.conversionTransaction(r, func(tx *gorm.DB, a *access, scope *conversationScope) error {
 		if e := verifyConversionSources(tx, scope, input.ConversionInput, false); e != nil {
+			return e
+		}
+		if e := s.intelligencePublicationAccess(tx, a, input.IntelligenceBasis, scope.Conversation.ID, conversionIntelligenceMessages(input.ConversionInput)); e != nil {
 			return e
 		}
 		var retry CommunicationExpenseRetry
@@ -116,6 +130,10 @@ func (s *Server) convertMessageToExpense(w http.ResponseWriter, r *http.Request)
 		} else if err == gorm.ErrRecordNotFound {
 			expense, e := makeCommunicationExpense(tx, a, input)
 			if e != nil {
+				return e
+			}
+			audience := intelligenceExpenseAudience(a, expense)
+			if e = s.intelligencePublicationFirstWrite(tx, a, input.IntelligenceBasis, scope.Conversation.ID, conversionIntelligenceMessages(input.ConversionInput), input, audience); e != nil {
 				return e
 			}
 			expense.Code, e = nextExpenseCode(tx, a.Company.ID)
@@ -175,6 +193,9 @@ func (s *Server) convertMessageToExpense(w http.ResponseWriter, r *http.Request)
 			}
 		} else {
 			return err
+		}
+		if e := s.recordIntelligencePublication(tx, a, input.IntelligenceBasis, "expense", id, "expense_conversion", input.RetryKey, input); e != nil {
+			return e
 		}
 		return tx.Create(&CommunicationExpenseRetry{CompanyID: a.Company.ID, ActorID: a.User.ID, RetryKey: input.RetryKey, RequestHash: payloadHash(input), ExpenseID: id}).Error
 	})

@@ -90,6 +90,10 @@ func (s *Server) transcribeIntelligence(ctx context.Context, lease IntelligenceL
 	if e = os.Chmod(dir, 0700); e != nil {
 		return nil, e
 	}
+	marker, _ := json.Marshal(map[string]string{"jobId": lease.Job.ID, "leaseToken": lease.Token})
+	if e = os.WriteFile(filepath.Join(dir, "lease.json"), marker, 0600); e != nil {
+		return nil, e
+	}
 	path := filepath.Join(dir, "input")
 	f, e := os.OpenFile(path, os.O_CREATE|os.O_EXCL|os.O_WRONLY, 0600)
 	if e != nil {
@@ -182,4 +186,68 @@ func (s *Server) transcribeIntelligence(ctx context.Context, lease IntelligenceL
 		return nil, e
 	}
 	return json.Marshal(map[string]any{"language": out.Language, "segments": out.Segments})
+}
+
+// Only this configured owner-only root and expired named lease directories are
+// swept. An active lease always protects its bytes, including after a restart.
+func (s *Server) sweepIntelligenceScratch(ctx context.Context, now time.Time) error {
+	c := s.opts.Intelligence
+	if c == nil || c.ScratchRoot == "" {
+		return nil
+	}
+	root := c.ScratchRoot
+	st, e := os.Lstat(root)
+	if e != nil || !st.IsDir() || st.Mode().Perm() != 0700 {
+		return nil
+	}
+	real, e := filepath.EvalSymlinks(root)
+	if e != nil || real != filepath.Clean(root) {
+		return nil
+	}
+	rows, e := os.ReadDir(root)
+	if e != nil {
+		return e
+	}
+	n := 0
+	for _, entry := range rows {
+		if n >= 100 {
+			break
+		}
+		if !entry.IsDir() || !strings.HasPrefix(entry.Name(), "schach-intelligence-") {
+			continue
+		}
+		info, e := entry.Info()
+		if e != nil || now.Sub(info.ModTime()) < 10*time.Minute {
+			continue
+		}
+		dir := filepath.Join(root, entry.Name())
+		marker := filepath.Join(dir, "lease.json")
+		mi, e := os.Lstat(marker)
+		if e != nil || !mi.Mode().IsRegular() || mi.Size() > 1024 {
+			continue
+		}
+		raw, e := os.ReadFile(marker)
+		if e != nil {
+			continue
+		}
+		var key struct {
+			JobID string `json:"jobId"`
+			Token string `json:"leaseToken"`
+		}
+		if strictIntelligenceJSON(raw, &key) != nil {
+			continue
+		}
+		var active int64
+		if e = s.db.WithContext(ctx).Model(&IntelligenceJob{}).Where("id=? AND state='running' AND lease_token=? AND lease_until>?", key.JobID, key.Token, now).Count(&active).Error; e != nil {
+			return e
+		}
+		if active > 0 {
+			continue
+		}
+		if e = os.RemoveAll(dir); e != nil {
+			return e
+		}
+		n++
+	}
+	return nil
 }

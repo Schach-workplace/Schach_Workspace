@@ -33,13 +33,14 @@ func (a *access) canTriageIntake(item CommunicationRequest) bool {
 }
 
 type communicationRequestInput struct {
-	RetryKey              string `json:"retryKey"`
-	AnchorMessageID       string `json:"anchorMessageId"`
-	SourceRevision        int64  `json:"sourceRevision"`
-	ExpectedPolicyVersion int64  `json:"expectedPolicyVersion"`
-	DepartmentID          string `json:"departmentId"`
-	Title                 string `json:"title"`
-	Summary               string `json:"summary"`
+	IntelligenceBasis     *IntelligenceBasis `json:"intelligenceBasis,omitempty"`
+	RetryKey              string             `json:"retryKey"`
+	AnchorMessageID       string             `json:"anchorMessageId"`
+	SourceRevision        int64              `json:"sourceRevision"`
+	ExpectedPolicyVersion int64              `json:"expectedPolicyVersion"`
+	DepartmentID          string             `json:"departmentId"`
+	Title                 string             `json:"title"`
+	Summary               string             `json:"summary"`
 }
 
 func (s *Server) previewCommunicationRequest(w http.ResponseWriter, r *http.Request) error {
@@ -51,6 +52,7 @@ func (s *Server) previewCommunicationRequest(w http.ResponseWriter, r *http.Requ
 		return invalid("Supply a selected title and summary.")
 	}
 	audience := []string{}
+	reviewHash := ""
 	e := s.conversionTransaction(r, func(tx *gorm.DB, a *access, scope *conversationScope) error {
 		if scope.Conversation.Forwarding != "selected" {
 			return denied()
@@ -80,12 +82,22 @@ func (s *Server) previewCommunicationRequest(w http.ResponseWriter, r *http.Requ
 				audience = append(audience, uid)
 			}
 		}
+		if input.IntelligenceBasis != nil {
+			m, e := s.intelligencePublicationManifest(tx, a, input.IntelligenceBasis, true)
+			if e != nil {
+				return e
+			}
+			if e = intelligencePublicationScope(m, scope.Conversation.ID, nil); e != nil {
+				return e
+			}
+		}
+		reviewHash = intelligenceReviewedHash(a, input.IntelligenceBasis, input, audience)
 		return nil
 	})
 	if e != nil {
 		return e
 	}
-	return respond(w, 200, map[string]any{"audienceUserIds": audience, "notice": "The selected title and summary become an independent work request visible to the current listed audience. Future roles and department changes can change access. Source messages stay private; publishing does not retract previously disclosed work records."})
+	return respond(w, 200, map[string]any{"intelligenceReviewHash": reviewHash, "audienceUserIds": audience, "notice": "The selected title and summary become an independent work request visible to the current listed audience. Future roles and department changes can change access. Source messages stay private; publishing does not retract previously disclosed work records."})
 }
 func (s *Server) createCommunicationRequest(w http.ResponseWriter, r *http.Request) error {
 	var input communicationRequestInput
@@ -113,6 +125,9 @@ func (s *Server) createCommunicationRequest(w http.ResponseWriter, r *http.Reque
 		if input.DepartmentID == "" || !departmentExists(tx, a.Company.ID, input.DepartmentID) {
 			return invalid("Choose the responsible triage department.")
 		}
+		if e := s.intelligencePublicationAccess(tx, a, input.IntelligenceBasis, scope.Conversation.ID, nil); e != nil {
+			return e
+		}
 		var old CommunicationRequest
 		e = tx.First(&old, "company_id=? AND created_by=? AND retry_key=?", a.Company.ID, a.User.ID, input.RetryKey).Error
 		if e == nil {
@@ -132,10 +147,16 @@ func (s *Server) createCommunicationRequest(w http.ResponseWriter, r *http.Reque
 			return conflict()
 		}
 		item := CommunicationRequest{ID: newID("request"), CompanyID: a.Company.ID, ConversationID: scope.Conversation.ID, AnchorMessageID: source.ID, SourceRevision: source.Revision, CreatedBy: a.User.ID, RetryKey: input.RetryKey, RequestHash: payloadHash(input), DepartmentID: input.DepartmentID, Title: input.Title, Summary: input.Summary, State: "open", Version: 1, CreatedAt: nowString(), UpdatedAt: nowString()}
+		if e := s.intelligencePublicationFirstWrite(tx, a, input.IntelligenceBasis, scope.Conversation.ID, nil, input, intelligenceIntakeAudience(a, item)); e != nil {
+			return e
+		}
 		if e := tx.Create(&item).Error; e != nil {
 			return e
 		}
 		id = item.ID
+		if e := s.recordIntelligencePublication(tx, a, input.IntelligenceBasis, "intake", id, "request_publish", input.RetryKey, input); e != nil {
+			return e
+		}
 		if e := syncIntakeAttention(tx, a, item); e != nil {
 			return e
 		}

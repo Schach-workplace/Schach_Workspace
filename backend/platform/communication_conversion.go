@@ -34,10 +34,11 @@ type CommunicationWorkSource struct {
 	OutOfDate       bool   `json:"outOfDate" gorm:"-"`
 }
 type ConversionInput struct {
-	RetryKey        string `json:"retryKey"`
-	AnchorMessageID string `json:"anchorMessageId"`
-	ActionID        string `json:"actionId"`
-	Sources         []struct {
+	IntelligenceBasis *IntelligenceBasis `json:"intelligenceBasis,omitempty"`
+	RetryKey          string             `json:"retryKey"`
+	AnchorMessageID   string             `json:"anchorMessageId"`
+	ActionID          string             `json:"actionId"`
+	Sources           []struct {
 		MessageID string `json:"messageId"`
 		Revision  int64  `json:"revision"`
 	} `json:"sources"`
@@ -160,6 +161,7 @@ func (s *Server) previewTaskConversion(w http.ResponseWriter, r *http.Request) e
 		return e
 	}
 	var audience []string
+	reviewHash := ""
 	e := s.conversionTransaction(r, func(tx *gorm.DB, a *access, scope *conversationScope) error {
 		if e := verifyConversionSources(tx, scope, input, true); e != nil {
 			return e
@@ -179,13 +181,23 @@ func (s *Server) previewTaskConversion(w http.ResponseWriter, r *http.Request) e
 		if !a.canCreate(task.OwnerID, task.DepartmentID) {
 			return denied()
 		}
+		if input.IntelligenceBasis != nil {
+			m, e := s.intelligencePublicationManifest(tx, a, input.IntelligenceBasis, true)
+			if e != nil {
+				return e
+			}
+			if e = intelligencePublicationScope(m, scope.Conversation.ID, conversionIntelligenceMessages(input)); e != nil {
+				return e
+			}
+		}
 		audience = taskAudience(a, task)
+		reviewHash = intelligenceReviewedHash(a, input.IntelligenceBasis, input, audience)
 		return nil
 	})
 	if e != nil {
 		return e
 	}
-	return respond(w, 200, map[string]any{"audienceUserIds": audience, "policyVersion": input.ExpectedPolicyVersion, "notice": "Task titles, descriptions and selected excerpts become work records visible to this broader audience. Future roles and reporting changes can change the audience. Source removal does not retract published work records."})
+	return respond(w, 200, map[string]any{"intelligenceReviewHash": reviewHash, "audienceUserIds": audience, "policyVersion": input.ExpectedPolicyVersion, "notice": "Task titles, descriptions and selected excerpts become work records visible to this broader audience. Future roles and reporting changes can change the audience. Source removal does not retract published work records."})
 }
 func (s *Server) convertMessageToTask(w http.ResponseWriter, r *http.Request) error {
 	var input ConversionInput
@@ -195,6 +207,9 @@ func (s *Server) convertMessageToTask(w http.ResponseWriter, r *http.Request) er
 	id := ""
 	e := s.conversionTransaction(r, func(tx *gorm.DB, a *access, scope *conversationScope) error {
 		if e := verifyConversionSources(tx, scope, input, false); e != nil {
+			return e
+		}
+		if e := s.intelligencePublicationAccess(tx, a, input.IntelligenceBasis, scope.Conversation.ID, conversionIntelligenceMessages(input)); e != nil {
 			return e
 		}
 		hash := payloadHash(input)
@@ -250,6 +265,9 @@ func (s *Server) convertMessageToTask(w http.ResponseWriter, r *http.Request) er
 		if !a.canCreate(task.OwnerID, task.DepartmentID) {
 			return denied()
 		}
+		if e = s.intelligencePublicationFirstWrite(tx, a, input.IntelligenceBasis, scope.Conversation.ID, conversionIntelligenceMessages(input), input, taskAudience(a, task)); e != nil {
+			return e
+		}
 		if e = setWorkflow(tx, &task, "", false); e != nil {
 			return e
 		}
@@ -257,6 +275,9 @@ func (s *Server) convertMessageToTask(w http.ResponseWriter, r *http.Request) er
 			return e
 		}
 		id = task.ID
+		if e = s.recordIntelligencePublication(tx, a, input.IntelligenceBasis, "task", id, "task_conversion", input.RetryKey, input); e != nil {
+			return e
+		}
 		for _, mediaID := range input.Publication.AttachmentIDs {
 			if s.opts.MediaStore == nil {
 				return missing()

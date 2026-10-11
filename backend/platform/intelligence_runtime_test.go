@@ -111,3 +111,36 @@ func TestIntelligenceWorkerSharedBudgetAndStop(t *testing.T) {
 		t.Fatal("shared OCR slot ignored")
 	}
 }
+
+func TestIntelligenceWorkerWaitsForBudgetBeforeClaim(t *testing.T) {
+	s, _, _, id := intelligenceQueuedFixture(t, fakeIntelligenceProvider{})
+	budget := NewLocalProviderBudget(1)
+	s.opts.LocalProviderBudget = budget
+	release, _ := budget.Acquire(t.Context())
+	defer release()
+	ctx, cancel := context.WithCancel(t.Context())
+	done := make(chan struct{})
+	go func() { defer close(done); s.RunIntelligenceWorker(ctx) }()
+	time.Sleep(100 * time.Millisecond)
+	var j IntelligenceJob
+	s.db.First(&j, "id=?", id)
+	cancel()
+	<-done
+	if j.State != "queued" || j.Attempts != 0 {
+		t.Fatalf("claimed without available shared slot: %s attempts=%d", j.State, j.Attempts)
+	}
+}
+func TestIntelligenceMaintenanceRetiresDepartedOwner(t *testing.T) {
+	s, _, _, id := intelligenceQueuedFixture(t, fakeIntelligenceProvider{})
+	var j IntelligenceJob
+	s.db.First(&j, "id=?", id)
+	s.db.Model(&Membership{}).Where("company_id=? AND user_id=?", j.CompanyID, j.ActorID).Update("active", false)
+	n, e := s.RunIntelligenceMaintenance(t.Context(), time.Now().UTC(), 100)
+	if e != nil || n != 1 {
+		t.Fatalf("maintenance blocked by departed owner: count=%d error=%v", n, e)
+	}
+	s.db.First(&j, "id=?", id)
+	if j.State != "invalidated" || j.ResultJSON != "" {
+		t.Fatal("departed job retained")
+	}
+}

@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"io"
 	"math"
+	"net/http"
 	"strconv"
 	"strings"
 	"unicode/utf8"
@@ -163,19 +164,23 @@ func validateIntelligenceOutput(operation IntelligenceOperation, raw []byte, man
 		result.Uncertain = true
 	case "report_explanation":
 		var body struct {
-			Items []IntelligenceExplanation `json:"items"`
+			Items []struct {
+				FactKey         string   `json:"factKey"`
+				Relation        string   `json:"relation"`
+				ExplanationCode string   `json:"explanationCode"`
+				SourceKeys      []string `json:"sourceKeys"`
+			} `json:"items"`
 		}
 		if strictIntelligenceJSON(raw, &body) != nil || len(body.Items) == 0 || len(body.Items) > 100 {
 			return fail()
 		}
-		for i, item := range body.Items {
+		for _, item := range body.Items {
 			fact, ok := facts[item.FactKey]
-			if !ok || item.Text != "" || item.ExplanationCode != "selected_fact_v1" || !containsString(fact.Relations, item.Relation) || !citations(item.SourceKeys) || !sameStringSet(item.SourceKeys, fact.SourceKeys) {
+			if !ok || item.ExplanationCode != "selected_fact_v1" || !containsString(fact.Relations, item.Relation) || !citations(item.SourceKeys) || !sameStringSet(item.SourceKeys, fact.SourceKeys) {
 				return fail()
 			}
-			body.Items[i].Text = fact.Text
+			result.Items = append(result.Items, IntelligenceExplanation{FactKey: item.FactKey, Relation: item.Relation, ExplanationCode: item.ExplanationCode, SourceKeys: item.SourceKeys, Text: fact.Text})
 		}
-		result.Items = body.Items
 	default:
 		return fail()
 	}
@@ -195,4 +200,12 @@ func sameStringSet(a, b []string) bool {
 		}
 	}
 	return true
+}
+
+func decodeIntelligence(w http.ResponseWriter, r *http.Request, out any) error {
+	raw, e := io.ReadAll(http.MaxBytesReader(w, r.Body, 65536))
+	if e != nil || strictIntelligenceJSON(raw, out) != nil {
+		return invalid("Choose a valid, bounded local assistance request.")
+	}
+	return nil
 }

@@ -126,6 +126,11 @@ func recordReportGap(tx *gorm.DB, c TaskHistoryCoverage, f TaskFact) error {
 	return tx.Create(&gap).Error
 }
 func appendTaskFact(tx *gorm.DB, before *Task, after Task, actor ReportFactActor, operation string, at time.Time, authoredCurrentDeadline ...bool) error {
+	if before != nil {
+		if e := invalidateIntelligenceBusinessSource(tx, after.CompanyID, "task_fields", after.ID); e != nil {
+			return e
+		}
+	}
 	if !in(operation, "create", "patch", "approve", "request_changes", "evidence", "time", "recurrence") {
 		return invalid("Unsupported report fact operation.")
 	}

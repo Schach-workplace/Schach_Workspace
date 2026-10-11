@@ -40,12 +40,13 @@ func (s *Server) intelligenceAvailable(operation IntelligenceOperation) bool {
 	return c.Summary != nil
 }
 func (s *Server) intelligenceEnqueue(w http.ResponseWriter, r *http.Request) error {
+	w.Header().Set("Cache-Control", "no-store")
 	a, e := s.access(r)
 	if e != nil {
 		return e
 	}
 	var input IntelligenceEnqueue
-	if e = decode(w, r, &input); e != nil {
+	if e = decodeIntelligence(w, r, &input); e != nil {
 		return e
 	}
 	if !clean(input.RetryKey, 100) || !input.OptIn.Accepted || input.OptIn.PolicyVersion != intelligencePolicy {
@@ -65,9 +66,9 @@ func (s *Server) intelligenceEnqueue(w http.ResponseWriter, r *http.Request) err
 	var job IntelligenceJob
 	e = s.withAccessTransaction(r, a, func(tx *gorm.DB) error {
 		var found IntelligenceJob
-		err := tx.Omit("result_json").Where("company_id=? AND actor_id=? AND operation=? AND retry_key=?", a.Company.ID, a.User.ID, input.Operation, input.RetryKey).First(&found).Error
+		err := tx.Omit("result_json").Where("company_id=? AND actor_id=? AND retry_key=?", a.Company.ID, a.User.ID, input.RetryKey).First(&found).Error
 		if err == nil {
-			if found.ClientIntentHash != client {
+			if found.Operation != input.Operation || found.ClientIntentHash != client {
 				return conflict()
 			}
 			if found.Provider != s.opts.Intelligence.Identity {

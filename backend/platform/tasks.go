@@ -303,7 +303,7 @@ func (s *Server) createTask(w http.ResponseWriter, r *http.Request) error {
 	if e != nil {
 		return e
 	}
-	allowed := append(append([]string{}, createTaskFields...), "retryKey")
+	allowed := append(append([]string{}, createTaskFields...), "retryKey", "intelligenceBasis")
 	f, e := readFields(w, r, allowed...)
 	if e != nil {
 		return e
@@ -313,9 +313,29 @@ func (s *Server) createTask(w http.ResponseWriter, r *http.Request) error {
 		return e
 	}
 	delete(f, "retryKey")
+	var basis *IntelligenceBasis
+	if raw, ok := f["intelligenceBasis"]; ok {
+		basis = &IntelligenceBasis{}
+		if e := strictIntelligenceJSON(raw, basis); e != nil {
+			return e
+		}
+		if key == "" {
+			return invalid("A reviewed draft requires a stable retry key.")
+		}
+	}
+	intent := map[string]json.RawMessage{}
+	for k, v := range f {
+		intent[k] = v
+	}
+	delete(f, "intelligenceBasis")
 	var result BusinessResult
 	e = s.withAccessTransaction(r, a, func(tx *gorm.DB) error {
-		authorize := func() error { return authorizeTaskCreation(tx, a, f) }
+		authorize := func() error {
+			if e := s.intelligencePublicationAccess(tx, a, basis, "", nil); e != nil {
+				return e
+			}
+			return authorizeTaskCreation(tx, a, f)
+		}
 		apply := func() (BusinessResult, error) {
 			t, e := makeTask(a, f)
 			if e != nil {
@@ -324,10 +344,16 @@ func (s *Server) createTask(w http.ResponseWriter, r *http.Request) error {
 			if e = validateTask(tx, a, &t); e != nil {
 				return BusinessResult{}, e
 			}
+			if e = s.intelligencePublicationFirstWrite(tx, a, basis, "", nil, intent, taskAudience(a, t)); e != nil {
+				return BusinessResult{}, e
+			}
 			if e = setWorkflow(tx, &t, "", false); e != nil {
 				return BusinessResult{}, e
 			}
 			if e = insertTask(tx, a, &t); e != nil {
+				return BusinessResult{}, e
+			}
+			if e = s.recordIntelligencePublication(tx, a, basis, "task", t.ID, "task_create", key, intent); e != nil {
 				return BusinessResult{}, e
 			}
 			return BusinessResult{Kind: "task", IDs: []string{t.ID}, Versions: []int64{t.Version}}, nil
@@ -338,7 +364,7 @@ func (s *Server) createTask(w http.ResponseWriter, r *http.Request) error {
 			}
 			result, e = apply()
 		} else {
-			result, e = businessMutation(tx, a, "task_create", key, f, authorize, func(v BusinessResult) error { return authorizeTaskResults(tx, a, v) }, apply)
+			result, e = businessMutation(tx, a, "task_create", key, intent, authorize, func(v BusinessResult) error { return authorizeTaskResults(tx, a, v) }, apply)
 		}
 		return e
 	})

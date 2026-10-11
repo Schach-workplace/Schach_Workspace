@@ -2,6 +2,7 @@ package platform
 
 import (
 	"encoding/json"
+	"strings"
 	"testing"
 )
 
@@ -22,5 +23,28 @@ func TestIntelligenceSchema(t *testing.T) {
 	raw, _ := json.Marshal(map[string]any{"candidates": []IntelligenceCandidate{candidate}})
 	if _, e := validateIntelligenceOutput("action_draft", raw, m, nil); e == nil {
 		t.Fatal("model guessed owner")
+	}
+}
+
+func TestIntelligenceSchemaNumericAndSizeBoundaries(t *testing.T) {
+	m := SourceManifest{Sources: []BoundIntelligenceSource{{SourceKey: "s"}}}
+	segment := `{"language":"en","segments":[{"startMs":0,"endMs":100,"text":"Selected","sourceKey":"s"}]}`
+	for _, value := range []string{"-1", "1.5", "9007199254740992", "1e999", "NaN", "Infinity", "600001"} {
+		raw := strings.Replace(segment, `"endMs":100`, `"endMs":`+value, 1)
+		if _, e := validateIntelligenceOutput("transcript", []byte(raw), m, nil); e == nil {
+			t.Fatal("unsafe timestamp", value)
+		}
+	}
+	cases := [][]byte{[]byte(strings.Replace(segment, `"text":"Selected"`, `"text":"x","text":"y"`, 1)), append([]byte(segment), 0xff), []byte(strings.Replace(segment, "Selected", strings.Repeat("x", 16001), 1)), []byte(segment + ` null`)}
+	for _, raw := range cases {
+		if _, e := validateIntelligenceOutput("transcript", raw, m, nil); e == nil {
+			t.Fatal("unsafe encoded output accepted")
+		}
+	}
+	for _, field := range []string{`"ownerId":"guessed"`, `"dueDate":"2026-10-11"`, `"reviewerId":"guessed"`, `"amountMinor":130050`, `"amountMinor":1.5`, `"amountMinor":9007199254740992`, `"currency":"INR"`, `"tools":[]`} {
+		raw := []byte(`{"candidates":[{"kind":"expense","title":"Review","description":"Selected suggestion","sourceKeys":["s"],"unresolved":["amount"],` + field + `}]}`)
+		if _, e := validateIntelligenceOutput("action_draft", raw, m, nil); e == nil {
+			t.Fatal("invented business input", field)
+		}
 	}
 }

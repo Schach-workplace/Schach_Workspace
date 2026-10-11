@@ -54,7 +54,8 @@ func normalizedIntelligenceSelection(in IntelligenceSelection) (IntelligenceSele
 	}
 	in.Sources = append([]IntelligenceSourceRequest(nil), in.Sources...)
 	sort.Slice(in.Sources, func(i, j int) bool {
-		return intelligenceSourceKey(in.Sources[i]) < intelligenceSourceKey(in.Sources[j])
+		a, b := in.Sources[i], in.Sources[j]
+		return strings.Join([]string{a.Kind, a.ConversationID, a.ParentID, a.ID, a.SelectedFieldSet}, "\x00") < strings.Join([]string{b.Kind, b.ConversationID, b.ParentID, b.ID, b.SelectedFieldSet}, "\x00")
 	})
 	seen := map[string]bool{}
 	for _, r := range in.Sources {
@@ -584,12 +585,13 @@ func intelligencePublicSources(m SourceManifest) []map[string]any {
 	return out
 }
 func (s *Server) intelligenceSelectionPreview(w http.ResponseWriter, r *http.Request) error {
+	w.Header().Set("Cache-Control", "no-store")
 	a, e := s.access(r)
 	if e != nil {
 		return e
 	}
 	var input IntelligenceSelection
-	if e = decode(w, r, &input); e != nil {
+	if e = decodeIntelligence(w, r, &input); e != nil {
 		return e
 	}
 	var manifest SourceManifest

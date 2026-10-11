@@ -57,6 +57,11 @@ func revokePrincipalSessionsLocked(tx *gorm.DB, uid string, expectedEpoch int64,
 // User UPDATE is held; capability issuers hold User SHARE. All affected calls
 // precede any device/grant row, including account-only and device-only cleanup.
 func revokeSessionCapabilitiesLocked(tx *gorm.DB, uid string, hashes []string, scope SessionRevocationScope) error {
+	if len(hashes) > 0 {
+		if e := tx.Model(&IntelligenceJob{}).Where("actor_id=? AND originating_session_ref IN ? AND state IN ?", uid, hashes, []string{"queued", "running", "retry_wait", "ready"}).Updates(map[string]any{"state": "invalidated", "reason_code": "source_unavailable", "result_json": "", "lease_token": "", "cancellation_version": gorm.Expr("cancellation_version+1"), "updated_at": time.Now().UTC()}).Error; e != nil {
+			return e
+		}
+	}
 	var grants []CommunicationCallGrant
 	query := tx.Where("user_id=? AND active=?", uid, true)
 	if scope.AllGrants {

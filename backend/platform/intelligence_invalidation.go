@@ -16,7 +16,7 @@ func invalidateIntelligenceOwner(tx *gorm.DB, companyID, userID string) error {
 }
 func invalidateIntelligenceConversation(tx *gorm.DB, cid, conversationID, messageID string, authority bool) error {
 	var sources []IntelligenceSource
-	if e := tx.Where("company_id=? AND kind IN ?", cid, []string{"message", "record", "voice_media", "transcript", "goal_measurement"}).Find(&sources).Error; e != nil {
+	if e := tx.Where("company_id=? AND job_id IN (?) AND kind IN ?", cid, tx.Model(&IntelligenceJob{}).Select("id").Where("company_id=? AND state IN ?", cid, []string{"queued", "running", "retry_wait", "ready"}), []string{"message", "record", "voice_media", "transcript", "goal_measurement"}).Find(&sources).Error; e != nil {
 		return e
 	}
 	jobs := map[string]bool{}
@@ -52,4 +52,11 @@ func invalidateIntelligenceConversation(tx *gorm.DB, cid, conversationID, messag
 		}
 	}
 	return nil
+}
+
+// Live business roots invalidate direct projections; immutable historic facts
+// remain governed by their independent complete current ACL checks.
+func invalidateIntelligenceBusinessSource(tx *gorm.DB, cid, kind, id string) error {
+	jobs := tx.Model(&IntelligenceSource{}).Select("job_id").Where("company_id=? AND kind=? AND source_id=?", cid, kind, id)
+	return tx.Model(&IntelligenceJob{}).Where("id IN (?) AND state IN ?", jobs, []string{"queued", "running", "retry_wait", "ready"}).Updates(map[string]any{"state": "invalidated", "reason_code": "source_changed", "result_json": "", "lease_token": "", "cancellation_version": gorm.Expr("cancellation_version+1"), "updated_at": time.Now().UTC()}).Error
 }

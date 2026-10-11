@@ -47,6 +47,12 @@ func TestIntelligenceEnqueueRetry(t *testing.T) {
 		t.Fatal("changed intent", st, b)
 	}
 	delete(input, "language")
+	input["operation"] = "action_draft"
+	st, _, _ = req(t, s, "POST", path, input, c)
+	if st != 409 {
+		t.Fatal("changed operation reused retry key", st)
+	}
+	input["operation"] = "summary"
 	var job IntelligenceJob
 	db.First(&job, "id=?", jobID)
 	if job.CapturedUserEpoch <= 0 || job.OriginatingSessionRef == "" || job.ExpiresAt.After(time.Now().Add(24*time.Hour)) {

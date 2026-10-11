@@ -83,6 +83,9 @@ func normalizeGoalMeasurement(i *GoalMeasurementInput) error {
 	return nil
 }
 func recordGoalRevision(tx *gorm.DB, a *access, before, after Goal, reason, action string) error {
+	if e := invalidateIntelligenceBusinessSource(tx, a.Company.ID, "goal_fields", after.ID); e != nil {
+		return e
+	}
 	now := time.Now().UTC().Truncate(time.Microsecond)
 	if e := tx.Create(&GoalRevision{ID: newID("goalrev"), CompanyID: a.Company.ID, GoalID: after.ID, ActorID: a.User.ID, Reason: reason, CreatedAt: now, Version: after.Version, Before: before, After: after}).Error; e != nil {
 		return e
