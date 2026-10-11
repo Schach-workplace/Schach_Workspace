@@ -1,6 +1,9 @@
 package platform
 
 import (
+	"encoding/json"
+	"fmt"
+	"math"
 	"net/http/httptest"
 	"testing"
 	"time"
@@ -127,5 +130,94 @@ func TestPlanningDrillCurrentBasis(t *testing.T) {
 	status, rows, _ = req(t, s, "GET", path+"/tasks?from=2026-10-05&to=2026-10-11&category=scheduled&projectionBasis="+basis, nil, member)
 	if status != 409 || rows["tasks"] != nil {
 		t.Fatal(status, rows)
+	}
+}
+func TestPlanningLegacyNonfiniteBasis(t *testing.T) {
+	s, a := planningFixture(t)
+	ids := []string{}
+	m := a.Members[a.User.ID]
+	m.CapacityHours = math.Inf(1)
+	a.Members[a.User.ID] = m
+	for j := 0; j < 2; j++ {
+		x := Task{ID: newID("inf"), Code: newID("code"), CompanyID: a.Company.ID, OwnerID: a.User.ID, CreatedBy: a.User.ID, Title: "Legacy numeric", Status: "todo", Priority: "medium", Recurrence: "none", EstimatedHours: 8, DueDate: "2026-10-11", Version: 1}
+		normalizeTask(&x)
+		if e := s.db.Create(&x).Error; e != nil {
+			t.Fatal(e)
+		}
+		ids = append(ids, x.ID)
+		field := "estimated_hours"
+		if j == 1 {
+			field = "actual_hours"
+		}
+		if e := s.db.Model(&Task{}).Where("id=?", x.ID).Update(field, math.Inf(1)).Error; e != nil {
+			t.Fatal(e)
+		}
+	}
+	v, e := loadPlanning(s.db, a, PlanningFilters{From: "2026-10-05", To: "2026-10-11"}, time.Now())
+	if e != nil {
+		t.Fatal(e)
+	}
+	if v.Coverage.InvalidNumeric != 1 || v.Coverage.UniqueSelectedRemainingHours != 8 || v.Weeks[0].Utilization != nil {
+		t.Fatal(v)
+	}
+	if _, e := json.Marshal(v); e != nil {
+		t.Fatal(e)
+	}
+	if _, e := json.Marshal(planningWarnings(v)); e != nil {
+		t.Fatal(e)
+	}
+	// Actual persisted legacy Infinity values must also survive the application HTTP boundary.
+	cookie := login(t, s, "founder@example.com")
+	path := "/api/companies/" + a.Company.ID + "/planning"
+	status, summary, _ := req(t, s, "GET", path+"/summary?from=2026-10-05&to=2026-10-11", nil, cookie)
+	if status != 200 || summary["coverage"].(map[string]any)["invalidNumeric"] != float64(1) {
+		t.Fatal(status, summary)
+	}
+	basis := summary["projectionBasis"].(string)
+	for _, endpoint := range []string{"warnings", "tasks"} {
+		status, body, _ := req(t, s, "GET", path+"/"+endpoint+"?from=2026-10-05&to=2026-10-11&category=scheduled&projectionBasis="+basis, nil, cookie)
+		if status != 200 {
+			t.Fatal(endpoint, status, body)
+		}
+		if _, e := json.Marshal(body); e != nil {
+			t.Fatal(endpoint, e)
+		}
+	}
+	for _, id := range ids {
+		status, body, _ := req(t, s, "GET", path+"/schedule-seed?from=2026-10-05&to=2026-10-11&projectionBasis="+basis+"&taskIds="+id, nil, cookie)
+		if status != 422 || body["tasks"] != nil {
+			t.Fatal("nonfinite seed must be controlled unavailable", status, body)
+		}
+	}
+}
+func TestPlanningWarningUnroundedThresholds(t *testing.T) {
+	for j, tc := range []struct {
+		effort, capacity float64
+		kind             string
+	}{{40.04, 40, "declared_weekly_overcapacity"}, {.04, 0, "effort_with_recorded_zero"}, {40.06, 40.07, ""}} {
+		t.Run(fmt.Sprint(j), func(t *testing.T) {
+			s, a := planningFixture(t)
+			m := a.Members[a.User.ID]
+			m.CapacityHours = tc.capacity
+			a.Members[a.User.ID] = m
+			x := Task{ID: newID("threshold"), Code: newID("code"), CompanyID: a.Company.ID, OwnerID: a.User.ID, CreatedBy: a.User.ID, Title: "Threshold", Status: "todo", Priority: "medium", Recurrence: "none", EstimatedHours: tc.effort, DueDate: "2026-10-11", Version: 1}
+			normalizeTask(&x)
+			if e := s.db.Create(&x).Error; e != nil {
+				t.Fatal(e)
+			}
+			v, e := loadPlanning(s.db, a, PlanningFilters{From: "2026-10-05", To: "2026-10-11"}, time.Now())
+			if e != nil {
+				t.Fatal(e)
+			}
+			found := ""
+			for _, w := range planningWarnings(v) {
+				if w.Kind == "declared_weekly_overcapacity" || w.Kind == "effort_with_recorded_zero" {
+					found = w.Kind
+				}
+			}
+			if found != tc.kind {
+				t.Fatal(tc, found)
+			}
+		})
 	}
 }

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useEffectEvent, useState } from "react";
 import { Text, TextInput, View } from "react-native";
 import { useWorkspace } from "./Workspace";
 import { Action, ui } from "./ConnectUI";
@@ -45,17 +45,25 @@ export default function GoalMeasurementForm({
       authored: false,
     }),
   );
-  useEffect(() => {
+  const inspect = useEffectEvent(() => {
     if (ready && !draft.authored)
       prefill({
         ...draft,
         expectedVersion: goal.version,
         value: String(correction?.value ?? goal.current),
       });
-  }, [ready, goal.version]);
+  });
+  useEffect(() => {
+    inspect();
+  }, [ready, goal.version, correction?.id, correction?.value]);
   const action = useExecutionMutation(form, ["/goals/" + goal.id]);
   const [error, setError] = useState("");
   const [saved, setSaved] = useState(false);
+  // Retain only the measured extent, never the fetched correction text.
+  const [correctionGeometry, setCorrectionGeometry] = useState({
+    scope: form,
+    height: 0,
+  });
   const set = (k: string, v: unknown) =>
     setDraft((d) => ({ ...d, [k]: v, authored: true }));
   let candidates: string[] = [];
@@ -63,7 +71,7 @@ export default function GoalMeasurementForm({
     try {
       candidates = [
         workDeadline(draft.date, draft.time, zone, draft.instant).dueAt,
-      ];
+      ].filter(Boolean);
     } catch (e) {
       if (e instanceof DeadlineChoiceError) candidates = e.candidates;
     }
@@ -72,9 +80,16 @@ export default function GoalMeasurementForm({
     setError("");
     const captured = draft;
     try {
+      if (
+        !action.attempt &&
+        (!draft.value.trim() || !Number.isFinite(Number(draft.value)))
+      )
+        throw Error("Enter an explicit measured value.");
       const effectiveAt =
         correction?.effectiveAt ??
         workDeadline(draft.date, draft.time, zone, draft.instant).dueAt;
+      if (!action.attempt && !effectiveAt)
+        throw Error("Enter an explicit observation time.");
       const payload = action.attempt?.payload ?? {
         expectedVersion: draft.expectedVersion,
         value: Number(draft.value),
@@ -97,7 +112,7 @@ export default function GoalMeasurementForm({
       setError((e as Error).message);
     }
   }
-  return (
+  const header = (
     <View style={{ gap: 12 }}>
       <Text style={ui.title}>
         {correction ? "Correct measured result" : "Update measured result"}
@@ -106,12 +121,12 @@ export default function GoalMeasurementForm({
         Task completion never records an outcome. Reason is shared with the goal
         audience; evidence retains its source access.
       </Text>
-      {!ready && (
-        <Text>
-          Checking current goal and sources… Your authored input remains.
-        </Text>
-      )}
-      <Text>Measured value {ready ? (correction?.unit ?? goal.unit) : ""}</Text>
+      <Text>
+        Your authored input remains while current goal and sources are checked.
+      </Text>
+      <Text numberOfLines={1}>
+        Measured value {ready ? (correction?.unit ?? goal.unit) : ""}
+      </Text>
       <TextInput
         accessibilityLabel="Measured value"
         keyboardType="decimal-pad"
@@ -121,7 +136,25 @@ export default function GoalMeasurementForm({
         editable={!action.busy && !action.attempt}
       />
       {correction ? (
-        <Text>
+        <Text
+          accessibilityLabel="Correction source"
+          style={{
+            minHeight:
+              !ready && correctionGeometry.scope === form
+                ? correctionGeometry.height
+                : undefined,
+          }}
+          onLayout={(event) => {
+            if (ready) {
+              const height = event.nativeEvent.layout.height;
+              setCorrectionGeometry((previous) =>
+                previous.scope === form && previous.height === height
+                  ? previous
+                  : { scope: form, height },
+              );
+            }
+          }}
+        >
           {ready
             ? "Inherited observation: " +
               correction.effectiveAt +
@@ -141,6 +174,7 @@ export default function GoalMeasurementForm({
             dateLabel="Observation date"
             timeLabel="Observation time"
             retainWhilePending
+            requireTime
             onChange={(v) => {
               setDraft((d) => ({ ...d, ...v, instant: "", authored: true }));
             }}
@@ -171,15 +205,10 @@ export default function GoalMeasurementForm({
         onChangeText={(v) => set("reason", v)}
         editable={!action.busy && !action.attempt}
       />
-      <GoalEvidencePicker
-        goalId={goal.id}
-        ready={ready}
-        value={draft.evidence}
-        onChange={(v) => {
-          if (!action.busy) action.abandon();
-          set("evidence", v);
-        }}
-      />
+    </View>
+  );
+  const footer = (
+    <View style={{ gap: 12 }}>
       <Text accessibilityRole="alert">{error || action.error}</Text>
       {saved && <Text>Measurement saved.</Text>}
       <Action
@@ -191,11 +220,28 @@ export default function GoalMeasurementForm({
           !ready ||
           action.busy ||
           !draft.reason.trim() ||
+          !draft.value.trim() ||
           !Number.isFinite(Number(draft.value)) ||
           (!correction && !candidates.length)
         }
         onPress={() => void submit()}
       />
+      {!action.busy && ready && (
+        <Action
+          title="Load latest value and version"
+          onPress={() => {
+            action.abandon();
+            setDraft({
+              ...draft,
+              expectedVersion: goal.version,
+              value: String(correction?.value ?? goal.current),
+              evidence: [],
+              authored: true,
+            });
+            setError("");
+          }}
+        />
+      )}
       {action.attempt && (
         <Action
           title="Abandon uncertain intent and inspect current goal"
@@ -206,5 +252,18 @@ export default function GoalMeasurementForm({
         />
       )}
     </View>
+  );
+  return (
+    <GoalEvidencePicker
+      goalId={goal.id}
+      ready={ready && !action.busy && !action.attempt}
+      value={draft.evidence}
+      onChange={(v) => {
+        if (!action.busy) action.abandon();
+        set("evidence", v);
+      }}
+      header={header}
+      footer={footer}
+    />
   );
 }

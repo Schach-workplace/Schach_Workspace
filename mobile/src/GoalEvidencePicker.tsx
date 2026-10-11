@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useEffectEvent, useState, type ReactNode } from "react";
 import { Text, View, FlatList } from "react-native";
 import { Action, ui } from "./ConnectUI";
 import { useExecutionRead } from "./execution";
@@ -14,11 +14,15 @@ export default function GoalEvidencePicker({
   ready,
   value,
   onChange,
+  header,
+  footer,
 }: {
   goalId: string;
   ready: boolean;
   value: GoalEvidenceInput[];
   onChange: (v: GoalEvidenceInput[]) => void;
+  header?: ReactNode;
+  footer?: ReactNode;
 }) {
   const [kind, setKind] =
     useState<GoalEvidenceInput["kind"]>("report_snapshot");
@@ -46,134 +50,156 @@ export default function GoalEvidencePicker({
       new URLSearchParams({ kind, sourceId: chosen, parentId: parent }),
     ready && !!chosen,
   );
+  const scrub = useEffectEvent(() => {
+    onChange([]);
+    setChosen("");
+  });
   useEffect(() => {
-    if (opts.denied || preview.denied) {
-      void Promise.resolve().then(() => {
-        onChange([]);
-        setChosen("");
-      });
-    }
+    if (opts.denied || preview.denied)
+      void Promise.resolve().then(() => scrub());
   }, [opts.denied, preview.denied]);
+  const choosingParent = ["message", "task_comment"].includes(kind) && !parent;
+  const rows = choosingParent
+    ? parents.ready
+      ? (parents.data?.options ??
+        parents.data?.conversations?.map((c) => ({
+          sourceId: c.id,
+          label: c.title,
+        })) ??
+        [])
+      : []
+    : opts.ready
+      ? (opts.data?.options ?? [])
+      : [];
   return (
-    <View style={{ gap: 10 }}>
-      <Text style={ui.title}>Optional evidence</Text>
-      <Text>
-        Choose a currently authorized source by its human label. Measurement
-        reason is visible to the goal audience.
-      </Text>
-      <View style={ui.row}>
-        {(["report_snapshot", "task", "task_comment", "message"] as const).map(
-          (k) => (
-            <Action
-              key={k}
-              title={
-                k === "report_snapshot"
-                  ? "My historical reports"
-                  : k.replace("_", " ")
-              }
-              selected={kind === k}
-              onPress={() => {
-                setKind(k);
-                setChosen("");
-                setParent("");
-              }}
-            />
-          ),
-        )}
-      </View>
-      {["message", "task_comment"].includes(kind) &&
-        parents.ready &&
-        (
-          parents.data?.options ??
-          parents.data?.conversations?.map((c) => ({
-            sourceId: c.id,
-            label: c.title,
-          })) ??
-          []
-        ).map((p) => (
-          <Action
-            key={p.sourceId}
-            title={p.label}
-            selected={parent === p.sourceId}
-            onPress={() => {
-              setParent(p.sourceId);
+    <FlatList
+      style={{ flex: 1 }}
+      keyboardShouldPersistTaps="handled"
+      data={rows}
+      keyExtractor={(o) => kind + ":" + o.sourceId}
+      renderItem={({ item }) => (
+        <Action
+          title={item.label}
+          selected={chosen === item.sourceId}
+          disabled={!ready}
+          onPress={() => {
+            if (choosingParent) {
+              setParent(item.sourceId);
               setChosen("");
-            }}
-          />
-        ))}
-      <View style={{ height: 180 }}>
-        <FlatList
-          data={opts.ready ? (opts.data?.options ?? []) : []}
-          keyExtractor={(o) => o.sourceId}
-          ListEmptyComponent={
-            <Text>{opts.error ?? "Checking current evidence options…"}</Text>
-          }
-          renderItem={({ item }) => (
-            <Action
-              title={item.label}
-              selected={chosen === item.sourceId}
-              onPress={() => setChosen(item.sourceId)}
-            />
-          )}
+            } else setChosen(item.sourceId);
+          }}
         />
-      </View>
-      {chosen && (
-        <View style={{ minHeight: 80 }}>
-          {preview.ready && preview.data ? (
-            <>
-              <Text>{preview.data.label}</Text>
-              <Text>{preview.data.excerpt}</Text>
-              <Text>{preview.data.audienceNotice}</Text>
+      )}
+      ListEmptyComponent={
+        <Text>
+          {(choosingParent ? parents.error : opts.error) ??
+            "Checking current evidence options…"}
+        </Text>
+      }
+      ListHeaderComponent={
+        <View style={{ gap: 10 }}>
+          {header}
+          <Text style={ui.title}>Optional evidence</Text>
+          <Text>
+            Choose a currently authorized source by its human label. Measurement
+            reason is visible to the goal audience.
+          </Text>
+          <View style={ui.row}>
+            {(
+              ["report_snapshot", "task", "task_comment", "message"] as const
+            ).map((k) => (
               <Action
-                title="Use selected evidence"
-                disabled={value.length >= 50}
+                key={k}
+                title={
+                  k === "report_snapshot"
+                    ? "My historical reports"
+                    : k.replace("_", " ")
+                }
+                disabled={!ready}
+                selected={kind === k}
                 onPress={() => {
-                  if (
-                    preview.data &&
-                    !value.some(
-                      (v) =>
-                        v.kind === kind &&
-                        v.parentId === parent &&
-                        v.sourceId === chosen,
-                    )
-                  )
-                    onChange([
-                      ...value,
-                      {
-                        kind: preview.data.kind,
-                        sourceId: preview.data.sourceId,
-                        parentId: preview.data.parentId,
-                        revision: preview.data.revision,
-                        contentHash: preview.data.contentHash,
-                      },
-                    ]);
+                  setKind(k);
                   setChosen("");
+                  setParent("");
                 }}
               />
-            </>
-          ) : (
-            <Text>{preview.error ?? "Authorizing this exact source…"}</Text>
+            ))}
+          </View>
+          {!!parent && (
+            <Action
+              title="Choose another parent source"
+              disabled={!ready}
+              onPress={() => {
+                setParent("");
+                setChosen("");
+              }}
+            />
           )}
         </View>
-      )}
-      <Text>{value.length} evidence selections</Text>
-      {value.map((binding, i) => (
-        <Bound
-          key={binding.kind + binding.parentId + binding.sourceId}
-          root={root}
-          binding={binding}
-          ready={ready}
-          onDenied={() => onChange([])}
-          onRemove={() => onChange(value.filter((_, n) => n !== i))}
-        />
-      ))}
-      {value.length > 0 && (
-        <Action
-          title="Clear evidence selections"
-          onPress={() => onChange([])}
-        />
-      )}
-    </View>
+      }
+      ListFooterComponent={
+        <View style={{ gap: 10 }}>
+          {chosen && (
+            <View style={{ minHeight: 80 }}>
+              {preview.ready && preview.data ? (
+                <>
+                  <Text>{preview.data.label}</Text>
+                  <Text>{preview.data.excerpt}</Text>
+                  <Text>{preview.data.audienceNotice}</Text>
+                  <Action
+                    title="Use selected evidence"
+                    disabled={!ready || value.length >= 50}
+                    onPress={() => {
+                      if (
+                        preview.data &&
+                        !value.some(
+                          (v) =>
+                            v.kind === kind &&
+                            v.parentId === parent &&
+                            v.sourceId === chosen,
+                        )
+                      )
+                        onChange([
+                          ...value,
+                          {
+                            kind: preview.data.kind,
+                            sourceId: preview.data.sourceId,
+                            parentId: preview.data.parentId,
+                            revision: preview.data.revision,
+                            contentHash: preview.data.contentHash,
+                          },
+                        ]);
+                      setChosen("");
+                    }}
+                  />
+                </>
+              ) : (
+                <Text>{preview.error ?? "Authorizing this exact source…"}</Text>
+              )}
+            </View>
+          )}
+          <Text>{value.length} evidence selections</Text>
+          {value.map((binding, i) => (
+            <Bound
+              key={binding.kind + binding.parentId + binding.sourceId}
+              root={root}
+              binding={binding}
+              ready={ready}
+              onDenied={() => onChange([])}
+              onRemove={() => onChange(value.filter((_, n) => n !== i))}
+            />
+          ))}
+          {value.length > 0 && (
+            <Action
+              title="Clear evidence selections"
+              disabled={!ready}
+              onPress={() => onChange([])}
+            />
+          )}
+          {footer}
+        </View>
+      }
+    />
   );
 }
 function Bound({
@@ -199,13 +225,14 @@ function Bound({
       }),
     ready,
   );
+  const scrub = useEffectEvent(() => onDenied());
   useEffect(() => {
-    if (q.denied) onDenied();
+    if (q.denied) scrub();
   }, [q.denied]);
   return (
     <View style={{ minHeight: 44 }}>
       <Text>{q.ready ? q.data?.label : "Checking selected evidence…"}</Text>
-      <Action title="Remove evidence" onPress={onRemove} />
+      <Action title="Remove evidence" disabled={!ready} onPress={onRemove} />
     </View>
   );
 }

@@ -380,8 +380,8 @@ func (s *Server) saveGoal(w http.ResponseWriter, r *http.Request) error {
 				if e != nil {
 					return e
 				}
-				if e = measureAuthority(tx, a, old); e != nil {
-					return e
+				if !canMeasureGoal(a, old) {
+					return denied()
 				}
 				candidate = old
 			}

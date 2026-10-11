@@ -134,6 +134,36 @@ function ReminderEditor({
         <textarea required value={draft.reason} onChange={(e) => set('reason', e.target.value)} />
       </Field>
       <ErrorMessage error={error} />
+      {action.attempt && (
+        <button
+          type="button"
+          className="button"
+          disabled={action.busy}
+          onClick={() => {
+            action.abandon();
+            setError('');
+          }}
+        >
+          Discard submitted intent and edit
+        </button>
+      )}
+      <button
+        type="button"
+        className="button"
+        disabled={action.busy || !ready}
+        onClick={() => {
+          action.abandon();
+          setDraft({
+            ...preference,
+            expectedVersion: preference.version,
+            reason: '',
+            authored: true,
+          });
+          setError('');
+        }}
+      >
+        Load latest preference and version
+      </button>
       <button className="button" disabled={!ready || action.busy || !draft.reason.trim()}>
         {action.attempt ? 'Retry same preference' : 'Save my reminder preference'}
       </button>

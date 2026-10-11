@@ -28,6 +28,7 @@ type PlanningCoverage struct {
 	VisibleTasks                 int     `json:"visibleTasks"`
 }
 type PlanningPerson struct {
+	remaining        float64
 	ID               string        `json:"id"`
 	Name             string        `json:"name"`
 	RecordedCapacity float64       `json:"recordedCapacity"`
@@ -119,6 +120,28 @@ func planningInterval(t Task, zone string) (string, string, string) {
 	return start, end, "scheduled"
 }
 func roundPlanning(v float64) float64 { return math.Round(v*10) / 10 }
+
+// Basis uses only projection/schedule inputs. Invalid numerics have stable markers;
+// ancillary ActualHours/private task data must not make planning JSON fail.
+func planningNumberBasis(v float64) any {
+	if math.IsNaN(v) {
+		return "invalid:NaN"
+	}
+	if math.IsInf(v, 1) {
+		return "invalid:+Infinity"
+	}
+	if math.IsInf(v, -1) {
+		return "invalid:-Infinity"
+	}
+	return v
+}
+func planningTaskBasis(tasks []Task) []any {
+	out := []any{}
+	for _, t := range tasks {
+		out = append(out, []any{t.ID, t.Version, t.Title, t.Status, t.OwnerID, t.DepartmentID, t.ProjectID, t.ParentID, t.Dependencies, t.StartDate, t.DueDate, t.DeadlineMode, t.DueAt, t.DueTimezone, planningNumberBasis(t.EstimatedHours), planningNumberBasis(t.Progress)})
+	}
+	return out
+}
 func loadPlanning(tx *gorm.DB, a *access, f PlanningFilters, now time.Time) (PlanningView, error) {
 	v := PlanningView{Method: "visible_remaining_overlap_v1", MethodDescription: "Authorized work in this view. Full remaining estimate is counted once per overlapping week against the whole recorded weekly capacity, including partial weeks. Unique effort differs from weekly exposure; recorded zero is possibly unestimated. Capacity is not attendance or free time.", Timezone: a.Company.Timezone, GeneratedAt: now.UTC().Format(time.RFC3339Nano), ReadBasis: accessBasis(a), Filters: f, Weeks: []PlanningWeek{}}
 	if !planningDate(f.From) || !planningDate(f.To) || f.From > f.To {
@@ -179,7 +202,7 @@ func loadPlanning(tx *gorm.DB, a *access, f PlanningFilters, now time.Time) (Pla
 		sources = append(sources, rows...)
 	}
 	v.sources = sources
-	normalized := []any{a.Company.Timezone, f, tasks, sources}
+	normalized := []any{a.Company.Timezone, f, planningTaskBasis(tasks), planningTaskBasis(sources)}
 	members := []Membership{}
 	seen := map[string]bool{}
 	for _, t := range tasks {
@@ -189,7 +212,11 @@ func loadPlanning(tx *gorm.DB, a *access, f PlanningFilters, now time.Time) (Pla
 		}
 	}
 	sort.Slice(members, func(i, j int) bool { return members[i].UserID < members[j].UserID })
-	normalized = append(normalized, members)
+	memberBasis := []any{}
+	for _, m := range members {
+		memberBasis = append(memberBasis, []any{m.UserID, m.Active, m.DepartmentID, m.ManagerID, m.Role, planningNumberBasis(m.CapacityHours)})
+	}
+	normalized = append(normalized, memberBasis)
 	b, e := json.Marshal(normalized)
 	if e != nil {
 		return v, e
@@ -253,7 +280,7 @@ func loadPlanning(tx *gorm.DB, a *access, f PlanningFilters, now time.Time) (Pla
 		}
 		for id, h := range effort {
 			m := a.Members[id]
-			p := PlanningPerson{ID: id, Name: a.Users[id].Name, RecordedCapacity: m.CapacityHours, RemainingHours: roundPlanning(h), CapacityState: "recorded_positive", Drill: PlanningDrill{Category: "scheduled", Week: w.From, PersonID: id}}
+			p := PlanningPerson{ID: id, Name: a.Users[id].Name, RecordedCapacity: m.CapacityHours, RemainingHours: roundPlanning(h), remaining: h, CapacityState: "recorded_positive", Drill: PlanningDrill{Category: "scheduled", Week: w.From, PersonID: id}}
 			if !finite(m.CapacityHours) || m.CapacityHours < 0 || m.CapacityHours > 168 {
 				p.RecordedCapacity = 0
 				p.CapacityState = "invalid"

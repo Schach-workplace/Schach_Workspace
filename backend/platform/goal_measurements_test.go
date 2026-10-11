@@ -245,3 +245,36 @@ func TestGoalTimestampProjectionUTC(t *testing.T) {
 		t.Fatal(view)
 	}
 }
+func TestGoalInactiveOwnerTransferMetadata(t *testing.T) {
+	s, db := testServer(t)
+	c := login(t, s, "founder@example.com")
+	cid := firstCompany(t, s, c)
+	uid := me(t, s, c)
+	old := addPerson(t, s, c, cid, "m8inactive@example.com", "member")
+	id := createMeasuredGoal(t, s, c, cid, old)
+	if e := db.Model(&Membership{}).Where("company_id=? AND user_id=?", cid, old).Update("active", false).Error; e != nil {
+		t.Fatal(e)
+	}
+	path := "/api/companies/" + cid + "/goals/" + id
+	st, b, _ := req(t, s, "POST", path+"/measurements", map[string]any{"retryKey": "inactive-observe", "expectedVersion": 1, "value": 4, "effectiveAt": "2026-10-02T00:00:00Z", "reason": "Before transfer"}, c)
+	if st != 422 {
+		t.Fatal(st, b)
+	}
+	st, b, _ = req(t, s, "PATCH", path, map[string]any{"retryKey": "transfer-inactive", "version": 1, "ownerId": uid, "reason": "Transfer to active owner"}, c)
+	if st != 200 {
+		t.Fatal(st, b)
+	}
+	var g Goal
+	db.First(&g, "id=?", id)
+	var n int64
+	db.Model(&GoalMeasurement{}).Where("goal_id=?", id).Count(&n)
+	if g.OwnerID != uid || g.Current != 4.8 || g.Version != 2 || n != 1 {
+		t.Fatal(g, n)
+	}
+	member := addPerson(t, s, c, cid, "m8outofscope@example.com", "member")
+	mc := login(t, s, "m8outofscope@example.com")
+	st, b, _ = req(t, s, "PATCH", path, map[string]any{"retryKey": "transfer-denied", "version": 2, "ownerId": member, "reason": "Outside metadata authority"}, mc)
+	if st != 404 && st != 403 {
+		t.Fatal(st, b)
+	}
+}

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useWorkspace } from '../store';
 import { useExecutionInput } from '../data/executionInput';
-import { useGoalMutation, type MeasuredGoal } from '../data/goals';
+import { useGoalMutation, useGoalRead, type MeasuredGoal, type GoalDetail } from '../data/goals';
 import { deadlineCandidates, localDeadline } from '../data/deadlines';
 import { Field, ErrorMessage, Modal } from './UI';
 export default function GoalMetadataForm({
@@ -22,6 +22,7 @@ export default function GoalMetadataForm({
     description: item?.description ?? '',
     ownerId: item?.ownerId ?? data.me.id,
     departmentId: item?.departmentId ?? data.me.departmentId,
+    inspectedUnit: item?.unit ?? '%',
     unit: item?.unit ?? '%',
     baseline: String(item?.baseline ?? 0),
     target: String(item?.target ?? 100),
@@ -36,16 +37,51 @@ export default function GoalMetadataForm({
     withMeasurement: !item,
   }));
   const action = useGoalMutation(form, item?.id ? ['/goals/' + item.id] : []);
+  const latest = useGoalRead<GoalDetail>('/goals/' + (item?.id ?? ''), !!item && ready);
+  const loadLatest = () => {
+    if (!latest.ready || !latest.data?.canEdit) return;
+    const g = latest.data.goal;
+    action.abandon();
+    setDraft({
+      ...draft,
+      version: g.version,
+      name: g.name,
+      description: g.description,
+      ownerId: g.ownerId,
+      departmentId: g.departmentId,
+      unit: g.unit,
+      inspectedUnit: g.unit,
+      baseline: String(g.baseline),
+      target: String(g.target),
+      dueDate: g.dueDate,
+      taskIds: g.taskIds,
+      value: String(g.current),
+      withMeasurement: false,
+      authored: true,
+    });
+    setError('');
+  };
   const [error, setError] = useState('');
   const set = (key: string, value: unknown) =>
     setDraft((v) => ({ ...v, [key]: value, authored: true }));
-  const needMeasurement = draft.withMeasurement || !item || draft.unit !== item.unit;
+  const needMeasurement = draft.withMeasurement || !item || draft.unit !== draft.inspectedUnit;
   const candidates = deadlineCandidates(draft.local, data.company.timezone);
   const instant = draft.instant;
   const setInstant = (value: string) => set('instant', value);
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     setError('');
+    if (
+      !action.attempt &&
+      (!draft.baseline.trim() ||
+        !draft.target.trim() ||
+        !Number.isFinite(Number(draft.baseline)) ||
+        !Number.isFinite(Number(draft.target)) ||
+        (needMeasurement && (!draft.value.trim() || !Number.isFinite(Number(draft.value)))))
+    ) {
+      setError('Enter explicit finite numeric values.');
+      return;
+    }
     const submitted = draft;
     const metadata = {
       name: draft.name,
@@ -261,6 +297,29 @@ export default function GoalMetadataForm({
             </>
           )}
           <ErrorMessage error={error} />
+          {action.attempt && (
+            <button
+              type="button"
+              className="button"
+              disabled={action.busy}
+              onClick={() => {
+                action.abandon();
+                setError('');
+              }}
+            >
+              Discard submitted intent and edit
+            </button>
+          )}
+          {!!item && (
+            <button
+              type="button"
+              className="button"
+              disabled={action.busy || !ready || !latest.ready || !latest.data?.canEdit}
+              onClick={loadLatest}
+            >
+              Load latest goal and version
+            </button>
+          )}
           <button className="button button-primary" disabled={!ready || action.busy}>
             {action.attempt ? 'Retry same goal intent' : 'Save reviewed goal'}
           </button>

@@ -17,6 +17,7 @@ export default function DeadlinePicker({
   calendarOnly = false,
   timeOnly = false,
   retainWhilePending = false,
+  requireTime = false,
 }: {
   date: string;
   time: string;
@@ -30,6 +31,7 @@ export default function DeadlinePicker({
   calendarOnly?: boolean;
   timeOnly?: boolean;
   retainWhilePending?: boolean;
+  requireTime?: boolean;
 }) {
   const [mode, setMode] = useState<"date" | "time" | null>(null);
   const [error, setError] = useState("");
@@ -111,7 +113,11 @@ export default function DeadlinePicker({
       {!calendarOnly && (
         <TextInput
           accessibilityLabel={timeLabel}
-          placeholder="HH:mm · leave empty for all day"
+          placeholder={
+            requireTime
+              ? "HH:mm · observation time required"
+              : "HH:mm · leave empty for all day"
+          }
           value={time}
           editable={!disabled}
           maxLength={5}
@@ -146,7 +152,7 @@ export default function DeadlinePicker({
             )}
           </>
         )}
-        {!calendarOnly && !timeOnly && (
+        {!calendarOnly && !timeOnly && !requireTime && (
           <Action
             title={time ? "Use all-day deadline" : "Use timed deadline"}
             disabled={disabled}

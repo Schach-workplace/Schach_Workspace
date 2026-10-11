@@ -207,6 +207,7 @@ export default function GoalScreen({ id }: { id: string }) {
       />
       {(measure || correction) && (
         <Sheet
+          scroll={false}
           title={correction ? "Correct measurement" : "Measured result"}
           onClose={() => {
             setMeasure(false);

@@ -61,6 +61,10 @@ export default function GoalMeasurementForm({
     e.preventDefault();
     setError('');
     if (!ready) return;
+    if (!action.attempt && (!draft.value.trim() || !Number.isFinite(Number(draft.value)))) {
+      setError('Enter an explicit measured value.');
+      return;
+    }
     const submitted = draft;
     const payload = action.attempt?.payload ?? {
       expectedVersion: draft.expectedVersion,
@@ -169,7 +173,10 @@ export default function GoalMeasurementForm({
           !ready ||
           action.busy ||
           (!action.attempt &&
-            (!draft.reason.trim() || !at || !Number.isFinite(Number(draft.value))))
+            (!draft.value.trim() ||
+              !draft.reason.trim() ||
+              !at ||
+              !Number.isFinite(Number(draft.value))))
         }
       >
         {action.attempt
@@ -188,6 +195,7 @@ export default function GoalMeasurementForm({
               ...draft,
               expectedVersion: goal.version,
               value: String(correction?.value ?? goal.current),
+              evidence: [],
               authored: true,
             });
           }}

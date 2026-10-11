@@ -70,6 +70,24 @@ export default function PlanningScreen() {
       selected.join(","),
     review && !!view && !!selected.length,
   );
+  // Keep only nonprivate measured geometry, qualified by principal and authored
+  // filters. Current DTOs are still withheld during every execution refresh.
+  const geometryScope = [
+    w.company,
+    w.session?.user.id,
+    qs,
+    JSON.stringify(drill),
+  ].join(":");
+  const [geometry, setGeometry] = useState({
+    scope: geometryScope,
+    header: 0,
+    content: 0,
+  });
+  const currentGeometry =
+    geometry.scope === geometryScope
+      ? geometry
+      : { scope: geometryScope, header: 0, content: 0 };
+  const sourcePending = !view || !warnings.ready || (!!drill && !tasks.ready);
   const change = (k: string, v: string) => {
     setPeriod((p) => ({ ...p, [k]: v }));
     setDrill(undefined);
@@ -79,10 +97,36 @@ export default function PlanningScreen() {
   return (
     <Page scroll={false} safeBottom>
       <FlatList
+        contentContainerStyle={{
+          minHeight: sourcePending ? currentGeometry.content : 0,
+        }}
+        onContentSizeChange={(_width, height) => {
+          if (!sourcePending)
+            setGeometry((g) => ({
+              scope: geometryScope,
+              header: g.scope === geometryScope ? g.header : 0,
+              content: height,
+            }));
+        }}
         data={tasks.ready ? (tasks.data?.tasks ?? []) : []}
         keyExtractor={(t) => t.id}
         ListHeaderComponent={
-          <View style={{ gap: 12 }}>
+          <View
+            style={{
+              gap: 12,
+              minHeight: sourcePending ? currentGeometry.header : 0,
+            }}
+            onLayout={(e) => {
+              if (!sourcePending) {
+                const height = e.nativeEvent.layout.height;
+                setGeometry((g) => ({
+                  scope: geometryScope,
+                  header: height,
+                  content: g.scope === geometryScope ? g.content : 0,
+                }));
+              }
+            }}
+          >
             <Action title="‹ Back" onPress={() => router.back()} />
             <Text style={ui.title}>Planning authorized work</Text>
             <DeadlinePicker

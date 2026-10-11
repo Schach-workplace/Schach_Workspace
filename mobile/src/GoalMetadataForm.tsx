@@ -3,7 +3,7 @@ import { Text, TextInput, View } from "react-native";
 import { useWorkspace } from "./Workspace";
 import { Action, Sheet, ui } from "./ConnectUI";
 import { useRamInput } from "./ramInput";
-import { useExecutionMutation } from "./execution";
+import { useExecutionMutation, useExecutionRead } from "./execution";
 import PersonPicker from "./PersonPicker";
 import DeadlinePicker from "./DeadlinePicker";
 import {
@@ -12,7 +12,7 @@ import {
   workDeadline,
   DeadlineChoiceError,
 } from "./workDates";
-import type { MeasuredGoal } from "../../shared/goals/types";
+import type { MeasuredGoal, GoalDetail } from "../../shared/goals/types";
 export default function GoalMetadataForm({
   item,
   ready,
@@ -33,6 +33,7 @@ export default function GoalMetadataForm({
       description: item?.description ?? "",
       ownerId: item?.ownerId ?? w.session?.user.id ?? "",
       departmentId: item?.departmentId ?? "",
+      inspectedUnit: item?.unit ?? "%",
       unit: item?.unit ?? "%",
       baseline: String(item?.baseline ?? 0),
       target: String(item?.target ?? 100),
@@ -52,20 +53,58 @@ export default function GoalMetadataForm({
     "$goal-metadata:" + (item?.id ?? "new"),
     item ? ["/goals/" + item.id] : [],
   );
+  const latest = useExecutionRead<GoalDetail>(
+    "/goals/" + (item?.id ?? ""),
+    !!item && ready,
+  );
+  const loadLatest = () => {
+    if (!latest.ready || !latest.data?.canEdit) return;
+    const g = latest.data.goal;
+    action.abandon();
+    setDraft({
+      ...draft,
+      version: g.version,
+      name: g.name,
+      description: g.description,
+      ownerId: g.ownerId,
+      departmentId: g.departmentId,
+      unit: g.unit,
+      inspectedUnit: g.unit,
+      baseline: String(g.baseline),
+      target: String(g.target),
+      taskIds: g.taskIds,
+      dueDate: g.dueDate,
+      value: String(g.current),
+      withMeasurement: false,
+      authored: true,
+    });
+    setError("");
+  };
   const [error, setError] = useState("");
   const set = (k: string, v: unknown) =>
     setDraft((d) => ({ ...d, [k]: v, authored: true }));
-  const need = !item || draft.withMeasurement || draft.unit !== item.unit;
+  const need =
+    !item || draft.withMeasurement || draft.unit !== draft.inspectedUnit;
   let candidates: string[] = [];
   try {
     candidates = [
       workDeadline(draft.date, draft.time, zone, draft.instant).dueAt,
-    ];
+    ].filter(Boolean);
   } catch (e) {
     if (e instanceof DeadlineChoiceError) candidates = e.candidates;
   }
   async function save() {
     try {
+      if (
+        !action.attempt &&
+        (!draft.baseline.trim() ||
+          !draft.target.trim() ||
+          !Number.isFinite(Number(draft.baseline)) ||
+          !Number.isFinite(Number(draft.target)) ||
+          (need &&
+            (!draft.value.trim() || !Number.isFinite(Number(draft.value)))))
+      )
+        throw Error("Enter explicit finite numeric values.");
       const metadata = {
         name: draft.name,
         description: draft.description,
@@ -80,6 +119,8 @@ export default function GoalMetadataForm({
       const effectiveAt = need
         ? workDeadline(draft.date, draft.time, zone, draft.instant).dueAt
         : "";
+      if (!action.attempt && need && !effectiveAt)
+        throw Error("Enter an explicit observation time.");
       const measurement = {
         value: Number(draft.value),
         effectiveAt,
@@ -221,6 +262,7 @@ export default function GoalMetadataForm({
             label="Observation time"
             dateLabel="Observation date"
             timeLabel="Observation time"
+            requireTime
             retainWhilePending
             onChange={(v) => setDraft((d) => ({ ...d, ...v, instant: "" }))}
           />
@@ -243,6 +285,25 @@ export default function GoalMetadataForm({
         </>
       )}
       <Text>{error || action.error}</Text>
+      {action.attempt && (
+        <Action
+          title="Discard submitted intent and edit"
+          disabled={action.busy}
+          onPress={() => {
+            action.abandon();
+            setError("");
+          }}
+        />
+      )}
+      {!!item && (
+        <Action
+          title="Load latest goal and version"
+          disabled={
+            action.busy || !ready || !latest.ready || !latest.data?.canEdit
+          }
+          onPress={loadLatest}
+        />
+      )}
       <Action
         title={action.attempt ? "Retry same goal intent" : "Save reviewed goal"}
         primary
@@ -251,7 +312,15 @@ export default function GoalMetadataForm({
           action.busy ||
           !draft.name.trim() ||
           (item && !draft.reason.trim()) ||
-          (need && !draft.measurementReason.trim())
+          !draft.baseline.trim() ||
+          !draft.target.trim() ||
+          !Number.isFinite(Number(draft.baseline)) ||
+          !Number.isFinite(Number(draft.target)) ||
+          (need &&
+            (!candidates.length ||
+              !draft.measurementReason.trim() ||
+              !draft.value.trim() ||
+              !Number.isFinite(Number(draft.value))))
         }
         onPress={() => void save()}
       />

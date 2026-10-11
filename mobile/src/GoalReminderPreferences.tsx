@@ -1,11 +1,14 @@
 import { useWorkspace } from "./Workspace";
-import { useEffect, useState } from "react";
+import { useEffect, useEffectEvent, useState } from "react";
 import { Text, TextInput, View } from "react-native";
 import { Action, ui } from "./ConnectUI";
 import { useRamInput } from "./ramInput";
 import { useExecutionRead, useExecutionMutation } from "./execution";
 import DeadlinePicker from "./DeadlinePicker";
-import type { GoalReminderPreference } from "../../shared/goals/types";
+import type {
+  GoalReminderPreference,
+  GoalReminderInput,
+} from "../../shared/goals/types";
 export default function GoalReminderPreferences({
   goalId,
   ready,
@@ -15,10 +18,9 @@ export default function GoalReminderPreferences({
 }) {
   const w = useWorkspace();
   const path = "/goals/" + goalId + "/reminder-preference";
-  const q = useExecutionRead<{ preference: GoalReminderPreference }>(
-    path,
-    ready,
-  );
+  const q = useExecutionRead<{
+    preference: GoalReminderPreference;
+  }>(path, ready);
   const [draft, setDraft, retire, , prefill] = useRamInput(
     "$goal-reminder:" + goalId,
     "draft",
@@ -33,13 +35,24 @@ export default function GoalReminderPreferences({
       authored: false,
     }),
   );
-  useEffect(() => {
+  const inspect = useEffectEvent(() => {
     if (q.ready && q.data && !draft.authored)
-      prefill({
-        ...draft,
-        ...q.data.preference,
-        expectedVersion: q.data.preference.version,
-      });
+      prefill(preferenceDraft(q.data.preference));
+  });
+  function preferenceDraft(p: GoalReminderPreference) {
+    return {
+      expectedVersion: p.version,
+      enabled: p.enabled,
+      cadence: p.cadence,
+      weekday: p.weekday,
+      monthDay: p.monthDay,
+      localTime: p.localTime,
+      reason: "",
+      authored: false,
+    };
+  }
+  useEffect(() => {
+    inspect();
   }, [q.ready, q.data?.preference.version]);
   const action = useExecutionMutation("$goal-reminder:" + goalId, [
     "/goals/" + goalId,
@@ -50,10 +63,18 @@ export default function GoalReminderPreferences({
   async function save() {
     const captured = draft;
     try {
-      const { authored, ...payload } = draft;
+      const payload: GoalReminderInput = {
+        expectedVersion: draft.expectedVersion,
+        enabled: draft.enabled,
+        cadence: draft.cadence,
+        weekday: draft.weekday,
+        monthDay: draft.monthDay,
+        localTime: draft.localTime,
+        reason: draft.reason,
+      };
       await action.execute(
         path,
-        action.attempt?.payload ?? payload,
+        action.attempt?.payload ?? { ...payload },
         "PATCH",
         () => {
           retire(captured);
@@ -128,6 +149,27 @@ export default function GoalReminderPreferences({
           action.error ||
           (!q.ready ? "Checking current preference…" : "")}
       </Text>
+      {action.attempt && (
+        <Action
+          title="Discard submitted intent and edit"
+          disabled={action.busy}
+          onPress={() => {
+            action.abandon();
+            setError("");
+          }}
+        />
+      )}
+      <Action
+        title="Load latest preference and version"
+        disabled={action.busy || !ready || !q.ready || !q.data}
+        onPress={() => {
+          if (q.ready && q.data) {
+            action.abandon();
+            setDraft({ ...preferenceDraft(q.data.preference), authored: true });
+            setError("");
+          }
+        }}
+      />
       <Action
         title={
           action.attempt

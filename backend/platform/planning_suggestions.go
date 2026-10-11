@@ -52,11 +52,11 @@ func planningWarnings(v PlanningView) []PlanningWarning {
 	for _, w := range v.Weeks {
 		for _, p := range w.People {
 			kind, description := "", ""
-			if p.CapacityState == "recorded_zero" && p.RemainingHours > 0 {
+			if p.CapacityState == "recorded_zero" && p.remaining > 0 {
 				kind = "effort_with_recorded_zero"
 				description = "Visible effort with recorded zero weekly capacity; utilization unavailable."
 			}
-			if p.CapacityState == "recorded_positive" && p.RemainingHours > p.RecordedCapacity {
+			if p.CapacityState == "recorded_positive" && p.remaining > p.RecordedCapacity {
 				kind = "declared_weekly_overcapacity"
 				description = "Visible estimate exceeds recorded weekly capacity; review commitments."
 			}
@@ -215,6 +215,11 @@ func (s *Server) planningScheduleSeed(w http.ResponseWriter, r *http.Request) er
 			}
 			if !a.canWrite(task) {
 				return denied()
+			}
+			// The canonical M5 seed contains Task numeric fields. Keep legacy
+			// nonfinite values unavailable instead of fabricating replacements.
+			if !finite(task.EstimatedHours) || !finite(task.Progress) || !finite(task.ActualHours) {
+				return invalid("Selected task has invalid recorded numeric inputs; inspect and repair the task before scheduling.")
 			}
 			tasks = append(tasks, task)
 			if task.ProjectID != "" && !projects[task.ProjectID] {

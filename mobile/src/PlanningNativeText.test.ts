@@ -43,3 +43,18 @@ it("keeps literal JSX text inside native Text in all M8 planning and goal consum
   }
   expect(failures).toEqual([]);
 });
+
+it("gives the measurement sheet exactly one virtualized scroll owner and a stable element header", () => {
+  const screen = readFileSync(
+    join(import.meta.dirname, "GoalScreen.tsx"),
+    "utf8",
+  );
+  const picker = readFileSync(
+    join(import.meta.dirname, "GoalEvidencePicker.tsx"),
+    "utf8",
+  );
+  expect(screen).toMatch(/<Sheet\s+scroll=\{false\}\s+title=\{correction/);
+  expect((picker.match(/<FlatList/g) ?? []).length).toBe(1);
+  expect(picker).not.toContain("<ScrollView");
+  expect(picker).toMatch(/ListHeaderComponent=\{\s*<View/);
+});
