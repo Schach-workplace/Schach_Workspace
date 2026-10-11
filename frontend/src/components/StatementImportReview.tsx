@@ -127,7 +127,9 @@ export default function StatementImportReview({
         ))}
       </fieldset>
       <button
-        disabled={!q.ready || q.data?.state !== 'clean' || m.busy || !!imported.attempt || imported.busy}
+        disabled={
+          !q.ready || q.data?.state !== 'clean' || m.busy || !!imported.attempt || imported.busy
+        }
         onClick={() => void prepare()}
       >
         {m.attempt ? 'Retry same mapping preview' : 'Preview exact statement rows'}

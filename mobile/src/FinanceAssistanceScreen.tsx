@@ -82,6 +82,9 @@ export default function FinanceAssistanceScreen({
   });
   useLayoutEffect(() => {
     current.current = captured;
+    return () => {
+      current.current = "";
+    };
   }, [captured]);
   useEffect(() => {
     const clear = () => {
@@ -90,7 +93,6 @@ export default function FinanceAssistanceScreen({
     };
     const stop = client.registerCancellation(clear);
     return () => {
-      current.current = "";
       stop();
       clear();
     };

@@ -1,4 +1,5 @@
 // @vitest-environment happy-dom
+import FinanceIntakeReview from "./FinanceIntakeReview";
 import { act, createElement, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { it, expect, vi } from "vitest";
@@ -46,7 +47,6 @@ vi.mock("react-native", () => ({
   Text: ({ children }: any) => createElement("span", {}, children),
   Image: () => null,
 }));
-import FinanceIntakeReview from "./FinanceIntakeReview";
 it.each([
   ["rejected", "scan_rejected", false],
   ["failed", "scan_unavailable", true],

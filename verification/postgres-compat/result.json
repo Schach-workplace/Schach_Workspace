@@ -1,6 +1,6 @@
 {
   "kind": "PGlite migration compatibility check",
-  "executedAt": "2026-10-11T02:27:16.553Z",
+  "executedAt": "2026-10-11T03:45:30.028Z",
   "nodeVersion": "v24.14.0",
   "pgliteVersion": "0.5.8",
   "migrationSha256": {
@@ -329,6 +329,13 @@
       "downFile": "46_finance_assistance_history.down.sql",
       "upSha256": "3e847e044a1e9fd2782d3288f6613c7d98ec2ec954d8f67a8da2c295337e6502",
       "downSha256": "c648951ec31c0fe930d4d2fed845020b7af2aa275f766e373eb0d4f6430d3647"
+    },
+    {
+      "version": 47,
+      "upFile": "47_finance_reconciliation_attention_work.up.sql",
+      "downFile": "47_finance_reconciliation_attention_work.down.sql",
+      "upSha256": "d3abcdf67c86fa76144561913c6465f8fc3f0e97f5e38f7d8c08d5ce48bac13d",
+      "downSha256": "4bf782c48bf636177b8be236d0fd97ab53b622b2ce24a96f9674f089aeb06973"
     }
   ],
   "checks": [

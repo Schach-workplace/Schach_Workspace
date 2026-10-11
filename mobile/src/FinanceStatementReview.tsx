@@ -121,7 +121,11 @@ export default function FinanceStatementReview({
             : "Preview exact statement rows"
         }
         disabled={
-          !q.ready || q.data?.state !== "clean" || m.busy || !!imported.attempt || imported.busy
+          !q.ready ||
+          q.data?.state !== "clean" ||
+          m.busy ||
+          !!imported.attempt ||
+          imported.busy
         }
         onPress={() => {
           if (imported.attempt || imported.busy) return;

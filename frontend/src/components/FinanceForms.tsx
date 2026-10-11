@@ -88,10 +88,14 @@ export function ExpenseForm({
     receiptExceptionReason: expense?.receiptExceptionReason || '',
   });
   const formId = '$finance-draft:' + (item?.id ?? 'new');
-  const [authored, setAuthored, , retireAuthored] = useExecutionInput(formId, 'reviewedDraft', () => ({
-    draft: makeDraft(item),
-    version: item?.version || 0,
-  }));
+  const [authored, setAuthored, , retireAuthored] = useExecutionInput(
+    formId,
+    'reviewedDraft',
+    () => ({
+      draft: makeDraft(item),
+      version: item?.version || 0,
+    }),
+  );
   const { draft, version } = authored;
   const setDraft = (next: ExpenseDraft | ((current: ExpenseDraft) => ExpenseDraft)) =>
     setAuthored((current) => ({
