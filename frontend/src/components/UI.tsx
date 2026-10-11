@@ -34,7 +34,7 @@ export const statusLabel: Record<TaskStatus, string> = {
 export const priorities: Priority[] = ['critical', 'high', 'medium', 'low'];
 export const cx = (...values: (string | false | null | undefined)[]) =>
   values.filter(Boolean).join(' ');
-export const isOpen = (t: Task) => !['done', 'cancelled'].includes(t.status);
+export const isOpen = (t: Pick<Task, 'status'>) => !['done', 'cancelled'].includes(t.status);
 export function today(timezone = 'UTC') {
   return new Intl.DateTimeFormat('en-CA', {
     timeZone: timezone,
@@ -70,8 +70,16 @@ export function initials(name = '') {
     .join('')
     .toUpperCase();
 }
-export function isOverdue(task: Task, date: string) {
-  return isOpen(task) && (task.deadlineMode === 'timed' ? !!task.dueAt && Date.now() > Date.parse(task.dueAt) : !!task.dueDate && task.dueDate < date);
+export function isOverdue(
+  task: Pick<Task, 'status' | 'deadlineMode' | 'dueAt' | 'dueDate'>,
+  date: string,
+) {
+  return (
+    isOpen(task) &&
+    (task.deadlineMode === 'timed'
+      ? !!task.dueAt && Date.now() > Date.parse(task.dueAt)
+      : !!task.dueDate && task.dueDate < date)
+  );
 }
 export function canManage(data: WorkspaceData) {
   return ['founder', 'ceo', 'admin', 'head', 'manager'].includes(data.me.role);

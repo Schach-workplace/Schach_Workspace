@@ -89,7 +89,21 @@ export function TaskTable({
   onTask,
   compact = false,
 }: {
-  tasks: Task[];
+  tasks: Pick<
+    Task,
+    | 'id'
+    | 'code'
+    | 'title'
+    | 'status'
+    | 'ownerId'
+    | 'projectId'
+    | 'departmentId'
+    | 'dueDate'
+    | 'deadlineMode'
+    | 'dueAt'
+    | 'priority'
+    | 'progress'
+  >[];
   data: WorkspaceData;
   onTask: (id: string) => void;
   compact?: boolean;

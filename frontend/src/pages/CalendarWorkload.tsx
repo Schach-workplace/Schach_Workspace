@@ -1,4 +1,5 @@
 import { useExecutionRead } from '../data/execution';
+import type { CalendarTask, CalendarView } from '../data/planning';
 import { useExecutionInput } from '../data/executionInput';
 import PlanningView from '../components/PlanningView';
 import { localDeadline } from '../data/deadlines';
@@ -43,7 +44,7 @@ function scheduled(task: Task, from: string, to: string) {
   const end = task.dueDate || task.startDate;
   return !!start && start <= to && end >= from;
 }
-function calendarTaskDate(t: Task, zone: string) {
+function calendarTaskDate(t: CalendarTask, zone: string) {
   if (t.deadlineMode === 'timed') {
     if (!t.dueAt || !Number.isFinite(Date.parse(t.dueAt))) return '';
     return localDeadline(t.dueAt, zone).slice(0, 10);
@@ -51,7 +52,7 @@ function calendarTaskDate(t: Task, zone: string) {
   return t.dueDate;
 }
 export function CalendarPage({ onTask }: { onTask: (id: string) => void }) {
-  const { data: workspace } = useWorkspace();
+  const { data: workspace, mode } = useWorkspace();
   const data = workspace!;
   const date = today(data.company.timezone);
   const [anchor, setAnchor] = useExecutionInput('$calendar', 'anchor', date);
@@ -63,22 +64,44 @@ export function CalendarPage({ onTask }: { onTask: (id: string) => void }) {
   const firstMonth = anchor.slice(0, 7) + '-01';
   const first = view === 'week' ? weekStart(anchor) : weekStart(firstMonth);
   const days = Array.from({ length: view === 'week' ? 7 : 42 }, (_, i) => addDays(first, i));
-  const agenda = useExecutionRead<{ tasks: Task[] }>('/tasks');
-  const tasks = (agenda.ready ? (agenda.data?.tasks ?? []) : []).filter(
-    (t) =>
-      (!openOnly || isOpen(t)) &&
-      (!department || t.departmentId === department) &&
-      (!owner || t.ownerId === owner),
+  const calendarQuery = new URLSearchParams({
+    from: first,
+    to: days[days.length - 1],
+    departmentId: department,
+    ownerId: owner,
+    openOnly: String(openOnly),
+  });
+  const agenda = useExecutionRead<CalendarView>(
+    '/planning/calendar?' + calendarQuery,
+    mode !== 'demo',
   );
-  const selectedTasks = tasks.filter(
-    (t) => calendarTaskDate(t, data.company.timezone) === selected,
-  );
+  const demo = mode === 'demo';
+  const complete = demo || (agenda.ready && agenda.data?.complete === true);
+  const tasks: CalendarTask[] = demo
+    ? data.tasks.filter(
+        (t) =>
+          (!openOnly || isOpen(t)) &&
+          (!department || t.departmentId === department) &&
+          (!owner || t.ownerId === owner),
+      )
+    : complete
+      ? agenda.data!.tasks
+      : [];
+  const calendarZone = !demo && complete ? agenda.data!.timezone : data.company.timezone;
+  const taskDate = (task: CalendarTask) =>
+    demo ? calendarTaskDate(task, calendarZone) : task.dueDate;
+  const selectedTasks = tasks.filter((t) => taskDate(t) === selected);
   function change(direction: number) {
-    if (view === 'week') setAnchor(addDays(anchor, 7 * direction));
-    else {
+    if (view === 'week') {
+      const next = addDays(anchor, 7 * direction);
+      setAnchor(next);
+      setSelected(next);
+    } else {
       const d = new Date(`${firstMonth}T12:00:00Z`);
       d.setUTCMonth(d.getUTCMonth() + direction);
-      setAnchor(d.toISOString().slice(0, 10));
+      const next = d.toISOString().slice(0, 10);
+      setAnchor(next);
+      setSelected(next);
     }
   }
   return (
@@ -115,10 +138,22 @@ export function CalendarPage({ onTask }: { onTask: (id: string) => void }) {
           </button>
         </div>
         <div className="segmented">
-          <button className={view === 'month' ? 'active' : ''} onClick={() => setView('month')}>
+          <button
+            className={view === 'month' ? 'active' : ''}
+            onClick={() => {
+              setView('month');
+              setSelected(anchor);
+            }}
+          >
             Month
           </button>
-          <button className={view === 'week' ? 'active' : ''} onClick={() => setView('week')}>
+          <button
+            className={view === 'week' ? 'active' : ''}
+            onClick={() => {
+              setView('week');
+              setSelected(anchor);
+            }}
+          >
             Week
           </button>
         </div>
@@ -156,8 +191,16 @@ export function CalendarPage({ onTask }: { onTask: (id: string) => void }) {
           />
           Open work only
         </label>
-        <span className="timezone-note">Deadlines in {data.company.timezone}</span>
+        <span className="timezone-note">Deadlines in {calendarZone}</span>
       </div>
+      {demo && (
+        <p>Demo calendar shows the finite local sample; it is not a complete server calendar.</p>
+      )}
+      {!complete && (
+        <p role="status">
+          {agenda.error?.message ?? 'Checking the complete currently authorized calendar range…'}
+        </p>
+      )}
       <div className={cx('calendar-grid', view === 'week' && 'calendar-week')}>
         <div className="calendar-weekdays">
           {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((day) => (
@@ -166,7 +209,7 @@ export function CalendarPage({ onTask }: { onTask: (id: string) => void }) {
         </div>
         <div className="calendar-days">
           {days.map((day) => {
-            const work = tasks.filter((t) => calendarTaskDate(t, data.company.timezone) === day);
+            const work = tasks.filter((t) => taskDate(t) === day);
             return (
               <div
                 className={cx(
@@ -179,7 +222,7 @@ export function CalendarPage({ onTask }: { onTask: (id: string) => void }) {
               >
                 <button
                   className="calendar-day-number"
-                  aria-label={`${dateLabel(day, { weekday: 'long', day: 'numeric', month: 'long' })}, ${work.length} tasks`}
+                  aria-label={`${dateLabel(day, { weekday: 'long', day: 'numeric', month: 'long' })}, ${complete ? work.length + ' tasks' : 'checking current calendar'}`}
                   onClick={() => setSelected(day)}
                 >
                   {Number(day.slice(-2))}
@@ -215,13 +258,21 @@ export function CalendarPage({ onTask }: { onTask: (id: string) => void }) {
       <div className="section-header calendar-agenda-heading">
         <div>
           <h2>{dateLabel(selected, { weekday: 'long', day: 'numeric', month: 'long' })}</h2>
-          <p>{selectedTasks.length} deadlines on this day</p>
+          <p>
+            {complete
+              ? `${selectedTasks.length} deadlines on this day`
+              : 'Current day count unavailable while the complete range is checked.'}
+          </p>
         </div>
         <CalendarDays size={18} />
       </div>
       <div className="panel">
-        {!agenda.ready && <p role="status">Checking currently authorized calendar work…</p>}
-        <TaskTable tasks={selectedTasks} data={data} onTask={onTask} compact />
+        {complete && <TaskTable tasks={selectedTasks} data={data} onTask={onTask} compact />}
+        {!complete && agenda.error && (
+          <button className="button" onClick={() => void agenda.retry()}>
+            Retry current calendar range
+          </button>
+        )}
       </div>
       <PlanningView key={first} from={first} to={days[days.length - 1]} onTask={onTask} />
     </div>
