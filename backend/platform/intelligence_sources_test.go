@@ -14,9 +14,12 @@ func TestIntelligenceSelectionBinding(t *testing.T) {
 	s, db := testServer(t)
 	c := login(t, s, "founder@example.com")
 	cid := firstCompany(t, s, c)
-	tasks := []Task{{ID: "intel-task-a", Code: "INT-A", CompanyID: cid, Title: "Selected A", Version: 1}, {ID: "intel-task-b", Code: "INT-B", CompanyID: cid, Title: "Selected B", Version: 1}}
-	if e := db.Create(&tasks).Error; e != nil {
-		t.Fatal(e)
+	tasks := []Task{}
+	for i := 0; i < 2; i++ {
+		id := createTask(t, s, c, cid, taskBody(me(t, s, c)))
+		var task Task
+		db.First(&task, "id=?", id)
+		tasks = append(tasks, task)
 	}
 	one := map[string]any{"kind": "task_fields", "id": tasks[0].ID, "selectedFieldSet": "narrative", "expectedVersion": tasks[0].Version}
 	two := map[string]any{"kind": "task_fields", "id": tasks[1].ID, "selectedFieldSet": "narrative", "expectedVersion": tasks[1].Version}
@@ -42,10 +45,9 @@ func TestIntelligenceNestedEvidenceBinding(t *testing.T) {
 	s, db := testServer(t)
 	c := login(t, s, "founder@example.com")
 	cid := firstCompany(t, s, c)
-	task := Task{ID: "intel-task", CompanyID: cid, Title: "Selected", Version: 1}
-	if e := db.Create(&task).Error; e != nil {
-		t.Fatal(e)
-	}
+	taskID := createTask(t, s, c, cid, taskBody(me(t, s, c)))
+	var task Task
+	db.First(&task, "id=?", taskID)
 	comment := Comment{ID: "intel-comment", CompanyID: cid, TaskID: task.ID, UserID: me(t, s, c), Body: "Exact selected comment", CreatedAt: nowString()}
 	if e := db.Create(&comment).Error; e != nil {
 		t.Fatal(e)
@@ -75,15 +77,21 @@ func TestIntelligenceNestedEvidenceRecordAndHistorical(t *testing.T) {
 	c := login(t, s, "founder@example.com")
 	cid := firstCompany(t, s, c)
 	uid := me(t, s, c)
-	conv := Conversation{ID: "int-conv", CompanyID: cid, Title: "Private selected", Kind: "group", Version: 1, Forwarding: "allowed"}
-	db.Create(&conv)
-	db.Create(&ConversationMember{CompanyID: cid, ConversationID: conv.ID, UserID: uid, Active: true, Epoch: 1, HistoryFromSequence: 1})
-	m := Message{ID: "int-message", CompanyID: cid, ConversationID: conv.ID, SenderID: uid, Sequence: 1, Revision: 1, Body: "Selected anchor", CreatedAt: nowString()}
-	db.Create(&m)
-	record := CommunicationRecord{ID: "int-record", CompanyID: cid, ConversationID: conv.ID, AnchorMessageID: m.ID, Revision: 1, Title: "Decision", Options: []string{"First", "Second"}, State: "open"}
-	db.Create(&record)
-	response := CommunicationRecipient{CompanyID: cid, ConversationID: conv.ID, RecordID: record.ID, Revision: 1, UserID: uid, Response: "First"}
-	db.Create(&response)
+	convID := newConversation(t, s, c, cid, []string{uid}, "group")
+	var conv Conversation
+	db.First(&conv, "id=?", convID)
+	sent := sendMessage(t, s, c, cid, convID, "int-message", "Selected anchor")
+	var m Message
+	db.First(&m, "id=?", sent["id"])
+	created := financeOK(t, s, "POST", "/api/companies/"+cid+"/conversations/"+convID+"/records", map[string]any{"retryKey": "int-record", "kind": "poll", "anchorMessageId": m.ID, "sourceRevision": 1, "title": "Decision", "body": "Selected decision", "recipientIds": []string{uid}, "options": []string{"First", "Second"}}, c)
+	var record CommunicationRecord
+	db.First(&record, "id=?", created["id"])
+	if record.ID == "" {
+		db.Where("conversation_id=?", convID).First(&record)
+	}
+	var response CommunicationRecipient
+	db.First(&response, "record_id=? AND user_id=?", record.ID, uid)
+	db.Model(&response).Update("response", "First")
 	source := map[string]any{"kind": "record", "id": record.ID, "parentId": m.ID, "conversationId": conv.ID, "selectedFieldSet": "content_responses"}
 	st, b := intelligencePreview(t, s, c, cid, []map[string]any{source})
 	if st != 200 {

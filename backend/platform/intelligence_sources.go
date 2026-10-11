@@ -218,6 +218,15 @@ func (s *Server) captureIntelligenceSource(tx *gorm.DB, a *access, r Intelligenc
 			if e != nil {
 				return b, e
 			}
+			if rec.CreatedBy != a.User.ID {
+				var count int64
+				if e := tx.Model(&CommunicationRecipient{}).Where("company_id=? AND record_id=? AND revision=? AND user_id=?", a.Company.ID, rec.ID, rec.Revision, a.User.ID).Count(&count).Error; e != nil {
+					return b, e
+				}
+				if count != 1 {
+					return b, missing()
+				}
+			}
 			mid = rec.AnchorMessageID
 			if r.ParentID != mid {
 				return b, missing()
