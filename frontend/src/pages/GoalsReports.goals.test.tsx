@@ -1,2 +1,31 @@
 // @vitest-environment happy-dom
-import{render,screen,cleanup}from'@testing-library/react';import{it,expect,afterEach,vi}from'vitest';import{GoalsPage}from'./GoalsReports';import sample from '../data/sample.json';vi.mock('../store',()=>({useWorkspace:()=>({data:sample.workspaces[0],mode:'api',companyId:'c',session:{user:{id:'u'}}})}));vi.mock('../data/goals',()=>({useGoalRead:()=>({ready:true,data:{goals:[{...sample.workspaces[0].goals[0],name:'Quality',current:4.8,target:3,baseline:8}]},denied:false})}));afterEach(cleanup);it('reads independent goals and shows raw decreasing target values',()=>{render(<GoalsPage onTask={()=>{}}/>);expect(screen.getByText('Quality')).toBeTruthy();expect(screen.getByText(/4.8/)).toBeTruthy();expect(screen.getByRole('button',{name:/Open Quality/})).toBeTruthy()});
+import { render, screen, cleanup } from '@testing-library/react';
+import { it, expect, afterEach, vi } from 'vitest';
+import { GoalsPage } from './GoalsReports';
+import sample from '../data/sample.json';
+vi.mock('../store', () => ({
+  useWorkspace: () => ({
+    data: sample.workspaces[0],
+    mode: 'api',
+    companyId: 'c',
+    session: { user: { id: 'u' } },
+  }),
+}));
+vi.mock('../data/goals', () => ({
+  useGoalRead: () => ({
+    ready: true,
+    data: {
+      goals: [
+        { ...sample.workspaces[0].goals[0], name: 'Quality', current: 4.8, target: 3, baseline: 8 },
+      ],
+    },
+    denied: false,
+  }),
+}));
+afterEach(cleanup);
+it('reads independent goals and shows raw decreasing target values', () => {
+  render(<GoalsPage onTask={() => {}} />);
+  expect(screen.getByText('Quality')).toBeTruthy();
+  expect(screen.getByText(/4.8/)).toBeTruthy();
+  expect(screen.getByRole('button', { name: /Open Quality/ })).toBeTruthy();
+});

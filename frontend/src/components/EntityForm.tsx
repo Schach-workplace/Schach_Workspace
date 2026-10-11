@@ -7,7 +7,17 @@ import { canAdmin, ErrorMessage, Field, Modal, ownsScope, SaveButton } from './U
 
 export type EntityKind = 'project' | 'goal' | 'person' | 'department' | 'company';
 type Entity = Project | Goal | Person | Department | Company;
-export default function EntityForm(props:{kind:EntityKind;item?:Entity;onClose:()=>void}){return props.kind==='goal'?<GoalMetadataForm item={props.item as Goal | undefined} onClose={props.onClose}/>:<GenericEntityForm {...props}/>;}
+export default function EntityForm(props: {
+  kind: EntityKind;
+  item?: Entity;
+  onClose: () => void;
+}) {
+  return props.kind === 'goal' ? (
+    <GoalMetadataForm item={props.item as Goal | undefined} onClose={props.onClose} />
+  ) : (
+    <GenericEntityForm {...props} />
+  );
+}
 function GenericEntityForm({
   kind,
   item,

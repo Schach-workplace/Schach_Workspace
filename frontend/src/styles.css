@@ -8627,7 +8627,22 @@ small,
   height: 20px;
 }
 /* Planning and measured outcomes preserve readable wrapping on narrow screens. */
-.execution-panel button, .execution-panel input:not([type=checkbox]), .execution-panel select, .execution-panel textarea { min-height:44px; max-width:100%; }
-.execution-panel button { white-space:normal; overflow-wrap:anywhere; }
-.execution-panel blockquote, .execution-panel small { overflow-wrap:anywhere; }
-.execution-panel .form-grid > *, .page-content .form-grid > * { min-width:0; }
+.execution-panel button,
+.execution-panel input:not([type='checkbox']),
+.execution-panel select,
+.execution-panel textarea {
+  min-height: 44px;
+  max-width: 100%;
+}
+.execution-panel button {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+.execution-panel blockquote,
+.execution-panel small {
+  overflow-wrap: anywhere;
+}
+.execution-panel .form-grid > *,
+.page-content .form-grid > * {
+  min-width: 0;
+}
