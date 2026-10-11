@@ -44,3 +44,6 @@ deploy/secrets/
 verification/**/logs/
 
 .worktrees/
+
+# Local TypeScript incremental compiler cache.
+*.tsbuildinfo
