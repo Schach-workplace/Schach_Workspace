@@ -45,12 +45,16 @@ export default function StatementImportReview({
     '/finance/statement-previews/' + preview + '?cursor=' + encodeURIComponent(pageCursor),
     !!preview,
   );
+  const frozen = !!m.attempt || m.busy || !!imported.attempt || imported.busy;
   const set = (key: keyof typeof choices, value: string) => {
+    if (frozen) return;
     setChoices((v) => ({ ...v, [key]: value }));
     setConfirmed(false);
     setPreview('');
+    setPageCursor('');
   };
   async function prepare() {
+    if (imported.attempt || imported.busy) return;
     try {
       await m.execute<{ preview: { id: string } }>(
         '/finance/statement-previews',
@@ -60,7 +64,11 @@ export default function StatementImportReview({
           mapping: statementMapping(choices),
         },
         'POST',
-        (r) => setPreview(r.preview.id),
+        (r) => {
+          setPageCursor('');
+          setConfirmed(false);
+          setPreview(r.preview.id);
+        },
       );
     } catch (e) {
       setError((e as Error).message);
@@ -73,7 +81,7 @@ export default function StatementImportReview({
         Choose every mapping explicitly. Debits/outflows are negative. This import records statement
         evidence and never initiates payment.
       </p>
-      <fieldset disabled={!!m.attempt || m.busy} style={{ border: 0, padding: 0, minWidth: 0 }}>
+      <fieldset disabled={frozen} style={{ border: 0, padding: 0, minWidth: 0 }}>
         {Object.entries({
           headerRow: ['yes', 'no'],
           delimiter: ['comma', 'semicolon', 'tab'],
@@ -119,7 +127,7 @@ export default function StatementImportReview({
         ))}
       </fieldset>
       <button
-        disabled={!q.ready || q.data?.state !== 'clean' || m.busy}
+        disabled={!q.ready || q.data?.state !== 'clean' || m.busy || !!imported.attempt || imported.busy}
         onClick={() => void prepare()}
       >
         {m.attempt ? 'Retry same mapping preview' : 'Preview exact statement rows'}
@@ -152,6 +160,7 @@ export default function StatementImportReview({
             <input
               type="checkbox"
               checked={confirmed}
+              disabled={!!imported.attempt || imported.busy}
               onChange={(e) => setConfirmed(e.target.checked)}
             />
             I reviewed the complete mapping and all normalized rows

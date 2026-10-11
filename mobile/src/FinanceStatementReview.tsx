@@ -59,6 +59,7 @@ export default function FinanceStatementReview({
   );
   const frozen = !!m.attempt || m.busy || !!imported.attempt || imported.busy;
   const set = (key: keyof typeof choices, value: string) => {
+    if (frozen) return;
     setChoices((v) => ({ ...v, [key]: value }));
     setPreview("");
     setConfirmed(false);
@@ -120,9 +121,10 @@ export default function FinanceStatementReview({
             : "Preview exact statement rows"
         }
         disabled={
-          !q.ready || q.data?.state !== "clean" || m.busy || imported.busy
+          !q.ready || q.data?.state !== "clean" || m.busy || !!imported.attempt || imported.busy
         }
         onPress={() => {
+          if (imported.attempt || imported.busy) return;
           try {
             void m
               .execute<{ preview: { id: string } }>(
@@ -133,7 +135,11 @@ export default function FinanceStatementReview({
                   mapping: statementMapping(choices),
                 },
                 "POST",
-                (r) => setPreview(r.preview.id),
+                (r) => {
+                  setPageCursor("");
+                  setConfirmed(false);
+                  setPreview(r.preview.id);
+                },
               )
               .catch((e) => setError(e.message));
           } catch (e) {
