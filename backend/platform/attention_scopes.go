@@ -1,6 +1,9 @@
 package platform
 
-import "gorm.io/gorm"
+import (
+	"gorm.io/gorm"
+	"time"
+)
 
 // attentionCandidates applies live business and private source scope in SQL
 // before batching/limit. Projection additionally validates exact obligations.
@@ -34,5 +37,11 @@ func attentionCandidates(tx *gorm.DB, a *access) *gorm.DB {
 	financeDuplicates := financeDuplicateReadQuery(tx, a).Select("id").Where("state='open'")
 	financeRows := financeReconciliationAttentionQuery(tx, a).Select("id")
 	q := tx.Model(&AttentionItem{}).Where(`company_id=? AND recipient_id=? AND ((source_kind='task' AND source_id IN (?) AND (kind<>'task_review' OR source_id IN (?)) AND (kind<>'blocker' OR source_id IN (?))) OR (source_kind='expense' AND source_id IN (?) AND (kind<>'expense_review' OR source_id IN (?))) OR (source_kind='intake' AND source_id IN (?)) OR (source_kind='record' AND `+record+`) OR (source_kind='bookmark' AND `+bookmark+`)) OR (company_id=? AND recipient_id=? AND ((source_kind='finance_extraction' AND source_id IN (?)) OR (source_kind='finance_duplicate' AND source_id IN (?)) OR (source_kind='finance_reconciliation' AND source_id IN (?))))`, a.Company.ID, a.User.ID, tasks, reviews, blockers, expenses, expenseReviews, intake, a.User.ID, true, a.User.ID, false, true, true, a.User.ID, a.User.ID, a.User.ID, a.User.ID, true, a.User.ID, false, true, true, a.Company.ID, a.User.ID, financeExtractions, financeDuplicates, financeRows).Or("id IN (?)", goalAttentionCandidates(tx, a).Select("id"))
+	// Only current recipient-bound ready jobs enter candidate batches. Full source,
+	// definition and schedule authority remains a projection-time check.
+	reports := tx.Model(&ReportExportJob{}).Select("report_export_jobs.id").
+		Joins("JOIN report_artifacts art ON art.id=report_export_jobs.artifact_id AND art.job_id=report_export_jobs.id AND art.company_id=report_export_jobs.company_id AND art.recipient_id=report_export_jobs.recipient_id").
+		Where("report_export_jobs.company_id=? AND report_export_jobs.recipient_id=? AND report_export_jobs.recipient_access_epoch=? AND report_export_jobs.state='ready' AND art.state='ready' AND art.expires_at>?", a.Company.ID, a.User.ID, a.Member.AccessEpoch, time.Now().UTC())
+	q = q.Or("company_id=? AND recipient_id=? AND source_kind='report_export' AND kind='report_ready' AND source_id IN (?)", a.Company.ID, a.User.ID, reports)
 	return tx.Model(&AttentionItem{}).Where("id IN (?)", q.Select("id")).Where("membership_epoch=?", a.Member.AccessEpoch)
 }

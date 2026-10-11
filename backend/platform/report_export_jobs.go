@@ -56,7 +56,7 @@ func authorizeReportExportJob(tx *gorm.DB, a *access, id string) (ReportExportJo
 		if e != nil || owner.Member.Role == "viewer" {
 			return job, historicalAccessChanged()
 		}
-		if e := validateSavedConfiguration(tx, owner, d.Configuration); e != nil {
+		if e := validateSavedRuntimeConfiguration(tx, owner, d.Configuration); e != nil {
 			return job, historicalAccessChanged()
 		}
 		var sources []ReportSnapshotSource

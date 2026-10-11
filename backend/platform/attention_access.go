@@ -75,6 +75,11 @@ func projectAttentionSource(tx *gorm.DB, a *access, item AttentionItem, replay b
 	case "report_export":
 		job, e := authorizeReportExportJob(tx, a, item.SourceID)
 		if e != nil {
+			// A stale report is unavailable to this recipient, not a failure of the
+			// remaining independently authorized Inbox items.
+			if api, ok := e.(*apiError); ok && api.Status < 500 {
+				return v, missing()
+			}
 			return v, e
 		}
 		if item.Kind != "report_ready" || job.State != "ready" || job.ArtifactID == "" {

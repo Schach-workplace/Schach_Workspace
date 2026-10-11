@@ -26,6 +26,15 @@ Actual current Goal geometry is independently accepted as a qualified composite:
 
 Recorded on **10 October 2026**. This document separates executed checks from deployment checks that remain open. It is a technical delivery record, not an external security audit or production certification.
 
+## Final reporting correction, 12 October 2026
+
+All three Important findings in the complete whole-branch review have one consolidated reporting correction. Owning tests reproduce the original Inbox omission, four CSV revocations, and unrelated recipient departure/suspension denial. The corrected public Inbox query, original-snapshot64KiB CSV authority checks, and per-recipient runtime validation pass. Explicit saves still validate all recipients, and owner/source/version/expiry invalidation remains enforced.
+
+Fresh changed-backend checks pass: full Go suite (platform136.485s), affected PostgreSQL suite (75 top-level tests,69.845s), final PostgreSQL owning/wider controls (11 top-level tests,30 subcases,21.393s), and focused PostgreSQL race (9 top-level tests,24 subcases,88.895s). Current compiled standalone and actual isolated Encore compiler/exporter/native PostgreSQL TCP checks each pass four bounded report checks. No provider inference, unchanged client build, APK, or native fixture run is repeated. All205 compiled native/shared inputs still match the74e6474 APK source boundary.
+
+Exact before-command inputs, outcomes, raw-output hashes, preserved failed fixture/adapter/socket qualifications, complete original review, Ruling109 addendum, and executor dispositions are [published append-only](../verification/workspace-improvements-roadmap/final-review/publication-report.md). Prior535 M10 safe records plus249 final-integration records and the M10 index remain byte-identical. Already-written/in-flight CSV bytes, existing export copies, and all17 earlier deployment/device qualifications retain their limits. Root owns the single scoped re-review, final preservation/cutover, and push. This correction does not claim those later actions have passed.
+
+
 ## Historical finance-release runtime and dependency record
 
 | Item | Version and evidence |

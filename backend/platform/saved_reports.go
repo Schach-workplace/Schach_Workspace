@@ -87,7 +87,24 @@ func (s *Server) savedReportRoutes() {
 	s.route("POST "+root+"/{id}/generate", s.generateSavedReport)
 	s.route("PATCH "+root+"/{id}/schedule", s.updateReportSchedule)
 }
+
+// Explicit saves validate every selected recipient's current eligibility.
 func validateSavedConfiguration(tx *gorm.DB, a *access, c SavedReportConfiguration) error {
+	if e := validateSavedRuntimeConfiguration(tx, a, c); e != nil {
+		return e
+	}
+	for _, id := range c.RecipientIDs {
+		if !a.activeUser(id) {
+			return invalid("Choose distinct active company recipients.")
+		}
+	}
+	return nil
+}
+
+// Runtime validates the saved configuration and owner's source scope. Each
+// output boundary separately validates its own current recipient; a departed
+// co-recipient cannot disable other recipients' outputs.
+func validateSavedRuntimeConfiguration(tx *gorm.DB, a *access, c SavedReportConfiguration) error {
 	if !clean(c.Name, 120) || c.Basis != "task_history_v1" || !in(c.PeriodRule, "fixed", "previous_week", "previous_month") || !in(c.TimezonePolicy, "explicit", "company_at_resolution") {
 		return invalid("Choose a name, supported period and timezone policy.")
 	}
@@ -112,7 +129,7 @@ func validateSavedConfiguration(tx *gorm.DB, a *access, c SavedReportConfigurati
 	}
 	seen := map[string]bool{}
 	for _, id := range c.RecipientIDs {
-		if seen[id] || !a.activeUser(id) || a.Users[id].ID == "" || a.Users[id].Suspended {
+		if seen[id] || id == "" {
 			return invalid("Choose distinct active company recipients.")
 		}
 		seen[id] = true
@@ -379,7 +396,7 @@ func (s *Server) generateSavedReport(w http.ResponseWriter, r *http.Request) err
 			if d.State != "active" || d.Version != input.ExpectedVersion {
 				return conflict()
 			}
-			return validateSavedConfiguration(tx, a, d.Configuration)
+			return validateSavedRuntimeConfiguration(tx, a, d.Configuration)
 		}, func(out BusinessResult) error { return authorizeHistoricalSources(tx, a, out.IDs[0]) }, func() (BusinessResult, error) {
 			request, e := resolveSavedReportRequest(d.Configuration, a.Company.Timezone, time.Now().UTC())
 			if e != nil {

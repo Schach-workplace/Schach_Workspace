@@ -1,6 +1,7 @@
 package platform
 
 import (
+	"bytes"
 	"database/sql"
 	"encoding/csv"
 	"encoding/json"
@@ -285,14 +286,26 @@ func (s *Server) readReportSnapshot(r *http.Request) (*reportSnapshot, error) {
 	if snap == nil || time.Since(snap.Generated) > 5*time.Minute {
 		return nil, &apiError{409, "snapshot_expired", "Generate a new report summary before continuing.", nil}
 	}
+	if e = s.withReportAccessTransaction(r, a, func(tx *gorm.DB) error {
+		return authorizeCurrentReportSnapshot(tx, a, snap, filters)
+	}); e != nil {
+		return nil, e
+	}
+	return snap, nil
+}
+
+func authorizeCurrentReportSnapshot(tx *gorm.DB, a *access, snap *reportSnapshot, filters string) error {
+	if snap == nil || time.Since(snap.Generated) > 5*time.Minute {
+		return &apiError{409, "snapshot_expired", "Generate a new report summary before continuing.", nil}
+	}
 	if snap.Company != a.Company.ID || snap.User != a.User.ID {
-		return nil, missing()
+		return missing()
 	}
 	if snap.Filters != filters {
-		return nil, invalid("This snapshot belongs to different report filters.")
+		return invalid("This snapshot belongs to different report filters.")
 	}
 	if snap.Access != accessBasis(a) {
-		return nil, &apiError{409, "access_changed", "Company access changed. Generate a new report.", nil}
+		return &apiError{409, "access_changed", "Company access changed. Generate a new report.", nil}
 	}
 	// Frozen values never grant continuing access. Reassignment/deletion and
 	// changed visibility of references invalidate the entire read basis.
@@ -312,15 +325,25 @@ func (s *Server) readReportSnapshot(r *http.Request) (*reportSnapshot, error) {
 	}
 	if len(requested) > 0 {
 		var count int64
-		if e = taskReadQuery(s.db.WithContext(r.Context()), a).Where("id IN ?", requested).Count(&count).Error; e != nil {
-			return nil, e
+		if e := taskReadQuery(tx, a).Where("id IN ?", requested).Count(&count).Error; e != nil {
+			return e
 		}
 		if count != int64(len(requested)) {
-			return nil, &apiError{409, "access_changed", "Task access changed. Generate a new report.", nil}
+			return &apiError{409, "access_changed", "Task access changed. Generate a new report.", nil}
 		}
 	}
-	return snap, nil
+	return nil
 }
+
+// Reuse the exact cached snapshot and original request session at every output
+// boundary. No snapshot renewal, row dropping, or authority lock spans I/O.
+func (s *Server) recheckCurrentReportSnapshot(r *http.Request, snap *reportSnapshot) error {
+	a := &access{Company: Company{ID: snap.Company}, User: User{ID: snap.User}}
+	return s.withReportAccessTransaction(r, a, func(tx *gorm.DB) error {
+		return authorizeCurrentReportSnapshot(tx, a, snap, snap.Filters)
+	})
+}
+
 func (s *Server) reportSummary(w http.ResponseWriter, r *http.Request) error {
 	snap, e := s.createReportSnapshot(r)
 	if e != nil {
@@ -409,33 +432,50 @@ func (s *Server) reportExport(w http.ResponseWriter, r *http.Request) error {
 	if e != nil {
 		return e
 	}
-	w.Header().Set("Content-Type", "text/csv; charset=utf-8")
-	w.Header().Set("Content-Disposition", "attachment; filename=task-report.csv")
-	w.Header().Set("X-Report-Basis", "snapshot_current_state")
-	w.Header().Set("X-Report-Rows", strconv.Itoa(len(rows)))
-	writer := csv.NewWriter(w)
+	// The snapshot already has a hard 8 MiB encoded-data ceiling. Serialize
+	// its frozen values once so even a large row uses bounded output chunks.
+	var content bytes.Buffer
+	writer := csv.NewWriter(&content)
 	if e = writer.Write([]string{"ID", "Title", "Department", "Project", "Owner", "Reviewer", "Status", "Priority", "Original deadline", "Current deadline", "Due date", "Deadline mode", "Due at", "Due timezone", "Original deadline mode", "Original due at", "Original due timezone", "Owner email", "Deadline change reason", "Progress %", "Estimated hours", "Actual hours", "Accepted at", "Description", "Blocker"}); e != nil {
 		return e
 	}
-	for i, t := range rows {
+	for _, t := range rows {
 		if e = r.Context().Err(); e != nil {
 			return e
 		}
 		if e = writer.Write(csvTaskRow(t, snap)); e != nil {
 			return e
 		}
-		if i%100 == 99 {
-			writer.Flush()
-			if e = writer.Error(); e != nil {
-				return e
-			}
-			if f, ok := w.(http.Flusher); ok {
-				f.Flush()
-			}
-		}
 	}
 	writer.Flush()
-	return writer.Error()
+	if e = writer.Error(); e != nil {
+		return e
+	}
+	if e = s.recheckCurrentReportSnapshot(r, snap); e != nil {
+		return e
+	}
+	w.Header().Set("Content-Type", "text/csv; charset=utf-8")
+	w.Header().Set("Content-Disposition", "attachment; filename=task-report.csv")
+	w.Header().Set("X-Report-Basis", "snapshot_current_state")
+	w.Header().Set("X-Report-Rows", strconv.Itoa(len(rows)))
+	w.Header().Set("Content-Length", strconv.Itoa(content.Len()))
+	data := content.Bytes()
+	for start := 0; start < len(data); start += 64 << 10 {
+		if e = r.Context().Err(); e != nil {
+			return e
+		}
+		if e = s.recheckCurrentReportSnapshot(r, snap); e != nil {
+			return e
+		}
+		end := min(start+(64<<10), len(data))
+		if _, e = w.Write(data[start:end]); e != nil {
+			return e
+		}
+		if f, ok := w.(http.Flusher); ok {
+			f.Flush()
+		}
+	}
+	return nil
 }
 
 func csvTaskRow(t Task, snap *reportSnapshot) []string {

@@ -263,7 +263,7 @@ func (s *Server) RunReportSchedules(ctx context.Context, now time.Time, limit in
 				}
 				return tx.Model(&schedule).Updates(map[string]any{"state": "paused", "failure_code": "owner_ineligible"}).Error
 			}
-			if e := validateSavedConfiguration(tx, owner, definition.Configuration); e != nil {
+			if e := validateSavedRuntimeConfiguration(tx, owner, definition.Configuration); e != nil {
 				if e := cancelReportDefinitionOutputs(tx, schedule.CompanyID, definition.ID, definition.Version); e != nil {
 					return e
 				}
