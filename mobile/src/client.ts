@@ -1,3 +1,4 @@
+import { isIntelligenceRawExpiry } from "../../shared/intelligence/rawExpiry";
 import * as SecureStore from "expo-secure-store";
 import { authorizedSource } from "../../shared/communication/history";
 export interface Session {
@@ -156,6 +157,12 @@ export class NativeClient {
       if (!response.ok) {
         if (
           [401, 403, 404].includes(response.status) &&
+          !isIntelligenceRawExpiry(
+            path,
+            method,
+            response.status,
+            value.error?.code ?? "",
+          ) &&
           !(contextual && response.status === 404)
         ) {
           this.clearGeneration();

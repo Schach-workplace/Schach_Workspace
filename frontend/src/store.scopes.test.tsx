@@ -156,3 +156,93 @@ it('finishes unauthenticated startup after the initial session401', async () => 
   );
   await screen.findByText('Ready to sign in');
 });
+
+it.each([
+  ['GET', '/intelligence/jobs/raw', 403, 'expired', true],
+  ['GET', '/intelligence/jobs/raw', 403, 'source_unavailable', false],
+  ['GET', '/intelligence/jobs/raw', 401, 'expired', false],
+  ['POST', '/intelligence/jobs/raw/publication-access', 403, 'expired', false],
+  ['POST', '/intelligence/jobs/raw/cancel', 403, 'expired', false],
+  ['GET', '/tasks/raw', 403, 'expired', false],
+] as const)(
+  'real workspace transport raw expiry classification %s %s %s %s',
+  async (method, path, status, code, preserve) => {
+    const { request } = await import('./data/api');
+    const { beginAttempt, readAttempt, clearAllBusinessAttempts } =
+      await import('../../shared/business/attempts');
+    const { writeDraft, readDraft, clearAllDrafts } = await import('./communication/drafts');
+    clearAllBusinessAttempts();
+    clearAllDrafts();
+    const data = structuredClone(sample.workspaces[0]) as WorkspaceData;
+    data.company.id = 'expiry-company-' + crypto.randomUUID();
+    data.me.id = 'expiry-actor';
+    data.me.memberAccessEpoch = 1;
+    const actor = {
+      user: { id: data.me.id, name: data.me.name, email: data.me.email },
+      companies: [data.company],
+    };
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (input: string) => {
+        const url = String(input);
+        if (url.endsWith(path))
+          return new Response(JSON.stringify({ error: { code, message: 'Raw unavailable' } }), {
+            status,
+          });
+        const value = url.endsWith('/auth/session')
+          ? actor
+          : url.endsWith('/bootstrap')
+            ? { ...data, readBasis: 'stable', tasks: [], expenses: [], financeEvents: [] }
+            : url.includes('/tasks?')
+              ? { tasks: [], cursor: '' }
+              : url.includes('/expenses?')
+                ? { expenses: [], cursor: '' }
+                : { financeEvents: [] };
+        return new Response(JSON.stringify(value), { status: 200 });
+      }),
+    );
+    function Probe() {
+      const w = useWorkspace();
+      return <p>{w.data?.readBasis}</p>;
+    }
+    render(
+      <WorkspaceProvider>
+        <Probe />
+      </WorkspaceProvider>,
+    );
+    await screen.findByText('stable');
+    const scope = {
+      serverOrigin: window.location.origin + ':api',
+      companyId: data.company.id,
+      userId: data.me.id,
+      formId: '$intelligence-review:raw:0',
+    };
+    const original = beginAttempt(
+      scope,
+      { title: 'Human authored', intelligenceBasis: { jobId: 'raw' } },
+      'original-key',
+      {
+        path: '/tasks',
+        method: 'POST',
+        canonical: true,
+        sources: ['/intelligence/jobs/raw/publication-access'],
+      },
+      data.me,
+    );
+    const draft = {
+      serverOrigin: scope.serverOrigin,
+      companyId: scope.companyId,
+      userId: scope.userId,
+      conversationId: scope.formId,
+      threadRootId: 'input:authored',
+    };
+    writeDraft(draft, { body: 'Human authored' });
+    await expect(request('/companies/' + data.company.id + path, { method })).rejects.toMatchObject(
+      { status, code },
+    );
+    expect(readAttempt(scope)).toBe(preserve ? original : undefined);
+    expect(readDraft(draft).body).toBe(preserve ? 'Human authored' : '');
+    clearAllBusinessAttempts();
+    clearAllDrafts();
+  },
+);

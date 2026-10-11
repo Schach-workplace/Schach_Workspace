@@ -1,3 +1,4 @@
+import { isIntelligenceRawExpiry } from '../../../shared/intelligence/rawExpiry';
 import { businessAttemptGeneration } from '../../../shared/business/attempts';
 const base = (import.meta.env.VITE_API_URL ?? '').replace(/\/$/, '');
 export class ApiError extends Error {
@@ -48,6 +49,7 @@ export async function request<T>(
     }
     if (
       capturedGeneration === businessAttemptGeneration() &&
+      !isIntelligenceRawExpiry(path, method, response.status, code) &&
       (response.status === 401 || (response.status === 403 && path.startsWith('/companies/')))
     )
       window.dispatchEvent(

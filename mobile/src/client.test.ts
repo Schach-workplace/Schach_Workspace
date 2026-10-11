@@ -177,3 +177,60 @@ it.each([true, false])(
     expect(c.generation).toBe(authorized ? 0 : 1);
   },
 );
+
+it.each([
+  ["GET", "/intelligence/jobs/raw", 403, "expired", true],
+  ["GET", "/intelligence/jobs/raw", 403, "source_unavailable", false],
+  ["GET", "/intelligence/jobs/raw", 401, "expired", false],
+  ["GET", "/intelligence/jobs/raw", 404, "expired", false],
+  ["POST", "/intelligence/jobs/raw/publication-access", 403, "expired", false],
+  ["POST", "/intelligence/jobs/raw/cancel", 403, "expired", false],
+  ["GET", "/tasks/raw", 403, "expired", false],
+] as const)(
+  "actual native raw expiry transport classification %s %s %s %s",
+  async (method, path, status, code, preserve) => {
+    const { beginAttempt, readAttempt, clearAllBusinessAttempts } =
+      await import("../../shared/business/attempts");
+    clearAllBusinessAttempts();
+    const c = new NativeClient();
+    c.endpoint = "https://owned.test";
+    const scope = {
+      serverOrigin: c.endpoint,
+      companyId: "co",
+      userId: "actor",
+      formId: "$intelligence-review:raw:0",
+    };
+    const original = beginAttempt(
+      scope,
+      { title: "Human authored", intelligenceBasis: { jobId: "raw" } },
+      "original-key",
+      {
+        path: "/tasks",
+        method: "POST",
+        canonical: true,
+        sources: ["/intelligence/jobs/raw/publication-access"],
+      },
+    );
+    const retired = vi.fn(() => clearAllBusinessAttempts());
+    c.onPolicyChange = retired;
+    const cancel = vi.fn();
+    c.registerCancellation(cancel);
+    const generation = c.generation;
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => ({
+        ok: false,
+        status,
+        json: async () => ({ error: { code, message: "Raw unavailable" } }),
+      })),
+    );
+    await expect(
+      c.request("/companies/co" + path, method),
+    ).rejects.toMatchObject({ status, code });
+    expect(c.generation).toBe(generation + (preserve ? 0 : 1));
+    expect(retired).toHaveBeenCalledTimes(preserve ? 0 : 1);
+    expect(cancel).toHaveBeenCalledTimes(preserve ? 0 : 1);
+    expect(readAttempt(scope)).toBe(preserve ? original : undefined);
+    clearAllBusinessAttempts();
+  },
+);
