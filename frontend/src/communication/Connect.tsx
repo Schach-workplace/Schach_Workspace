@@ -1,3 +1,4 @@
+import IntelligenceLauncher from '../components/IntelligenceLauncher';
 import {
   lazy,
   Suspense,
@@ -630,6 +631,33 @@ function ConnectView({
                   Load older messages
                 </button>
               )}
+              <IntelligenceLauncher
+                choices={chat.messages
+                  .filter((m) => !m.removed)
+                  .flatMap((m) => [
+                    {
+                      label: 'Message: ' + m.body.slice(0, 100),
+                      source: {
+                        kind: 'message' as const,
+                        id: m.id,
+                        conversationId: chat.selected,
+                        expectedRevision: m.revision,
+                        selectedFieldSet: 'body',
+                      },
+                    },
+                    ...(m.mediaIds ?? []).map((id) => ({
+                      label: 'Attached audio from selected message',
+                      source: {
+                        kind: 'voice_media' as const,
+                        id,
+                        parentId: m.id,
+                        conversationId: chat.selected,
+                        expectedRevision: m.revision,
+                        selectedFieldSet: 'audio',
+                      },
+                    })),
+                  ])}
+              />
               {chat.messages.length === 0 ? (
                 <div className="connect-empty-chat">
                   <MessagesSquare size={38} />

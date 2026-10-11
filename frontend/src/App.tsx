@@ -1,3 +1,4 @@
+import IntelligenceLauncher from './components/IntelligenceLauncher';
 import PeopleTools from './components/PeopleTools';
 import Connect from './communication/Connect';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
@@ -325,7 +326,23 @@ function WorkspaceApp() {
   const [view, setView] = useState<View>(hashView);
   const [filters, setFilters] = useState<TaskFilters>(emptyFilters);
   const [taskId, setTaskId] = useState('');
+  useEffect(() => {
+    const open = (e: Event) => {
+      const id = (e as CustomEvent<{ id: string }>).detail?.id;
+      if (id) setTaskId(id);
+    };
+    window.addEventListener('schach-open-task', open);
+    return () => window.removeEventListener('schach-open-task', open);
+  }, []);
   const [expenseId, setExpenseId] = useState('');
+  useEffect(() => {
+    const open = (e: Event) => {
+      const id = (e as CustomEvent<{ id: string }>).detail?.id;
+      if (id) setExpenseId(id);
+    };
+    window.addEventListener('schach-open-expense', open);
+    return () => window.removeEventListener('schach-open-expense', open);
+  }, []);
   const [initialProject, setInitialProject] = useState('');
   const [projectId, setProjectId] = useState('');
   const [mobileNav, setMobileNav] = useState(false);
@@ -585,6 +602,7 @@ function WorkspaceApp() {
       <aside className="sidebar">{sidebarContent}</aside>
       <div className="app-main">
         <header className="topbar">
+          <IntelligenceLauncher label="Local assistance history" />
           <div className="topbar-left">
             <button
               className="icon-button desktop-collapse"

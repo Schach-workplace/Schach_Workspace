@@ -1,3 +1,4 @@
+import IntelligenceLauncher from './IntelligenceLauncher';
 import ExecutionRecovery from './ExecutionRecovery';
 import { clearAttemptScope } from '../data/businessAttempts';
 import { ApiError } from '../data/api';
@@ -67,6 +68,7 @@ export default function TaskDrawer(props: {
   onClose: () => void;
   initialProject?: string;
 }) {
+  const [assistanceOpen, setAssistanceOpen] = useState(false);
   const detail = useTaskDetail(props.taskId);
   const store = useWorkspace();
   const data = store.data;
@@ -84,23 +86,57 @@ export default function TaskDrawer(props: {
     detail.accessRevoked ||
       (!!data && props.taskId !== 'new' && !data.tasks.some((t) => t.id === props.taskId)),
   );
-  if (props.taskId !== 'new' && !detail.task)
-    return (
-      <div role="dialog" aria-label="Task details">
-        <button onClick={props.onClose}>Close</button>
-        <p role={detail.error ? 'alert' : 'status'}>{detail.error || 'Loading task details…'}</p>
-      </div>
-    );
   return (
-    <TaskDrawerBody
-      {...props}
-      memory={memory}
-      resolvedTask={detail.task}
-      resolvedPeople={detail.people}
-    />
+    <>
+      <IntelligenceLauncher
+        controlledOpen={assistanceOpen}
+        onClose={() => setAssistanceOpen(false)}
+        choices={
+          detail.task
+            ? [
+                {
+                  label: 'Selected task fields',
+                  source: {
+                    kind: 'task_fields',
+                    id: detail.task.id,
+                    expectedVersion: detail.task.version,
+                    selectedFieldSet: 'narrative',
+                  },
+                },
+                ...(detail.task.comments ?? []).map((c) => ({
+                  label: 'Task comment: ' + c.body.slice(0, 80),
+                  source: {
+                    kind: 'task_comment' as const,
+                    id: c.id,
+                    parentId: props.taskId,
+                    selectedFieldSet: 'body',
+                  },
+                })),
+              ]
+            : []
+        }
+      />
+      {props.taskId !== 'new' && !detail.task ? (
+        <div role="dialog" aria-label="Task details">
+          <button onClick={props.onClose}>Close</button>
+          <p role={detail.error ? 'alert' : 'status'}>{detail.error || 'Loading task details…'}</p>
+        </div>
+      ) : (
+        <TaskDrawerBody
+          {...props}
+          onAssist={() => setAssistanceOpen(true)}
+          assistanceOpen={assistanceOpen}
+          memory={memory}
+          resolvedTask={detail.task}
+          resolvedPeople={detail.people}
+        />
+      )}
+    </>
   );
 }
 function TaskDrawerBody({
+  onAssist,
+  assistanceOpen,
   memory,
   resolvedTask,
   resolvedPeople,
@@ -108,6 +144,8 @@ function TaskDrawerBody({
   onClose,
   initialProject = '',
 }: {
+  onAssist: () => void;
+  assistanceOpen: boolean;
   memory: RecordDraftMemory;
   resolvedTask?: Task;
   resolvedPeople?: Person[];
@@ -369,10 +407,18 @@ function TaskDrawerBody({
         .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
     : [];
   return (
-    <Dialog.Root open onOpenChange={(open) => !open && onClose()}>
+    <Dialog.Root open modal={!assistanceOpen} onOpenChange={(open) => !open && onClose()}>
       <Dialog.Portal>
         <Dialog.Overlay className="dialog-overlay" />
-        <Dialog.Content className="task-sheet">
+        <Dialog.Content
+          className="task-sheet"
+          onOpenAutoFocus={(event) => {
+            if (assistanceOpen) event.preventDefault();
+          }}
+          onCloseAutoFocus={(event) => {
+            if (assistanceOpen) event.preventDefault();
+          }}
+        >
           <header className="sheet-header">
             <div className="sheet-breadcrumb">
               <ClipboardList size={17} />
@@ -390,6 +436,11 @@ function TaskDrawerBody({
           </header>
           <div className="sheet-title">
             <Dialog.Title>{task ? task.title : 'Make the next step clear.'}</Dialog.Title>
+            {task && (
+              <button className="button" onClick={onAssist}>
+                Local assistance
+              </button>
+            )}
             <Dialog.Description>
               {task
                 ? `Created by ${personName(data, task.createdBy)} · ${dateLabel(task.createdAt)} · Version ${task.version}`

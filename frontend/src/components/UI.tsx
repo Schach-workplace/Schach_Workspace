@@ -271,6 +271,8 @@ export function Field({
 }
 export function Modal({
   open,
+  modal = true,
+  layer = 100,
   onClose,
   title,
   description,
@@ -278,6 +280,8 @@ export function Modal({
   wide = false,
 }: {
   open: boolean;
+  modal?: boolean;
+  layer?: number;
   onClose: () => void;
   title: string;
   description?: string;
@@ -285,10 +289,19 @@ export function Modal({
   wide?: boolean;
 }) {
   return (
-    <Dialog.Root open={open} onOpenChange={(v) => !v && onClose()}>
+    <Dialog.Root modal={modal} open={open} onOpenChange={(v) => !v && onClose()}>
       <Dialog.Portal>
-        <Dialog.Overlay className="dialog-overlay" />
-        <Dialog.Content className={cx('dialog-content', wide && 'dialog-wide')}>
+        <Dialog.Overlay className="dialog-overlay" style={{ zIndex: layer }} />
+        <Dialog.Content
+          style={{ zIndex: layer + 1 }}
+          onOpenAutoFocus={(event) => {
+            if (!modal) event.preventDefault();
+          }}
+          onCloseAutoFocus={(event) => {
+            if (!modal) event.preventDefault();
+          }}
+          className={cx('dialog-content', wide && 'dialog-wide')}
+        >
           <div className="dialog-header">
             <div>
               <Dialog.Title>{title}</Dialog.Title>

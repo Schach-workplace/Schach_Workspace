@@ -1,3 +1,4 @@
+import IntelligenceLauncher from './IntelligenceLauncher';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useWorkspace } from '../store';
@@ -220,6 +221,24 @@ export default function HistoricalReports({
     <div className="historical-reports">
       <section className="panel report-controls">
         <h2>Generate an immutable report</h2>
+        <IntelligenceLauncher
+          label="Explain selected report facts"
+          operation="report_explanation"
+          choices={
+            result.ready && snapshotId
+              ? [
+                  {
+                    label: 'Selected historical report',
+                    source: {
+                      kind: 'report_snapshot',
+                      id: snapshotId,
+                      selectedFieldSet: 'metrics',
+                    },
+                  },
+                ]
+              : []
+          }
+        />
         <p>
           State at period end, genuine acceptance episodes and dated effort are separate. Choose a
           completed period.

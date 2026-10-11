@@ -1,3 +1,4 @@
+import IntelligenceLauncher from '../components/IntelligenceLauncher';
 import { useEffect, useState } from 'react';
 import type { Message, Conversation } from './types';
 import type { WorkspaceData } from '../types';
@@ -215,6 +216,23 @@ export default function Structured({
           </button>
         </form>
       )}
+      <IntelligenceLauncher
+        choices={records.flatMap((record) =>
+          ['content', 'content_responses'].map((selectedFieldSet) => ({
+            label:
+              record.title +
+              (selectedFieldSet === 'content_responses' ? ' and current responses' : ''),
+            source: {
+              kind: 'record',
+              id: record.id,
+              parentId: record.anchorMessageId,
+              conversationId: conversation.id,
+              expectedRevision: record.revision,
+              selectedFieldSet,
+            },
+          })),
+        )}
+      />
       {records.map((record) => {
         const mine = recipients.find(
           (p) =>

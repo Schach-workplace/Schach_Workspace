@@ -1,3 +1,4 @@
+import IntelligenceLauncher from '../components/IntelligenceLauncher';
 import MeasuredGoals from '../components/MeasuredGoals';
 import { useEffect, useState } from 'react';
 import HistoricalReports from '../components/HistoricalReports';
@@ -105,6 +106,17 @@ function CurrentReportsPage({ onTask }: { onTask: (id: string) => void }) {
   const attentionCount = input.summary?.needsAttention ?? needsAttention.length;
   return (
     <div className="page-content">
+      {input.available && input.snapshot && (
+        <IntelligenceLauncher
+          operation="report_explanation"
+          choices={[
+            {
+              label: 'Selected current report facts',
+              source: { kind: 'report_current', id: input.snapshot, selectedFieldSet: 'metrics' },
+            },
+          ]}
+        />
+      )}
       <p className="field-help">
         Current-state report · {data.company.timezone} · later task changes can change these
         figures.

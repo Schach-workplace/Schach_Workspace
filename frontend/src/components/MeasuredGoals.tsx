@@ -1,3 +1,4 @@
+import IntelligenceLauncher from './IntelligenceLauncher';
 import { useState } from 'react';
 import { useWorkspace } from '../store';
 import {
@@ -106,6 +107,38 @@ function GoalPanel({ goalId, onTask }: { goalId: string; onTask: (id: string) =>
   return (
     <section>
       <h2>{q.ready ? goal.name : 'Checking current goal…'}</h2>
+      <IntelligenceLauncher
+        label="Explain selected goal facts"
+        operation="report_explanation"
+        choices={
+          q.ready
+            ? [
+                {
+                  label: 'Current selected goal',
+                  source: {
+                    kind: 'goal_fields',
+                    id: goal.id,
+                    expectedVersion: goal.version,
+                    selectedFieldSet: 'measurement',
+                  },
+                },
+                ...(goal.currentMeasurementId
+                  ? [
+                      {
+                        label: 'Recorded measurement',
+                        source: {
+                          kind: 'goal_measurement' as const,
+                          id: goal.currentMeasurementId,
+                          parentId: goal.id,
+                          selectedFieldSet: 'measurement_evidence',
+                        },
+                      },
+                    ]
+                  : []),
+              ]
+            : []
+        }
+      />
       {q.ready && q.data ? (
         <>
           <p>

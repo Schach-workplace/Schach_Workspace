@@ -1,3 +1,4 @@
+import IntelligenceLauncher from './IntelligenceLauncher';
 import { useState } from 'react';
 import { useWorkspace } from '../store';
 import {
@@ -63,6 +64,25 @@ export default function PlanningView({
   return (
     <section className="page-content">
       <h2>Planning authorized work</h2>
+      <IntelligenceLauncher
+        label="Explain selected planning facts"
+        operation="report_explanation"
+        choices={
+          view
+            ? [
+                {
+                  label: 'Current capacity projection',
+                  source: {
+                    kind: 'planning_projection',
+                    id: view.projectionBasis,
+                    selectedFieldSet: 'capacity',
+                    filters: { ...period, projectId: '' },
+                  },
+                },
+              ]
+            : []
+        }
+      />
       {w.mode === 'demo' ? (
         <p>
           Current planning projections and schedule suggestions require a connected company server.

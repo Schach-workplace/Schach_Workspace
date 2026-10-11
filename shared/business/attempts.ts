@@ -218,6 +218,11 @@ export function canonicalBusinessTarget(
       ) || /^\/goals\/[^/?]+\/reminder-preference$/.test(path)
     );
   return (
+    path === "/tasks" ||
+    path === "/intelligence/jobs" ||
+    /^\/conversations\/[^/?]+\/(task-conversions|expense-conversions|requests)$/.test(
+      path,
+    ) ||
     /^\/goals(?:\/[^/?]+\/measurements)?$/.test(path) ||
     /^\/task-templates(?:\/[^/?]+\/apply)?$/.test(path) ||
     /^\/projects\/[^/?]+\/milestones$/.test(path) ||

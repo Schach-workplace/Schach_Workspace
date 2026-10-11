@@ -8655,3 +8655,22 @@ small,
 .people-form fieldset {
   min-inline-size: 0;
 }
+
+.intelligence-panel label {
+  max-width: 100%;
+  min-width: 0;
+}
+.intelligence-panel label input:not([type='checkbox']),
+.intelligence-panel label select,
+.intelligence-panel textarea {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+.intelligence-panel button {
+  min-height: 44px;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}

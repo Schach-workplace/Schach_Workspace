@@ -1,3 +1,4 @@
+import IntelligenceLauncher from './IntelligenceLauncher';
 import ExpenseReceiptAssistance from './ExpenseReceiptAssistance';
 import { useRef, useState, type FormEvent } from 'react';
 import {
@@ -48,6 +49,7 @@ export default function FinanceDetail(props: {
   onEdit: (expense: Expense) => void;
   onOpenTask: (id: string) => void;
 }) {
+  const [assistanceOpen, setAssistanceOpen] = useState(false);
   const detail = useExpenseDetail(props.expense.id);
   const store = useWorkspace();
   const data = store.data;
@@ -64,24 +66,52 @@ export default function FinanceDetail(props: {
     ]),
     detail.accessRevoked || (!!data && !data.expenses.some((e) => e.id === props.expense.id)),
   );
-  if (!detail.expense)
-    return (
-      <div role="dialog" aria-label="Expense details">
-        <button onClick={props.onClose}>Close</button>
-        <p role={detail.error ? 'alert' : 'status'}>{detail.error || 'Loading expense details…'}</p>
-      </div>
-    );
   return (
-    <FinanceDetailBody
-      {...props}
-      memory={memory}
-      expense={detail.expense}
-      resolvedPeople={detail.people}
-      onEdit={() => props.onEdit(detail.expense!)}
-    />
+    <>
+      <IntelligenceLauncher
+        controlledOpen={assistanceOpen}
+        onClose={() => setAssistanceOpen(false)}
+        operation="report_explanation"
+        choices={
+          detail.expense
+            ? [
+                {
+                  label: 'Selected expense facts',
+                  source: {
+                    kind: 'expense_fields',
+                    id: detail.expense.id,
+                    expectedVersion: detail.expense.version,
+                    selectedFieldSet: 'economics',
+                  },
+                },
+              ]
+            : []
+        }
+      />
+      {!detail.expense ? (
+        <div role="dialog" aria-label="Expense details">
+          <button onClick={props.onClose}>Close</button>
+          <p role={detail.error ? 'alert' : 'status'}>
+            {detail.error || 'Loading expense details…'}
+          </p>
+        </div>
+      ) : (
+        <FinanceDetailBody
+          {...props}
+          onAssist={() => setAssistanceOpen(true)}
+          assistanceOpen={assistanceOpen}
+          memory={memory}
+          expense={detail.expense}
+          resolvedPeople={detail.people}
+          onEdit={() => props.onEdit(detail.expense!)}
+        />
+      )}
+    </>
   );
 }
 function FinanceDetailBody({
+  onAssist,
+  assistanceOpen,
   memory,
   resolvedPeople,
   expense,
@@ -89,6 +119,8 @@ function FinanceDetailBody({
   onEdit,
   onOpenTask,
 }: {
+  onAssist: () => void;
+  assistanceOpen: boolean;
   memory: RecordDraftMemory;
   resolvedPeople?: Person[];
   expense: Expense;
@@ -239,6 +271,7 @@ function FinanceDetailBody({
 
   return (
     <Modal
+      modal={!assistanceOpen}
       open
       wide
       onClose={onClose}
@@ -246,6 +279,9 @@ function FinanceDetailBody({
       description={`${expense.code} · Created by ${personName(data, expense.createdBy)} · Version ${expense.version}`}
     >
       <div className="finance-detail">
+        <button className="button" onClick={onAssist}>
+          Local assistance
+        </button>
         <ErrorMessage error={error} />
         <div className="finance-detail-total">
           <div>
