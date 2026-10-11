@@ -28,7 +28,7 @@ func (p *countedReceiptProvider) Extract(ctx context.Context, in ReceiptOCRInput
 	return immediateReceiptOCR{}.Extract(ctx, in)
 }
 func TestReceiptExtractionReauthorizeBeforeProvider(t *testing.T) {
-	for _, barrier := range []string{"source_denied", "cancelled", "lease_reclaimed"} {
+	for _, barrier := range []string{"source_denied", "cancelled", "lease_reclaimed", "original_session_expired"} {
 		t.Run(barrier, func(t *testing.T) {
 			f := newFinanceFixture(t)
 			id := readyReceiptExtraction(t, f)
@@ -46,6 +46,8 @@ func TestReceiptExtractionReauthorizeBeforeProvider(t *testing.T) {
 				t.Fatal("scanner not entered")
 			}
 			switch barrier {
+			case "original_session_expired":
+				expireFinanceJobOrigin(t, f, id)
 			case "source_denied":
 				if e := f.db.Model(&Membership{}).Where("company_id=? AND user_id=?", f.cid, f.uid).Update("active", false).Error; e != nil {
 					t.Fatal(e)
@@ -85,35 +87,63 @@ func (b waitingFinanceBudget) Acquire(ctx context.Context) (func(), error) {
 	return b.LocalProviderBudget.Acquire(ctx)
 }
 func TestReceiptExtractionReauthorizeAfterBudgetWait(t *testing.T) {
-	f := newFinanceFixture(t)
-	id := readyReceiptExtraction(t, f)
-	f.db.Where("job_id=?", id).Delete(&ReceiptExtractionResult{})
-	f.db.Model(&FinanceAssistanceJob{}).Where("id=?", id).Updates(map[string]any{"status": "queued", "result_id": "", "attempts": 0, "available_at": time.Now().Add(-time.Minute)})
-	budget := NewLocalProviderBudget(1)
-	release, e := budget.Acquire(t.Context())
-	if e != nil {
-		t.Fatal(e)
+	for _, barrier := range []string{"cancelled", "original_session_expired"} {
+		t.Run(barrier, func(t *testing.T) {
+			f := newFinanceFixture(t)
+			id := readyReceiptExtraction(t, f)
+			f.db.Where("job_id=?", id).Delete(&ReceiptExtractionResult{})
+			f.db.Model(&FinanceAssistanceJob{}).Where("id=?", id).Updates(map[string]any{"status": "queued", "result_id": "", "attempts": 0, "available_at": time.Now().Add(-time.Minute)})
+			budget := NewLocalProviderBudget(1)
+			release, e := budget.Acquire(t.Context())
+			if e != nil {
+				t.Fatal(e)
+			}
+			entered := make(chan struct{})
+			f.s.opts.LocalProviderBudget = waitingFinanceBudget{budget, entered}
+			provider := &countedReceiptProvider{}
+			f.s.opts.ReceiptOCRProvider = provider
+			done := make(chan error, 1)
+			go func() { _, e := f.s.RunFinanceAssistanceJobs(t.Context(), time.Now(), 1); done <- e }()
+			select {
+			case <-entered:
+			case <-time.After(3 * time.Second):
+				release()
+				t.Fatal("budget wait not entered")
+			}
+			var j FinanceAssistanceJob
+			f.db.First(&j, "id=?", id)
+			if barrier == "cancelled" {
+				financeOK(t, f.s, "POST", f.base()+"/finance/receipt-extractions/"+id+"/cancel", map[string]any{"retryKey": "cancel-budget-wait", "expectedVersion": j.Version}, f.cookie)
+			} else {
+				expireFinanceJobOrigin(t, f, id)
+			}
+			release()
+			if e := <-done; e != nil {
+				t.Fatal(e)
+			}
+			if provider.calls.Load() != 0 {
+				t.Fatal("budget-time cancellation disclosed bytes to provider")
+			}
+
+		})
 	}
-	entered := make(chan struct{})
-	f.s.opts.LocalProviderBudget = waitingFinanceBudget{budget, entered}
-	provider := &countedReceiptProvider{}
-	f.s.opts.ReceiptOCRProvider = provider
-	done := make(chan error, 1)
-	go func() { _, e := f.s.RunFinanceAssistanceJobs(t.Context(), time.Now(), 1); done <- e }()
-	select {
-	case <-entered:
-	case <-time.After(3 * time.Second):
-		release()
-		t.Fatal("budget wait not entered")
-	}
+}
+
+func expireFinanceJobOrigin(t *testing.T, f financeFixture, id string) {
+	t.Helper()
+	fresh := login(t, f.s, "founder@example.com")
 	var j FinanceAssistanceJob
-	f.db.First(&j, "id=?", id)
-	financeOK(t, f.s, "POST", f.base()+"/finance/receipt-extractions/"+id+"/cancel", map[string]any{"retryKey": "cancel-budget-wait", "expectedVersion": j.Version}, f.cookie)
-	release()
-	if e := <-done; e != nil {
+	if e := f.db.First(&j, "id=?", id).Error; e != nil {
 		t.Fatal(e)
 	}
-	if provider.calls.Load() != 0 {
-		t.Fatal("budget-time cancellation disclosed bytes to provider")
+	if e := f.db.Model(&SessionRecord{}).Where("token_hash=?", j.SessionRef).Update("expires_at", time.Now().UTC().Add(-time.Minute)).Error; e != nil {
+		t.Fatal(e)
+	}
+	if st, _, _ := req(t, f.s, "GET", f.base()+"/finance/receipt-extractions/"+id, nil, fresh); st != 404 {
+		t.Fatal("fresh caller renewed expired job origin", st)
+	}
+	list := financeOK(t, f.s, "GET", f.base()+"/finance/receipt-extractions?limit=1", nil, fresh)
+	if len(list["items"].([]any)) != 0 {
+		t.Fatal("expired origin disclosed recovery metadata")
 	}
 }
