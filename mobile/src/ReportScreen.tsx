@@ -88,19 +88,24 @@ function CurrentReportAssistance() {
   const q = useExecutionRead<{ snapshot: string }>(
     "/reports/tasks/summary?from=" + date.slice(0, 7) + "-01&to=" + date,
   );
-  return q.ready && q.data ? (
+  return (
     <IntelligenceLauncher
       operation="report_explanation"
-      choices={[
-        {
-          label: "Current month report facts",
-          source: {
-            kind: "report_current",
-            id: q.data.snapshot,
-            selectedFieldSet: "metrics",
-          },
-        },
-      ]}
+      sourceRead={{ ready: q.ready, denied: !!q.denied }}
+      choices={
+        q.ready && q.data
+          ? [
+              {
+                label: "Current month report facts",
+                source: {
+                  kind: "report_current",
+                  id: q.data.snapshot,
+                  selectedFieldSet: "metrics",
+                },
+              },
+            ]
+          : []
+      }
     />
-  ) : null;
+  );
 }

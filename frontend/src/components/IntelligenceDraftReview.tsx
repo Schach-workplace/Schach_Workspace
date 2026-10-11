@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import type { IntelligenceJob } from '../data/intelligence';
 import { useWorkspace } from '../store';
 import { useExecutionInput, clearExecutionForm } from '../data/executionInput';
@@ -7,6 +7,7 @@ import {
   useBusinessAttempt,
   clearAttemptScope,
   businessAttemptGeneration,
+  subscribeAttempts,
 } from '../data/businessAttempts';
 import {
   emptyIntelligenceAuthored,
@@ -53,7 +54,12 @@ export default function IntelligenceDraftReview({
       operation: intelligencePublicationOperation(frozen.attempt?.target?.path),
     },
   );
-  const privateReview = !!job?.publication?.conversationId || !!authored.anchorMessageId;
+  // Retain only layout intent while pending; source options and writes still
+  // require the current raw job. This also covers the first, unchosen anchor.
+  const [privateMode, setPrivateMode] = useState(!!job?.publication?.conversationId);
+  if (job && privateMode !== !!job.publication?.conversationId)
+    setPrivateMode(!!job.publication?.conversationId);
+  const privateReview = privateMode || !!authored.anchorMessageId;
   const actionPath =
     '/conversations/' +
     (job?.publication?.conversationId ?? '') +
@@ -111,7 +117,7 @@ export default function IntelligenceDraftReview({
   current.current = scope;
   const revision = useRef(0);
   const binding = job ? intelligenceReviewIdentity(job, index, kind) : undefined;
-  const retirement = businessAttemptGeneration();
+  const retirement = useSyncExternalStore(subscribeAttempts, businessAttemptGeneration);
   const [inspected, setInspected] = useState({ scope, binding, retirement });
   // A pending read supplies no raw job. Keep only the local review continuity;
   // the render/confirm gates still require current positive proof. A response
@@ -123,6 +129,7 @@ export default function IntelligenceDraftReview({
     (authorized && !job && inspected.binding !== undefined)
   ) {
     setInspected({ scope, binding, retirement });
+    setPrivateMode(!!job?.publication?.conversationId);
     revision.current++;
     setPreview(undefined);
     setAck(false);
@@ -136,6 +143,7 @@ export default function IntelligenceDraftReview({
   );
   useEffect(() => {
     if (sourceDenied) {
+      setPrivateMode(false);
       clearAttemptScope(frozen.scope);
       revision.current++;
       clearExecutionForm(w.companyId, w.session?.user.id ?? '', form);
@@ -281,7 +289,7 @@ export default function IntelligenceDraftReview({
             />
           </label>
           {privateReview && (
-            <>
+            <Fragment key={JSON.stringify([scope, inspected.binding, retirement, sourceDenied])}>
               <label>
                 Source anchor
                 <select
@@ -316,7 +324,7 @@ export default function IntelligenceDraftReview({
                   </select>
                 </label>
               )}
-            </>
+            </Fragment>
           )}
           {(['ownerId', 'reviewerId'] as const).map((key) => (
             <label key={key}>

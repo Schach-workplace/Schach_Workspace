@@ -10,12 +10,14 @@ export default function IntelligenceLauncher({
   label = 'Local assistance',
   controlledOpen,
   onClose,
+  sourceRead,
 }: {
   controlledOpen?: boolean;
   onClose?: () => void;
   choices?: IntelligenceChoice[];
   operation?: IntelligenceOperation;
   label?: string;
+  sourceRead?: { ready: boolean; denied: boolean };
 }) {
   const w = useWorkspace();
   const [open, setOpen] = useState(false);
@@ -39,6 +41,7 @@ export default function IntelligenceLauncher({
           <IntelligencePanel
             key={w.companyId + ':' + w.session?.user.id + ':' + w.data?.me.memberAccessEpoch}
             choices={choices}
+            sourceRead={sourceRead}
             initialOperation={operation}
           />
         </Modal>

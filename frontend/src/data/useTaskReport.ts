@@ -111,6 +111,8 @@ export function useTaskReport(
     rowsLoading: mode === 'api' && authorized && pages.isPending,
     error: mode === 'api' ? (error?.message ?? '') : '',
     available,
+    checking: mode === 'api' && summary.isFetching,
+    denied: error instanceof ApiError && [401, 403, 404, 409].includes(error.status),
     hasMore: mode === 'api' && available && pages.hasNextPage,
     loadingMore: pages.isFetchingNextPage,
     loadMore: () => void pages.fetchNextPage(),

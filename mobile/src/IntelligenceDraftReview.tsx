@@ -1,11 +1,13 @@
 import { router } from "expo-router";
 import { client } from "./client";
 import {
+  Fragment,
   useEffect,
   useEffectEvent,
   useLayoutEffect,
   useRef,
   useState,
+  useSyncExternalStore,
 } from "react";
 import { Text, View } from "react-native";
 import { Action } from "./ConnectUI";
@@ -19,6 +21,7 @@ import {
   useBusinessAttempt,
   clearAttemptScope,
   businessAttemptGeneration,
+  subscribeAttempts,
 } from "./businessAttempts";
 import {
   intelligenceRequest,
@@ -71,8 +74,14 @@ export default function IntelligenceDraftReview({
       operation: intelligencePublicationOperation(frozen.attempt?.target?.path),
     },
   );
-  const privateReview =
-    !!job?.publication?.conversationId || !!authored.anchorMessageId;
+  // This is layout intent only: current job proof still supplies every option,
+  // label and publication gate. Pending reads must not dismiss a first picker.
+  const [privateMode, setPrivateMode] = useState(
+    !!job?.publication?.conversationId,
+  );
+  if (job && privateMode !== !!job.publication?.conversationId)
+    setPrivateMode(!!job.publication?.conversationId);
+  const privateReview = privateMode || !!authored.anchorMessageId;
   const actionPath =
     "/conversations/" +
     (job?.publication?.conversationId ?? "") +
@@ -144,7 +153,10 @@ export default function IntelligenceDraftReview({
   const binding = job
     ? intelligenceReviewIdentity(job, index, kind)
     : undefined;
-  const retirement = businessAttemptGeneration();
+  const retirement = useSyncExternalStore(
+    subscribeAttempts,
+    businessAttemptGeneration,
+  );
   const [inspected, setInspected] = useState({ scope, binding, retirement });
   // A pending read supplies no raw job. Keep only the local review continuity;
   // the render/confirm gates still require current positive proof. A response
@@ -156,6 +168,7 @@ export default function IntelligenceDraftReview({
     (authorized && !job && inspected.binding !== undefined)
   ) {
     setInspected({ scope, binding, retirement });
+    setPrivateMode(!!job?.publication?.conversationId);
     setPreview(undefined);
     setAck(false);
   }
@@ -174,6 +187,7 @@ export default function IntelligenceDraftReview({
   if (previousDenied !== sourceDenied) {
     setPreviousDenied(sourceDenied);
     if (sourceDenied) {
+      setPrivateMode(false);
       setPreview(undefined);
       setAck(false);
     }
@@ -315,7 +329,14 @@ export default function IntelligenceDraftReview({
             onChange={(v) => write("description", v)}
           />
           {privateReview && (
-            <>
+            <Fragment
+              key={JSON.stringify([
+                scope,
+                inspected.binding,
+                retirement,
+                sourceDenied,
+              ])}
+            >
               <ReportChoice
                 label="Source anchor"
                 value={authored.anchorMessageId}
@@ -340,7 +361,7 @@ export default function IntelligenceDraftReview({
                   onChange={(v) => write("actionId", v)}
                 />
               )}
-            </>
+            </Fragment>
           )}
           <PersonPicker
             label="Intelligence owner"

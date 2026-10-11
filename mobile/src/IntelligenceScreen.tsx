@@ -1,7 +1,18 @@
 import { useRamInput } from "./ramInput";
-import { useBusinessAttempt } from "./businessAttempts";
+import {
+  businessAttemptGeneration,
+  subscribeAttempts,
+  useBusinessAttempt,
+} from "./businessAttempts";
+import { client } from "./client";
 import IntelligenceGeometry from "./IntelligenceGeometry";
-import { useLayoutEffect, useRef, useState } from "react";
+import {
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from "react";
 import { Text, View } from "react-native";
 import { Action } from "./ConnectUI";
 import { ReportChoice } from "./ReportControls";
@@ -26,10 +37,12 @@ export default function IntelligenceScreen({
   choices = [],
   initialOperation = "summary",
   initialJob = "",
+  sourceRead,
 }: {
   choices?: IntelligenceChoice[];
   initialOperation?: IntelligenceOperation;
   initialJob?: string;
+  sourceRead?: { ready: boolean; denied: boolean };
 }) {
   const w = useWorkspace();
   const frozen = useBusinessAttempt<Record<string, unknown>>(
@@ -59,6 +72,26 @@ export default function IntelligenceScreen({
     "/intelligence/jobs",
   );
   const job = useIntelligence(jobId);
+  // Summary GETs issue new handles even for identical facts. Reauthorize the
+  // exact human-selected snapshot; only Choose latest may replace its handle.
+  const selectedReport = useExecutionRead<IntelligencePreview>(
+    "/intelligence/selection-preview",
+    !!sourceRead &&
+      sourceRead.ready &&
+      !sourceRead.denied &&
+      selected.length > 0,
+    { operation, sources: selected },
+  );
+  const [expiredProof, setExpiredProof] = useState<string>();
+  const proofExpiry = selectedReport.data?.expiresAt;
+  useEffect(() => {
+    if (!proofExpiry) return;
+    const timer = setTimeout(
+      () => setExpiredProof(proofExpiry),
+      Math.max(0, Date.parse(proofExpiry) - Date.now()),
+    );
+    return () => clearTimeout(timer);
+  }, [proofExpiry]);
   const enqueue = useExecutionMutation(
     "$intelligence-enqueue",
     selected.map((s) =>
@@ -67,49 +100,130 @@ export default function IntelligenceScreen({
         : "/tasks/" + (s.parentId || s.id),
     ),
   );
-  const scope = w.company + ":" + w.session?.user.id + ":" + w.policyEpoch;
+  const retirement = useSyncExternalStore(
+    subscribeAttempts,
+    businessAttemptGeneration,
+  );
+  const scope = JSON.stringify([
+    client.endpoint,
+    client.generation,
+    w.company,
+    w.session?.user.id,
+    w.work?.readBasis,
+    w.policyEpoch,
+    w.foreground,
+    retirement,
+  ]);
   const latest = useRef(scope);
   const revision = useRef(0);
   const live = useRef(true);
+  const workspaceReady = w.foreground && !!w.work;
   const selectionBasis = JSON.stringify([
     selected,
     operation,
     scope,
     w.foreground,
     w.recordEpoch,
+    !!sourceRead?.denied,
+    !!sourceRead && !!selectedReport.error,
   ]);
-  const [previewOwner, setPreviewOwner] = useState(selectionBasis);
-  if (previewOwner !== selectionBasis) {
-    setPreviewOwner(selectionBasis);
+  const sourceBinding =
+    selectedReport.ready && selectedReport.data
+      ? JSON.stringify([
+          selectedReport.data.selectionHash,
+          selectedReport.data.policyVersion,
+        ])
+      : undefined;
+  const [previewOwner, setPreviewOwner] = useState({
+    selectionBasis,
+    sourceBinding,
+  });
+  if (
+    previewOwner.selectionBasis !== selectionBasis ||
+    (sourceBinding !== undefined &&
+      previewOwner.sourceBinding !== sourceBinding)
+  ) {
+    setPreviewOwner({ selectionBasis, sourceBinding });
     setPreview(undefined);
     setOptIn(false);
+    setBusy(false);
+    setError("");
+  }
+  // Parent report refreshes withhold current choices, not the open Sheet or
+  // original owned job. Only equivalent positive source proof restores consent.
+  const reportProofReady =
+    !sourceRead ||
+    (sourceRead.ready &&
+      selectedReport.ready &&
+      !!selectedReport.data &&
+      selectedReport.data.expiresAt !== expiredProof);
+  const reportProofCurrent = () =>
+    !sourceRead ||
+    (reportProofReady &&
+      Date.parse(selectedReport.data!.expiresAt) > Date.now());
+  const sourcesCurrent =
+    w.foreground && !!w.work && !sourceRead?.denied && reportProofReady;
+  const previewCurrent =
+    sourcesCurrent &&
+    preview &&
+    (!sourceRead ||
+      (preview.selectionHash === selectedReport.data?.selectionHash &&
+        preview.policyVersion === selectedReport.data?.policyVersion));
+  const currentChoices =
+    w.foreground && !sourceRead?.denied && (!sourceRead || sourceRead.ready)
+      ? sourceRead && selected.length
+        ? sourcesCurrent
+          ? selected.map((source) => ({
+              label: "Selected report facts",
+              source,
+            }))
+          : []
+        : transcript
+          ? [...choices, transcript]
+          : choices
+      : [];
+  function chooseLatestReport() {
+    revision.current++;
+    setPreview(undefined);
+    setOptIn(false);
+    setBusy(false);
+    setError("");
+    setSelected(choices.map((choice) => choice.source));
+    selectedReport.retry();
   }
   useLayoutEffect(() => {
     latest.current = scope;
-    live.current = w.foreground && !!w.work;
+    live.current = workspaceReady;
     revision.current++;
-  }, [selectionBasis, scope, w.foreground, w.work]);
+    return () => {
+      live.current = false;
+    };
+  }, [previewOwner, scope, workspaceReady]);
   async function inspect() {
+    if (!sourcesCurrent || !reportProofCurrent() || !selected.length) return;
+    const captured = scope;
+    const serial = revision.current;
+    const generation = client.generation;
+    const retirement = businessAttemptGeneration();
+    const current = () =>
+      latest.current === captured &&
+      revision.current === serial &&
+      live.current &&
+      client.generation === generation &&
+      businessAttemptGeneration() === retirement;
     try {
       setBusy(true);
       setError("");
-      const captured = scope;
-      const serial = revision.current;
       const p = await intelligenceRequest<IntelligencePreview>(
         w.company,
         "/intelligence/selection-preview",
         canonicalSelection({ operation, sources: selected }),
       );
-      if (
-        latest.current === captured &&
-        revision.current === serial &&
-        live.current
-      )
-        setPreview(p);
+      if (current()) setPreview(p);
     } catch (e) {
-      setError((e as Error).message);
+      if (current()) setError((e as Error).message);
     } finally {
-      setBusy(false);
+      if (current()) setBusy(false);
     }
   }
   async function generate() {
@@ -131,7 +245,7 @@ export default function IntelligenceScreen({
       }
       return;
     }
-    if (!preview || !optIn) return;
+    if (!previewCurrent || !reportProofCurrent() || !preview || !optIn) return;
     try {
       await enqueue.execute<{ jobId: string }>(
         "/intelligence/jobs",
@@ -185,24 +299,42 @@ export default function IntelligenceScreen({
         onChange={(v) => setOperation(v as IntelligenceOperation)}
       />
       <IntelligenceSelection
-        choices={
-          w.foreground ? (transcript ? [...choices, transcript] : choices) : []
-        }
+        choices={currentChoices}
         selected={selected}
         onChange={setSelected}
         disabled={!w.foreground || busy}
       />
+      {sourceRead && selected.length > 0 && (
+        <>
+          <Text>
+            {selectedReport.error ||
+            (!!proofExpiry && proofExpiry === expiredProof)
+              ? "Selected report facts are unavailable. Choose the latest facts and review again."
+              : "Your selected report facts stay fixed until you choose the latest facts."}
+          </Text>
+          <Action
+            title="Choose latest report facts"
+            disabled={
+              !w.foreground ||
+              !sourceRead.ready ||
+              sourceRead.denied ||
+              !choices.length
+            }
+            onPress={chooseLatestReport}
+          />
+        </>
+      )}
       <Action
         title="Review selected sources"
         disabled={
-          !w.foreground ||
+          !sourcesCurrent ||
           busy ||
           !selected.length ||
           !capabilities.data?.operations[operation]
         }
         onPress={() => void inspect()}
       />
-      {w.foreground && preview && (
+      {previewCurrent && preview && (
         <>
           <Text>{preview.sources.map((s) => s.label).join(" · ")}</Text>
           <Action
