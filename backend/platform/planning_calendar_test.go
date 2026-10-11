@@ -210,3 +210,125 @@ func TestPlanningCalendarAfterCompanyLockWait(t *testing.T) {
 		t.Fatal("calendar reader did not finish")
 	}
 }
+
+func TestPlanningCalendarCivilMidnightTransitions(t *testing.T) {
+	for _, c := range []struct {
+		name, zone, from, to string
+		instants             []string
+		want                 []string
+	}{
+		{"HavanaBeforeGap", "America/Havana", "2026-03-07", "2026-03-07", []string{"2026-03-08T04:30:00.123456Z", "2026-03-08T05:30:00.123456Z"}, []string{"2026-03-08T04:30:00.123456Z"}},
+		{"HavanaGapDay", "America/Havana", "2026-03-08", "2026-03-08", []string{"2026-03-08T04:59:59.999999Z", "2026-03-08T05:00:00Z", "2026-03-09T03:59:59.999999Z", "2026-03-09T04:00:00Z"}, []string{"2026-03-08T05:00:00Z", "2026-03-09T03:59:59.999999Z"}},
+		{"HavanaWeekEndingGap", "America/Havana", "2026-03-02", "2026-03-08", []string{"2026-03-09T03:30:00.654321Z", "2026-03-09T04:00:00Z"}, []string{"2026-03-09T03:30:00.654321Z"}},
+		{"HavanaMidnightOverlap", "America/Havana", "2026-11-01", "2026-11-01", []string{"2026-11-01T03:59:59.999999Z", "2026-11-01T04:30:00.123456Z", "2026-11-01T05:30:00.654321Z", "2026-11-02T04:59:59.999999Z", "2026-11-02T05:00:00Z"}, []string{"2026-11-01T04:30:00.123456Z", "2026-11-01T05:30:00.654321Z", "2026-11-02T04:59:59.999999Z"}},
+		{"ApiaBeforeSkippedDate", "Pacific/Apia", "2011-12-29", "2011-12-29", []string{"2011-12-30T09:59:59.999999Z", "2011-12-30T10:00:00Z"}, []string{"2011-12-30T09:59:59.999999Z"}},
+		{"ApiaSkippedDate", "Pacific/Apia", "2011-12-30", "2011-12-30", []string{"2011-12-30T09:59:59.999999Z", "2011-12-30T10:00:00Z"}, nil},
+		{"ApiaRangeAcrossSkippedDate", "Pacific/Apia", "2011-12-29", "2011-12-31", []string{"2011-12-30T09:59:59.999999Z", "2011-12-30T10:00:00Z"}, []string{"2011-12-30T09:59:59.999999Z", "2011-12-30T10:00:00Z"}},
+		{"StJohnsRepeatedDateWithHole", "America/St_Johns", "1988-10-29", "1988-10-29", []string{"1988-10-30T01:29:59.999999Z", "1988-10-30T01:30:30.123456Z", "1988-10-30T01:31:30.654321Z", "1988-10-30T03:29:59.999999Z", "1988-10-30T03:30:00Z"}, []string{"1988-10-30T01:29:59.999999Z", "1988-10-30T01:31:30.654321Z", "1988-10-30T03:29:59.999999Z"}},
+		{"FutureLeapYearSeam", "America/Havana", "2040-12-31", "2040-12-31", []string{"2040-12-31T04:59:59.999999Z", "2040-12-31T05:00:00Z", "2041-01-01T04:59:59.999999Z", "2041-01-01T05:00:00Z"}, []string{"2040-12-31T05:00:00Z", "2041-01-01T04:59:59.999999Z"}},
+	} {
+		t.Run(c.name, func(t *testing.T) {
+			s, a := planningFixture(t)
+			cookie := login(t, s, "founder@example.com")
+			if e := s.db.Model(&Company{}).Where("id=?", a.Company.ID).Update("timezone", c.zone).Error; e != nil {
+				t.Fatal(e)
+			}
+			loc, e := time.LoadLocation(c.zone)
+			if e != nil {
+				t.Fatal(e)
+			}
+			for i, instant := range c.instants {
+				row := calendarFixtureTask(a, a.User.ID, fmt.Sprintf("civil-%d", i), "2026-01-01", "todo")
+				row.DeadlineMode = "timed"
+				row.DueAt = DeadlineInstant(instant)
+				row.DueTimezone = "UTC"
+				if e := s.db.Create(&row).Error; e != nil {
+					t.Fatal(e)
+				}
+			}
+			st, body, _ := req(t, s, "GET", "/api/companies/"+a.Company.ID+"/planning/calendar?from="+c.from+"&to="+c.to, nil, cookie)
+			if st != 200 || body["complete"] != true {
+				t.Fatal(st, body)
+			}
+			seen := map[string]bool{}
+			for _, item := range body["tasks"].([]any) {
+				row := item.(map[string]any)
+				instant := row["dueAt"].(string)
+				seen[instant] = true
+				parsed, e := time.Parse(time.RFC3339Nano, instant)
+				if e != nil {
+					t.Fatal(e)
+				}
+				date := parsed.In(loc).Format("2006-01-02")
+				if date < c.from || date > c.to || row["dueDate"] != date {
+					t.Fatal("unselected civil date in complete response", row)
+				}
+			}
+			if len(seen) != len(c.want) {
+				t.Fatalf("range %s..%s: want %v, actual %v", c.from, c.to, c.want, seen)
+			}
+			for _, instant := range c.want {
+				if !seen[instant] {
+					t.Fatalf("omitted actual company-date commitment %s: %v", instant, body)
+				}
+			}
+			var stored Task
+			if e := s.db.First(&stored, "id=?", "civil-0").Error; e != nil {
+				t.Fatal(e)
+			}
+			if stored.DueDate != "2026-01-01" || string(stored.DueAt) != c.instants[0] || stored.Version != 1 {
+				t.Fatal("calendar changed original source", stored)
+			}
+		})
+	}
+}
+
+func TestPlanningCalendarCivilDateBeforeCap(t *testing.T) {
+	s, a := planningFixture(t)
+	cookie := login(t, s, "founder@example.com")
+	if e := s.db.Model(&Company{}).Where("id=?", a.Company.ID).Update("timezone", "America/Havana").Error; e != nil {
+		t.Fatal(e)
+	}
+	outside := []Task{}
+	for i := 0; i < 10001; i++ {
+		row := calendarFixtureTask(a, a.User.ID, fmt.Sprintf("civil-outside-%05d", i), "2026-03-08", "todo")
+		row.DeadlineMode = "timed"
+		row.DueAt = "2026-03-08T04:30:00.123456Z"
+		row.DueTimezone = "UTC"
+		outside = append(outside, row)
+	}
+	if e := s.db.CreateInBatches(&outside, 100).Error; e != nil {
+		t.Fatal(e)
+	}
+	inside := calendarFixtureTask(a, a.User.ID, "civil-selected", "2026-03-08", "todo")
+	if e := s.db.Create(&inside).Error; e != nil {
+		t.Fatal(e)
+	}
+	st, body, _ := req(t, s, "GET", "/api/companies/"+a.Company.ID+"/planning/calendar?from=2026-03-08&to=2026-03-08", nil, cookie)
+	if st != 200 || body["complete"] != true || len(body["tasks"].([]any)) != 1 {
+		t.Fatal("previous civil day exhausted selected-date cap", st, body)
+	}
+	if body["tasks"].([]any)[0].(map[string]any)["id"] != inside.ID {
+		t.Fatal(body)
+	}
+}
+
+func TestPlanningCalendarSkippedCivilAllDayLabel(t *testing.T) {
+	s, a := planningFixture(t)
+	cookie := login(t, s, "founder@example.com")
+	if e := s.db.Model(&Company{}).Where("id=?", a.Company.ID).Update("timezone", "Pacific/Apia").Error; e != nil {
+		t.Fatal(e)
+	}
+	row := calendarFixtureTask(a, a.User.ID, "skipped-all-day-label", "2011-12-30", "todo")
+	if e := s.db.Create(&row).Error; e != nil {
+		t.Fatal(e)
+	}
+	st, body, _ := req(t, s, "GET", "/api/companies/"+a.Company.ID+"/planning/calendar?from=2011-12-30&to=2011-12-30", nil, cookie)
+	if st != 200 || body["complete"] != true || len(body["tasks"].([]any)) != 1 {
+		t.Fatal(st, body)
+	}
+	task := body["tasks"].([]any)[0].(map[string]any)
+	if task["id"] != row.ID || task["dueDate"] != "2011-12-30" || task["dueAt"] != "" {
+		t.Fatal("civil label was changed into invented instant", task)
+	}
+}

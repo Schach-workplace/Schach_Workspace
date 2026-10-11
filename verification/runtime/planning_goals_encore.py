@@ -2,7 +2,7 @@
 """M8 actual exported Encore against an owned PostgreSQL container and network."""
 import argparse,json,os,secrets,socket,subprocess,tempfile,time,shutil,base64,urllib.request
 from pathlib import Path
-ROOT=Path(__file__).resolve().parents[2];p=argparse.ArgumentParser();p.add_argument('--output',type=Path,required=True);p.add_argument('--allow-demo-mutations',action='store_true');a=p.parse_args();assert a.allow_demo_mutations;out=a.output.resolve();out.mkdir(parents=True,exist_ok=True);suffix=secrets.token_hex(6);pg='schach-m8-pg-'+suffix;name='schach-m8-encore-'+suffix;network=name;tag='schach-m8-encore:'+suffix;made=[];result={'status':'failed','checks':[]}
+ROOT=Path(__file__).resolve().parents[2];p=argparse.ArgumentParser();p.add_argument('--output',type=Path,required=True);p.add_argument('--allow-demo-mutations',action='store_true');p.add_argument('--calendar-civil-only',action='store_true');a=p.parse_args();assert a.allow_demo_mutations;out=a.output.resolve();out.mkdir(parents=True,exist_ok=True);suffix=secrets.token_hex(6);pg='schach-m8-pg-'+suffix;name='schach-m8-encore-'+suffix;network=name;tag='schach-m8-encore:'+suffix;made=[];result={'status':'failed','checks':[]}
 def cmd(args,cwd=ROOT,env=None,log='commands.log'):
  with(out/log).open('ab')as f:return subprocess.run(args,cwd=cwd,env=env,stdout=f,stderr=subprocess.STDOUT,check=True,timeout=300)
 try:
@@ -29,7 +29,7 @@ try:
    except OSError:pass
    time.sleep(.1)
   else:raise RuntimeError('actual exported Encore startup failed')
-  cmd(['python3',str(ROOT/'verification/runtime/planning_goals_fixture.py'),'--url',base,'--output',str(out/'api.json'),'--allow-demo-mutations'],log='api.log');result['checks'].append('Actual exported gateway TCP planning/M5 apply/goal measurement+concurrent retry/report evidence/correction/reminder endpoints pass on nativePG49');result['status']='passed'
+  cmd(['python3',str(ROOT/('verification/runtime/planning_calendar_civil_fixture.py' if a.calendar_civil_only else 'verification/runtime/planning_goals_fixture.py')),'--url',base,'--output',str(out/'api.json'),'--allow-demo-mutations'],log='api.log');result['checks'].append('Actual exported gateway targeted Calendar civil-date TCP flow on nativePG49' if a.calendar_civil_only else 'Actual exported gateway TCP planning/M5 apply/goal measurement+concurrent retry/report evidence/correction/reminder endpoints pass on nativePG49');result['status']='passed'
 finally:
  if 'app'in made:subprocess.run(['docker','logs',name],stdout=(out/'runtime.log').open('wb'),stderr=subprocess.STDOUT);subprocess.run(['docker','rm','-f',name],stdout=subprocess.DEVNULL)
  if 'pg'in made:subprocess.run(['docker','rm','-f',pg],stdout=subprocess.DEVNULL)

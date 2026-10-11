@@ -65,15 +65,10 @@ func (s *Server) planningCalendar(w http.ResponseWriter, r *http.Request) error 
 		if e != nil {
 			return invalid("Company timezone is unavailable.")
 		}
-		first, e := time.ParseInLocation("2006-01-02", f.From, location)
+		intervals, e := calendarCivilIntervals(from, to.AddDate(0, 0, 1), location)
 		if e != nil {
 			return e
 		}
-		last, e := time.ParseInLocation("2006-01-02", f.To, location)
-		if e != nil {
-			return e
-		}
-		end := last.AddDate(0, 0, 1)
 		query := taskReadQuery(tx, a)
 		for _, filter := range []struct{ value, col string }{{f.OwnerID, "owner_id"}, {f.DepartmentID, "department_id"}, {f.ProjectID, "project_id"}} {
 			if filter.value != "" {
@@ -90,9 +85,19 @@ func (s *Server) planningCalendar(w http.ResponseWriter, r *http.Request) error 
 			seconds := "(CASE WHEN substr(due_at,-1)='Z' THEN substr(due_at,1,19) ELSE strftime('%Y-%m-%dT%H:%M:%S',substr(due_at,1,19)||substr(due_at,-6)) END)"
 			timed = seconds + " >= substr(?,1,19) AND " + seconds + " < substr(?,1,19)"
 		}
-		// Filter actual instants by company-local day boundaries before row cap. UTC
-		// boundaries also handle DST; stale denormalized timed due_date is never used.
-		query = query.Where("((deadline_mode='all_day' AND due_date >= ? AND due_date <= ?) OR (deadline_mode='timed' AND ("+timed+")))", f.From, f.To, first.UTC().Format(time.RFC3339Nano), end.UTC().Format(time.RFC3339Nano))
+		// Exact inverse of instant.In(companyZone)'s selected civil dates, including
+		// midnight gaps/overlaps/skipped days. Apply before all selected row/byte caps.
+		predicates := []string{}
+		args := []any{f.From, f.To}
+		for _, interval := range intervals {
+			predicates = append(predicates, "("+timed+")")
+			args = append(args, interval.from.Format(time.RFC3339Nano), interval.to.Format(time.RFC3339Nano))
+		}
+		timedDates := "FALSE" // A skipped civil date has no timed instants.
+		if len(predicates) > 0 {
+			timedDates = strings.Join(predicates, " OR ")
+		}
+		query = query.Where("((deadline_mode='all_day' AND due_date >= ? AND due_date <= ?) OR (deadline_mode='timed' AND ("+timedDates+")))", args...)
 		// Check selected row/byte bounds in SQL before transferring any large
 		// legacy Task field. This is the same current Task source and fence.
 		length := "length(CAST(%s AS BLOB))"
@@ -174,4 +179,60 @@ func (s *Server) planningCalendar(w http.ResponseWriter, r *http.Request) error 
 }
 func calendarRangeTooLarge() error {
 	return &apiError{Status: 422, Code: "range_too_large", Message: "Calendar exceeds 10000 tasks or 8 MiB. Narrow its dates or filters."}
+}
+
+// calendarCivilIntervals maps a half-open civil date range (represented in UTC
+// solely as Gregorian fields) into its exact UTC intervals. Within each constant
+// offset zone, local = UTC + offset, so intersect the shifted civil range with
+// that zone's UTC bounds. No local midnight is constructed or normalized.
+type calendarInstantInterval struct{ from, to time.Time }
+
+func calendarCivilIntervals(from, to time.Time, location *time.Location) ([]calendarInstantInterval, error) {
+	// LoadLocation's TZif offsets are signed32-bit seconds; its POSIX tail offsets
+	// are smaller. This conservative envelope covers every possible offset without
+	// assuming a24h bound or scanning minute-by-minute. Only zone transitions are
+	// visited; unrelated Task rows are never fetched. Adjacent results are merged.
+	const maxOffset = time.Duration(1<<31) * time.Second
+	cursor, limit := from.Add(-maxOffset), to.Add(maxOffset)
+	intervals := []calendarInstantInterval{}
+	for cursor.Before(limit) {
+		local := cursor.In(location)
+		_, offset := local.Zone()
+		_, zoneEnd := local.ZoneBounds()
+		if zoneEnd.IsZero() || zoneEnd.After(limit) {
+			zoneEnd = limit
+		}
+		if !zoneEnd.After(cursor) {
+			// Go's POSIX-tail lookup uses yearStart+365days as its final
+			// bound, even in leap years. Once all this year's transitions
+			// have passed, that synthetic bound can be behind Dec31.
+			// Continue the final zone only to the actual next UTC year.
+			year := cursor.UTC().Year()
+			yearStart := time.Date(year, 1, 1, 0, 0, 0, 0, time.UTC)
+			nextYear := yearStart.AddDate(1, 0, 0)
+			if cursor.Before(yearStart.Add(365*24*time.Hour)) || !cursor.Before(nextYear) {
+				return nil, invalid("Calendar timezone transitions are unavailable.")
+			}
+			zoneEnd = nextYear
+			if zoneEnd.After(limit) {
+				zoneEnd = limit
+			}
+		}
+		first, end := from.Add(-time.Duration(offset)*time.Second), to.Add(-time.Duration(offset)*time.Second)
+		if first.Before(cursor) {
+			first = cursor
+		}
+		if end.After(zoneEnd) {
+			end = zoneEnd
+		}
+		if first.Before(end) {
+			if len(intervals) > 0 && intervals[len(intervals)-1].to.Equal(first) {
+				intervals[len(intervals)-1].to = end
+			} else {
+				intervals = append(intervals, calendarInstantInterval{first.UTC(), end.UTC()})
+			}
+		}
+		cursor = zoneEnd.UTC()
+	}
+	return intervals, nil
 }
