@@ -22,6 +22,9 @@ func reserveFinanceIntake(t *testing.T, f financeFixture, data []byte, purpose s
 	t.Helper()
 	h := sha256.Sum256(data)
 	b := map[string]any{"retryKey": "reserve-" + purpose, "purpose": purpose, "fileName": "fictional.png", "size": len(data), "sha256": hex.EncodeToString(h[:])}
+	if purpose == "statement" {
+		b["fileName"] = "fictional.csv"
+	}
 	if purpose == "receipt" {
 		b["destinationDepartmentId"] = f.department
 	}
