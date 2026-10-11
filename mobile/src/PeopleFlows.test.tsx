@@ -466,6 +466,13 @@ it.each(["review", "departure"])(
     expect(field.disabled).toBe(false);
     expect(document.activeElement === field).toBe(true);
     expect([field.selectionStart, field.selectionEnd]).toEqual([1, 3]);
+    if (mode === "departure") {
+      const picker = c.querySelector(
+        'section[aria-label="Replacement for task owner"]',
+      );
+      expect(picker?.textContent).toContain("Checking current options…");
+      expect(picker?.textContent).not.toContain("Fictional Admin");
+    }
     held = false;
     await act(async () => {
       release!();
@@ -596,5 +603,200 @@ it.each(["onboarding", "preset", "review"])(
         : payload.membership;
     expect(membership.capacityHours).toBe(31.5);
     expect(Object.hasOwn(membership, "capacityInput")).toBe(false);
+  },
+);
+
+it("discloses every ordered checklist requirement from the actual server preview before confirmation", async () => {
+  // Captured by TestOnboardingReviewedTemplateTasks, not an invented preview DTO.
+  const { default: fixture } =
+    await import("../../shared/people/testdata/onboarding-review.json");
+  state.request.mockImplementation(async (path: string) => {
+    if (path.endsWith("/people/context")) return fixture.context;
+    if (path.endsWith("/onboarding/preview")) return fixture.preview;
+    if (path.endsWith("/projects")) return fixture.projects;
+    return reads(path);
+  });
+  await render(createElement(PeopleOnboarding));
+  await enter("Name", fixture.preview.person.name);
+  await enter("Email", fixture.preview.person.email);
+  await press("Continue to access");
+  await press("Continue to starting work");
+  await press("Review onboarding");
+  expect(c.textContent).toContain("Complete the reviewed starting work");
+  expect(c.textContent).toContain(
+    "Owner: Founder · Independent reviewer: admin",
+  );
+  expect(c.textContent).toContain(
+    "Project: Reviewed starting project · Project version: 1",
+  );
+  expect(c.textContent).toContain(
+    "Status: todo · Priority: high · Estimated hours: 2.5",
+  );
+  expect(c.textContent).toContain("Start: 2026-10-11 · Due: 2026-10-14");
+  expect(
+    [...c.querySelectorAll("span")]
+      .filter((el) => el.textContent?.startsWith("Checklist:"))
+      .map((el) => el.textContent),
+  ).toEqual([
+    "Checklist: Read the complete starting handbook",
+    "Checklist: Confirm the independent review requirements",
+  ]);
+  expect(
+    [...c.querySelectorAll("button")].find(
+      (b) => b.textContent === "Confirm onboarding",
+    )?.disabled,
+  ).toBe(true);
+});
+
+it.each([422, 409])(
+  "captures corrected preview after explicit same-stack abandonment of HTTP %s",
+  async (status) => {
+    const { useExecutionMutation } = await import("./execution");
+    const { NativeApiError } = await import("./client");
+    let action!: ReturnType<typeof useExecutionMutation>;
+    function Probe() {
+      action = useExecutionMutation("$people-onboard-preview");
+      return null;
+    }
+    const submitted: any[] = [];
+    state.request.mockImplementation(async (_path, _method, body) => {
+      submitted.push(body);
+      if (!body.name || !body.email)
+        throw new NativeApiError(
+          status,
+          "validation",
+          "Enter a valid name and email.",
+        );
+      return { id: "corrected-preview", taskPreviews: [] };
+    });
+    await render(createElement(Probe));
+    await act(async () => {
+      await expect(
+        action.execute("/people/onboarding/preview", {
+          name: "",
+          email: "",
+          tasks: [],
+        }),
+      ).rejects.toThrow();
+    });
+    expect(action.attempt?.payload).toMatchObject({ name: "", email: "" });
+    const sameRender = action;
+    await act(async () => {
+      sameRender.abandon();
+      // No intervening render: this is the actual PeopleOnboarding.inspect path.
+      await expect(
+        sameRender.execute("/people/onboarding/preview", {
+          name: "Reviewed Starter",
+          email: "reviewed@example.invalid",
+          tasks: [],
+          expectedPresetVersion: 2,
+        }),
+      ).resolves.toMatchObject({ id: "corrected-preview" });
+    });
+    expect(submitted[1]).toMatchObject({
+      name: "Reviewed Starter",
+      email: "reviewed@example.invalid",
+      expectedPresetVersion: 2,
+    });
+    expect(submitted[1].retryKey).not.toBe(submitted[0].retryKey);
+    expect(action.attempt).toBeUndefined();
+  },
+);
+
+it("preserves an unabandoned unknown attempt's exact payload, key, target and source versions", async () => {
+  const { useExecutionMutation } = await import("./execution");
+  let action!: ReturnType<typeof useExecutionMutation>;
+  function Probe() {
+    action = useExecutionMutation("$people-onboard-preview", [
+      "/task-templates/original",
+    ]);
+    return null;
+  }
+  const submitted: any[] = [];
+  state.request.mockImplementation(async (path, method, body) => {
+    submitted.push({ path, method, body });
+    throw Error("Unknown ACK");
+  });
+  await render(createElement(Probe));
+  await act(async () => {
+    await expect(
+      action.execute("/people/onboarding/preview", {
+        name: "Original",
+        expectedPresetVersion: 2,
+        tasks: [
+          {
+            templateId: "original",
+            expectedTemplateVersion: 3,
+            expectedProjectVersion: 4,
+          },
+        ],
+      }),
+    ).rejects.toThrow();
+  });
+  const original = action.attempt;
+  await act(async () => {
+    await expect(
+      action.execute("/people/onboarding/preview", {
+        name: "Changed",
+        expectedPresetVersion: 9,
+        tasks: [],
+      }),
+    ).rejects.toThrow("Unknown ACK");
+  });
+  expect(submitted).toHaveLength(2);
+  expect(submitted[1]).toEqual(submitted[0]);
+  expect(action.attempt).toBe(original);
+  expect(action.attempt?.target?.sources).toEqual(["/task-templates/original"]);
+  await act(async () => {
+    await expect(
+      action.execute("/people/onboarding/apply", {}),
+    ).rejects.toThrow("original submitted target");
+  });
+  expect(submitted).toHaveLength(2);
+});
+
+it.each(["abandon", "hard clear"])(
+  "ignores a late old ACK after %s and leaves a newer registry attempt intact",
+  async (clear) => {
+    const { useExecutionMutation } = await import("./execution");
+    const { beginAttempt } = await import("../../shared/business/attempts");
+    let action!: ReturnType<typeof useExecutionMutation>;
+    function Probe() {
+      action = useExecutionMutation("$people-onboard-preview");
+      return null;
+    }
+    let resolve!: (value: unknown) => void;
+    state.request.mockImplementation(
+      () =>
+        new Promise((r) => {
+          resolve = r;
+        }),
+    );
+    await render(createElement(Probe));
+    const committed = vi.fn();
+    let pending!: Promise<unknown>;
+    await act(async () => {
+      pending = action
+        .execute(
+          "/people/onboarding/preview",
+          { name: "Old" },
+          "POST",
+          committed,
+        )
+        .catch((e) => e);
+    });
+    let fresh: unknown;
+    await act(async () => {
+      if (clear === "hard clear") clearAllBusinessAttempts();
+      else action.abandon();
+      fresh = beginAttempt(action.scope, { name: "New" }, "new-reviewed-key", {
+        path: "/people/onboarding/preview",
+        method: "POST",
+      });
+      resolve({ id: "old-preview" });
+      expect(await pending).toBeInstanceOf(Error);
+    });
+    expect(committed).not.toHaveBeenCalled();
+    expect(action.attempt).toBe(fresh);
   },
 );

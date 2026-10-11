@@ -97,6 +97,8 @@ type FieldRequirement struct {
 	Message string `json:"message"`
 }
 type TemplateTaskPreview struct {
+	// Captured text requirements, without task item IDs or completion state.
+	Checklist       []string                   `json:"checklist"`
 	TemplateID      string                     `json:"templateId"`
 	TemplateVersion int64                      `json:"templateVersion"`
 	ProjectVersion  int64                      `json:"projectVersion"`

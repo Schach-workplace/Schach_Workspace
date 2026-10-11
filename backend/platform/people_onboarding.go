@@ -87,6 +87,13 @@ func loadOnboardingManifest(p PeoplePreview) (onboardingManifest, error) {
 }
 func onboardingPreviewView(p PeoplePreview, m onboardingManifest) OnboardingPreviewView {
 	v := OnboardingPreviewView{ID: p.ID, Version: p.Version, ExpiresAt: p.ExpiresAt, GraphFingerprint: p.GraphFingerprint, AccountMode: m.AccountMode, MembershipAfter: m.Intent.Membership, Grants: peopleGrants(m.Intent.Membership), TaskPreviews: m.TaskPreviews, Unresolved: m.Unresolved, SessionEffect: peopleSessionEffect()}
+	// A stored pre-disclosure preview cannot stand in for a reviewed checklist.
+	// Keep its captured fields, but ask the client for a deliberate new preview.
+	for i, task := range m.TaskPreviews {
+		if task.Checklist == nil {
+			v.Unresolved = append(v.Unresolved, FieldRequirement{Field: "tasks[" + strconv.Itoa(i) + "].checklist", Message: "Checklist requirements unavailable. Review onboarding again."})
+		}
+	}
 	v.Person.Name = m.Intent.Name
 	v.Person.Email = m.Intent.Email
 	return v
@@ -180,7 +187,7 @@ func (s *Server) peopleOnboardingPreview(w http.ResponseWriter, r *http.Request)
 						return BusinessResult{}, e
 					}
 				}
-				manifest.TaskPreviews = append(manifest.TaskPreviews, TemplateTaskPreview{TemplateID: task.TemplateID, TemplateVersion: template.Version, ProjectVersion: task.ExpectedProjectVersion, Fields: fields})
+				manifest.TaskPreviews = append(manifest.TaskPreviews, TemplateTaskPreview{TemplateID: task.TemplateID, TemplateVersion: template.Version, ProjectVersion: task.ExpectedProjectVersion, Fields: fields, Checklist: append([]string{}, template.Defaults.Checklist...)})
 			}
 			now := time.Now().UTC()
 			intent, _ := json.Marshal(manifest.Intent)
@@ -400,6 +407,13 @@ func (s *Server) peopleOnboardingApply(w http.ResponseWriter, r *http.Request) e
 			}, func() (BusinessResult, error) {
 				if preview.Version != input.ExpectedPreviewVersion || !preview.ExpiresAt.After(time.Now().UTC()) || preview.AppliedResultID != "" || preview.GraphFingerprint != peopleGraphFingerprint(a) {
 					return BusinessResult{}, conflict()
+				}
+				// Only first application requires a fully disclosed captured preview;
+				// committed canonical retries have already returned through businessMutation.
+				for _, task := range manifest.TaskPreviews {
+					if task.Checklist == nil {
+						return BusinessResult{}, conflict()
+					}
 				}
 				if len(manifest.Unresolved) > 0 {
 					return BusinessResult{}, invalid("Resolve every onboarding assignment before applying.")

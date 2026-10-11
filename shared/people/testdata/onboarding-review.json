@@ -1,0 +1,146 @@
+{
+  "context": {
+    "companyPermissionEpoch": 2,
+    "departments": [],
+    "people": [
+      {
+        "active": true,
+        "avatar": "",
+        "capacityHours": 40,
+        "companyPermissionEpoch": 2,
+        "departmentId": "",
+        "email": "founder@example.com",
+        "id": "usr_b260936deb198dc625a0b2ffd3eb4529",
+        "managerId": "",
+        "memberAccessEpoch": 1,
+        "membershipId": "mem_134885e6e66416d8bdfee07a8082c54f",
+        "membershipVersion": 1,
+        "name": "Founder",
+        "role": "founder",
+        "title": ""
+      },
+      {
+        "active": true,
+        "avatar": "",
+        "capacityHours": 40,
+        "companyPermissionEpoch": 2,
+        "departmentId": "",
+        "email": "checklist-reviewer@example.invalid",
+        "id": "usr_d0722d5f04fcea8079b66ea28fd95355",
+        "managerId": "",
+        "memberAccessEpoch": 1,
+        "membershipId": "mem_6d9a808cd1ee3d48c716eb8dc9d83c94",
+        "membershipVersion": 1,
+        "name": "admin",
+        "role": "admin",
+        "title": ""
+      }
+    ],
+    "readBasis": "9b017b6781be8b7b9aa600276d8d9dd05c7078c0ce47b1e1bff8ba94e0ec45a3",
+    "roles": [
+      "founder",
+      "ceo",
+      "admin",
+      "finance",
+      "head",
+      "manager",
+      "member",
+      "viewer"
+    ]
+  },
+  "preview": {
+    "accountMode": "new_account",
+    "expiresAt": "2026-10-11T11:45:27.420515549Z",
+    "grants": [
+      {
+        "area": "ordinary_work",
+        "summary": "Read and update your assigned or created ordinary work."
+      },
+      {
+        "area": "finance",
+        "summary": "Read your own expense records; independent finance review remains required."
+      },
+      {
+        "area": "administration",
+        "summary": "Company administration is unavailable."
+      },
+      {
+        "area": "private_conversations",
+        "summary": "Private conversations require explicit owner invitations."
+      }
+    ],
+    "graphFingerprint": "29038ee5365929241ba16c6a1bf9252d59dd526c9e4f0bb982d8658dc640e229",
+    "id": "pp_9cc9b9f8ec574d6ec0a96b937c433dda",
+    "membershipAfter": {
+      "capacityHours": 32,
+      "departmentId": "",
+      "managerId": "",
+      "role": "member",
+      "title": ""
+    },
+    "person": {
+      "email": "reviewed-starter@example.invalid",
+      "name": "Fictional Reviewed Starter"
+    },
+    "sessionEffect": {
+      "callsMustRejoin": true,
+      "devicesMustReregister": true,
+      "otherCompanyMembershipsPreserved": true,
+      "reauthenticate": true,
+      "scope": "account_sessions"
+    },
+    "taskPreviews": [
+      {
+        "checklist": [
+          "Read the complete starting handbook",
+          "Confirm the independent review requirements"
+        ],
+        "fields": {
+          "deadlineMode": "all_day",
+          "departmentId": "",
+          "description": "Complete the reviewed starting work",
+          "dueAt": "",
+          "dueDate": "2026-10-14",
+          "dueTimezone": "",
+          "estimatedHours": 2.5,
+          "ownerId": "usr_b260936deb198dc625a0b2ffd3eb4529",
+          "priority": "high",
+          "projectId": "prj_bad42a237b18dc3bf184277a3961e29d",
+          "recurrence": "none",
+          "requiresApproval": true,
+          "reviewerId": "usr_d0722d5f04fcea8079b66ea28fd95355",
+          "startDate": "2026-10-11",
+          "status": "todo",
+          "tags": ["starting", "reviewed"],
+          "title": "Reviewed starting task"
+        },
+        "projectVersion": 1,
+        "templateId": "tpl_0e38a60f5321e0330c1e854b96295070",
+        "templateVersion": 1
+      }
+    ],
+    "unresolved": [],
+    "version": 1
+  },
+  "projects": {
+    "nextCursor": "",
+    "projects": [
+      {
+        "color": "#F97316",
+        "companyId": "cmp_8b982a64e1f1fb6550e483513976cb62",
+        "defaultRequiresApproval": true,
+        "defaultReviewerId": "usr_d0722d5f04fcea8079b66ea28fd95355",
+        "defaultTaskOwnerId": "",
+        "departmentId": "",
+        "description": "",
+        "dueDate": "",
+        "id": "prj_bad42a237b18dc3bf184277a3961e29d",
+        "name": "Reviewed starting project",
+        "ownerId": "usr_b260936deb198dc625a0b2ffd3eb4529",
+        "status": "active",
+        "taskOwnerPolicy": "actor",
+        "version": 1
+      }
+    ]
+  }
+}

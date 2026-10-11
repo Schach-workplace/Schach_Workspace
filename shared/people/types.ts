@@ -78,6 +78,8 @@ export interface OnboardingPreview {
     templateVersion: number;
     projectVersion: number;
     fields: Record<string, unknown>;
+    // Older captured previews require a fresh review before first application.
+    checklist?: string[] | null;
   }[];
   unresolved: { field: string; message: string }[];
   sessionEffect: SessionEffect;

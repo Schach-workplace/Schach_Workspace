@@ -94,26 +94,36 @@ export function PeopleChoice({
             value={query}
             onChange={setQuery}
           />
-          <PeopleProjection current={!disabled}>
-            <FlatList
-              data={options.filter((o) =>
-                o.name.toLowerCase().includes(query.toLowerCase()),
-              )}
-              keyExtractor={(o) => o.id}
-              keyboardShouldPersistTaps="handled"
-              renderItem={({ item }) => (
-                <Action
-                  disabled={disabled}
-                  title={item.name}
-                  selected={item.id === value}
-                  onPress={() => {
-                    onChange(item.id);
-                    setOpen(false);
-                  }}
-                />
-              )}
-            />
-          </PeopleProjection>
+          <View>
+            <PeopleProjection current={!disabled}>
+              <FlatList
+                data={options.filter((o) =>
+                  o.name.toLowerCase().includes(query.toLowerCase()),
+                )}
+                keyExtractor={(o) => o.id}
+                keyboardShouldPersistTaps="handled"
+                renderItem={({ item }) => (
+                  <Action
+                    disabled={disabled}
+                    title={item.name}
+                    selected={item.id === value}
+                    onPress={() => {
+                      onChange(item.id);
+                      setOpen(false);
+                    }}
+                  />
+                )}
+              />
+            </PeopleProjection>
+            {disabled && (
+              <Text
+                accessibilityLiveRegion="polite"
+                style={{ position: "absolute", top: 0, left: 0, right: 0 }}
+              >
+                Checking current options…
+              </Text>
+            )}
+          </View>
         </Sheet>
       )}
     </>

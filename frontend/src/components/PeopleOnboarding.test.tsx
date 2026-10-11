@@ -104,6 +104,7 @@ it('erases local and submitted credentials before dependent refresh fails after 
                         templateId: 'fictional-template',
                         templateVersion: 3,
                         projectVersion: 0,
+                        checklist: ['Read the handbook'],
                         fields: {
                           title: 'Reviewed starter task',
                           ownerId: sample.workspaces[0].me.id,
@@ -116,7 +117,6 @@ it('erases local and submitted credentials before dependent refresh fails after 
                           dueDate: '2026-12-01',
                           dueAt: '2026-12-01T09:00:00Z',
                           dueTimezone: 'Asia/Kolkata',
-                          checklist: ['Read the handbook'],
                           tags: ['starter'],
                         },
                       },
@@ -502,3 +502,70 @@ it('keeps authored role, department and manager select values with neutral pendi
   expect(selects.map((select) => select.value)).toEqual(before);
   expect(onChange).not.toHaveBeenCalled();
 });
+
+it('discloses every ordered checklist requirement from the actual server preview before confirmation', async () => {
+  // Captured by TestOnboardingReviewedTemplateTasks, never a hand-authored preview.
+  const { default: fixture } =
+    await import('../../../shared/people/testdata/onboarding-review.json');
+  vi.stubGlobal(
+    'fetch',
+    vi.fn(
+      async (input: string) =>
+        new Response(
+          JSON.stringify(
+            String(input).endsWith('/people/context')
+              ? fixture.context
+              : String(input).endsWith('/onboarding/preview')
+                ? fixture.preview
+                : String(input).endsWith('/projects')
+                  ? fixture.projects
+                  : String(input).includes('presets')
+                    ? { items: [] }
+                    : { templates: [] },
+          ),
+          { status: 200 },
+        ),
+    ),
+  );
+  render(
+    <QueryClientProvider client={new QueryClient()}>
+      <PeopleOnboarding onClose={() => {}} />
+    </QueryClientProvider>,
+  );
+  fireEvent.change(screen.getByLabelText('Name'), {
+    target: { value: fixture.preview.person.name },
+  });
+  fireEvent.change(screen.getByLabelText('Email'), {
+    target: { value: fixture.preview.person.email },
+  });
+  await waitFor(() =>
+    expect(screen.getByText('Continue to access').hasAttribute('disabled')).toBe(false),
+  );
+  fireEvent.click(screen.getByText('Continue to access'));
+  fireEvent.click(screen.getByText('Continue to starting work'));
+  fireEvent.click(screen.getByText('Review onboarding'));
+  await screen.findByLabelText(/New account password/);
+  expect(screen.getByText('Complete the reviewed starting work')).toBeTruthy();
+  expect(screen.getByText('Owner: Founder · Independent reviewer: admin')).toBeTruthy();
+  expect(screen.getByText(/Project: Reviewed starting project · Project version: 1/)).toBeTruthy();
+  expect(screen.getByText(/Status: todo · Priority: high · Estimated hours: 2.5/)).toBeTruthy();
+  expect(screen.getByText(/Start: 2026-10-11 · Due: 2026-10-14/)).toBeTruthy();
+  const lines = screen.getAllByText(/^Checklist:/).map((node) => node.textContent);
+  expect(lines).toEqual([
+    'Checklist: Read the complete starting handbook',
+    'Checklist: Confirm the independent review requirements',
+  ]);
+  expect(screen.getByText('Confirm onboarding').hasAttribute('disabled')).toBe(true);
+});
+
+it.each([null, undefined])(
+  'labels legacy unavailable checklist requirements instead of implying none (%s)',
+  async (checklist) => {
+    const { default: fixture } =
+      await import('../../../shared/people/testdata/onboarding-review.json');
+    const { onboardingTaskReview } = await import('../../../shared/people/taskReview');
+    expect(
+      onboardingTaskReview({ ...fixture.preview.taskPreviews[0], checklist }, undefined),
+    ).toContain('Checklist requirements unavailable. Review onboarding again.');
+  },
+);

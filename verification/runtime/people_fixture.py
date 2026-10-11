@@ -23,9 +23,20 @@ try:
  context=request(admin,base+'/people/context');reviewer=next(x for x in context['people'] if x['id']!=actor and x['active'] and x['role']!='viewer')
  preset=request(admin,base+'/people/presets',{'retryKey':key(),'name':'Fictional runtime starter','description':'Reviewed local fixture','membership':{'role':'member','departmentId':'','managerId':'','title':'Fictional colleague','capacityHours':32},'templateIds':[]})
  preset=request(admin,base+'/people/presets/'+preset['id'])
- email='m9-'+suffix+'@example.invalid';preview=request(admin,base+'/people/onboarding/preview',{'retryKey':key(),'name':'Fictional Runtime Person','email':email,'presetId':preset['id'],'expectedPresetVersion':preset['version'],'membership':preset['membership'],'tasks':[]})
+ checklist=['Read the complete starting handbook','Confirm the independent review requirements']
+ template=request(admin,base+'/task-templates',{'retryKey':key(),'kind':'task','name':'Fictional checklist starting template','scopeOwnerId':actor,'defaults':{'title':'Reviewed runtime starting task','description':'Complete the reviewed starting work','ownerPolicy':'actor','reviewerId':reviewer['id'],'requiresApproval':True,'status':'todo','priority':'high','estimatedHours':2.5,'relativeDueDays':3,'tags':['starting','reviewed'],'checklist':checklist}})
+ starting={'templateId':template['id'],'expectedTemplateVersion':1,'anchorDate':'2026-10-11','fields':{'startDate':'2026-10-11'}}
+ before=request(admin,base+'/workspace');before_people=len(before['people']);before_tasks=len(before['tasks'])
+ email='m9-'+suffix+'@example.invalid';preview=request(admin,base+'/people/onboarding/preview',{'retryKey':key(),'name':'Fictional Runtime Person','email':email,'presetId':preset['id'],'expectedPresetVersion':preset['version'],'membership':preset['membership'],'tasks':[starting]})
  assert preview['accountMode']=='new_account' and preview['sessionEffect']['reauthenticate'] and len(preview['grants'])==4
+ after_preview=request(admin,base+'/workspace');assert len(after_preview['people'])==before_people and len(after_preview['tasks'])==before_tasks
+ task_preview=preview['taskPreviews'][0];assert task_preview['checklist']==checklist and 'checklist' not in task_preview['fields'];assert task_preview['fields']['dueDate']=='2026-10-14' and task_preview['fields']['reviewerId']==reviewer['id'] and task_preview['fields']['requiresApproval']
+ (a.output.parent/(a.output.stem+'-onboarding-preview.json')).write_text(json.dumps(preview,indent=2)+'\n')
+ checks.append('Real onboarding preview discloses full ordered checklist text without checklist IDs/state or user/task creation')
  password='FictionalLocal-'+uuid.uuid4().hex;body={'retryKey':key(),'previewId':preview['id'],'expectedPreviewVersion':preview['version'],'password':password};joined=request(admin,base+'/people/onboarding/apply',body);assert request(admin,base+'/people/onboarding/apply',body)==joined
+ created=request(admin,base+'/tasks/'+joined['taskIds'][0]);created=created.get('task',created);assert [x['text'] for x in created['checklist']]==checklist and len({x['id'] for x in created['checklist']})==2 and all(x['id'] and not x['done'] for x in created['checklist']);assert created['dueDate']==created['originalDueDate']=='2026-10-14' and created['startDate']=='2026-10-11' and created['reviewerId']==reviewer['id'] and created['requiresApproval']
+ after_apply=request(admin,base+'/workspace');assert len(after_apply['people'])==before_people+1 and len(after_apply['tasks'])==before_tasks+1
+ checks.append('Real apply and canonical replay create exactly one task with fresh unchecked ordered checklist and original dates/independent reviewer')
  changed=dict(body,password='FictionalDifferent-'+uuid.uuid4().hex);request(admin,base+'/people/onboarding/apply',changed,status=409)
  assert password not in json.dumps([preview,joined]);uid=joined['userId'];checks.append('Preset/current preview/new-account apply and same-key canonical replay; changed credential conflicts without echoed password')
  person=client();request(person,'/auth/login',{'email':email,'password':password});request(admin,base+'/people/'+uid,{'role':'manager','expectedVersion':1},'PATCH');request(person,'/auth/session',status=401)

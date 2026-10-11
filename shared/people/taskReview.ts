@@ -35,7 +35,9 @@ export function onboardingTaskReview(
     f.requiresApproval
       ? "Independent acceptance required; evidence and review policy are preserved."
       : "Existing task evidence and review policy applies.",
-    ...list(f.checklist).map((text) => "Checklist: " + text),
+    ...(Array.isArray(task.checklist)
+      ? task.checklist.map((text) => "Checklist: " + text)
+      : ["Checklist requirements unavailable. Review onboarding again."]),
     ...(list(f.tags).length ? ["Tags: " + list(f.tags).join(", ")] : []),
   ].filter(Boolean);
 }
