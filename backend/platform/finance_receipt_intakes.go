@@ -70,7 +70,9 @@ func authorizeFinanceIntake(tx *gorm.DB, a *access, id string) (FinanceAssistanc
 func (s *Server) financeIntakeRoutes() {
 	base := "/api/companies/{cid}"
 	s.route("POST "+base+"/finance/intakes", s.reserveFinanceIntake)
+	s.route("GET "+base+"/finance/intakes", s.listFinanceIntakes)
 	s.route("GET "+base+"/finance/intakes/{id}", s.getFinanceIntake)
+	s.route("POST "+base+"/finance/intakes/{id}/bind-content", s.bindFinanceIntake)
 	s.route("POST "+base+"/finance/intakes/{id}/upload", s.uploadFinanceIntake)
 	s.route("POST "+base+"/finance/intakes/{id}/finalize", s.finalizeFinanceIntake)
 	s.route("POST "+base+"/finance/intakes/{id}/cancel", s.cancelFinanceIntake)
@@ -82,7 +84,7 @@ func (s *Server) reserveFinanceIntake(w http.ResponseWriter, r *http.Request) er
 	if e != nil {
 		return e
 	}
-	f, e := readFields(w, r, "retryKey", "purpose", "fileName", "size", "sha256", "destinationDepartmentId")
+	f, e := readFields(w, r, "retryKey", "purpose", "fileName", "size", "sha256", "destinationDepartmentId", "capture")
 	if e != nil {
 		return e
 	}
@@ -92,6 +94,7 @@ func (s *Server) reserveFinanceIntake(w http.ResponseWriter, r *http.Request) er
 	}
 	var input struct {
 		Purpose                 string
+		Capture                 bool
 		FileName                string
 		Size                    int64
 		SHA256                  string
@@ -100,7 +103,16 @@ func (s *Server) reserveFinanceIntake(w http.ResponseWriter, r *http.Request) er
 	if e = applyFields(f, &input); e != nil {
 		return e
 	}
-	if !in(input.Purpose, "receipt", "statement") || !financeClean(input.FileName, 240) || filepath.Base(input.FileName) != input.FileName || strings.ContainsAny(input.FileName, "/\\\x00") || !financeSHA256.MatchString(input.SHA256) || input.Size < 1 || input.Size > 10<<20 || input.Purpose == "statement" && input.Size > 8<<20 {
+	if input.Capture {
+		if input.Purpose != "receipt" {
+			return invalid("Capture reservations are for receipts only.")
+		}
+		for _, field := range []string{"fileName", "size", "sha256"} {
+			if _, present := f[field]; present {
+				return invalid("Bind actual file identity after capture.")
+			}
+		}
+	} else if !in(input.Purpose, "receipt", "statement") || !validFinanceContentIdentity(input.FileName, input.Size, input.SHA256, input.Purpose) {
 		return invalid("Choose a bounded supported file and exact content identity.")
 	}
 	if input.Purpose == "statement" && input.DestinationDepartmentID != "" {
@@ -135,17 +147,25 @@ func (s *Server) reserveFinanceIntake(w http.ResponseWriter, r *http.Request) er
 		}, func() (BusinessResult, error) {
 			var actor, company int64
 			q := tx.Model(&FinanceAssistanceIntake{}).Where("company_id=? AND expires_at>? AND state NOT IN ?", a.Company.ID, time.Now(), []string{"cancelled", "expired", "purged", "rejected"})
-			if e := q.Select("COALESCE(SUM(size),0)").Scan(&company).Error; e != nil {
+			if e := q.Select("COALESCE(SUM(CASE WHEN state='capture_reserved' THEN 10485760 ELSE size END),0)").Scan(&company).Error; e != nil {
 				return BusinessResult{}, e
 			}
-			if e := q.Where("owner_id=?", a.User.ID).Select("COALESCE(SUM(size),0)").Scan(&actor).Error; e != nil {
+			if e := q.Where("owner_id=?", a.User.ID).Select("COALESCE(SUM(CASE WHEN state='capture_reserved' THEN 10485760 ELSE size END),0)").Scan(&actor).Error; e != nil {
 				return BusinessResult{}, e
 			}
-			if actor+input.Size > s.opts.FinanceActorQuotaBytes || company+input.Size > s.opts.FinanceCompanyQuotaBytes {
+			charge := input.Size
+			if input.Capture {
+				charge = 10 << 20
+			}
+			if actor+charge > s.opts.FinanceActorQuotaBytes || company+charge > s.opts.FinanceCompanyQuotaBytes {
 				return BusinessResult{}, invalid("Private finance intake capacity reached; cancel an unused intake.")
 			}
 			now := time.Now().UTC()
 			out = FinanceAssistanceIntake{ID: newID("fin"), CompanyID: a.Company.ID, OwnerID: a.User.ID, Purpose: input.Purpose, SessionRef: ref, StoreKey: newID("med"), FileName: input.FileName, Size: input.Size, InternalSHA256: input.SHA256, State: "reserved", Version: 1, ContentGeneration: 1, DestinationDepartmentID: input.DestinationDepartmentID, CreatedAt: now, ExpiresAt: now.Add(s.opts.FinanceIntakeTTL)}
+			if input.Capture {
+				out.State = "capture_reserved"
+				out.ContentGeneration = 0
+			}
 			if e := tx.Create(&out).Error; e != nil {
 				return BusinessResult{}, e
 			}
@@ -202,6 +222,9 @@ func (s *Server) uploadFinanceIntake(w http.ResponseWriter, r *http.Request) err
 	})
 	if e != nil {
 		return e
+	}
+	if i.State == "capture_reserved" || i.Size < 1 || i.InternalSHA256 == "" {
+		return financeConflict()
 	}
 	data, e := io.ReadAll(io.LimitReader(r.Body, i.Size+1))
 	if e != nil {
@@ -376,7 +399,7 @@ func (s *Server) downloadFinanceIntake(w http.ResponseWriter, r *http.Request) e
 	return e
 }
 func (s *Server) readFinanceIntakeBytes(ctx context.Context, i FinanceAssistanceIntake) ([]byte, error) {
-	if s.opts.FinanceIntakeStore == nil {
+	if i.State == "capture_reserved" || i.Size < 1 || !financeSHA256.MatchString(i.InternalSHA256) || s.opts.FinanceIntakeStore == nil {
 		return nil, missing()
 	}
 	f, e := s.opts.FinanceIntakeStore.Open(ctx, i.StoreKey)
