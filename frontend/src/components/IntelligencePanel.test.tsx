@@ -666,3 +666,176 @@ it.each(['company', 'session'])(
     );
   },
 );
+
+it.each([false, true])(
+  'retains inspected web review across cloned pending refresh (preview overlaps=%s)',
+  async (overlap) => {
+    let previewDone: (v: Response) => void = () => {};
+    const prior = globalThis.fetch;
+    vi.stubGlobal(
+      'fetch',
+      vi.fn((input: RequestInfo, init?: RequestInit) =>
+        String(input).endsWith('/task-preview') && overlap
+          ? new Promise<Response>((r) => {
+              previewDone = r;
+            })
+          : prior(input, init),
+      ),
+    );
+    state.mutate.mockResolvedValue({ id: 'created' });
+    mount();
+    await edit();
+    fireEvent.click(screen.getByText('Preview content and audience'));
+    if (!overlap) {
+      await screen.findByText('Publish to the reviewed audience.');
+      fireEvent.click(screen.getByLabelText('I reviewed these fields and this audience.'));
+    }
+    const editor = screen.getByLabelText('Reviewed intelligence title');
+    held = new Promise((r) => {
+      release = r;
+    });
+    fireEvent.click(screen.getByText('Recheck current result'));
+    await waitFor(() => expect(screen.queryByText('Authorized source')).toBeNull());
+    expect(screen.queryByText('Publish to the reviewed audience.')).toBeNull();
+    expect(screen.getByLabelText('Reviewed intelligence title')).toBe(editor);
+    expect(screen.getByText('Confirm reviewed creation')).toHaveProperty('disabled', true);
+    if (overlap)
+      await act(async () =>
+        previewDone(
+          response({
+            audienceUserIds: ['actor', 'reviewer'],
+            notice: 'Publish to the reviewed audience.',
+            intelligenceReviewHash: 'audience',
+          }),
+        ),
+      );
+    expect(screen.queryByText('Publish to the reviewed audience.')).toBeNull();
+    await act(async () => release(response(JSON.parse(JSON.stringify(job)))));
+    await screen.findByText('Publish to the reviewed audience.');
+    if (overlap)
+      fireEvent.click(screen.getByLabelText('I reviewed these fields and this audience.'));
+    fireEvent.click(screen.getByText('Confirm reviewed creation'));
+    await screen.findByText('Created work successfully.');
+  },
+);
+
+it.each([
+  [403, 'expired'],
+  [403, 'access_changed'],
+  [401, 'expired'],
+  [404, 'expired'],
+] as const)(
+  'keeps web held canonical ACK only for exact raw expiry %s/%s',
+  async (status, code) => {
+    let finish: (v: unknown) => void = () => {};
+    state.mutate.mockImplementation(
+      () =>
+        new Promise((r) => {
+          finish = r;
+        }),
+    );
+    mount();
+    await edit();
+    fireEvent.click(screen.getByText('Preview content and audience'));
+    await screen.findByText('Publish to the reviewed audience.');
+    fireEvent.click(screen.getByLabelText('I reviewed these fields and this audience.'));
+    fireEvent.click(screen.getByText('Confirm reviewed creation'));
+    await waitFor(() => expect(state.mutate).toHaveBeenCalledTimes(1));
+    held = Promise.resolve(response({ code, message: 'Unavailable' }, status));
+    fireEvent.click(screen.getByText('Recheck current result'));
+    await waitFor(() => expect(screen.queryByText('Authorized source')).toBeNull());
+    await act(async () => finish({ id: 'created' }));
+    if (status === 403 && code === 'expired') await screen.findByText('Created work successfully.');
+    else expect(screen.queryByText('Created work successfully.')).toBeNull();
+  },
+);
+
+it.each([
+  'result',
+  'source',
+  'edit',
+  'authority',
+  'foreground',
+  'denied',
+  'candidate',
+  'unmount',
+  'retirement',
+])('rejects late web inspected preview across %s change', async (change) => {
+  let previewDone: (v: Response) => void = () => {};
+  const initial = {
+    ...job,
+    result: {
+      ...job.result,
+      candidates: [
+        job.result.candidates[0],
+        { ...job.result.candidates[0], title: 'Second candidate' },
+      ],
+    },
+  };
+  const prior = globalThis.fetch;
+  vi.stubGlobal(
+    'fetch',
+    vi.fn((input: RequestInfo, init?: RequestInit) =>
+      String(input).endsWith('/task-preview')
+        ? new Promise<Response>((r) => {
+            previewDone = r;
+          })
+        : String(input).endsWith('/jobs/job')
+          ? (held ?? Promise.resolve(response(initial)))
+          : prior(input, init),
+    ),
+  );
+  const mounted = mount();
+  await edit();
+  fireEvent.click(screen.getByText('Preview content and audience'));
+  if (change === 'candidate') fireEvent.click(screen.getAllByText('Review task draft')[1]);
+  held = new Promise((r) => {
+    release = r;
+  });
+  fireEvent.click(screen.getByText('Recheck current result'));
+  await waitFor(() => expect(screen.queryByText('Authorized source')).toBeNull());
+  if (change === 'edit')
+    fireEvent.change(screen.getByLabelText('Reviewed intelligence title'), {
+      target: { value: 'Changed human intent' },
+    });
+  if (change === 'authority') {
+    state.user = 'new-actor';
+    mounted.rerender(
+      <QueryClientProvider client={new QueryClient()}>
+        <IntelligencePanel initialJob="job" />
+      </QueryClientProvider>,
+    );
+  }
+  if (change === 'foreground') {
+    Object.defineProperty(document, 'visibilityState', { configurable: true, value: 'hidden' });
+    fireEvent(document, new Event('visibilitychange'));
+  }
+  if (change === 'retirement') await act(async () => clearAllBusinessAttempts());
+  if (change === 'unmount') {
+    mounted.unmount();
+    mount();
+  }
+  const changed = JSON.parse(JSON.stringify(initial));
+  if (change === 'result') changed.resultHash = 'new-result';
+  if (change === 'source') changed.publication.sources = [{ messageId: 'message', revision: 2 }];
+  await act(async () =>
+    release(
+      change === 'denied'
+        ? response({ code: 'not_found', message: 'Removed' }, 404)
+        : response(changed),
+    ),
+  );
+  await act(async () =>
+    previewDone(
+      response({
+        audienceUserIds: ['actor'],
+        notice: 'Obsolete private audience',
+        intelligenceReviewHash: 'old-review',
+      }),
+    ),
+  );
+  expect(screen.queryByText('Obsolete private audience')).toBeNull();
+  expect(screen.queryByText('Confirm reviewed creation')?.getAttribute('disabled')).not.toBeNull();
+  if (change === 'foreground')
+    Object.defineProperty(document, 'visibilityState', { configurable: true, value: 'visible' });
+});

@@ -1,3 +1,4 @@
+import { isIntelligenceRawExpiry } from "../../shared/intelligence/rawExpiry";
 import { mergeExecutionPage } from "../../shared/business/pagination";
 import { useRamInput } from "./ramInput";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
@@ -52,6 +53,7 @@ export function useExecutionRead<T>(
     data?: T;
     error?: string;
     denied?: boolean;
+    rawExpired?: boolean;
   }>();
   // Returning to the same foreground scope must not revive its previous read.
   const [previousScope, setPreviousScope] = useState(scope);
@@ -99,6 +101,14 @@ export function useExecutionRead<T>(
         if (alive && generation === client.generation)
           setLoaded({ scope, data });
       } catch (e) {
+        const rawExpired =
+          e instanceof NativeApiError &&
+          isIntelligenceRawExpiry(
+            `/companies/${w.company}${path}`,
+            bodyKey === undefined ? "GET" : "POST",
+            e.status,
+            e.code,
+          );
         if (
           alive &&
           generation === client.generation &&
@@ -108,12 +118,13 @@ export function useExecutionRead<T>(
               e.status === 409 &&
               e.code === "access_changed"))
         ) {
-          clearAttemptsForSource(
-            client.endpoint,
-            w.company,
-            w.session?.user.id ?? "",
-            path.includes("/evidence-preview?") ? path : path.split("?")[0],
-          );
+          if (!rawExpired)
+            clearAttemptsForSource(
+              client.endpoint,
+              w.company,
+              w.session?.user.id ?? "",
+              path.includes("/evidence-preview?") ? path : path.split("?")[0],
+            );
           const goal = path.match(/^\/goals\/([^/?]+)$/);
           if (goal)
             for (const prefix of [
@@ -165,6 +176,7 @@ export function useExecutionRead<T>(
         if (alive && generation === client.generation)
           setLoaded({
             scope,
+            rawExpired,
             error:
               e instanceof NativeApiError
                 ? e.message
@@ -194,14 +206,14 @@ export function useExecutionRead<T>(
   ]);
   const denied = loaded?.scope === scope && loaded.denied;
   useEffect(() => {
-    if (denied)
+    if (denied && !loaded?.rawExpired)
       clearAttemptsForSource(
         client.endpoint,
         w.company,
         w.session?.user.id ?? "",
         path.startsWith("/reports/") ? path.split("/rows")[0] : path,
       );
-  }, [denied, path, w.company, w.session?.user.id]);
+  }, [denied, loaded?.rawExpired, path, w.company, w.session?.user.id]);
   const current =
     enabled && w.foreground && !!w.work && loaded?.scope === scope;
   return {

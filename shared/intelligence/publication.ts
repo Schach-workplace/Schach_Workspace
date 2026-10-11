@@ -167,3 +167,34 @@ export function intelligencePublicationOperation(path?: string) {
     return "request_publish";
   return "";
 }
+
+/** A fresh parse of an immutable result is not a new inspected candidate.
+ * Keep only producer identities/revisions here, never candidate/source prose. */
+export function intelligenceReviewIdentity(
+  job: IntelligenceJob,
+  index: number,
+  kind: string,
+): string {
+  return JSON.stringify([
+    job.jobId,
+    job.state,
+    job.resultHash,
+    job.sourceSetHash,
+    index,
+    kind,
+    job.result?.operation,
+    job.result?.sourceSetHash,
+    job.publication,
+    job.sources?.map((s) => [
+      s.sourceKey,
+      s.kind,
+      s.id,
+      s.parentId,
+      s.conversationId,
+      s.revision,
+      s.version,
+      s.contentHash,
+      s.selectedFieldSet,
+    ]),
+  ]);
+}

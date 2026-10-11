@@ -613,7 +613,7 @@ it("requires human supported anchor/action for second candidate and opens canoni
   expect(c.textContent).toContain("Source anchor: Choose");
 });
 
-async function nativeSubmitCurrent(candidateIndex = 0) {
+async function nativeSubmitCurrent(candidateIndex = 0, confirm = true) {
   await act(async () => {
     [...c.querySelectorAll("button")]
       .filter((b) => b.textContent === "Review task draft")
@@ -631,6 +631,7 @@ async function nativeSubmitCurrent(candidateIndex = 0) {
     date.dispatchEvent(new Event("input", { bubbles: true }));
   });
   await click("Preview content and audience");
+  if (!confirm) return;
   await click("I reviewed these fields and this audience");
   await click("Confirm reviewed creation");
 }
@@ -791,3 +792,235 @@ it.each(["company", "session"])(
     ).toHaveLength(0);
   },
 );
+
+it.each([false, true])(
+  "retains inspected native review across real cloned polling (preview overlaps=%s)",
+  async (overlap) => {
+    const polledJob = {
+      ...job,
+      publication: {
+        allowed: true,
+        conversationId: "conversation",
+        policyVersion: 2,
+        sources: [{ messageId: "message", revision: 1 }],
+      },
+      result: {
+        ...job.result,
+        candidates: [
+          job.result.candidates[0],
+          { ...job.result.candidates[0], title: "Second candidate" },
+        ],
+      },
+    };
+    let hold = false;
+    let rawDone: (v: unknown) => void = () => {};
+    let previewDone: (v: unknown) => void = () => {};
+    const inspected = {
+      audienceUserIds: ["actor", "reviewer"],
+      notice: "Inspected current audience",
+      intelligenceReviewHash: "review",
+    };
+    s.request.mockImplementation(async (path: string, method: string) => {
+      if (path.endsWith("/jobs/job"))
+        return hold
+          ? new Promise((r) => {
+              rawDone = r;
+            })
+          : JSON.parse(JSON.stringify(polledJob));
+      if (path.endsWith("/task-conversions/preview"))
+        return overlap
+          ? new Promise((r) => {
+              previewDone = r;
+            })
+          : inspected;
+      if (path.endsWith("/task-conversions") && method === "POST")
+        return { id: "created" };
+      if (path.includes("/work-actions?")) return { actions: [] };
+      return { jobs: [], operations: { summary: true } };
+    });
+    await render(<IntelligenceScreen initialJob="job" />);
+    await render(<IntelligenceScreen initialJob="job" />);
+    await click("Review task draft");
+    await click("Source anchor: Choose");
+    await click("Selected message 1 (revision 1)");
+    await click("Instruction action: Choose");
+    await click("Primary instruction");
+    await click("Intelligence owner: Choose person");
+    await click("Human owner · founder");
+    await click("Intelligence reviewer: Choose person");
+    await click("Independent reviewer · head");
+    const editor = c.querySelector<HTMLInputElement>(
+      '[aria-label="Reviewed intelligence title"]',
+    )!;
+    const date = c.querySelector<HTMLInputElement>(
+      '[aria-label="Intelligence deadline"]',
+    )!;
+    await act(async () => {
+      date.value = "2026-11-15";
+      date.dispatchEvent(new Event("input", { bubbles: true }));
+    });
+    await click("Preview content and audience");
+    if (!overlap) await click("I reviewed these fields and this audience");
+    hold = true;
+    // Actual mounted useIntelligence interval invokes actual useExecutionRead.
+    await act(async () => {
+      await new Promise((r) => setTimeout(r, 5100));
+    });
+    expect(c.textContent).not.toContain("Inspected current audience");
+    expect(c.textContent).not.toContain("Authorized source");
+    expect(c.querySelector('[aria-label="Reviewed intelligence title"]')).toBe(
+      editor,
+    );
+    expect(
+      [...c.querySelectorAll("button")].find(
+        (b) => b.textContent === "Confirm reviewed creation",
+      )!.disabled,
+    ).toBe(true);
+    if (overlap) await act(async () => previewDone(inspected));
+    expect(c.textContent).not.toContain("Inspected current audience");
+    await act(async () => rawDone(JSON.parse(JSON.stringify(polledJob))));
+    expect(c.textContent).toContain("Inspected current audience");
+    if (overlap) await click("I reviewed these fields and this audience");
+    await click("Confirm reviewed creation");
+    expect(c.textContent).toContain("Created work successfully.");
+  },
+  12000,
+);
+
+it.each([
+  [403, "expired"],
+  [403, "access_changed"],
+  [401, "expired"],
+  [404, "expired"],
+] as const)(
+  "keeps native held canonical ACK only for exact raw expiry %s/%s",
+  async (status, code) => {
+    let expired = false;
+    let finish: (v: unknown) => void = () => {};
+    s.request.mockImplementation(async (path: string, method: string) => {
+      if (path.endsWith("/jobs/job")) {
+        if (expired) throw new NativeApiError(status, code, "Unavailable");
+        return JSON.parse(JSON.stringify(job));
+      }
+      if (path.endsWith("/task-preview"))
+        return {
+          audienceUserIds: ["actor", "reviewer"],
+          notice: "Current audience",
+          intelligenceReviewHash: "review",
+        };
+      if (path.endsWith("/tasks") && method === "POST")
+        return new Promise((r) => {
+          finish = r;
+        });
+      if (path.endsWith("/publication-access"))
+        return { current: true, committed: true };
+      return { jobs: [], operations: { summary: true } };
+    });
+    await render(<IntelligenceScreen initialJob="job" />);
+    await render(<IntelligenceScreen initialJob="job" />);
+    await nativeSubmitCurrent();
+    expired = true;
+    await click("Recheck current result");
+    await act(async () => finish({ id: "created" }));
+    expect(c.textContent?.includes("Created work successfully.")).toBe(
+      status === 403 && code === "expired",
+    );
+    expect(c.textContent).not.toContain("Authorized source");
+  },
+);
+
+it.each([
+  "result",
+  "source",
+  "edit",
+  "authority",
+  "foreground",
+  "denied",
+  "candidate",
+  "unmount",
+  "retirement",
+])("rejects late native inspected preview across %s change", async (change) => {
+  const initial = {
+    ...job,
+    result: {
+      ...job.result,
+      candidates: [
+        job.result.candidates[0],
+        { ...job.result.candidates[0], title: "Second candidate" },
+      ],
+    },
+  };
+  let hold = false;
+  let rawDone: (v: unknown) => void = () => {};
+  let rawFail: (e: unknown) => void = () => {};
+  let previewDone: (v: unknown) => void = () => {};
+  s.request.mockImplementation(async (path: string) => {
+    if (path.endsWith("/jobs/job"))
+      return hold
+        ? new Promise((r, j) => {
+            rawDone = r;
+            rawFail = j;
+          })
+        : JSON.parse(JSON.stringify(initial));
+    if (path.endsWith("/task-preview"))
+      return new Promise((r) => {
+        previewDone = r;
+      });
+    return { jobs: [], operations: { summary: true } };
+  });
+  await render(<IntelligenceScreen initialJob="job" />);
+  await render(<IntelligenceScreen initialJob="job" />);
+  await nativeSubmitCurrent(0, false);
+  if (change === "candidate")
+    await act(async () => {
+      [...c.querySelectorAll("button")]
+        .filter((b) => b.textContent === "Review task draft")[1]
+        .click();
+    });
+  hold = true;
+  await click("Recheck current result");
+  if (change === "edit")
+    await act(async () => {
+      const e = c.querySelector<HTMLInputElement>(
+        '[aria-label="Reviewed intelligence title"]',
+      )!;
+      e.value = "Changed human intent";
+      e.dispatchEvent(new Event("input", { bubbles: true }));
+    });
+  if (change === "authority") {
+    s.w.policyEpoch++;
+    await render(<IntelligenceScreen initialJob="job" />);
+  }
+  if (change === "foreground") {
+    s.w.foreground = false;
+    await render(<IntelligenceScreen initialJob="job" />);
+  }
+  if (change === "retirement")
+    await act(async () => clearAllBusinessAttempts());
+  if (change === "unmount") {
+    await render(<div />);
+    await render(<IntelligenceScreen initialJob="job" />);
+  }
+  const changed = JSON.parse(JSON.stringify(initial));
+  if (change === "result") changed.resultHash = "new-result";
+  if (change === "source")
+    changed.publication.sources = [{ messageId: "message", revision: 2 }];
+  await act(async () => {
+    if (change === "denied")
+      rawFail(new NativeApiError(404, "not_found", "Removed"));
+    else rawDone(changed);
+  });
+  await act(async () =>
+    previewDone({
+      audienceUserIds: ["actor"],
+      notice: "Obsolete private audience",
+      intelligenceReviewHash: "old-review",
+    }),
+  );
+  expect(c.textContent).not.toContain("Obsolete private audience");
+  expect(
+    [...c.querySelectorAll("button")].find(
+      (b) => b.textContent === "Confirm reviewed creation",
+    )?.disabled,
+  ).toBe(true);
+});

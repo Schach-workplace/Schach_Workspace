@@ -3,11 +3,16 @@ import type { IntelligenceJob } from '../data/intelligence';
 import { useWorkspace } from '../store';
 import { useExecutionInput, clearExecutionForm } from '../data/executionInput';
 import { executionRead, useExecutionMutation, useExecutionRead } from '../data/execution';
-import { useBusinessAttempt, clearAttemptScope } from '../data/businessAttempts';
+import {
+  useBusinessAttempt,
+  clearAttemptScope,
+  businessAttemptGeneration,
+} from '../data/businessAttempts';
 import {
   emptyIntelligenceAuthored,
   intelligenceReviewRequest,
   intelligencePublicationOperation,
+  intelligenceReviewIdentity,
   type IntelligenceAuthored,
 } from '../../../shared/intelligence/publication';
 export default function IntelligenceDraftReview({
@@ -89,19 +94,40 @@ export default function IntelligenceDraftReview({
   const [ack, setAck] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState<{ id: string; outcome?: string }>();
-  const scope = w.companyId + ':' + w.session?.user.id;
+  const scope = JSON.stringify([
+    w.mode,
+    w.companyId,
+    w.session?.user.id,
+    w.data?.readBasis,
+    document.visibilityState,
+  ]);
   const current = useRef(scope);
   current.current = scope;
   const revision = useRef(0);
-  const lastJob = useRef(job);
-  if (lastJob.current !== job) {
-    lastJob.current = job;
+  const binding = job ? intelligenceReviewIdentity(job, index, kind) : undefined;
+  const retirement = businessAttemptGeneration();
+  const [inspected, setInspected] = useState({ scope, binding, retirement });
+  // A pending read supplies no raw job. Keep only the local review continuity;
+  // the render/confirm gates still require current positive proof. A response
+  // overlapping this interval may settle, but stays hidden until that proof.
+  if (
+    inspected.scope !== scope ||
+    inspected.retirement !== retirement ||
+    (binding !== undefined && inspected.binding !== binding) ||
+    (authorized && !job && inspected.binding !== undefined)
+  ) {
+    setInspected({ scope, binding, retirement });
     revision.current++;
-  }
-  useEffect(() => {
     setPreview(undefined);
     setAck(false);
-  }, [job]);
+  }
+  useEffect(
+    () => () => {
+      current.current = '';
+      revision.current++;
+    },
+    [],
+  );
   useEffect(() => {
     if (sourceDenied) {
       clearAttemptScope(frozen.scope);
@@ -136,6 +162,9 @@ export default function IntelligenceDraftReview({
       setError('Choose a current supported instruction action.');
       return;
     }
+    const captured = scope;
+    const serial = revision.current;
+    const capturedRetirement = businessAttemptGeneration();
     try {
       const plan = intelligenceReviewRequest(
         job,
@@ -147,8 +176,6 @@ export default function IntelligenceDraftReview({
       const body = plan.previewPath.endsWith('/task-preview')
         ? plan.previewPayload
         : { ...plan.previewPayload, retryKey: 'intelligence-review' };
-      const captured = scope;
-      const serial = revision.current;
       const p = await executionRead<typeof preview>(
         w.mode,
         w.companyId,
@@ -156,9 +183,19 @@ export default function IntelligenceDraftReview({
         plan.previewPath,
         body,
       );
-      if (current.current === captured && revision.current === serial) setPreview(p);
+      if (
+        current.current === captured &&
+        revision.current === serial &&
+        businessAttemptGeneration() === capturedRetirement
+      )
+        setPreview(p);
     } catch (e) {
-      setError((e as Error).message);
+      if (
+        current.current === captured &&
+        revision.current === serial &&
+        businessAttemptGeneration() === capturedRetirement
+      )
+        setError((e as Error).message);
     }
   }
   async function confirm() {

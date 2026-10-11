@@ -1,4 +1,5 @@
 import { router } from "expo-router";
+import { client } from "./client";
 import {
   useEffect,
   useEffectEvent,
@@ -14,7 +15,11 @@ import { useWorkspace } from "./Workspace";
 import { useRamInput } from "./ramInput";
 import { clearConversationDrafts } from "./conversationDrafts";
 import { useExecutionMutation, useExecutionRead } from "./execution";
-import { useBusinessAttempt, clearAttemptScope } from "./businessAttempts";
+import {
+  useBusinessAttempt,
+  clearAttemptScope,
+  businessAttemptGeneration,
+} from "./businessAttempts";
 import {
   intelligenceRequest,
   type IntelligenceJob,
@@ -23,6 +28,7 @@ import {
   emptyIntelligenceAuthored,
   intelligenceReviewRequest,
   intelligencePublicationOperation,
+  intelligenceReviewIdentity,
   type IntelligenceAuthored,
 } from "../../shared/intelligence/publication";
 export default function IntelligenceDraftReview({
@@ -115,19 +121,49 @@ export default function IntelligenceDraftReview({
   const [ack, setAck] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState<{ id: string; outcome?: string }>();
-  const scope = w.company + ":" + w.session?.user.id;
+  const scope = JSON.stringify([
+    client.endpoint,
+    client.generation,
+    w.company,
+    w.session?.user.id,
+    w.work?.readBasis,
+    w.policyEpoch,
+    w.recordEpoch,
+    w.attentionEpoch,
+    w.executionEpoch,
+    w.foreground,
+  ]);
   const current = useRef(scope);
   const revision = useRef(0);
-  const [previewJob, setPreviewJob] = useState(job);
-  if (previewJob !== job) {
-    setPreviewJob(job);
+  const binding = job
+    ? intelligenceReviewIdentity(job, index, kind)
+    : undefined;
+  const retirement = businessAttemptGeneration();
+  const [inspected, setInspected] = useState({ scope, binding, retirement });
+  // A pending read supplies no raw job. Keep only the local review continuity;
+  // the render/confirm gates still require current positive proof. A response
+  // overlapping this interval may settle, but stays hidden until that proof.
+  if (
+    inspected.scope !== scope ||
+    inspected.retirement !== retirement ||
+    (binding !== undefined && inspected.binding !== binding) ||
+    (authorized && !job && inspected.binding !== undefined)
+  ) {
+    setInspected({ scope, binding, retirement });
     setPreview(undefined);
     setAck(false);
   }
   useLayoutEffect(() => {
     current.current = scope;
     revision.current++;
-  }, [job, scope]);
+  }, [scope, inspected]);
+  useEffect(
+    () => () => {
+      current.current = "";
+      revision.current++;
+    },
+    [],
+  );
   const [previousDenied, setPreviousDenied] = useState(sourceDenied);
   if (previousDenied !== sourceDenied) {
     setPreviousDenied(sourceDenied);
@@ -169,6 +205,9 @@ export default function IntelligenceDraftReview({
       setError("Choose a current supported instruction action.");
       return;
     }
+    const captured = scope;
+    const serial = revision.current;
+    const capturedRetirement = businessAttemptGeneration();
     try {
       const plan = intelligenceReviewRequest(
         job,
@@ -180,17 +219,24 @@ export default function IntelligenceDraftReview({
       const body = plan.previewPath.endsWith("/task-preview")
         ? plan.previewPayload
         : { ...plan.previewPayload, retryKey: "intelligence-review" };
-      const captured = scope;
-      const serial = revision.current;
       const p = await intelligenceRequest<typeof preview>(
         w.company,
         plan.previewPath,
         body,
       );
-      if (current.current === captured && revision.current === serial)
+      if (
+        current.current === captured &&
+        revision.current === serial &&
+        businessAttemptGeneration() === capturedRetirement
+      )
         setPreview(p);
     } catch (e) {
-      setError((e as Error).message);
+      if (
+        current.current === captured &&
+        revision.current === serial &&
+        businessAttemptGeneration() === capturedRetirement
+      )
+        setError((e as Error).message);
     }
   }
   async function confirm() {

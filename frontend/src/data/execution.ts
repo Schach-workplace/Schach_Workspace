@@ -1,3 +1,4 @@
+import { isIntelligenceRawExpiry } from '../../../shared/intelligence/rawExpiry';
 import { clearExecutionForm } from './executionInput';
 import { clearFormPrefix, readDraft } from '../communication/drafts';
 import { mergeExecutionPage } from '../../../shared/business/pagination';
@@ -141,6 +142,16 @@ export function useExecutionRead<T>(path: string, enabled = true, body?: unknown
         query.error.code === 'access_changed'));
   useEffect(() => {
     if (!denied) return;
+    if (
+      query.error instanceof ApiError &&
+      isIntelligenceRawExpiry(
+        `/companies/${encodeURIComponent(company)}${path}`,
+        body === undefined ? 'GET' : 'POST',
+        query.error.status,
+        query.error.code,
+      )
+    )
+      return;
     clearAttemptsForSource(
       (import.meta.env.VITE_API_URL ?? window.location.origin) + ':' + store.mode,
       company,
