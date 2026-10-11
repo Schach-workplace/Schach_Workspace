@@ -157,3 +157,14 @@ export function clearDraftSources(
   }
   notify();
 }
+
+/** Confirmed source denial erases every authored editor for that exact source. */
+export function clearFormPrefix(company: string, user: string, prefix: string) {
+  for (const [k, v] of entries)
+    if (
+      matches(v.scope, company, user) &&
+      v.scope.conversationId.startsWith(prefix)
+    )
+      entries.delete(k);
+  notify();
+}

@@ -14,17 +14,33 @@ import {
 } from '../data/execution';
 import { deadlineCandidates, localDeadline } from '../data/deadlines';
 import { Field, ErrorMessage } from './UI';
-export default function ScheduleReview({ tasks, onDone, context }: { tasks: Task[]; onDone?: () => void; context?: ScheduleContext }) {
+export default function ScheduleReview({
+  tasks,
+  onDone,
+  context,
+  ready = true,
+}: {
+  tasks: Task[];
+  onDone?: () => void;
+  context?: ScheduleContext;
+  ready?: boolean;
+}) {
   const store = useWorkspace();
   const data = store.data!;
   const identity = tasks
     .map((t) => t.id)
     .sort()
     .join(':');
-  const [inspectedContext, freezeContext] = useExecutionInput<ScheduleContext | undefined>('$schedule:' + identity, 'context', context);
+  const [inspectedContext, freezeContext] = useExecutionInput<ScheduleContext | undefined>(
+    '$schedule:' + identity,
+    'context',
+    context,
+  );
   const previewAction = useExecutionMutation('schedule-preview:' + identity);
   const applyAction = useExecutionMutation('schedule-apply:' + identity);
-  const [rows, setRows] = useState<ScheduleChange[]>(
+  const [rows, setRows] = useExecutionInput<ScheduleChange[]>(
+    '$schedule:' + identity,
+    'rows',
     () =>
       (previewAction.attempt?.payload.changes as ScheduleChange[]) ??
       tasks
@@ -40,17 +56,33 @@ export default function ScheduleReview({ tasks, onDone, context }: { tasks: Task
           reason: '',
         })),
   );
-  const [selected, setSelected] = useState<string[]>(rows.map((r) => r.taskId));
+  const [selected, setSelected] = useExecutionInput<string[]>(
+    '$schedule:' + identity,
+    'selected',
+    () => rows.map((r) => r.taskId),
+  );
   const [proposalId, setProposalId] = useExecutionInput(
     '$schedule:' + identity,
     'proposal',
     String(applyAction.attempt?.payload.proposalId ?? ''),
   );
-  const [method, setMethod] = useState<'manual' | 'calendar_day_shift'>('manual');
-  const [offset, setOffset] = useState(1);
+  const [method, setMethod] = useExecutionInput<'manual' | 'calendar_day_shift'>(
+    '$schedule:' + identity,
+    'method',
+    'manual',
+  );
+  const [offset, setOffset] = useExecutionInput('$schedule:' + identity, 'offset', 1);
   const [error, setError] = useState('');
-  const [wall, setWall] = useState<Record<string, string>>({});
-  const [fold, setFold] = useState<Record<string, string>>({});
+  const [wall, setWall] = useExecutionInput<Record<string, string>>(
+    '$schedule:' + identity,
+    'wall',
+    {},
+  );
+  const [fold, setFold] = useExecutionInput<Record<string, string>>(
+    '$schedule:' + identity,
+    'fold',
+    {},
+  );
   const inspected = useExecutionRead<{ proposal: ScheduleProposalView }>(
     `/task-schedule/${proposalId}`,
     !!proposalId,
@@ -63,6 +95,10 @@ export default function ScheduleReview({ tasks, onDone, context }: { tasks: Task
       setProposalId('');
     }
   }, [inspected.denied]);
+  const freezeInspected = () => {
+    freezeContext(inspectedContext);
+    setRows(rows);
+  };
   const update = (id: string, key: keyof ScheduleChange, value: unknown) => {
     if (inspectedContext) freezeContext(inspectedContext);
     setProposalId('');
@@ -92,7 +128,10 @@ export default function ScheduleReview({ tasks, onDone, context }: { tasks: Task
           <Field label="Schedule method">
             <select
               value={method}
-              onChange={(e) => setMethod(e.target.value as typeof method)}
+              onChange={(e) => {
+                freezeInspected();
+                setMethod(e.target.value as typeof method);
+              }}
               disabled={!!previewAction.attempt}
             >
               <option value="manual">Manual reviewed dates</option>
@@ -106,13 +145,16 @@ export default function ScheduleReview({ tasks, onDone, context }: { tasks: Task
                 min={-366}
                 max={366}
                 value={offset}
-                onChange={(e) => setOffset(Number(e.target.value))}
+                onChange={(e) => {
+                  freezeInspected();
+                  setOffset(Number(e.target.value));
+                }}
               />
             </Field>
           )}
           {rows.map((r) => {
             const task = tasks.find((t) => t.id === r.taskId)!;
-            const title = task.title;
+            const title = ready ? task.title : 'Selected work';
             const time =
               wall[r.taskId] ??
               (r.dueAt
@@ -129,27 +171,29 @@ export default function ScheduleReview({ tasks, onDone, context }: { tasks: Task
                     <input
                       type="checkbox"
                       checked={selected.includes(r.taskId)}
-                      onChange={(e) =>
+                      onChange={(e) => {
+                        freezeInspected();
                         setSelected((ids) =>
                           e.target.checked
                             ? [...ids, r.taskId]
                             : ids.filter((id) => id !== r.taskId),
-                        )
-                      }
+                        );
+                      }}
                     />
                     {title}
                   </label>
                 </legend>
                 <p>
                   Original:{' '}
-                  {commitmentLabel({
-                    dueDate: task.originalDueDate,
-                    deadlineMode: task.originalDeadlineMode ?? 'all_day',
-                    dueAt: task.originalDueAt ?? '',
-                    dueTimezone: task.originalDueTimezone ?? '',
-                  })}
+                  {ready &&
+                    commitmentLabel({
+                      dueDate: task.originalDueDate,
+                      deadlineMode: task.originalDeadlineMode ?? 'all_day',
+                      dueAt: task.originalDueAt ?? '',
+                      dueTimezone: task.originalDueTimezone ?? '',
+                    })}
                 </p>
-                <p>Current: {commitmentLabel(task)}</p>
+                <p>Current: {ready ? commitmentLabel(task) : 'Checking current source…'}</p>
                 {method === 'manual' && (
                   <>
                     <Field label={'Start date: ' + title}>
@@ -181,7 +225,10 @@ export default function ScheduleReview({ tasks, onDone, context }: { tasks: Task
                           <input
                             type="time"
                             value={time}
-                            onChange={(e) => setWall((v) => ({ ...v, [r.taskId]: e.target.value }))}
+                            onChange={(e) => {
+                              freezeInspected();
+                              setWall((v) => ({ ...v, [r.taskId]: e.target.value }));
+                            }}
                           />
                         </Field>
                         <Field label={'Commitment timezone: ' + title}>
@@ -194,9 +241,10 @@ export default function ScheduleReview({ tasks, onDone, context }: { tasks: Task
                           <Field label={'Repeated time offset: ' + title}>
                             <select
                               value={fold[r.taskId] ?? ''}
-                              onChange={(e) =>
-                                setFold((v) => ({ ...v, [r.taskId]: e.target.value }))
-                              }
+                              onChange={(e) => {
+                                freezeInspected();
+                                setFold((v) => ({ ...v, [r.taskId]: e.target.value }));
+                              }}
                             >
                               <option value="">Choose an instant</option>
                               {candidates.map((c) => (
@@ -226,6 +274,7 @@ export default function ScheduleReview({ tasks, onDone, context }: { tasks: Task
           <button
             className="button button-primary"
             disabled={
+              !ready ||
               previewAction.busy ||
               !selected.length ||
               rows.some((r) => selected.includes(r.taskId) && !r.reason.trim())
@@ -270,12 +319,14 @@ export default function ScheduleReview({ tasks, onDone, context }: { tasks: Task
                       .filter(Boolean),
                   ),
                 ];
-                const projects = inspectedContext?.projects ?? projectIds.map((id) => {
-                  const p = data.projects.find((p) => p.id === id);
-                  if (!p?.version)
-                    throw Error('Open and inspect the current project before previewing.');
-                  return { id, version: p.version };
-                });
+                const projects =
+                  inspectedContext?.projects ??
+                  projectIds.map((id) => {
+                    const p = data.projects.find((p) => p.id === id);
+                    if (!p?.version)
+                      throw Error('Open and inspect the current project before previewing.');
+                    return { id, version: p.version };
+                  });
                 const result = await previewAction.execute<{ proposal: ScheduleProposalView }>(
                   '/task-schedule/preview',
                   previewAction.attempt?.payload ?? {
@@ -324,7 +375,7 @@ export default function ScheduleReview({ tasks, onDone, context }: { tasks: Task
           </button>
           <button
             className="button button-primary"
-            disabled={applyAction.busy || (view.expired && !applyAction.attempt)}
+            disabled={!ready || applyAction.busy || (view.expired && !applyAction.attempt)}
             onClick={() =>
               void run(async () => {
                 await applyAction.execute(

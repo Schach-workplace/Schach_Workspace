@@ -1,5 +1,5 @@
 import { clearExecutionForm } from './executionInput';
-import { readDraft } from '../communication/drafts';
+import { clearFormPrefix, readDraft } from '../communication/drafts';
 import { mergeExecutionPage } from '../../../shared/business/pagination';
 import { useEffect, useRef, useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
@@ -126,7 +126,7 @@ export function useExecutionRead<T>(path: string, enabled = true, body?: unknown
     !query.isFetching &&
     query.error instanceof ApiError &&
     ([401, 403, 404].includes(query.error.status) ||
-      (path.startsWith('/reports/') &&
+      ((path.startsWith('/reports/') || path.includes('/evidence-')) &&
         query.error.status === 409 &&
         query.error.code === 'access_changed'));
   useEffect(() => {
@@ -137,6 +137,14 @@ export function useExecutionRead<T>(path: string, enabled = true, body?: unknown
       user,
       path.startsWith('/reports/') ? path.split('/rows')[0] : path,
     );
+    const goal = path.match(/^\/goals\/([^/?]+)$/);
+    if (goal)
+      for (const prefix of [
+        '$goal-measure:' + goal[1] + ':',
+        '$goal-metadata:' + goal[1],
+        '$goal-reminder:' + goal[1],
+      ])
+        clearFormPrefix(company, user, prefix);
     const finance = path.match(
       /^\/finance\/(receipt-extractions|intakes|duplicate-candidates|statement-previews)\/([^/?]+)/,
     );
@@ -245,7 +253,10 @@ export function useExecutionMutation(formId: string, sources: string[] = []) {
       return result as T;
     } catch (e) {
       if (committedResult !== undefined && current.current === captured) return committedResult;
-      if (e instanceof ApiError && [401, 403, 404].includes(e.status))
+      if (
+        e instanceof ApiError &&
+        ([401, 403, 404].includes(e.status) || (e.status === 409 && e.code === 'access_changed'))
+      )
         clearAttemptScope(business.scope);
       if (current.current === captured) setError((e as Error).message);
       throw e;

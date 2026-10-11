@@ -25,6 +25,7 @@ export function affectedScopes(path: string): string[] {
   const parts = path.split('/').filter(Boolean);
   if (parts[0] === 'finance' || parts[0] === 'expense-receipts')
     return ['execution', 'attention', 'finance', 'expense-details', 'bootstrap'];
+  if (parts[0] === 'goals') return ['execution', 'bootstrap', 'attention', 'reports'];
   if (parts[0] === 'attention') return ['attention', 'execution'];
   if (['task-templates', 'task-schedule'].includes(parts[0]))
     return ['execution', 'tasks', 'attention', 'reports', 'details', 'bootstrap'];

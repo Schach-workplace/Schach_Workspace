@@ -5,6 +5,12 @@ export function mergeExecutionPage(
 ) {
   for (const key of [
     "items",
+    "goals",
+    "measurements",
+    "tasks",
+    "options",
+    "warnings",
+    "conversations",
     "allocations",
     "unallocatedExpenses",
     "templates",
@@ -22,7 +28,9 @@ export function mergeExecutionPage(
           ? JSON.stringify([value.from, value.to])
           : key === "paths"
             ? JSON.stringify(value)
-            : (value.id ?? value.row?.id);
+            : key === "warnings"
+              ? JSON.stringify(value)
+              : (value.id ?? value.sourceId ?? value.row?.id);
       if (seen.has(identity)) return false;
       seen.add(identity);
       return true;

@@ -1,3 +1,6 @@
+import { useExecutionRead } from '../data/execution';
+import { useExecutionInput } from '../data/executionInput';
+import PlanningView from '../components/PlanningView';
 import { localDeadline } from '../data/deadlines';
 import { useState } from 'react';
 import {
@@ -40,26 +43,36 @@ function scheduled(task: Task, from: string, to: string) {
   const end = task.dueDate || task.startDate;
   return !!start && start <= to && end >= from;
 }
+function calendarTaskDate(t: Task, zone: string) {
+  if (t.deadlineMode === 'timed') {
+    if (!t.dueAt || !Number.isFinite(Date.parse(t.dueAt))) return '';
+    return localDeadline(t.dueAt, zone).slice(0, 10);
+  }
+  return t.dueDate;
+}
 export function CalendarPage({ onTask }: { onTask: (id: string) => void }) {
   const { data: workspace } = useWorkspace();
   const data = workspace!;
   const date = today(data.company.timezone);
-  const [anchor, setAnchor] = useState(date);
-  const [selected, setSelected] = useState(date);
-  const [view, setView] = useState('month');
+  const [anchor, setAnchor] = useExecutionInput('$calendar', 'anchor', date);
+  const [selected, setSelected] = useExecutionInput('$calendar', 'selected', date);
+  const [view, setView] = useExecutionInput('$calendar', 'view', 'month');
   const [department, setDepartment] = useState('');
   const [owner, setOwner] = useState('');
   const [openOnly, setOpenOnly] = useState(true);
   const firstMonth = anchor.slice(0, 7) + '-01';
   const first = view === 'week' ? weekStart(anchor) : weekStart(firstMonth);
   const days = Array.from({ length: view === 'week' ? 7 : 42 }, (_, i) => addDays(first, i));
-  const tasks = data.tasks.filter(
+  const agenda = useExecutionRead<{ tasks: Task[] }>('/tasks');
+  const tasks = (agenda.ready ? (agenda.data?.tasks ?? []) : []).filter(
     (t) =>
       (!openOnly || isOpen(t)) &&
       (!department || t.departmentId === department) &&
       (!owner || t.ownerId === owner),
   );
-  const selectedTasks = tasks.filter((t) => (t.deadlineMode==='timed'&&t.dueAt?localDeadline(t.dueAt,data.company.timezone).slice(0,10):t.dueDate) === selected);
+  const selectedTasks = tasks.filter(
+    (t) => calendarTaskDate(t, data.company.timezone) === selected,
+  );
   function change(direction: number) {
     if (view === 'week') setAnchor(addDays(anchor, 7 * direction));
     else {
@@ -153,7 +166,7 @@ export function CalendarPage({ onTask }: { onTask: (id: string) => void }) {
         </div>
         <div className="calendar-days">
           {days.map((day) => {
-            const work = tasks.filter((t) => (t.deadlineMode==='timed'&&t.dueAt?localDeadline(t.dueAt,data.company.timezone).slice(0,10):t.dueDate) === day);
+            const work = tasks.filter((t) => calendarTaskDate(t, data.company.timezone) === day);
             return (
               <div
                 className={cx(
@@ -207,211 +220,14 @@ export function CalendarPage({ onTask }: { onTask: (id: string) => void }) {
         <CalendarDays size={18} />
       </div>
       <div className="panel">
+        {!agenda.ready && <p role="status">Checking currently authorized calendar work…</p>}
         <TaskTable tasks={selectedTasks} data={data} onTask={onTask} compact />
       </div>
+      <PlanningView key={first} from={first} to={days[days.length - 1]} onTask={onTask} />
     </div>
   );
 }
 
 export function WorkloadPage({ onTask }: { onTask: (id: string) => void }) {
-  const { data: workspace } = useWorkspace();
-  const data = workspace!;
-  const date = today(data.company.timezone);
-  const [start, setStart] = useState(weekStart(date));
-  const [department, setDepartment] = useState('');
-  const [selected, setSelected] = useState('');
-  const end = addDays(start, 6);
-  const people = data.people.filter(
-    (p) => p.active && (!department || p.departmentId === department),
-  );
-  const rows = people
-    .map((person) => {
-      const tasks = data.tasks.filter((t) => t.ownerId === person.id && scheduled(t, start, end));
-      const planned =
-        Math.round(
-          tasks.reduce((sum, t) => sum + t.estimatedHours * (1 - t.progress / 100), 0) * 10,
-        ) / 10;
-      return {
-        person,
-        tasks,
-        planned,
-        utilization: person.capacityHours
-          ? (planned / person.capacityHours) * 100
-          : planned > 0
-            ? 101
-            : 0,
-      };
-    })
-    .sort((a, b) => b.utilization - a.utilization);
-  const totalCapacity = people.reduce((sum, p) => sum + p.capacityHours, 0);
-  const planned = Math.round(rows.reduce((sum, row) => sum + row.planned, 0) * 10) / 10;
-  const selectedRow = rows.find((r) => r.person.id === selected);
-  const unscheduled = data.tasks.filter(
-    (t) =>
-      isOpen(t) && !t.startDate && !t.dueDate && (!department || t.departmentId === department),
-  );
-  return (
-    <div className="page-content">
-      <div className="task-toolbar">
-        <div className="calendar-month">
-          <button
-            className="icon-button bordered"
-            aria-label="Previous week"
-            onClick={() => setStart(addDays(start, -7))}
-          >
-            <ChevronLeft size={17} />
-          </button>
-          <h2>
-            {dateLabel(start)} – {dateLabel(end)}
-          </h2>
-          <button
-            className="icon-button bordered"
-            aria-label="Next week"
-            onClick={() => setStart(addDays(start, 7))}
-          >
-            <ChevronRight size={17} />
-          </button>
-          <button className="button button-secondary" onClick={() => setStart(weekStart(date))}>
-            This week
-          </button>
-        </div>
-        <select
-          aria-label="Workload department"
-          value={department}
-          onChange={(e) => setDepartment(e.target.value)}
-        >
-          <option value="">All departments</option>
-          {data.departments.map((d) => (
-            <option key={d.id} value={d.id}>
-              {d.name}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div className="capacity-summary">
-        <div>
-          <Clock3 size={19} />
-          <span>Remaining planned effort</span>
-          <strong>
-            {planned}
-            <small>h</small>
-          </strong>
-        </div>
-        <div>
-          <UsersRound size={19} />
-          <span>Declared weekly capacity</span>
-          <strong>
-            {totalCapacity}
-            <small>h</small>
-          </strong>
-        </div>
-        <div>
-          <CircleHelp size={19} />
-          <span>People over capacity</span>
-          <strong>
-            {rows.filter((r) => r.utilization > 100).length}
-            <small> / {people.length}</small>
-          </strong>
-        </div>
-      </div>
-      <section className="panel">
-        <div className="section-header">
-          <div>
-            <h2>Make room for the right work</h2>
-            <p>Estimated remaining effort, compared with each person's weekly availability.</p>
-          </div>
-          <span className="pill pill-slate">{people.length} people</span>
-        </div>
-        <div className="workload-list">
-          {rows.map((row) => (
-            <button
-              className="workload-row"
-              key={row.person.id}
-              onClick={() => setSelected(row.person.id)}
-            >
-              <div className="workload-person">
-                <Avatar person={row.person} size="md" />
-                <div>
-                  <strong>{row.person.name}</strong>
-                  <span>{row.person.title || departmentName(data, row.person.departmentId)}</span>
-                </div>
-              </div>
-              <div className="workload-bar">
-                <div>
-                  <span>
-                    {row.planned}h planned{' '}
-                    <span className="muted">/ {row.person.capacityHours}h available</span>
-                  </span>
-                  <strong>
-                    {row.person.capacityHours ? `${Math.round(row.utilization)}%` : '—'}
-                  </strong>
-                </div>
-                <ProgressBar
-                  value={row.utilization}
-                  color={row.utilization > 100 ? 'red' : row.utilization > 80 ? 'orange' : 'green'}
-                />
-              </div>
-              <span
-                className={`pill ${row.utilization > 100 ? 'pill-red' : row.utilization >= 80 ? 'pill-orange' : 'pill-green'}`}
-              >
-                {!row.person.capacityHours
-                  ? 'No capacity set'
-                  : row.utilization > 100
-                    ? 'Over capacity'
-                    : row.utilization >= 80
-                      ? 'Near capacity'
-                      : 'Room available'}
-              </span>
-              <span className="workload-task-count">
-                {row.tasks.length} tasks
-                <ArrowRight size={15} />
-              </span>
-            </button>
-          ))}
-          {rows.length === 0 && (
-            <EmptyState
-              title="No people in this view"
-              description="Choose another department, or add a company member."
-            />
-          )}
-        </div>
-      </section>
-      <div className="method-note">
-        <CircleHelp size={18} />
-        <div>
-          <h3>How capacity is calculated</h3>
-          <p>
-            Remaining effort = estimated hours × (1 − progress ÷ 100). Open tasks whose
-            start–deadline interval overlaps {dateLabel(start)}–{dateLabel(end)} contribute their
-            full remaining estimate once. Tasks with only one date use that date. This is a
-            conservative planning view, not a timesheet or an employee rating.
-          </p>
-          {unscheduled.length > 0 && (
-            <p>
-              <strong>{unscheduled.length} undated tasks</strong> are excluded until scheduled.
-            </p>
-          )}
-        </div>
-      </div>
-      {selectedRow && (
-        <Modal
-          open
-          onClose={() => setSelected('')}
-          title={`${selectedRow.person.name}'s planned work`}
-          description={`${dateLabel(start)} – ${dateLabel(end)} · ${selectedRow.planned}h remaining / ${selectedRow.person.capacityHours}h capacity`}
-          wide
-        >
-          <TaskTable
-            tasks={selectedRow.tasks}
-            data={data}
-            onTask={(id) => {
-              setSelected('');
-              onTask(id);
-            }}
-            compact
-          />
-        </Modal>
-      )}
-    </div>
-  );
+  return <PlanningView onTask={onTask} />;
 }

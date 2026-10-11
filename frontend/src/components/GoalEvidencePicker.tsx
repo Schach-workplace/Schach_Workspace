@@ -1,0 +1,186 @@
+import { useEffect, useState } from 'react';
+import { useGoalRead, type GoalEvidenceInput } from '../data/goals';
+import { Field } from './UI';
+type Option = { sourceId: string; parentId?: string; label: string };
+export default function GoalEvidencePicker({
+  goalId,
+  value,
+  onChange,
+  ready,
+}: {
+  goalId: string;
+  value: GoalEvidenceInput[];
+  onChange: (value: GoalEvidenceInput[]) => void;
+  ready: boolean;
+}) {
+  const [kind, setKind] = useState<GoalEvidenceInput['kind']>('task');
+  const [parent, setParent] = useState('');
+  const [selected, setSelected] = useState<Option>();
+  const tasks = useGoalRead<{ options: Option[] }>(
+    `/goals/${goalId}/evidence-options?kind=task`,
+    ready && kind === 'task_comment',
+  );
+  const conversations = useGoalRead<{ conversations: { id: string; title: string }[] }>(
+    '/conversations',
+    ready && kind === 'message',
+  );
+  const options = useGoalRead<{ options: Option[] }>(
+    `/goals/${goalId}/evidence-options?kind=${kind}${parent ? '&parentId=' + encodeURIComponent(parent) : ''}`,
+    ready && ((kind !== 'task_comment' && kind !== 'message') || !!parent),
+  );
+  const path = selected
+    ? `/goals/${goalId}/evidence-preview?kind=${kind}&sourceId=${encodeURIComponent(selected.sourceId)}&parentId=${encodeURIComponent(selected.parentId ?? parent)}`
+    : '';
+  const preview = useGoalRead<
+    GoalEvidenceInput & { label: string; excerpt: string; audienceNotice: string }
+  >(path, ready && !!selected);
+  useEffect(() => {
+    if (options.denied || preview.denied) {
+      setSelected(undefined);
+      onChange([]);
+    }
+  }, [options.denied, preview.denied]);
+  return (
+    <section aria-label="Goal evidence">
+      <h4>Selected evidence ({value.length}/50)</h4>
+      <p>
+        Evidence keeps its own current access. Your authored reason is shared with the goal
+        audience.
+      </p>
+      <Field label="Evidence kind">
+        <select
+          value={kind}
+          onChange={(e) => {
+            setKind(e.target.value as typeof kind);
+            setParent('');
+            setSelected(undefined);
+          }}
+        >
+          <option value="task">Task</option>
+          <option value="task_comment">Task comment</option>
+          <option value="message">Message</option>
+          <option value="report_snapshot">My historical report</option>
+        </select>
+      </Field>
+      {(kind === 'task_comment' || kind === 'message') && (
+        <Field label={kind === 'message' ? 'Conversation' : 'Comment task'}>
+          <select
+            value={parent}
+            onChange={(e) => {
+              setParent(e.target.value);
+              setSelected(undefined);
+            }}
+          >
+            <option value="">Choose a currently readable source</option>
+            {kind === 'message' &&
+              conversations.ready &&
+              conversations.data?.conversations.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.title}
+                </option>
+              ))}
+            {kind === 'task_comment' &&
+              tasks.ready &&
+              tasks.data?.options.map((t) => (
+                <option key={t.sourceId} value={t.sourceId}>
+                  {t.label}
+                </option>
+              ))}
+          </select>
+        </Field>
+      )}
+      {!ready || !options.ready ? (
+        <p role="status">Checking current evidence access…</p>
+      ) : (
+        <div>
+          {options.data?.options.map((o) => (
+            <button
+              type="button"
+              className="button button-secondary"
+              key={o.sourceId}
+              onClick={() => setSelected(o)}
+            >
+              {o.label}
+            </button>
+          ))}
+          {!options.data?.options.length && <p>No currently readable options.</p>}
+        </div>
+      )}
+      {selected && (
+        <div>
+          {preview.ready && preview.data ? (
+            <>
+              <p>{preview.data.label}</p>
+              <blockquote>{preview.data.excerpt}</blockquote>
+              <small>Exact binding: {preview.data.contentHash}</small>
+              <button
+                type="button"
+                className="button"
+                disabled={value.length >= 50}
+                onClick={() => {
+                  const p = preview.data!;
+                  const binding: GoalEvidenceInput = {
+                    kind: p.kind,
+                    sourceId: p.sourceId,
+                    parentId: p.parentId,
+                    revision: p.revision,
+                    contentHash: p.contentHash,
+                  };
+                  if (
+                    !value.some(
+                      (v) =>
+                        v.kind === binding.kind &&
+                        v.sourceId === binding.sourceId &&
+                        v.parentId === binding.parentId,
+                    )
+                  )
+                    onChange([...value, binding]);
+                  setSelected(undefined);
+                }}
+              >
+                Use selected evidence
+              </button>
+            </>
+          ) : (
+            <p role="status">Checking this exact source…</p>
+          )}
+        </div>
+      )}
+      {value.map((binding, i) => (
+        <BoundEvidence
+          key={i}
+          goalId={goalId}
+          binding={binding}
+          ready={ready}
+          onDenied={() => onChange([])}
+        />
+      ))}
+      {value.length > 0 && (
+        <button type="button" className="button button-secondary" onClick={() => onChange([])}>
+          Clear selected evidence
+        </button>
+      )}
+    </section>
+  );
+}
+
+function BoundEvidence({
+  goalId,
+  binding,
+  ready,
+  onDenied,
+}: {
+  goalId: string;
+  binding: GoalEvidenceInput;
+  ready: boolean;
+  onDenied: () => void;
+}) {
+  const q = useGoalRead(
+    `/goals/${goalId}/evidence-preview?kind=${binding.kind}&sourceId=${encodeURIComponent(binding.sourceId)}&parentId=${encodeURIComponent(binding.parentId)}`,
+    ready,
+  );
+  useEffect(() => {
+    if (q.denied) onDenied();
+  }, [q.denied]);
+  return null;
+}

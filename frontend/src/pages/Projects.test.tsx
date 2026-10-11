@@ -4,7 +4,8 @@ import { it, expect, vi, afterEach } from 'vitest';
 import Projects from './Projects';
 import sample from '../data/sample.json';
 vi.mock('../store', () => ({ useWorkspace: () => ({ data: sample.workspaces[0] }) }));
-vi.mock('../data/execution', () => ({
+vi.mock('../data/execution', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('../data/execution')>()),
   useExecutionRead: () => ({
     ready: true,
     data: {
