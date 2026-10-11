@@ -154,12 +154,36 @@ func (s *Server) RunFinanceAssistanceJobs(ctx context.Context, now time.Time, li
 		}
 		work, cancel := context.WithTimeout(ctx, 45*time.Second)
 		data, mime, e := s.financeJobBytes(work, j)
-		_ = mime
+		var extracted ReceiptOCRText
+		var candidates ReceiptCandidates
 		if e == nil {
 			if s.opts.FinanceScanner == nil {
 				e = invalid("Clean assessment unavailable.")
 			} else {
 				e = s.opts.FinanceScanner.Scan(work, bytes.NewReader(data))
+			}
+		}
+		if e == nil && j.Operation == "extract_receipt" {
+			if s.opts.ReceiptOCRProvider == nil || s.opts.FinanceOCRFingerprint != j.ProviderFingerprint {
+				e = invalid("Receipt extraction unavailable.")
+			} else {
+				var release func()
+				release, e = s.opts.LocalProviderBudget.Acquire(work)
+				if e == nil {
+					extracted, e = s.opts.ReceiptOCRProvider.Extract(work, ReceiptOCRInput{Reader: bytes.NewReader(data), Size: int64(len(data)), MIME: mime, Language: "eng", ConfigFingerprint: j.ProviderFingerprint})
+					release()
+					if e == nil {
+						candidates, e = parseReceiptCandidates(extracted.Text, j.CompanyCurrency)
+					}
+				}
+			}
+		}
+		if e == nil {
+			latest, _, err := s.financeJobBytes(work, j)
+			if err != nil {
+				e = err
+			} else if financeDigest(latest) != financeDigest(data) {
+				e = missing()
 			}
 		}
 		cancel()
@@ -173,7 +197,19 @@ func (s *Server) RunFinanceAssistanceJobs(ctx context.Context, now time.Time, li
 			if e := tx.First(&fresh, "id=? AND lease_token=? AND status='running' AND lease_until>?", j.ID, j.LeaseToken, time.Now()).Error; e != nil {
 				return missing()
 			}
-			if j.Operation == "scan_intake" {
+			if j.Operation == "extract_receipt" {
+				if s.opts.FinanceOCRFingerprint != j.ProviderFingerprint {
+					return missing()
+				}
+				result := ReceiptExtractionResult{ID: newID("fres"), CompanyID: j.CompanyID, JobID: j.ID, RequesterID: j.RequesterID, Revision: 1, Engine: extracted.Engine, EngineVersion: extracted.Version, Language: extracted.Language, Candidates: candidates, CreatedAt: time.Now().UTC(), ExpiresAt: j.ExpiresAt}
+				if e := tx.Create(&result).Error; e != nil {
+					return e
+				}
+				fresh.ResultID = result.ID
+				if e := tx.Model(&fresh).Update("result_id", result.ID).Error; e != nil {
+					return e
+				}
+			} else if j.Operation == "scan_intake" {
 				var i FinanceAssistanceIntake
 				if e := tx.First(&i, "id=?", j.SourceID).Error; e != nil {
 					return e

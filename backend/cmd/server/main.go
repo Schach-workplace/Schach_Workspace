@@ -151,6 +151,9 @@ func run() error {
 	if !production {
 		reportRoot = filepath.Join(filepath.Dir(*localDB), "report-artifacts")
 	}
+	if err := platform.ConfigureFinanceAssistance(&options); err != nil {
+		return err
+	}
 	if err := platform.ConfigureReports(&options, reportRoot); err != nil {
 		return err
 	}

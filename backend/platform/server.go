@@ -21,6 +21,9 @@ import (
 )
 
 type Options struct {
+	ReceiptOCRProvider       ReceiptOCRProvider
+	FinanceOCRFingerprint    string
+	LocalProviderBudget      LocalProviderBudget
 	FinanceIntakeStore       MediaStore
 	FinanceScanner           MediaScanner
 	FinanceIntakeTTL         time.Duration
@@ -90,11 +93,14 @@ func newID(prefix string) string {
 }
 func nowString() string { return time.Now().UTC().Format(time.RFC3339Nano) }
 func Migrate(db *gorm.DB) error {
-	return db.AutoMigrate(&FinanceAssistanceIntake{}, &ReceiptEvidenceFingerprint{}, &FinanceAssistanceJob{}, &ReportScheduleFailure{}, &SavedReportDefinition{}, &SavedReportRevision{}, &ReportSchedule{}, &ReportExportJob{}, &ReportArtifact{}, &ReportDeliveryIntent{}, &HistoricalReportSnapshot{}, &HistoricalReportRow{}, &ReportSnapshotSource{}, &TaskFact{}, &TaskHistoryCoverage{}, &TaskHistoryGap{}, &TaskAcceptanceFact{}, &TaskTimeFact{}, &TaskScheduleProposal{}, &ProjectMilestone{}, &MilestoneAcceptance{}, &MilestoneEvent{}, &TaskTemplate{}, &TaskTemplateApplication{}, &BusinessMutationRetry{}, &Company{}, &User{}, &Membership{}, &Department{}, &Project{}, &Task{}, &Comment{}, &TimeEntry{}, &Attachment{}, &Goal{}, &Activity{}, &Notification{}, &SessionRecord{}, &AutomationRecord{}, &ExpenseCategory{}, &Budget{}, &Expense{}, &ExpenseReceipt{}, &FinanceEvent{}, &Conversation{}, &ConversationMember{}, &ConversationInterval{}, &Message{}, &MessageRevision{}, &CommunicationEvent{}, &CommunicationOutbox{}, &CommunicationInbox{}, &CommunicationAction{}, &CommunicationRetry{}, &CommunicationWorkSource{}, &CommunicationBookmark{}, &CommunicationReaction{}, &CommunicationMedia{}, &CommunicationDevice{}, &CommunicationPreference{}, &CommunicationCall{}, &CommunicationCallGrant{}, &CommunicationRecord{}, &CommunicationRecipient{}, &CommunicationRequest{}, &CommunicationRecordRevision{}, &CommunicationExportAudit{}, &CommunicationCallJob{}, &CommunicationExpenseLink{}, &CommunicationExpenseRetry{}, &CommunicationBlock{}, &CommunicationPin{}, &CommunicationBundle{}, &CommunicationBundleAction{}, &UserMFA{}, &MFARecovery{}, &CommunicationPush{}, &AttentionItem{}, &AttentionRetry{}, &AttentionPreference{}, &AttentionReminder{}, &AttentionDelivery{})
+	return db.AutoMigrate(&ReceiptExtractionResult{}, &FinanceAssistanceIntake{}, &ReceiptEvidenceFingerprint{}, &FinanceAssistanceJob{}, &ReportScheduleFailure{}, &SavedReportDefinition{}, &SavedReportRevision{}, &ReportSchedule{}, &ReportExportJob{}, &ReportArtifact{}, &ReportDeliveryIntent{}, &HistoricalReportSnapshot{}, &HistoricalReportRow{}, &ReportSnapshotSource{}, &TaskFact{}, &TaskHistoryCoverage{}, &TaskHistoryGap{}, &TaskAcceptanceFact{}, &TaskTimeFact{}, &TaskScheduleProposal{}, &ProjectMilestone{}, &MilestoneAcceptance{}, &MilestoneEvent{}, &TaskTemplate{}, &TaskTemplateApplication{}, &BusinessMutationRetry{}, &Company{}, &User{}, &Membership{}, &Department{}, &Project{}, &Task{}, &Comment{}, &TimeEntry{}, &Attachment{}, &Goal{}, &Activity{}, &Notification{}, &SessionRecord{}, &AutomationRecord{}, &ExpenseCategory{}, &Budget{}, &Expense{}, &ExpenseReceipt{}, &FinanceEvent{}, &Conversation{}, &ConversationMember{}, &ConversationInterval{}, &Message{}, &MessageRevision{}, &CommunicationEvent{}, &CommunicationOutbox{}, &CommunicationInbox{}, &CommunicationAction{}, &CommunicationRetry{}, &CommunicationWorkSource{}, &CommunicationBookmark{}, &CommunicationReaction{}, &CommunicationMedia{}, &CommunicationDevice{}, &CommunicationPreference{}, &CommunicationCall{}, &CommunicationCallGrant{}, &CommunicationRecord{}, &CommunicationRecipient{}, &CommunicationRequest{}, &CommunicationRecordRevision{}, &CommunicationExportAudit{}, &CommunicationCallJob{}, &CommunicationExpenseLink{}, &CommunicationExpenseRetry{}, &CommunicationBlock{}, &CommunicationPin{}, &CommunicationBundle{}, &CommunicationBundleAction{}, &UserMFA{}, &MFARecovery{}, &CommunicationPush{}, &AttentionItem{}, &AttentionRetry{}, &AttentionPreference{}, &AttentionReminder{}, &AttentionDelivery{})
 }
 func New(db *gorm.DB, opts Options) (*Server, error) {
 	if db == nil {
 		return nil, errors.New("database is required")
+	}
+	if opts.LocalProviderBudget == nil {
+		opts.LocalProviderBudget = processLocalProviderBudget
 	}
 	if opts.FinanceIntakeTTL == 0 {
 		opts.FinanceIntakeTTL = 7 * 24 * time.Hour
@@ -183,6 +189,7 @@ func (s *Server) route(pattern string, fn endpoint) {
 }
 func (s *Server) routes() {
 	s.financeIntakeRoutes()
+	s.financeExtractionRoutes()
 	s.reportExportRoutes()
 	s.savedReportRoutes()
 	s.historicalReportRoutes()
