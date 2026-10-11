@@ -274,7 +274,7 @@ export default function FinanceAssistanceScreen({
               onExtracted={setJob}
               onStatement={() => setTool("statement")}
             />
-          )}{" "}
+          )}
           {job && (
             <FinanceReceiptReview
               jobId={job}
@@ -303,7 +303,7 @@ export default function FinanceAssistanceScreen({
               initialCandidate={initialCandidate}
               onClose={() => setTool("")}
             />
-          )}{" "}
+          )}
           {tool === "reconciliation" && authority && (
             <FinanceReconciliation
               initialRow={initialRow}

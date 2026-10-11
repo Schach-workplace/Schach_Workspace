@@ -136,7 +136,7 @@ export default function FinanceIntakeReview({
               disabled={busy}
               onPress={() => void take()}
             />
-          )}{" "}
+          )}
           {q.data.state === "reserved" && !state.file && (
             <Action
               title="Reselect the exact reserved file"
@@ -145,7 +145,7 @@ export default function FinanceIntakeReview({
                 void chooseCapture(scope).catch((e) => setError(e.message))
               }
             />
-          )}{" "}
+          )}
           {state.file && (
             <>
               <Text>
@@ -189,13 +189,13 @@ export default function FinanceIntakeReview({
                   .catch(() => {})
               }
             />
-          )}{" "}
+          )}
           {q.data.state === "scanning" && (
             <Action
               title="Check clean assessment"
               onPress={() => void q.retry()}
             />
-          )}{" "}
+          )}
           {q.data.state === "clean" && q.data.purpose === "receipt" && (
             <>
               <Action
