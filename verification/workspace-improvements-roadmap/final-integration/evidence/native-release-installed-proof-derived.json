@@ -1,0 +1,154 @@
+{
+  "sha256": "b6418f127e03b8dec0ba2bccb550cf305c807ee95cd2261e489b7924b2e5e3a5",
+  "matchesApproved": true,
+  "flags": [
+    "versionName=1.0.0",
+    "flags=[ HAS_CODE ALLOW_CLEAR_USER_DATA ALLOW_BACKUP ]",
+    "android.permission.POST_NOTIFICATIONS: granted=false, flags=[ USER_SENSITIVE_WHEN_GRANTED|USER_SENSITIVE_WHEN_DENIED]",
+    "android.permission.BLUETOOTH_CONNECT: granted=false, flags=[ USER_SENSITIVE_WHEN_GRANTED|USER_SENSITIVE_WHEN_DENIED]",
+    "android.permission.CAMERA: granted=false, flags=[ USER_SENSITIVE_WHEN_GRANTED|USER_SENSITIVE_WHEN_DENIED]",
+    "android.permission.RECORD_AUDIO: granted=false, flags=[ USER_SENSITIVE_WHEN_GRANTED|USER_SENSITIVE_WHEN_DENIED]"
+  ],
+  "foreground": [],
+  "observerInstalledExit": 0,
+  "reverseMappings": "\n",
+  "signIn": {
+    "label": "Sign in",
+    "bounds": [
+      50,
+      1153,
+      1031,
+      1274
+    ],
+    "enabled": "true",
+    "clickable": "true",
+    "class": "android.widget.Button",
+    "ancestors": [
+      {
+        "class": "android.view.ViewGroup",
+        "bounds": [
+          0,
+          0,
+          1080,
+          2280
+        ],
+        "scrollable": "false"
+      },
+      {
+        "class": "android.view.ViewGroup",
+        "bounds": [
+          0,
+          0,
+          1080,
+          2280
+        ],
+        "scrollable": "false"
+      },
+      {
+        "class": "android.widget.ScrollView",
+        "bounds": [
+          0,
+          0,
+          1080,
+          2280
+        ],
+        "scrollable": "false"
+      },
+      {
+        "class": "android.view.ViewGroup",
+        "bounds": [
+          0,
+          0,
+          1080,
+          2280
+        ],
+        "scrollable": "false"
+      },
+      {
+        "class": "android.view.ViewGroup",
+        "bounds": [
+          0,
+          0,
+          1080,
+          2280
+        ],
+        "scrollable": "false"
+      },
+      {
+        "class": "android.widget.FrameLayout",
+        "bounds": [
+          0,
+          0,
+          1080,
+          2280
+        ],
+        "scrollable": "false"
+      },
+      {
+        "class": "android.widget.FrameLayout",
+        "bounds": [
+          0,
+          0,
+          1080,
+          2280
+        ],
+        "scrollable": "false"
+      },
+      {
+        "class": "android.widget.LinearLayout",
+        "bounds": [
+          0,
+          0,
+          1080,
+          2280
+        ],
+        "scrollable": "false"
+      },
+      {
+        "class": "android.widget.FrameLayout",
+        "bounds": [
+          0,
+          0,
+          1080,
+          2280
+        ],
+        "scrollable": "false"
+      },
+      {
+        "class": "android.widget.LinearLayout",
+        "bounds": [
+          0,
+          0,
+          1080,
+          2280
+        ],
+        "scrollable": "false"
+      },
+      {
+        "class": "android.widget.FrameLayout",
+        "bounds": [
+          0,
+          0,
+          1080,
+          2280
+        ],
+        "scrollable": "false"
+      }
+    ],
+    "effectiveBounds": [
+      50,
+      1153,
+      1031,
+      1274
+    ],
+    "effectiveWidthDp": 356.72727272727275,
+    "effectiveHeightDp": 44.0
+  },
+  "publicationDerivation": {
+    "originalRecord": "004-005-installed-proof.json",
+    "removedFields": [
+      "installedPath"
+    ],
+    "qualification": "Derived public record. Its published SHA256 is recomputed from derived bytes and is not the original record hash. APK sha256 remains the separately verified public artifact hash."
+  }
+}

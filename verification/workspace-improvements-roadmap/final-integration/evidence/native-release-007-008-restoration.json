@@ -1,0 +1,202 @@
+{
+  "fontScale": "1.0",
+  "imeShown": false,
+  "cleared": [
+    {
+      "label": "Email",
+      "emptyOrStaticHint": true,
+      "selection": [
+        -1,
+        -1
+      ],
+      "secure": false,
+      "inputValueExcluded": true
+    },
+    {
+      "label": "Password",
+      "emptyOrStaticHint": true,
+      "selection": [
+        -1,
+        -1
+      ],
+      "secure": true,
+      "inputValueExcluded": true
+    },
+    {
+      "label": "Authenticator code",
+      "emptyOrStaticHint": true,
+      "selection": [
+        -1,
+        -1
+      ],
+      "secure": false,
+      "inputValueExcluded": true
+    },
+    {
+      "label": "Recovery code",
+      "emptyOrStaticHint": true,
+      "selection": [
+        -1,
+        -1
+      ],
+      "secure": false,
+      "inputValueExcluded": true
+    }
+  ],
+  "authoredMarkersAbsent": true,
+  "emptyObserverQualification": "Android returns static hint or null, selection -1/-1; knownInputMatches false does not indicate retained authored value",
+  "signIn": {
+    "label": "Sign in",
+    "bounds": [
+      50,
+      1153,
+      1031,
+      1274
+    ],
+    "enabled": "true",
+    "clickable": "true",
+    "class": "android.widget.Button",
+    "ancestors": [
+      {
+        "class": "android.view.ViewGroup",
+        "bounds": [
+          0,
+          0,
+          1080,
+          2280
+        ],
+        "scrollable": "false"
+      },
+      {
+        "class": "android.view.ViewGroup",
+        "bounds": [
+          0,
+          0,
+          1080,
+          2280
+        ],
+        "scrollable": "false"
+      },
+      {
+        "class": "android.widget.ScrollView",
+        "bounds": [
+          0,
+          0,
+          1080,
+          2280
+        ],
+        "scrollable": "false"
+      },
+      {
+        "class": "android.view.ViewGroup",
+        "bounds": [
+          0,
+          0,
+          1080,
+          2280
+        ],
+        "scrollable": "false"
+      },
+      {
+        "class": "android.view.ViewGroup",
+        "bounds": [
+          0,
+          0,
+          1080,
+          2280
+        ],
+        "scrollable": "false"
+      },
+      {
+        "class": "android.widget.FrameLayout",
+        "bounds": [
+          0,
+          0,
+          1080,
+          2280
+        ],
+        "scrollable": "false"
+      },
+      {
+        "class": "android.widget.FrameLayout",
+        "bounds": [
+          0,
+          0,
+          1080,
+          2280
+        ],
+        "scrollable": "false"
+      },
+      {
+        "class": "android.widget.LinearLayout",
+        "bounds": [
+          0,
+          0,
+          1080,
+          2280
+        ],
+        "scrollable": "false"
+      },
+      {
+        "class": "android.widget.FrameLayout",
+        "bounds": [
+          0,
+          0,
+          1080,
+          2280
+        ],
+        "scrollable": "false"
+      },
+      {
+        "class": "android.widget.LinearLayout",
+        "bounds": [
+          0,
+          0,
+          1080,
+          2280
+        ],
+        "scrollable": "false"
+      },
+      {
+        "class": "android.widget.FrameLayout",
+        "bounds": [
+          0,
+          0,
+          1080,
+          2280
+        ],
+        "scrollable": "false"
+      }
+    ],
+    "effectiveBounds": [
+      50,
+      1153,
+      1031,
+      1274
+    ],
+    "effectiveWidthDp": 356.72727272727275,
+    "effectiveHeightDp": 44.0
+  },
+  "retainedProcessIdentities": [
+    {
+      "pid": 2427642,
+      "alive": true,
+      "command": "/tmp/schach-communication-tools-20261010/android-sdk/emulator/qemu/linux-x86_64/qemu-system-x86_64-headless -avd schach-roadmap-api36 -port 5574 -no-window -no-audio -no-snapshot -no-boot-anim -accel on -gpu software -cores 2 -memory 3072 -camera-back virtualscene -camera-front emulated -no-metrics "
+    },
+    {
+      "pid": 1871279,
+      "alive": true,
+      "command": "/tmp/schach-roadmap-native-runtime-20261011/server -addr 127.0.0.1:8092 -db /tmp/schach-roadmap-native-runtime-20261011/evaluation.db -frontend /tmp/schach-roadmap-native-runtime-20261011/static -migrate "
+    },
+    {
+      "pid": 1855813,
+      "alive": true,
+      "command": "python current-read-barrier-proxy-m10-fix4.py "
+    },
+    {
+      "pid": 2398357,
+      "alive": true,
+      "command": "/home/brahma/.local/share/mise/installs/node/24.14.0/bin/node /home/brahma/.local/state/schach-native-acceptance/final-goal-74e6474/mobile/node_modules/.bin/expo start --dev-client --host localhost --port 8087 --max-workers 4 --clear "
+    }
+  ]
+}

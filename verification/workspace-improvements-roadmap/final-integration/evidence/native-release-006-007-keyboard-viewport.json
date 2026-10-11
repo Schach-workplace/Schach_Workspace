@@ -1,0 +1,338 @@
+{
+  "samples": [
+    {
+      "scale": "1.0",
+      "imeInsets": [
+        "InsetsSource id=3 type=ime frame=[0,1458][1080,2280] visibleFrame=[0,1458][1080,2280] visible=true flags= sideHint=BOTTOM boundingRects=null",
+        "mSource=InsetsSource id=3 type=ime frame=[0,1458][1080,2280] visibleFrame=[0,1458][1080,2280] visible=true flags= sideHint=BOTTOM boundingRects=null"
+      ],
+      "imeWindowMetadata": [
+        "mGivenContentInsets=[0,1392][0,0] mGivenVisibleInsets=[0,1392][0,0]",
+        "Frames: parent=[0,66][1080,2280] display=[0,66][1080,2280] frame=[0,66][1080,2280] last=[0,66][1080,2280] insetsChanged=false",
+        "isOnScreen=true"
+      ],
+      "observation": {
+        "label": "Recovery code",
+        "matches": [
+          {
+            "bounds": [
+              49,
+              1006,
+              1030,
+              1131
+            ],
+            "focused": true,
+            "enabled": true,
+            "visible": true,
+            "editable": true,
+            "secure": false,
+            "selectionStart": -1,
+            "selectionEnd": -1,
+            "knownInputMatches": false
+          }
+        ],
+        "imeShown": true,
+        "allInputTextRemovedBeforePersistence": true
+      },
+      "signIn": {
+        "label": "Sign in",
+        "bounds": [
+          50,
+          1153,
+          1031,
+          1274
+        ],
+        "enabled": "true",
+        "clickable": "true",
+        "class": "android.widget.Button",
+        "ancestors": [
+          {
+            "class": "android.view.ViewGroup",
+            "bounds": [
+              0,
+              0,
+              1080,
+              2280
+            ],
+            "scrollable": "false"
+          },
+          {
+            "class": "android.view.ViewGroup",
+            "bounds": [
+              0,
+              0,
+              1080,
+              2280
+            ],
+            "scrollable": "false"
+          },
+          {
+            "class": "android.widget.ScrollView",
+            "bounds": [
+              0,
+              0,
+              1080,
+              2280
+            ],
+            "scrollable": "false"
+          },
+          {
+            "class": "android.view.ViewGroup",
+            "bounds": [
+              0,
+              0,
+              1080,
+              2280
+            ],
+            "scrollable": "false"
+          },
+          {
+            "class": "android.view.ViewGroup",
+            "bounds": [
+              0,
+              0,
+              1080,
+              2280
+            ],
+            "scrollable": "false"
+          },
+          {
+            "class": "android.widget.FrameLayout",
+            "bounds": [
+              0,
+              0,
+              1080,
+              2280
+            ],
+            "scrollable": "false"
+          },
+          {
+            "class": "android.widget.FrameLayout",
+            "bounds": [
+              0,
+              0,
+              1080,
+              2280
+            ],
+            "scrollable": "false"
+          },
+          {
+            "class": "android.widget.LinearLayout",
+            "bounds": [
+              0,
+              0,
+              1080,
+              2280
+            ],
+            "scrollable": "false"
+          },
+          {
+            "class": "android.widget.FrameLayout",
+            "bounds": [
+              0,
+              0,
+              1080,
+              2280
+            ],
+            "scrollable": "false"
+          },
+          {
+            "class": "android.widget.LinearLayout",
+            "bounds": [
+              0,
+              0,
+              1080,
+              2280
+            ],
+            "scrollable": "false"
+          },
+          {
+            "class": "android.widget.FrameLayout",
+            "bounds": [
+              0,
+              0,
+              1080,
+              2280
+            ],
+            "scrollable": "false"
+          }
+        ],
+        "effectiveBounds": [
+          50,
+          1153,
+          1031,
+          1274
+        ],
+        "effectiveWidthDp": 356.72727272727275,
+        "effectiveHeightDp": 44.0
+      }
+    },
+    {
+      "scale": "1.3",
+      "imeInsets": [
+        "InsetsSource id=3 type=ime frame=[0,1458][1080,2280] visibleFrame=[0,1458][1080,2280] visible=true flags= sideHint=BOTTOM boundingRects=null",
+        "mSource=InsetsSource id=3 type=ime frame=[0,1458][1080,2280] visibleFrame=[0,1458][1080,2280] visible=true flags= sideHint=BOTTOM boundingRects=null"
+      ],
+      "imeWindowMetadata": [
+        "mGivenContentInsets=[0,1392][0,0] mGivenVisibleInsets=[0,1392][0,0]",
+        "Frames: parent=[0,66][1080,2280] display=[0,66][1080,2280] frame=[0,66][1080,2280] last=[0,66][1080,2280] insetsChanged=false",
+        "isOnScreen=true"
+      ],
+      "observation": {
+        "label": "Recovery code",
+        "matches": [
+          {
+            "bounds": [
+              49,
+              1050,
+              1030,
+              1192
+            ],
+            "focused": true,
+            "enabled": true,
+            "visible": true,
+            "editable": true,
+            "secure": false,
+            "selectionStart": -1,
+            "selectionEnd": -1,
+            "knownInputMatches": false
+          }
+        ],
+        "imeShown": true,
+        "allInputTextRemovedBeforePersistence": true
+      },
+      "signIn": {
+        "label": "Sign in",
+        "bounds": [
+          50,
+          1214,
+          1031,
+          1335
+        ],
+        "enabled": "true",
+        "clickable": "true",
+        "class": "android.widget.Button",
+        "ancestors": [
+          {
+            "class": "android.view.ViewGroup",
+            "bounds": [
+              0,
+              0,
+              1080,
+              2280
+            ],
+            "scrollable": "false"
+          },
+          {
+            "class": "android.view.ViewGroup",
+            "bounds": [
+              0,
+              0,
+              1080,
+              2280
+            ],
+            "scrollable": "false"
+          },
+          {
+            "class": "android.widget.ScrollView",
+            "bounds": [
+              0,
+              0,
+              1080,
+              2280
+            ],
+            "scrollable": "false"
+          },
+          {
+            "class": "android.view.ViewGroup",
+            "bounds": [
+              0,
+              0,
+              1080,
+              2280
+            ],
+            "scrollable": "false"
+          },
+          {
+            "class": "android.view.ViewGroup",
+            "bounds": [
+              0,
+              0,
+              1080,
+              2280
+            ],
+            "scrollable": "false"
+          },
+          {
+            "class": "android.widget.FrameLayout",
+            "bounds": [
+              0,
+              0,
+              1080,
+              2280
+            ],
+            "scrollable": "false"
+          },
+          {
+            "class": "android.widget.FrameLayout",
+            "bounds": [
+              0,
+              0,
+              1080,
+              2280
+            ],
+            "scrollable": "false"
+          },
+          {
+            "class": "android.widget.LinearLayout",
+            "bounds": [
+              0,
+              0,
+              1080,
+              2280
+            ],
+            "scrollable": "false"
+          },
+          {
+            "class": "android.widget.FrameLayout",
+            "bounds": [
+              0,
+              0,
+              1080,
+              2280
+            ],
+            "scrollable": "false"
+          },
+          {
+            "class": "android.widget.LinearLayout",
+            "bounds": [
+              0,
+              0,
+              1080,
+              2280
+            ],
+            "scrollable": "false"
+          },
+          {
+            "class": "android.widget.FrameLayout",
+            "bounds": [
+              0,
+              0,
+              1080,
+              2280
+            ],
+            "scrollable": "false"
+          }
+        ],
+        "effectiveBounds": [
+          50,
+          1214,
+          1031,
+          1335
+        ],
+        "effectiveWidthDp": 356.72727272727275,
+        "effectiveHeightDp": 44.0
+      }
+    }
+  ]
+}

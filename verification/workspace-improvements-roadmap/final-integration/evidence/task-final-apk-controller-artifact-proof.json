@@ -1,0 +1,28 @@
+{
+  "verifiedUTC": "2026-10-11T21:31:18.689936+00:00",
+  "sourceCommit": "74e6474b8ea80c86d2505de1561de56453c7356f",
+  "apkPath": "/home/brahma/.cache/schach-final-integration-android-74e6474/source/mobile/android/app/build/outputs/apk/release/app-release.apk",
+  "apkBytes": 98206840,
+  "apkSHA256": "b6418f127e03b8dec0ba2bccb550cf305c807ee95cd2261e489b7924b2e5e3a5",
+  "embeddedBundleSHA256": "b78fe096f4a810d45e5de10674417be5b81fa1721a205319a030b8eb6218e994",
+  "embeddedBundleBytes": 4618132,
+  "hermesMagicHex": "c61fbc03c103191f",
+  "abis": [
+    "arm64-v8a",
+    "x86_64"
+  ],
+  "committedSourceHashComparisons": 1772,
+  "actualCompiledSourceComparisons": 207,
+  "generatedConfigComparisons": 4,
+  "mismatches": [],
+  "signatureFreshExit": 0,
+  "signatureSHA256": "779b75b032a8f23d45d558b304ab6276bf5894001fa1fafb79c17eaf8f89a272",
+  "signerCertificateSHA256": "fac61745dc0903786fb9ede62a962b399f7348f0bb6f899b8332667591033b9c",
+  "evaluationSigner": true,
+  "candidateNotInstalledYet": true,
+  "deviceAPKAuthProtectedTLSPhysicalIOS": "unverified; isolatedAVD activation pending originalGoalowner yield",
+  "qualifiedEnvironmentFailures": [
+    "initial missing JAVA_HOME/java",
+    "tmpfs userquota EDQUOT after558tasks; ownSSD relocation exactsource"
+  ]
+}

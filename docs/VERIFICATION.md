@@ -6,7 +6,7 @@ Local acceptance does not certify physical Android/iOS, an iOS binary, organizat
 
 ### Final integration source and build record — 12 October 2026
 
-Native/APK checkpoint `74e6474b8ea80c86d2505de1561de56453c7356f` and the subsequent web readiness correction have [source, command, build and safe evidence manifests](../verification/workspace-improvements-roadmap/final-integration/publication-report.md). Exact before-command inputs and earlier failures are retained; the final checks below used equivalent owning product bytes.
+Product checkpoint `800457b5ceeb5cd593c2511e5a0cd07b29ca1ed7` and unchanged native/APK checkpoint `74e6474b8ea80c86d2505de1561de56453c7356f` have [source, command, build and safe evidence manifests](../verification/workspace-improvements-roadmap/final-integration/publication-report.md). Exact before-command inputs and earlier failures are retained; the final checks below used equivalent owning product bytes.
 
 | Executed check | Actual result and scope |
 | --- | --- |
@@ -19,7 +19,7 @@ Native/APK checkpoint `74e6474b8ea80c86d2505de1561de56453c7356f` and the subsequ
 | Hermes exports | Android and iOS exports passed. Metro children still emitted two `NO_COLOR`/`FORCE_COLOR` warnings despite runner scrub; these exports do not establish an iOS binary or device result. |
 | Android evaluation binary | [Exact-source APK manifest](../verification/workspace-improvements-roadmap/final-integration/evidence/final-apk-build.json): 98,206,840 bytes, SHA-256 `b6418f127e03b8dec0ba2bccb550cf305c807ee95cd2261e489b7924b2e5e3a5`, arm64-v8a/x86_64, embedded Hermes and verified Android Debug evaluation certificate. Missing-Java/tmpfs user-quota failures precede the successful isolated SSD build. Dependency/Gradle and `expo-system-ui` advisories remain qualified. |
 
-Actual current Goal geometry and isolated release launch/Auth acceptance are separate controller-owned results. Release restore rejects a retained HTTP origin and can delete its stored token, so release evaluation uses a separate isolated AVD. Protected HTTPS authentication remains unverified without an authorized trusted target. A current-JS development-shell Goal geometry result is a composite result, not release APK authentication evidence.
+Actual current Goal geometry is independently accepted as a qualified composite: 27 enabled owning intersections at fonts 1.0/1.3 meet 44dp, with former 120px shortfalls now 123–124px. The separately accepted exact release APK launched without Metro in a fresh isolated AVD: 24 enabled Sign in intersections meet 44dp at both fonts; eight focus/cursor/IME phases and eight keyboard-return phases passed. Inputs cleared, font restored and new AVD stopped; retained fixture untouched. No authentication was submitted. Release restore rejects a retained HTTP origin and can delete its stored token, so release evaluation uses a separate isolated AVD. Protected HTTPS authentication remains unverified without an authorized trusted target. A current-JS development-shell Goal geometry result is a composite result, not release APK authentication evidence.
 
 
 **Local continuation, 10 October 2026:** [Fresh native baseline and failures](LOCAL_BASELINE_2026-10-10.md) records successful PostgreSQL, TCP, browser and Compose checks on the current host, plus three Encore adapter source defects. The original environment limits below are historical; the new record distinguishes the unchanged adapter from its disposable corrected diagnostic copy.

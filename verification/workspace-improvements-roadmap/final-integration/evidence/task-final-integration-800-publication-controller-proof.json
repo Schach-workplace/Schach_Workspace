@@ -1,0 +1,9 @@
+{
+  "verifiedUTC": "2026-10-11T21:49:53.491195+00:00",
+  "checkpoint": "800457b5ceeb5cd593c2511e5a0cd07b29ca1ed7",
+  "publishedManifestRecords": 237,
+  "issues": [],
+  "M10PublishedBytesUnchanged": true,
+  "status": "PASS_CHECKPOINT_PUBLICATION_HASH_PATHS",
+  "qualification": "Immutable800 publication237 records hash/path checked; owner privacy audit separately retained. Selected nativegeometry/focus/preservation only; no XML/binaries/privateAVD/keys. Later finalmanifest/report/native isolatedproofs pending."
+}

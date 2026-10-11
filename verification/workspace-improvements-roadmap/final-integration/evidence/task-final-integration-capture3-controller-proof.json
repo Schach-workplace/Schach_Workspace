@@ -1,0 +1,10 @@
+{
+  "verifiedUTC": "2026-10-11T21:49:29.111569+00:00",
+  "checkpoint": "800457b5ceeb5cd593c2511e5a0cd07b29ca1ed7",
+  "capturedDocuments": 3,
+  "committedAffectedInputComparisons": 1736,
+  "backendEncore98b7Unchanged": true,
+  "issues": [],
+  "status": "PASS_CAPTURE3_COMMITTED_CHECKPOINT",
+  "qualification": "Natural webfix/source publication checkpoint; final native isolatedAuth/report/yield/wholebranch review/cutover remain pending. Rootdocs may resumeupdates onlyafter successful comparison."
+}

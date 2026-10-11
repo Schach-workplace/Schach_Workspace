@@ -1,6 +1,6 @@
 # Schach Workspace implementation and handoff checklist
 
-Updated UTC 2026-10-11T21:46:47.399418+00:00. Read [AI_HANDOFF.md](AI_HANDOFF.md) and [AI_FILE_INDEX.json](AI_FILE_INDEX.json) first. The active ledger is `.superpowers/sdd/2026-10-10-workspace-improvements-roadmap/progress.md`. Historical failures and source-only evidence remain qualified there; a checked source gate does not certify an installed client or production rollout.
+Updated UTC 2026-10-11T21:59:13.141325+00:00. Read [AI_HANDOFF.md](AI_HANDOFF.md) and [AI_FILE_INDEX.json](AI_FILE_INDEX.json) first. The active ledger is `.superpowers/sdd/2026-10-10-workspace-improvements-roadmap/progress.md`. Historical failures and source-only evidence remain qualified there; a checked source gate does not certify an installed client or production rollout.
 
 ## Accepted roadmap milestones
 
@@ -55,17 +55,17 @@ Saved requirements/reports: `task-final-integration-brief-preparation.md`, `task
 - [x] Fast A/B held-response owning regression before any current-target/authority callback fix; preserve original legitimate canonical commits.
 - [x] Structured current eligible conversation members/historyFromSeq/public roles/reviewer exclusions; native searchable choices/company-zone deadline fold-gap/optional blank/frozen unknown payload.
 - [x] Goal geometry: real owning RED, narrow local margin, independently verified27 enabled owners at font1/1.3 after full ancestor intersections;113 records frozen and preservation read. Qualified exact74JS/old-shell composite.
-- [ ] Public Auth geometry in exact embedded APK on a separate new private SSD AVD; protected TLS and physical checks remain open.
+- [x] Public Auth geometry in exact embeddedAPK: independently96records/24owners>=44dp/font1/1.3/8focuscursorIME+8Backreturns; noAuthsubmit; fresh5576 stopped and retainedfixture intact. Protected TLS/physical gates remain open.
 - [x] Source/focused gate only: auth-safe Connect/assistance lazy loading and manual recovery; measure normal chunks against unchanged900kB warning threshold.
 - [x] Source/HappyDOM gate only: coherent single-entry offline DEMO using installed Vite8/Rolldown configuration; regenerate preview, actual offline Connect/manual assistance zero external requests; honest intentional inline-DEMO warning.
 - [x] Source/synthetic gate only: harness invalid flags exit2 before side effects; derive contiguous58 SQL/mirror/checksum/legacy inventory; safe environment scrub/color setup and actual executed-proof labels.
 - [x] Draft source gate only, final evidence reconciliation pending: README/VERIFICATION/API/SECURITY/OPERATIONS/mobile/module documentation: actual APIs, dated qualified results, provider pins/limits, key backup, history and rollout gates. Clean attached audio is distinct from disabled call recording/transcription.
 - [x] Validated checkpoint74e6474: final affected full clients/types/lint/normal/demo/offline/Hermes/current browser320/375/430 and20px focus/scroll/pending/unknown evidence. Reuse unchanged heavy backend proofs only with exact source equivalence.
 - [x] Exact74 isolated-source Android evaluation APK independently verified:1772 committed/207 compiled inputs, embedded Hermes, dualABI, fresh evaluation signature/config/permissions. First Java/quota failures and third-party warnings retained.
-- [ ] SAME original native owner exact APK standalone launch/Auth hit areas on new private SSD AVD. ACTIVE brief task-final-release-isolated-avd-brief.md; no release install on retained HTTP fixture.
+- [x] SAME original native owner exact APK standalone launch/Auth on privateSSD AVD, full report/rootproof/freezes acceptedqualified and ownershipYIELDED. No release install on retainedHTTPfixture.
 - [x] Root verified Structured readiness-identity RED→GREEN6/full348/type/build/preview14/Chromium,1738currentinputs across8checks0mismatch. Native compiled inputs unchanged; README-only drift qualified.
-- [ ] Capture3 natural source checkpoint independently compared; three coordination docs frozen until then.
-- [ ] Final clean source/build/check/evidence manifests, full report/self-review and exclusive ownership yield.
+- [x] Capture3 natural checkpoint800 independently compared:3docs/1736committedinputs/backend98b7 zero mismatch.237safe publishedproof hashes/paths match; oldM10publication unchanged. Root coordination updates resumed.
+- [ ] Final clean source/build/check/evidence manifests, full report/self-review and exclusive ownership yield; capture4 revision2 frozen for natural metadata commit after indexing all ten new approved publication paths.
 
 Partial checkpoint47bfbae: ROOTverified7060inputhashes/3captured docs,focusedweb59/native87/typespass; wholeintegration/fullchecks/finalreview remainpending. Areas5–13 active, task-final-integration-resume.md current. ReleaseAPK must useisolatedAVD: retainedHTTPsession can be erased by release restore; trustedHTTPSauthgap explicit, noTLSbypass.
 

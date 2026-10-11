@@ -1,0 +1,32 @@
+{
+  "timestampUTC": "2026-10-11T21:55:40.254966+00:00",
+  "signInOwningRows": 24,
+  "minimumHeightDp": 44.0,
+  "minimumWidthDp": 356.72727272727275,
+  "inputPhases": 8,
+  "inputCursorFocusIMEChecksPassed": true,
+  "returnKeyboardHiddenChecks": 8,
+  "privacyScanSafeFiles": 93,
+  "forbiddenInputMarkers": 0,
+  "xmlDefaultDenyPassed": true,
+  "toolSessions": {
+    "create": 0,
+    "artifactSignatureInitial": 127,
+    "artifactSignatureWithExistingJDK": 0,
+    "installLaunch": 0,
+    "authPhases89331": 0,
+    "keyboardInsets31041": 0,
+    "restoration81242": 0,
+    "ownedStop22298": 0,
+    "emulator58255": 0
+  },
+  "warnings": [
+    "avdmanager exit0 with missing system-image devices.xml warning",
+    "emulator QuickbootFileBacked disabled on non-ext4",
+    "emulator initial protected-range unmap warning",
+    "new emulator-home emu-update-last-check.ini absent warning",
+    "graceful emulator exit0 emitted stop: Not implemented / unconfigured client / netsim stream cancelled warnings"
+  ],
+  "retainedRuntimeMutations": 0,
+  "signInSubmissions": 0
+}

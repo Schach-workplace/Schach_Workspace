@@ -1,5 +1,5 @@
 {
-  "productSourceCommit": "74e6474b8ea80c86d2505de1561de56453c7356f",
+  "productSourceCommit": "800457b5ceeb5cd593c2511e5a0cd07b29ca1ed7",
   "acceptedBase": "bc3b7c71f840b78f277d70d55b8d2674257af01f",
   "areas": [
     {
@@ -89,9 +89,11 @@
         "final-native-picker-lint-result.json",
         "native-goal-010-010-geometry-current-rows.json",
         "native-goal-015-015-restored-typed-preservation.json",
-        "task-final-native-goal-affected-controller-proof.json"
+        "task-final-native-goal-affected-controller-proof.json",
+        "native-release-009-010-verification.json",
+        "task-final-release-isolated-avd-controller-proof.json"
       ],
-      "disposition": "Complete qualified Goal composite:27 actual enabled owner intersections >=44dp/font1+1.3 accepted independently. Global44 unchanged/local45 correction. Exact74 isolated APK Auth pendingROOT, no protectedTLS/physical claim."
+      "disposition": "Complete qualified: accepted Goal composite27 enabled intersections >=44dp/font1+1.3, global44/local45. Exact74 isolated release Signin24 enabled intersections >=44dp/font1+1.3 with8 input/return phases accepted. No authenticated protectedTLS/physical claim."
     },
     {
       "area": 7,
@@ -194,9 +196,12 @@
         "final-apk-source-manifest.json",
         "final-apk-signature.log",
         "final-apk-permissions.log",
-        "final-apk-badging.log"
+        "final-apk-badging.log",
+        "native-release-installed-proof-derived.json",
+        "task-final-release-isolated-avd-report.md",
+        "task-final-apk-controller-artifact-proof.json"
       ],
-      "disposition": "Buildcomplete:74gitarchive/897lock-matching installed packages/generatedconfig/dualABI/releasebundle/cert/permissions actualPASS; JAVApath/tmpusrquota failures retained. ROOTisolatedAVD launch/Auth pending, releaseprotectedTLS absenttrustedtarget unverified"
+      "disposition": "Complete qualified: exact74 release dualABI/APK/bundle/cert/config/source verification; isolated installedAPK hash equals approved, standalone Auth24 enabled targets/8 input phases atfont1+1.3 accepted, newAVDstopped/originalretained untouched. Evaluationcert; protectedTLSauthenticated target unavailable."
     },
     {
       "area": 13,
@@ -207,10 +212,13 @@
         "../check-manifest.json",
         "../build-manifest.json",
         "../safe-artifact-manifest.json",
-        "../prior-publication-preservation.json"
+        "../prior-publication-preservation.json",
+        "../rulings-manifest.json",
+        "controller-final-integration-rulings-public-addendum.md"
       ],
-      "disposition": "Inprogress: curatedfinal proofs only,535publishedM10 bytepreserved, acceptednative proofs/report and finalcleancoordinationcapture/commit/yield pending"
+      "disposition": "Complete qualified: current800/nativeAPK74 source/check/SQL/build/safe manifests and108ordered rulings97+11/latestdispositions,535M10 exact bytes preserved; accepted Goalcomposite/releaseAuth selected public proofs only. Final clean metadata commit/source ownership yield recorded in implementation report; root owns subsequent wholebranchreview/cutover/push."
     }
   ],
-  "resolvedHistory": "AcceptedM1/N1/N2/N2b unchanged; no duplicatefix or inference. Earlier48action-row publication and97historicalfullrulings remain in M10 publication; root appends subsequentrulings separately."
+  "resolvedHistory": "AcceptedM1/N1/N2/N2b unchanged; no duplicatefix or inference. Earlier48action-row publication and97historicalfullrulings remain in M10 publication; root appends subsequentrulings separately.",
+  "nativeAPKProductSourceCommit": "74e6474b8ea80c86d2505de1561de56453c7356f"
 }

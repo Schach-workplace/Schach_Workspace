@@ -1,14 +1,18 @@
 {
-  "productSourceCommit": "74e6474b8ea80c86d2505de1561de56453c7356f",
+  "productSourceCommit": "800457b5ceeb5cd593c2511e5a0cd07b29ca1ed7",
   "policy": "Explicit command metadata/source hashes/Green logs/public binary metadata and allowlisted fictional runtime summaries only. Failed raw logs, private fixture DB, credentials, private keys, signed URLs, session/cookie/header/body values, provider stderr, scratch roots and device backups are excluded. Native evidence is separately frozen/published only after root acceptance.",
   "files": {
     "build-manifest.json": {
       "bytes": 11064,
-      "sha256": "7203d8a965a4c73f14d7dd577e371999214f946dc4c3ebc777e8fc5f32c9b419"
+      "sha256": "8f6e1158a5ad99b6dcc5503c065f855967a08e1d4c489f71b94f4d5feef8d6f3"
     },
     "check-manifest.json": {
       "bytes": 77809,
-      "sha256": "3d1b598222202fae656e8c11554f9a6a42d21ab0a1d94ab4e01d251907958a42"
+      "sha256": "ccccf0cf7bc1695329044d9f7296f2d7ed707f68563b9e2459ee0c23f67cffe3"
+    },
+    "evidence/controller-final-integration-rulings-public-addendum.md": {
+      "bytes": 15115,
+      "sha256": "a66533a253a453a646ad0b53147e4ecea662fd5a479bb6a9ad99317b60ab0a00"
     },
     "evidence/final-all-owned-client-format-inputs.json": {
       "bytes": 298455,
@@ -910,6 +914,26 @@
       "bytes": 1227,
       "sha256": "2b3ffca49840c4b2ab2c4514d388f50f90c7e0c8bfbf4aa254509021f6c15558"
     },
+    "evidence/native-release-006-007-keyboard-viewport.json": {
+      "bytes": 8243,
+      "sha256": "6e789c1bdd6fce5c28adac38653a4c9113aaf01e555b033077769b0d6b00cba5"
+    },
+    "evidence/native-release-007-008-restoration.json": {
+      "bytes": 4476,
+      "sha256": "1050a5cdb2e235de8eaaded2867224609ea13f545712e7a895373b2847159cae"
+    },
+    "evidence/native-release-008-009-owned-stop.json": {
+      "bytes": 206,
+      "sha256": "5dce81baf5e65124d3b3443ec8ff0fd475216a83328d632e575d9fcec2679b7b"
+    },
+    "evidence/native-release-009-010-verification.json": {
+      "bytes": 1060,
+      "sha256": "f0ceb9e17f6a9bebc223c6dea30da83c6d0f18f8b962fbe1bc7a29d185a2d300"
+    },
+    "evidence/native-release-installed-proof-derived.json": {
+      "bytes": 3473,
+      "sha256": "20fa7acacaf2b2ba651362e30d957af90d0b85957585a65b01c1d2edcdb3ae22"
+    },
     "evidence/people-actual-runtime.json": {
       "bytes": 27161,
       "sha256": "f2798ced6701a65e931ae89333470ae1b235ca43ddf1ab87498a798ea86d598f"
@@ -917,6 +941,18 @@
     "evidence/planning-actual-runtime.json": {
       "bytes": 19123,
       "sha256": "b0f95cefc2a1c98e70083ff6ace6439d8a29da018665e9f5d68fcc9cc7a0e2da"
+    },
+    "evidence/task-final-apk-controller-artifact-proof.json": {
+      "bytes": 1266,
+      "sha256": "7a245b3592ed520403e1e9c9918a56723f18856121ef9bfd5909a6e6f3522ac6"
+    },
+    "evidence/task-final-integration-800-publication-controller-proof.json": {
+      "bytes": 517,
+      "sha256": "4dc3271095ea3b66d49e052852d5dc81258f7e7b1e109fe991558003a3fce419"
+    },
+    "evidence/task-final-integration-capture3-controller-proof.json": {
+      "bytes": 501,
+      "sha256": "79837f0de53434ce3f75200a5b209ce6ff8d43eef3261bf8db51f016636eb712"
     },
     "evidence/task-final-native-goal-affected-controller-proof.json": {
       "bytes": 743,
@@ -926,29 +962,41 @@
       "bytes": 7774,
       "sha256": "1c7a004b7f5c00ea3cf8b59f419ec6731efb59cbda74544f69101634ccb7795f"
     },
+    "evidence/task-final-release-isolated-avd-controller-proof.json": {
+      "bytes": 739,
+      "sha256": "412272dee95d62275ad32f5154e0f6b160f7642e72712f9def07dfc4c0f57f4f"
+    },
+    "evidence/task-final-release-isolated-avd-report.md": {
+      "bytes": 5760,
+      "sha256": "d8ba82980cc7395d2abae98dcd555e05c52bd0b646571901312922adc9558aba"
+    },
     "evidence/task-final-web-readiness-controller-proof.json": {
       "bytes": 7799,
       "sha256": "35bdf16974e8525c1f4f177f90fc3f0bd67fc5e313a1069313f45dcaa6cb6532"
     },
     "failure-qualifications.json": {
-      "bytes": 4912,
-      "sha256": "71b4c04f6987576cb51f495057b4b20154fa0a9e1a8cecfe33a9f6f72a7c9f04"
+      "bytes": 5367,
+      "sha256": "65ead9ce51a5c013184abbf7cdb5ace728e430696b808e17876008ddeb831a91"
     },
     "prior-publication-preservation.json": {
       "bytes": 234,
       "sha256": "ecb1da0db1775083785284a480dd50eb7ddad36e84d66979a222c37248cc9636"
     },
     "publication-report.md": {
-      "bytes": 6564,
-      "sha256": "a7a4e6157380732047c4fab6a5b51ec21d492931c390dc5d5cc6d4fed18e6be7"
+      "bytes": 7546,
+      "sha256": "1d1cc70fcc74816b725cdf18acdc8d956f0e8662968e07b7144f5774b1dfc671"
+    },
+    "rulings-manifest.json": {
+      "bytes": 1086,
+      "sha256": "ae804e5c6102a68d4b4161a642350623513cb1ddf2deb00e068222e419cc5301"
     },
     "source-manifest.json": {
-      "bytes": 264851,
-      "sha256": "2c957231e8fb6d18ae8b2f11bd25bf6d9843f56ecce6bd07cfa5133e3e722ef7"
+      "bytes": 308620,
+      "sha256": "588a04cc575bd068a6f99133d7ca0ca0c929ded1e51fed28e0a99516765f603e"
     },
     "task-mapping.json": {
-      "bytes": 9033,
-      "sha256": "8c6961d46ea7d6ee64064db9fef325de93ed1610ebd6521d8c990e72d0663373"
+      "bytes": 9789,
+      "sha256": "6351e8ad4901b6f66c9962a3a76f4111e478e605aa7af5cb236f51a8e4ec860c"
     }
   }
 }

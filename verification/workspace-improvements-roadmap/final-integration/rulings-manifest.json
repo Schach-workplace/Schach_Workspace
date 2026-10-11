@@ -1,0 +1,19 @@
+{
+  "writtenUTC": "2026-10-11T21:58:24.732738+00:00",
+  "totalOrderedRulings": 108,
+  "immutablePrevious": {
+    "path": "../milestone-10/evidence/controller-rulings-current-extract.md",
+    "count": 97,
+    "sha256": "7680d10e56f0eebf96a5ed91df31eb1c703e8b368d263f65b3cea1c830e29edc"
+  },
+  "addendum": {
+    "path": "evidence/controller-final-integration-rulings-public-addendum.md",
+    "count": 11,
+    "first": 98,
+    "last": 108,
+    "sha256": "a66533a253a453a646ad0b53147e4ecea662fd5a479bb6a9ad99317b60ab0a00"
+  },
+  "ledgerSHA256": "d51d9c5b611f22e412f9553e9e0a45179c2d2fb76352a63d7d39c3c76997d724",
+  "qualification": "Public addendum11fullrulings audited by root with original choice/why/cost; previous97bytes remainimmutable. Ledgercontains additional observationhistory, not authoritative unresolvedcounts.",
+  "publicationDerivation": "Public paths mapped from controller-final-integration-rulings-public-proof.json; proof bytes are derivative, original extract/addendum SHA values retain exact original bytes. Complete108=immutable97+ordered11, no historical rewrite."
+}

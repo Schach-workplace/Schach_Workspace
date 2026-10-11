@@ -1,0 +1,12 @@
+{
+  "verifiedUTC": "2026-10-11T21:57:02.378752+00:00",
+  "reportFullRead": true,
+  "manifestSHA256": "c0e9f3939fba0ff877ae171eeee07abb188dc361eef194690dc288f6d60b7802",
+  "records": 96,
+  "recomputedSignInOwners": 24,
+  "eightInputAndReturnPhasesVerified": true,
+  "issues": [],
+  "status": "PASS_QUALIFIED_STANDALONE_OFFLINE_AUTH",
+  "qualification": "Exact74 embeddedAPK evalsignature standaloneAuth fonts1/1.3 geometry/focus/cursor/IME; noAuthsubmit/trustedHTTPS/authenticatedGoal/physical/iOS/orgsigning. No nativecompiledchanges since74; web-only source800 separately accepted. Generic foregroundmetadata empty is not standalone proof; real package Signin XML/owner+installedhash discriminate actual render.",
+  "frozenRecords": 96
+}
