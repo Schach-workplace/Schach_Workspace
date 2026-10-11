@@ -92,10 +92,13 @@ export default function SavedReports({
   )
     setGeometry({ key: "", height: 0 });
 
+  // A deliberate drag ends editing even after Android's keyboard is closed,
+  // so a later source check cannot scroll back to the obsolete editor focus.
   return (
     <FlatList
       style={{ flex: 1 }}
       keyboardShouldPersistTaps="handled"
+      keyboardDismissMode="on-drag"
       contentContainerStyle={
         holdGeometry ? { minHeight: geometry.height } : undefined
       }
