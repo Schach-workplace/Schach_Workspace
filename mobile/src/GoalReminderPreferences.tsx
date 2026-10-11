@@ -1,0 +1,142 @@
+import { useWorkspace } from "./Workspace";
+import { useEffect, useState } from "react";
+import { Text, TextInput, View } from "react-native";
+import { Action, ui } from "./ConnectUI";
+import { useRamInput } from "./ramInput";
+import { useExecutionRead, useExecutionMutation } from "./execution";
+import DeadlinePicker from "./DeadlinePicker";
+import type { GoalReminderPreference } from "../../shared/goals/types";
+export default function GoalReminderPreferences({
+  goalId,
+  ready,
+}: {
+  goalId: string;
+  ready: boolean;
+}) {
+  const w = useWorkspace();
+  const path = "/goals/" + goalId + "/reminder-preference";
+  const q = useExecutionRead<{ preference: GoalReminderPreference }>(
+    path,
+    ready,
+  );
+  const [draft, setDraft, retire, , prefill] = useRamInput(
+    "$goal-reminder:" + goalId,
+    "draft",
+    () => ({
+      expectedVersion: 0,
+      enabled: false,
+      cadence: "weekly",
+      weekday: 1,
+      monthDay: 1,
+      localTime: "09:00",
+      reason: "",
+      authored: false,
+    }),
+  );
+  useEffect(() => {
+    if (q.ready && q.data && !draft.authored)
+      prefill({
+        ...draft,
+        ...q.data.preference,
+        expectedVersion: q.data.preference.version,
+      });
+  }, [q.ready, q.data?.preference.version]);
+  const action = useExecutionMutation("$goal-reminder:" + goalId, [
+    "/goals/" + goalId,
+  ]);
+  const [error, setError] = useState("");
+  const set = (k: string, v: unknown) =>
+    setDraft((d) => ({ ...d, [k]: v, authored: true }));
+  async function save() {
+    const captured = draft;
+    try {
+      const { authored, ...payload } = draft;
+      await action.execute(
+        path,
+        action.attempt?.payload ?? payload,
+        "PATCH",
+        () => {
+          retire(captured);
+          q.retry();
+        },
+      );
+    } catch (e) {
+      setError((e as Error).message);
+    }
+  }
+  return (
+    <View style={{ gap: 12 }}>
+      <Text style={ui.title}>My goal update reminder</Text>
+      <Text>
+        Opt-in, current owner only. Resolving the reminder does not record a
+        measurement.
+      </Text>
+      <Action
+        title={
+          (draft.authored || q.ready) && draft.enabled
+            ? "Reminder enabled · disable"
+            : "Reminder disabled · enable"
+        }
+        selected={(draft.authored || q.ready) && draft.enabled}
+        onPress={() => set("enabled", !draft.enabled)}
+      />
+      <View style={ui.row}>
+        {["weekly", "monthly"].map((c) => (
+          <Action
+            key={c}
+            title={c}
+            selected={(draft.authored || q.ready) && draft.cadence === c}
+            onPress={() => set("cadence", c)}
+          />
+        ))}
+      </View>
+      <Text>Weekday Monday 1–Sunday 7</Text>
+      <TextInput
+        style={ui.input}
+        accessibilityLabel="Reminder weekday"
+        keyboardType="number-pad"
+        value={draft.authored || q.ready ? String(draft.weekday) : ""}
+        onChangeText={(v) => set("weekday", Number(v))}
+      />
+      <Text>Month day 1–28</Text>
+      <TextInput
+        style={ui.input}
+        accessibilityLabel="Reminder month day"
+        keyboardType="number-pad"
+        value={draft.authored || q.ready ? String(draft.monthDay) : ""}
+        onChangeText={(v) => set("monthDay", Number(v))}
+      />
+      <DeadlinePicker
+        date=""
+        time={draft.authored || q.ready ? draft.localTime : ""}
+        timezone={w.work?.company.timezone ?? "UTC"}
+        timeOnly
+        label="Company local reminder time"
+        timeLabel="Reminder time"
+        retainWhilePending
+        onChange={(v) => set("localTime", v.time)}
+      />
+      <Text>Preference reason</Text>
+      <TextInput
+        style={ui.input}
+        accessibilityLabel="Reminder preference reason"
+        value={draft.reason}
+        onChangeText={(v) => set("reason", v)}
+      />
+      <Text>
+        {error ||
+          action.error ||
+          (!q.ready ? "Checking current preference…" : "")}
+      </Text>
+      <Action
+        title={
+          action.attempt
+            ? "Retry same reminder preference"
+            : "Save my reminder preference"
+        }
+        disabled={!ready || !q.ready || action.busy || !draft.reason.trim()}
+        onPress={() => void save()}
+      />
+    </View>
+  );
+}

@@ -115,6 +115,18 @@ export default function TaskDetailScreen({ id }: { id: string }) {
   }
   return (
     <Page safeBottom>
+      <Action
+        title="Planning authorized work"
+        onPress={() =>
+          router.push({ pathname: "/planning", params: { company: w.company } })
+        }
+      />
+      <Action
+        title="Measured outcomes"
+        onPress={() =>
+          router.push({ pathname: "/goals", params: { company: w.company } })
+        }
+      />
       <Action title="‹ Back" disabled={busy} onPress={() => router.back()} />
       {error && <Text accessibilityRole="alert">{error}</Text>}
       {loading || !task ? (

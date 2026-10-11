@@ -142,6 +142,11 @@ export default function AttentionInbox({
         pathname: "/task/[id]",
         params: { id: i.sourceId, company: w.company },
       });
+    else if (i.sourceKind === "goal")
+      router.push({
+        pathname: "/goals/[id]",
+        params: { company: w.company, id: i.sourceId },
+      });
     else if (i.sourceKind === "expense")
       router.push({
         pathname: "/expense/[id]",

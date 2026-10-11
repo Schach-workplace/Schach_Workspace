@@ -231,6 +231,21 @@ function WorkView({ w }: { w: ReturnType<typeof useWorkspace> }) {
     <Page scroll={false}>
       <View style={ui.row}>
         <Text style={ui.title}>Work</Text>
+        <Action
+          title="Planning authorized work"
+          onPress={() =>
+            router.push({
+              pathname: "/planning",
+              params: { company: w.company },
+            })
+          }
+        />
+        <Action
+          title="Measured outcomes"
+          onPress={() =>
+            router.push({ pathname: "/goals", params: { company: w.company } })
+          }
+        />
         {editable && <Action title="New task" primary onPress={openCreate} />}
       </View>
       <Text style={ui.subtitle}>

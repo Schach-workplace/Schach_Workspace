@@ -16,6 +16,7 @@ import {
   readDraft,
   clearDraft,
   clearConversationDrafts,
+  clearFormPrefix,
 } from "./conversationDrafts";
 export * from "../../shared/business/types";
 export function useExecutionRead<T>(
@@ -93,7 +94,7 @@ export function useExecutionRead<T>(
           generation === client.generation &&
           e instanceof NativeApiError &&
           ([401, 403, 404].includes(e.status) ||
-            (path.startsWith("/reports/") &&
+            ((path.startsWith("/reports/") || path.includes("/evidence-")) &&
               e.status === 409 &&
               e.code === "access_changed"))
         ) {
@@ -103,6 +104,14 @@ export function useExecutionRead<T>(
             w.session?.user.id ?? "",
             path.split("?")[0],
           );
+          const goal = path.match(/^\/goals\/([^/?]+)$/);
+          if (goal)
+            for (const prefix of [
+              "$goal-measure:" + goal[1] + ":",
+              "$goal-metadata:" + goal[1],
+              "$goal-reminder:" + goal[1],
+            ])
+              clearFormPrefix(w.company, w.session?.user.id ?? "", prefix);
           const finance = path.match(
             /^\/finance\/(receipt-extractions|intakes|duplicate-candidates|statement-previews)\/([^/?]+)/,
           );
@@ -153,7 +162,8 @@ export function useExecutionRead<T>(
             denied:
               e instanceof NativeApiError &&
               ([401, 403, 404].includes(e.status) ||
-                (path.startsWith("/reports/") &&
+                ((path.startsWith("/reports/") ||
+                  path.includes("/evidence-")) &&
                   e.status === 409 &&
                   e.code === "access_changed")),
           });
@@ -268,7 +278,11 @@ export function useExecutionMutation(formId: string, sources: string[] = []) {
       }
       return result;
     } catch (e) {
-      if (e instanceof NativeApiError && [401, 403, 404].includes(e.status))
+      if (
+        e instanceof NativeApiError &&
+        ([401, 403, 404].includes(e.status) ||
+          (e.status === 409 && e.code === "access_changed"))
+      )
         clearAttemptScope(business.scope);
       if (alive.current && current.current === captured)
         setError(

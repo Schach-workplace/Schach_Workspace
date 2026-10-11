@@ -38,6 +38,8 @@ it("routes each retained module and account through a real company-qualified rou
   await act(async () => r.render(createElement(More)));
   expect([...c.querySelectorAll("button")].map((b) => b.textContent)).toEqual([
     "Finance",
+    "Planning",
+    "Goals",
     "Projects",
     "Reports",
     "Requests",
@@ -48,5 +50,19 @@ it("routes each retained module and account through a real company-qualified rou
     pathname: "/finance",
     params: { company: "company" },
   });
+  for (const [title, path] of [
+    ["Planning", "/planning"],
+    ["Goals", "/goals"],
+  ]) {
+    await act(async () =>
+      [...c.querySelectorAll("button")]
+        .find((b) => b.textContent === title)!
+        .click(),
+    );
+    expect(h.push).toHaveBeenCalledWith({
+      pathname: path,
+      params: { company: "company" },
+    });
+  }
   await act(async () => r.unmount());
 });

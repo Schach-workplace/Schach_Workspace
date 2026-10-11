@@ -21,6 +21,24 @@ export default function More() {
             />
           )}
           <Action
+            title="Planning"
+            onPress={() =>
+              router.push({
+                pathname: "/planning",
+                params: { company: w.company },
+              })
+            }
+          />
+          <Action
+            title="Goals"
+            onPress={() =>
+              router.push({
+                pathname: "/goals",
+                params: { company: w.company },
+              })
+            }
+          />
+          <Action
             title="Projects"
             onPress={() =>
               router.push({

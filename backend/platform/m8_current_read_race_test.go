@@ -188,7 +188,7 @@ func TestM8GoalReminderClaimRollbackAndNativeRace(t *testing.T) {
 	}
 }
 func TestM8MultipleCompanyIsolationAndContextBound(t *testing.T) {
-	s, _ := testServer(t)
+	s, db := testServer(t)
 	c := login(t, s, "founder@example.com")
 	cid := firstCompany(t, s, c)
 	uid := me(t, s, c)
@@ -203,6 +203,31 @@ func TestM8MultipleCompanyIsolationAndContextBound(t *testing.T) {
 	st, b, _ = req(t, s, "GET", "/api/companies/"+other+"/goals/"+goal, nil, c)
 	if st != 404 {
 		t.Fatal(st, b)
+	}
+	otherGoal := createMeasuredGoal(t, s, c, other, uid)
+	now := time.Now().UTC().Truncate(time.Microsecond)
+	for company, id := range map[string]string{cid: goal, other: otherGoal} {
+		pref := GoalReminderPreference{CompanyID: company, GoalID: id, UserID: uid, Version: 1, Enabled: true, Cadence: "weekly", Weekday: 1, MonthDay: 1, LocalTime: "00:00", CreatedAt: now.AddDate(0, 0, -14), UpdatedAt: now.AddDate(0, 0, -14)}
+		if e := db.Create(&pref).Error; e != nil {
+			t.Fatal(e)
+		}
+	}
+	if e := s.generateGoalReminders(t.Context(), now, 100); e != nil {
+		t.Fatal(e)
+	}
+	var items []AttentionItem
+	if e := db.Where("company_id IN ? AND source_kind='goal'", []string{cid, other}).Find(&items).Error; e != nil {
+		t.Fatal(e)
+	}
+	if len(items) != 2 || items[0].CompanyID == items[1].CompanyID {
+		t.Fatalf("Expected independent company reminders: %+v", items)
+	}
+	var records []AutomationRecord
+	if e := db.Where("company_id IN ? AND key LIKE ?", []string{cid, other}, "%goal-update:%").Find(&records).Error; e != nil {
+		t.Fatal(e)
+	}
+	if len(records) != 2 || records[0].Key == records[1].Key {
+		t.Fatalf("Company-prefixed global claims collided: %+v", records)
 	}
 	input := scheduleBody(aTask, 1)
 	input["context"].(map[string]any)["sources"] = []any{map[string]any{"id": bTask, "version": 1}}

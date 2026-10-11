@@ -231,18 +231,22 @@ export function NativeSchedule({
   onDone,
   project,
   context,
+  ready = true,
 }: {
   tasks: WorkTask[];
   onDone?: () => void;
   project?: ExecutionProject;
   context?: ScheduleContext;
+  ready?: boolean;
 }) {
   const w = useWorkspace();
   const identity = tasks
     .map((t) => t.id)
     .sort()
     .join(":");
-  const [inspectedContext, freezeContext] = useRamInput<ScheduleContext | undefined>("$schedule:" + identity, "context", context);
+  const [inspectedContext, freezeContext] = useRamInput<
+    ScheduleContext | undefined
+  >("$schedule:" + identity, "context", context);
   const retireSchedule = useAuthoredRetirement("$schedule:" + identity);
   const preview = useExecutionMutation("schedule-preview:" + identity);
   const apply = useExecutionMutation("schedule-apply:" + identity);
@@ -289,6 +293,10 @@ export function NativeSchedule({
   );
   const [error, setError] = useState("");
   const locked = preview.busy || !!preview.attempt;
+  const freezeInspected = () => {
+    freezeContext(inspectedContext);
+    setRows(rows);
+  };
   const update = (id: string, key: keyof ScheduleChange, value: unknown) => {
     freezeContext(inspectedContext);
     setRows((rows) =>
@@ -330,15 +338,19 @@ export function NativeSchedule({
           <Action
             title={"Method: " + method}
             disabled={locked}
-            onPress={() =>
-              setMethod(method === "manual" ? "calendar_day_shift" : "manual")
-            }
+            onPress={() => {
+              freezeInspected();
+              setMethod(method === "manual" ? "calendar_day_shift" : "manual");
+            }}
           />
           {method === "calendar_day_shift" && (
             <ExecutionField
               label="Signed company-calendar day offset"
               value={offset}
-              onChange={setOffset}
+              onChange={(value) => {
+                freezeInspected();
+                setOffset(value);
+              }}
               disabled={locked}
             />
           )}
@@ -349,39 +361,46 @@ export function NativeSchedule({
                 <Action
                   title={
                     (selected.includes(r.taskId) ? "Selected: " : "Select: ") +
-                    (t?.title ?? "Task")
+                    (ready ? (t?.title ?? "Task") : "Selected work")
                   }
                   disabled={locked}
-                  onPress={() =>
+                  onPress={() => {
+                    freezeInspected();
                     setSelected((ids) =>
                       ids.includes(r.taskId)
                         ? ids.filter((id) => id !== r.taskId)
                         : [...ids, r.taskId],
-                    )
-                  }
+                    );
+                  }}
                 />
                 <Text>
                   Original:{" "}
-                  {commitmentLabel({
-                    dueDate: t?.originalDueDate,
-                    deadlineMode:
-                      t?.originalDeadlineMode === "timed" ? "timed" : "all_day",
-                    dueAt: t?.originalDueAt,
-                    dueTimezone: t?.originalDueTimezone,
-                  })}
+                  {ready &&
+                    commitmentLabel({
+                      dueDate: t?.originalDueDate,
+                      deadlineMode:
+                        t?.originalDeadlineMode === "timed"
+                          ? "timed"
+                          : "all_day",
+                      dueAt: t?.originalDueAt,
+                      dueTimezone: t?.originalDueTimezone,
+                    })}
                 </Text>
                 <Text>
                   Current:{" "}
-                  {commitmentLabel({
-                    ...t,
-                    deadlineMode:
-                      t?.deadlineMode === "timed" ? "timed" : "all_day",
-                  })}
+                  {ready &&
+                    commitmentLabel({
+                      ...t,
+                      deadlineMode:
+                        t?.deadlineMode === "timed" ? "timed" : "all_day",
+                    })}
                 </Text>
                 {method === "manual" && (
                   <>
                     <ExecutionField
-                      label={"Start date: " + t?.title}
+                      label={
+                        "Start date: " + (ready ? t?.title : "Selected work")
+                      }
                       value={r.startDate}
                       onChange={(v) => update(r.taskId, "startDate", v)}
                       disabled={locked}
@@ -391,7 +410,7 @@ export function NativeSchedule({
                       disabled={locked}
                       onChange={(v) => {
                         freezeContext(inspectedContext);
-    setRows((rows) =>
+                        setRows((rows) =>
                           rows.map((old) =>
                             old.taskId === r.taskId ? { ...old, ...v } : old,
                           ),
@@ -401,7 +420,7 @@ export function NativeSchedule({
                   </>
                 )}
                 <ExecutionField
-                  label={"Reason: " + t?.title}
+                  label={"Reason: " + (ready ? t?.title : "Selected work")}
                   value={r.reason}
                   onChange={(v) => update(r.taskId, "reason", v)}
                   disabled={locked}
@@ -417,6 +436,7 @@ export function NativeSchedule({
                 : "Preview schedule"
             }
             disabled={
+              !ready ||
               preview.busy ||
               !selected.length ||
               rows.some((r) => selected.includes(r.taskId) && !r.reason.trim())
@@ -455,20 +475,22 @@ export function NativeSchedule({
                       .filter(Boolean),
                   ),
                 ];
-                const projects = inspectedContext?.projects ?? await Promise.all(
-                  ids.map(async (id) => {
-                    const p =
-                      project?.id === id
-                        ? project
-                        : (
-                            await client.request<ProjectDetail>(
-                              `/companies/${w.company}/projects/${id}`,
-                            )
-                          ).project;
-                    if (!p) throw Error("Inspect the current project first.");
-                    return { id: p.id, version: p.version };
-                  }),
-                );
+                const projects =
+                  inspectedContext?.projects ??
+                  (await Promise.all(
+                    ids.map(async (id) => {
+                      const p =
+                        project?.id === id
+                          ? project
+                          : (
+                              await client.request<ProjectDetail>(
+                                `/companies/${w.company}/projects/${id}`,
+                              )
+                            ).project;
+                      if (!p) throw Error("Inspect the current project first.");
+                      return { id: p.id, version: p.version };
+                    }),
+                  ));
                 const result = await preview.execute<{
                   proposal: ScheduleProposalView;
                 }>("/task-schedule/preview", {
@@ -512,7 +534,7 @@ export function NativeSchedule({
               )}
               <Action
                 title="Edit and create a fresh preview"
-                disabled={apply.busy || !!apply.attempt}
+                disabled={!ready || apply.busy || !!apply.attempt}
                 onPress={() => setProposalId("")}
               />
               <Action
@@ -522,7 +544,7 @@ export function NativeSchedule({
                     : "Confirm reviewed schedule"
                 }
                 disabled={
-                  apply.busy || (q.data.proposal.expired && !apply.attempt)
+                  !ready || apply.busy || (q.data.proposal.expired && !apply.attempt)
                 }
                 primary
                 onPress={() =>
@@ -558,7 +580,7 @@ export function NativeSchedule({
       <ExecutionAttempt action={apply} />
       <Action
         title="Cancel schedule review"
-        disabled={preview.busy || apply.busy}
+        disabled={!ready || preview.busy || apply.busy}
         onPress={onDone ?? (() => setProposalId(""))}
       />
     </View>
