@@ -149,18 +149,23 @@ type Attachment struct {
 	Data       []byte `json:"-"`
 }
 type Goal struct {
-	ID           string   `json:"id" gorm:"primaryKey;size:80"`
-	CompanyID    string   `json:"companyId" gorm:"index"`
-	Name         string   `json:"name"`
-	Description  string   `json:"description"`
-	OwnerID      string   `json:"ownerId"`
-	DepartmentID string   `json:"departmentId"`
-	Unit         string   `json:"unit"`
-	Baseline     float64  `json:"baseline"`
-	Target       float64  `json:"target"`
-	Current      float64  `json:"current"`
-	DueDate      string   `json:"dueDate"`
-	TaskIDs      []string `json:"taskIds" gorm:"serializer:json;type:jsonb"`
+	Version                 int64      `json:"version" gorm:"default:1"`
+	CurrentMeasurementID    string     `json:"currentMeasurementId" gorm:"default:''"`
+	MeasurementCoverageFrom *time.Time `json:"measurementCoverageFrom"`
+	LegacyObservedCurrent   *float64   `json:"legacyObservedCurrent"`
+	LegacyObservedUnit      string     `json:"legacyObservedUnit" gorm:"default:''"`
+	ID                      string     `json:"id" gorm:"primaryKey;size:80"`
+	CompanyID               string     `json:"companyId" gorm:"index"`
+	Name                    string     `json:"name"`
+	Description             string     `json:"description"`
+	OwnerID                 string     `json:"ownerId"`
+	DepartmentID            string     `json:"departmentId"`
+	Unit                    string     `json:"unit"`
+	Baseline                float64    `json:"baseline"`
+	Target                  float64    `json:"target"`
+	Current                 float64    `json:"current"`
+	DueDate                 string     `json:"dueDate"`
+	TaskIDs                 []string   `json:"taskIds" gorm:"serializer:json;type:jsonb"`
 }
 type Activity struct {
 	ID        string `json:"id" gorm:"primaryKey;size:80"`
