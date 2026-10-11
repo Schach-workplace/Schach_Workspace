@@ -65,9 +65,8 @@ function RowReview({
       </label>
       <button
         disabled={
-          !expense ||
+          (!m.attempt && (!expense || reason.trim().length < 12)) ||
           m.busy ||
-          reason.trim().length < 12 ||
           (!!m.attempt && m.attempt.target?.path !== '/finance/reconciliation/matches')
         }
         onClick={() =>
@@ -86,7 +85,9 @@ function RowReview({
             .catch(() => {})
         }
       >
-        Match full recorded payment
+        {m.attempt?.target?.path === '/finance/reconciliation/matches'
+          ? 'Retry same full payment match'
+          : 'Match full recorded payment'}
       </button>
       <button
         disabled={
@@ -150,7 +151,7 @@ function Allocation({
         {allocation.active ? 'Active full association' : 'Reversed association'} ·{' '}
         {allocation.reason}
       </p>
-      {allocation.active && (
+      {(allocation.active || !!m.attempt) && (
         <>
           <label>
             Reversal reason
@@ -161,7 +162,7 @@ function Allocation({
             />
           </label>
           <button
-            disabled={m.busy || reason.trim().length < 12}
+            disabled={m.busy || (!m.attempt && reason.trim().length < 12)}
             onClick={() =>
               void m
                 .execute(
@@ -172,7 +173,7 @@ function Allocation({
                 .catch(() => {})
             }
           >
-            Unmatch reviewed association
+            {m.attempt ? 'Retry same association unmatch' : 'Unmatch reviewed association'}
           </button>
         </>
       )}
