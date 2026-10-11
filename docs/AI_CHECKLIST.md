@@ -1,6 +1,6 @@
 # Schach Workspace live implementation checklist
 
-Updated UTC 2026-10-11T23:16:19.171675+00:00. Read [AI_HANDOFF.md](AI_HANDOFF.md), [AI_FILE_INDEX.json](AI_FILE_INDEX.json) and [durable ledger](../verification/workspace-improvements-roadmap/release-cutover/release-ledger.md). Check marks represent the named gate, not production/device certification.
+Updated UTC 2026-10-11T23:20:30.872155+00:00. Read [AI_HANDOFF.md](AI_HANDOFF.md), [AI_FILE_INDEX.json](AI_FILE_INDEX.json) and [durable ledger](../verification/workspace-improvements-roadmap/release-cutover/release-ledger.md). Check marks represent the named gate, not production/device certification.
 
 ## Ten implementation milestones
 
@@ -32,9 +32,9 @@ Updated UTC 2026-10-11T23:16:19.171675+00:00. Read [AI_HANDOFF.md](AI_HANDOFF.md
 - [x] Fast-forward main; current normal frontend/runtime provenance; preserve original settings and independent People key only if absent; scheduler enabled, no seed/reset.
 - [x] Pin/verify optional local providers with other known consumers quiescent; no new inference during checks.
 - [x] Actual APIhealth JSON/currentbinary/auth/browser13modules/8APIreads/320375430widths PASS; fulltyped old business/finance/deadline/media/auth preserved. Local operations4available/noinference; legacyInbox12batches/66items.
-- [ ] Unique safe source ZIP/privacy/integrity/manifest/inclusions; genericlogs excluded, full proof remains Git.
-- [ ] Non-force private feature+main push and exact remote commit verification; keep app running.
-- [ ] Update this checklist, handoff, index and durable ledger with final source/process/artifact and remaining limits.
+- [x] Unique safe source ZIP/privacy/integrity/manifest/inclusions; genericlogs excluded, full proof remains Git.
+- [x] Non-force private feature+main push748a verified; app remains running. Final documentation sync must be confirmed against private final-state.json/live refs if this last publication was interrupted.
+- [x] Update this checklist, handoff, index and durable ledger with final source/process/artifact and remaining limits.
 
 ## External rollout gates
 

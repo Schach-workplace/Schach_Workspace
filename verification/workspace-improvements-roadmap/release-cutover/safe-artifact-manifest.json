@@ -1,5 +1,5 @@
 {
-  "policy": "Only approved source/check hashes, review/ruling prose and aggregate local cutover outcomes. Private env/DB/key/session/cookies/body values/digests/provider output/rawUI/binaries excluded.",
+  "policy": "Approved source/check hashes, review/ruling prose and aggregate cutover/packaging/push outcomes only. No private env/DB/keys/session/body values or fingerprints/provider output/rawUI/binaries.",
   "files": {
     "README.md": {
       "bytes": 788,
@@ -49,13 +49,17 @@
       "bytes": 560,
       "sha256": "8d2a38fc2a2e1d290476c83ea971404b8cb7da85ca57bc750f6cbc2db55fcebb"
     },
+    "private-push-checkpoint-proof.json": {
+      "bytes": 610,
+      "sha256": "127b6dde1ab6bd48505800c2565520e1d043daaf216561b8c9924052a8ef9f58"
+    },
     "recovery-archive-proof.json": {
       "bytes": 788,
       "sha256": "6f6d155422cacd36ef1f139babfaa73973399b6c3f35b88ee4598ec9ac996944"
     },
     "release-ledger.md": {
-      "bytes": 2410,
-      "sha256": "60bcf4508aa401f8dff5de9a0dac3e331424e608f5772532cd4ef36ed3e6b2a1"
+      "bytes": 3666,
+      "sha256": "d3041672f562dbfc74f27f44785775599e4d45603b77009de0ec319134e04cab"
     },
     "ruling-110-local-runtime-configuration.md": {
       "bytes": 840,
@@ -72,7 +76,11 @@
     "scoped-review.md": {
       "bytes": 14747,
       "sha256": "225c3581fb0cbc659a420b2948f183debc716c133e4268fd73505fe23f38a3f9"
+    },
+    "source-archive-proof.json": {
+      "bytes": 858,
+      "sha256": "bd5c21960ca2d4cabe5b9bdb15086a59b16b4b400ab37fa487fa4393d87be01c"
     }
   },
-  "qualification": "Pre-package release metadata manifest; refresh after subsequent ledger/proof additions. Self hash excluded; source acceptance remains separately qualified."
+  "qualification": "Latest mutable release metadata manifest, self hash excluded. Previous M10/final-integration/final-review publications remain immutable. Final metadata synchronization verified separately; compiled product unchanged."
 }

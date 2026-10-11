@@ -1,0 +1,16 @@
+{
+  "updatedUtc": "2026-10-11T23:19:00.536803+00:00",
+  "sourceHead": "748a5b676c7f6d56c448a091c5102e8c63fcc3b7",
+  "archive": "/home/brahma/Projects/Schach_Workspace-release-20261012-final-improvements.zip",
+  "bytes": 18822447,
+  "sha256": "7fa5be2b1bfd83c1d4665a1222edae88bdfb082c2cd9c70770085485a3a68b85",
+  "entries": 1868,
+  "manifestRowsVerified": 1867,
+  "duplicateEntries": 0,
+  "integrity": "passed",
+  "forbiddenEntries": 0,
+  "sqlFileNamesPerMirror": 116,
+  "physicalSQLCopies": 232,
+  "freshFileBirthAtOrAfterSourceCommit": true,
+  "qualification": "Source ZIP captures748a product/currentnormal/demo and then-current handoff. Later release/push metadata lives in Git. Generic.log sanitized proof deliberately excluded by source selector; complete test outcomes remain committed in Git. No private DB/env/keys/device/binaries/rawUI included."
+}

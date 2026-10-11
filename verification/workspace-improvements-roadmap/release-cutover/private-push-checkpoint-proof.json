@@ -1,0 +1,11 @@
+{
+  "updatedUtc": "2026-10-11T23:20:30.872155+00:00",
+  "isPrivate": true,
+  "organization": "Schach-workplace",
+  "repository": "Schach_Workspace",
+  "defaultBranch": "main",
+  "pushMode": "non-force",
+  "mainVerified": "748a5b676c7f6d56c448a091c5102e8c63fcc3b7",
+  "featureVerified": "748a5b676c7f6d56c448a091c5102e8c63fcc3b7",
+  "qualification": "Exact remote main and improve/workspace-improvements checkpoint observed after successful authorized push. Subsequent final handoff metadata remains outside compiled-source review; final exact refs are verified again and stored in private final-state.json."
+}

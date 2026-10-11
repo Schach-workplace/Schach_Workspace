@@ -1,3 +1,11 @@
+# Current final release state — 2026-10-11T23:20:30.872155+00:00
+
+All ten implementation milestones and the final source/integration review are accepted with explicit qualifications. Root backup-first main cutover, running normal app, actual sign-in/module/API browser smoke, old522typed-row preservation, bounded legacy Inbox reconciliation and safe source ZIP are complete. Private main/feature checkpoint748a5b6 was pushed without force and exact remote refs verified. App PID3048810 remains healthy at127.0.0.1:8080; productebc994d and unchanged569compiled inputs. No inference was submitted.
+
+Root final documentation publication is now in progress. If interrupted before final-state.json exists in the private recovery root, compare local and remote refs, synchronize only missing metadata, check health, and write final-state.json; do not redo features, migrate again or replay native generations. After that only the individually documented external rollout gates remain. SourceZIP captures748a; later metadata/full safe logs live in Git. Complete private recovery and all110ordered decisions are retained. Source/review agents yielded; no active implementation task.
+
+Historical release checkpoints follow; this current-state section controls.
+
 # Durable Schach release and recovery ledger
 
 Updated UTC 2026-10-11T23:08:40.306399+00:00. Root owns authorized final integration; all source/reviewer owners yielded. All10features accepted qualified; final fix dff8ddc/productebc994d scoped review PASS/mergeYES. Current Go/PG/race/standalone/Encore/vet input-bound checks and fresh private Go/NORMAL builds pass. Existing app/main still d200/8080 until preserved-data cutover.

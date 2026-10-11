@@ -1,6 +1,6 @@
 # Schach Workspace AI handoff
 
-Updated UTC 2026-10-11T23:16:19.171675+00:00. Read this document, [AI_CHECKLIST.md](AI_CHECKLIST.md), [AI_FILE_INDEX.json](AI_FILE_INDEX.json), then the [durable release ledger](../verification/workspace-improvements-roadmap/release-cutover/release-ledger.md). Update all four at each material boundary and before a context limit. Verify live Git/process state before acting; historical PIDs are not permission to signal a process.
+Updated UTC 2026-10-11T23:20:30.872155+00:00. Read this document, [AI_CHECKLIST.md](AI_CHECKLIST.md), [AI_FILE_INDEX.json](AI_FILE_INDEX.json), then the [durable release ledger](../verification/workspace-improvements-roadmap/release-cutover/release-ledger.md). Update all four at each material boundary and before a context limit. Verify live Git/process state before acting; historical PIDs are not permission to signal a process.
 
 ## Current state and next action
 
@@ -10,7 +10,15 @@ Reviewed fix HEAD `dff8ddc045b7bec32b41ac3e4f8847938c4f3de3`; product `ebc994dc6
 
 Current app PID3048810 runs the exact current-source Go binary and NORMAL frontend on127.0.0.1:8080; `/api/health` JSON200/ok. Browser preserved-account sign-in,13module views,8scoped API reads and320/375/430width container smoke pass, zero renderer exceptions. All4local intelligence operations are available after pinned loader verification; no inference submitted. Bounded ordinary-ACL legacy reconciliation completed12batches across2companies, creating66Inbox items without canonical task/finance changes. These are bounded local checks, not physical/production acceptance.
 
-Complete private ownSDD recovery/every-file comparison succeeded, all110orderedrulings committed, only the exact ownSDD directory removed. All later work uses the durable release ledger. Next: final source ZIP/privacy/integrity/manifest checks, release metadata/source-equivalence checks, non-force feature/main push and exact remote verification; then record final health/process/data/checklist state. Cutover is complete; push and ZIP remain pending. Private start-current-runtime.py can restart the configured app only on a free8080 port; never rerun execute-cutover.py against the already cut-over database.
+Complete private ownSDD recovery/every-file comparison succeeded, all110orderedrulings committed, only the exact ownSDD directory removed. All later work uses the durable release ledger. Source ZIP and non-force private feature/main push are now complete and verified at748a5b6. Final handoff metadata is being synchronized; the final exact Git/runtime state will be recorded privately in `final-state.json` under the recovery root. If a limit interrupted this last step, verify local versus remote refs and push only missing metadata without force; do not repeat development, migrations or tests on unchanged code. Otherwise only the explicit external rollout gates remain. Private start-current-runtime.py can restart the configured app only on a free8080 port; never rerun execute-cutover.py against the already cut-over database.
+
+## Completed deliverables
+
+- App: http://127.0.0.1:8080; existing credentials and business data preserved.
+- Private repository: https://github.com/Schach-workplace/Schach_Workspace, main and feature aligned/pushed.
+- Source ZIP: `/home/brahma/Projects/Schach_Workspace-release-20261012-final-improvements.zip`,18,822,447bytes;1868entries,1867manifest hashes verified, zero forbidden/duplicate entries and232physicalSQL copies matched. [Archive proof](../verification/workspace-improvements-roadmap/release-cutover/source-archive-proof.json). It captures748a; later completion metadata and full sanitized `.log` proof live in Git.
+- Full private AI recovery:8357files/871373847bytes/every-file verified; published110ordered decisions retain rationale and cost. All related source/current paths are enumerated in AI_FILE_INDEX; full private evidence inventory remains0600.
+- Final source checks and current runtime/browser/preservation proofs pass. No new application bug was established during cutover; two controller browser-harness failures and environment/tool warnings are retained in cutover-failure-qualifications.json.
 
 ## Authorization and binding controls
 

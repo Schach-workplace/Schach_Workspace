@@ -1,5 +1,5 @@
 {
-  "updatedUtc": "2026-10-11T23:16:19.211029+00:00",
+  "updatedUtc": "2026-10-11T23:20:30.908544+00:00",
   "qualification": "Durable recovery metadata; reviewed source/evidence separately qualified. No pending runtime/push claim.",
   "handoff": "docs/AI_HANDOFF.md",
   "checklist": "docs/AI_CHECKLIST.md",
@@ -10,7 +10,7 @@
     "sourceWriters": "all yielded",
     "reviewer": "yielded"
   },
-  "currentPhase": "Local main cutover and runtime/browser/preservation complete; finalZIP and non-force privatepush pending.",
+  "currentPhase": "All10implementation/review/cutover/runtime/browser/data/ZIP and privatecodepush verified. Final documentation sync, then only external rollout gates.",
   "verifiedProductHead": "ebc994dc6c2be442db595e468a716139b56ed721",
   "verifiedFixHead": "dff8ddc045b7bec32b41ac3e4f8847938c4f3de3",
   "reviewDisposition": "verification/workspace-improvements-roadmap/release-cutover/scoped-review-disposition.json",
@@ -20,7 +20,8 @@
     "inventory": "/home/brahma/.local/state/schach-workspace-cutover-20261012-uoxlpfcw/complete-plan-recovery-inventory.json",
     "files": 8357,
     "bytes": 871373847,
-    "qualification": "Private full related-file inventory and raw proof remain0600; path locator only, never package contents. Historical paths resolve within archive."
+    "qualification": "Private full related-file inventory and raw proof remain0600; path locator only, never package contents. Historical paths resolve within archive.",
+    "finalState": "/home/brahma/.local/state/schach-workspace-cutover-20261012-uoxlpfcw/final-state.json"
   },
   "privateTools": {
     "cutover": "/home/brahma/.local/state/schach-workspace-cutover-20261012-uoxlpfcw/tools/execute-cutover.py",
@@ -41,7 +42,9 @@
     "verification/workspace-improvements-roadmap/release-cutover/runtime-browser-proof.json",
     "verification/workspace-improvements-roadmap/release-cutover/poststart-preservation-proof.json",
     "verification/workspace-improvements-roadmap/release-cutover/attention-reconcile-proof.json",
-    "verification/workspace-improvements-roadmap/release-cutover/cutover-failure-qualifications.json"
+    "verification/workspace-improvements-roadmap/release-cutover/cutover-failure-qualifications.json",
+    "verification/workspace-improvements-roadmap/release-cutover/source-archive-proof.json",
+    "verification/workspace-improvements-roadmap/release-cutover/private-push-checkpoint-proof.json"
   ],
   "historicalBoundaries": {
     "mainBeforeCutover": "d20063b8063ee1dfd9bec6b4cd7807f4e31bcfa6",
@@ -2176,31 +2179,36 @@
       "verification/workspace-improvements-roadmap/milestone-9/task-9-report.md",
       "verification/workspace-improvements-roadmap/milestone-9/task-9-review.md",
       "verification/workspace-improvements-roadmap/release-cutover/README.md",
+      "verification/workspace-improvements-roadmap/release-cutover/attention-reconcile-proof.json",
       "verification/workspace-improvements-roadmap/release-cutover/consuming-worker-preflight.json",
       "verification/workspace-improvements-roadmap/release-cutover/current-build-inputs.json",
       "verification/workspace-improvements-roadmap/release-cutover/current-build-proof.json",
+      "verification/workspace-improvements-roadmap/release-cutover/current-runtime-proof.json",
+      "verification/workspace-improvements-roadmap/release-cutover/cutover-failure-qualifications.json",
+      "verification/workspace-improvements-roadmap/release-cutover/cutover-prestart-proof.json",
       "verification/workspace-improvements-roadmap/release-cutover/fix-controller-proof.json",
       "verification/workspace-improvements-roadmap/release-cutover/ordered-rulings-index.json",
+      "verification/workspace-improvements-roadmap/release-cutover/packaged-web-artifact-proof.json",
+      "verification/workspace-improvements-roadmap/release-cutover/poststart-preservation-proof.json",
       "verification/workspace-improvements-roadmap/release-cutover/recovery-archive-proof.json",
       "verification/workspace-improvements-roadmap/release-cutover/release-ledger.md",
       "verification/workspace-improvements-roadmap/release-cutover/ruling-110-local-runtime-configuration.md",
+      "verification/workspace-improvements-roadmap/release-cutover/runtime-browser-proof.json",
+      "verification/workspace-improvements-roadmap/release-cutover/safe-artifact-manifest.json",
       "verification/workspace-improvements-roadmap/release-cutover/scoped-review-disposition.json",
       "verification/workspace-improvements-roadmap/release-cutover/scoped-review.md",
       "verification/workspace-improvements-roadmap/rulings.md"
     ]
   },
-  "inventoryGitHead": "0b20b314d60da45bc9835d973d0b96cd898f2389",
+  "inventoryGitHead": "748a5b676c7f6d56c448a091c5102e8c63fcc3b7",
   "liveChangedOrUntrackedPaths": [
     "docs/AI_CHECKLIST.md",
     "docs/AI_FILE_INDEX.json",
     "docs/AI_HANDOFF.md",
-    "verification/workspace-improvements-roadmap/release-cutover/attention-reconcile-proof.json",
-    "verification/workspace-improvements-roadmap/release-cutover/cutover-failure-qualifications.json",
-    "verification/workspace-improvements-roadmap/release-cutover/cutover-prestart-proof.json",
-    "verification/workspace-improvements-roadmap/release-cutover/packaged-web-artifact-proof.json",
-    "verification/workspace-improvements-roadmap/release-cutover/poststart-preservation-proof.json",
+    "verification/workspace-improvements-roadmap/release-cutover/private-push-checkpoint-proof.json",
     "verification/workspace-improvements-roadmap/release-cutover/release-ledger.md",
-    "verification/workspace-improvements-roadmap/release-cutover/runtime-browser-proof.json"
+    "verification/workspace-improvements-roadmap/release-cutover/safe-artifact-manifest.json",
+    "verification/workspace-improvements-roadmap/release-cutover/source-archive-proof.json"
   ],
   "inventoryQualification": "Durable tracked/current path existence only. Acceptance and artifact provenance remain separately recorded; private archive references are historical recovery, not current source paths.",
   "currentRuntime": {
@@ -2209,5 +2217,13 @@
     "mainAtStartup": "0b20b314d60da45bc9835d973d0b96cd898f2389",
     "qualifiedProductSource": "ebc994dc6c2be442db595e468a716139b56ed721",
     "qualification": "Historical at next resume: verify /proc UID/exe/cwd/argv before signals, current /api/health JSON. Normal current build; local operations available, no inference."
+  },
+  "verifiedPublicationCheckpoint": "748a5b676c7f6d56c448a091c5102e8c63fcc3b7",
+  "verifiedPublicationQualification": "Exact remote checkpoint before final completion metadata; final-state.json records final actual refs/process. Verify live Git if resuming.",
+  "sourceArchive": {
+    "path": "/home/brahma/Projects/Schach_Workspace-release-20261012-final-improvements.zip",
+    "sourceHead": "748a5b676c7f6d56c448a091c5102e8c63fcc3b7",
+    "sha256": "7fa5be2b1bfd83c1d4665a1222edae88bdfb082c2cd9c70770085485a3a68b85",
+    "qualification": "Source ZIP at748a; later metadata and complete sanitized proof logs in Git."
   }
 }
