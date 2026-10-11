@@ -1,3 +1,4 @@
+import { frozenGoalDraft } from "../../shared/goals/recovery";
 import { useEffect, useEffectEvent, useState } from "react";
 import { Text, TextInput, View } from "react-native";
 import { useWorkspace } from "./Workspace";
@@ -31,7 +32,7 @@ export default function GoalMeasurementForm({
   const w = useWorkspace();
   const zone = w.work?.company.timezone ?? "UTC";
   const form = "$goal-measure:" + goal.id + ":" + (correction?.id ?? "new");
-  const [draft, setDraft, retire, , prefill] = useRamInput(
+  const [storedDraft, setDraft, retire, , prefill] = useRamInput(
     form,
     "draft",
     () => ({
@@ -45,6 +46,23 @@ export default function GoalMeasurementForm({
       authored: false,
     }),
   );
+  const action = useExecutionMutation(form, [
+    "/goals/" + goal.id,
+    ...storedDraft.evidence.map(
+      (e) =>
+        `/goals/${goal.id}/evidence-preview?kind=${e.kind}&sourceId=${encodeURIComponent(e.sourceId)}&parentId=${encodeURIComponent(e.parentId)}`,
+    ),
+  ]);
+  const draft = frozenGoalDraft(
+    storedDraft,
+    action.attempt,
+    "measurement",
+    (instant) => ({
+      date: companyDate(new Date(instant), zone),
+      time: deadlineLocalTime(instant, zone),
+      instant,
+    }),
+  );
   const inspect = useEffectEvent(() => {
     if (ready && !draft.authored)
       prefill({
@@ -56,7 +74,7 @@ export default function GoalMeasurementForm({
   useEffect(() => {
     inspect();
   }, [ready, goal.version, correction?.id, correction?.value]);
-  const action = useExecutionMutation(form, ["/goals/" + goal.id]);
+
   const [error, setError] = useState("");
   const [saved, setSaved] = useState(false);
   // Retain only the measured extent, never the fetched correction text.
@@ -85,9 +103,10 @@ export default function GoalMeasurementForm({
         (!draft.value.trim() || !Number.isFinite(Number(draft.value)))
       )
         throw Error("Enter an explicit measured value.");
-      const effectiveAt =
-        correction?.effectiveAt ??
-        workDeadline(draft.date, draft.time, zone, draft.instant).dueAt;
+      const effectiveAt = action.attempt
+        ? ""
+        : (correction?.effectiveAt ??
+          workDeadline(draft.date, draft.time, zone, draft.instant).dueAt);
       if (!action.attempt && !effectiveAt)
         throw Error("Enter an explicit observation time.");
       const payload = action.attempt?.payload ?? {

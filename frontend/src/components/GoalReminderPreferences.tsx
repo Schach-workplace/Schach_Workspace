@@ -1,3 +1,4 @@
+import { frozenGoalDraft } from '../../../shared/goals/recovery';
 import { useEffect, useState } from 'react';
 import { useGoalRead, useGoalMutation, type GoalReminderPreference } from '../data/goals';
 import { useExecutionInput } from '../data/executionInput';
@@ -52,16 +53,18 @@ function ReminderEditor({
   preference: GoalReminderPreference;
   ready: boolean;
 }) {
-  const [draft, setDraft, prefill, retire] = useExecutionInput(
+  const [storedDraft, setDraft, prefill, retire] = useExecutionInput(
     '$goal-reminder:' + goalId,
     'draft',
     () => ({ ...preference, expectedVersion: preference.version, reason: '', authored: false }),
   );
+  const action = useGoalMutation('$goal-reminder:' + goalId, ['/goals/' + goalId]);
+  const draft = frozenGoalDraft(storedDraft, action.attempt, 'reminder', () => ({}));
   useEffect(() => {
     if (ready && !draft.authored)
       prefill({ ...preference, expectedVersion: preference.version, reason: '', authored: false });
   }, [ready, preference.version]);
-  const action = useGoalMutation('$goal-reminder:' + goalId, ['/goals/' + goalId]);
+
   const [error, setError] = useState('');
   const set = (k: string, v: unknown) => setDraft((d) => ({ ...d, [k]: v, authored: true }));
   async function submit(e: React.FormEvent) {

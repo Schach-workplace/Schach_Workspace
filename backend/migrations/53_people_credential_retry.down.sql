@@ -1,0 +1,1 @@
+ALTER TABLE business_mutation_retries DROP COLUMN credential_binding;

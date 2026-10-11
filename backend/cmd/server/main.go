@@ -144,6 +144,9 @@ func run() error {
 		}
 	}
 	options := platform.Options{AllowedOrigins: origins, SecureCookies: secure, SessionHours: hours}
+	if err := platform.ConfigurePeopleCredentialRetry(&options); err != nil {
+		return err
+	}
 	if err := platform.ConfigureCommunication(&options); err != nil {
 		return err
 	}

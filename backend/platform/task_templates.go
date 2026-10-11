@@ -514,40 +514,7 @@ func (s *Server) templateApply(w http.ResponseWriter, r *http.Request) error {
 			}
 			return authorizeTaskCreation(tx, a, input.Fields)
 		}
-		apply := func() (BusinessResult, error) {
-			fields, unresolved, e := templateFields(tx, a, template, input, true)
-			if e != nil {
-				return BusinessResult{}, e
-			}
-			if len(unresolved) > 0 {
-				return BusinessResult{}, invalid("Resolve active owner and independent reviewer before applying.")
-			}
-			checklist := []ChecklistItem{}
-			for _, text := range template.Defaults.Checklist {
-				checklist = append(checklist, ChecklistItem{ID: newID("chk"), Text: text})
-			}
-			fields["checklist"], _ = json.Marshal(checklist)
-			t, e := makeTask(a, fields)
-			if e != nil {
-				return BusinessResult{}, e
-			}
-			if e = authorizeTaskCreation(tx, a, fields); e != nil {
-				return BusinessResult{}, e
-			}
-			if e = validateTask(tx, a, &t); e != nil {
-				return BusinessResult{}, e
-			}
-			if e = setWorkflow(tx, &t, "", false); e != nil {
-				return BusinessResult{}, e
-			}
-			if e = insertTask(tx, a, &t); e != nil {
-				return BusinessResult{}, e
-			}
-			if e = tx.Create(&TaskTemplateApplication{ID: newID("tpa"), CompanyID: a.Company.ID, TemplateID: template.ID, TemplateVersion: template.Version, TaskID: t.ID, ActorID: a.User.ID, RetryKey: key, CreatedAt: nowString()}).Error; e != nil {
-				return BusinessResult{}, e
-			}
-			return BusinessResult{Kind: "task", IDs: []string{t.ID}, Versions: []int64{t.Version}}, nil
-		}
+		apply := func() (BusinessResult, error) { return applyTaskTemplateTx(tx, a, template, input, key) }
 		out, e = businessMutation(tx, a, "template_apply", key, []any{r.PathValue("id"), input}, authorize, func(v BusinessResult) error { return authorizeTaskResults(tx, a, v) }, apply)
 		return e
 	})
@@ -620,4 +587,39 @@ func (s *Server) checklistApply(w http.ResponseWriter, r *http.Request) error {
 		return e
 	}
 	return ok(w, out.IDs[0])
+}
+
+func applyTaskTemplateTx(tx *gorm.DB, a *access, template TaskTemplate, input TemplateUseInput, key string) (BusinessResult, error) {
+	fields, unresolved, e := templateFields(tx, a, template, input, true)
+	if e != nil {
+		return BusinessResult{}, e
+	}
+	if len(unresolved) > 0 {
+		return BusinessResult{}, invalid("Resolve active owner and independent reviewer before applying.")
+	}
+	checklist := []ChecklistItem{}
+	for _, text := range template.Defaults.Checklist {
+		checklist = append(checklist, ChecklistItem{ID: newID("chk"), Text: text})
+	}
+	fields["checklist"], _ = json.Marshal(checklist)
+	t, e := makeTask(a, fields)
+	if e != nil {
+		return BusinessResult{}, e
+	}
+	if e = authorizeTaskCreation(tx, a, fields); e != nil {
+		return BusinessResult{}, e
+	}
+	if e = validateTask(tx, a, &t); e != nil {
+		return BusinessResult{}, e
+	}
+	if e = setWorkflow(tx, &t, "", false); e != nil {
+		return BusinessResult{}, e
+	}
+	if e = insertTask(tx, a, &t); e != nil {
+		return BusinessResult{}, e
+	}
+	if e = tx.Create(&TaskTemplateApplication{ID: newID("tpa"), CompanyID: a.Company.ID, TemplateID: template.ID, TemplateVersion: template.Version, TaskID: t.ID, ActorID: a.User.ID, RetryKey: key, CreatedAt: nowString()}).Error; e != nil {
+		return BusinessResult{}, e
+	}
+	return BusinessResult{Kind: "task", IDs: []string{t.ID}, Versions: []int64{t.Version}}, nil
 }

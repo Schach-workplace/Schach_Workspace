@@ -19,6 +19,7 @@ export type View =
   | 'inbox'
   | 'settings';
 export interface Company {
+  companyPermissionEpoch: number;
   id: string;
   name: string;
   slug: string;
@@ -36,6 +37,9 @@ export interface User {
   isPlatformAdmin: boolean;
 }
 export interface Person {
+  membershipVersion: number;
+  memberAccessEpoch: number;
+  companyPermissionEpoch: number;
   id: string;
   membershipId: string;
   name: string;
@@ -49,6 +53,7 @@ export interface Person {
   active: boolean;
 }
 export interface Department {
+  version: number;
   id: string;
   companyId: string;
   name: string;
@@ -317,6 +322,7 @@ export interface MutationResult {
   reminders?: number;
 }
 export interface WorkspaceStore {
+  authorizing?: boolean;
   mode: 'demo' | 'api';
   session: Session | null;
   data: WorkspaceData | null;

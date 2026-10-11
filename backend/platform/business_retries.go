@@ -14,15 +14,16 @@ import (
 // Successful identities live for the company's lifetime. Only identifiers and
 // versions are retained here; current scope is checked before every replay.
 type BusinessMutationRetry struct {
-	CompanyID      string `gorm:"primaryKey"`
-	ActorID        string `gorm:"primaryKey"`
-	Operation      string `gorm:"primaryKey"`
-	RetryKey       string `gorm:"primaryKey"`
-	RequestHash    string
-	ResultKind     string
-	ResultIDs      []string `gorm:"serializer:json;type:jsonb"`
-	ResultVersions []int64  `gorm:"serializer:json;type:jsonb"`
-	CreatedAt      string
+	CredentialBinding *CredentialRetryBinding `json:"-" gorm:"serializer:json;type:jsonb"`
+	CompanyID         string                  `gorm:"primaryKey"`
+	ActorID           string                  `gorm:"primaryKey"`
+	Operation         string                  `gorm:"primaryKey"`
+	RetryKey          string                  `gorm:"primaryKey"`
+	RequestHash       string
+	ResultKind        string
+	ResultIDs         []string `gorm:"serializer:json;type:jsonb"`
+	ResultVersions    []int64  `gorm:"serializer:json;type:jsonb"`
+	CreatedAt         string
 }
 type BusinessResult struct {
 	Kind     string   `json:"kind"`
@@ -41,18 +42,25 @@ func optionalBusinessKey(f map[string]json.RawMessage) (string, error) {
 	}
 	return key, nil
 }
-func businessHash(intent any) (string, error) {
+func businessCanonicalBytes(intent any) ([]byte, error) {
 	b, e := json.Marshal(intent)
 	if e != nil {
-		return "", e
+		return nil, e
 	}
 	decoder := json.NewDecoder(bytes.NewReader(b))
 	decoder.UseNumber()
 	var normalized any
 	if e = decoder.Decode(&normalized); e != nil {
-		return "", e
+		return nil, e
 	}
 	b, e = json.Marshal(normalized)
+	if e != nil {
+		return nil, e
+	}
+	return b, nil
+}
+func businessHash(intent any) (string, error) {
+	b, e := businessCanonicalBytes(intent)
 	if e != nil {
 		return "", e
 	}

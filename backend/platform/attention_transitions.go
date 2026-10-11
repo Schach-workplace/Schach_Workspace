@@ -11,6 +11,24 @@ import (
 )
 
 func ensureAttentionItem(tx *gorm.DB, item AttentionItem) error {
+	var membership Membership
+	if e := tx.First(&membership, "company_id=? AND user_id=? AND active=?", item.CompanyID, item.RecipientID, true).Error; e != nil {
+		if e == gorm.ErrRecordNotFound {
+			return nil
+		}
+		return e
+	}
+	item.MembershipEpoch = membership.AccessEpoch
+	// Repair of the same source revision must not manufacture a new personal
+	// episode after departure/rejoin or after a private recipient interval ends.
+	var retired int64
+	if e := tx.Model(&AttentionItem{}).Where("company_id=? AND recipient_id=? AND source_kind=? AND source_id=? AND kind=? AND source_revision=? AND record_revision=? AND (membership_epoch<>? OR recipient_epoch<>?)", item.CompanyID, item.RecipientID, item.SourceKind, item.SourceID, item.Kind, item.SourceRevision, item.RecordRevision, item.MembershipEpoch, item.RecipientEpoch).Count(&retired).Error; e != nil {
+		return e
+	}
+	if retired > 0 {
+		return nil
+	}
+
 	if item.ID == "" {
 		item.ID = newID("attention")
 	}
@@ -142,42 +160,9 @@ func (s *Server) transitionAttention(w http.ResponseWriter, r *http.Request) err
 		case "unsnooze":
 			item.SnoozedUntil = nil
 		case "route":
-			if err := attentionCanRoute(tx, a, item, input.RecipientID); err != nil {
+			target, err := prepareAttentionRouteTarget(tx, a, item, input.RecipientID, input.RetryKey, false)
+			if err != nil {
 				return err
-			}
-			var target AttentionItem
-			target, err = openAttentionTarget(tx, a, item, input.RecipientID)
-			if err != nil && err != gorm.ErrRecordNotFound {
-				return err
-			}
-			if err == nil {
-				t, e := currentAttentionActorLocked(tx, item.CompanyID, input.RecipientID)
-				if e != nil {
-					return e
-				}
-				if _, e = attentionSource(tx, t, target); e != nil {
-					err = gorm.ErrRecordNotFound
-				}
-			}
-			if err == gorm.ErrRecordNotFound {
-				target = item
-				target.ID = newID("attention")
-				target.RecipientID = input.RecipientID
-				target.OccurrenceKey = "route:" + rootAttentionOccurrence(item.OccurrenceKey) + ":" + payloadHash([]string{item.ID, input.RetryKey})
-				target.Version = 1
-				target.CreatedAt = now
-				target.UpdatedAt = now
-				target.SnoozedUntil = nil
-				if item.SourceKind == "record" {
-					scope, e := conversationAccess(tx, target.RecipientID, item.CompanyID, item.ConversationID)
-					if e != nil {
-						return e
-					}
-					target.RecipientEpoch = scope.Epoch
-				}
-				if e := ensureAttentionItem(tx, target); e != nil {
-					return e
-				}
 			}
 			result.ResultItemID = target.ID
 			item.State = "routed"
@@ -204,4 +189,53 @@ func attentionCanRouteReplay(tx *gorm.DB, a *access, item AttentionItem, target 
 	copy := item
 	copy.State = "open"
 	return checkAttentionRoute(tx, a, copy, target, true)
+}
+
+// prepareAttentionRouteTarget shares current recipient/source eligibility and
+// episode creation between ordinary routing and reviewed company handover.
+// Callers already hold the ordered source fence; no nested transaction occurs.
+func prepareAttentionRouteTarget(tx *gorm.DB, a *access, item AttentionItem, targetID, retryIdentity string, retainOnly bool) (AttentionItem, error) {
+	var target AttentionItem
+	if e := attentionCanRoute(tx, a, item, targetID); e != nil {
+		return target, e
+	}
+	target, err := openAttentionTarget(tx, a, item, targetID)
+	if err != nil && err != gorm.ErrRecordNotFound {
+		return target, err
+	}
+	recipient, e := currentAttentionActorLocked(tx, item.CompanyID, targetID)
+	if e != nil {
+		return target, e
+	}
+	if err == nil {
+		if _, e := attentionSource(tx, recipient, target); e != nil {
+			err = gorm.ErrRecordNotFound
+		}
+	}
+	if err == gorm.ErrRecordNotFound {
+		if retainOnly {
+			return target, invalid("The retained reviewer needs a current open review obligation.")
+		}
+		now := time.Now().UTC()
+		target = item
+		target.ID = newID("attention")
+		target.RecipientID = targetID
+		target.MembershipEpoch = recipient.Member.AccessEpoch
+		target.OccurrenceKey = "route:" + rootAttentionOccurrence(item.OccurrenceKey) + ":" + payloadHash([]string{item.ID, retryIdentity})
+		target.Version = 1
+		target.CreatedAt = now
+		target.UpdatedAt = now
+		target.SnoozedUntil = nil
+		if item.SourceKind == "record" {
+			scope, e := conversationAccess(tx, targetID, item.CompanyID, item.ConversationID)
+			if e != nil {
+				return target, e
+			}
+			target.RecipientEpoch = scope.Epoch
+		}
+		if e := ensureAttentionItem(tx, target); e != nil {
+			return target, e
+		}
+	}
+	return target, nil
 }

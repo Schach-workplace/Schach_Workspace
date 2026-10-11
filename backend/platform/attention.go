@@ -150,7 +150,7 @@ func (s *Server) getAttention(w http.ResponseWriter, r *http.Request) error {
 		if view.CanRoute {
 			for uid, m := range a.Members {
 				if uid != a.User.ID && m.Active && !a.Users[uid].Suspended && attentionCanRoute(tx, a, item, uid) == nil {
-					view.RoutePeople = append(view.RoutePeople, person(a.Users[uid], m))
+					view.RoutePeople = append(view.RoutePeople, person(a.Users[uid], m, a.Company.PermissionEpoch))
 				}
 			}
 			view.CanRoute = len(view.RoutePeople) > 0

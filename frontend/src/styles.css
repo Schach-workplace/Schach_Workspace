@@ -8646,3 +8646,12 @@ small,
 .page-content .form-grid > * {
   min-width: 0;
 }
+
+/* Reviewed identities and source labels must wrap inside narrow People dialogs. */
+.people-form {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.people-form fieldset {
+  min-inline-size: 0;
+}

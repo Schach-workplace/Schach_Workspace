@@ -18,11 +18,11 @@ func (s *Server) withFinanceClaimAccess(ctx context.Context, job FinanceAssistan
 		if e := lockCompany(tx, job.CompanyID); e != nil {
 			return e
 		}
-		if e := financeOriginalSession(tx, job.CompanyID, job.RequesterID, job.SessionRef); e != nil {
-			return e
-		}
 		a, e := currentAttentionActorLocked(tx, job.CompanyID, job.RequesterID)
 		if e != nil {
+			return e
+		}
+		if e := financeOriginalSession(tx, job.CompanyID, job.RequesterID, job.SessionRef); e != nil {
 			return e
 		}
 		var owned FinanceAssistanceJob
@@ -84,6 +84,9 @@ func authorizeFinanceJobSource(tx *gorm.DB, a *access, j FinanceAssistanceJob, v
 			var fingerprint ReceiptEvidenceFingerprint
 			if e := tx.First(&fingerprint, "company_id=? AND receipt_id=? AND sha256=? AND state='clean'", a.Company.ID, receipt.ID, j.InternalHash).Error; e != nil || fingerprint.Generation != j.CleanGeneration {
 				return missing()
+			}
+			if e := financeOriginalSession(tx, fingerprint.CompanyID, fingerprint.RequesterID, fingerprint.SessionRef); e != nil {
+				return e
 			}
 		}
 	}

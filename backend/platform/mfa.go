@@ -107,21 +107,17 @@ func (s *Server) consumeMFACode(tx *gorm.DB, mfa *UserMFA, code, recovery string
 	}
 	return &apiError{401, "invalid_mfa", "Authenticator or recovery code is invalid or already used.", nil}
 }
-func (s *Server) withMFAAccount(r *http.Request, fn func(*gorm.DB, User) error) error {
+func (s *Server) withMFAAccount(r *http.Request, fn func(*gorm.DB, User, []SessionRecord) error) error {
 	u, hash, e := s.authenticate(r)
 	if e != nil {
 		return e
 	}
 	return s.db.WithContext(r.Context()).Transaction(func(tx *gorm.DB) error {
-		var current User
-		if e := lockCommunicationRow(tx, "UPDATE").First(&current, "id=? AND suspended=?", u.ID, false).Error; e != nil {
-			return denied()
+		current, sessions, e := lockAccountWriter(tx, u.ID, hash)
+		if e != nil {
+			return e
 		}
-		var session SessionRecord
-		if e := lockCommunicationRow(tx, "SHARE").First(&session, "user_id=? AND token_hash=? AND expires_at>?", u.ID, hash, time.Now().UTC()).Error; e != nil {
-			return denied()
-		}
-		return fn(tx, current)
+		return fn(tx, current, sessions)
 	})
 }
 func (s *Server) mfaStatus(w http.ResponseWriter, r *http.Request) error {
@@ -148,7 +144,7 @@ func (s *Server) mfaSetup(w http.ResponseWriter, r *http.Request) error {
 		return e
 	}
 	label := ""
-	e := s.withMFAAccount(r, func(tx *gorm.DB, u User) error {
+	e := s.withMFAAccount(r, func(tx *gorm.DB, u User, sessions []SessionRecord) error {
 		if !passwordMatches(u.PasswordHash, input.Password) {
 			return denied()
 		}
@@ -183,7 +179,7 @@ func (s *Server) mfaConfirm(w http.ResponseWriter, r *http.Request) error {
 		return e
 	}
 	codes := []string{}
-	e := s.withMFAAccount(r, func(tx *gorm.DB, u User) error {
+	e := s.withMFAAccount(r, func(tx *gorm.DB, u User, sessions []SessionRecord) error {
 		var m UserMFA
 		if e := tx.First(&m, "user_id=? AND enabled=?", u.ID, false).Error; e != nil {
 			return missing()
@@ -212,10 +208,7 @@ func (s *Server) mfaConfirm(w http.ResponseWriter, r *http.Request) error {
 		if e != nil {
 			return e
 		}
-		if e := tx.Model(&CommunicationDevice{}).Where("user_id=? AND session_hash<>?", u.ID, hashToken(raw)).Update("active", false).Error; e != nil {
-			return e
-		}
-		return tx.Where("user_id=? AND token_hash<>?", u.ID, hashToken(raw)).Delete(&SessionRecord{}).Error
+		return revokePrincipalSessionsLocked(tx, u.ID, u.SessionEpoch, SessionRevocationScope{Sessions: sessions, PreserveHash: hashToken(raw)})
 	})
 	if e != nil {
 		return e
@@ -231,7 +224,7 @@ func (s *Server) mfaDisable(w http.ResponseWriter, r *http.Request) error {
 	if e := decode(w, r, &input); e != nil {
 		return e
 	}
-	e := s.withMFAAccount(r, func(tx *gorm.DB, u User) error {
+	e := s.withMFAAccount(r, func(tx *gorm.DB, u User, sessions []SessionRecord) error {
 		if !passwordMatches(u.PasswordHash, input.Password) {
 			return denied()
 		}
@@ -245,7 +238,14 @@ func (s *Server) mfaDisable(w http.ResponseWriter, r *http.Request) error {
 		if e := tx.Where("user_id=?", u.ID).Delete(&MFARecovery{}).Error; e != nil {
 			return e
 		}
-		return tx.Where("user_id=?", u.ID).Delete(&UserMFA{}).Error
+		if e := tx.Where("user_id=?", u.ID).Delete(&UserMFA{}).Error; e != nil {
+			return e
+		}
+		raw, e := sessionToken(r)
+		if e != nil {
+			return e
+		}
+		return revokePrincipalSessionsLocked(tx, u.ID, u.SessionEpoch, SessionRevocationScope{Sessions: sessions, PreserveHash: hashToken(raw)})
 	})
 	if e != nil {
 		return e

@@ -58,7 +58,7 @@ func (s *Server) RunCommunicationPush(ctx context.Context, now time.Time) (int, 
 	now = now.UTC()
 	// Populate bounded deduplicated device intents. No message body leaves this process.
 	var candidates []CommunicationPush
-	if e := s.db.WithContext(ctx).Table("communication_inboxes i").Select("i.event_id,d.id AS device_id,i.company_id,i.user_id").Joins("JOIN communication_devices d ON d.user_id=i.user_id AND d.active=? AND d.push_provider<>'' AND d.push_token<>''", true).Joins("JOIN sessions ss ON ss.token_hash=d.session_hash AND ss.user_id=d.user_id AND ss.expires_at>?", now).Joins("LEFT JOIN communication_pushes p ON p.event_id=i.event_id AND p.device_id=d.id").Where("i.read=? AND p.event_id IS NULL", false).Order("i.event_id,d.id").Limit(100).Scan(&candidates).Error; e != nil {
+	if e := s.db.WithContext(ctx).Table("communication_inboxes i").Select("i.event_id,d.id AS device_id,i.company_id,i.user_id").Joins("JOIN communication_devices d ON d.user_id=i.user_id AND d.active=? AND d.push_provider<>'' AND d.push_token<>''", true).Joins("JOIN sessions ss ON ss.token_hash=d.session_hash AND ss.user_id=d.user_id AND ss.expires_at>?", now).Joins("JOIN users pu ON pu.id=ss.user_id AND pu.suspended=false AND pu.session_epoch=ss.session_epoch AND pu.session_epoch>0").Joins("JOIN memberships pm ON pm.user_id=i.user_id AND pm.company_id=i.company_id AND pm.active=true AND pm.access_epoch=i.membership_epoch").Joins("LEFT JOIN communication_pushes p ON p.event_id=i.event_id AND p.device_id=d.id").Where("i.read=? AND p.event_id IS NULL", false).Order("i.event_id,d.id").Limit(100).Scan(&candidates).Error; e != nil {
 		return 0, e
 	}
 	for _, job := range candidates {
@@ -111,6 +111,9 @@ func (s *Server) RunCommunicationPush(ctx context.Context, now time.Time) (int, 
 				}
 				return e
 			}
+			if _, e := fenceSessionUser(tx, session, "SHARE"); e != nil {
+				return finishPush(tx, job, token)
+			}
 			var event CommunicationEvent
 			if e := tx.First(&event, "id=? AND company_id=?", job.EventID, job.CompanyID).Error; e != nil {
 				return e
@@ -134,7 +137,7 @@ func (s *Server) RunCommunicationPush(ctx context.Context, now time.Time) (int, 
 			if e := tx.First(&inbox, "event_id=? AND user_id=?", job.EventID, job.UserID).Error; e != nil {
 				return e
 			}
-			if inbox.Read {
+			if inbox.Read || inbox.MembershipEpoch != member.AccessEpoch || inbox.RecipientEpoch != scope.Epoch {
 				return finishPush(tx, job, token)
 			}
 			var pref CommunicationPreference
@@ -192,7 +195,11 @@ func (s *Server) ackCommunicationInbox(w http.ResponseWriter, r *http.Request) e
 		if event.MessageSequence != 0 && event.MessageSequence < a.HistoryFromSequence {
 			return missing()
 		}
-		row := tx.Model(&CommunicationInbox{}).Where("company_id=? AND user_id=? AND event_id=?", a.CompanyID, a.UserID, event.ID).Update("read", true)
+		var member Membership
+		if e := tx.First(&member, "company_id=? AND user_id=?", a.CompanyID, a.UserID).Error; e != nil {
+			return e
+		}
+		row := tx.Model(&CommunicationInbox{}).Where("membership_epoch=? AND recipient_epoch=?", member.AccessEpoch, a.Epoch).Where("company_id=? AND user_id=? AND event_id=?", a.CompanyID, a.UserID, event.ID).Update("read", true)
 		if row.Error != nil {
 			return row.Error
 		}

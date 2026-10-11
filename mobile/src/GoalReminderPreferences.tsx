@@ -1,3 +1,4 @@
+import { frozenGoalDraft } from "../../shared/goals/recovery";
 import { useWorkspace } from "./Workspace";
 import { useEffect, useEffectEvent, useState } from "react";
 import { Text, TextInput, View } from "react-native";
@@ -21,7 +22,7 @@ export default function GoalReminderPreferences({
   const q = useExecutionRead<{
     preference: GoalReminderPreference;
   }>(path, ready);
-  const [draft, setDraft, retire, , prefill] = useRamInput(
+  const [storedDraft, setDraft, retire, , prefill] = useRamInput(
     "$goal-reminder:" + goalId,
     "draft",
     () => ({
@@ -34,6 +35,15 @@ export default function GoalReminderPreferences({
       reason: "",
       authored: false,
     }),
+  );
+  const action = useExecutionMutation("$goal-reminder:" + goalId, [
+    "/goals/" + goalId,
+  ]);
+  const draft = frozenGoalDraft(
+    storedDraft,
+    action.attempt,
+    "reminder",
+    () => ({}),
   );
   const inspect = useEffectEvent(() => {
     if (q.ready && q.data && !draft.authored)
@@ -54,9 +64,7 @@ export default function GoalReminderPreferences({
   useEffect(() => {
     inspect();
   }, [q.ready, q.data?.preference.version]);
-  const action = useExecutionMutation("$goal-reminder:" + goalId, [
-    "/goals/" + goalId,
-  ]);
+
   const [error, setError] = useState("");
   const set = (k: string, v: unknown) =>
     setDraft((d) => ({ ...d, [k]: v, authored: true }));

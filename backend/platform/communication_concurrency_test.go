@@ -74,11 +74,18 @@ func TestNativeSendRemovalOrdering(t *testing.T) {
 				t.Fatal("first operation failed", st)
 			}
 			st := <-second
-			if sendFirst && st != 200 || !sendFirst && st != 404 {
+			if sendFirst && st != 200 || !sendFirst && st != 401 {
 				t.Fatal("removal order ignored", st)
 			}
-			if st := send(); st != 404 {
+			if st := send(); st != 401 {
 				t.Fatal("departed send replay", st)
+			}
+			if st, _, _ := req(t, s, "PATCH", root+"/people/"+uid, map[string]any{"active": true}, c); st != 200 {
+				t.Fatalf("explicit rejoin: %d", st)
+			}
+			mc = login(t, s, "member@example.com")
+			if st := send(); st != 404 {
+				t.Fatalf("fresh rejoined session restores no private interval: %d", st)
 			}
 		})
 	}

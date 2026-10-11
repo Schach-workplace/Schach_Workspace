@@ -29,6 +29,9 @@ func authorizeReportExportJob(tx *gorm.DB, a *access, id string) (ReportExportJo
 		}
 		return job, e
 	}
+	if job.RecipientAccessEpoch != a.Member.AccessEpoch {
+		return job, historicalAccessChanged()
+	}
 	if e := authorizeHistoricalSources(tx, a, job.SnapshotID); e != nil {
 		return job, e
 	}
@@ -81,7 +84,7 @@ func authorizeReportExportJob(tx *gorm.DB, a *access, id string) (ReportExportJo
 	return job, nil
 }
 func newReportExportJob(a *access, snap HistoricalReportSnapshot, now time.Time) ReportExportJob {
-	return ReportExportJob{ID: newID("rj"), CompanyID: a.Company.ID, RequestActorID: a.User.ID, RecipientID: a.User.ID, DefinitionID: snap.DefinitionID, DefinitionRevision: snap.DefinitionRevision, SnapshotID: snap.ID, PayloadHash: payloadHash([]any{snap.ID, 1, snap.RequestHash}), CSVSchemaVersion: 1, Period: snap.Period, State: "queued", NextAttemptAt: now, CreatedAt: now, UpdatedAt: now}
+	return ReportExportJob{RecipientAccessEpoch: a.Member.AccessEpoch, ID: newID("rj"), CompanyID: a.Company.ID, RequestActorID: a.User.ID, RecipientID: a.User.ID, DefinitionID: snap.DefinitionID, DefinitionRevision: snap.DefinitionRevision, SnapshotID: snap.ID, PayloadHash: payloadHash([]any{snap.ID, 1, snap.RequestHash}), CSVSchemaVersion: 1, Period: snap.Period, State: "queued", NextAttemptAt: now, CreatedAt: now, UpdatedAt: now}
 }
 func (s *Server) createReportExport(w http.ResponseWriter, r *http.Request) error {
 	a, e := s.access(r)

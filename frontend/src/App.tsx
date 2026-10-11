@@ -1,3 +1,4 @@
+import PeopleTools from './components/PeopleTools';
 import Connect from './communication/Connect';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
@@ -312,6 +313,13 @@ function Login() {
 }
 
 export default function App() {
+  return (
+    <PeopleTools>
+      <WorkspaceApp />
+    </PeopleTools>
+  );
+}
+function WorkspaceApp() {
   const store = useWorkspace();
   const { data, session } = store;
   const [view, setView] = useState<View>(hashView);
@@ -375,7 +383,7 @@ export default function App() {
     setSearchFocused(false);
     setSearch('');
     if (next === 'tasks' || next === 'my-work') setFilters({ ...emptyFilters, ...nextFilters });
-    if (next === 'projects') setProjectId('');
+    if (next === 'projects') setProjectId(nextFilters?.projectId ?? '');
     if (next === 'finance') setExpenseId('');
     window.scrollTo({ top: 0, behavior: 'instant' });
   }

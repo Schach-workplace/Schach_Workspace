@@ -10,18 +10,19 @@ import (
 )
 
 type GoalReminderPreference struct {
-	CompanyID string     `json:"-" gorm:"primaryKey"`
-	GoalID    string     `json:"goalId" gorm:"primaryKey"`
-	UserID    string     `json:"userId" gorm:"primaryKey"`
-	Version   int64      `json:"version"`
-	Enabled   bool       `json:"enabled"`
-	Cadence   string     `json:"cadence"`
-	Weekday   int        `json:"weekday"`
-	MonthDay  int        `json:"monthDay"`
-	LocalTime string     `json:"localTime"`
-	CreatedAt time.Time  `json:"createdAt"`
-	UpdatedAt time.Time  `json:"updatedAt"`
-	CheckedAt *time.Time `json:"-"`
+	MembershipEpoch int64      `json:"-" gorm:"not null;default:1"`
+	CompanyID       string     `json:"-" gorm:"primaryKey"`
+	GoalID          string     `json:"goalId" gorm:"primaryKey"`
+	UserID          string     `json:"userId" gorm:"primaryKey"`
+	Version         int64      `json:"version"`
+	Enabled         bool       `json:"enabled"`
+	Cadence         string     `json:"cadence"`
+	Weekday         int        `json:"weekday"`
+	MonthDay        int        `json:"monthDay"`
+	LocalTime       string     `json:"localTime"`
+	CreatedAt       time.Time  `json:"createdAt"`
+	UpdatedAt       time.Time  `json:"updatedAt"`
+	CheckedAt       *time.Time `json:"-"`
 }
 type goalOccurrence struct {
 	Key, Period       string
@@ -100,7 +101,7 @@ func latestGoalOccurrence(p GoalReminderPreference, zone string, now time.Time) 
 			if e != nil {
 				return o, e
 			}
-			o = goalOccurrence{Period: period, Start: begin, End: finish, DueAt: due, Key: fmt.Sprintf("goal-update:%s:%s:%s:%s:%s:%d:%s", p.CompanyID, p.GoalID, p.UserID, p.Cadence, period, p.Version, payloadHash([]any{zone, "fold_first_gap_next_v1"})[:12])}
+			o = goalOccurrence{Period: period, Start: begin, End: finish, DueAt: due, Key: fmt.Sprintf("goal-update:%s:%s:%s:%s:%s:%d:%d:%s", p.CompanyID, p.GoalID, p.UserID, p.Cadence, period, p.Version, p.MembershipEpoch, payloadHash([]any{zone, "fold_first_gap_next_v1"})[:12])}
 			return o, nil
 		}
 		if p.Cadence == "weekly" {
@@ -191,6 +192,7 @@ func (s *Server) goalReminderWrite(w http.ResponseWriter, r *http.Request) error
 			}
 			now := time.Now().UTC().Truncate(time.Microsecond)
 			p.Version++
+			p.MembershipEpoch = a.Member.AccessEpoch
 			p.Enabled = i.Enabled
 			p.Cadence = i.Cadence
 			p.Weekday = i.Weekday
@@ -233,7 +235,7 @@ func projectGoalAttention(tx *gorm.DB, a *access, item AttentionItem, replay boo
 	if e != nil {
 		return v, e
 	}
-	if !p.Enabled || p.Version != item.GoalPreferenceVersion || a.Company.Timezone != item.GoalTimezone {
+	if p.MembershipEpoch != a.Member.AccessEpoch || !p.Enabled || p.Version != item.GoalPreferenceVersion || a.Company.Timezone != item.GoalTimezone {
 		return v, missing()
 	}
 	if !replay {
@@ -289,7 +291,7 @@ func ensureGoalReminder(tx *gorm.DB, a *access, p GoalReminderPreference, now ti
 		}
 		return e
 	}
-	if !p.Enabled || g.OwnerID != p.UserID || measureAuthority(tx, a, g) != nil {
+	if p.MembershipEpoch != a.Member.AccessEpoch || !p.Enabled || g.OwnerID != p.UserID || measureAuthority(tx, a, g) != nil {
 		return nil
 	}
 	o, e := latestGoalOccurrence(p, a.Company.Timezone, now)
@@ -347,5 +349,5 @@ func (s *Server) generateGoalReminders(ctx context.Context, now time.Time, limit
 	return nil
 }
 func goalAttentionCandidates(tx *gorm.DB, a *access) *gorm.DB {
-	return tx.Model(&AttentionItem{}).Where(`company_id=? AND recipient_id=? AND source_kind='goal' AND kind='update' AND goal_timezone=? AND source_id IN (?) AND EXISTS (SELECT 1 FROM goal_reminder_preferences p JOIN goals g ON g.company_id=p.company_id AND g.id=p.goal_id WHERE p.company_id=attention_items.company_id AND p.goal_id=attention_items.source_id AND p.user_id=attention_items.recipient_id AND p.enabled=? AND p.version=attention_items.goal_preference_version AND g.owner_id=p.user_id AND attention_items.due_at>=p.updated_at AND NOT EXISTS (SELECT 1 FROM goal_measurements m WHERE m.company_id=g.company_id AND m.goal_id=g.id AND m.unit=g.unit AND m.effective_at>=attention_items.goal_period_start AND m.effective_at<attention_items.goal_period_end))`, a.Company.ID, a.User.ID, a.Company.Timezone, goalReadQuery(tx, a).Select("id").Where("owner_id=?", a.User.ID), true)
+	return tx.Model(&AttentionItem{}).Where(`company_id=? AND recipient_id=? AND source_kind='goal' AND kind='update' AND goal_timezone=? AND source_id IN (?) AND EXISTS (SELECT 1 FROM goal_reminder_preferences p JOIN goals g ON g.company_id=p.company_id AND g.id=p.goal_id WHERE p.company_id=attention_items.company_id AND p.goal_id=attention_items.source_id AND p.user_id=attention_items.recipient_id AND p.enabled=? AND p.membership_epoch=attention_items.membership_epoch AND p.version=attention_items.goal_preference_version AND g.owner_id=p.user_id AND attention_items.due_at>=p.updated_at AND NOT EXISTS (SELECT 1 FROM goal_measurements m WHERE m.company_id=g.company_id AND m.goal_id=g.id AND m.unit=g.unit AND m.effective_at>=attention_items.goal_period_start AND m.effective_at<attention_items.goal_period_end))`, a.Company.ID, a.User.ID, a.Company.Timezone, goalReadQuery(tx, a).Select("id").Where("owner_id=?", a.User.ID), true)
 }

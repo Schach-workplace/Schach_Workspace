@@ -1,3 +1,4 @@
+import { frozenGoalDraft } from "../../shared/goals/recovery";
 import { useState } from "react";
 import { Text, TextInput, View } from "react-native";
 import { useWorkspace } from "./Workspace";
@@ -24,7 +25,7 @@ export default function GoalMetadataForm({
 }) {
   const w = useWorkspace();
   const zone = w.work?.company.timezone ?? "UTC";
-  const [draft, setDraft, retire] = useRamInput(
+  const [storedDraft, setDraft, retire] = useRamInput(
     "$goal-metadata:" + (item?.id ?? "new"),
     "draft",
     () => ({
@@ -52,6 +53,16 @@ export default function GoalMetadataForm({
   const action = useExecutionMutation(
     "$goal-metadata:" + (item?.id ?? "new"),
     item ? ["/goals/" + item.id] : [],
+  );
+  const draft = frozenGoalDraft(
+    storedDraft,
+    action.attempt,
+    "metadata",
+    (instant) => ({
+      date: companyDate(new Date(instant), zone),
+      time: deadlineLocalTime(instant, zone),
+      instant,
+    }),
   );
   const latest = useExecutionRead<GoalDetail>(
     "/goals/" + (item?.id ?? ""),
@@ -116,9 +127,10 @@ export default function GoalMetadataForm({
         taskIds: draft.taskIds,
         dueDate: draft.dueDate,
       };
-      const effectiveAt = need
-        ? workDeadline(draft.date, draft.time, zone, draft.instant).dueAt
-        : "";
+      const effectiveAt =
+        !action.attempt && need
+          ? workDeadline(draft.date, draft.time, zone, draft.instant).dueAt
+          : "";
       if (!action.attempt && need && !effectiveAt)
         throw Error("Enter an explicit observation time.");
       const measurement = {

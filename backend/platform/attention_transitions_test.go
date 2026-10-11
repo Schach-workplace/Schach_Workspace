@@ -222,3 +222,17 @@ func TestAttentionRecordRoutingDoesNotAddCreatorToFixedRecipients(t *testing.T) 
 		t.Fatal("nonrecipient route", st, w.Body.String())
 	}
 }
+
+func TestAttentionRouteCurrentTargetMembershipEpoch(t *testing.T) {
+	s, c, cid, _, _ := attentionFixture(t)
+	target := addPerson(t, s, c, cid, "route-epoch@example.invalid", "member")
+	financeOK(t, s, "PATCH", "/api/companies/"+cid+"/people/"+target, map[string]any{"role": "admin"}, c)
+	result := financeOK(t, s, "POST", "/api/companies/"+cid+"/attention/attention-test/transition", map[string]any{"expectedVersion": 1, "retryKey": "route-current-epoch", "action": "route", "reason": "Current independent recipient", "recipientId": target}, c)
+	var item AttentionItem
+	s.db.First(&item, "id=?", result["resultItemId"])
+	var member Membership
+	s.db.First(&member, "company_id=? AND user_id=?", cid, target)
+	if item.MembershipEpoch != member.AccessEpoch {
+		t.Fatal("routed episode retained previous recipient epoch")
+	}
+}

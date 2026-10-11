@@ -1,4 +1,9 @@
-import { clearAllBusinessAttempts } from '../../shared/business/attempts';
+import {
+  clearAllBusinessAttempts,
+  filterBusinessAttemptsForGraph,
+  sameBusinessActorBasis,
+  type BusinessActorBasis,
+} from '../../shared/business/attempts';
 import { clearAllDrafts as clearConnectDrafts } from './communication/drafts';
 import {
   createContext,
@@ -61,6 +66,46 @@ function rememberCompany(id: string) {
 
 function Store({ children }: { children: ReactNode }) {
   const client = useQueryClient();
+  useEffect(() => {
+    const denied = (event: Event) => {
+      const { status, path } = (event as CustomEvent<{ status: number; path: string }>).detail;
+      const deniedCompany = path.match(/^\/companies\/([^/]+)/)?.[1];
+      if (status !== 401 && deniedCompany !== encodeURIComponent(companyId)) return;
+      clearConnectDrafts();
+      clearAllBusinessAttempts();
+      if (status === 401) {
+        authGeneration.current++;
+        applySession(null);
+        setAuthLoading(false);
+        client.clear();
+      } else if (/\/(bootstrap|workspace)$/.test(path) && session) {
+        const userId = session.user.id,
+          generation = authGeneration.current;
+        setDeniedCompanies((previous) =>
+          previous.includes(companyId) ? previous : [...previous, companyId],
+        );
+        applySession({
+          ...session,
+          companies: session.companies.filter((c) => c.id !== companyId),
+        });
+        client.removeQueries({ queryKey: ['workspace', MODE, userId, companyId] });
+        void request<Session>('/auth/session')
+          .then((next) => {
+            if (authGeneration.current === generation && next.user.id === userId)
+              applySession({
+                ...next,
+                companies: next.companies.filter((c) => c.id !== companyId),
+              });
+          })
+          .catch(() => {});
+      } else
+        void client.invalidateQueries({
+          queryKey: ['workspace', MODE, session?.user.id ?? '', companyId, 'bootstrap'],
+        });
+    };
+    window.addEventListener('schach-api-hard-denial', denied);
+    return () => window.removeEventListener('schach-api-hard-denial', denied);
+  });
   const [session, setSession] = useState<Session | null>(() =>
     MODE === 'demo' ? initialDemoSession() : null,
   );
@@ -135,13 +180,18 @@ function Store({ children }: { children: ReactNode }) {
     workspace.isFetchedAfterMount &&
     !!workspace.data &&
     !(workspace.error instanceof ApiError && [401, 403].includes(workspace.error.status));
-  const connectAuthorization = useRef<{ owner: string; basis: string } | null>(null);
+  const connectAuthorization = useRef<{
+    owner: string;
+    basis: string;
+    actor: BusinessActorBasis;
+  } | null>(null);
   const roleBasis = workspace.data
     ? [
         workspace.data.readBasis,
         workspace.data.me.role,
         workspace.data.me.departmentId,
         workspace.data.me.managerId,
+        workspace.data.me.memberAccessEpoch,
       ].join(':')
     : '';
   useLayoutEffect(() => {
@@ -149,9 +199,20 @@ function Store({ children }: { children: ReactNode }) {
     const previous = connectAuthorization.current;
     if (previous && previous.owner === nextConnectOwner && previous.basis !== roleBasis) {
       clearConnectDrafts();
-      clearAllBusinessAttempts();
+      if (sameBusinessActorBasis(previous.actor, workspace.data?.me))
+        filterBusinessAttemptsForGraph(
+          (import.meta.env.VITE_API_URL ?? window.location.origin) + ':' + MODE,
+          companyId,
+          session?.user.id ?? '',
+          workspace.data!.me,
+        );
+      else clearAllBusinessAttempts();
     }
-    connectAuthorization.current = { owner: nextConnectOwner, basis: roleBasis };
+    connectAuthorization.current = {
+      owner: nextConnectOwner,
+      basis: roleBasis,
+      actor: workspace.data!.me,
+    };
   }, [authorized, roleBasis, nextConnectOwner]);
   const tasks = useQuery({
     queryKey: [...key, 'tasks', roleBasis],
@@ -517,6 +578,7 @@ function Store({ children }: { children: ReactNode }) {
       mode: MODE,
       session,
       data: accessDenied ? null : scopedData,
+      authorizing: workspace.isFetching || authLoading,
       companyId,
       loading: authLoading || workspace.isLoading || (MODE === 'api' && authorized && !scopedData),
       saving: pending > 0,

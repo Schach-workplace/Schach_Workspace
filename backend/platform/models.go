@@ -3,6 +3,7 @@ package platform
 import "time"
 
 type Company struct {
+	PermissionEpoch      int64  `json:"companyPermissionEpoch" gorm:"not null;default:1;check:permission_epoch > 0"`
 	ID                   string `json:"id" gorm:"primaryKey;size:80"`
 	Name                 string `json:"name"`
 	Slug                 string `json:"slug" gorm:"uniqueIndex"`
@@ -16,6 +17,7 @@ type Company struct {
 	NextExpenseNumber    int64  `json:"-" gorm:"default:0"`
 }
 type User struct {
+	SessionEpoch    int64  `json:"-" gorm:"not null;default:1;check:session_epoch > 0"`
 	Suspended       bool   `json:"-"`
 	ID              string `json:"id" gorm:"primaryKey;size:80"`
 	Name            string `json:"name"`
@@ -24,6 +26,8 @@ type User struct {
 	PasswordHash    string `json:"-"`
 }
 type Membership struct {
+	Version       int64   `json:"membershipVersion" gorm:"not null;default:1;check:version > 0"`
+	AccessEpoch   int64   `json:"memberAccessEpoch" gorm:"not null;default:1;check:access_epoch > 0"`
 	ID            string  `json:"membershipId" gorm:"primaryKey;size:80"`
 	CompanyID     string  `json:"-" gorm:"uniqueIndex:membership_company_user;index"`
 	UserID        string  `json:"id" gorm:"uniqueIndex:membership_company_user;index"`
@@ -36,19 +40,23 @@ type Membership struct {
 	Active        bool    `json:"active"`
 }
 type Person struct {
-	ID            string  `json:"id"`
-	MembershipID  string  `json:"membershipId"`
-	Name          string  `json:"name"`
-	Email         string  `json:"email"`
-	Role          string  `json:"role"`
-	DepartmentID  string  `json:"departmentId"`
-	ManagerID     string  `json:"managerId"`
-	Title         string  `json:"title"`
-	CapacityHours float64 `json:"capacityHours"`
-	Avatar        string  `json:"avatar"`
-	Active        bool    `json:"active"`
+	CompanyPermissionEpoch int64   `json:"companyPermissionEpoch"`
+	MembershipVersion      int64   `json:"membershipVersion"`
+	MemberAccessEpoch      int64   `json:"memberAccessEpoch"`
+	ID                     string  `json:"id"`
+	MembershipID           string  `json:"membershipId"`
+	Name                   string  `json:"name"`
+	Email                  string  `json:"email"`
+	Role                   string  `json:"role"`
+	DepartmentID           string  `json:"departmentId"`
+	ManagerID              string  `json:"managerId"`
+	Title                  string  `json:"title"`
+	CapacityHours          float64 `json:"capacityHours"`
+	Avatar                 string  `json:"avatar"`
+	Active                 bool    `json:"active"`
 }
 type Department struct {
+	Version     int64  `json:"version" gorm:"not null;default:1;check:version > 0"`
 	ID          string `json:"id" gorm:"primaryKey;size:80"`
 	CompanyID   string `json:"companyId" gorm:"index"`
 	Name        string `json:"name"`
@@ -189,10 +197,11 @@ type Notification struct {
 	CreatedAt string `json:"createdAt"`
 }
 type SessionRecord struct {
-	TokenHash string `gorm:"primaryKey;size:64"`
-	UserID    string `gorm:"index"`
-	CreatedAt time.Time
-	ExpiresAt time.Time `gorm:"index"`
+	SessionEpoch int64  `json:"-" gorm:"not null;default:1;check:session_epoch > 0"`
+	TokenHash    string `gorm:"primaryKey;size:64"`
+	UserID       string `gorm:"index"`
+	CreatedAt    time.Time
+	ExpiresAt    time.Time `gorm:"index"`
 }
 
 func (SessionRecord) TableName() string { return "sessions" }

@@ -328,3 +328,45 @@ it('keeps a delayed known commit from invoking current-flow callbacks after a co
   await screen.findByText('Company changed');
   expect(committed).not.toHaveBeenCalled();
 });
+
+it('drops a late canonical ACK after a hard reset before callback or returned IDs', async () => {
+  let resolve!: (value: { id: string }) => void;
+  let acknowledge!: (value: { id: string }) => void;
+  const saved = vi.fn(),
+    returned = vi.fn();
+  state.mutate.mockImplementation((_path, _body, _method, callback) => {
+    acknowledge = callback;
+    return new Promise((r) => {
+      resolve = r;
+    });
+  });
+  function Probe() {
+    const action = useExecutionMutation('late-ack');
+    return (
+      <button
+        onClick={() =>
+          void action
+            .execute(
+              '/people/onboarding/apply',
+              { previewId: 'p', expectedPreviewVersion: 1, password: 'fictional-only' },
+              'POST',
+              saved,
+            )
+            .then(returned)
+            .catch(() => {})
+        }
+      >
+        Submit
+      </button>
+    );
+  }
+  render(<Probe />);
+  fireEvent.click(screen.getByText('Submit'));
+  await waitFor(() => expect(state.mutate).toHaveBeenCalledTimes(1));
+  clearAllBusinessAttempts();
+  acknowledge({ id: 'must-not-disclose' });
+  resolve({ id: 'must-not-disclose' });
+  await new Promise((r) => setTimeout(r, 0));
+  expect(saved).not.toHaveBeenCalled();
+  expect(returned).not.toHaveBeenCalled();
+});

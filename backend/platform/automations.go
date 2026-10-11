@@ -39,6 +39,9 @@ func claimAutomation(tx *gorm.DB, cid, key string) (bool, error) {
 
 // RunAutomations is safe to invoke repeatedly or concurrently. The unique claim and resulting changes commit atomically.
 func (s *Server) RunAutomations(ctx context.Context) (created, reminders int, err error) {
+	if err = s.cleanExpiredSessions(ctx, time.Now().UTC()); err != nil {
+		return
+	}
 	var companies []Company
 	if err = s.db.WithContext(ctx).Find(&companies).Error; err != nil {
 		return
@@ -54,8 +57,8 @@ func (s *Server) RunAutomations(ctx context.Context) (created, reminders int, er
 	}
 	return
 }
-func (s *Server) runCompanyAutomations(ctx context.Context, c Company, actorID string) (created, reminders int, err error) {
-	err = s.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
+func (s *Server) runCompanyAutomations(ctx context.Context, c Company, actorID string, request ...*http.Request) (created, reminders int, err error) {
+	work := func(tx *gorm.DB) error {
 		if e := lockCompany(tx, c.ID); e != nil {
 			return e
 		}
@@ -78,18 +81,30 @@ func (s *Server) runCompanyAutomations(ctx context.Context, c Company, actorID s
 		}
 		today := time.Now().In(loc).Format("2006-01-02")
 		tomorrow := time.Now().In(loc).AddDate(0, 0, 1).Format("2006-01-02")
-		var tasks []Task
-		if e = tx.Where("company_id = ?", c.ID).Find(&tasks).Error; e != nil {
+		var members []Membership
+		if e = lockCommunicationRow(tx, "UPDATE").Where("company_id = ?", c.ID).Order("user_id").Find(&members).Error; e != nil {
 			return e
 		}
-		var members []Membership
-		if e = lockCommunicationRow(tx, "UPDATE").Where("company_id = ? AND active = ?", c.ID, true).Order("user_id").Find(&members).Error; e != nil {
+		ids := []string{}
+		for _, m := range members {
+			ids = append(ids, m.UserID)
+		}
+		var users []User
+		if e := lockCommunicationRow(tx, "SHARE").Where("id IN ?", ids).Order("id").Find(&users).Error; e != nil {
+			return e
+		}
+		suspended := map[string]bool{}
+		for _, u := range users {
+			suspended[u.ID] = u.Suspended
+		}
+		var tasks []Task
+		if e = tx.Where("company_id = ?", c.ID).Find(&tasks).Error; e != nil {
 			return e
 		}
 		active := map[string]bool{}
 		roles := map[string]string{}
 		for _, m := range members {
-			active[m.UserID] = true
+			active[m.UserID] = m.Active && !suspended[m.UserID]
 			roles[m.UserID] = m.Role
 		}
 		for _, t := range tasks {
@@ -223,14 +238,17 @@ func (s *Server) runCompanyAutomations(ctx context.Context, c Company, actorID s
 				}
 			}
 		}
-		if e = tx.Where("expires_at < ?", time.Now().UTC()).Delete(&SessionRecord{}).Error; e != nil {
-			return e
-		}
 		if actorID != "" {
 			return audit(tx, c.ID, "", actorID, "automations_run", fmt.Sprintf("Created %d recurring tasks and %d reminders.", created, reminders))
 		}
 		return nil
-	})
+	}
+	if len(request) > 0 {
+		a := &access{Company: c, User: User{ID: actorID}}
+		err = s.withAccessTransaction(request[0], a, work)
+	} else {
+		err = s.db.WithContext(ctx).Transaction(work)
+	}
 	if err != nil {
 		created = 0
 		reminders = 0
@@ -245,7 +263,7 @@ func (s *Server) runAutomationsHTTP(w http.ResponseWriter, r *http.Request) erro
 	if !leadership(a.Member.Role) {
 		return denied()
 	}
-	n, m, e := s.runCompanyAutomations(r.Context(), a.Company, a.User.ID)
+	n, m, e := s.runCompanyAutomations(r.Context(), a.Company, a.User.ID, r)
 	if e != nil {
 		return e
 	}

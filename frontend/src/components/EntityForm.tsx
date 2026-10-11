@@ -81,6 +81,16 @@ function GenericEntityForm({
   };
   async function submit(event: FormEvent) {
     event.preventDefault();
+    if (
+      kind === 'person' &&
+      item &&
+      values.active === false &&
+      (item as Person).active &&
+      !window.confirm(
+        'Revoke company access now? Account sessions will end. Existing responsibilities remain assigned and handover is not performed.',
+      )
+    )
+      return;
     setError('');
     const fields: Record<EntityKind, string[]> = {
       project: [
@@ -132,7 +142,9 @@ function GenericEntityForm({
       ],
     };
     const body = Object.fromEntries(fields[kind].map((k) => [k, values[k]]));
-    if (kind === 'project' && item) body.version = (item as Project).version;
+    if (kind === 'project' && item) body.version = values.version;
+    if (kind === 'person' && item) body.expectedVersion = values.membershipVersion;
+    if (kind === 'department' && item) body.expectedVersion = values.version;
     try {
       await mutate(
         item ? (kind === 'company' ? '' : `${paths[kind]}/${item.id}`) : paths[kind],

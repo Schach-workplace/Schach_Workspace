@@ -139,7 +139,7 @@ func loadFinanceProjection(db *gorm.DB, a *access, d *WorkspaceData, visibleTask
 		if !ok {
 			continue
 		}
-		d.People = append(d.People, person(a.Users[uid], m))
+		d.People = append(d.People, person(a.Users[uid], m, a.Company.PermissionEpoch))
 	}
 	sort.Slice(d.People, func(i, j int) bool { return d.People[i].Name < d.People[j].Name })
 	return visibleExpenses, nil

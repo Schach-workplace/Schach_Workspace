@@ -458,14 +458,7 @@ func (s *Server) saveGoal(w http.ResponseWriter, r *http.Request) error {
 					}
 					mid = m.ID
 				}
-				res := tx.Model(&Goal{}).Where("id=? AND company_id=? AND version=?", candidate.ID, candidate.CompanyID, old.Version).Select("*").Updates(&candidate)
-				if res.Error != nil {
-					return BusinessResult{}, res.Error
-				}
-				if res.RowsAffected != 1 {
-					return BusinessResult{}, conflict()
-				}
-				if e = recordGoalRevision(tx, a, old, candidate, reason, "updated"); e != nil {
+				if e = commitGoalMetadataRevision(tx, a, old, candidate, reason); e != nil {
 					return BusinessResult{}, e
 				}
 			}
@@ -640,4 +633,30 @@ func migrateGoalMeasurements(db *gorm.DB) error {
 		return e
 	}
 	return db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS goal_correction_leaf ON goal_measurements(company_id,goal_id,corrects_id) WHERE corrects_id <> ''").Error
+}
+
+func commitGoalMetadataRevision(tx *gorm.DB, a *access, old, candidate Goal, reason string) error {
+	res := tx.Model(&Goal{}).Where("id=? AND company_id=? AND version=?", candidate.ID, candidate.CompanyID, old.Version).Select("*").Updates(&candidate)
+	if res.Error != nil {
+		return res.Error
+	}
+	if res.RowsAffected != 1 {
+		return conflict()
+	}
+	return recordGoalRevision(tx, a, old, candidate, reason, "updated")
+}
+func prepareGoalOwnerChange(tx *gorm.DB, a *access, old Goal, version int64, uid string) (Goal, error) {
+	next := old
+	if !canMeasureGoal(a, old) || in(a.Member.Role, "viewer", "member", "finance") {
+		return next, denied()
+	}
+	if version < 1 || old.Version != version {
+		return next, conflict()
+	}
+	next.OwnerID = uid
+	if e := validateGoalMetadata(tx, a, next, false); e != nil {
+		return next, e
+	}
+	next.Version = old.Version + 1
+	return next, nil
 }

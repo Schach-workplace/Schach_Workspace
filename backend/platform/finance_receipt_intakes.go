@@ -37,9 +37,17 @@ func financeSessionRef(r *http.Request) (string, error) {
 	}
 	return hashToken(token), nil
 }
+
+// Original-session reads intentionally take no late Session lock. Every live
+// session deletion/revocation writer holds its User UPDATE; callers hold User
+// SHARE before source work. Fresh expiry is checked even while that fence holds.
 func financeOriginalSession(tx *gorm.DB, cid, uid, ref string) error {
-	var session SessionRecord
-	if e := lockCommunicationRow(tx, "SHARE").Where("token_hash=? AND user_id=? AND expires_at>?", ref, uid, time.Now().UTC()).First(&session).Error; e != nil {
+	var n int64
+	e := tx.Table("sessions sess").Joins("JOIN users u ON u.id=sess.user_id").Joins("JOIN memberships m ON m.user_id=u.id AND m.company_id=?", cid).Where("sess.token_hash=? AND sess.user_id=? AND sess.expires_at>? AND sess.session_epoch=u.session_epoch AND u.session_epoch>0 AND u.suspended=? AND m.active=?", ref, uid, time.Now().UTC(), false, true).Count(&n).Error
+	if e != nil {
+		return e
+	}
+	if n != 1 {
 		return missing()
 	}
 	return nil

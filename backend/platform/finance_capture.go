@@ -81,7 +81,7 @@ func (s *Server) listFinanceIntakes(w http.ResponseWriter, r *http.Request) erro
 	}
 	var rows []FinanceAssistanceIntake
 	e = s.withAccessTransaction(r, a, func(tx *gorm.DB) error {
-		q := tx.Model(&FinanceAssistanceIntake{}).Where("company_id=? AND owner_id=? AND expires_at>? AND state NOT IN ?", a.Company.ID, a.User.ID, time.Now(), []string{"cancelled", "expired", "purged", "rejected"}).Where("EXISTS (SELECT 1 FROM sessions sess WHERE sess.token_hash=finance_assistance_intakes.session_ref AND sess.user_id=? AND sess.expires_at>?)", a.User.ID, time.Now())
+		q := tx.Model(&FinanceAssistanceIntake{}).Where("company_id=? AND owner_id=? AND expires_at>? AND state NOT IN ?", a.Company.ID, a.User.ID, time.Now(), []string{"cancelled", "expired", "purged", "rejected"}).Where("EXISTS (SELECT 1 FROM sessions sess JOIN users su ON su.id=sess.user_id WHERE sess.session_epoch=su.session_epoch AND su.session_epoch>0 AND su.suspended=false AND sess.token_hash=finance_assistance_intakes.session_ref AND sess.user_id=? AND sess.expires_at>?)", a.User.ID, time.Now())
 		departments := []string{}
 		var ds []Department
 		if e := tx.Where("company_id=?", a.Company.ID).Find(&ds).Error; e != nil {

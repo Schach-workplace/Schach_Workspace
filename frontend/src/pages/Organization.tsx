@@ -1,3 +1,5 @@
+import { usePeopleTools } from '../components/PeopleTools';
+import { DirectCompanyRevocation } from '../components/DepartureHandover';
 import { useState } from 'react';
 import {
   ArrowRight,
@@ -38,9 +40,10 @@ export default function Organization({
 }: {
   onNavigate: (view: View, filters?: Partial<TaskFilters>) => void;
 }) {
-  const { data: workspace } = useWorkspace();
+  const { data: workspace, mode } = useWorkspace();
   const data = workspace!;
   const [tab, setTab] = useState('people');
+  const openPeople = usePeopleTools();
   const [search, setSearch] = useState('');
   const [department, setDepartment] = useState('');
   const [active, setActive] = useState('active');
@@ -57,6 +60,13 @@ export default function Organization({
   const admin = canAdmin(data);
   return (
     <div className="page-content">
+      {mode === 'demo' && (
+        <p role="status">
+          Fictional local People demonstration. No real accounts, credentials, private invitations
+          or server changes. Starting task templates and private review obligations require a
+          connected company.
+        </p>
+      )}
       <div className="organization-summary">
         <div>
           <span className="org-summary-icon">
@@ -112,13 +122,25 @@ export default function Organization({
         {admin && (
           <button
             className="button button-primary"
-            onClick={() => setEditing({ kind: tab === 'departments' ? 'department' : 'person' })}
+            onClick={() =>
+              tab === 'departments' ? setEditing({ kind: 'department' }) : openPeople('onboard')
+            }
           >
             <Plus size={15} />
             {tab === 'departments' ? 'Add department' : 'Add person'}
           </button>
         )}
       </div>
+      {admin && (
+        <div className="form-actions">
+          <button className="button" onClick={() => openPeople('presets')}>
+            Onboarding presets
+          </button>
+          <button className="button" onClick={() => openPeople('reviews')}>
+            Review access
+          </button>
+        </div>
+      )}
       {tab === 'people' && (
         <>
           <div className="filters-panel">
@@ -411,6 +433,22 @@ export default function Organization({
                 <dd>{selected.active ? 'Active' : 'Inactive'}</dd>
               </div>
             </dl>
+            {admin && (
+              <>
+                <button
+                  className="button"
+                  onClick={() => {
+                    openPeople('departure', selected.id, (id) =>
+                      onNavigate('projects', { projectId: id }),
+                    );
+                    setSelected(null);
+                  }}
+                >
+                  Review company departure
+                </button>
+                <DirectCompanyRevocation userId={selected.id} />
+              </>
+            )}
             <div className="form-actions">
               {admin && (
                 <button

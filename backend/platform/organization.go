@@ -86,6 +86,21 @@ func (s *Server) createCompany(w http.ResponseWriter, r *http.Request) error {
 		return e
 	}
 	e = s.db.WithContext(r.Context()).Transaction(func(tx *gorm.DB) error {
+		raw, e := sessionToken(r)
+		if e != nil {
+			return e
+		}
+		var session SessionRecord
+		if e := lockCommunicationRow(tx, "SHARE").First(&session, "token_hash=?", hashToken(raw)).Error; e != nil {
+			return unauthenticated()
+		}
+		current, e := fenceSessionUser(tx, session, "SHARE")
+		if e != nil {
+			return e
+		}
+		if !current.IsPlatformAdmin {
+			return denied()
+		}
 		var n int64
 		if e := tx.Model(&Company{}).Where("slug = ?", c.Slug).Count(&n).Error; e != nil {
 			return e
@@ -171,9 +186,16 @@ func (s *Server) saveDepartment(w http.ResponseWriter, r *http.Request) error {
 	if e != nil {
 		return e
 	}
-	f, e := readFields(w, r, "name", "headId", "color", "description")
+	f, e := readFields(w, r, "name", "headId", "color", "description", "expectedVersion")
 	if e != nil {
 		return e
+	}
+	var expected int64
+	if raw, ok := f["expectedVersion"]; ok {
+		if json.Unmarshal(raw, &expected) != nil || expected < 1 {
+			return invalid("A positive department version is required.")
+		}
+		delete(f, "expectedVersion")
 	}
 	id := r.PathValue("id")
 	if id == "" {
@@ -183,11 +205,15 @@ func (s *Server) saveDepartment(w http.ResponseWriter, r *http.Request) error {
 		if !leadership(a.Member.Role) {
 			return denied()
 		}
-		d := Department{ID: id, CompanyID: a.Company.ID, Color: "#F97316"}
+		d := Department{ID: id, CompanyID: a.Company.ID, Color: "#F97316", Version: 1}
 		if r.Method == "PATCH" {
 			if e := tx.Where("id = ? AND company_id = ?", id, a.Company.ID).First(&d).Error; e != nil {
 				return missing()
 			}
+		}
+		old := d
+		if r.Method == "PATCH" && expected > 0 && expected != d.Version {
+			return conflict()
 		}
 		if e := applyFields(f, &d); e != nil {
 			return e
@@ -201,8 +227,26 @@ func (s *Server) saveDepartment(w http.ResponseWriter, r *http.Request) error {
 		if d.HeadID != "" && !a.activeUser(d.HeadID) {
 			return invalid("Department head must be an active member of this company.")
 		}
-		if e := tx.Save(&d).Error; e != nil {
-			return e
+		if r.Method == "PATCH" {
+			if d == old {
+				return nil
+			}
+			d.Version = old.Version + 1
+			if e := commitDepartmentRevision(tx, a, d, old.Version); e != nil {
+				return e
+			}
+		} else {
+			if e := tx.Create(&d).Error; e != nil {
+				return e
+			}
+		}
+		if d.HeadID != old.HeadID {
+			if e := tx.Model(&Company{}).Where("id=?", a.Company.ID).Update("permission_epoch", gorm.Expr("permission_epoch + 1")).Error; e != nil {
+				return e
+			}
+		}
+		if r.Method == "PATCH" {
+			return nil
 		}
 		return audit(tx, a.Company.ID, "", a.User.ID, "department_updated", d.Name+" saved.")
 	})
@@ -292,15 +336,20 @@ func (s *Server) addPerson(w http.ResponseWriter, r *http.Request) error {
 	if e = validateMember(s.db, a, m); e != nil {
 		return e
 	}
-	e = s.withAccessTransaction(r, a, func(tx *gorm.DB) error {
+	e = s.withPeopleAccessTransaction(r, a, []string{u.ID}, func(tx *gorm.DB) error {
 		if !leadership(a.Member.Role) || rank(v.Role) > rank(a.Member.Role) || (v.Role == "founder" && a.Member.Role != "founder") {
 			return denied()
 		}
 		if e := validateMember(tx, a, m); e != nil {
 			return e
 		}
-		if e := lockCompany(tx, a.Company.ID); e != nil {
-			return e
+		before := cloneMembers(a.Members)
+		if !newUser {
+			current, ok := a.Users[u.ID]
+			if !ok || current.Suspended {
+				return invalid("A suspended account cannot join a company.")
+			}
+			u = current
 		}
 		var n int64
 		if e := tx.Model(&Membership{}).Where("company_id = ? AND user_id = ?", a.Company.ID, u.ID).Count(&n).Error; e != nil {
@@ -310,11 +359,20 @@ func (s *Server) addPerson(w http.ResponseWriter, r *http.Request) error {
 			return invalid("This account already has a membership; edit that membership instead.")
 		}
 		if newUser {
-			if e := tx.Create(&u).Error; e != nil {
-				return e
+			result := tx.Clauses(clause.OnConflict{DoNothing: true}).Create(&u)
+			if result.Error != nil {
+				return result.Error
 			}
+			if result.RowsAffected != 1 {
+				return conflict()
+			}
+			a.Users[u.ID] = u
 		}
 		if e := tx.Create(&m).Error; e != nil {
+			return e
+		}
+		a.Members[u.ID] = m
+		if _, e := finalizeMembershipConsequences(tx, a, before, a.Members, "", "person_added"); e != nil {
 			return e
 		}
 		return audit(tx, a.Company.ID, "", a.User.ID, "person_added", u.Name+" added as "+m.Role+". Existing account passwords are never reset.")
@@ -336,60 +394,46 @@ func (s *Server) patchPerson(w http.ResponseWriter, r *http.Request) error {
 	if e != nil {
 		return e
 	}
-	f, e := readFields(w, r, "role", "departmentId", "managerId", "title", "capacityHours", "active")
+	f, e := readFields(w, r, "role", "departmentId", "managerId", "title", "capacityHours", "active", "expectedVersion")
 	if e != nil {
 		return e
 	}
-	uid := r.PathValue("id")
-	e = s.withAccessTransaction(r, a, func(tx *gorm.DB) error {
-		if !leadership(a.Member.Role) {
-			return denied()
+	var expected int64
+	if raw, ok := f["expectedVersion"]; ok {
+		if json.Unmarshal(raw, &expected) != nil || expected < 1 {
+			return invalid("A positive membership version is required.")
 		}
+		delete(f, "expectedVersion")
+	}
+	uid := r.PathValue("id")
+	var consequences MembershipConsequences
+	e = s.withPeopleAccessTransaction(r, a, []string{uid}, func(tx *gorm.DB) error {
 		old, exists := a.Members[uid]
 		if !exists {
 			return missing()
 		}
-		m := old
-		if e := applyFields(f, &m); e != nil {
+		before := cloneMembers(a.Members)
+		next, e := prepareMemberPatch(tx, a, old, MemberPatch{ExpectedVersion: expected, Fields: f}, before)
+		if e != nil {
 			return e
 		}
-		if e := validateMember(tx, a, m); e != nil {
-			return e
-		}
-		if rank(old.Role) > rank(a.Member.Role) || rank(m.Role) > rank(a.Member.Role) || (m.Role == "founder" && a.Member.Role != "founder") {
-			return denied()
-		}
-		if uid == a.User.ID && rank(m.Role) > rank(old.Role) {
-			return denied()
-		}
-		if uid == a.User.ID && !m.Active {
-			return invalid("Ask another company administrator to deactivate your membership.")
-		}
-		if old.Role == "founder" && old.Active && (m.Role != "founder" || !m.Active) {
-			count := 0
-			for _, member := range a.Members {
-				if member.Role == "founder" && member.Active {
-					count++
-				}
-			}
-			if count <= 1 {
-				return invalid("A company must retain at least one active founder.")
-			}
-		}
-		if old.Active && !m.Active {
+		reason := ""
+		if old.Active && !next.Active {
 			if e := revokeCompanyConversations(tx, a.Company.ID, uid); e != nil {
 				return e
 			}
+			reason = "Handover not performed."
 		}
-		if e := tx.Model(&Membership{}).Where("id = ?", m.ID).Updates(map[string]any{"role": m.Role, "department_id": m.DepartmentID, "manager_id": m.ManagerID, "title": m.Title, "capacity_hours": m.CapacityHours, "active": m.Active}).Error; e != nil {
+		if e := commitMemberPatch(tx, a, old, next, reason, "membership_updated"); e != nil {
 			return e
 		}
-		return audit(tx, a.Company.ID, "", a.User.ID, "membership_updated", uid+": role "+old.Role+" → "+m.Role+"; reporting line, capacity and active status saved.")
+		consequences, e = finalizeMembershipConsequences(tx, a, before, a.Members, reason, "membership_updated")
+		return e
 	})
 	if e != nil {
 		return e
 	}
-	return ok(w, uid)
+	return respond(w, 200, map[string]any{"ok": true, "id": uid, "sessionEffect": consequences.SessionEffect, "companyPermissionEpoch": consequences.CompanyEpoch, "handoverStatus": "not_performed"})
 }
 func (s *Server) saveProject(w http.ResponseWriter, r *http.Request) error {
 	a, e := s.access(r)
@@ -430,43 +474,12 @@ func (s *Server) saveProject(w http.ResponseWriter, r *http.Request) error {
 		if e := applyFields(f, &p); e != nil {
 			return e
 		}
-		if !clean(p.Name, 160) || len(p.Description) > 8000 {
-			return invalid("Project name is required (up to 160 characters); description allows 8,000.")
-		}
-		if !a.activeUser(p.OwnerID) || !departmentExists(tx, a.Company.ID, p.DepartmentID) {
-			return invalid("Project owner and department must belong to this company.")
-		}
-		if !validDate(p.DueDate) || !colorPattern.MatchString(p.Color) || !in(p.Status, "active", "on_hold", "completed", "archived") {
-			return invalid("Project date, color or status is invalid.")
-		}
-		if !a.canCreate(p.OwnerID, p.DepartmentID) {
-			return denied()
-		}
-		if !in(p.TaskOwnerPolicy, "actor", "project_owner", "fixed") {
-			return invalid("Choose a project task owner policy.")
-		}
-		if p.TaskOwnerPolicy == "fixed" && (!a.activeUser(p.DefaultTaskOwnerID) || !a.canCreate(p.DefaultTaskOwnerID, p.DepartmentID)) {
-			return invalid("Choose an active permitted default owner.")
-		}
-		resolvedOwner := p.OwnerID
-		if p.TaskOwnerPolicy == "fixed" {
-			resolvedOwner = p.DefaultTaskOwnerID
-		}
-		if p.DefaultReviewerID != "" && (!a.activeUser(p.DefaultReviewerID) || a.Members[p.DefaultReviewerID].Role == "viewer" || p.DefaultReviewerID == resolvedOwner) {
-			return invalid("Choose an active independent default reviewer.")
-		}
-		if p.DefaultRequiresApproval && p.DefaultReviewerID == "" {
-			return invalid("Choose a default reviewer for required review.")
+		if e := validateProject(tx, a, p); e != nil {
+			return e
 		}
 		if r.Method == "PATCH" {
 			p.Version = expected + 1
-			res := tx.Model(&Project{}).Where("id = ? AND company_id = ? AND version = ?", p.ID, p.CompanyID, expected).Select("*").Updates(&p)
-			if res.Error != nil {
-				return res.Error
-			}
-			if res.RowsAffected != 1 {
-				return conflict()
-			}
+			return commitProjectRevision(tx, a, p, expected)
 		} else {
 			if e := tx.Create(&p).Error; e != nil {
 				return e
@@ -478,4 +491,58 @@ func (s *Server) saveProject(w http.ResponseWriter, r *http.Request) error {
 		return e
 	}
 	return ok(w, id)
+}
+
+func validateProject(tx *gorm.DB, a *access, p Project) error {
+	if !clean(p.Name, 160) || len(p.Description) > 8000 {
+		return invalid("Project name is required (up to 160 characters); description allows 8,000.")
+	}
+	if !a.activeUser(p.OwnerID) || !departmentExists(tx, a.Company.ID, p.DepartmentID) {
+		return invalid("Project owner and department must belong to this company.")
+	}
+	if !validDate(p.DueDate) || !colorPattern.MatchString(p.Color) || !in(p.Status, "active", "on_hold", "completed", "archived") {
+		return invalid("Project date, color or status is invalid.")
+	}
+	if !a.canCreate(p.OwnerID, p.DepartmentID) {
+		return denied()
+	}
+	if !in(p.TaskOwnerPolicy, "actor", "project_owner", "fixed") {
+		return invalid("Choose a project task owner policy.")
+	}
+	if p.TaskOwnerPolicy == "fixed" && (!a.activeUser(p.DefaultTaskOwnerID) || !a.canCreate(p.DefaultTaskOwnerID, p.DepartmentID)) {
+		return invalid("Choose an active permitted default owner.")
+	}
+	resolvedOwner := p.OwnerID
+	if p.TaskOwnerPolicy == "fixed" {
+		resolvedOwner = p.DefaultTaskOwnerID
+	}
+	if p.DefaultReviewerID != "" && (!a.activeUser(p.DefaultReviewerID) || a.Members[p.DefaultReviewerID].Role == "viewer" || p.DefaultReviewerID == resolvedOwner) {
+		return invalid("Choose an active independent default reviewer.")
+	}
+	if p.DefaultRequiresApproval && p.DefaultReviewerID == "" {
+		return invalid("Choose a default reviewer for required review.")
+	}
+
+	return nil
+}
+
+func commitProjectRevision(tx *gorm.DB, a *access, p Project, expected int64) error {
+	res := tx.Model(&Project{}).Where("id=? AND company_id=? AND version=?", p.ID, a.Company.ID, expected).Select("*").Updates(&p)
+	if res.Error != nil {
+		return res.Error
+	}
+	if res.RowsAffected != 1 {
+		return conflict()
+	}
+	return audit(tx, a.Company.ID, "", a.User.ID, "project_updated", p.Name+" saved.")
+}
+func commitDepartmentRevision(tx *gorm.DB, a *access, d Department, expected int64) error {
+	res := tx.Model(&Department{}).Where("id=? AND company_id=? AND version=?", d.ID, a.Company.ID, expected).Select("*").Updates(&d)
+	if res.Error != nil {
+		return res.Error
+	}
+	if res.RowsAffected != 1 {
+		return conflict()
+	}
+	return audit(tx, a.Company.ID, "", a.User.ID, "department_updated", d.Name+" saved.")
 }

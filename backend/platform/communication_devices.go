@@ -68,6 +68,9 @@ func (s *Server) registerDevice(w http.ResponseWriter, r *http.Request) error {
 		if e := lockCommunicationRow(tx, "SHARE").First(&session, "token_hash=? AND expires_at>?", hash, time.Now().UTC()).Error; e != nil {
 			return &apiError{401, "unauthenticated", "Please sign in again.", nil}
 		}
+		if _, e := fenceSessionUser(tx, session, "SHARE"); e != nil {
+			return e
+		}
 		var existing CommunicationDevice
 		e := tx.First(&existing, "id=?", id).Error
 		if e == nil && existing.UserID != u.ID {
@@ -134,7 +137,7 @@ func (s *Server) communicationInbox(w http.ResponseWriter, r *http.Request) erro
 		Kind string `json:"kind"`
 	}{}
 	e := s.withCommunicationTransaction(r, nil, func(tx *gorm.DB, a *conversationScope) error {
-		return tx.Table("communication_inboxes AS i").Select("i.*, e.kind AS kind").Joins("JOIN communication_events e ON e.id=i.event_id AND e.company_id=i.company_id").Joins("JOIN conversations c ON c.id=i.conversation_id AND c.company_id=i.company_id").Joins("LEFT JOIN conversation_members cm ON cm.company_id=i.company_id AND cm.conversation_id=i.conversation_id AND cm.user_id=i.user_id").Where("i.company_id=? AND i.user_id=? AND (c.public=? OR (cm.active=? AND (e.message_sequence=0 OR e.message_sequence>=cm.history_from_sequence)))", a.CompanyID, a.UserID, true, true).Order("e.created_at DESC,e.id").Limit(100).Scan(&rows).Error
+		return tx.Table("communication_inboxes AS i").Select("i.*, e.kind AS kind").Joins("JOIN communication_events e ON e.id=i.event_id AND e.company_id=i.company_id").Joins("JOIN conversations c ON c.id=i.conversation_id AND c.company_id=i.company_id").Joins("LEFT JOIN conversation_members cm ON cm.company_id=i.company_id AND cm.conversation_id=i.conversation_id AND cm.user_id=i.user_id").Joins("JOIN memberships im ON im.company_id=i.company_id AND im.user_id=i.user_id AND im.active=true AND im.access_epoch=i.membership_epoch").Where("i.recipient_epoch=CASE WHEN cm.active=true THEN cm.epoch ELSE 0 END").Where("i.company_id=? AND i.user_id=? AND (c.public=? OR (cm.active=? AND (e.message_sequence=0 OR e.message_sequence>=cm.history_from_sequence)))", a.CompanyID, a.UserID, true, true).Order("e.created_at DESC,e.id").Limit(100).Scan(&rows).Error
 	})
 	if e != nil {
 		return e
@@ -199,6 +202,9 @@ func (s *Server) listDevices(w http.ResponseWriter, r *http.Request) error {
 		if e := lockCommunicationRow(tx, "SHARE").First(&session, "token_hash=? AND expires_at>?", hash, time.Now().UTC()).Error; e != nil {
 			return &apiError{401, "unauthenticated", "Please sign in again.", nil}
 		}
+		if _, e := fenceSessionUser(tx, session, "SHARE"); e != nil {
+			return e
+		}
 		return tx.Where("user_id=?", u.ID).Order("created_at,id").Find(&rows).Error
 	})
 	if e != nil {
@@ -221,6 +227,7 @@ func (s *Server) revokeDevice(w http.ResponseWriter, r *http.Request) error {
 		}
 		keys := []string{hash, device.SessionHash}
 		sort.Strings(keys)
+		var actorSession SessionRecord
 		for i, key := range keys {
 			if i > 0 && key == keys[i-1] {
 				continue
@@ -233,6 +240,15 @@ func (s *Server) revokeDevice(w http.ResponseWriter, r *http.Request) error {
 			if e != nil && e != gorm.ErrRecordNotFound {
 				return e
 			}
+			if key == hash {
+				actorSession = session
+			}
+		}
+		if _, e := fenceSessionUser(tx, actorSession, "UPDATE"); e != nil {
+			return e
+		}
+		if e := revokeSessionCapabilitiesLocked(tx, u.ID, []string{device.SessionHash}, SessionRevocationScope{}); e != nil {
+			return e
 		}
 		var current CommunicationDevice
 		if e := lockCommunicationRow(tx, "UPDATE").First(&current, "id=? AND user_id=?", device.ID, u.ID).Error; e != nil {

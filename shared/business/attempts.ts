@@ -4,13 +4,21 @@ export interface BusinessAttemptScope {
   userId: string;
   formId: string;
 }
+export interface BusinessActorBasis {
+  memberAccessEpoch: number;
+  role: string;
+  departmentId: string;
+  managerId: string;
+}
 export interface BusinessAttemptTarget {
+  canonical?: true;
   path: string;
   method: "POST" | "PATCH";
   sources?: string[];
 }
 export interface FrozenBusinessAttempt<T = unknown> {
   retryKey: string;
+  actorBasis?: BusinessActorBasis;
   target?: BusinessAttemptTarget;
   payload: T;
   state: "unknown" | "committed";
@@ -18,6 +26,8 @@ export interface FrozenBusinessAttempt<T = unknown> {
 }
 const attempts = new Map<string, FrozenBusinessAttempt>();
 const listeners = new Set<() => void>();
+let hardGeneration = 0;
+export const businessAttemptGeneration = () => hardGeneration;
 const identity = (scope: BusinessAttemptScope) =>
   JSON.stringify([
     scope.serverOrigin,
@@ -62,6 +72,7 @@ export function beginAttempt<T>(
   payload: T,
   key: string,
   target?: BusinessAttemptTarget,
+  actorBasis?: BusinessActorBasis,
 ): FrozenBusinessAttempt<T> {
   const previous = readAttempt<T>(scope);
   if (previous) {
@@ -77,6 +88,9 @@ export function beginAttempt<T>(
   if (!key.trim() || key.length > 100) throw Error("Choose a valid retry key.");
   const attempt = freeze({
     retryKey: key,
+    ...(validBusinessActorBasis(actorBasis)
+      ? { actorBasis: { ...actorBasis } }
+      : {}),
     ...(target
       ? {
           target: {
@@ -106,6 +120,7 @@ export function markAttemptCommitted(
     identity(scope),
     freeze({
       ...a,
+      payload: null,
       state: "committed" as const,
       result: { ids: [...result.ids] },
     }),
@@ -123,6 +138,7 @@ export function retireAttempt(
   return true;
 }
 export function clearAttemptScope(scope: BusinessAttemptScope) {
+  hardGeneration++;
   if (attempts.delete(identity(scope))) changed();
 }
 export function clearAttemptsForPrincipal(
@@ -130,6 +146,7 @@ export function clearAttemptsForPrincipal(
   companyId: string,
   userId: string,
 ) {
+  hardGeneration++;
   for (const key of attempts.keys()) {
     const [s, c, u] = JSON.parse(key);
     if (s === serverOrigin && c === companyId && u === userId)
@@ -143,6 +160,7 @@ export function clearAttemptsForSource(
   userId: string,
   sourcePath: string,
 ) {
+  hardGeneration++;
   for (const [key, attempt] of attempts) {
     const [s, c, u] = JSON.parse(key);
     const path = attempt.target?.path;
@@ -158,6 +176,79 @@ export function clearAttemptsForSource(
   changed();
 }
 export function clearAllBusinessAttempts() {
+  hardGeneration++;
   attempts.clear();
+  changed();
+}
+
+export function validBusinessActorBasis(
+  value: unknown,
+): value is BusinessActorBasis {
+  const a = value as BusinessActorBasis | undefined;
+  return (
+    !!a &&
+    Number.isSafeInteger(a.memberAccessEpoch) &&
+    a.memberAccessEpoch > 0 &&
+    typeof a.role === "string" &&
+    a.role.length > 0 &&
+    typeof a.departmentId === "string" &&
+    typeof a.managerId === "string"
+  );
+}
+export function sameBusinessActorBasis(a: unknown, b: unknown): boolean {
+  return (
+    validBusinessActorBasis(a) &&
+    validBusinessActorBasis(b) &&
+    a.memberAccessEpoch === b.memberAccessEpoch &&
+    a.role === b.role &&
+    a.departmentId === b.departmentId &&
+    a.managerId === b.managerId
+  );
+}
+// This registry describes actual canonical mutation adapters; POST/PATCH alone
+// never qualifies. In particular ordinary project PATCH is not registered.
+export function canonicalBusinessTarget(
+  path: string,
+  method: "POST" | "PATCH",
+): boolean {
+  if (method === "PATCH")
+    return (
+      /^\/(goals|task-templates|project-milestones|people\/presets)\/[^/?]+$/.test(
+        path,
+      ) || /^\/goals\/[^/?]+\/reminder-preference$/.test(path)
+    );
+  return (
+    /^\/goals(?:\/[^/?]+\/measurements)?$/.test(path) ||
+    /^\/task-templates(?:\/[^/?]+\/apply)?$/.test(path) ||
+    /^\/projects\/[^/?]+\/milestones$/.test(path) ||
+    /^\/project-milestones\/[^/?]+\/transition$/.test(path) ||
+    /^\/(?:task-bulk|task-schedule)\/(?:preview|apply)$/.test(path) ||
+    /^\/people\/(?:presets|onboarding\/(?:preview|apply)|access-reviews\/preview|access-reviews\/[^/?]+\/complete|[^/?]+\/departure\/(?:preview|apply))$/.test(
+      path,
+    )
+  );
+}
+// One existing-map graph filter. Undefined current basis quarantines a valid
+// submitted request during bootstrap; callers still block all sends/projections.
+export function filterBusinessAttemptsForGraph(
+  serverOrigin: string,
+  companyId: string,
+  userId: string,
+  currentBasis?: BusinessActorBasis,
+) {
+  for (const [key, a] of attempts) {
+    const [s, c, u] = JSON.parse(key);
+    if (s !== serverOrigin || c !== companyId || u !== userId) continue;
+    const target = a.target;
+    if (
+      a.state !== "unknown" ||
+      !target?.canonical ||
+      !canonicalBusinessTarget(target.path, target.method) ||
+      !validBusinessActorBasis(a.actorBasis) ||
+      (currentBasis !== undefined &&
+        !sameBusinessActorBasis(a.actorBasis, currentBasis))
+    )
+      attempts.delete(key);
+  }
   changed();
 }

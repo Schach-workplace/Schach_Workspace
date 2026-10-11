@@ -767,3 +767,46 @@ it("requires an explicit observation time while preserving ordinary task all-day
     )?.disabled,
   ).toBe(true);
 });
+it("reconstructs frozen measurement controls after graph-only draft clearing", async () => {
+  const goal: any = {
+    id: "frozen",
+    version: 7,
+    current: 4.8,
+    baseline: 8,
+    target: 3,
+    unit: "defects",
+  };
+  const bodies: any[] = [];
+  s.request.mockImplementation(
+    async (path: string, method: string, body: any) => {
+      if (path.endsWith("/measurements")) {
+        bodies.push(body);
+        if (bodies.length === 1) throw Error("lost ACK");
+        return { id: "frozen" };
+      }
+      return { options: [] };
+    },
+  );
+  await render(createElement(GoalMeasurementForm, { goal, ready: true }));
+  await enter("Measured value", "2.7");
+  await enter("Measurement reason", "Frozen human observation");
+  await press("Save measured result");
+  await render(null);
+  clearAllDrafts();
+  await render(
+    createElement(GoalMeasurementForm, {
+      goal: { ...goal, current: 1, version: 9 },
+      ready: true,
+    }),
+  );
+  expect(
+    (c.querySelector('[aria-label="Measured value"]') as HTMLInputElement)
+      .value,
+  ).toBe("2.7");
+  expect(
+    (c.querySelector('[aria-label="Measurement reason"]') as HTMLInputElement)
+      .value,
+  ).toBe("Frozen human observation");
+  await press("Retry same measurement");
+  expect(bodies[1]).toEqual(bodies[0]);
+});

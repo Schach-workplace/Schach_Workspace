@@ -1,3 +1,4 @@
+import { frozenGoalDraft } from '../../../shared/goals/recovery';
 import { useEffect, useState } from 'react';
 import { useWorkspace } from '../store';
 import { useExecutionInput } from '../data/executionInput';
@@ -25,7 +26,7 @@ export default function GoalMeasurementForm({
   const w = useWorkspace();
   const zone = w.data!.company.timezone;
   const form = '$goal-measure:' + goal.id + ':' + (correction?.id ?? 'new');
-  const [draft, setDraft, prefill, retire] = useExecutionInput(form, 'draft', () => ({
+  const [storedDraft, setDraft, prefill, retire] = useExecutionInput(form, 'draft', () => ({
     expectedVersion: goal.version,
     value: String(correction?.value ?? goal.current),
     local: localDeadline(new Date().toISOString(), zone),
@@ -33,6 +34,18 @@ export default function GoalMeasurementForm({
     reason: '',
     evidence: [] as GoalEvidenceInput[],
     authored: false,
+  }));
+  const sources = [
+    '/goals/' + goal.id,
+    ...storedDraft.evidence.map(
+      (e) =>
+        `/goals/${goal.id}/evidence-preview?kind=${e.kind}&sourceId=${encodeURIComponent(e.sourceId)}&parentId=${encodeURIComponent(e.parentId)}`,
+    ),
+  ];
+  const action = useGoalMutation(form, sources);
+  const draft = frozenGoalDraft(storedDraft, action.attempt, 'measurement', (instant) => ({
+    local: localDeadline(instant, zone),
+    instant,
   }));
   useEffect(() => {
     if (ready && !draft.authored)
@@ -42,14 +55,7 @@ export default function GoalMeasurementForm({
         value: String(correction?.value ?? goal.current),
       });
   }, [ready, goal.version]);
-  const sources = [
-    '/goals/' + goal.id,
-    ...draft.evidence.map(
-      (e) =>
-        `/goals/${goal.id}/evidence-preview?kind=${e.kind}&sourceId=${encodeURIComponent(e.sourceId)}&parentId=${encodeURIComponent(e.parentId)}`,
-    ),
-  ];
-  const action = useGoalMutation(form, sources);
+
   const [error, setError] = useState('');
   const [saved, setSaved] = useState('');
   const set = (key: string, value: unknown) =>

@@ -45,7 +45,7 @@ func TestDeviceSessionAndCompanyRevocation(t *testing.T) {
 		t.Fatal(st)
 	}
 	st, _, _ = req(t, s, "GET", "/api/companies/"+cid+"/communication/inbox", nil, mc)
-	if st != 404 {
+	if st != 401 {
 		t.Fatal(st)
 	}
 	st, _, _ = req(t, s, "POST", "/api/auth/logout", map[string]any{}, mc)

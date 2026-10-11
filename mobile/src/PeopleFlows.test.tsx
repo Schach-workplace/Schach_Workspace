@@ -1,0 +1,316 @@
+// @vitest-environment happy-dom
+import { act, createElement, type ReactNode } from "react";
+import { createRoot, type Root } from "react-dom/client";
+import { beforeEach, afterEach, it, expect, vi } from "vitest";
+import PeopleOnboarding from "./PeopleOnboarding";
+import AccessReview from "./AccessReview";
+import DepartureHandover from "./DepartureHandover";
+import {
+  clearAllBusinessAttempts,
+  readAttempt,
+} from "../../shared/business/attempts";
+import { clearAllDrafts } from "./conversationDrafts";
+const state = vi.hoisted(() => ({ w: {} as any, request: vi.fn() }));
+vi.mock("./client", () => ({
+  client: {
+    endpoint: "https://fictional.invalid",
+    generation: 1,
+    request: state.request,
+  },
+  NativeApiError: class extends Error {
+    constructor(
+      public status: number,
+      public code: string,
+      message: string,
+    ) {
+      super(message);
+    }
+  },
+}));
+vi.mock("@react-native-community/datetimepicker",()=>({default:()=>null}));
+vi.mock("expo-crypto", () => ({ randomUUID: () => crypto.randomUUID() }));
+vi.mock("expo-router", () => ({
+  router: { replace: vi.fn(), back: vi.fn(), push: vi.fn() },
+}));
+vi.mock("./Workspace", () => ({ useWorkspace: () => state.w }));
+vi.mock("./PeoplePage", () => ({
+  default: ({ children }: { children: ReactNode }) =>
+    createElement("div", {}, children),
+}));
+vi.mock("./ConnectUI", () => ({
+  ui: {},
+  Action: ({ title, onPress, disabled }: any) =>
+    createElement("button", { onClick: onPress, disabled }, title),
+  Sheet: ({ children, title }: any) =>
+    createElement("section", { "aria-label": title }, children),
+}));
+vi.mock("react-native", () => ({
+  Text: ({ children }: any) => createElement("span", {}, children),
+  View: ({ children, style }: any) => createElement("div", { style }, children),
+  TextInput: ({
+    value,
+    onChangeText,
+    accessibilityLabel,
+    secureTextEntry,
+    editable,
+  }: any) =>
+    createElement("input", {
+      "aria-label": accessibilityLabel,
+      value,
+      type: secureTextEntry ? "password" : "text",
+      disabled: editable === false,
+      onChange: (e: any) => onChangeText(e.target.value),
+    }),
+  FlatList: ({ data, renderItem }: any) =>
+    createElement(
+      "div",
+      {},
+      data.map((item: any) =>
+        createElement("div", { key: item.id }, renderItem({ item })),
+      ),
+    ),
+}));
+let root: Root, c: HTMLDivElement;
+const people = [
+  {
+    id: "actor",
+    membershipId: "ma",
+    name: "Fictional Admin",
+    email: "admin@example.invalid",
+    role: "founder",
+    departmentId: "",
+    managerId: "",
+    title: "",
+    capacityHours: 40,
+    active: true,
+    membershipVersion: 1,
+    memberAccessEpoch: 1,
+    companyPermissionEpoch: 1,
+  },
+  {
+    id: "target",
+    membershipId: "mt",
+    name: "Fictional Member",
+    email: "member@example.invalid",
+    role: "member",
+    departmentId: "",
+    managerId: "",
+    title: "",
+    capacityHours: 40,
+    active: true,
+    membershipVersion: 1,
+    memberAccessEpoch: 1,
+    companyPermissionEpoch: 1,
+  },
+];
+const effect = {
+  reauthenticate: true,
+  scope: "account_sessions",
+  devicesMustReregister: true,
+  callsMustRejoin: true,
+  otherCompanyMembershipsPreserved: true,
+};
+const render = async (node: ReactNode) =>
+  act(async () => {
+    root.render(node);
+    await new Promise((r) => setTimeout(r, 10));
+  });
+const press = async (title: string) =>
+  act(async () => {
+    const b = [...c.querySelectorAll("button")].find(
+      (b) => b.textContent === title,
+    );
+    expect(b, "button " + title).toBeTruthy();
+    expect(b!.disabled).toBe(false);
+    b!.click();
+    await new Promise((r) => setTimeout(r, 10));
+  });
+const enter = async (label: string, value: string) =>
+  act(async () => {
+    const el = c.querySelector(
+      '[aria-label="' + label + '"]',
+    ) as HTMLInputElement;
+    expect(el).toBeTruthy();
+    Object.getOwnPropertyDescriptor(
+      HTMLInputElement.prototype,
+      "value",
+    )!.set!.call(el, value);
+    el.dispatchEvent(new Event("input", { bubbles: true }));
+    el.dispatchEvent(new Event("change", { bubbles: true }));
+  });
+beforeEach(() => {
+  Object.assign(globalThis, { IS_REACT_ACT_ENVIRONMENT: true });
+  clearAllBusinessAttempts();
+  clearAllDrafts();
+  c = document.createElement("div");
+  document.body.append(c);
+  root = createRoot(c);
+  state.w = {
+    company: "company",
+    session: { user: { id: "actor" } },
+    foreground: true,
+    policyEpoch: 0,
+    recordEpoch: 0,
+    attentionEpoch: 0,
+    work: {
+      readBasis: "current",
+      me: people[0],
+      people,
+      departments: [],
+      company: { timezone: "UTC" },
+    },
+    refresh: vi.fn().mockResolvedValue(undefined),
+    setError: vi.fn(),
+  };
+  state.request.mockReset();
+});
+afterEach(async () => {
+  await act(() => root.unmount());
+  c.remove();
+});
+function reads(path: string) {
+  if (path.endsWith("/people/context"))
+    return {
+      people,
+      departments: [],
+      roles: ["founder", "admin", "member"],
+      readBasis: "current",
+    };
+  if (
+    path.endsWith("/people/presets") ||
+    path.endsWith("/people/access-reviews")
+  )
+    return { items: [] };
+  if (path.endsWith("/task-templates")) return { templates: [] };
+  if (path.endsWith("/projects")) return { projects: [] };
+  return undefined;
+}
+it("retains exact submitted onboarding after lost ACK and clears the credential before failed refresh", async () => {
+  const submitted: any[] = [];
+  state.request.mockImplementation(
+    async (path: string, method: string, body: any) => {
+      const r = reads(path);
+      if (r) return r;
+      if (path.endsWith("/onboarding/preview"))
+        return {
+          id: "preview",
+          version: 1,
+          accountMode: "new_account",
+          person: {
+            name: "Fictional Starter",
+            email: "starter@example.invalid",
+          },
+          grants: [],
+          taskPreviews: [],
+          unresolved: [],
+          sessionEffect: effect,
+        };
+      if (path.endsWith("/onboarding/apply")) {
+        submitted.push(body);
+        if (submitted.length === 1) throw Error("Fictional lost ACK");
+        return { id: "created", sessionEffect: effect };
+      }
+      throw Error("Unexpected endpoint");
+    },
+  );
+  state.w.refresh.mockImplementation(async () => {
+    expect(
+      readAttempt({
+        serverOrigin: "https://fictional.invalid",
+        companyId: "company",
+        userId: "actor",
+        formId: "$people-onboard-apply",
+      }),
+    ).toBeUndefined();
+    expect(c.querySelector('input[type="password"]')).toBeNull();
+    throw Error("Fictional dependent refresh failure");
+  });
+  await render(createElement(PeopleOnboarding));
+  await enter("Name", "Fictional Starter");
+  await enter("Email", "starter@example.invalid");
+  await press("Continue to access");
+  await press("Continue to starting work");
+  await press("Review onboarding");
+  await enter("New account password", "fictional-never-log-123");
+  await press("Confirm onboarding");
+  expect(c.textContent).toContain("Retry the same submission");
+  expect(c.querySelector('input[type="password"]')).toBeNull();
+  await render(null);
+  clearAllDrafts();
+  state.w.work = { ...state.w.work, readBasis: "other-graph" };
+  await render(createElement(PeopleOnboarding));
+  await press("Retry the same submission");
+  expect(submitted).toHaveLength(2);
+  expect(submitted[1]).toEqual(submitted[0]);
+  expect(c.textContent).toContain("Company onboarding completed.");
+  expect(c.textContent).not.toContain("Retry the same submission");
+});
+it("captures all reviewed memberships despite display filtering and records pending handover", async () => {
+  let captured: any;
+  state.request.mockImplementation(
+    async (path: string, method: string, body: any) => {
+      const r = reads(path);
+      if (r) return r;
+      if (path.endsWith("/access-reviews/preview")) {
+        captured = body;
+        return {
+          id: "review",
+          previewId: "preview",
+          version: 1,
+          sessionEffect: effect,
+        };
+      }
+      if (path.endsWith("/review/complete"))
+        return {
+          id: "review",
+          decisions: captured.decisions.map((d: any) => ({
+            ...d,
+            accessOutcome: "unchanged",
+            handoverStatus:
+              d.action === "departure_required" ? "pending" : "not_requested",
+          })),
+          sessionEffect: effect,
+        };
+      throw Error("Unexpected endpoint");
+    },
+  );
+  await render(createElement(AccessReview));
+  await press("Capture current company memberships");
+  await enter("Review reason", "Quarterly fictional attestation");
+  await press("Access decision for Fictional Member: Keep access");
+  await press("Departure follow-up required");
+  await enter("Filter reviewed members", "Admin");
+  await press("Preview access decisions");
+  expect(captured.decisions).toHaveLength(2);
+  expect(captured.decisions[1].action).toBe("departure_required");
+  await press("Complete access attestation");
+  expect(c.textContent).toContain("handover pending");
+});
+it("withholds blocked departure completion while direct revocation stays independently reachable", async () => {
+  state.request.mockImplementation(
+    async (path: string) =>
+      reads(path) ?? {
+        id: "departure-preview",
+        version: 1,
+        target: people[1],
+        liveItems: [],
+        retainedHistory: { tasks: 2 },
+        unresolved: [
+          {
+            code: "private_review_resolution_required",
+            message:
+              "An independent private review requires authorized source resolution.",
+          },
+        ],
+        sessionEffect: effect,
+        readyToApply: false,
+      },
+  );
+  await render(createElement(DepartureHandover, { userId: "target" }));
+  await enter("Departure reason", "Reviewed fictional departure");
+  await press("Inspect current obligations");
+  expect(c.textContent).toContain("independent private review");
+  expect(c.textContent).not.toContain("Complete company departure");
+  expect(c.textContent).toContain("Revoke company access");
+  expect(c.textContent).toContain("responsibilities retained");
+});

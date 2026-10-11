@@ -61,7 +61,7 @@ func accessBasis(a *access) string {
 		ms = append(ms, m)
 	}
 	sort.Slice(ms, func(i, j int) bool { return ms[i].UserID < ms[j].UserID })
-	return payloadHash([]any{a.Company.ID, a.User.ID, a.Company.Timezone, ms})
+	return payloadHash([]any{a.Company.ID, a.User.ID, a.Company.Timezone, a.Company.PermissionEpoch, ms})
 }
 func pageLimit(r *http.Request) (int, error) {
 	v := r.URL.Query().Get("limit")
@@ -411,7 +411,7 @@ func taskEvidencePeople(a *access, t Task) []Person {
 	rows := []Person{}
 	for id := range ids {
 		if m, ok := a.Members[id]; ok {
-			rows = append(rows, person(a.Users[id], m))
+			rows = append(rows, person(a.Users[id], m, a.Company.PermissionEpoch))
 		}
 	}
 	sort.Slice(rows, func(i, j int) bool { return rows[i].ID < rows[j].ID })
@@ -489,7 +489,7 @@ func financeEventPeople(a *access, rows []FinanceEvent) []Person {
 	people := []Person{}
 	for id := range ids {
 		if m, ok := a.Members[id]; ok {
-			people = append(people, person(a.Users[id], m))
+			people = append(people, person(a.Users[id], m, a.Company.PermissionEpoch))
 		}
 	}
 	sort.Slice(people, func(i, j int) bool { return people[i].ID < people[j].ID })

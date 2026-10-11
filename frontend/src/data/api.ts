@@ -1,3 +1,4 @@
+import { businessAttemptGeneration } from '../../../shared/business/attempts';
 const base = (import.meta.env.VITE_API_URL ?? '').replace(/\/$/, '');
 export class ApiError extends Error {
   constructor(
@@ -14,6 +15,7 @@ export async function request<T>(
   options: { method?: string; body?: unknown; signal?: AbortSignal } = {},
 ): Promise<T> {
   const { method = 'GET', body, signal } = options;
+  const capturedGeneration = businessAttemptGeneration();
   const headers: Record<string, string> = { Accept: 'application/json' };
   if (body !== undefined && !(body instanceof FormData))
     headers['Content-Type'] = 'application/json';
@@ -44,6 +46,13 @@ export async function request<T>(
     } catch {
       /* A proxy may return a non-JSON error. */
     }
+    if (
+      capturedGeneration === businessAttemptGeneration() &&
+      (response.status === 401 || (response.status === 403 && path.startsWith('/companies/')))
+    )
+      window.dispatchEvent(
+        new CustomEvent('schach-api-hard-denial', { detail: { status: response.status, path } }),
+      );
     throw new ApiError(message, response.status, code);
   }
   if (response.status === 204) return { ok: true } as T;

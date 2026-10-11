@@ -38,6 +38,7 @@ it("routes each retained module and account through a real company-qualified rou
   await act(async () => r.render(createElement(More)));
   expect([...c.querySelectorAll("button")].map((b) => b.textContent)).toEqual([
     "Finance",
+    "People",
     "Planning",
     "Goals",
     "Projects",
@@ -52,6 +53,7 @@ it("routes each retained module and account through a real company-qualified rou
   });
   for (const [title, path] of [
     ["Planning", "/planning"],
+    ["People", "/people"],
     ["Goals", "/goals"],
   ]) {
     await act(async () =>

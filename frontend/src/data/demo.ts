@@ -1,3 +1,9 @@
+import {
+  readDemoPeople,
+  mutateDemoPeople,
+  newDemoPeopleState,
+  type DemoPeopleState,
+} from './demo-people';
 import { ApiError } from './api';
 import {
   defaultAttentionPreference,
@@ -52,6 +58,7 @@ interface DemoAttentionRow {
   snoozedUntil: string | null;
 }
 interface DemoDatabase {
+  peopleAdministration?: DemoPeopleState;
   businessRetries?: Record<string, { hash: string; result: MutationResult }>;
   attention?: DemoAttentionRow[];
   attentionRetries?: Record<
@@ -114,7 +121,17 @@ function shiftedFixture(): DemoDatabase {
   return { schema: 1, ...data, passwords: {}, generated: {} };
 }
 function hydrateDB(db: DemoDatabase): DemoDatabase {
-  for (const w of db.workspaces) hydrateFinance(w);
+  for (const w of db.workspaces) {
+    hydrateFinance(w);
+    // Migration of this local demonstration database, never an API fallback.
+    w.company.companyPermissionEpoch ??= 1;
+    for (const p of w.people) {
+      p.membershipVersion ??= 1;
+      p.memberAccessEpoch ??= 1;
+      p.companyPermissionEpoch = w.company.companyPermissionEpoch;
+    }
+    for (const d of w.departments) d.version ??= 1;
+  }
   for (const s of db.sessions)
     s.companies = s.companies.map(
       (c) =>
@@ -284,6 +301,15 @@ function ping(
     createdAt: stamp(),
   });
 }
+export async function readDemoPeopleWorkflow(
+  companyId: string,
+  userId: string,
+  path: string,
+): Promise<unknown> {
+  const db = readDB();
+  const { w, me } = context(db, companyId, userId);
+  return readDemoPeople(db.peopleAdministration ?? newDemoPeopleState(), w, me, path);
+}
 export async function readDemoWorkspace(companyId: string, userId: string): Promise<WorkspaceData> {
   const { w, me } = context(readDB(), companyId, userId);
   return scopedDemoWorkspace(w, me);
@@ -346,6 +372,11 @@ function scopedDemoWorkspace(w: WorkspaceData, me: Person): WorkspaceData {
   const expenseIds = new Set(financial.expenses.map((e) => e.id));
   return clone({
     ...w,
+    readBasis: JSON.stringify([
+      w.company.companyPermissionEpoch,
+      w.people.map((p) => [p.id, p.membershipVersion]),
+      w.departments.map((d) => [d.id, d.version]),
+    ]),
     ...financial,
     me,
     people,
@@ -577,6 +608,7 @@ export async function demoMutate(
       fail('Choose a valid IANA timezone.');
     }
     const c: Company = {
+      companyPermissionEpoch: 1,
       id: id(),
       name,
       slug,
@@ -588,6 +620,9 @@ export async function demoMutate(
       fiscalYearStartMonth: Number(b.fiscalYearStartMonth ?? 4),
     };
     const me: Person = {
+      membershipVersion: 1,
+      memberAccessEpoch: 1,
+      companyPermissionEpoch: 1,
       id: userId,
       membershipId: id(),
       name: session!.user.name,
@@ -627,6 +662,36 @@ export async function demoMutate(
     return { ok: true, id: c.id };
   }
   const { w, me } = context(db, companyId, userId);
+  if (
+    /^\/people\/(?:presets|onboarding|access-reviews)(?:\/|$)/.test(path) ||
+    /^\/people\/[^/]+\/departure\//.test(path)
+  ) {
+    db.peopleAdministration ??= newDemoPeopleState();
+    const result = mutateDemoPeople(
+      db.peopleAdministration,
+      w,
+      me,
+      path,
+      b,
+      method,
+      (email) => db.sessions.find((s) => s.user.email.toLowerCase() === email)?.user,
+    );
+    if (path === '/people/onboarding/apply') {
+      const p = w.people.find((p) => p.id === result.userId)!;
+      let session = db.sessions.find((s) => s.user.id === p.id);
+      if (!session) {
+        session = {
+          user: { id: p.id, name: p.name, email: p.email, isPlatformAdmin: false },
+          companies: [],
+        };
+        db.sessions.push(session);
+      }
+      if (!session.companies.some((c) => c.id === companyId))
+        session.companies.push(clone(w.company));
+    }
+    saveDB(db);
+    return result as MutationResult;
+  }
   for (const p of w.projects) {
     p.version ??= 1;
     p.taskOwnerPolicy ??= 'actor';
@@ -877,6 +942,10 @@ export async function demoMutate(
     if (parts[1]) {
       const d = w.departments.find((d) => d.id === parts[1]);
       if (!d) fail('Department not found.');
+      if (b.expectedVersion !== undefined && b.expectedVersion !== d!.version)
+        fail('Department changed. Review current fields.');
+      if (b.headId !== undefined && b.headId !== d!.headId) w.company.companyPermissionEpoch++;
+      d!.version++;
       Object.assign(d!, {
         name,
         headId: b.headId ?? d!.headId,
@@ -885,6 +954,7 @@ export async function demoMutate(
       });
     } else {
       const d: Department = {
+        version: 1,
         id: id(),
         companyId: w.company.id,
         name,
@@ -918,6 +988,8 @@ export async function demoMutate(
     if (parts[1]) {
       const p = w.people.find((p) => p.id === parts[1]);
       if (!p) fail('Person not found.');
+      if (b.expectedVersion !== undefined && b.expectedVersion !== p!.membershipVersion)
+        fail('Membership changed. Review current fields.');
       if (p!.role === 'founder' && me.role !== 'founder')
         fail('Only a founder can edit another founder.');
       if (
@@ -928,6 +1000,22 @@ export async function demoMutate(
         fail('The company must retain at least one active founder.');
       if (b.managerId && (b.managerId === p!.id || reports(w, p!.id).has(b.managerId)))
         fail('That reporting line would create a cycle.');
+      const scopeChanged = ['role', 'departmentId', 'managerId', 'active'].some(
+        (k) => b[k] !== undefined && b[k] !== (p! as unknown as Record<string, unknown>)[k],
+      );
+      const changed = [
+        'role',
+        'departmentId',
+        'managerId',
+        'active',
+        'title',
+        'capacityHours',
+      ].some((k) => b[k] !== undefined && b[k] !== (p! as unknown as Record<string, unknown>)[k]);
+      if (changed) p!.membershipVersion++;
+      if (scopeChanged) {
+        p!.memberAccessEpoch++;
+        w.company.companyPermissionEpoch++;
+      }
       for (const k of [
         'role',
         'departmentId',
@@ -955,6 +1043,9 @@ export async function demoMutate(
       }
       s.companies.push(clone(w.company));
       const p: Person = {
+        membershipVersion: 1,
+        memberAccessEpoch: 1,
+        companyPermissionEpoch: w.company.companyPermissionEpoch + 1,
         id: s.user.id,
         membershipId: id(),
         name: s.user.name,
@@ -972,6 +1063,7 @@ export async function demoMutate(
         active: true,
       };
       w.people.push(p);
+      w.company.companyPermissionEpoch++;
       result.id = p.id;
     }
     audit(

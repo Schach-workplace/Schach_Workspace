@@ -78,7 +78,7 @@ func (s *Server) authenticate(r *http.Request) (User, string, error) {
 	if e = s.db.WithContext(r.Context()).First(&u, "id = ?", sr.UserID).Error; e != nil {
 		return u, "", e
 	}
-	if u.Suspended {
+	if u.Suspended || u.SessionEpoch < 1 || sr.SessionEpoch != u.SessionEpoch {
 		return u, "", &apiError{401, "unauthenticated", "Please sign in again.", nil}
 	}
 	return u, hash, nil
@@ -171,6 +171,7 @@ func (s *Server) login(w http.ResponseWriter, r *http.Request) error {
 		} else if e != gorm.ErrRecordNotFound {
 			return e
 		}
+		sr.SessionEpoch = current.SessionEpoch
 		return tx.Create(&sr).Error
 	}); err != nil {
 		return err
@@ -186,26 +187,46 @@ func (s *Server) login(w http.ResponseWriter, r *http.Request) error {
 	return respond(w, 200, session)
 }
 func (s *Server) session(w http.ResponseWriter, r *http.Request) error {
-	u, _, e := s.authenticate(r)
+	_, hash, e := s.authenticate(r)
 	if e != nil {
 		return e
 	}
-	v, e := s.sessionFor(s.db, u)
-	if e != nil {
-		return e
-	}
-	return respond(w, 200, v)
+	return s.db.WithContext(r.Context()).Transaction(func(tx *gorm.DB) error {
+		var session SessionRecord
+		if e := lockCommunicationRow(tx, "SHARE").First(&session, "token_hash=?", hash).Error; e != nil {
+			return unauthenticated()
+		}
+		var members []Membership
+		if e := lockCommunicationRow(tx, "SHARE").Where("user_id=?", session.UserID).Order("company_id,user_id").Find(&members).Error; e != nil {
+			return e
+		}
+		u, e := fenceSessionUser(tx, session, "SHARE")
+		if e != nil {
+			return e
+		}
+		v, e := s.sessionFor(tx, u)
+		if e != nil {
+			return e
+		}
+		return respond(w, 200, v)
+	})
 }
 func (s *Server) logout(w http.ResponseWriter, r *http.Request) error {
 	if token, e := sessionToken(r); e == nil {
 		hash := hashToken(token)
-		if e := s.db.Transaction(func(tx *gorm.DB) error {
+		if e := s.db.WithContext(r.Context()).Transaction(func(tx *gorm.DB) error {
 			var session SessionRecord
 			e := lockCommunicationRow(tx, "UPDATE").First(&session, "token_hash=?", hash).Error
 			if e == gorm.ErrRecordNotFound {
 				return nil
 			}
 			if e != nil {
+				return e
+			}
+			if _, e := fenceSessionUser(tx, session, "UPDATE"); e != nil {
+				return e
+			}
+			if e := revokeSessionCapabilitiesLocked(tx, session.UserID, []string{hash}, SessionRevocationScope{}); e != nil {
 				return e
 			}
 			if e := tx.Model(&CommunicationDevice{}).Where("session_hash=?", hash).Update("active", false).Error; e != nil {
@@ -243,6 +264,13 @@ func (s *Server) changePassword(w http.ResponseWriter, r *http.Request) error {
 		return e
 	}
 	e = s.db.WithContext(r.Context()).Transaction(func(tx *gorm.DB) error {
+		current, sessions, e := lockAccountWriter(tx, u.ID, token)
+		if e != nil {
+			return e
+		}
+		if current.PasswordHash != u.PasswordHash {
+			return conflict()
+		}
 		result := tx.Model(&User{}).Where("id = ? AND password_hash = ?", u.ID, u.PasswordHash).Update("password_hash", hash)
 		if result.Error != nil {
 			return result.Error
@@ -250,7 +278,7 @@ func (s *Server) changePassword(w http.ResponseWriter, r *http.Request) error {
 		if result.RowsAffected != 1 {
 			return &apiError{409, "account_changed", "Account credentials changed during this request. Sign in again before retrying.", nil}
 		}
-		if e := tx.Where("user_id = ? AND token_hash <> ?", u.ID, token).Delete(&SessionRecord{}).Error; e != nil {
+		if e := revokePrincipalSessionsLocked(tx, u.ID, current.SessionEpoch, SessionRevocationScope{Sessions: sessions, PreserveHash: token}); e != nil {
 			return e
 		}
 		var ms []Membership
@@ -335,24 +363,21 @@ func RecoverAccount(db *gorm.DB, email, newPassword string, resetMFA bool, reaso
 		return e
 	}
 	return db.Transaction(func(tx *gorm.DB) error {
-		var u User
-		if e := lockCommunicationRow(tx, "UPDATE").Where("email = ?", email).First(&u).Error; e != nil {
+		var candidate User
+		if e := tx.Where("email=?", email).First(&candidate).Error; e != nil {
 			if e == gorm.ErrRecordNotFound {
 				return invalid("No account exists with this email. No account was created.")
 			}
 			return e
 		}
-		if e := tx.Model(&User{}).Where("id = ?", u.ID).Update("password_hash", hash).Error; e != nil {
+		u, sessions, e := lockAccountWriter(tx, candidate.ID, "")
+		if e != nil {
 			return e
 		}
-		var sessions []SessionRecord
-		if e := lockCommunicationRow(tx, "UPDATE").Where("user_id=?", u.ID).Order("token_hash").Find(&sessions).Error; e != nil {
+		if e := tx.Model(&User{}).Where("id=?", u.ID).Update("password_hash", hash).Error; e != nil {
 			return e
 		}
-		if e := tx.Model(&CommunicationDevice{}).Where("user_id=?", u.ID).Update("active", false).Error; e != nil {
-			return e
-		}
-		if e := tx.Where("user_id = ?", u.ID).Delete(&SessionRecord{}).Error; e != nil {
+		if e := revokePrincipalSessionsLocked(tx, u.ID, u.SessionEpoch, SessionRevocationScope{Sessions: sessions}); e != nil {
 			return e
 		}
 		if resetMFA {

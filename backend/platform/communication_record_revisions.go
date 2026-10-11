@@ -60,6 +60,23 @@ func (s *Server) editCommunicationRecord(w http.ResponseWriter, r *http.Request)
 		if record.Revision != input.ExpectedRevision {
 			return conflict()
 		}
+		if record.Kind == "decision" {
+			reviewer, e := conversationAccess(tx, record.ReviewerID, a.CompanyID, a.Conversation.ID)
+			var user User
+			if e != nil || reviewer.Role == "viewer" || record.ReviewerID == record.CreatedBy {
+				return invalid("The independent reviewer no longer has source access.")
+			}
+			if e := tx.First(&user, "id=?", record.ReviewerID).Error; e != nil {
+				return e
+			}
+			if user.Suspended {
+				return invalid("The independent reviewer no longer has source access.")
+			}
+			source, e := scopedMessage(tx, reviewer, record.AnchorMessageID)
+			if e != nil || source.Removed || source.Revision != record.SourceRevision {
+				return invalid("The independent reviewer no longer has source access.")
+			}
+		}
 		if record.Kind == "poll" {
 			if len(input.Options) < 2 || len(input.Options) > 10 {
 				return invalid("Choose 2–10 poll options.")

@@ -164,3 +164,27 @@ it('measurement Load latest replaces captured value/version after conflict and r
   await waitFor(() => expect(s.mutate).toHaveBeenCalledTimes(2));
   expect(s.mutate.mock.calls[1][1]).toMatchObject({ expectedVersion: 9, value: -2 });
 });
+
+it('reconstructs locked authored measurement controls from the exact unknown submission after graph draft invalidation', async () => {
+  s.mutate.mockRejectedValueOnce(Error('lost ACK')).mockResolvedValue({ id: 'recovery' });
+  mount(<GoalMeasurementForm goal={s.goal} ready />);
+  fireEvent.change(screen.getByLabelText(/Measured value/), { target: { value: '2.7' } });
+  fireEvent.change(screen.getByLabelText('Reason shared with goal audience'), {
+    target: { value: 'Frozen human observation' },
+  });
+  fireEvent.submit(screen.getByLabelText(/Measured value/).closest('form')!);
+  await waitFor(() => expect(s.mutate).toHaveBeenCalledTimes(1));
+  const original = s.mutate.mock.calls[0][1];
+  cleanup();
+  clearAllDrafts();
+  s.goal = { ...s.goal, current: 1, version: 9 };
+  mount(<GoalMeasurementForm goal={s.goal} ready />);
+  expect(screen.getByLabelText(/Measured value/)).toHaveProperty('value', '2.7');
+  expect(screen.getByLabelText('Reason shared with goal audience')).toHaveProperty(
+    'value',
+    'Frozen human observation',
+  );
+  fireEvent.submit(screen.getByLabelText(/Measured value/).closest('form')!);
+  await waitFor(() => expect(s.mutate).toHaveBeenCalledTimes(2));
+  expect(s.mutate.mock.calls[1][1]).toEqual(original);
+});

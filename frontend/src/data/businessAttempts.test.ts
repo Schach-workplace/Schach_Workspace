@@ -77,3 +77,51 @@ it('purges a milestone decision when its parent project source is denied', () =>
   clearAttemptsForSource(scope.serverOrigin, scope.companyId, scope.userId, '/projects/p');
   expect(readAttempt(scope)).toBeUndefined();
 });
+it('erases submitted secrets as soon as a canonical result is committed', () => {
+  beginAttempt(scope, { previewId: 'p', password: 'fictional-ram-only-secret' }, 'secret');
+  expect(markAttemptCommitted(scope, 'secret', { ids: ['application'] })).toBe(true);
+  expect(JSON.stringify(readAttempt(scope))).not.toContain('fictional-ram-only-secret');
+});
+it('graph filtering keeps only canonical submitted intent with unchanged positive actor basis', async () => {
+  const { filterBusinessAttemptsForGraph } = await import('../../../shared/business/attempts');
+  const basis = { memberAccessEpoch: 2, role: 'admin', departmentId: '', managerId: '' };
+  const target = {
+    path: '/people/onboarding/apply',
+    method: 'POST' as const,
+    canonical: true as const,
+    sources: ['/people/onboarding/p'],
+  };
+  const frozen = beginAttempt(
+    scope,
+    { previewId: 'p', expectedPreviewVersion: 1 },
+    'original',
+    target,
+    basis,
+  );
+  const legacy = { ...scope, formId: 'legacy' };
+  beginAttempt(
+    legacy,
+    { version: 1 },
+    'legacy',
+    { path: '/projects/p', method: 'PATCH', canonical: true },
+    basis,
+  );
+  filterBusinessAttemptsForGraph(scope.serverOrigin, scope.companyId, scope.userId, basis);
+  expect(readAttempt(scope)).toBe(frozen);
+  expect(readAttempt(legacy)).toBeUndefined();
+  filterBusinessAttemptsForGraph(scope.serverOrigin, scope.companyId, scope.userId, {
+    ...basis,
+    memberAccessEpoch: 3,
+  });
+  expect(readAttempt(scope)).toBeUndefined();
+});
+it('missing actor epoch never enables graph retention', async () => {
+  const { filterBusinessAttemptsForGraph } = await import('../../../shared/business/attempts');
+  beginAttempt(scope, { previewId: 'p' }, 'unknown', {
+    path: '/people/onboarding/apply',
+    method: 'POST',
+    canonical: true,
+  });
+  filterBusinessAttemptsForGraph(scope.serverOrigin, scope.companyId, scope.userId);
+  expect(readAttempt(scope)).toBeUndefined();
+});

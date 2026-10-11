@@ -87,7 +87,7 @@ func (s *Server) withCommunicationTransaction(r *http.Request, extraUsers []stri
 		ids := append([]string{u.ID}, extraUsers...)
 		sort.Strings(ids)
 		var members []Membership
-		if e := lockCommunicationRow(tx, "SHARE").Where("company_id = ? AND user_id IN ?", r.PathValue("cid"), ids).Order("user_id").Find(&members).Error; e != nil {
+		if e := lockCommunicationRow(tx, "SHARE").Where("company_id = ?", r.PathValue("cid")).Order("user_id").Find(&members).Error; e != nil {
 			return e
 		}
 		active := map[string]bool{}
@@ -99,6 +99,26 @@ func (s *Server) withCommunicationTransaction(r *http.Request, extraUsers []stri
 		}
 		for _, id := range ids {
 			if !active[id] {
+				return invalid("Participants must be active company members.")
+			}
+		}
+		directory := []string{}
+		for _, m := range members {
+			directory = append(directory, m.UserID)
+		}
+		var users []User
+		if e := lockCommunicationRow(tx, "SHARE").Where("id IN ?", directory).Order("id").Find(&users).Error; e != nil {
+			return e
+		}
+		current := map[string]User{}
+		for _, user := range users {
+			current[user.ID] = user
+		}
+		if !validCurrentSession(session, current[u.ID]) {
+			return unauthenticated()
+		}
+		for _, id := range ids {
+			if current[id].ID == "" || current[id].Suspended {
 				return invalid("Participants must be active company members.")
 			}
 		}

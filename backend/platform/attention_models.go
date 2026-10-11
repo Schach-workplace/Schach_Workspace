@@ -4,6 +4,7 @@ import "time"
 
 // AttentionItem stores identifiers and attention outcomes, never source previews.
 type AttentionItem struct {
+	MembershipEpoch       int64 `gorm:"not null;default:1"`
 	GoalPreferenceVersion int64
 	GoalPeriodStart       *time.Time
 	GoalPeriodEnd         *time.Time

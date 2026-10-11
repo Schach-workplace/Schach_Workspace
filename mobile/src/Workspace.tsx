@@ -1,4 +1,9 @@
-import { clearAllBusinessAttempts } from "../../shared/business/attempts";
+import {
+  clearAllBusinessAttempts,
+  filterBusinessAttemptsForGraph,
+  sameBusinessActorBasis,
+  type BusinessActorBasis,
+} from "../../shared/business/attempts";
 import { router } from "expo-router";
 import { AuthorizedNotificationTarget } from "./notificationTarget";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -58,7 +63,14 @@ export interface Message {
   createdAt: string;
 }
 export interface Person {
-  managerId?: string;
+  membershipId: string;
+  email: string;
+  title: string;
+  capacityHours: number;
+  membershipVersion: number;
+  memberAccessEpoch: number;
+  companyPermissionEpoch: number;
+  managerId: string;
   id: string;
   name: string;
   role: string;
@@ -147,6 +159,7 @@ function useController() {
   const sessionAuthorized = useRef(false);
   // Content-free authorization fingerprint survives fetched-history background clearing.
   const confirmedBasis = useRef<string | null>(null);
+  const confirmedActor = useRef<BusinessActorBasis | null>(null);
   const currentScope = useRef({
     company,
     sessionId: session?.user.id,
@@ -167,6 +180,7 @@ function useController() {
     clearAllBusinessAttempts();
     clearCaptures();
     confirmedBasis.current = null;
+    confirmedActor.current = null;
     sessionAuthorized.current = false;
     setAuthorized(false);
     client.clearGeneration();
@@ -273,14 +287,23 @@ function useController() {
       bootstrap.me.role,
       bootstrap.me.departmentId,
       bootstrap.me.managerId,
+      bootstrap.me.memberAccessEpoch,
     ]);
     if (confirmedBasis.current && confirmedBasis.current !== nextBasis) {
       clearAllDrafts();
-      clearAllBusinessAttempts();
+      if (sameBusinessActorBasis(confirmedActor.current, bootstrap.me))
+        filterBusinessAttemptsForGraph(
+          client.endpoint,
+          company,
+          session.user.id,
+          bootstrap.me,
+        );
+      else clearAllBusinessAttempts();
       clearCaptures();
       setPolicyEpoch((p) => p + 1);
     }
     confirmedBasis.current = nextBasis;
+    confirmedActor.current = bootstrap.me;
     // Confirmed membership changes take effect before subsequent pages arrive.
     // A transport error before bootstrap confirmation preserves the last work.
     setWork(confirmedNativeWork(work, bootstrap));
@@ -562,10 +585,12 @@ export function Page({
   children,
   scroll = true,
   safeBottom = false,
+  preserveMounted = false,
 }: {
   children: ReactNode;
   scroll?: boolean;
   safeBottom?: boolean;
+  preserveMounted?: boolean;
 }) {
   const w = useWorkspace();
   return (
@@ -588,13 +613,21 @@ export function Page({
         ))}
       </ScrollView>
       {!!w.error && <Text accessibilityRole="alert">{w.error}</Text>}
-      {w.foreground ? (
+      {w.foreground || preserveMounted ? (
         scroll ? (
           <ScrollView key={w.company + ":" + w.session?.user.id}>
             {children}
           </ScrollView>
         ) : (
-          <View style={{ flex: 1 }} key={w.company + ":" + w.session?.user.id}>
+          <View
+            style={{ flex: 1, opacity: w.foreground ? 1 : 0 }}
+            pointerEvents={w.foreground ? "auto" : "none"}
+            accessibilityElementsHidden={!w.foreground}
+            importantForAccessibility={
+              w.foreground ? "auto" : "no-hide-descendants"
+            }
+            key={w.company + ":" + w.session?.user.id}
+          >
             {children}
           </View>
         )

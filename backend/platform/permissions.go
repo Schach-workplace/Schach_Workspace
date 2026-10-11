@@ -3,17 +3,19 @@ package platform
 import (
 	"database/sql"
 	"net/http"
+	"sort"
 	"time"
 
 	"gorm.io/gorm"
 )
 
 type access struct {
-	User    User
-	Company Company
-	Member  Membership
-	Members map[string]Membership
-	Users   map[string]User
+	User           User
+	Company        Company
+	Member         Membership
+	Members        map[string]Membership
+	Users          map[string]User
+	LockedSessions []SessionRecord
 }
 
 func leadership(role string) bool { return in(role, "founder", "ceo", "admin") }
@@ -146,7 +148,10 @@ func (a *access) canCreate(owner, department string) bool {
 	}
 	return false
 }
-func (a *access) activeUser(id string) bool { m, ok := a.Members[id]; return ok && m.Active }
+func (a *access) activeUser(id string) bool {
+	m, ok := a.Members[id]
+	return ok && m.Active && a.Users[id].ID != "" && !a.Users[id].Suspended
+}
 func scopedTask(db *gorm.DB, a *access, id string) (Task, error) {
 	var t Task
 	if e := db.Where("id = ? AND company_id = ?", id, a.Company.ID).First(&t).Error; e != nil {
@@ -175,48 +180,96 @@ func (s *Server) withAccessTransaction(r *http.Request, a *access, fn func(*gorm
 		current.Isolation = sql.LevelReadCommitted
 		opts = []*sql.TxOptions{&current}
 	}
+	return s.withCompanyAccessFence(r, a, nil, fn, opts...)
+}
+
+// withPeopleAccessTransaction declares the complete affected account set before
+// acquiring any session or User lock. Callers must not widen it in callbacks.
+func (s *Server) withPeopleAccessTransaction(r *http.Request, a *access, affected []string, fn func(*gorm.DB) error) error {
+	return s.withCompanyAccessFence(r, a, affected, fn)
+}
+func (s *Server) withCompanyAccessFence(r *http.Request, a *access, affected []string, fn func(*gorm.DB) error, opts ...*sql.TxOptions) error {
 	return s.db.WithContext(r.Context()).Transaction(func(tx *gorm.DB) error {
 		if err := lockCompany(tx, a.Company.ID); err != nil {
 			return err
 		}
-		rawToken, e := sessionToken(r)
+		raw, e := sessionToken(r)
 		if e != nil {
-			return &apiError{401, "unauthenticated", "Please sign in again.", nil}
+			return unauthenticated()
+		}
+		hash := hashToken(raw)
+		strength := "SHARE"
+		if affected != nil {
+			strength = "UPDATE"
+		}
+		var sessions []SessionRecord
+		if e := lockCommunicationRow(tx, strength).Where("token_hash = ? OR user_id IN ?", hash, affected).Order("token_hash").Find(&sessions).Error; e != nil {
+			return e
 		}
 		var session SessionRecord
-		if e := lockCommunicationRow(tx, "SHARE").Where("token_hash = ? AND user_id = ? AND expires_at > ?", hashToken(rawToken), a.User.ID, time.Now().UTC()).First(&session).Error; e != nil {
-			return &apiError{401, "unauthenticated", "Please sign in again.", nil}
+		for _, row := range sessions {
+			if row.TokenHash == hash {
+				session = row
+			}
 		}
+		a.LockedSessions = sessions
 		var members []Membership
-		if err := lockCommunicationRow(tx, "UPDATE").Where("company_id = ?", a.Company.ID).Order("user_id").Find(&members).Error; err != nil {
-			return err
+		if e := lockCommunicationRow(tx, "UPDATE").Where("company_id = ?", a.Company.ID).Order("user_id").Find(&members).Error; e != nil {
+			return e
 		}
-		a.Members = make(map[string]Membership, len(members))
+		a.Members = map[string]Membership{}
+		ids := map[string]bool{}
 		for _, m := range members {
 			a.Members[m.UserID] = m
+			ids[m.UserID] = true
+		}
+		update := map[string]bool{}
+		for _, id := range affected {
+			ids[id] = true
+			update[id] = true
+		}
+		ordered := make([]string, 0, len(ids))
+		for id := range ids {
+			ordered = append(ordered, id)
+		}
+		sort.Strings(ordered)
+		a.Users = map[string]User{}
+		for _, id := range ordered {
+			mode := "SHARE"
+			if update[id] {
+				mode = "UPDATE"
+			}
+			var u User
+			e := lockCommunicationRow(tx, mode).First(&u, "id=?", id).Error
+			if e == gorm.ErrRecordNotFound {
+				continue
+			}
+			if e != nil {
+				return e
+			}
+			a.Users[id] = u
+		}
+		a.User = a.Users[a.User.ID]
+		if !validCurrentSession(session, a.User) {
+			return unauthenticated()
 		}
 		current, exists := a.Members[a.User.ID]
 		if !exists || !current.Active {
 			return denied()
 		}
 		a.Member = current
-		if err := tx.First(&a.Company, "id = ?", a.Company.ID).Error; err != nil {
-			return err
-		}
-		// Publication audiences must use the directory under this transaction,
-		// including users provisioned after the initial HTTP access snapshot.
-		var users []User
-		ids := make([]string, 0, len(a.Members))
-		for id := range a.Members {
-			ids = append(ids, id)
-		}
-		if e := tx.Where("id IN ?", ids).Find(&users).Error; e != nil {
+		if e := tx.First(&a.Company, "id=?", a.Company.ID).Error; e != nil {
 			return e
 		}
-		a.Users = make(map[string]User, len(users))
-		for _, user := range users {
-			a.Users[user.ID] = user
+		if len(affected) > 0 {
+			if e := prelockPeopleRevocationSources(tx, a.Company.ID, affected); e != nil {
+				return e
+			}
 		}
 		return fn(tx)
 	}, opts...)
+}
+func unauthenticated() error { return &apiError{401, "unauthenticated", "Please sign in again.", nil} }
+func validCurrentSession(session SessionRecord, u User) bool {
+	return u.ID != "" && !u.Suspended && u.SessionEpoch > 0 && session.UserID == u.ID && session.SessionEpoch == u.SessionEpoch && session.ExpiresAt.After(time.Now().UTC())
 }

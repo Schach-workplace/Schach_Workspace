@@ -193,6 +193,9 @@ func (s *Server) withAuthorizedCallGrant(ctx context.Context, claims liveKitClai
 		if e := lockCommunicationRow(tx, "SHARE").First(&member, "company_id=? AND user_id=? AND active=?", cid, grant.UserID, true).Error; e != nil {
 			return missing()
 		}
+		if _, e := fenceSessionUser(tx, session, "SHARE"); e != nil {
+			return e
+		}
 		var conversation Conversation
 		if e := lockCommunicationRow(tx, "UPDATE").First(&conversation, "company_id=? AND id=?", cid, grant.ConversationID).Error; e != nil {
 			return missing()

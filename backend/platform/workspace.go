@@ -27,7 +27,7 @@ func (s *Server) readWorkspace(w http.ResponseWriter, r *http.Request, lean bool
 	if e != nil {
 		return e
 	}
-	d := WorkspaceData{ReadBasis: accessBasis(a), Company: a.Company, Me: person(a.User, a.Member), Departments: []Department{}, People: []Person{}, Projects: []Project{}, Tasks: []Task{}, Goals: []Goal{}, Activities: []Activity{}, Notifications: []Notification{}}
+	d := WorkspaceData{ReadBasis: accessBasis(a), Company: a.Company, Me: person(a.User, a.Member, a.Company.PermissionEpoch), Departments: []Department{}, People: []Person{}, Projects: []Project{}, Tasks: []Task{}, Goals: []Goal{}, Activities: []Activity{}, Notifications: []Notification{}}
 	db := s.db.WithContext(r.Context())
 	var tasks []Task
 	taskQuery := db.Where("company_id = ?", a.Company.ID)
@@ -128,7 +128,7 @@ func (s *Server) readWorkspace(w http.ResponseWriter, r *http.Request, lean bool
 	full := leadership(a.Member.Role) || a.Member.Role == "viewer"
 	for id, m := range a.Members {
 		if full || a.ownsScope(id) || userIDs[id] {
-			d.People = append(d.People, person(a.Users[id], m))
+			d.People = append(d.People, person(a.Users[id], m, a.Company.PermissionEpoch))
 			departmentIDs[m.DepartmentID] = true
 		}
 	}

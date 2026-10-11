@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useWorkspace } from '../store';
 import { ApiError, request } from './api';
-import { readDemoWorkspace } from './demo';
+import { readDemoWorkspace, readDemoPeopleWorkflow } from './demo';
 import {
   useBusinessAttempt,
   beginAttempt,
@@ -14,6 +14,10 @@ import {
   retireAttempt,
   clearAttemptScope,
   clearAttemptsForSource,
+  businessAttemptGeneration,
+  canonicalBusinessTarget,
+  sameBusinessActorBasis,
+  readAttempt,
 } from './businessAttempts';
 export * from '../../../shared/business/types';
 export async function executionRead<T>(
@@ -25,6 +29,11 @@ export async function executionRead<T>(
   signal?: AbortSignal,
 ): Promise<T> {
   if (mode === 'demo') {
+    if (path.startsWith('/people/'))
+      return (await readDemoPeopleWorkflow(company, user, path)) as T;
+    if (path === '/task-templates') return { templates: [], nextCursor: '' } as T;
+    if (path === '/projects')
+      return { projects: (await readDemoWorkspace(company, user)).projects, nextCursor: '' } as T;
     if (/^\/projects\/[^/]+$/.test(path)) {
       const w = await readDemoWorkspace(company, user);
       const p = w.projects.find((p) => p.id === path.split('/')[2]);
@@ -116,6 +125,7 @@ export function useExecutionRead<T>(path: string, enabled = true, body?: unknown
     enabled &&
     foreground &&
     !!store.data &&
+    !store.authorizing &&
     query.isFetchedAfterMount &&
     !query.isFetching &&
     !query.error;
@@ -205,12 +215,17 @@ export function useExecutionMutation(formId: string, sources: string[] = []) {
     onCommitted?: (result: T) => void,
   ): Promise<T> {
     if (pending.current) throw Error('This action is already being submitted.');
-    if (store.mode === 'demo' && path !== '/expenses')
+    if (store.authorizing || !store.data)
+      throw Error('Restore current company authority before submitting.');
+    if (store.mode === 'demo' && path !== '/expenses' && !path.startsWith('/people/'))
       throw Error('This execution tool is available on a connected company server.');
     pending.current = true;
     setBusy(true);
     setError('');
     const captured = owner;
+    const hardGeneration = businessAttemptGeneration();
+    const currentACK = () =>
+      current.current === captured && businessAttemptGeneration() === hardGeneration;
     let committedResult: T | undefined;
     try {
       const dependencies = [
@@ -219,40 +234,50 @@ export function useExecutionMutation(formId: string, sources: string[] = []) {
           ? ['/projects/' + payload.projectId]
           : []),
       ];
-      const attempt = beginAttempt(business.scope, payload, businessKey(), {
+      const existing = readAttempt<Record<string, unknown>>(business.scope);
+      if (existing?.actorBasis && !sameBusinessActorBasis(existing.actorBasis, store.data?.me))
+        throw Error('Restore current company authority before retrying.');
+      const target = existing?.target ?? {
         path,
         method,
+        ...(canonicalBusinessTarget(path, method) ? { canonical: true as const } : {}),
         ...(dependencies.length ? { sources: dependencies } : {}),
-      });
+      };
+      if (target.path !== path || target.method !== method)
+        throw Error('Retry the original submitted target.');
+      const attempt = beginAttempt(business.scope, payload, businessKey(), target, store.data?.me);
       const committed = (r: Record<string, unknown>) => {
-        committedResult = r as T;
+        if (!currentACK()) return;
         const matching = markAttemptCommitted(business.scope, attempt.retryKey, {
           ids: (r.ids as string[]) ?? (r.id ? [String(r.id)] : []),
         });
         if (matching) {
+          committedResult = r as T;
           retireAttempt(business.scope, attempt.retryKey);
           if (current.current === captured) onCommitted?.(r as T);
         }
       };
-      const result = path.endsWith('/preview')
-        ? await request<T>(`/companies/${encodeURIComponent(business.scope.companyId)}${path}`, {
-            method,
-            body: { ...attempt.payload, retryKey: attempt.retryKey },
-          }).then((r) => {
-            committed(r as Record<string, unknown>);
-            return r;
-          })
-        : await store.mutate(
-            path,
-            { ...attempt.payload, retryKey: attempt.retryKey },
-            method,
-            (r) => committed(r as unknown as Record<string, unknown>),
-          );
-      if (current.current !== captured) throw Error('Company changed. Open the current workspace.');
-      retireAttempt(business.scope, attempt.retryKey);
-      return result as T;
+      const result =
+        store.mode !== 'demo' && path.endsWith('/preview')
+          ? await request<T>(`/companies/${encodeURIComponent(business.scope.companyId)}${path}`, {
+              method,
+              body: { ...attempt.payload, retryKey: attempt.retryKey },
+            }).then((r) => {
+              committed(r as Record<string, unknown>);
+              return r;
+            })
+          : await store.mutate(
+              path,
+              { ...attempt.payload, retryKey: attempt.retryKey },
+              method,
+              (r) => committed(r as unknown as Record<string, unknown>),
+            );
+      if (committedResult === undefined) committed(result as Record<string, unknown>);
+      if (!currentACK() || committedResult === undefined)
+        throw Error('Access changed. Open the current workspace.');
+      return committedResult;
     } catch (e) {
-      if (committedResult !== undefined && current.current === captured) return committedResult;
+      if (committedResult !== undefined && currentACK()) return committedResult;
       if (
         e instanceof ApiError &&
         ([401, 403, 404].includes(e.status) || (e.status === 409 && e.code === 'access_changed'))

@@ -109,8 +109,8 @@ func TestRevocationWinsAfterCommit(t *testing.T) {
 		t.Fatal(st)
 	}
 	st, _, _ = req(t, s, "GET", "/api/companies/"+cid+"/conversations/"+id, nil, mc)
-	if st != 404 {
-		t.Fatalf("revoked %d", st)
+	if st != 401 {
+		t.Fatalf("revoked session %d", st)
 	}
 }
 
@@ -124,6 +124,11 @@ func TestCompanyReactivationDoesNotRestorePrivateHistory(t *testing.T) {
 		}
 	}
 	st, _, _ := req(t, s, "GET", "/api/companies/"+cid+"/conversations/"+id, nil, mc)
+	if st != 401 {
+		t.Fatalf("rejoin restored old account session: %d", st)
+	}
+	mc = login(t, s, "member@example.com")
+	st, _, _ = req(t, s, "GET", "/api/companies/"+cid+"/conversations/"+id, nil, mc)
 	if st != 404 {
 		t.Fatalf("private membership restored %d", st)
 	}

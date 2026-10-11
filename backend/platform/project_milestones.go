@@ -472,7 +472,11 @@ func (s *Server) saveMilestone(w http.ResponseWriter, r *http.Request) error {
 				}
 				next.Version++
 			}
-			if e := tx.Save(&next).Error; e != nil {
+			if create {
+				if e := tx.Create(&next).Error; e != nil {
+					return BusinessResult{}, e
+				}
+			} else if e := commitMilestoneRevision(tx, a, old, next); e != nil {
 				return BusinessResult{}, e
 			}
 			return BusinessResult{Kind: "milestone", IDs: []string{next.ID}, Versions: []int64{next.Version}}, nil
@@ -682,4 +686,15 @@ func clearMilestoneSubmission(m *ProjectMilestone) {
 	m.Assertions = []MilestoneAssertion{}
 	m.AcceptedAt = ""
 	m.AcceptedBy = ""
+}
+
+func commitMilestoneRevision(tx *gorm.DB, a *access, before, after ProjectMilestone) error {
+	res := tx.Model(&ProjectMilestone{}).Where("id=? AND company_id=? AND version=? AND state='draft'", before.ID, a.Company.ID, before.Version).Select("*").Updates(&after)
+	if res.Error != nil {
+		return res.Error
+	}
+	if res.RowsAffected != 1 {
+		return conflict()
+	}
+	return nil
 }

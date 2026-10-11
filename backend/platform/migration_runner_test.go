@@ -293,3 +293,84 @@ func TestMilestone6NumberedUpgradeFrom32(t *testing.T) {
 		t.Fatal("legacy done invented acceptance", accepted)
 	}
 }
+
+func TestPeoplePopulatedUpgradeFrom49(t *testing.T) {
+	if os.Getenv("TEST_DATABASE_URL") == "" {
+		t.Skip("owned PostgreSQL numbered upgrade")
+	}
+	s, db := testServer(t)
+	c := login(t, s, "founder@example.com")
+	cid := firstCompany(t, s, c)
+	uid := me(t, s, c)
+	taskID := createTask(t, s, c, cid, taskBody(uid))
+	var taskBefore Task
+	db.First(&taskBefore, "id=?", taskID)
+	var userBefore User
+	db.First(&userBefore, "id=?", uid)
+	files, e := filepath.Glob("../migrations/*.up.sql")
+	if e != nil {
+		t.Fatal(e)
+	}
+	sort.Slice(files, func(i, j int) bool { return migrationNumber(files[i]) > migrationNumber(files[j]) })
+	for _, file := range files {
+		if migrationNumber(file) > 49 {
+			raw, e := os.ReadFile(strings.Replace(file, ".up.sql", ".down.sql", 1))
+			if e != nil {
+				t.Fatal(e)
+			}
+			if e = db.Exec(string(raw)).Error; e != nil {
+				t.Fatal(e)
+			}
+		}
+	}
+	if e = db.Exec("CREATE TABLE schach_schema_migrations(version integer PRIMARY KEY,sha256 text NOT NULL,applied_at timestamptz NOT NULL DEFAULT now())").Error; e != nil {
+		t.Fatal(e)
+	}
+	for _, file := range files {
+		n := migrationNumber(file)
+		if n <= 49 {
+			raw, e := os.ReadFile(file)
+			if e != nil {
+				t.Fatal(e)
+			}
+			sum := sha256.Sum256(raw)
+			if e = db.Exec("INSERT INTO schach_schema_migrations(version,sha256) VALUES (?,?)", n, fmt.Sprintf("%x", sum)).Error; e != nil {
+				t.Fatal(e)
+			}
+		}
+	}
+	if e = migrations.Apply(t.Context(), db, 0); e != nil {
+		t.Fatal(e)
+	}
+	if e = migrations.Apply(t.Context(), db, 0); e != nil {
+		t.Fatal("idempotent upgrade", e)
+	}
+	var taskAfter Task
+	db.First(&taskAfter, "id=?", taskID)
+	if !reflect.DeepEqual(taskBefore, taskAfter) {
+		t.Fatal("populated task history changed")
+	}
+	var userAfter User
+	db.First(&userAfter, "id=?", uid)
+	if userAfter.PasswordHash != userBefore.PasswordHash || userAfter.SessionEpoch != 1 {
+		t.Fatal("populated account identity changed or epoch not backfilled")
+	}
+	var bad int64
+	db.Model(&Membership{}).Where("version<>1 OR access_epoch<>1").Count(&bad)
+	if bad != 0 {
+		t.Fatal("membership baseline not backfilled")
+	}
+	db.Model(&SessionRecord{}).Where("session_epoch<>1").Count(&bad)
+	if bad != 0 {
+		t.Fatal("sessions baseline not backfilled")
+	}
+	for _, table := range []string{"onboarding_presets", "people_previews", "onboarding_applications", "access_reviews", "access_review_decisions", "company_departures", "departure_transfers"} {
+		if !db.Migrator().HasTable(table) {
+			t.Fatal("missing People table", table)
+		}
+	}
+	status, _, _ := req(t, s, "GET", "/api/companies/"+cid+"/workspace", nil, c)
+	if status != 200 {
+		t.Fatalf("legitimate upgraded original session: %d", status)
+	}
+}

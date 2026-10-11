@@ -11,6 +11,10 @@ import {
   retireAttempt,
   clearAttemptScope,
   clearAttemptsForSource,
+  businessAttemptGeneration,
+  canonicalBusinessTarget,
+  sameBusinessActorBasis,
+  readAttempt,
 } from "./businessAttempts";
 import {
   readDraft,
@@ -234,15 +238,37 @@ export function useExecutionMutation(formId: string, sources: string[] = []) {
     setError("");
     const captured = scope;
     const generation = client.generation;
+    const hardGeneration = businessAttemptGeneration();
+    const currentACK = () =>
+      generation === client.generation &&
+      current.current === captured &&
+      businessAttemptGeneration() === hardGeneration;
     try {
       // Existing project PATCH uses the accepted positive-version CAS contract.
       const keyed = !(method === "PATCH" && /^\/projects\/[^/]+$/.test(path));
+      const existing = readAttempt<Record<string, unknown>>(business.scope);
+      if (
+        existing?.actorBasis &&
+        !sameBusinessActorBasis(existing.actorBasis, w.work.me)
+      )
+        throw Error("Restore current company authority before retrying.");
+      const target = existing?.target ?? {
+        path,
+        method,
+        ...(canonicalBusinessTarget(path, method)
+          ? { canonical: true as const }
+          : {}),
+        ...(sources.length ? { sources } : {}),
+      };
+      if (target.path !== path || target.method !== method)
+        throw Error("Retry the original submitted target.");
       const attempt = keyed
         ? beginAttempt(
             business.scope,
             business.attempt?.payload ?? payload,
             businessKey(),
-            { path, method, ...(sources.length ? { sources } : {}) },
+            target,
+            w.work.me,
           )
         : undefined;
       const result = await client.request<T>(
@@ -250,13 +276,18 @@ export function useExecutionMutation(formId: string, sources: string[] = []) {
         method,
         attempt ? { ...attempt.payload, retryKey: attempt.retryKey } : payload,
       );
-      if (generation !== client.generation || current.current !== captured)
-        throw Error("Company changed. Open the current workspace.");
+      if (!currentACK())
+        throw Error("Access changed. Open the current workspace.");
       const r = result as { id?: string; ids?: string[] };
       if (attempt) {
-        markAttemptCommitted(business.scope, attempt.retryKey, {
-          ids: r.ids ?? (r.id ? [r.id] : []),
-        });
+        if (
+          !markAttemptCommitted(business.scope, attempt.retryKey, {
+            ids: r.ids ?? (r.id ? [r.id] : []),
+          })
+        )
+          throw Error(
+            "This submission no longer belongs to the current workspace.",
+          );
         retireAttempt(business.scope, attempt.retryKey);
       }
       onCommitted?.(result);
@@ -276,6 +307,8 @@ export function useExecutionMutation(formId: string, sources: string[] = []) {
             setError("Saved. Refresh to inspect the current result.");
         }
       }
+      if (!currentACK())
+        throw Error("Access changed. Open the current workspace.");
       return result;
     } catch (e) {
       if (

@@ -56,7 +56,7 @@ func attentionSourceForReplay(tx *gorm.DB, a *access, item AttentionItem) (Atten
 }
 func projectAttentionSource(tx *gorm.DB, a *access, item AttentionItem, replay bool) (AttentionView, error) {
 	v := AttentionView{ID: item.ID, CompanyID: item.CompanyID, RecipientID: item.RecipientID, SourceKind: item.SourceKind, SourceID: item.SourceID, Kind: item.Kind, State: item.State, Version: item.Version, SnoozedUntil: item.SnoozedUntil, DueAt: item.DueAt, Actions: []string{}, RoutePeople: []Person{}, ReminderState: "pending"}
-	if item.CompanyID != a.Company.ID || item.RecipientID != a.User.ID || (!replay && item.State == "superseded") || a.User.Suspended {
+	if item.MembershipEpoch != a.Member.AccessEpoch || item.CompanyID != a.Company.ID || item.RecipientID != a.User.ID || (!replay && item.State == "superseded") || a.User.Suspended {
 		return v, missing()
 	}
 	switch item.SourceKind {
@@ -224,6 +224,7 @@ func checkAttentionRoute(tx *gorm.DB, actor *access, item AttentionItem, targetI
 	}
 	copy := item
 	copy.RecipientID = targetID
+	copy.MembershipEpoch = target.Member.AccessEpoch
 	if in(item.SourceKind, "record", "bookmark") {
 		scope, e := conversationAccess(tx, targetID, item.CompanyID, item.ConversationID)
 		if e != nil {

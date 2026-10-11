@@ -1,3 +1,4 @@
+import { frozenGoalDraft } from '../../../shared/goals/recovery';
 import { useState } from 'react';
 import { useWorkspace } from '../store';
 import { useExecutionInput } from '../data/executionInput';
@@ -16,7 +17,7 @@ export default function GoalMetadataForm({
   const w = useWorkspace();
   const data = w.data!;
   const form = '$goal-metadata:' + (item?.id ?? 'new');
-  const [draft, setDraft, , retire] = useExecutionInput(form, 'draft', () => ({
+  const [storedDraft, setDraft, , retire] = useExecutionInput(form, 'draft', () => ({
     version: item?.version ?? 1,
     name: item?.name ?? '',
     description: item?.description ?? '',
@@ -37,6 +38,10 @@ export default function GoalMetadataForm({
     withMeasurement: !item,
   }));
   const action = useGoalMutation(form, item?.id ? ['/goals/' + item.id] : []);
+  const draft = frozenGoalDraft(storedDraft, action.attempt, 'metadata', (instant) => ({
+    local: localDeadline(instant, data.company.timezone),
+    instant,
+  }));
   const latest = useGoalRead<GoalDetail>('/goals/' + (item?.id ?? ''), !!item && ready);
   const loadLatest = () => {
     if (!latest.ready || !latest.data?.canEdit) return;
@@ -95,7 +100,7 @@ export default function GoalMetadataForm({
       taskIds: draft.taskIds,
     };
     const at = candidates.length === 1 ? candidates[0] : instant;
-    if (needMeasurement && !at) {
+    if (!action.attempt && needMeasurement && !at) {
       setError('Choose a valid, explicit observation instant.');
       return;
     }

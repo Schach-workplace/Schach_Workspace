@@ -21,42 +21,51 @@ import (
 )
 
 type Options struct {
-	ReceiptOCRProvider       ReceiptOCRProvider
-	FinanceOCRFingerprint    string
-	LocalProviderBudget      LocalProviderBudget
-	FinanceIntakeStore       MediaStore
-	FinanceScanner           MediaScanner
-	FinanceIntakeTTL         time.Duration
-	FinanceActorQuotaBytes   int64
-	FinanceCompanyQuotaBytes int64
-	ReportArtifactStore      ReportArtifactStore
-	ReportArtifactTTL        time.Duration
-	MetricSink               func(RequestMetric)
-	MediaLimitBytes          int64
-	MediaUserQuotaBytes      int64
-	MediaCompanyQuotaBytes   int64
-	MediaRetentionDays       int
-	UnusedUploadHours        int
-	MessageRetentionDays     int
-	MFAEncryptionKey         []byte
-	PushSender               PushSender
-	LiveKitURL               string
-	LiveKitAPIKey            string
-	LiveKitAPISecret         string
-	MediaStore               MediaStore
-	MediaScanner             MediaScanner
-	AllowedOrigins           []string
-	SecureCookies            bool
-	SessionHours             int
+	CredentialRetryActiveKeyID       string
+	CredentialRetryKeys              map[string][]byte
+	CredentialRetryActorCompanyLimit int
+	CredentialRetryActorLimit        int
+	CredentialRetryMismatchLimit     int
+	CredentialRetryConcurrent        int
+	CredentialRetryWaiting           int
+	CredentialRetryQueueWait         time.Duration
+	ReceiptOCRProvider               ReceiptOCRProvider
+	FinanceOCRFingerprint            string
+	LocalProviderBudget              LocalProviderBudget
+	FinanceIntakeStore               MediaStore
+	FinanceScanner                   MediaScanner
+	FinanceIntakeTTL                 time.Duration
+	FinanceActorQuotaBytes           int64
+	FinanceCompanyQuotaBytes         int64
+	ReportArtifactStore              ReportArtifactStore
+	ReportArtifactTTL                time.Duration
+	MetricSink                       func(RequestMetric)
+	MediaLimitBytes                  int64
+	MediaUserQuotaBytes              int64
+	MediaCompanyQuotaBytes           int64
+	MediaRetentionDays               int
+	UnusedUploadHours                int
+	MessageRetentionDays             int
+	MFAEncryptionKey                 []byte
+	PushSender                       PushSender
+	LiveKitURL                       string
+	LiveKitAPIKey                    string
+	LiveKitAPISecret                 string
+	MediaStore                       MediaStore
+	MediaScanner                     MediaScanner
+	AllowedOrigins                   []string
+	SecureCookies                    bool
+	SessionHours                     int
 }
 type Server struct {
-	db              *gorm.DB
-	opts            Options
-	mux             *http.ServeMux
-	reportMu        sync.Mutex
-	reportSnapshots map[string]*reportSnapshot
-	throttleMu      sync.Mutex
-	throttles       map[string]loginAttempt
+	credentialAdmission *credentialAdmission
+	db                  *gorm.DB
+	opts                Options
+	mux                 *http.ServeMux
+	reportMu            sync.Mutex
+	reportSnapshots     map[string]*reportSnapshot
+	throttleMu          sync.Mutex
+	throttles           map[string]loginAttempt
 }
 type loginAttempt struct {
 	Count int
@@ -93,7 +102,10 @@ func newID(prefix string) string {
 }
 func nowString() string { return time.Now().UTC().Format(time.RFC3339Nano) }
 func Migrate(db *gorm.DB) error {
-	if err := db.AutoMigrate(&GoalReminderPreference{}, &GoalMeasurement{}, &GoalRevision{}, &GoalAudit{}, &FinanceReconciliationAttentionWork{}, &FinanceAssistanceHistory{}, &FinanceReconciliationAllocation{}, &FinanceReconciliationDecision{}, &FinanceStatementPreview{}, &FinanceStatementImport{}, &FinanceStatementRow{}, &FinanceStatementAudit{}, &FinanceDuplicateCandidate{}, &FinanceDuplicateDecision{}, &FinanceExtractionAcceptance{}, &ReceiptExtractionResult{}, &FinanceAssistanceIntake{}, &ReceiptEvidenceFingerprint{}, &FinanceAssistanceJob{}, &ReportScheduleFailure{}, &SavedReportDefinition{}, &SavedReportRevision{}, &ReportSchedule{}, &ReportExportJob{}, &ReportArtifact{}, &ReportDeliveryIntent{}, &HistoricalReportSnapshot{}, &HistoricalReportRow{}, &ReportSnapshotSource{}, &TaskFact{}, &TaskHistoryCoverage{}, &TaskHistoryGap{}, &TaskAcceptanceFact{}, &TaskTimeFact{}, &TaskScheduleProposal{}, &ProjectMilestone{}, &MilestoneAcceptance{}, &MilestoneEvent{}, &TaskTemplate{}, &TaskTemplateApplication{}, &BusinessMutationRetry{}, &Company{}, &User{}, &Membership{}, &Department{}, &Project{}, &Task{}, &Comment{}, &TimeEntry{}, &Attachment{}, &Goal{}, &Activity{}, &Notification{}, &SessionRecord{}, &AutomationRecord{}, &ExpenseCategory{}, &Budget{}, &Expense{}, &ExpenseReceipt{}, &FinanceEvent{}, &Conversation{}, &ConversationMember{}, &ConversationInterval{}, &Message{}, &MessageRevision{}, &CommunicationEvent{}, &CommunicationOutbox{}, &CommunicationInbox{}, &CommunicationAction{}, &CommunicationRetry{}, &CommunicationWorkSource{}, &CommunicationBookmark{}, &CommunicationReaction{}, &CommunicationMedia{}, &CommunicationDevice{}, &CommunicationPreference{}, &CommunicationCall{}, &CommunicationCallGrant{}, &CommunicationRecord{}, &CommunicationRecipient{}, &CommunicationRequest{}, &CommunicationRecordRevision{}, &CommunicationExportAudit{}, &CommunicationCallJob{}, &CommunicationExpenseLink{}, &CommunicationExpenseRetry{}, &CommunicationBlock{}, &CommunicationPin{}, &CommunicationBundle{}, &CommunicationBundleAction{}, &UserMFA{}, &MFARecovery{}, &CommunicationPush{}, &AttentionItem{}, &AttentionRetry{}, &AttentionPreference{}, &AttentionReminder{}, &AttentionDelivery{}); err != nil {
+	if err := db.AutoMigrate(&CompanyDeparture{}, &DepartureTransfer{}, &AccessReview{}, &AccessReviewDecision{}, &OnboardingPreset{}, &PeoplePreview{}, &OnboardingApplication{}, &GoalReminderPreference{}, &GoalMeasurement{}, &GoalRevision{}, &GoalAudit{}, &FinanceReconciliationAttentionWork{}, &FinanceAssistanceHistory{}, &FinanceReconciliationAllocation{}, &FinanceReconciliationDecision{}, &FinanceStatementPreview{}, &FinanceStatementImport{}, &FinanceStatementRow{}, &FinanceStatementAudit{}, &FinanceDuplicateCandidate{}, &FinanceDuplicateDecision{}, &FinanceExtractionAcceptance{}, &ReceiptExtractionResult{}, &FinanceAssistanceIntake{}, &ReceiptEvidenceFingerprint{}, &FinanceAssistanceJob{}, &ReportScheduleFailure{}, &SavedReportDefinition{}, &SavedReportRevision{}, &ReportSchedule{}, &ReportExportJob{}, &ReportArtifact{}, &ReportDeliveryIntent{}, &HistoricalReportSnapshot{}, &HistoricalReportRow{}, &ReportSnapshotSource{}, &TaskFact{}, &TaskHistoryCoverage{}, &TaskHistoryGap{}, &TaskAcceptanceFact{}, &TaskTimeFact{}, &TaskScheduleProposal{}, &ProjectMilestone{}, &MilestoneAcceptance{}, &MilestoneEvent{}, &TaskTemplate{}, &TaskTemplateApplication{}, &BusinessMutationRetry{}, &Company{}, &User{}, &Membership{}, &Department{}, &Project{}, &Task{}, &Comment{}, &TimeEntry{}, &Attachment{}, &Goal{}, &Activity{}, &Notification{}, &SessionRecord{}, &AutomationRecord{}, &ExpenseCategory{}, &Budget{}, &Expense{}, &ExpenseReceipt{}, &FinanceEvent{}, &Conversation{}, &ConversationMember{}, &ConversationInterval{}, &Message{}, &MessageRevision{}, &CommunicationEvent{}, &CommunicationAudience{}, &CommunicationOutbox{}, &CommunicationInbox{}, &CommunicationAction{}, &CommunicationRetry{}, &CommunicationWorkSource{}, &CommunicationBookmark{}, &CommunicationReaction{}, &CommunicationMedia{}, &CommunicationDevice{}, &CommunicationPreference{}, &CommunicationCall{}, &CommunicationCallGrant{}, &CommunicationRecord{}, &CommunicationRecipient{}, &CommunicationRequest{}, &CommunicationRecordRevision{}, &CommunicationExportAudit{}, &CommunicationCallJob{}, &CommunicationExpenseLink{}, &CommunicationExpenseRetry{}, &CommunicationBlock{}, &CommunicationPin{}, &CommunicationBundle{}, &CommunicationBundleAction{}, &UserMFA{}, &MFARecovery{}, &CommunicationPush{}, &AttentionItem{}, &AttentionRetry{}, &AttentionPreference{}, &AttentionReminder{}, &AttentionDelivery{}); err != nil {
+		return err
+	}
+	if err := migrateCommunicationAudience(db); err != nil {
 		return err
 	}
 	if err := migrateGoalMeasurements(db); err != nil {
@@ -110,6 +122,9 @@ func Migrate(db *gorm.DB) error {
 func New(db *gorm.DB, opts Options) (*Server, error) {
 	if db == nil {
 		return nil, errors.New("database is required")
+	}
+	if e := validateCredentialOptions(&opts); e != nil {
+		return nil, e
 	}
 	if opts.LocalProviderBudget == nil {
 		opts.LocalProviderBudget = processLocalProviderBudget
@@ -165,7 +180,7 @@ func New(db *gorm.DB, opts Options) (*Server, error) {
 			return nil, fmt.Errorf("invalid allowed origin %q; use scheme://host[:port]", origin)
 		}
 	}
-	s := &Server{db: db.Session(&gorm.Session{Logger: measuredLogger{}}), opts: opts, mux: http.NewServeMux(), throttles: map[string]loginAttempt{}}
+	s := &Server{credentialAdmission: newCredentialAdmission(opts), db: db.Session(&gorm.Session{Logger: measuredLogger{}}), opts: opts, mux: http.NewServeMux(), throttles: map[string]loginAttempt{}}
 	s.routes()
 	return s, nil
 }
@@ -210,6 +225,7 @@ func (s *Server) routes() {
 	s.savedReportRoutes()
 	s.historicalReportRoutes()
 	s.communicationRoutes()
+	s.peopleRoutes()
 	s.templateRoutes()
 	s.milestoneRoutes()
 	s.scheduleRoutes()
@@ -392,6 +408,6 @@ func in(v string, vals ...string) bool {
 	return false
 }
 func clean(s string, max int) bool { return len(strings.TrimSpace(s)) > 0 && len(s) <= max }
-func person(u User, m Membership) Person {
-	return Person{ID: u.ID, MembershipID: m.ID, Name: u.Name, Email: u.Email, Role: m.Role, DepartmentID: m.DepartmentID, ManagerID: m.ManagerID, Title: m.Title, CapacityHours: m.CapacityHours, Avatar: m.Avatar, Active: m.Active}
+func person(u User, m Membership, companyEpoch int64) Person {
+	return Person{CompanyPermissionEpoch: companyEpoch, MembershipVersion: m.Version, MemberAccessEpoch: m.AccessEpoch, ID: u.ID, MembershipID: m.ID, Name: u.Name, Email: u.Email, Role: m.Role, DepartmentID: m.DepartmentID, ManagerID: m.ManagerID, Title: m.Title, CapacityHours: m.CapacityHours, Avatar: m.Avatar, Active: m.Active}
 }

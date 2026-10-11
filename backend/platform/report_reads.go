@@ -158,7 +158,7 @@ func (s *Server) createReportSnapshot(r *http.Request) (*reportSnapshot, error) 
 		snap.Timezone = a.Company.Timezone
 		snap.People = map[string]Person{}
 		for id, m := range a.Members {
-			snap.People[id] = person(a.Users[id], m)
+			snap.People[id] = person(a.Users[id], m, a.Company.PermissionEpoch)
 		}
 		snap.Departments = map[string]string{}
 		snap.Projects = map[string]string{}

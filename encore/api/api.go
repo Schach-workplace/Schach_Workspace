@@ -106,6 +106,9 @@ func initService() (*Service, error) {
 		}
 	}
 	options := platform.Options{AllowedOrigins: cfg.AllowedOrigins, SecureCookies: cfg.SecureCookies, SessionHours: cfg.SessionHours}
+	if err := platform.ConfigurePeopleCredentialRetry(&options); err != nil {
+		return nil, err
+	}
 	if err := platform.ConfigureCommunication(&options); err != nil {
 		return nil, err
 	}
