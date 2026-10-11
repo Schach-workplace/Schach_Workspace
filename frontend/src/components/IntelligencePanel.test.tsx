@@ -839,3 +839,61 @@ it.each([
   if (change === 'foreground')
     Object.defineProperty(document, 'visibilityState', { configurable: true, value: 'visible' });
 });
+
+it('gates inspected private audience until current supported actions return after refresh', async () => {
+  const privateJob = {
+    ...job,
+    publication: {
+      allowed: true,
+      conversationId: 'conversation',
+      policyVersion: 2,
+      sources: [{ messageId: 'message', revision: 1 }],
+    },
+  };
+  let holdActions = false;
+  const actions: ((v: Response) => void)[] = [];
+  const prior = globalThis.fetch;
+  vi.stubGlobal(
+    'fetch',
+    vi.fn((input: RequestInfo, init?: RequestInit) => {
+      const path = String(input);
+      if (path.endsWith('/jobs/job')) return held ?? Promise.resolve(response(privateJob));
+      if (path.includes('/work-actions?'))
+        return holdActions
+          ? new Promise<Response>((r) => actions.push(r))
+          : Promise.resolve(response({ actions: [] }));
+      if (path.endsWith('/task-conversions/preview'))
+        return Promise.resolve(
+          response({
+            audienceUserIds: ['actor', 'reviewer'],
+            notice: 'Current private audience',
+            intelligenceReviewHash: 'review',
+          }),
+        );
+      return prior(input, init);
+    }),
+  );
+  mount();
+  await edit();
+  fireEvent.change(screen.getByLabelText('Source anchor'), { target: { value: 'message' } });
+  await screen.findByText('Primary instruction');
+  fireEvent.change(screen.getByLabelText('Instruction action'), { target: { value: 'primary' } });
+  fireEvent.click(screen.getByText('Preview content and audience'));
+  await screen.findByText('Current private audience');
+  fireEvent.click(screen.getByLabelText('I reviewed these fields and this audience.'));
+  holdActions = true;
+  held = new Promise((r) => {
+    release = r;
+  });
+  fireEvent.click(screen.getByText('Recheck current result'));
+  await waitFor(() => expect(screen.queryByText('Authorized source')).toBeNull());
+  await act(async () => release(response(privateJob)));
+  await waitFor(() => expect(actions.length).toBeGreaterThan(0));
+  expect(screen.queryByText('Current private audience')).toBeNull();
+  expect(screen.getByText('Preview content and audience')).toHaveProperty('disabled', true);
+  expect(screen.getByText('Confirm reviewed creation')).toHaveProperty('disabled', true);
+  holdActions = false;
+  await act(async () => actions.splice(0).forEach((r) => r(response({ actions: [] }))));
+  await screen.findByText('Current private audience');
+  expect(screen.getByText('Confirm reviewed creation')).toHaveProperty('disabled', false);
+});

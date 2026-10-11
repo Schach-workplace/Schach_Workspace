@@ -98,10 +98,16 @@ export default function IntelligenceDraftReview({
           .map((a) => ({ id: a.id, name: a.title })),
       ]
     : [];
+  const actionsCurrent =
+    !privateReview ||
+    kind !== "task" ||
+    (!!selectedAnchor &&
+      actions.ready &&
+      actionOptions.some((a) => a.id === authored.actionId));
   const sourceDenied = unknown ? !!proof.denied : denied;
   const canConfirm = unknown
     ? proof.ready && !!proof.data?.current
-    : authorized && !denied;
+    : authorized && !denied && actionsCurrent;
   const retryProof = useEffectEvent(() => {
     void proof.retry();
   });
@@ -121,6 +127,9 @@ export default function IntelligenceDraftReview({
   const [ack, setAck] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState<{ id: string; outcome?: string }>();
+  // Workspace record/attention/execution epochs trigger fresh reads, including
+  // ordinary successful polls. Current proof/semantic binding below, not those
+  // counters, decides whether the inspected human review is still the same.
   const scope = JSON.stringify([
     client.endpoint,
     client.generation,
@@ -128,9 +137,6 @@ export default function IntelligenceDraftReview({
     w.session?.user.id,
     w.work?.readBasis,
     w.policyEpoch,
-    w.recordEpoch,
-    w.attentionEpoch,
-    w.executionEpoch,
     w.foreground,
   ]);
   const current = useRef(scope);
@@ -390,10 +396,12 @@ export default function IntelligenceDraftReview({
           )}
           <Action
             title="Preview content and audience"
-            disabled={!job || mutation.busy || !!frozen.attempt}
+            disabled={
+              !job || !actionsCurrent || mutation.busy || !!frozen.attempt
+            }
             onPress={() => void review()}
           />
-          {job && preview && (
+          {job && actionsCurrent && preview && (
             <>
               <Text>{preview.notice}</Text>
               {preview.outcome === "existing" && (

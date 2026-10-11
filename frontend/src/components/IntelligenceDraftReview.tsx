@@ -76,8 +76,14 @@ export default function IntelligenceDraftReview({
           .map((a) => ({ id: a.id, name: a.title })),
       ]
     : [];
+  const actionsCurrent =
+    !privateReview ||
+    kind !== 'task' ||
+    (!!selectedAnchor && actions.ready && actionOptions.some((a) => a.id === authored.actionId));
   const sourceDenied = unknown ? !!proof.denied : denied;
-  const canConfirm = unknown ? proof.ready && !!proof.data?.current : authorized && !denied;
+  const canConfirm = unknown
+    ? proof.ready && !!proof.data?.current
+    : authorized && !denied && actionsCurrent;
   useEffect(() => {
     if (!unknown) return;
     const timer = setInterval(() => void proof.retry(), 5000);
@@ -388,12 +394,12 @@ export default function IntelligenceDraftReview({
           )}
           <button
             className="button"
-            disabled={pending || mutation.busy || !!frozen.attempt}
+            disabled={pending || !actionsCurrent || mutation.busy || !!frozen.attempt}
             onClick={() => void review()}
           >
             Preview content and audience
           </button>
-          {job && preview && (
+          {job && actionsCurrent && preview && (
             <>
               <p>{preview.notice}</p>
               {preview.outcome === 'existing' && (
