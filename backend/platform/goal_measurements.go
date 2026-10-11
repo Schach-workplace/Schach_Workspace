@@ -1,6 +1,7 @@
 package platform
 
 import (
+	"bytes"
 	"database/sql"
 	"encoding/json"
 	"gorm.io/gorm"
@@ -45,6 +46,10 @@ func measureAuthority(tx *gorm.DB, a *access, g Goal) error {
 	return nil
 }
 func filteredGoal(tx *gorm.DB, a *access, g Goal) Goal {
+	if g.MeasurementCoverageFrom != nil {
+		at := g.MeasurementCoverageFrom.UTC()
+		g.MeasurementCoverageFrom = &at
+	}
 	ids := []string{}
 	for _, id := range g.TaskIDs {
 		if _, e := scopedTask(tx, a, id); e == nil {
@@ -135,6 +140,9 @@ func appendGoalMeasurement(tx *gorm.DB, a *access, g *Goal, i GoalMeasurementInp
 	if e := measureAuthority(tx, a, *g); e != nil {
 		return m, e
 	}
+	if e := validateGoalMetadata(tx, a, *g, false); e != nil {
+		return m, e
+	}
 	if g.Version != i.ExpectedVersion {
 		return m, conflict()
 	}
@@ -208,10 +216,18 @@ func (s *Server) goalMeasurement(w http.ResponseWriter, r *http.Request) error {
 	if e != nil {
 		return e
 	}
-	var input GoalMeasurementInput
-	if e = decode(w, r, &input); e != nil {
+	var body struct {
+		GoalMeasurementInput
+		ObservedValue *float64 `json:"value"`
+	}
+	if e = decode(w, r, &body); e != nil {
 		return e
 	}
+	if body.ObservedValue == nil {
+		return invalid("Supply an explicit observed value.")
+	}
+	input := body.GoalMeasurementInput
+	input.Value = *body.ObservedValue
 	if e = normalizeGoalMeasurement(&input); e != nil {
 		return e
 	}
@@ -299,7 +315,7 @@ func (s *Server) saveGoal(w http.ResponseWriter, r *http.Request) error {
 	var measurement *GoalMeasurementInput
 	if _, ok := f["current"]; ok {
 		m := GoalMeasurementInput{ExpectedVersion: version, RetryKey: key}
-		if json.Unmarshal(f["current"], &m.Value) != nil {
+		if string(f["current"]) == "null" || json.Unmarshal(f["current"], &m.Value) != nil {
 			return invalid("Invalid current value.")
 		}
 		json.Unmarshal(f["effectiveAt"], &m.EffectiveAt)
@@ -321,8 +337,14 @@ func (s *Server) saveGoal(w http.ResponseWriter, r *http.Request) error {
 		if !ok {
 			return invalid("Provide an initial measured observation and reason.")
 		}
-		if json.Unmarshal(raw, &m) != nil {
+		decoder := json.NewDecoder(bytes.NewReader(raw))
+		decoder.DisallowUnknownFields()
+		if decoder.Decode(&m) != nil {
 			return invalid("Invalid initial observation.")
+		}
+		var supplied map[string]json.RawMessage
+		if json.Unmarshal(raw, &supplied) != nil || len(supplied["value"]) == 0 || string(supplied["value"]) == "null" {
+			return invalid("Supply an explicit initial value.")
 		}
 		if e = normalizeGoalMeasurement(&m); e != nil {
 			return e
@@ -534,6 +556,8 @@ func (s *Server) goalDetail(w http.ResponseWriter, r *http.Request) error {
 	return respond(w, 200, out)
 }
 func goalMeasurementView(tx *gorm.DB, a *access, m GoalMeasurement) map[string]any {
+	m.EffectiveAt = m.EffectiveAt.UTC()
+	m.CreatedAt = m.CreatedAt.UTC()
 	b, _ := json.Marshal(m)
 	out := map[string]any{}
 	json.Unmarshal(b, &out)
@@ -590,6 +614,15 @@ func (s *Server) goalHistory(w http.ResponseWriter, r *http.Request) error {
 		if more {
 			ms = ms[:limit]
 			cursor = encodeReadCursor(readCursor{Basis: basis, ID: ms[len(ms)-1].ID})
+		}
+		inputs := []GoalEvidenceInput{}
+		for _, m := range ms {
+			for _, binding := range m.Evidence {
+				inputs = append(inputs, binding.GoalEvidenceInput)
+			}
+		}
+		if e := lockGoalEvidenceSources(tx, a, inputs); e != nil {
+			return e
 		}
 		for _, m := range ms {
 			rows = append(rows, goalMeasurementView(tx, a, m))

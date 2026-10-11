@@ -108,7 +108,16 @@ func planningWarnings(v PlanningView) []PlanningWarning {
 		}
 		return a.Drill.PersonID < b.Drill.PersonID
 	})
-	return out
+	unique := out[:0]
+	seen := map[string]bool{}
+	for _, w := range out {
+		key := w.Kind + ":" + w.Week + ":" + w.TaskID + ":" + w.Drill.PersonID
+		if !seen[key] {
+			seen[key] = true
+			unique = append(unique, w)
+		}
+	}
+	return unique
 }
 func (s *Server) planningWarnings(w http.ResponseWriter, r *http.Request) error {
 	a, e := s.access(r)

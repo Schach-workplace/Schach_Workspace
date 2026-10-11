@@ -165,6 +165,16 @@ func scopedTask(db *gorm.DB, a *access, id string) (Task, error) {
 // This protects reporting/dependency graphs across edits to different rows as well
 // as preventing stale role snapshots from authorizing a later write.
 func (s *Server) withAccessTransaction(r *http.Request, a *access, fn func(*gorm.DB) error, opts ...*sql.TxOptions) error {
+	// These transactions hold Company, session, all company Membership UPDATE
+	// locks and (for report/goal reads) current User locks before source reads.
+	// RR takes its snapshot BEFORE a lock wait, and can therefore reuse revoked
+	// task/private access after the writer commits. RC starts post-fence reads at
+	// the committed state; the writer fences keep the graph consistent thereafter.
+	if s.db.Dialector.Name() == "postgres" && len(opts) > 0 && opts[0] != nil && opts[0].Isolation == sql.LevelRepeatableRead {
+		current := *opts[0]
+		current.Isolation = sql.LevelReadCommitted
+		opts = []*sql.TxOptions{&current}
+	}
 	return s.db.WithContext(r.Context()).Transaction(func(tx *gorm.DB) error {
 		if err := lockCompany(tx, a.Company.ID); err != nil {
 			return err

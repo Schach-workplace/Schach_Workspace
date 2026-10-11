@@ -31,8 +31,8 @@ func lockGoalEvidenceSources(tx *gorm.DB, a *access, input []GoalEvidenceInput) 
 	sort.Strings(ids)
 	for _, id := range ids {
 		var c Conversation
-		if e := lockCommunicationRow(tx, "UPDATE").First(&c, "id=? AND company_id=?", id, a.Company.ID).Error; e != nil {
-			return missing()
+		if e := lockCommunicationRow(tx, "UPDATE").Where("id=? AND company_id=?", id, a.Company.ID).Find(&c).Error; e != nil {
+			return e
 		}
 	}
 	return nil
@@ -247,6 +247,11 @@ func (s *Server) goalEvidenceOptions(w http.ResponseWriter, r *http.Request) err
 		}
 		if e = measureAuthority(tx, a, g); e != nil {
 			return e
+		}
+		if kind == "message" {
+			if e := lockGoalEvidenceSources(tx, a, []GoalEvidenceInput{{Kind: kind, ParentID: r.URL.Query().Get("parentId")}}); e != nil {
+				return e
+			}
 		}
 		basis := payloadHash([]any{a.User.ID, a.Company.ID, g.ID, accessBasis(a), kind, r.URL.Query().Get("parentId")})
 		c := readCursor{}

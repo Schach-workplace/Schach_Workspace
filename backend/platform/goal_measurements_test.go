@@ -222,3 +222,26 @@ func TestGoalCanonicalRace(t *testing.T) {
 		t.Fatal(n)
 	}
 }
+func TestGoalRequiresExplicitValue(t *testing.T) {
+	s, _ := testServer(t)
+	c := login(t, s, "founder@example.com")
+	cid := firstCompany(t, s, c)
+	id := createMeasuredGoal(t, s, c, cid, me(t, s, c))
+	for _, value := range []any{nil, "missing"} {
+		body := map[string]any{"retryKey": "absent-value", "expectedVersion": 1, "effectiveAt": "2026-10-02T00:00:00Z", "reason": "Must supply observed value"}
+		if value == nil {
+			body["value"] = nil
+		}
+		st, b, _ := req(t, s, "POST", "/api/companies/"+cid+"/goals/"+id+"/measurements", body, c)
+		if st != 422 {
+			t.Fatal(st, b)
+		}
+	}
+}
+func TestGoalTimestampProjectionUTC(t *testing.T) {
+	at, _ := time.Parse(time.RFC3339Nano, "2026-10-02T05:30:00.654321+05:30")
+	view := goalMeasurementView(nil, &access{Users: map[string]User{}, Members: map[string]Membership{}}, GoalMeasurement{EffectiveAt: at, CreatedAt: at, Evidence: []GoalEvidenceBinding{}})
+	if view["effectiveAt"] != "2026-10-02T00:00:00.654321Z" || view["createdAt"] != "2026-10-02T00:00:00.654321Z" {
+		t.Fatal(view)
+	}
+}

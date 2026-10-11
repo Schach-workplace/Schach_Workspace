@@ -59,6 +59,17 @@ type SchedulePreviewInput struct {
 }
 
 func scheduleSources(tx *gorm.DB, a *access, p TaskScheduleProposal) error {
+	if len(p.Context.Sources) > 1000 {
+		return invalid("Select at most 1000 inspected sources.")
+	}
+	seen := map[string]bool{}
+	for _, source := range p.Context.Sources {
+		if source.ID == "" || source.Version <= 0 || seen[source.ID] {
+			return invalid("Choose unique positive inspected source versions.")
+		}
+		seen[source.ID] = true
+	}
+
 	if p.CompanyID != a.Company.ID || p.ActorID != a.User.ID {
 		return missing()
 	}

@@ -304,7 +304,7 @@ func (s *Server) captureHistoricalReport(ctx context.Context, a *access, input H
 	var snap HistoricalReportSnapshot
 	opts := &sql.TxOptions{}
 	if s.db.Dialector.Name() == "postgres" {
-		opts.Isolation = sql.LevelRepeatableRead
+		opts.Isolation = sql.LevelReadCommitted
 	}
 	e := s.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
 		if e := lockCompany(tx, a.Company.ID); e != nil {
@@ -506,7 +506,7 @@ func (s *Server) compareHistoricalSnapshots(w http.ResponseWriter, r *http.Reque
 func (s *Server) reportCaptureOptions() *sql.TxOptions {
 	opts := &sql.TxOptions{}
 	if s.db.Dialector.Name() == "postgres" {
-		opts.Isolation = sql.LevelRepeatableRead
+		opts.Isolation = sql.LevelReadCommitted
 	}
 	return opts
 }
