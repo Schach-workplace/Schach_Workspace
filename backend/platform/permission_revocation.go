@@ -42,6 +42,9 @@ func revokePrincipalSessionsLocked(tx *gorm.DB, uid string, expectedEpoch int64,
 			return unauthenticated()
 		}
 	}
+	if e := invalidateIntelligenceOwner(tx, "", uid); e != nil {
+		return e
+	}
 	if e := revokeSessionCapabilitiesLocked(tx, uid, hashes, scope); e != nil {
 		return e
 	}
@@ -140,6 +143,9 @@ func invalidatePeopleOutputs(tx *gorm.DB, cid string, before, after map[string]M
 		return e
 	}
 	for _, uid := range c.ScopeChangedUsers {
+		if e := invalidateIntelligenceOwner(tx, cid, uid); e != nil {
+			return e
+		}
 		if e := tx.Model(&CommunicationInbox{}).Where("company_id=? AND user_id=?", cid, uid).Update("read", true).Error; e != nil {
 			return e
 		}

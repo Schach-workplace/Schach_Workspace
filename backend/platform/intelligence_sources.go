@@ -522,6 +522,40 @@ func intelligenceReportRoots(tx *gorm.DB, a *access, id string) ([]IntelligenceR
 	return out, nil
 }
 func (s *Server) authorizeIntelligenceSources(tx *gorm.DB, a *access, m SourceManifest, mode SourceCheckMode) error {
+	ids := map[string]bool{}
+	for _, old := range m.Sources {
+		if old.Request.ConversationID != "" {
+			ids[old.Request.ConversationID] = true
+		}
+		for _, root := range old.Roots {
+			if root.Evidence != nil && root.Evidence.Kind == "message" {
+				ids[root.Evidence.ParentID] = true
+			}
+		}
+		if old.Request.Kind == "transcript" {
+			var sources []IntelligenceSource
+			if e := tx.Where("job_id=? AND company_id=?", old.Request.ID, a.Company.ID).Find(&sources).Error; e != nil {
+				return e
+			}
+			for _, source := range sources {
+				if source.Binding.Request.ConversationID != "" {
+					ids[source.Binding.Request.ConversationID] = true
+				}
+			}
+		}
+	}
+	ordered := []string{}
+	for id := range ids {
+		ordered = append(ordered, id)
+	}
+	sort.Strings(ordered)
+	for _, id := range ordered {
+		var c Conversation
+		if e := lockCommunicationRow(tx, "UPDATE").First(&c, "id=? AND company_id=?", id, a.Company.ID).Error; e != nil {
+			return missing()
+		}
+	}
+
 	for _, old := range m.Sources {
 		if old.CompanyID != a.Company.ID {
 			return missing()

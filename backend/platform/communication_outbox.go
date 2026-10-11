@@ -44,6 +44,11 @@ type CommunicationInbox struct {
 }
 
 func appendCommunicationEvent(tx *gorm.DB, a *conversationScope, kind, mid string, messageSequence int64) error {
+	if in(kind, "message_edited", "message_removed", "content_expired", "record_updated", "record_response", "membership_changed", "policy_changed") {
+		if e := invalidateIntelligenceConversation(tx, a.CompanyID, a.Conversation.ID, mid, in(kind, "message_removed", "content_expired", "membership_changed", "policy_changed")); e != nil {
+			return e
+		}
+	}
 	var c Conversation
 	if e := tx.Where("company_id = ? AND id = ?", a.CompanyID, a.Conversation.ID).First(&c).Error; e != nil {
 		return e

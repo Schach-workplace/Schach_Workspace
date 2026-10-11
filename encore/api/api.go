@@ -116,6 +116,7 @@ func initService() (*Service, error) {
 	if meta.Environment.Cloud == encore.CloudLocal {
 		reportRoot = ".encore/report-artifacts"
 	}
+	_ = platform.ConfigureIntelligence(&options)
 	if err := platform.ConfigureFinanceAssistance(&options); err != nil {
 		return nil, err
 	}

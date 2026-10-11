@@ -154,6 +154,7 @@ func run() error {
 	if !production {
 		reportRoot = filepath.Join(filepath.Dir(*localDB), "report-artifacts")
 	}
+	_ = platform.ConfigureIntelligence(&options)
 	if err := platform.ConfigureFinanceAssistance(&options); err != nil {
 		return err
 	}

@@ -255,10 +255,11 @@ func (s *Server) StartBackgroundWorkers(parent context.Context) *WorkerLifecycle
 	ctx, cancel := context.WithCancel(parent)
 	lifecycle := &WorkerLifecycle{cancel: cancel, done: make(chan struct{})}
 	var workers sync.WaitGroup
-	workers.Add(3)
+	workers.Add(4)
 	go func() { defer workers.Done(); s.RunCommunicationWorker(ctx) }()
 	go func() { defer workers.Done(); s.RunReportWorker(ctx) }()
 	go func() { defer workers.Done(); s.RunFinanceAssistanceWorker(ctx) }()
+	go func() { defer workers.Done(); s.RunIntelligenceWorker(ctx) }()
 	go func() { workers.Wait(); close(lifecycle.done) }()
 	return lifecycle
 }
