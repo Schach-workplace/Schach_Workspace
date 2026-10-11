@@ -119,7 +119,7 @@ All45 unordered pairs are checked. “Ordered” means later slice consumes the 
 
 ## Review disposition
 
-Implementation preflight retains all10 slices,49 acceptance steps,17 shared ownership/interface groups and all45 slice pairs. Producer placeholders are resolved by the reviewed source binding and concrete contracts in the implementation plan. Provider preparation does not establish current application acceptance; each execution result is separately recorded with current source provenance.
+Implementation preflight retains all10 slices,48 actual action-checkbox steps (the former 49 count included introductory syntax),17 shared ownership/interface groups and all45 slice pairs. Producer placeholders are resolved by the reviewed source binding and concrete contracts in the implementation plan. Provider preparation does not establish current application acceptance; each execution result is separately recorded with current source provenance.
 
 
 Current resume: reviewed backend8f24, clientf2, restored M10 source/runtime commits598080e/3b76a96/af39129, and mirroredSQL57. Historical next57/pendingM9 descriptions are superseded by the reviewed round5 contracts. Provider provisioning evidence remains preparation only; current M10 application/runtime evidence is separately source-bound in task-10-report.md. Both bounded WIP stashes remain retained.
