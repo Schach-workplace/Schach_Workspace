@@ -10,7 +10,7 @@ export default function IntelligenceResult({
   onOpenJob,
 }: {
   job: IntelligenceJob;
-  onReview: (index: number) => void;
+  onReview: (index: number, kind: 'task' | 'expense' | 'intake') => void;
   onTranscript: () => void;
   onOpenJob: (id: string) => void;
 }) {
@@ -138,7 +138,7 @@ export default function IntelligenceResult({
               disabled={
                 !job.publication?.allowed || (c.kind !== 'task' && !job.publication.conversationId)
               }
-              onClick={() => onReview(i)}
+              onClick={() => onReview(i, c.kind)}
             >
               Review {c.kind} draft
             </button>

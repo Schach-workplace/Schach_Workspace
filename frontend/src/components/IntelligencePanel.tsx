@@ -36,11 +36,10 @@ export default function IntelligencePanel({
     'job:' + initialJob,
     initialJob,
   );
-  const [draft, setDraft] = useExecutionInput<number | null>(
-    '$intelligence-panel',
-    'draft:' + initialJob,
-    null,
-  );
+  const [draft, setDraft] = useExecutionInput<{
+    index: number;
+    kind: 'task' | 'expense' | 'intake';
+  } | null>('$intelligence-panel', 'draft:' + initialJob, null);
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
   const [transcript, setTranscript] = useState<IntelligenceChoice>();
@@ -250,7 +249,7 @@ export default function IntelligencePanel({
             {result?.state === 'ready' && result.result && (
               <IntelligenceResult
                 job={result}
-                onReview={setDraft}
+                onReview={(index, kind) => setDraft({ index, kind })}
                 onOpenJob={(id) => {
                   setDraft(null);
                   setJobId(id);
@@ -271,7 +270,8 @@ export default function IntelligencePanel({
           {draft !== null && (
             <IntelligenceDraftReview
               jobId={jobId}
-              index={draft}
+              index={draft.index}
+              kind={draft.kind}
               job={result?.state === 'ready' ? result : undefined}
               current={job.ready}
               denied={!!job.denied || result?.state === 'invalidated'}

@@ -13,12 +13,14 @@ import {
 export default function IntelligenceDraftReview({
   jobId,
   index,
+  kind = 'task',
   job,
   denied,
   current: authorized,
 }: {
   jobId: string;
   index: number;
+  kind?: 'task' | 'expense' | 'intake';
   job?: IntelligenceJob;
   denied: boolean;
   current: boolean;
@@ -95,7 +97,13 @@ export default function IntelligenceDraftReview({
   async function review() {
     if (!job || !candidate) return;
     try {
-      const plan = intelligenceReviewRequest(job, candidate, resolved);
+      const plan = intelligenceReviewRequest(
+        job,
+        candidate,
+        resolved,
+        '',
+        w.data?.company?.currency,
+      );
       const body = plan.previewPath.endsWith('/task-preview')
         ? plan.previewPayload
         : { ...plan.previewPayload, retryKey: 'intelligence-review' };
@@ -131,6 +139,7 @@ export default function IntelligenceDraftReview({
         candidate,
         resolved,
         preview.intelligenceReviewHash,
+        w.data?.company?.currency,
       );
       await mutation.execute<{ id: string }>(plan.path, plan.payload, 'POST', (r) =>
         setSuccess(r.id),
@@ -211,7 +220,7 @@ export default function IntelligenceDraftReview({
                 ))}
             </select>
           </label>
-          {candidate?.kind === 'expense' && (
+          {kind === 'expense' && (
             <>
               <label>
                 Category

@@ -30,6 +30,7 @@ export function intelligenceReviewRequest(
   candidate: IntelligenceCandidate,
   authored: IntelligenceAuthored,
   reviewHash = "",
+  companyCurrency = "",
 ) {
   const publication = job.publication;
   if (!publication?.allowed || !job.resultHash || !job.sourceSetHash)
@@ -121,6 +122,11 @@ export function intelligenceReviewRequest(
     throw Error("Amount exceeds the supported range.");
   if (!authored.categoryId || !authored.expenseDate || !authored.currency)
     throw Error("Choose an expense category, date and currency.");
+  if (
+    !companyCurrency ||
+    authored.currency.trim().toUpperCase() !== companyCurrency
+  )
+    throw Error("Use the current company currency for this expense.");
   const payload = {
     ...conversion,
     expense: {
@@ -131,7 +137,6 @@ export function intelligenceReviewRequest(
       vendor: authored.vendor,
       expenseDate: authored.expenseDate,
       amountMinor: Number(minor),
-      currency: authored.currency,
       projectId: "",
       taskId: "",
     },

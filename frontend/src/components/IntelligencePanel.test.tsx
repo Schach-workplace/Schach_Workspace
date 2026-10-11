@@ -3,6 +3,10 @@ import { render, screen, fireEvent, cleanup, waitFor } from '@testing-library/re
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { beforeEach, afterEach, it, expect, vi } from 'vitest';
 import IntelligencePanel from './IntelligencePanel';
+import {
+  intelligenceReviewRequest,
+  emptyIntelligenceAuthored,
+} from '../../../shared/intelligence/publication';
 import { clearAllDrafts } from '../communication/drafts';
 import { clearAllBusinessAttempts } from '../../../shared/business/attempts';
 const state = vi.hoisted(() => ({ mutate: vi.fn(), company: 'co' }));
@@ -195,4 +199,58 @@ it('recovers the selected authored review and frozen attempt after remount with 
   fireEvent.click(retry);
   await screen.findByText('Created work successfully.');
   expect(state.mutate.mock.calls[1][1]).toEqual(original);
+});
+
+it('preserves expense fields and focused authored amount during current-source reauthorization', async () => {
+  const expenseJob = {
+    ...job,
+    publication: {
+      allowed: true,
+      conversationId: 'conversation',
+      sources: [{ messageId: 'message', revision: 1 }],
+      policyVersion: 1,
+    },
+    result: { ...job.result, candidates: [{ ...job.result.candidates[0], kind: 'expense' }] },
+  };
+  held = Promise.resolve(response(expenseJob));
+  mount();
+  await screen.findByText('Generated seed');
+  fireEvent.click(screen.getByText('Review expense draft'));
+  const amount = screen.getByLabelText('amount');
+  fireEvent.change(amount, { target: { value: '1300.50' } });
+  amount.focus();
+  held = new Promise((r) => (release = r));
+  fireEvent.click(screen.getByText('Recheck current result'));
+  await waitFor(() => expect(screen.queryByText('Selected source suggestion')).toBeNull());
+  expect(screen.getByLabelText('amount')).toBe(amount);
+  expect(amount).toHaveProperty('value', '1300.50');
+  expect(document.activeElement).toBe(amount);
+  expect(screen.getByText('Confirm reviewed creation')).toHaveProperty('disabled', true);
+  release(response(expenseJob));
+});
+it('builds company-currency expense input accepted by the existing field contract', () => {
+  const expenseJob: any = {
+    ...job,
+    publication: {
+      allowed: true,
+      conversationId: 'conversation',
+      policyVersion: 1,
+      sources: [{ messageId: 'message', revision: 1 }],
+    },
+  };
+  const candidate: any = { ...job.result.candidates[0], kind: 'expense' };
+  const authored = {
+    ...emptyIntelligenceAuthored,
+    title: 'Human review',
+    amount: '1300.50',
+    currency: 'INR',
+    categoryId: 'category',
+    expenseDate: '2026-10-11',
+  };
+  const plan = intelligenceReviewRequest(expenseJob, candidate, authored, '', 'INR');
+  expect(plan.payload.expense).toMatchObject({ amountMinor: 130050 });
+  expect(plan.payload.expense).not.toHaveProperty('currency');
+  expect(() =>
+    intelligenceReviewRequest(expenseJob, candidate, { ...authored, currency: 'USD' }, '', 'INR'),
+  ).toThrow('company currency');
 });

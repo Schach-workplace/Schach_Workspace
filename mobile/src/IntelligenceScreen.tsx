@@ -45,11 +45,10 @@ export default function IntelligenceScreen({
     "job:" + initialJob,
     initialJob,
   );
-  const [draft, setDraft] = useRamInput<number | null>(
-    "$intelligence-panel",
-    "draft:" + initialJob,
-    null,
-  );
+  const [draft, setDraft] = useRamInput<{
+    index: number;
+    kind: "task" | "expense" | "intake";
+  } | null>("$intelligence-panel", "draft:" + initialJob, null);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   const [transcript, setTranscript] = useState<IntelligenceChoice>();
@@ -251,7 +250,7 @@ export default function IntelligenceScreen({
             {result?.state === "ready" && result.result && (
               <IntelligenceResult
                 job={result}
-                onReview={setDraft}
+                onReview={(index, kind) => setDraft({ index, kind })}
                 onTranscript={() => {
                   const source: IntelligenceSourceRequest = {
                     kind: "transcript",
@@ -268,7 +267,8 @@ export default function IntelligenceScreen({
           {draft !== null && (
             <IntelligenceDraftReview
               jobId={jobId}
-              index={draft}
+              index={draft.index}
+              kind={draft.kind}
               job={result?.state === "ready" ? result : undefined}
               current={job.ready}
               denied={!!job.denied || result?.state === "invalidated"}

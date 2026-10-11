@@ -14,7 +14,7 @@ export default function IntelligenceResult({
   onTranscript,
 }: {
   job: IntelligenceJob;
-  onReview: (index: number) => void;
+  onReview: (index: number, kind: "task" | "expense" | "intake") => void;
   onTranscript: () => void;
 }) {
   const w = useWorkspace();
@@ -163,7 +163,7 @@ export default function IntelligenceResult({
                 !job.publication?.allowed ||
                 (candidate.kind !== "task" && !job.publication?.conversationId)
               }
-              onPress={() => onReview(i)}
+              onPress={() => onReview(i, candidate.kind)}
             />
           </View>
         ))}

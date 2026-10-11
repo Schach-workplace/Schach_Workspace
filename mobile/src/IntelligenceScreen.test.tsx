@@ -316,3 +316,44 @@ it("checks published frozen retry roots while editing is locked, blocks held pro
   expect(readAttempt(scope)).toBeUndefined();
   expect(c.textContent).not.toContain("Retry original submitted draft");
 });
+
+it("keeps the selected expense amount editor mounted through a current fetch", async () => {
+  const expenseJob = {
+    ...job,
+    publication: {
+      allowed: true,
+      conversationId: "conversation",
+      sources: [{ messageId: "message", revision: 1 }],
+      policyVersion: 1,
+    },
+    result: {
+      ...job.result,
+      candidates: [{ ...job.result.candidates[0], kind: "expense" }],
+    },
+  };
+  let hold = false;
+  s.request.mockImplementation(async (path: string) => {
+    if (path.endsWith("/jobs/job"))
+      return hold ? new Promise(() => {}) : expenseJob;
+    if (path.endsWith("/capabilities"))
+      return { operations: { summary: true } };
+    return { jobs: [] };
+  });
+  s.w.work.expenseCategories = [];
+  await render(<IntelligenceScreen initialJob="job" />);
+  await render(<IntelligenceScreen initialJob="job" />);
+  await click("Review expense draft");
+  const amount = c.querySelector<HTMLInputElement>('[aria-label="amount"]')!;
+  expect(amount).not.toBeNull();
+  await act(async () => {
+    amount.value = "1300.50";
+    amount.dispatchEvent(new Event("input", { bubbles: true }));
+  });
+  amount.focus();
+  hold = true;
+  await click("Recheck current result");
+  expect(c.textContent).not.toContain("Selected source suggestion");
+  expect(c.querySelector('[aria-label="amount"]')).toBe(amount);
+  expect(amount.value).toBe("1300.50");
+  expect(document.activeElement).toBe(amount);
+});
