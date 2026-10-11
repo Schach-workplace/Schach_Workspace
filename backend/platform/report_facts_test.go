@@ -276,3 +276,42 @@ func assertNativeTaskFacts(t *testing.T, s *Server) {
 		}
 	}
 }
+
+func TestTaskFactsExactAuthoredDeadlineEditParity(t *testing.T) {
+	s, db := testServer(t)
+	c := login(t, s, "founder@example.com")
+	cid := firstCompany(t, s, c)
+	body := taskBody(me(t, s, c))
+	body["deadlineMode"] = "timed"
+	body["dueAt"] = "2026-10-20T10:00:00.000000001Z"
+	body["dueTimezone"] = "UTC"
+	id := createTask(t, s, c, cid, body)
+	for i, fields := range []map[string]any{
+		{"dueAt": "2026-10-20T10:00:00Z", "deadlineChangeReason": "Deliberate exact-second edit"},
+		{"title": "Keep deliberately edited commitment"},
+	} {
+		fields["version"] = i + 1
+		st, _, w := req(t, s, "PATCH", "/api/companies/"+cid+"/tasks/"+id, fields, c)
+		if st != 200 {
+			t.Fatal(st, w.Body.String())
+		}
+	}
+	var facts []TaskFact
+	if e := db.Where("task_id=?", id).Order("task_version").Find(&facts).Error; e != nil {
+		t.Fatal(e)
+	}
+	for _, f := range facts[1:] {
+		if f.State.Original.At != "2026-10-20T10:00:00.000000001Z" || f.State.Current.At != "2026-10-20T10:00:00Z" {
+			t.Fatalf("authored deadline replaced by previous precision: %+v", f.State)
+		}
+		met, valid := reportDeadlineMet("2026-10-20T10:00:00.000000001Z", f.State.Current, "UTC")
+		if !valid || met {
+			t.Fatal("one nanosecond after edited commitment was reported on time")
+		}
+	}
+	var gaps int64
+	db.Model(&TaskHistoryGap{}).Where("task_id=?", id).Count(&gaps)
+	if gaps != 0 {
+		t.Fatal("authored edit fabricated a gap", gaps)
+	}
+}

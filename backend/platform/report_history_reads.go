@@ -26,6 +26,35 @@ func historicalInstant(raw string, fallback time.Time) time.Time {
 	return v
 }
 
+// Candidate pages are independent of the output limit: attribution may reject
+// early events. A bounded total scan fails closed rather than returning a prefix.
+const reportCandidateScanLimit = 100000
+
+func scanHistoricalCandidates[T any](query *gorm.DB, scanned *int, id func(T) string, consume func([]T) error) error {
+	cursor := ""
+	for {
+		var page []T
+		q := query.Session(&gorm.Session{}).Order("id").Limit(500)
+		if cursor != "" {
+			q = q.Where("id > ?", cursor)
+		}
+		if e := q.Find(&page).Error; e != nil {
+			return e
+		}
+		*scanned += len(page)
+		if *scanned > reportCandidateScanLimit {
+			return rangeTooLarge()
+		}
+		if e := consume(page); e != nil {
+			return e
+		}
+		if len(page) < 500 {
+			return nil
+		}
+		cursor = id(page[len(page)-1])
+	}
+}
+
 // Caller owns the accepted company/session/current-actor transaction fence.
 func captureHistoricalReportTx(tx *gorm.DB, a *access, input HistoricalReportRequest, definition *ReportDefinitionBasis) (HistoricalReportSnapshot, error) {
 	snap := HistoricalReportSnapshot{}
@@ -37,11 +66,9 @@ func captureHistoricalReportTx(tx *gorm.DB, a *access, input HistoricalReportReq
 		return snap, e
 	}
 	var tasks []Task
-	if e := taskReadQuery(tx, a).Order("id").Limit(reportRowLimit + 1).Find(&tasks).Error; e != nil {
+	scanned := 0
+	if e := scanHistoricalCandidates(taskReadQuery(tx, a), &scanned, func(t Task) string { return t.ID }, func(page []Task) error { tasks = append(tasks, page...); return nil }); e != nil {
 		return snap, e
-	}
-	if len(tasks) > reportRowLimit {
-		return snap, rangeTooLarge()
 	}
 	now := time.Now().UTC()
 	ids := []string{}
@@ -138,24 +165,33 @@ func captureHistoricalReportTx(tx *gorm.DB, a *access, input HistoricalReportReq
 		}
 		for _, cov := range covs {
 			f, ok := known[cov.TaskID]
-			gapReason := ""
+			cutoffUnavailable := false
 			var gaps []TaskHistoryGap
 			if e := tx.Where("company_id=? AND task_id=? AND from_exclusive < ?", a.Company.ID, cov.TaskID, period.EndExclusive).Find(&gaps).Error; e != nil {
 				return snap, e
 			}
 			for _, gap := range gaps {
+				// Interval history and the latest known cutoff state are independent.
+				// Every intersecting gap remains visible even after a later known fact.
+				intersects := gap.ToExclusive == nil || gap.ToExclusive.After(period.StartInclusive)
+				reason := "gap"
+				if gap.ToExclusive == nil {
+					reason = "inconsistent"
+				}
+				if intersects {
+					if e := add(HistoricalReportRow{Kind: "coverage", TaskID: cov.TaskID, FactID: gap.ID, Reason: reason, Provenance: "unknown"}); e != nil {
+						return snap, e
+					}
+				}
 				if gap.ToExclusive != nil {
 					if period.EndExclusive.After(gap.FromExclusive) && !period.EndExclusive.After(*gap.ToExclusive) {
-						gapReason = "gap"
+						cutoffUnavailable = true
 					}
 				} else if !ok || !f.EffectiveAt.After(gap.FromExclusive) {
-					gapReason = "inconsistent"
+					cutoffUnavailable = true
 				}
 			}
-			if gapReason != "" {
-				if e := add(HistoricalReportRow{Kind: "coverage", TaskID: cov.TaskID, Reason: gapReason, Provenance: "unknown"}); e != nil {
-					return snap, e
-				}
+			if cutoffUnavailable {
 				continue
 			}
 			if !ok {
@@ -177,37 +213,39 @@ func captureHistoricalReportTx(tx *gorm.DB, a *access, input HistoricalReportReq
 				}
 			}
 		}
-		var acceptances []TaskAcceptanceFact
-		if e := tx.Where("company_id=? AND task_id IN ? AND accepted_at >= ? AND accepted_at < ?", a.Company.ID, batch, period.StartInclusive, period.EndExclusive).Order("accepted_at,id").Limit(reportRowLimit + 1).Find(&acceptances).Error; e != nil {
+		if e := scanHistoricalCandidates(tx.Where("company_id=? AND task_id IN ? AND accepted_at >= ? AND accepted_at < ?", a.Company.ID, batch, period.StartInclusive, period.EndExclusive), &scanned, func(f TaskAcceptanceFact) string { return f.ID }, func(acceptances []TaskAcceptanceFact) error {
+			for _, f := range acceptances {
+				at := historicalInstant(f.AcceptedAtRaw, f.AcceptedAt)
+				if at.Before(period.StartInclusive) || !at.Before(period.EndExclusive) || !reportDimensionsMatch(f.State, input.Filters) {
+					continue
+				}
+				if e := add(HistoricalReportRow{Kind: "acceptance", TaskID: f.TaskID, FactID: f.TaskFactID, TaskVersion: f.TaskVersion, AcceptanceID: f.ID, AcceptedAtRaw: f.AcceptedAtRaw, AcceptanceKind: f.AcceptanceKind, State: f.State, Provenance: "native_event"}); e != nil {
+					return e
+				}
+			}
+			return nil
+		}); e != nil {
 			return snap, e
 		}
-		for _, f := range acceptances {
-			at := historicalInstant(f.AcceptedAtRaw, f.AcceptedAt)
-			if at.Before(period.StartInclusive) || !at.Before(period.EndExclusive) || !reportDimensionsMatch(f.State, input.Filters) {
-				continue
+		if e := scanHistoricalCandidates(tx.Where("company_id=? AND task_id IN ? AND entry_date>=? AND entry_date<=? AND recorded_at<?", a.Company.ID, batch, input.From, input.To, period.EndExclusive), &scanned, func(f TaskTimeFact) string { return f.ID }, func(times []TaskTimeFact) error {
+			for _, f := range times {
+				if !historicalInstant(f.RecordedAtRaw, f.RecordedAt).Before(period.EndExclusive) {
+					continue
+				}
+				var linked TaskFact
+				if e := tx.First(&linked, "id=? AND company_id=?", f.TaskFactID, a.Company.ID).Error; e != nil {
+					return e
+				}
+				if !reportDimensionsMatch(linked.State, input.Filters) {
+					continue
+				}
+				if e := add(HistoricalReportRow{Kind: "time", TaskID: f.TaskID, FactID: f.TaskFactID, TaskVersion: f.TaskVersion, TimeFactID: f.ID, EntryDate: f.EntryDate, Hours: f.Hours, State: linked.State, Provenance: f.Provenance}); e != nil {
+					return e
+				}
 			}
-			if e := add(HistoricalReportRow{Kind: "acceptance", TaskID: f.TaskID, FactID: f.TaskFactID, TaskVersion: f.TaskVersion, AcceptanceID: f.ID, AcceptedAtRaw: f.AcceptedAtRaw, AcceptanceKind: f.AcceptanceKind, State: f.State, Provenance: "native_event"}); e != nil {
-				return snap, e
-			}
-		}
-		var times []TaskTimeFact
-		if e := tx.Where("company_id=? AND task_id IN ? AND entry_date>=? AND entry_date<=? AND recorded_at<?", a.Company.ID, batch, input.From, input.To, period.EndExclusive).Order("entry_date,id").Limit(reportRowLimit + 1).Find(&times).Error; e != nil {
+			return nil
+		}); e != nil {
 			return snap, e
-		}
-		for _, f := range times {
-			if !historicalInstant(f.RecordedAtRaw, f.RecordedAt).Before(period.EndExclusive) {
-				continue
-			}
-			var linked TaskFact
-			if e := tx.First(&linked, "id=? AND company_id=?", f.TaskFactID, a.Company.ID).Error; e != nil {
-				return snap, e
-			}
-			if !reportDimensionsMatch(linked.State, input.Filters) {
-				continue
-			}
-			if e := add(HistoricalReportRow{Kind: "time", TaskID: f.TaskID, FactID: f.TaskFactID, TaskVersion: f.TaskVersion, TimeFactID: f.ID, EntryDate: f.EntryDate, Hours: f.Hours, State: linked.State, Provenance: f.Provenance}); e != nil {
-				return snap, e
-			}
 		}
 	}
 	sort.Slice(rows, func(i, j int) bool {

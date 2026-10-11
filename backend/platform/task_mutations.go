@@ -71,7 +71,8 @@ func commitTaskPatch(tx *gorm.DB, a *access, old, t Task, f map[string]json.RawM
 	if res.RowsAffected != 1 {
 		return conflict()
 	}
-	if e := appendTaskFact(tx, &old, t, ReportFactActor{ID: a.User.ID}, "patch", time.Now().UTC()); e != nil {
+	_, authoredDueAt := f["dueAt"]
+	if e := appendTaskFact(tx, &old, t, ReportFactActor{ID: a.User.ID}, "patch", time.Now().UTC(), authoredDueAt); e != nil {
 		return e
 	}
 	keys := []string{}

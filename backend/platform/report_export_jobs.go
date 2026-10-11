@@ -50,7 +50,7 @@ func authorizeReportExportJob(tx *gorm.DB, a *access, id string) (ReportExportJo
 			}
 		}
 		owner, e := currentAttentionActorLocked(tx, a.Company.ID, d.OwnerID)
-		if e != nil {
+		if e != nil || owner.Member.Role == "viewer" {
 			return job, historicalAccessChanged()
 		}
 		if e := validateSavedConfiguration(tx, owner, d.Configuration); e != nil {
@@ -364,6 +364,9 @@ func (s *Server) failReportExport(ctx context.Context, job ReportExportJob, toke
 	if api, ok := cause.(*apiError); ok {
 		state = "failed"
 		code = api.Code
+		if job.ScheduleID != "" && api.Code == "access_changed" {
+			state = "cancelled"
+		}
 	}
 	if job.AttemptCount >= 5 {
 		state = "failed"

@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-func reportTaskState(tx *gorm.DB, t Task) (ReportTaskState, error) {
+func reportTaskState(tx *gorm.DB, t Task, authoredCurrentDeadline ...bool) (ReportTaskState, error) {
 	var c Company
 	if e := tx.First(&c, "id=?", t.CompanyID).Error; e != nil {
 		return ReportTaskState{}, e
@@ -24,7 +24,9 @@ func reportTaskState(tx *gorm.DB, t Task) (ReportTaskState, error) {
 		}
 		if q.RowsAffected > 0 {
 			preserveExactDeadline(&state.Original, previous.State.Original)
-			preserveExactDeadline(&state.Current, previous.State.Current)
+			if len(authoredCurrentDeadline) == 0 || !authoredCurrentDeadline[0] {
+				preserveExactDeadline(&state.Current, previous.State.Current)
+			}
 		}
 	}
 	return state, nil
@@ -123,7 +125,7 @@ func recordReportGap(tx *gorm.DB, c TaskHistoryCoverage, f TaskFact) error {
 	gap := TaskHistoryGap{ID: newID("gap"), CompanyID: f.CompanyID, TaskID: f.TaskID, FromExclusive: prev.EffectiveAt, ToExclusive: &end, Reason: "skipped_versions", BeforeFactID: prev.ID, AfterFactID: f.ID}
 	return tx.Create(&gap).Error
 }
-func appendTaskFact(tx *gorm.DB, before *Task, after Task, actor ReportFactActor, operation string, at time.Time) error {
+func appendTaskFact(tx *gorm.DB, before *Task, after Task, actor ReportFactActor, operation string, at time.Time, authoredCurrentDeadline ...bool) error {
 	if !in(operation, "create", "patch", "approve", "request_changes", "evidence", "time", "recurrence") {
 		return invalid("Unsupported report fact operation.")
 	}
@@ -138,7 +140,7 @@ func appendTaskFact(tx *gorm.DB, before *Task, after Task, actor ReportFactActor
 			return e
 		}
 	}
-	state, e := reportTaskState(tx, after)
+	state, e := reportTaskState(tx, after, authoredCurrentDeadline...)
 	if e != nil {
 		return e
 	}

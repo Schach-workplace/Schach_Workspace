@@ -52,6 +52,27 @@ type ReportSchedule struct {
 	SkippedFrom        *time.Time `json:"skippedFrom"`
 	SkippedTo          *time.Time `json:"skippedTo"`
 	State              string     `json:"state"`
+	FailureCode        string     `json:"failureCode"`
+	FailureCount       int        `json:"failureCount"`
+	AttemptCount       int        `json:"attemptCount"`
+	NextAttemptAt      *time.Time `json:"nextAttemptAt"`
+}
+
+// Only occurrence identity and fixed failure codes are persisted, never content.
+type ReportScheduleFailure struct {
+	ID                 string `gorm:"primaryKey"`
+	CompanyID          string
+	DefinitionID       string
+	DefinitionRevision int64
+	ScheduleID         string
+	ScheduleVersion    int64
+	RecipientID        string
+	OccurrenceUTC      time.Time
+	ScheduledIdentity  string `gorm:"uniqueIndex"`
+	State              string
+	FailureCode        string
+	AttemptCount       int
+	UpdatedAt          time.Time
 }
 
 func (s *Server) savedReportRoutes() {
@@ -153,6 +174,24 @@ func cancelReportDefinitionOutputs(tx *gorm.DB, cid, id string, revision int64) 
 	ids := tx.Model(&ReportExportJob{}).Select("id").Where("company_id=? AND definition_id=? AND definition_revision<=?", cid, id, revision)
 	return tx.Model(&ReportDeliveryIntent{}).Where("company_id=? AND job_id IN (?)", cid, ids).Updates(map[string]any{"state": "cancelled", "updated_at": time.Now().UTC()}).Error
 }
+
+// A retry acknowledges its immutable committed revision; current-row reads
+// remain a separate inspection and cannot become an unseen CAS basis.
+func committedSavedDefinition(tx *gorm.DB, cid string, result BusinessResult, d *SavedReportDefinition) error {
+	if e := tx.First(d, "id=? AND company_id=?", result.IDs[0], cid).Error; e != nil {
+		return e
+	}
+	var revision SavedReportRevision
+	if e := tx.First(&revision, "company_id=? AND definition_id=? AND version=?", cid, result.IDs[0], result.Versions[0]).Error; e != nil {
+		return e
+	}
+	d.Version = revision.Version
+	d.Configuration = revision.Configuration
+	d.State = revision.State
+	d.UpdatedAt = revision.CreatedAt
+	return nil
+}
+
 func (s *Server) createSavedReport(w http.ResponseWriter, r *http.Request) error {
 	a, e := s.access(r)
 	if e != nil {
@@ -186,7 +225,7 @@ func (s *Server) createSavedReport(w http.ResponseWriter, r *http.Request) error
 		if e != nil {
 			return e
 		}
-		return tx.First(&d, "id=?", out.IDs[0]).Error
+		return committedSavedDefinition(tx, a.Company.ID, out, &d)
 	})
 	if e != nil {
 		return e
@@ -249,7 +288,7 @@ func (s *Server) updateSavedReport(w http.ResponseWriter, r *http.Request) error
 		if e != nil {
 			return e
 		}
-		return tx.First(&d, "id=?", out.IDs[0]).Error
+		return committedSavedDefinition(tx, a.Company.ID, out, &d)
 	})
 	if e != nil {
 		return e

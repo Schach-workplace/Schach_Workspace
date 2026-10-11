@@ -258,3 +258,167 @@ func TestHistoricalHTTPActorRefreshRejectsLateSuspension(t *testing.T) {
 		t.Fatal("stale HTTP actor disclosed report data", e, invoked)
 	}
 }
+
+func TestHistoricalInteriorGapsRemainVisibleWithKnownCutoffState(t *testing.T) {
+	s, db := testServer(t)
+	c := login(t, s, "founder@example.com")
+	cid := firstCompany(t, s, c)
+	body := taskBody(me(t, s, c))
+	body["dueDate"] = "2026-09-20"
+	body["startDate"] = "2026-09-01"
+	id := createTask(t, s, c, cid, body)
+	var fact TaskFact
+	db.First(&fact, "task_id=?", id)
+	known := time.Date(2026, 9, 20, 0, 0, 0, 0, time.UTC)
+	db.Model(&fact).Updates(map[string]any{"effective_at": known, "effective_at_raw": known.Format(time.RFC3339Nano)})
+	db.Model(&TaskHistoryCoverage{}).Where("task_id=?", id).Update("first_known_at", time.Date(2026, 8, 1, 0, 0, 0, 0, time.UTC))
+	from := time.Date(2026, 9, 10, 0, 0, 0, 0, time.UTC)
+	to := time.Date(2026, 9, 20, 0, 0, 0, 0, time.UTC)
+	gaps := []TaskHistoryGap{{ID: newID("gap"), CompanyID: cid, TaskID: id, FromExclusive: from, ToExclusive: &to, Reason: "skipped_versions"}, {ID: newID("gap"), CompanyID: cid, TaskID: id, FromExclusive: from.Add(-48 * time.Hour), ToExclusive: &from, Reason: "skipped_versions"}}
+	if e := db.Create(&gaps).Error; e != nil {
+		t.Fatal(e)
+	}
+	var snapshots []string
+	for _, test := range []struct {
+		from, to     string
+		states, gaps float64
+	}{
+		{"2026-09-01", "2026-09-30", 1, 2},
+		{"2026-09-01", "2026-09-15", 0, 2},
+		{"2026-09-21", "2026-09-30", 1, 0},
+	} {
+		input := historyRequest()
+		input["from"] = test.from
+		input["to"] = test.to
+		input["reportZone"] = "UTC"
+		st, b, w := req(t, s, "POST", "/api/companies/"+cid+"/reports/history/snapshots", map[string]any{"retryKey": test.from + test.to, "request": input}, c)
+		if st != 200 {
+			t.Fatal(st, w.Body.String())
+		}
+		sid := b["snapshotId"].(string)
+		snapshots = append(snapshots, sid)
+		var snap HistoricalReportSnapshot
+		db.First(&snap, "id=?", sid)
+		var stateRows int64
+		db.Model(&HistoricalReportRow{}).Where("snapshot_id=? AND kind=?", sid, "state").Count(&stateRows)
+		if float64(stateRows) != test.states || snap.Summary.Metrics["coverage.gaps"].Value != test.gaps {
+			t.Fatalf("%s..%s state=%v gaps=%v", test.from, test.to, stateRows, snap.Summary.Metrics["coverage.gaps"].Value)
+		}
+	}
+	st, b, w := req(t, s, "POST", "/api/companies/"+cid+"/reports/history/compare", map[string]any{"leftSnapshotId": snapshots[0], "rightSnapshotId": snapshots[2]}, c)
+	if st != 200 || !strings.Contains(fmt.Sprint(b), "gap") {
+		t.Fatal("comparison lost interior gap warning", st, w.Body.String())
+	}
+}
+
+func TestHistoricalFilteredEventsBeyondCandidatePage(t *testing.T) {
+	for _, kind := range []string{"acceptance", "time", "overflow"} {
+		t.Run(kind, func(t *testing.T) {
+			s, db := testServer(t)
+			c := login(t, s, "founder@example.com")
+			cid := firstCompany(t, s, c)
+			owner := me(t, s, c)
+			other := addPerson(t, s, c, cid, "history-filter@example.com", "member")
+			id := createTask(t, s, c, cid, taskBody(owner))
+			var original TaskFact
+			db.First(&original, "task_id=?", id)
+			at := time.Date(2026, 9, 10, 0, 0, 0, 0, time.UTC)
+			nonmatch := original.State
+			nonmatch.OwnerID = other
+			linked := original
+			linked.ID = newID("tf")
+			linked.TaskVersion = 2
+			linked.State = nonmatch
+			if e := db.Create(&linked).Error; e != nil {
+				t.Fatal(e)
+			}
+			count := reportRowLimit + 2
+			if kind == "time" {
+				facts := make([]TaskTimeFact, count)
+				for i := range facts {
+					fid := linked.ID
+					if i == count-1 {
+						fid = original.ID
+					}
+					facts[i] = TaskTimeFact{ID: fmt.Sprintf("ttf_page_%05d", i), CompanyID: cid, TimeEntryID: newID("te"), TaskID: id, TaskVersion: 1, TaskFactID: fid, RecordedAt: at, RecordedAtRaw: at.Format(time.RFC3339Nano), EntryDate: "2026-09-10", Hours: 2, ActorID: owner, Provenance: "native_time_entry"}
+				}
+				if e := db.CreateInBatches(&facts, 100).Error; e != nil {
+					t.Fatal(e)
+				}
+			} else {
+				facts := make([]TaskAcceptanceFact, count)
+				for i := range facts {
+					state := nonmatch
+					if i == count-1 || kind == "overflow" {
+						state = original.State
+					}
+					facts[i] = TaskAcceptanceFact{ID: fmt.Sprintf("af_page_%05d", i), CompanyID: cid, TaskID: id, TaskVersion: int64(i + 1), TaskFactID: newID("tf"), AcceptedAt: at, AcceptedAtRaw: at.Format(time.RFC3339Nano), ActorID: owner, AcceptanceKind: "direct_completion", State: state}
+				}
+				if e := db.CreateInBatches(&facts, 100).Error; e != nil {
+					t.Fatal(e)
+				}
+			}
+			input := historyRequest()
+			input["filters"] = map[string]any{"ownerId": owner}
+			st, b, w := req(t, s, "POST", "/api/companies/"+cid+"/reports/history/snapshots", map[string]any{"retryKey": "filtered-page", "request": input}, c)
+			if kind == "overflow" {
+				if st != 422 || !strings.Contains(w.Body.String(), "range_too_large") {
+					t.Fatal("incomplete report did not fail closed", st, w.Body.String())
+				}
+				return
+			}
+			if st != 200 {
+				t.Fatal(st, w.Body.String())
+			}
+			var snap HistoricalReportSnapshot
+			db.First(&snap, "id=?", b["snapshotId"])
+			code, want := "acceptance.episodes", float64(1)
+			if kind == "time" {
+				code = "effort.logged_hours"
+				want = 2
+			}
+			if snap.Summary.Metrics[code].Value != want {
+				t.Fatal("later matching event silently omitted", code, snap.Summary.Metrics[code].Value)
+			}
+		})
+	}
+}
+
+func TestHistoricalNarrowFilterBeyondVisibleTaskLimit(t *testing.T) {
+	s, db := testServer(t)
+	c := login(t, s, "founder@example.com")
+	cid := firstCompany(t, s, c)
+	owner := me(t, s, c)
+	other := addPerson(t, s, c, cid, "history-narrow@example.com", "member")
+	at := time.Date(2026, 9, 10, 0, 0, 0, 0, time.UTC)
+	tasks := make([]Task, reportRowLimit+2)
+	facts := make([]TaskFact, len(tasks))
+	covs := make([]TaskHistoryCoverage, len(tasks))
+	for i := range tasks {
+		uid := other
+		if i == len(tasks)-1 {
+			uid = owner
+		}
+		tasks[i] = Task{ID: fmt.Sprintf("tsk_narrow_%05d", i), CompanyID: cid, Code: fmt.Sprintf("NARROW-%d", i), Title: "Narrow fixture", OwnerID: uid, CreatedBy: owner, Status: "todo", Priority: "high", Recurrence: "none", Version: 1, DueDate: "2026-09-20", OriginalDueDate: "2026-09-20", DeadlineMode: "all_day", OriginalDeadlineMode: "all_day", Tags: []string{}, Checklist: []ChecklistItem{}, Dependencies: []string{}, Collaborators: []string{}}
+		state := ReportTaskState{Code: tasks[i].Code, Title: tasks[i].Title, OwnerID: uid, CreatorID: owner, Status: "todo", Priority: "high", Current: ReportDeadline{Mode: "all_day", Date: "2026-09-20"}, Original: ReportDeadline{Mode: "all_day", Date: "2026-09-20"}, CompanyPolicyZone: "UTC", Dependencies: []string{}}
+		hash := reportStateHash(state)
+		facts[i] = TaskFact{ID: newID("tf"), CompanyID: cid, TaskID: tasks[i].ID, TaskVersion: 1, RecordedAt: at, EffectiveAt: at, EffectiveAtRaw: at.Format(time.RFC3339Nano), Operation: "create", ActorKind: "user", ActorID: owner, Provenance: "native_event", KnownFrom: at, StateHash: hash, State: state}
+		covs[i] = TaskHistoryCoverage{CompanyID: cid, TaskID: tasks[i].ID, FirstKnownAt: at, LastRecordedVersion: 1, StateHash: hash, LastFactID: facts[i].ID}
+	}
+	for _, rows := range []any{&tasks, &facts, &covs} {
+		if e := db.CreateInBatches(rows, 100).Error; e != nil {
+			t.Fatal(e)
+		}
+	}
+	input := historyRequest()
+	input["filters"] = map[string]any{"ownerId": owner}
+	st, b, w := req(t, s, "POST", "/api/companies/"+cid+"/reports/history/snapshots", map[string]any{"retryKey": "narrow-tasks", "request": input}, c)
+	if st != 200 {
+		t.Fatal("narrow report cannot recover from visible candidate limit", st, w.Body.String())
+	}
+	var snap HistoricalReportSnapshot
+	db.First(&snap, "id=?", b["snapshotId"])
+	if snap.RowCount != 1 || snap.Summary.Metrics["state.cohort"].Value != 1 {
+		t.Fatal("narrow report was not complete", snap.RowCount, snap.Summary)
+	}
+}

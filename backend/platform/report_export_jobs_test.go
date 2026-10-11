@@ -378,3 +378,85 @@ func TestReportExportConcurrentClaimsAndDelivery(t *testing.T) {
 		t.Fatal(items, intents)
 	}
 }
+
+func TestScheduledExportsRejectDemotedOwnerBeforeDueTick(t *testing.T) {
+	for _, phase := range []string{"queued", "ready"} {
+		t.Run(phase, func(t *testing.T) {
+			s, db := testServer(t)
+			store, e := NewFileReportArtifactStore(t.TempDir() + "/reports")
+			if e != nil {
+				t.Fatal(e)
+			}
+			s.opts.ReportArtifactStore = store
+			c := login(t, s, "founder@example.com")
+			cid := firstCompany(t, s, c)
+			owner := me(t, s, c)
+			uid := addPerson(t, s, c, cid, "demoted-recipient@example.com", "member")
+			mc := login(t, s, "demoted-recipient@example.com")
+			root := "/api/companies/" + cid + "/reports"
+			cfg := savedConfig(owner)
+			cfg["recipientIds"] = []string{uid}
+			st, b, w := req(t, s, "POST", root+"/definitions", map[string]any{"retryKey": "demoted-def", "configuration": cfg}, c)
+			if st != 200 {
+				t.Fatal(w.Body.String())
+			}
+			did := b["definition"].(map[string]any)["id"].(string)
+			st, _, w = req(t, s, "PATCH", root+"/definitions/"+did+"/schedule", map[string]any{"retryKey": "demoted-schedule", "expectedDefinitionVersion": 1, "expectedScheduleVersion": 0, "weekdays": []int{0, 1, 2, 3, 4, 5, 6}, "localMinute": "00:00", "scheduleZone": "UTC", "state": "active"}, c)
+			if st != 200 {
+				t.Fatal(w.Body.String())
+			}
+			db.Model(&ReportSchedule{}).Where("definition_id=?", did).Update("next_occurrence_utc", time.Now().UTC().Add(-48*time.Hour))
+			if n, e := s.RunReportSchedules(context.Background(), time.Now().UTC(), 100); e != nil || n != 1 {
+				t.Fatal(n, e)
+			}
+			job, token, e := s.claimReportExport(context.Background(), time.Now().UTC())
+			if e != nil {
+				t.Fatal(e)
+			}
+			var artifact ReportArtifact
+			if phase == "ready" {
+				if e := s.generateReportExport(context.Background(), job, token); e != nil {
+					t.Fatal(e)
+				}
+				db.First(&artifact, "job_id=?", job.ID)
+			}
+			// The next schedule occurrence is still in the future: every publication and
+			// download boundary must enforce current owner eligibility independently.
+			if e := db.Model(&Membership{}).Where("company_id=? AND user_id=?", cid, owner).Update("role", "viewer").Error; e != nil {
+				t.Fatal(e)
+			}
+			if phase == "queued" {
+				e := s.generateReportExport(context.Background(), job, token)
+				if e == nil {
+					t.Fatal("demoted owner still generated scheduled output")
+				}
+				if e := s.failReportExport(context.Background(), job, token, e); e != nil {
+					t.Fatal(e)
+				}
+				var n int64
+				db.Model(&ReportArtifact{}).Where("job_id=?", job.ID).Count(&n)
+				if n != 0 {
+					t.Fatal("demoted output published")
+				}
+			}
+			st, _, w = req(t, s, "GET", root+"/exports/"+job.ID, nil, mc)
+			if st != 409 {
+				t.Fatal("demoted owner's job remained readable", st, w.Body.String())
+			}
+			if phase == "ready" {
+				st, _, w = req(t, s, "GET", root+"/artifacts/"+artifact.ID, nil, mc)
+				if st != 409 || strings.Contains(w.Body.String(), "schema,basis") {
+					t.Fatal("ready artifact escaped current owner check", st, w.Body.String())
+				}
+				if n, e := s.RunReportDelivery(context.Background(), time.Now().UTC(), 100); e != nil || n != 0 {
+					t.Fatal("demoted ready output delivered", n, e)
+				}
+			}
+			// Existing personal snapshot reads retain their separate source permission.
+			st, _, w = req(t, s, "GET", root+"/history/snapshots/"+job.SnapshotID, nil, mc)
+			if st != 200 {
+				t.Fatal("personal snapshot unnecessarily denied", st, w.Body.String())
+			}
+		})
+	}
+}

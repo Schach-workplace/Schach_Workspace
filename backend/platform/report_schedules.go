@@ -2,7 +2,9 @@ package platform
 
 import (
 	"context"
+	"errors"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 	"net/http"
 	"sort"
 	"time"
@@ -167,6 +169,10 @@ func (s *Server) updateReportSchedule(w http.ResponseWriter, r *http.Request) er
 			schedule.LocalMinute = input.LocalMinute
 			schedule.ScheduleZone = input.ScheduleZone
 			schedule.State = input.State
+			schedule.FailureCode = ""
+			schedule.FailureCount = 0
+			schedule.AttemptCount = 0
+			schedule.NextAttemptAt = nil
 			next, e := nextReportOccurrence(schedule, time.Now().UTC())
 			if e != nil {
 				return BusinessResult{}, e
@@ -196,22 +202,29 @@ func (s *Server) updateReportSchedule(w http.ResponseWriter, r *http.Request) er
 		if e := tx.First(&schedule, "id=?", out.IDs[1]).Error; e != nil {
 			return e
 		}
-		return tx.First(&definition, "id=?", out.IDs[0]).Error
+		if e := committedSavedDefinition(tx, a.Company.ID, out, &definition); e != nil {
+			return e
+		}
+		// The original request is bound to this receipt. Return only committed
+		// authored schedule fields, never runtime timing from an unseen current row.
+		schedule = ReportSchedule{ID: out.IDs[1], CompanyID: a.Company.ID, DefinitionID: out.IDs[0], DefinitionRevision: out.Versions[0], Version: out.Versions[1], Weekdays: append([]int{}, input.Weekdays...), LocalMinute: input.LocalMinute, ScheduleZone: input.ScheduleZone, State: input.State}
+		return nil
 	})
 	if e != nil {
 		return e
 	}
-	return respond(w, 200, map[string]any{"definition": definition, "schedule": schedule})
+	return respond(w, 200, map[string]any{"definition": definition, "schedule": map[string]any{"id": schedule.ID, "version": schedule.Version, "definitionRevision": schedule.DefinitionRevision, "weekdays": schedule.Weekdays, "localMinute": schedule.LocalMinute, "scheduleZone": schedule.ScheduleZone, "state": schedule.State}})
 }
 func (s *Server) RunReportSchedules(ctx context.Context, now time.Time, limit int) (int, error) {
 	if limit < 1 || limit > 100 {
 		limit = 100
 	}
 	var schedules []ReportSchedule
-	if e := s.db.WithContext(ctx).Where("state='active' AND next_occurrence_utc<=?", now).Order("next_occurrence_utc,id").Limit(limit).Find(&schedules).Error; e != nil {
+	if e := s.db.WithContext(ctx).Where("state='active' AND next_occurrence_utc<=? AND (next_attempt_at IS NULL OR next_attempt_at<=?)", now, now).Order("next_occurrence_utc,id").Limit(limit).Find(&schedules).Error; e != nil {
 		return 0, e
 	}
 	created := 0
+	var failures []error
 	for _, candidate := range schedules {
 		perSchedule := 0
 		e := s.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
@@ -222,7 +235,7 @@ func (s *Server) RunReportSchedules(ctx context.Context, now time.Time, limit in
 			if e := tx.First(&schedule, "id=?", candidate.ID).Error; e != nil {
 				return e
 			}
-			if schedule.State != "active" || schedule.NextOccurrenceUTC.After(now) {
+			if schedule.State != "active" || schedule.NextOccurrenceUTC.After(now) || (schedule.NextAttemptAt != nil && schedule.NextAttemptAt.After(now)) {
 				return nil
 			}
 			var definition SavedReportDefinition
@@ -237,13 +250,13 @@ func (s *Server) RunReportSchedules(ctx context.Context, now time.Time, limit in
 				if e := cancelReportDefinitionOutputs(tx, schedule.CompanyID, definition.ID, definition.Version); e != nil {
 					return e
 				}
-				return tx.Model(&schedule).Update("state", "paused").Error
+				return tx.Model(&schedule).Updates(map[string]any{"state": "paused", "failure_code": "owner_ineligible"}).Error
 			}
 			if e := validateSavedConfiguration(tx, owner, definition.Configuration); e != nil {
 				if e := cancelReportDefinitionOutputs(tx, schedule.CompanyID, definition.ID, definition.Version); e != nil {
 					return e
 				}
-				return tx.Model(&schedule).Update("state", "paused").Error
+				return tx.Model(&schedule).Updates(map[string]any{"state": "paused", "failure_code": "configuration_unavailable"}).Error
 			}
 			occurrence, e := latestReportOccurrence(schedule, now)
 			if e != nil {
@@ -256,38 +269,87 @@ func (s *Server) RunReportSchedules(ctx context.Context, now time.Time, limit in
 			if e != nil {
 				return e
 			}
+			transient := false
+			schedule.FailureCode = ""
+			schedule.FailureCount = 0
 			for _, uid := range definition.Configuration.RecipientIDs {
-				recipient, e := currentAttentionActorLocked(tx, schedule.CompanyID, uid)
-				if e != nil {
+				identity := payloadHash([]any{schedule.CompanyID, definition.ID, definition.Version, uid, occurrence.UTC().Format(time.RFC3339Nano)})
+				var failure ReportScheduleFailure
+				q := tx.Where("scheduled_identity=? AND state='failed'", identity).Find(&failure)
+				if q.Error != nil {
+					return q.Error
+				}
+				if q.RowsAffected > 0 {
+					schedule.FailureCount++
+					schedule.FailureCode = failure.FailureCode
 					continue
 				}
-				identity := payloadHash([]any{schedule.CompanyID, definition.ID, definition.Version, uid, occurrence.UTC().Format(time.RFC3339Nano)})
 				var existing ReportExportJob
-				q := tx.Where("scheduled_identity=?", identity).Find(&existing)
+				q = tx.Where("scheduled_identity=?", identity).Find(&existing)
 				if q.Error != nil {
 					return q.Error
 				}
 				if q.RowsAffected > 0 {
 					continue
 				}
-				snap, e := captureHistoricalReportTx(tx, recipient, request, &ReportDefinitionBasis{definition.ID, definition.Version})
-				if e != nil {
+				// The savepoint removes partial observations/snapshots/job state for a failed
+				// recipient while retaining successful independently authorized recipients.
+				recipientError := tx.Transaction(func(recipientTx *gorm.DB) error {
+					recipient, e := currentAttentionActorLocked(recipientTx, schedule.CompanyID, uid)
+					if e != nil {
+						return e
+					}
+					snap, e := captureHistoricalReportTx(recipientTx, recipient, request, &ReportDefinitionBasis{definition.ID, definition.Version})
+					if e != nil {
+						return e
+					}
+					job := newReportExportJob(recipient, snap, now)
+					job.RequestActorID = definition.OwnerID
+					job.ScheduleID = schedule.ID
+					job.ScheduleVersion = schedule.Version
+					job.OccurrenceUTC = &occurrence
+					job.ScheduledIdentity = &identity
+					if e := recipientTx.Create(&job).Error; e != nil {
+						return e
+					}
+					if _, e := authorizeReportExportJob(recipientTx, recipient, job.ID); e != nil {
+						return e
+					}
+					return nil
+				})
+				if recipientError == nil {
+					perSchedule++
+					continue
+				}
+				code, state := "transient_failure", "retry"
+				if api, ok := recipientError.(*apiError); ok && api.Status < 500 {
+					code, state = "access_changed", "failed"
+					if api.Code == "range_too_large" {
+						code = api.Code
+					}
+				}
+				if state == "retry" && schedule.AttemptCount >= 4 {
+					state = "failed"
+				}
+				if state == "retry" {
+					transient = true
+					failures = append(failures, recipientError)
+				}
+				schedule.FailureCount++
+				schedule.FailureCode = code
+				failure = ReportScheduleFailure{ID: newID("rsf"), CompanyID: schedule.CompanyID, DefinitionID: definition.ID, DefinitionRevision: definition.Version, ScheduleID: schedule.ID, ScheduleVersion: schedule.Version, RecipientID: uid, OccurrenceUTC: occurrence, ScheduledIdentity: identity, State: state, FailureCode: code, AttemptCount: schedule.AttemptCount + 1, UpdatedAt: now}
+				if e := tx.Clauses(clause.OnConflict{Columns: []clause.Column{{Name: "scheduled_identity"}}, DoUpdates: clause.AssignmentColumns([]string{"state", "failure_code", "attempt_count", "updated_at"})}).Create(&failure).Error; e != nil {
 					return e
 				}
-				job := newReportExportJob(recipient, snap, now)
-				job.RequestActorID = definition.OwnerID
-				job.ScheduleID = schedule.ID
-				job.ScheduleVersion = schedule.Version
-				job.OccurrenceUTC = &occurrence
-				job.ScheduledIdentity = &identity
-				if e := tx.Create(&job).Error; e != nil {
-					return e
-				}
-				if _, e := authorizeReportExportJob(tx, recipient, job.ID); e != nil {
-					return e
-				}
-				perSchedule++
 			}
+			if transient {
+				schedule.AttemptCount++
+				next := now.Add(time.Duration(5*(1<<(schedule.AttemptCount-1))) * time.Second)
+				schedule.NextAttemptAt = &next
+				return tx.Save(&schedule).Error
+			}
+			schedule.AttemptCount = 0
+			schedule.NextAttemptAt = nil
 			if occurrence.After(schedule.NextOccurrenceUTC) {
 				from, to := schedule.NextOccurrenceUTC, occurrence
 				schedule.SkippedFrom = &from
@@ -302,9 +364,24 @@ func (s *Server) RunReportSchedules(ctx context.Context, now time.Time, limit in
 			return tx.Save(&schedule).Error
 		}, s.reportCaptureOptions())
 		if e != nil {
-			return created, e
+			failures = append(failures, e)
+			if ctx.Err() != nil {
+				return created, errors.Join(failures...)
+			}
+			// A whole-schedule transient failure also receives bounded backoff, fenced
+			// against a concurrent definition/schedule edit. Later schedules still run.
+			attempt := candidate.AttemptCount + 1
+			next := now.Add(time.Duration(5*(1<<min(attempt-1, 4))) * time.Second)
+			state := "active"
+			if attempt >= 5 {
+				state = "paused"
+			}
+			if diagnosticError := s.db.WithContext(ctx).Model(&ReportSchedule{}).Where("id=? AND version=? AND state='active'", candidate.ID, candidate.Version).Updates(map[string]any{"failure_code": "transient_failure", "attempt_count": attempt, "next_attempt_at": next, "state": state}).Error; diagnosticError != nil {
+				failures = append(failures, diagnosticError)
+			}
+			continue
 		}
 		created += perSchedule
 	}
-	return created, nil
+	return created, errors.Join(failures...)
 }

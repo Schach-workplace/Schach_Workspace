@@ -5,6 +5,7 @@ import (
 	"errors"
 	"gorm.io/gorm"
 	"io"
+	"log"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -202,7 +203,9 @@ func (s *Server) RunReportWorker(ctx context.Context) {
 			short, cancel := context.WithTimeout(ctx, 10*time.Second)
 			now := time.Now().UTC()
 			_, _, _ = s.InitializeReportHistory(short, now, 100)
-			_, _ = s.RunReportSchedules(short, now, 100)
+			if _, e := s.RunReportSchedules(short, now, 100); e != nil && ctx.Err() == nil {
+				log.Print("report schedules maintenance failed; inspect schedule failure diagnostics")
+			}
 			_, _ = s.RunReportDelivery(short, now, 100)
 			_, _ = s.RunReportCleanup(short, now, 100)
 			cancel()

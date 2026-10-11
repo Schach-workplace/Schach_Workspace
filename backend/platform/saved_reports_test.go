@@ -143,3 +143,45 @@ func TestSavedReportOrphanManagementIsMetadataOnly(t *testing.T) {
 		t.Fatal(d)
 	}
 }
+
+func TestSavedReplayReturnsCommittedRevisionAfterInterveningEdit(t *testing.T) {
+	s, _ := testServer(t)
+	c := login(t, s, "founder@example.com")
+	cid := firstCompany(t, s, c)
+	uid := me(t, s, c)
+	root := "/api/companies/" + cid + "/reports/definitions"
+	create := map[string]any{"retryKey": "canonical-create", "configuration": savedConfig(uid)}
+	st, b, w := req(t, s, "POST", root, create, c)
+	if st != 200 {
+		t.Fatal(w.Body.String())
+	}
+	id := b["definition"].(map[string]any)["id"].(string)
+	cfg := savedConfig(uid)
+	cfg["name"] = "Committed second revision"
+	edit := map[string]any{"retryKey": "canonical-edit", "expectedVersion": 1, "configuration": cfg, "state": "active"}
+	st, _, w = req(t, s, "PATCH", root+"/"+id, edit, c)
+	if st != 200 {
+		t.Fatal(w.Body.String())
+	}
+	third := savedConfig(uid)
+	third["name"] = "Unseen third revision"
+	st, _, w = req(t, s, "PATCH", root+"/"+id, map[string]any{"retryKey": "intervening-edit", "expectedVersion": 2, "configuration": third, "state": "active"}, c)
+	if st != 200 {
+		t.Fatal(w.Body.String())
+	}
+	for _, replay := range []struct {
+		method, path string
+		body         map[string]any
+		version      float64
+		name         string
+	}{{"POST", root, create, 1, "Monthly delivery"}, {"PATCH", root + "/" + id, edit, 2, "Committed second revision"}} {
+		st, b, w = req(t, s, replay.method, replay.path, replay.body, c)
+		if st != 200 {
+			t.Fatal(w.Body.String())
+		}
+		d := b["definition"].(map[string]any)
+		if d["version"] != replay.version || d["configuration"].(map[string]any)["name"] != replay.name {
+			t.Fatal("retry silently rebased onto unseen row", d)
+		}
+	}
+}
