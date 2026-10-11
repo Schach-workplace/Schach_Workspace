@@ -1,0 +1,2 @@
+DROP TABLE finance_duplicate_decisions;
+DROP TABLE finance_duplicate_candidates;

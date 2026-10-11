@@ -86,6 +86,9 @@ func (s *Server) uploadExpenseReceipt(w http.ResponseWriter, r *http.Request) er
 		if result.RowsAffected != 1 {
 			return missing()
 		}
+		if err := staleFinanceDuplicates(tx, e.CompanyID, e.ID); err != nil {
+			return err
+		}
 		return financeEvent(tx, e.CompanyID, e.DepartmentID, "expense", e.ID, a.User.ID, "receipt_uploaded", receipt.FileName+" ("+strconv.FormatInt(receipt.Size, 10)+" bytes) appended to "+e.Code+"; financial fields remain unchanged.")
 	})
 	if err != nil {

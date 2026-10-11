@@ -120,5 +120,8 @@ func commitExpenseDraftPatch(tx *gorm.DB, a *access, old, next Expense, f map[st
 	if err := financeEvent(tx, next.CompanyID, next.DepartmentID, "expense", next.ID, a.User.ID, "expense_updated", financialChanges(f, old, next)); err != nil {
 		return err
 	}
+	if err := staleFinanceDuplicates(tx, a.Company.ID, next.ID); err != nil {
+		return err
+	}
 	return syncExpenseAttention(tx, a, old, next)
 }

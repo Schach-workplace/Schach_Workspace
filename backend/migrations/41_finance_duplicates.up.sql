@@ -1,0 +1,5 @@
+CREATE TABLE finance_duplicate_candidates (
+ id text PRIMARY KEY,company_id text NOT NULL,source_kind text NOT NULL CHECK(source_kind IN ('expense','extraction')),source_id text NOT NULL,source_version bigint NOT NULL,source_basis_hash text NOT NULL,compared_expense_id text NOT NULL,compared_version bigint NOT NULL,algorithm_version integer NOT NULL CHECK(algorithm_version=1),reason text NOT NULL CHECK(reason IN ('exact_vendor_invoice','same_receipt_content','near_invoice','same_vendor_amount_date')),state text NOT NULL CHECK(state IN ('open','dismissed','stale')),version bigint NOT NULL,created_at timestamptz NOT NULL,UNIQUE(source_kind,source_id,source_basis_hash,compared_expense_id,algorithm_version)
+);
+CREATE TABLE finance_duplicate_decisions(id text PRIMARY KEY,company_id text NOT NULL,candidate_id text NOT NULL,actor_id text NOT NULL,reason text NOT NULL,retry_key text NOT NULL,candidate_version bigint NOT NULL,created_at timestamptz NOT NULL);
+CREATE INDEX finance_duplicate_scope ON finance_duplicate_candidates(company_id,state,created_at,id);
