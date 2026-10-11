@@ -147,3 +147,40 @@ func expireFinanceJobOrigin(t *testing.T, f financeFixture, id string) {
 		t.Fatal("expired origin disclosed recovery metadata")
 	}
 }
+
+func TestFinanceProviderPreservedSessionEpoch(t *testing.T) {
+	f := newFinanceFixture(t)
+	expense := f.addExpense(t, 12345, f.cookie)
+	id := readyReceiptExtraction(t, f)
+	f.db.Where("job_id=?", id).Delete(&ReceiptExtractionResult{})
+	f.db.Model(&FinanceAssistanceJob{}).Where("id=?", id).Updates(map[string]any{"status": "queued", "result_id": "", "attempts": 0, "available_at": time.Now().Add(-time.Minute)})
+	p := pausedReceiptOCR{make(chan struct{}), make(chan struct{})}
+	f.s.opts.ReceiptOCRProvider = p
+	done := make(chan error, 1)
+	go func() { _, e := f.s.RunFinanceAssistanceJobs(t.Context(), time.Now(), 1); done <- e }()
+	select {
+	case <-p.entered:
+	case <-time.After(5 * time.Second):
+		t.Fatal("provider not entered")
+	}
+	financeOK(t, f.s, "POST", "/api/auth/password", map[string]any{"currentPassword": "A-strong-password!2026", "newPassword": "Fictional-changed-password!2026"}, f.cookie)
+	financeOK(t, f.s, "GET", "/api/auth/session", nil, f.cookie)
+	close(p.resume)
+	if e := <-done; e != nil {
+		t.Fatal(e)
+	}
+	var count int64
+	f.db.Model(&ReceiptExtractionResult{}).Where("job_id=?", id).Count(&count)
+	if count != 0 {
+		t.Fatal("pre-change provider published after preserved-session epoch change")
+	}
+	var job FinanceAssistanceJob
+	f.db.First(&job, "id=?", id)
+	if job.Status != "stale" {
+		t.Fatal("crossed producer was not retired", job.Status)
+	}
+	retained := financeOK(t, f.s, "GET", f.base()+"/expenses/"+expense, nil, f.cookie)
+	if retained["expense"].(map[string]any)["amountMinor"] != float64(12345) {
+		t.Fatal("independent financial history changed")
+	}
+}

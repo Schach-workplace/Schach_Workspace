@@ -1,3 +1,4 @@
+import PeopleProjection from "./PeopleProjection";
 import { useState } from "react";
 import { Text, View } from "react-native";
 import { useWorkspace } from "./Workspace";
@@ -5,6 +6,8 @@ import Page from "./PeoplePage";
 import { Action } from "./ConnectUI";
 import { useRamInput } from "./ramInput";
 import {
+  usePeopleEditorBasis,
+  usePeopleRowIDs,
   usePeopleRead,
   usePeopleMutation,
   usePeopleResult,
@@ -33,7 +36,7 @@ export default function AccessReview() {
     () => ({ reason: "", decisions: [] as ReviewDecision[] }),
   );
   const [search, setSearch] = useState("");
-  const [review, setReview] = useState<{
+  const [review, setReview] = usePeopleResult<{
     basis: string;
     value: AccessReviewView;
   }>();
@@ -42,9 +45,17 @@ export default function AccessReview() {
   const [confirmed, setConfirmed] = useState(false);
   const previewAction = usePeopleMutation("$people-review-preview");
   const action = usePeopleMutation("$people-review-complete");
-  const basis = w.work?.readBasis ?? "";
+  const basis = usePeopleEditorBasis(w.work?.readBasis);
   const ready = context.ready && w.foreground;
   const current = ready && review?.basis === basis ? review.value : undefined;
+  const visibleIDs = usePeopleRowIDs(
+    context.data?.people
+      .filter((p) =>
+        `${p.name} ${p.email}`.toLowerCase().includes(search.toLowerCase()),
+      )
+      .map((p) => p.id),
+    basis,
+  );
   const unknown = action.attempt?.state === "unknown";
   function update(uid: string, change: Partial<ReviewDecision>) {
     setReview(undefined);
@@ -96,7 +107,13 @@ export default function AccessReview() {
       <Text accessibilityLiveRegion="polite">
         {error || action.error || previewAction.error}
       </Text>
-      {!ready && <Text>Checking current company authority…</Text>}
+      <View
+        accessibilityElementsHidden={ready}
+        importantForAccessibility={ready ? "no-hide-descendants" : "auto"}
+        style={{ opacity: ready ? 0 : 1 }}
+      >
+        <Text>Checking current company authority…</Text>
+      </View>
       {unknown ? (
         <>
           <Text>The captured completion may already have succeeded.</Text>
@@ -165,57 +182,63 @@ export default function AccessReview() {
             value={search}
             onChange={setSearch}
           />
-          {ready &&
-            draft.decisions.map((d) => {
-              const p = context.data!.people.find((p) => p.id === d.userId);
-              if (
-                !p ||
-                !`${p.name} ${p.email}`
-                  .toLowerCase()
-                  .includes(search.toLowerCase())
-              )
-                return null;
-              return (
-                <View key={p.id}>
+          {draft.decisions.map((d) => {
+            const p = context.data?.people.find((p) => p.id === d.userId);
+            if (!visibleIDs.includes(d.userId)) return null;
+            return (
+              <View key={d.userId}>
+                <PeopleProjection current={ready}>
                   <Text>
-                    {p.name} · {p.role}
+                    {p?.name} · {p?.role}
                   </Text>
-                  <PeopleChoice
-                    label={"Access decision for " + p.name}
-                    value={d.action}
-                    options={[
-                      { id: "keep", name: "Keep access" },
-                      { id: "change", name: "Change reviewed access" },
-                      {
-                        id: "departure_required",
-                        name: "Departure follow-up required",
-                      },
-                      { id: "revoke_access", name: "Revoke company access" },
-                    ]}
-                    onChange={(action) =>
-                      update(p.id, {
-                        action: action as ReviewDecision["action"],
-                        fields: undefined,
-                      })
-                    }
+                </PeopleProjection>
+                <PeopleChoice
+                  disabled={!ready}
+                  label="Access decision"
+                  value={d.action}
+                  options={[
+                    { id: "keep", name: "Keep access" },
+                    { id: "change", name: "Change reviewed access" },
+                    {
+                      id: "departure_required",
+                      name: "Departure follow-up required",
+                    },
+                    { id: "revoke_access", name: "Revoke company access" },
+                  ]}
+                  onChange={(action) =>
+                    update(d.userId, {
+                      action: action as ReviewDecision["action"],
+                      fields:
+                        action === "change" && p
+                          ? {
+                              role: p.role,
+                              departmentId: p.departmentId,
+                              managerId: p.managerId,
+                              title: p.title,
+                              capacityHours: p.capacityHours,
+                            }
+                          : undefined,
+                    })
+                  }
+                />
+                {d.action === "change" && (
+                  <PeopleMembershipFields
+                    context={context.data}
+                    disabled={!ready}
+                    value={{
+                      role: "member",
+                      departmentId: "",
+                      managerId: "",
+                      title: "",
+                      capacityHours: 40,
+                      ...d.fields,
+                    }}
+                    onChange={(fields) => update(d.userId, { fields })}
                   />
-                  {d.action === "change" && (
-                    <PeopleMembershipFields
-                      context={context.data}
-                      value={{
-                        role: p.role,
-                        departmentId: p.departmentId,
-                        managerId: p.managerId,
-                        title: p.title,
-                        capacityHours: p.capacityHours,
-                        ...d.fields,
-                      }}
-                      onChange={(fields) => update(p.id, { fields })}
-                    />
-                  )}
-                </View>
-              );
-            })}
+                )}
+              </View>
+            );
+          })}
           <Text>Filtered members remain in the complete captured review.</Text>
           {draft.decisions.some((d) => d.action === "revoke_access") && (
             <>

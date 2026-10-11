@@ -8,6 +8,12 @@ def cmd(args,cwd=ROOT,env=None,log='commands.log'):
 def free_port():
  with socket.socket()as s:s.bind(('127.0.0.1',0));return s.getsockname()[1]
 try:
+ # Encore v1.58.6 hardcodes these daemon ports. Do not disrupt an existing
+ # workspace or start a partially isolated daemon when they are occupied.
+ for internal_port in (9500,9600,9700):
+  with socket.socket()as probe:
+   try:probe.bind(('127.0.0.1',internal_port))
+   except OSError as error:raise RuntimeError(f'Encore fixed internal port {internal_port} is occupied; leave its owner untouched and use an isolated network namespace')from error
  encore_env=dict(os.environ,XDG_CACHE_HOME=str(cache),ENCORE_CONFIG_DIR=str(cache/'config'),ENCORE_DAEMON_LOG_PATH=str(out/'owned-daemon.log'),ENCORE_DEVDASH_LISTEN_ADDR='127.0.0.1:'+str(free_port()),ENCORE_MCPSSE_LISTEN_ADDR='127.0.0.1:'+str(free_port()),ENCORE_OBJECTSTORAGE_LISTEN_ADDR='127.0.0.1:'+str(free_port()))
  daemon_log=(out/'owned-daemon.log').open('wb');daemon=subprocess.Popen(['encore','daemon','--foreground'],env=encore_env,stdout=daemon_log,stderr=subprocess.STDOUT);daemon_log.close();time.sleep(1)
  if not (cache/'encore/encored.sock').exists():raise RuntimeError('owned Encore daemon socket was not isolated')
@@ -22,7 +28,7 @@ try:
   cfg=root/'encore/api/config.cue';cfg.write_text(cfg.read_text().replace('SeedDemo: false','SeedDemo: true'))
   with socket.socket()as s:s.bind(('127.0.0.1',0));port=s.getsockname()[1]
   base=f'http://127.0.0.1:{port}';config={'metadata':{'app_id':'schach-m9-owned','env_name':'disposable-local','env_type':'development','cloud':'local','base_url':base},'auth':[{'type':'key','id':1,'key':{'$env':'SERVICE_API_KEY'}}],'sql_servers':[{'host':pg+':5432','tls_config':{'disabled':True},'databases':{'workspace':{'name':'workspace','username':'schach','password':'disposable-trust','min_connections':1,'max_connections':20}}}],'secrets':{'BootstrapPassword':{'$env':'BOOTSTRAP_PASSWORD'}},'log_config':'warn'}
-  infra=root/'infra.json';infra.write_text(json.dumps(config));cmd(['encore','-vv','build','docker',tag,'--config',str(infra),'--base','alpine:3'],root/'encore',env=encore_env,log='build.log');made.append('image');result['imageID']=subprocess.check_output(['docker','image','inspect',tag,'--format','{{.Id}}'],text=True).strip();result['checks'].append('Actual current Encore exporter builds current platform')
+  infra=root/'infra.json';infra.write_text(json.dumps(config));cmd(['encore','check'],root/'encore',env=encore_env,log='check.log');cmd(['encore','-vv','build','docker',tag,'--config',str(infra),'--base','alpine:3'],root/'encore',env=encore_env,log='build.log');made.append('image');result['imageID']=subprocess.check_output(['docker','image','inspect',tag,'--format','{{.Id}}'],text=True).strip();result['checks'].append('Actual current Encore exporter builds current platform')
   # Apply numbered SQL using the declared single standalone migration owner to
   # the dedicated physical database before booting the exported gateway.
   files=sorted((ROOT/'backend/migrations').glob('*.up.sql'),key=lambda p:int(p.name.split('_')[0]));sql='\n'.join(p.read_text()for p in files);r=subprocess.run(['docker','exec','-i',pg,'psql','-U','schach','-d','workspace','-v','ON_ERROR_STOP=1','--single-transaction'],input=sql.encode(),capture_output=True,check=True);(out/'migrations.log').write_bytes(r.stdout+r.stderr)

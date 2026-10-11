@@ -29,7 +29,7 @@ func authorizeReportExportJob(tx *gorm.DB, a *access, id string) (ReportExportJo
 		}
 		return job, e
 	}
-	if job.RecipientAccessEpoch != a.Member.AccessEpoch {
+	if job.FailureCode == "access_changed" || job.RecipientAccessEpoch != a.Member.AccessEpoch {
 		return job, historicalAccessChanged()
 	}
 	if e := authorizeHistoricalSources(tx, a, job.SnapshotID); e != nil {

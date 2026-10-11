@@ -1,3 +1,4 @@
+import PeopleProjection from "./PeopleProjection";
 import { useState } from "react";
 import { Text, View } from "react-native";
 import Page from "./PeoplePage";
@@ -84,13 +85,19 @@ export default function PeoplePresetEditor() {
   return (
     <Page>
       <Text accessibilityRole="header">Onboarding presets</Text>
-      {!ready && <Text>Checking current preset access…</Text>}
+      <View
+        accessibilityElementsHidden={ready}
+        importantForAccessibility={ready ? "no-hide-descendants" : "auto"}
+        style={{ opacity: ready ? 0 : 1 }}
+      >
+        <Text>Checking current preset access…</Text>
+      </View>
       <Text accessibilityLiveRegion="polite">{error || action.error}</Text>
       {saved && ready && (
         <Text>Preset saved. Select it to inspect its current version.</Text>
       )}
-      {ready && (
-        <>
+      {
+        <PeopleProjection current={ready}>
           <Action
             title="New preset"
             disabled={!!action.attempt}
@@ -104,22 +111,23 @@ export default function PeoplePresetEditor() {
               onPress={() => load(p)}
             />
           ))}
-        </>
-      )}
+        </PeopleProjection>
+      }
       <PeopleField
         label="Preset name"
         value={draft.name}
         onChange={(name) => setDraft({ ...draft, name })}
-        disabled={locked}
+        disabled={!!action.attempt}
       />
       <PeopleField
         label="Preset description"
         value={draft.description}
         onChange={(description) => setDraft({ ...draft, description })}
-        disabled={locked}
+        disabled={!!action.attempt}
         multiline
       />
       <PeopleMembershipFields
+        authoredDisabled={!!action.attempt}
         value={draft.membership}
         onChange={(membership) => setDraft({ ...draft, membership })}
         context={context.data}

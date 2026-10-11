@@ -1,9 +1,11 @@
+import PeopleProjection from './PeopleProjection';
 import { onboardingTaskReview } from '../../../shared/people/taskReview';
 import { useState } from 'react';
 import { useWorkspace } from '../store';
 import { useExecutionInput } from '../data/executionInput';
 import { businessAttemptGeneration } from '../data/businessAttempts';
 import {
+  usePeopleEditorBasis,
   usePeopleRead,
   usePeopleMutation,
   emptyOnboarding,
@@ -42,8 +44,9 @@ export default function PeopleOnboarding({ onClose }: { onClose: () => void }) {
   );
   const [preview, setPreview] = useState<{ basis: string; value: OnboardingPreview }>();
   const [done, setDone] = useState<{ generation: number; value: PeopleResult }>();
-  const basis = w.data?.readBasis ?? '';
-  const currentPreview = context.ready && preview?.basis === basis ? preview.value : undefined;
+  const basis = usePeopleEditorBasis(w.data?.readBasis);
+  const presented = preview?.basis === basis ? preview.value : undefined;
+  const currentPreview = context.ready ? presented : undefined;
   const unknown = action.attempt?.state === 'unknown';
   const result =
     done?.generation === businessAttemptGeneration() && context.ready ? done.value : undefined;
@@ -120,7 +123,12 @@ export default function PeopleOnboarding({ onClose }: { onClose: () => void }) {
             </li>
           ))}
         </ol>
-        {!context.ready && <p role="status">Checking current company access…</p>}
+        <div
+          aria-hidden={context.ready}
+          style={{ visibility: context.ready ? 'hidden' : 'visible' }}
+        >
+          <p role="status">Checking current company access…</p>
+        </div>
         <ErrorMessage error={error || action.error || previewAction.error} />
         {unknown ? (
           <section>
@@ -206,7 +214,7 @@ export default function PeopleOnboarding({ onClose }: { onClose: () => void }) {
               </button>
             </div>
             <div hidden={stage !== 1}>
-              {context.data && (
+              {
                 <>
                   <Field label="Onboarding preset">
                     <select
@@ -244,13 +252,14 @@ export default function PeopleOnboarding({ onClose }: { onClose: () => void }) {
                   <MembershipFields
                     value={draft.membership}
                     context={context.data}
+                    disabled={!ready}
                     onChange={(membership) => {
                       change();
                       setDraft({ ...draft, membership });
                     }}
                   />
                 </>
-              )}
+              }
               <p>{privateInviteCopy}</p>
               <button className="button" onClick={() => setStage(0)}>
                 Back
@@ -392,36 +401,38 @@ export default function PeopleOnboarding({ onClose }: { onClose: () => void }) {
               </button>
             </div>
             <div hidden={stage !== 3}>
-              {currentPreview ? (
+              {presented ? (
                 <>
-                  <h3>Review exact access</h3>
-                  <p>
-                    {currentPreview.person.name} · {currentPreview.person.email}
-                  </p>
-                  {currentPreview.grants.map((g) => (
-                    <p key={g.area}>{g.summary}</p>
-                  ))}
-                  {currentPreview.taskPreviews.map((t, i) => (
-                    <section key={i}>
-                      <h4>{String(t.fields.title ?? 'Starting task')}</h4>
-                      <p>
-                        Template version {t.templateVersion} ·{' '}
-                        {String(t.fields.dueDate ?? 'No deadline')}
-                      </p>
-                      {onboardingTaskReview(t, context.data, projects.data?.projects).map(
-                        (line, j) => (
-                          <p key={j}>{line}</p>
-                        ),
-                      )}
-                    </section>
-                  ))}
-                  {currentPreview.unresolved.map((u, i) => (
-                    <p role="alert" key={i}>
-                      {u.message}
+                  <PeopleProjection current={!!currentPreview}>
+                    <h3>Review exact access</h3>
+                    <p>
+                      {presented.person.name} · {presented.person.email}
                     </p>
-                  ))}
-                  <SessionEffect effect={currentPreview.sessionEffect} />
-                  {currentPreview.accountMode === 'new_account' ? (
+                    {presented.grants.map((g) => (
+                      <p key={g.area}>{g.summary}</p>
+                    ))}
+                    {presented.taskPreviews.map((t, i) => (
+                      <section key={i}>
+                        <h4>{String(t.fields.title ?? 'Starting task')}</h4>
+                        <p>
+                          Template version {t.templateVersion} ·{' '}
+                          {String(t.fields.dueDate ?? 'No deadline')}
+                        </p>
+                        {onboardingTaskReview(t, context.data, projects.data?.projects).map(
+                          (line, j) => (
+                            <p key={j}>{line}</p>
+                          ),
+                        )}
+                      </section>
+                    ))}
+                    {presented.unresolved.map((u, i) => (
+                      <p role="alert" key={i}>
+                        {u.message}
+                      </p>
+                    ))}
+                    <SessionEffect effect={presented.sessionEffect} />
+                  </PeopleProjection>
+                  {presented.accountMode === 'new_account' ? (
                     <Field
                       label="New account password"
                       hint="At least 12 characters; only the submitted request retains it while its result is unknown."
@@ -440,9 +451,8 @@ export default function PeopleOnboarding({ onClose }: { onClose: () => void }) {
                     className="button button-primary"
                     disabled={
                       !ready ||
-                      currentPreview.unresolved.length > 0 ||
-                      (currentPreview.accountMode === 'new_account' &&
-                        Array.from(password).length < 12)
+                      presented.unresolved.length > 0 ||
+                      (presented.accountMode === 'new_account' && Array.from(password).length < 12)
                     }
                     onClick={() => void apply()}
                   >

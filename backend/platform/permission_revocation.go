@@ -166,6 +166,20 @@ func invalidatePeopleOutputs(tx *gorm.DB, cid string, before, after map[string]M
 			return e
 		}
 	}
+	// Definition-backed exports are capabilities of both owner and recipient.
+	// Retire the owner's complete output set under the same Company fence; a
+	// later rejoin cannot restore it, and independent snapshots remain untouched.
+	definitions := tx.Model(&SavedReportDefinition{}).Select("id").Where("company_id=? AND owner_id IN ?", cid, c.ScopeChangedUsers)
+	ownedJobs := tx.Model(&ReportExportJob{}).Select("id").Where("company_id=? AND definition_id IN (?)", cid, definitions)
+	if e := tx.Model(&ReportArtifact{}).Where("company_id=? AND job_id IN (?) AND state='ready'", cid, ownedJobs).Update("state", "revoked").Error; e != nil {
+		return e
+	}
+	if e := tx.Model(&ReportDeliveryIntent{}).Where("company_id=? AND job_id IN (?) AND state='pending'", cid, ownedJobs).Update("state", "cancelled").Error; e != nil {
+		return e
+	}
+	if e := tx.Model(&ReportExportJob{}).Where("company_id=? AND definition_id IN (?) AND state IN ?", cid, definitions, []string{"queued", "running", "ready"}).Updates(map[string]any{"state": "cancelled", "failure_code": "access_changed", "lease_token": "", "lease_until": nil, "updated_at": time.Now().UTC()}).Error; e != nil {
+		return e
+	}
 	for _, uid := range c.DepartedUsers {
 		definitions := tx.Model(&SavedReportDefinition{}).Select("id").Where("company_id=? AND owner_id=?", cid, uid)
 		if e := tx.Model(&ReportSchedule{}).Where("company_id=? AND definition_id IN (?) AND state='active'", cid, definitions).Updates(map[string]any{"state": "paused", "version": gorm.Expr("version+1")}).Error; e != nil {

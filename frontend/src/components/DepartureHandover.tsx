@@ -1,8 +1,10 @@
+import PeopleProjection from './PeopleProjection';
 import { businessAttemptGeneration } from '../data/businessAttempts';
 import { useState } from 'react';
 import { useWorkspace } from '../store';
 import { useExecutionInput } from '../data/executionInput';
 import {
+  usePeopleEditorBasis,
   usePeopleRead,
   usePeopleMutation,
   usePeopleResult,
@@ -77,7 +79,7 @@ export default function DepartureHandover({
     'draft',
     () => ({ reason: '', replacements: [] as DepartureReplacement[] }),
   );
-  const [view, setView] = useState<{ basis: string; value: DeparturePreview }>();
+  const [view, setView] = usePeopleResult<{ basis: string; value: DeparturePreview }>();
   const [confirmed, setConfirmed] = useState(false);
   const [stage, setStage] = useState(0);
   const [done, setDone] = usePeopleResult<PeopleResult>();
@@ -97,8 +99,9 @@ export default function DepartureHandover({
     ),
   );
   const previewAction = usePeopleMutation('$people-departure-preview:' + userId);
-  const basis = w.data?.readBasis ?? '';
-  const current = context.ready && view?.basis === basis ? view.value : undefined;
+  const basis = usePeopleEditorBasis(w.data?.readBasis);
+  const presented = view?.basis === basis ? view.value : undefined;
+  const current = context.ready ? presented : undefined;
   const ready = context.ready && !w.authorizing;
   const unknown = action.attempt?.state === 'unknown';
   async function preview(empty = false) {
@@ -150,7 +153,9 @@ export default function DepartureHandover({
           ))}
         </ol>
         <ErrorMessage error={error || action.error || previewAction.error} />
-        {!ready && <p role="status">Checking current company access…</p>}
+        <div aria-hidden={ready} style={{ visibility: ready ? 'hidden' : 'visible' }}>
+          <p role="status">Checking current company access…</p>
+        </div>
         {unknown ? (
           <>
             <p>
@@ -205,27 +210,31 @@ export default function DepartureHandover({
             >
               Inspect current obligations
             </button>
-            {current && (
+            {presented && (
               <>
                 <h3>Live responsibilities</h3>
-                {current.liveItems.map((item) => (
+                {presented.liveItems.map((item) => (
                   <fieldset key={item.kind + item.sourceId}>
                     <legend>
-                      {item.title} · {replacementLabel(item.kind)}
+                      <PeopleProjection current={ready}>
+                        {item.title} · {replacementLabel(item.kind)}
+                      </PeopleProjection>
                     </legend>
-                    <p>
-                      {item.state} · captured version {item.version}
-                    </p>
-                    <Field
-                      label={'Replacement for ' + item.title + ' ' + replacementLabel(item.kind)}
-                    >
+                    <PeopleProjection current={ready}>
+                      <p>
+                        {item.state} · captured version {item.version}
+                      </p>
+                    </PeopleProjection>
+                    <Field label={'Replacement for ' + replacementLabel(item.kind)}>
                       <select
+                        aria-disabled={!ready}
                         value={
                           draft.replacements.find(
                             (r) => r.kind === item.kind && r.sourceId === item.sourceId,
                           )?.newUserId ?? '__choose'
                         }
                         onChange={(e) => {
+                          if (!ready) return;
                           const empty = e.target.value === '';
                           const replacement: DepartureReplacement = {
                             kind: item.kind,
@@ -252,7 +261,7 @@ export default function DepartureHandover({
                         {item.allowsNoManager && (
                           <option value="">No manager — explicit reviewed choice</option>
                         )}
-                        {item.candidates.map((p) => (
+                        {(ready ? item.candidates : []).map((p) => (
                           <option key={p.id} value={p.id}>
                             {p.name} · {p.role}
                           </option>
@@ -260,7 +269,7 @@ export default function DepartureHandover({
                       </select>
                     </Field>
                     {item.kind === 'expense_review_route' && (
-                      <Field label={'Review routing for ' + item.title}>
+                      <Field label="Review routing">
                         <select
                           value={
                             draft.replacements.find(
@@ -291,27 +300,29 @@ export default function DepartureHandover({
                     )}
                   </fieldset>
                 ))}
-                <h3>Retained accepted history</h3>
-                <p>
-                  {current.retainedHistory.tasks ?? 0} accepted or cancelled tasks keep their
-                  historical ownership and reviewers.
-                </p>
-                <p>
-                  {current.retainedHistory.milestones ?? 0} accepted milestones and{' '}
-                  {current.retainedHistory.projects ?? 0} completed or archived projects remain
-                  unchanged.
-                </p>
-                {current.unresolved.map((u, i) => (
-                  <p key={i} role="note">
-                    {u.message}
-                    {u.projectId && onProject && (
-                      <button className="button" onClick={() => onProject(u.projectId!)}>
-                        Open project for authorized request changes
-                      </button>
-                    )}
+                <PeopleProjection current={ready}>
+                  <h3>Retained accepted history</h3>
+                  <p>
+                    {presented.retainedHistory.tasks ?? 0} accepted or cancelled tasks keep their
+                    historical ownership and reviewers.
                   </p>
-                ))}
-                <SessionEffect effect={current.sessionEffect} />
+                  <p>
+                    {presented.retainedHistory.milestones ?? 0} accepted milestones and{' '}
+                    {presented.retainedHistory.projects ?? 0} completed or archived projects remain
+                    unchanged.
+                  </p>
+                  {presented.unresolved.map((u, i) => (
+                    <p key={i} role="note">
+                      {u.message}
+                      {u.projectId && onProject && (
+                        <button className="button" onClick={() => onProject(u.projectId!)}>
+                          Open project for authorized request changes
+                        </button>
+                      )}
+                    </p>
+                  ))}
+                  <SessionEffect effect={presented.sessionEffect} />
+                </PeopleProjection>
                 <button
                   className="button"
                   disabled={!ready || previewAction.busy}
@@ -319,7 +330,7 @@ export default function DepartureHandover({
                 >
                   Review selected replacements
                 </button>
-                {current.readyToApply && stage >= 2 && (
+                {presented.readyToApply && stage >= 2 && (
                   <>
                     <p>
                       Leave this company after transferring the reviewed responsibilities. Existing

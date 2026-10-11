@@ -44,6 +44,8 @@ type ReceiptEvidenceFingerprint struct {
 	AssessedAt     time.Time `json:"assessedAt"`
 }
 type FinanceAssistanceJob struct {
+	// Captured only for one claimed worker invocation, never durable raw-handle policy.
+	ProducerSessionEpoch    int64     `json:"-" gorm:"-"`
 	ID                      string    `json:"id" gorm:"primaryKey"`
 	CompanyID               string    `json:"-" gorm:"index"`
 	RequesterID             string    `json:"-"`

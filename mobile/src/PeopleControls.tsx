@@ -1,3 +1,4 @@
+import PeopleProjection from "./PeopleProjection";
 import { useState } from "react";
 import { FlatList, Text, TextInput, View } from "react-native";
 import { Action, Sheet, ui } from "./ConnectUI";
@@ -56,21 +57,35 @@ export function PeopleChoice({
 }) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
+  const [triggerHeight, setTriggerHeight] = useState(0);
   return (
     <>
-      <Action
-        title={
-          label +
-          ": " +
-          (options.find((x) => x.id === value)?.name ??
-            "Choose a current option")
-        }
-        disabled={disabled}
-        onPress={() => {
-          setQuery("");
-          setOpen(true);
+      <View
+        onLayout={(e) => {
+          if (!disabled) setTriggerHeight(e.nativeEvent.layout.height);
         }}
-      />
+        style={
+          disabled && triggerHeight > 0
+            ? { height: triggerHeight, overflow: "hidden" }
+            : undefined
+        }
+      >
+        <Action
+          title={
+            label +
+            ": " +
+            ((!disabled
+              ? options.find((x) => x.id === value)?.name
+              : undefined) ??
+              (disabled ? "Checking" : "Choose a current option"))
+          }
+          disabled={disabled}
+          onPress={() => {
+            setQuery("");
+            setOpen(true);
+          }}
+        />
+      </View>
       {open && (
         <Sheet title={label} scroll={false} onClose={() => setOpen(false)}>
           <PeopleField
@@ -78,27 +93,26 @@ export function PeopleChoice({
             value={query}
             onChange={setQuery}
           />
-          <FlatList
-            data={
-              disabled
-                ? []
-                : options.filter((o) =>
-                    o.name.toLowerCase().includes(query.toLowerCase()),
-                  )
-            }
-            keyExtractor={(o) => o.id}
-            keyboardShouldPersistTaps="handled"
-            renderItem={({ item }) => (
-              <Action
-                title={item.name}
-                selected={item.id === value}
-                onPress={() => {
-                  onChange(item.id);
-                  setOpen(false);
-                }}
-              />
-            )}
-          />
+          <PeopleProjection current={!disabled}>
+            <FlatList
+              data={options.filter((o) =>
+                o.name.toLowerCase().includes(query.toLowerCase()),
+              )}
+              keyExtractor={(o) => o.id}
+              keyboardShouldPersistTaps="handled"
+              renderItem={({ item }) => (
+                <Action
+                  disabled={disabled}
+                  title={item.name}
+                  selected={item.id === value}
+                  onPress={() => {
+                    onChange(item.id);
+                    setOpen(false);
+                  }}
+                />
+              )}
+            />
+          </PeopleProjection>
         </Sheet>
       )}
     </>
@@ -109,11 +123,13 @@ export function PeopleMembershipFields({
   onChange,
   context,
   disabled = false,
+  authoredDisabled = false,
 }: {
   value: MembershipDefaults;
   onChange: (v: MembershipDefaults) => void;
   context?: PeopleContext;
   disabled?: boolean;
+  authoredDisabled?: boolean;
 }) {
   const set = (k: keyof MembershipDefaults, v: string | number) =>
     onChange({ ...value, [k]: v });
@@ -152,17 +168,17 @@ export function PeopleMembershipFields({
         disabled={disabled}
       />
       <PeopleField
+        disabled={authoredDisabled}
         label="Title"
         value={value.title}
         onChange={(v) => set("title", v)}
-        disabled={disabled}
       />
       <PeopleField
+        disabled={authoredDisabled}
         label="Weekly capacity"
         value={String(value.capacityHours)}
         onChange={(v) => set("capacityHours", Number(v))}
         numeric
-        disabled={disabled}
       />
     </View>
   );

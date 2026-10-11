@@ -27,7 +27,9 @@ vi.mock("./client", () => ({
     }
   },
 }));
-vi.mock("@react-native-community/datetimepicker",()=>({default:()=>null}));
+vi.mock("@react-native-community/datetimepicker", () => ({
+  default: () => null,
+}));
 vi.mock("expo-crypto", () => ({ randomUUID: () => crypto.randomUUID() }));
 vi.mock("expo-router", () => ({
   router: { replace: vi.fn(), back: vi.fn(), push: vi.fn() },
@@ -277,7 +279,13 @@ it("captures all reviewed memberships despite display filtering and records pend
   await render(createElement(AccessReview));
   await press("Capture current company memberships");
   await enter("Review reason", "Quarterly fictional attestation");
-  await press("Access decision for Fictional Member: Keep access");
+  await act(async () => {
+    const rows = [...c.querySelectorAll("button")].filter(
+      (b) => b.textContent === "Access decision: Keep access",
+    );
+    rows[1].click();
+    await new Promise((r) => setTimeout(r, 10));
+  });
   await press("Departure follow-up required");
   await enter("Filter reviewed members", "Admin");
   await press("Preview access decisions");
@@ -314,3 +322,150 @@ it("withholds blocked departure completion while direct revocation stays indepen
   expect(c.textContent).toContain("Revoke company access");
   expect(c.textContent).toContain("responsibilities retained");
 });
+it("holds authored access and password nodes while current reads are pending", async () => {
+  let held = false;
+  let release: (() => void) | undefined;
+  state.request.mockImplementation(async (path: string) => {
+    if (path.endsWith("/people/context") && held)
+      await new Promise<void>((r) => {
+        release = r;
+      });
+    return (
+      reads(path) ?? {
+        id: "held-preview",
+        version: 1,
+        accountMode: "new_account",
+        person: { name: "Fictional", email: "fictional@example.invalid" },
+        grants: [],
+        taskPreviews: [],
+        unresolved: [],
+        sessionEffect: effect,
+      }
+    );
+  });
+  await render(createElement(PeopleOnboarding));
+  await enter("Name", "Held fictional");
+  await enter("Email", "held@example.invalid");
+  await press("Continue to access");
+  for (const label of ["Title", "Weekly capacity"]) {
+    await enter(label, label === "Title" ? "Authored title" : "31");
+    const field = c.querySelector(
+      `[aria-label="${label}"]`,
+    ) as HTMLInputElement;
+    field.focus();
+    held = true;
+    state.w.recordEpoch++;
+    await render(createElement(PeopleOnboarding));
+    expect(release).toBeTruthy();
+    expect(c.querySelector(`[aria-label="${label}"]`)).toBe(field);
+    expect(field.disabled).toBe(false);
+    expect(document.activeElement).toBe(field);
+    held = false;
+    await act(async () => {
+      release!();
+      await new Promise((r) => setTimeout(r, 10));
+    });
+    release = undefined;
+  }
+  await press("Continue to starting work");
+  await press("Review onboarding");
+  await enter("New account password", "fictional-held-secret");
+  const password = c.querySelector("input[type=password]") as HTMLInputElement;
+  password.focus();
+  password.setSelectionRange(3, 7);
+  held = true;
+  state.w.recordEpoch++;
+  await render(createElement(PeopleOnboarding));
+  expect(release).toBeTruthy();
+  const work = state.w.work;
+  state.w.work = null;
+  await render(createElement(PeopleOnboarding));
+  expect(c.querySelector("input[type=password]") === password).toBe(true);
+  expect(password.value.length).toBe(21);
+  expect(document.activeElement === password).toBe(true);
+  expect([password.selectionStart, password.selectionEnd]).toEqual([3, 7]);
+  held = false;
+  state.w.work = work;
+  await act(async () => {
+    release!();
+    await new Promise((r) => setTimeout(r, 10));
+  });
+  await render(createElement(PeopleOnboarding));
+});
+it.each(["review", "departure"])(
+  "keeps authored %s and an open picker through held current reads",
+  async (mode) => {
+    let held = false;
+    let release: (() => void) | undefined;
+    state.request.mockImplementation(async (path: string) => {
+      if (path.endsWith("/people/context") && held)
+        await new Promise<void>((r) => {
+          release = r;
+        });
+      return (
+        reads(path) ?? {
+          id: "departure",
+          version: 1,
+          target: people[1],
+          liveItems: [
+            {
+              kind: "task_owner",
+              sourceId: "task",
+              version: 7,
+              title: "Fictional duty",
+              state: "todo",
+              candidates: [people[0]],
+            },
+          ],
+          retainedHistory: { tasks: 1 },
+          unresolved: [],
+          readyToApply: false,
+          sessionEffect: effect,
+        }
+      );
+    });
+    const node = () =>
+      mode === "review"
+        ? createElement(AccessReview)
+        : createElement(DepartureHandover, { userId: "target" });
+    await render(node());
+    let field: HTMLInputElement;
+    if (mode === "review") {
+      await press("Capture current company memberships");
+      await act(async () => {
+        const rows = [...c.querySelectorAll("button")].filter(
+          (b) => b.textContent === "Access decision: Keep access",
+        );
+        rows[1].click();
+        await new Promise((r) => setTimeout(r, 10));
+      });
+      await press("Change reviewed access");
+      await enter("Title", "Authored review");
+      field = c.querySelector('input[aria-label="Title"]') as HTMLInputElement;
+    } else {
+      await enter("Departure reason", "Reviewed exit");
+      await press("Inspect current obligations");
+      await press("Replacement for task owner: Choose a current option");
+      await enter("Find replacement for task owner", "Admin");
+      field = c.querySelector(
+        'input[aria-label="Find replacement for task owner"]',
+      ) as HTMLInputElement;
+    }
+    field.focus();
+    field.setSelectionRange(1, 3);
+    held = true;
+    state.w.recordEpoch++;
+    await render(node());
+    expect(release).toBeTruthy();
+    expect(document.contains(field)).toBe(true);
+    expect(field.disabled).toBe(false);
+    expect(document.activeElement === field).toBe(true);
+    expect([field.selectionStart, field.selectionEnd]).toEqual([1, 3]);
+    held = false;
+    await act(async () => {
+      release!();
+      await new Promise((r) => setTimeout(r, 10));
+    });
+    await render(node());
+  },
+);

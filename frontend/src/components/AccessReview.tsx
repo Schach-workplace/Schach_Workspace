@@ -1,7 +1,10 @@
+import PeopleProjection from './PeopleProjection';
 import { useState } from 'react';
 import { useWorkspace } from '../store';
 import { useExecutionInput } from '../data/executionInput';
 import {
+  usePeopleEditorBasis,
+  usePeopleRowIDs,
   usePeopleRead,
   usePeopleMutation,
   usePeopleResult,
@@ -23,15 +26,21 @@ export default function AccessReview({ onClose }: { onClose: () => void }) {
     decisions: [] as ReviewDecision[],
   }));
   const [search, setSearch] = useState('');
-  const [review, setReview] = useState<{ basis: string; value: AccessReviewView }>();
+  const [review, setReview] = usePeopleResult<{ basis: string; value: AccessReviewView }>();
   const [done, setDone] = usePeopleResult<AccessReviewView>();
   const [error, setError] = useState('');
   const [confirmed, setConfirmed] = useState(false);
   const previewAction = usePeopleMutation('$people-review-preview');
   const action = usePeopleMutation('$people-review-complete');
-  const basis = w.data?.readBasis ?? '';
+  const basis = usePeopleEditorBasis(w.data?.readBasis);
   const current = context.ready && review?.basis === basis ? review.value : undefined;
   const ready = context.ready && !w.authorizing;
+  const visibleIDs = usePeopleRowIDs(
+    context.data?.people
+      .filter((p) => `${p.name} ${p.email}`.toLowerCase().includes(search.toLowerCase()))
+      .map((p) => p.id),
+    basis,
+  );
   const unknown = action.attempt?.state === 'unknown';
   const update = (uid: string, change: Partial<ReviewDecision>) => {
     setReview(undefined);
@@ -76,7 +85,9 @@ export default function AccessReview({ onClose }: { onClose: () => void }) {
     <Modal open title="Review company access" onClose={onClose}>
       <div className="entity-form people-form">
         <ErrorMessage error={error || action.error || previewAction.error} />
-        {!ready && <p role="status">Checking current company authority…</p>}
+        <div aria-hidden={ready} style={{ visibility: ready ? 'hidden' : 'visible' }}>
+          <p role="status">Checking current company authority…</p>
+        </div>
         {unknown ? (
           <>
             <p>Completion may already have succeeded. Retry the original captured review.</p>
@@ -152,49 +163,61 @@ export default function AccessReview({ onClose }: { onClose: () => void }) {
             <Field label="Filter reviewed members">
               <input value={search} onChange={(e) => setSearch(e.target.value)} />
             </Field>
-            {ready &&
-              draft.decisions.map((d) => {
-                const p = context.data!.people.find((p) => p.id === d.userId);
-                if (!p || !`${p.name} ${p.email}`.toLowerCase().includes(search.toLowerCase()))
-                  return null;
-                return (
-                  <fieldset key={d.userId}>
-                    <legend>
-                      {p.name} · {p.role}
-                    </legend>
-                    <Field label={'Access decision for ' + p.name}>
-                      <select
-                        value={d.action}
-                        onChange={(e) =>
-                          update(d.userId, {
-                            action: e.target.value as ReviewDecision['action'],
-                            fields: undefined,
-                          })
-                        }
-                      >
-                        <option value="keep">Keep access</option>
-                        <option value="change">Change reviewed access</option>
-                        <option value="departure_required">Departure follow-up required</option>
-                        <option value="revoke_access">Revoke company access</option>
-                      </select>
-                    </Field>
-                    {d.action === 'change' && (
-                      <MembershipFields
-                        context={context.data!}
-                        value={{
-                          role: p.role,
-                          departmentId: p.departmentId,
-                          managerId: p.managerId,
-                          title: p.title,
-                          capacityHours: p.capacityHours,
-                          ...d.fields,
-                        }}
-                        onChange={(fields) => update(d.userId, { fields })}
-                      />
-                    )}
-                  </fieldset>
-                );
-              })}
+            {draft.decisions.map((d) => {
+              const p = context.data?.people.find((p) => p.id === d.userId);
+              if (!visibleIDs.includes(d.userId)) return null;
+              return (
+                <fieldset key={d.userId}>
+                  <legend>
+                    <PeopleProjection current={ready}>
+                      {p?.name} · {p?.role}
+                    </PeopleProjection>
+                  </legend>
+                  <Field label="Access decision">
+                    <select
+                      aria-label={ready && p ? 'Access decision for ' + p.name : 'Access decision'}
+                      disabled={!ready}
+                      value={d.action}
+                      onChange={(e) =>
+                        update(d.userId, {
+                          action: e.target.value as ReviewDecision['action'],
+                          fields:
+                            e.target.value === 'change' && p
+                              ? {
+                                  role: p.role,
+                                  departmentId: p.departmentId,
+                                  managerId: p.managerId,
+                                  title: p.title,
+                                  capacityHours: p.capacityHours,
+                                }
+                              : undefined,
+                        })
+                      }
+                    >
+                      <option value="keep">Keep access</option>
+                      <option value="change">Change reviewed access</option>
+                      <option value="departure_required">Departure follow-up required</option>
+                      <option value="revoke_access">Revoke company access</option>
+                    </select>
+                  </Field>
+                  {d.action === 'change' && (
+                    <MembershipFields
+                      context={context.data}
+                      disabled={!ready}
+                      value={{
+                        role: 'member',
+                        departmentId: '',
+                        managerId: '',
+                        title: '',
+                        capacityHours: 40,
+                        ...d.fields,
+                      }}
+                      onChange={(fields) => update(d.userId, { fields })}
+                    />
+                  )}
+                </fieldset>
+              );
+            })}
             <p>Filtered members remain in the complete captured review.</p>
             {draft.decisions.some((d) => d.action === 'revoke_access') && (
               <>

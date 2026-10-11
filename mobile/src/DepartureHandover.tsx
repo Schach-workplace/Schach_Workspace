@@ -1,3 +1,4 @@
+import PeopleProjection from "./PeopleProjection";
 import { businessAttemptGeneration } from "./businessAttempts";
 import { useState } from "react";
 import { Text, View } from "react-native";
@@ -8,6 +9,7 @@ import { Action } from "./ConnectUI";
 import { useRamInput } from "./ramInput";
 import { client } from "./client";
 import {
+  usePeopleEditorBasis,
   usePeopleRead,
   usePeopleMutation,
   usePeopleResult,
@@ -94,7 +96,7 @@ export default function DepartureHandover({ userId }: { userId: string }) {
     "draft",
     () => ({ reason: "", replacements: [] as DepartureReplacement[] }),
   );
-  const [view, setView] = useState<{
+  const [view, setView] = usePeopleResult<{
     basis: string;
     value: DeparturePreview;
   }>();
@@ -119,9 +121,10 @@ export default function DepartureHandover({ userId }: { userId: string }) {
   const previewAction = usePeopleMutation(
     "$people-departure-preview:" + userId,
   );
-  const basis = w.work?.readBasis ?? "";
+  const basis = usePeopleEditorBasis(w.work?.readBasis);
   const ready = context.ready && w.foreground;
-  const current = ready && view?.basis === basis ? view.value : undefined;
+  const presented = view?.basis === basis ? view.value : undefined;
+  const current = ready ? presented : undefined;
   const unknown = action.attempt?.state === "unknown";
   async function preview(empty = false) {
     previewAction.abandon();
@@ -168,7 +171,13 @@ export default function DepartureHandover({ userId }: { userId: string }) {
       <Text accessibilityLiveRegion="polite">
         {error || action.error || previewAction.error}
       </Text>
-      {!ready && <Text>Checking current company access…</Text>}
+      <View
+        accessibilityElementsHidden={ready}
+        importantForAccessibility={ready ? "no-hide-descendants" : "auto"}
+        style={{ opacity: ready ? 0 : 1 }}
+      >
+        <Text>Checking current company access…</Text>
+      </View>
       {unknown ? (
         <>
           <Text>
@@ -212,38 +221,41 @@ export default function DepartureHandover({ userId }: { userId: string }) {
             disabled={!ready || !draft.reason.trim() || previewAction.busy}
             onPress={() => void preview(true)}
           />
-          {current && (
+          {presented && (
             <>
               <Text accessibilityRole="header">Live responsibilities</Text>
-              {current.liveItems.map((item) => (
+              {presented.liveItems.map((item) => (
                 <View key={item.kind + item.sourceId}>
-                  <Text>
-                    {item.title} · {replacementLabel(item.kind)} · {item.state}
-                  </Text>
+                  <PeopleProjection current={ready}>
+                    <Text>
+                      {item.title} · {replacementLabel(item.kind)} ·{" "}
+                      {item.state}
+                    </Text>
+                  </PeopleProjection>
                   <PeopleChoice
-                    label={
-                      "Replacement for " +
-                      item.title +
-                      " " +
-                      replacementLabel(item.kind)
-                    }
+                    disabled={!ready}
+                    label={"Replacement for " + replacementLabel(item.kind)}
                     value={
                       draft.replacements.find(
                         (r) =>
                           r.kind === item.kind && r.sourceId === item.sourceId,
                       )?.newUserId ?? "__choose"
                     }
-                    options={[
-                      ...(item.allowsNoManager
-                        ? [
-                            {
-                              id: "",
-                              name: "No manager — explicit reviewed choice",
-                            },
+                    options={
+                      !ready
+                        ? []
+                        : [
+                            ...(item.allowsNoManager
+                              ? [
+                                  {
+                                    id: "",
+                                    name: "No manager — explicit reviewed choice",
+                                  },
+                                ]
+                              : []),
+                            ...item.candidates,
                           ]
-                        : []),
-                      ...item.candidates,
-                    ]}
+                    }
                     onChange={(newUserId) => {
                       const replacement: DepartureReplacement = {
                         kind: item.kind,
@@ -270,7 +282,8 @@ export default function DepartureHandover({ userId }: { userId: string }) {
                   />
                   {item.kind === "expense_review_route" && (
                     <PeopleChoice
-                      label={"Review routing for " + item.title}
+                      disabled={!ready}
+                      label="Review routing"
                       value={
                         draft.replacements.find(
                           (r) =>
@@ -307,39 +320,43 @@ export default function DepartureHandover({ userId }: { userId: string }) {
                   )}
                 </View>
               ))}
-              <Text accessibilityRole="header">Retained accepted history</Text>
-              <Text>
-                {current.retainedHistory.tasks ?? 0} accepted or cancelled tasks
-                retain historical ownership and reviewers.
-              </Text>
-              <Text>
-                {current.retainedHistory.milestones ?? 0} accepted milestones
-                and {current.retainedHistory.projects ?? 0} completed or
-                archived projects remain unchanged.
-              </Text>
-              {current.unresolved.map((u, i) => (
-                <View key={i}>
-                  <Text>{u.message}</Text>
-                  {u.projectId && (
-                    <Action
-                      title="Open project for authorized request changes"
-                      onPress={() =>
-                        router.push({
-                          pathname: "/project/[id]",
-                          params: { id: u.projectId!, company: w.company },
-                        })
-                      }
-                    />
-                  )}
-                </View>
-              ))}
-              <SessionEffect effect={current.sessionEffect} />
+              <PeopleProjection current={ready}>
+                <Text accessibilityRole="header">
+                  Retained accepted history
+                </Text>
+                <Text>
+                  {presented.retainedHistory.tasks ?? 0} accepted or cancelled
+                  tasks retain historical ownership and reviewers.
+                </Text>
+                <Text>
+                  {presented.retainedHistory.milestones ?? 0} accepted
+                  milestones and {presented.retainedHistory.projects ?? 0}{" "}
+                  completed or archived projects remain unchanged.
+                </Text>
+                {presented.unresolved.map((u, i) => (
+                  <View key={i}>
+                    <Text>{u.message}</Text>
+                    {u.projectId && (
+                      <Action
+                        title="Open project for authorized request changes"
+                        onPress={() =>
+                          router.push({
+                            pathname: "/project/[id]",
+                            params: { id: u.projectId!, company: w.company },
+                          })
+                        }
+                      />
+                    )}
+                  </View>
+                ))}
+                <SessionEffect effect={presented.sessionEffect} />
+              </PeopleProjection>
               <Action
                 title="Review selected replacements"
                 disabled={!ready || previewAction.busy}
                 onPress={() => void preview()}
               />
-              {current.readyToApply && stage >= 2 && (
+              {presented.readyToApply && stage >= 2 && (
                 <>
                   <Text>
                     Leave this company after transferring the reviewed

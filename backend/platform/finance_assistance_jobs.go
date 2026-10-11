@@ -22,6 +22,9 @@ func (s *Server) withFinanceClaimAccess(ctx context.Context, job FinanceAssistan
 		if e != nil {
 			return e
 		}
+		if job.ProducerSessionEpoch != 0 && job.ProducerSessionEpoch != a.User.SessionEpoch {
+			return missing()
+		}
 		if e := financeOriginalSession(tx, job.CompanyID, job.RequesterID, job.SessionRef); e != nil {
 			return e
 		}
@@ -136,10 +139,13 @@ func (s *Server) claimFinanceJob(ctx context.Context, now time.Time) (FinanceAss
 	})
 	return j, e
 }
-func (s *Server) financeJobBytes(ctx context.Context, j FinanceAssistanceJob) ([]byte, string, error) {
+func (s *Server) financeJobBytes(ctx context.Context, j *FinanceAssistanceJob) ([]byte, string, error) {
 	var i FinanceAssistanceIntake
 	var receipt ExpenseReceipt
-	e := s.withFinanceJobAccess(ctx, j, func(tx *gorm.DB, a *access) error {
+	e := s.withFinanceJobAccess(ctx, *j, func(tx *gorm.DB, a *access) error {
+		if j.ProducerSessionEpoch == 0 {
+			j.ProducerSessionEpoch = a.User.SessionEpoch
+		}
 		if j.SourceKind == "intake" {
 			return tx.First(&i, "id=? AND company_id=?", j.SourceID, j.CompanyID).Error
 		}
@@ -153,7 +159,7 @@ func (s *Server) financeJobBytes(ctx context.Context, j FinanceAssistanceJob) ([
 	if j.SourceKind == "intake" {
 		data, e := s.readFinanceIntakeBytes(ctx, i)
 		if e == nil {
-			e = s.withFinanceJobAccess(ctx, j, func(*gorm.DB, *access) error { return nil })
+			e = s.withFinanceJobAccess(ctx, *j, func(*gorm.DB, *access) error { return nil })
 		}
 		return data, i.MimeType, e
 	}
@@ -186,7 +192,7 @@ func (s *Server) RunFinanceAssistanceJobs(ctx context.Context, now time.Time, li
 			return done, e
 		}
 		work, cancel := context.WithTimeout(ctx, 45*time.Second)
-		data, mime, e := s.financeJobBytes(work, j)
+		data, mime, e := s.financeJobBytes(work, &j)
 		var extracted ReceiptOCRText
 		var candidates ReceiptCandidates
 		if e == nil {
@@ -203,7 +209,7 @@ func (s *Server) RunFinanceAssistanceJobs(ctx context.Context, now time.Time, li
 				var release func()
 				release, e = s.opts.LocalProviderBudget.Acquire(work)
 				if e == nil {
-					latest, _, err := s.financeJobBytes(work, j)
+					latest, _, err := s.financeJobBytes(work, &j)
 					if err != nil {
 						e = err
 					} else if financeDigest(latest) != financeDigest(data) || s.opts.FinanceOCRFingerprint != j.ProviderFingerprint {
@@ -219,7 +225,7 @@ func (s *Server) RunFinanceAssistanceJobs(ctx context.Context, now time.Time, li
 			}
 		}
 		if e == nil {
-			latest, _, err := s.financeJobBytes(work, j)
+			latest, _, err := s.financeJobBytes(work, &j)
 			if err != nil {
 				e = err
 			} else if financeDigest(latest) != financeDigest(data) {

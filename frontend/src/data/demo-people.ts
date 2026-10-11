@@ -86,8 +86,8 @@ const basis = (w: WorkspaceData) =>
 function authorize(me: Person) {
   if (!me.active || !['founder', 'ceo', 'admin'].includes(me.role)) denied();
 }
-function validate(w: WorkspaceData, me: Person, p: Person, all: Person[]) {
-  if (!roles.includes(p.role) || ranks[p.role] > ranks[me.role]) denied();
+function validate(w: WorkspaceData, me: Person, p: Person, all: Person[], checkRank = true) {
+  if (!roles.includes(p.role) || (checkRank && ranks[p.role] > ranks[me.role])) denied();
   if (p.id === me.id && !p.active)
     invalid('Ask another administrator to revoke your company access.');
   if (!Number.isFinite(p.capacityHours) || p.capacityHours < 0 || p.capacityHours > 168)
@@ -112,7 +112,7 @@ function applyMembers(w: WorkspaceData, me: Person, after: Person[]): SessionEff
     if (old && ranks[old.role] > ranks[me.role]) {
       if (JSON.stringify(old) !== JSON.stringify(p)) denied();
     }
-    validate(w, me, p, after);
+    validate(w, me, p, after, !old || JSON.stringify(old) !== JSON.stringify(p));
   }
   let scope = false;
   for (const p of after) {
@@ -147,9 +147,21 @@ export function readDemoPeople(
     };
   if (path === '/people/presets')
     return {
-      items: Object.values(state.presets).filter((p) => p.company === w.company.id),
+      items: Object.values(state.presets).filter(
+        (p) => p.company === w.company.id && ranks[p.membership.role] <= ranks[me.role],
+      ),
       cursor: '',
     };
+  if (path.startsWith('/people/presets/')) {
+    const preset = state.presets[path.split('/')[3]];
+    if (
+      !preset ||
+      preset.company !== w.company.id ||
+      ranks[preset.membership.role] > ranks[me.role]
+    )
+      denied();
+    return preset;
+  }
   if (path === '/people/access-reviews')
     return {
       items: Object.values(state.reviews).filter((p) => p.company === w.company.id),
@@ -279,6 +291,19 @@ export function mutateDemoPeople(
     Object.fromEntries(Object.entries(b).filter(([k]) => k !== 'password' && k !== 'retryKey')),
   );
   const previous = state.retries[key];
+  const authorizePreset = (id: string | undefined) => {
+    if (!id) return;
+    const p = state.presets[id];
+    if (!p || p.company !== w.company.id || ranks[p.membership.role] > ranks[me.role]) denied();
+  };
+  if (path.startsWith('/people/presets/')) authorizePreset(path.split('/')[3]);
+  if (path === '/people/presets' && previous) authorizePreset((previous.result as PeoplePreset).id);
+  if (path === '/people/onboarding/preview') authorizePreset(b.presetId);
+  if (path === '/people/onboarding/apply')
+    authorizePreset(
+      (state.previews[b.previewId]?.intent as OnboardingIntent | undefined)?.presetId,
+    );
+
   if (previous) {
     if (previous.body !== body) conflict();
     return structuredClone(previous.result);
@@ -336,8 +361,10 @@ export function mutateDemoPeople(
       .toLowerCase();
     if (!intent.name.trim() || !/^\S+@\S+\.\S+$/.test(email))
       invalid('Enter a name and valid email.');
-    if (w.people.some((p) => p.email.toLowerCase() === email && p.active))
-      invalid('This person already has active company access.');
+    if (w.people.some((p) => p.email.toLowerCase() === email))
+      invalid(
+        'This person already has a company membership. Use explicit membership reactivation or edit.',
+      );
     if (intent.tasks.length) invalid('This finite local sample has no starting task templates.');
     if (intent.presetId) {
       const p = state.presets[intent.presetId];
@@ -387,12 +414,9 @@ export function mutateDemoPeople(
       invalid('Use at least 12 characters for the fictional form.');
     let person = w.people.find((x) => x.id === account?.id);
     if (person) {
-      if (person.active) conflict();
-      const after = w.people.map((x) =>
-        x.id === person!.id ? { ...x, ...typedMembership(intent.membership), active: true } : x,
+      invalid(
+        'This person already has a company membership. Use explicit membership reactivation or edit.',
       );
-      applyMembers(w, me, after);
-      person = after.find((x) => x.id === person!.id)!;
     } else {
       person = {
         ...typedMembership(intent.membership),

@@ -149,7 +149,13 @@ it('erases local and submitted credentials before dependent refresh fails after 
       <PeopleOnboarding onClose={() => {}} />
     </QueryClientProvider>,
   );
-  await waitFor(() => expect(screen.queryByText('Checking current company access…')).toBeNull());
+  await waitFor(() =>
+    expect(
+      screen
+        .queryByText('Checking current company access…')
+        ?.parentElement?.getAttribute('aria-hidden') !== 'false',
+    ).toBe(true),
+  );
   fireEvent.change(screen.getByLabelText('Name'), { target: { value: 'Fictional' } });
   fireEvent.change(screen.getByLabelText('Email'), {
     target: { value: 'fictional@example.invalid' },
@@ -233,3 +239,202 @@ it('keeps the authored onboarding node while the joined workspace shell is reaut
   );
   await waitFor(() => expect(screen.queryByLabelText('Name')).toBeNull());
 });
+
+it('keeps access title/capacity and password nodes through held current reads', async () => {
+  let held = false;
+  let release: (() => void) | undefined;
+  vi.stubGlobal(
+    'fetch',
+    vi.fn(async (input: string) => {
+      if (String(input).endsWith('/people/context') && held)
+        await new Promise<void>((r) => {
+          release = r;
+        });
+      const body = String(input).endsWith('/people/context')
+        ? {
+            people: sample.workspaces[0].people,
+            departments: sample.workspaces[0].departments,
+            roles: ['member'],
+          }
+        : String(input).endsWith('/onboarding/preview')
+          ? {
+              id: 'held-preview',
+              version: 1,
+              accountMode: 'new_account',
+              person: { name: 'Held fictional', email: 'held@example.invalid' },
+              grants: [],
+              taskPreviews: [],
+              unresolved: [],
+              sessionEffect: { reauthenticate: true },
+            }
+          : { items: [], templates: [], projects: [] };
+      return new Response(JSON.stringify(body), { status: 200 });
+    }),
+  );
+  const q = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+  const node = (
+    <QueryClientProvider client={q}>
+      <PeopleOnboarding onClose={() => {}} />
+    </QueryClientProvider>
+  );
+  const mounted = render(node);
+  await screen.findByLabelText('Name');
+  fireEvent.change(screen.getByLabelText('Name'), { target: { value: 'Held fictional' } });
+  fireEvent.change(screen.getByLabelText('Email'), { target: { value: 'held@example.invalid' } });
+  await waitFor(() =>
+    expect(
+      screen.getByRole('button', { name: 'Continue to access' }).hasAttribute('disabled'),
+    ).toBe(false),
+  );
+  fireEvent.click(screen.getByRole('button', { name: 'Continue to access' }));
+  for (const label of ['Title', 'Weekly capacity']) {
+    const input = screen.getByLabelText(label) as HTMLInputElement;
+    fireEvent.change(input, { target: { value: label === 'Title' ? 'Authored title' : '31' } });
+    input.focus();
+    held = true;
+    void q.refetchQueries();
+    await waitFor(() => expect(release).toBeTruthy());
+    expect(screen.getByLabelText(label)).toBe(input);
+    expect(document.activeElement).toBe(input);
+    expect(input.disabled).toBe(false);
+    held = false;
+    release!();
+    release = undefined;
+    await waitFor(() =>
+      expect(
+        screen
+          .queryByText('Checking current company access…')
+          ?.parentElement?.getAttribute('aria-hidden') !== 'false',
+      ).toBe(true),
+    );
+  }
+  fireEvent.click(screen.getByRole('button', { name: 'Continue to starting work' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Review onboarding' }));
+  await waitFor(() => expect(!!document.querySelector('input[type=password]')).toBe(true));
+  const password = document.querySelector('input[type=password]') as HTMLInputElement;
+  fireEvent.change(password, { target: { value: 'fictional-held-secret' } });
+  password.focus();
+  password.setSelectionRange(3, 7);
+  held = true;
+  void q.refetchQueries();
+  await waitFor(() => expect(release).toBeTruthy());
+  state.withhold = true;
+  mounted.rerender(node);
+  expect(document.querySelector('input[type=password]') === password).toBe(true);
+  expect(password.value.length).toBe(21);
+  expect(document.activeElement === password).toBe(true);
+  expect([password.selectionStart, password.selectionEnd]).toEqual([3, 7]);
+  held = false;
+  release!();
+  state.withhold = false;
+  mounted.rerender(node);
+  await waitFor(() =>
+    expect(
+      screen
+        .queryByText('Checking current company access…')
+        ?.parentElement?.getAttribute('aria-hidden') !== 'false',
+    ).toBe(true),
+  );
+});
+
+it.each(['review', 'departure'])(
+  'keeps authored %s controls during held current reads',
+  async (mode) => {
+    const { default: AccessReview } = await import('./AccessReview');
+    const { default: Departure } = await import('./DepartureHandover');
+    const target = sample.workspaces[0].people[1];
+    let held = false;
+    let release: (() => void) | undefined;
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (input: string) => {
+        if (String(input).endsWith('/people/context') && held)
+          await new Promise<void>((r) => {
+            release = r;
+          });
+        const body = String(input).endsWith('/people/context')
+          ? {
+              people: sample.workspaces[0].people,
+              departments: sample.workspaces[0].departments,
+              roles: ['member', 'admin'],
+            }
+          : String(input).endsWith('/departure/preview')
+            ? {
+                id: 'departure',
+                version: 1,
+                target,
+                liveItems: [
+                  {
+                    kind: 'task_owner',
+                    sourceId: 'task',
+                    version: 7,
+                    title: 'Fictional duty',
+                    state: 'todo',
+                    candidates: [sample.workspaces[0].people[0]],
+                  },
+                ],
+                retainedHistory: { tasks: 1 },
+                unresolved: [],
+                readyToApply: false,
+                sessionEffect: { reauthenticate: true },
+              }
+            : { items: [] };
+        return new Response(JSON.stringify(body), { status: 200 });
+      }),
+    );
+    const q = new QueryClient();
+    render(
+      <QueryClientProvider client={q}>
+        {mode === 'review' ? (
+          <AccessReview onClose={() => {}} />
+        ) : (
+          <Departure userId={target.id} onClose={() => {}} />
+        )}
+      </QueryClientProvider>,
+    );
+    let input: HTMLElement;
+    if (mode === 'review') {
+      await waitFor(() =>
+        expect(
+          screen
+            .getByRole('button', { name: 'Capture current company memberships' })
+            .hasAttribute('disabled'),
+        ).toBe(false),
+      );
+      fireEvent.click(screen.getByRole('button', { name: 'Capture current company memberships' }));
+      fireEvent.change(screen.getByLabelText('Access decision for ' + target.name), {
+        target: { value: 'change' },
+      });
+      input = screen.getByLabelText('Title');
+      fireEvent.change(input, { target: { value: 'Reviewed authored title' } });
+    } else {
+      fireEvent.change(screen.getByLabelText('Departure reason'), {
+        target: { value: 'Reviewed exit' },
+      });
+      await waitFor(() =>
+        expect(
+          screen
+            .getByRole('button', { name: 'Inspect current obligations' })
+            .hasAttribute('disabled'),
+        ).toBe(false),
+      );
+      fireEvent.click(screen.getByRole('button', { name: 'Inspect current obligations' }));
+      input = await screen.findByLabelText('Replacement for task owner');
+    }
+    input.focus();
+    held = true;
+    void q.refetchQueries();
+    await waitFor(() => expect(release).toBeTruthy());
+    expect(document.contains(input)).toBe(true);
+    expect(document.activeElement === input).toBe(true);
+    held = false;
+    release!();
+    await waitFor(() =>
+      expect(
+        screen
+          .queryByText('Checking current company access…')
+          ?.parentElement?.getAttribute('aria-hidden') !== 'false',
+      ).toBe(true),
+    );
+  },
+);

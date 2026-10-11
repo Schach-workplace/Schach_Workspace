@@ -1,3 +1,4 @@
+import PeopleProjection from "./PeopleProjection";
 import { businessAttemptGeneration } from "./businessAttempts";
 import { onboardingTaskReview } from "../../shared/people/taskReview";
 import DeadlinePicker from "./DeadlinePicker";
@@ -9,6 +10,7 @@ import Page from "./PeoplePage";
 import { Action } from "./ConnectUI";
 import { useRamInput } from "./ramInput";
 import {
+  usePeopleEditorBasis,
   usePeopleRead,
   usePeopleMutation,
   usePeopleResult,
@@ -60,9 +62,10 @@ export default function PeopleOnboarding() {
       ...(t.projectId ? ["/projects/" + t.projectId] : []),
     ]),
   );
-  const basis = w.work?.readBasis ?? "";
+  const basis = usePeopleEditorBasis(w.work?.readBasis);
   const ready = context.ready && w.foreground;
-  const current = ready && preview?.basis === basis ? preview.value : undefined;
+  const presented = preview?.basis === basis ? preview.value : undefined;
+  const current = ready ? presented : undefined;
   const unknown = action.attempt?.state === "unknown";
   const passwordScope =
     businessAttemptGeneration() +
@@ -125,7 +128,13 @@ export default function PeopleOnboarding() {
     <Page>
       <Text accessibilityRole="header">Add person</Text>
       <Text>{onboardingStages.join(" → ")}</Text>
-      {!ready && <Text>Checking current company access…</Text>}
+      <View
+        accessibilityElementsHidden={ready}
+        importantForAccessibility={ready ? "no-hide-descendants" : "auto"}
+        style={{ opacity: ready ? 0 : 1 }}
+      >
+        <Text>Checking current company access…</Text>
+      </View>
       <Text accessibilityLiveRegion="polite">
         {error || action.error || previewAction.error}
       </Text>
@@ -369,34 +378,36 @@ export default function PeopleOnboarding() {
             />
           </View>
           <View style={stage === 3 ? undefined : { display: "none" }}>
-            {current ? (
+            {presented ? (
               <>
-                <Text>
-                  {current.person.name} · {current.person.email}
-                </Text>
-                {current.grants.map((g) => (
-                  <Text key={g.area}>{g.summary}</Text>
-                ))}
-                {current.taskPreviews.map((t, i) => (
-                  <View key={i}>
-                    <Text>
-                      {String(t.fields.title ?? "Starting task")} · template
-                      version {t.templateVersion}
-                    </Text>
-                    {onboardingTaskReview(
-                      t,
-                      context.data,
-                      projects.data?.projects,
-                    ).map((line, j) => (
-                      <Text key={j}>{line}</Text>
-                    ))}
-                  </View>
-                ))}
-                {current.unresolved.map((u, i) => (
-                  <Text key={i}>{u.message}</Text>
-                ))}
-                <SessionEffect effect={current.sessionEffect} />
-                {current.accountMode === "new_account" ? (
+                <PeopleProjection current={!!current}>
+                  <Text>
+                    {presented.person.name} · {presented.person.email}
+                  </Text>
+                  {presented.grants.map((g) => (
+                    <Text key={g.area}>{g.summary}</Text>
+                  ))}
+                  {presented.taskPreviews.map((t, i) => (
+                    <View key={i}>
+                      <Text>
+                        {String(t.fields.title ?? "Starting task")} · template
+                        version {t.templateVersion}
+                      </Text>
+                      {onboardingTaskReview(
+                        t,
+                        context.data,
+                        projects.data?.projects,
+                      ).map((line, j) => (
+                        <Text key={j}>{line}</Text>
+                      ))}
+                    </View>
+                  ))}
+                  {presented.unresolved.map((u, i) => (
+                    <Text key={i}>{u.message}</Text>
+                  ))}
+                  <SessionEffect effect={presented.sessionEffect} />
+                </PeopleProjection>
+                {presented.accountMode === "new_account" ? (
                   <PeopleField
                     label="New account password"
                     value={password}
@@ -415,8 +426,8 @@ export default function PeopleOnboarding() {
                   disabled={
                     !ready ||
                     action.busy ||
-                    current.unresolved.length > 0 ||
-                    (current.accountMode === "new_account" &&
+                    presented.unresolved.length > 0 ||
+                    (presented.accountMode === "new_account" &&
                       Array.from(password).length < 12)
                   }
                   onPress={() => void apply()}

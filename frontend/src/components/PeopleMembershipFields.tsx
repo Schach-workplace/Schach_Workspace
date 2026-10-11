@@ -8,16 +8,20 @@ export default function PeopleMembershipFields({
 }: {
   value: MembershipDefaults;
   onChange: (next: MembershipDefaults) => void;
-  context: PeopleContext;
+  context?: PeopleContext;
   disabled?: boolean;
 }) {
   const set = (key: keyof MembershipDefaults, v: string | number) =>
     onChange({ ...value, [key]: v });
   return (
-    <fieldset disabled={disabled} className="form-grid">
+    <fieldset className="form-grid">
       <Field label="Company role">
-        <select value={value.role} onChange={(e) => set('role', e.target.value)}>
-          {context.roles.map((r) => (
+        <select
+          disabled={disabled}
+          value={value.role}
+          onChange={(e) => set('role', e.target.value)}
+        >
+          {context?.roles.map((r) => (
             <option key={r} value={r}>
               {r}
             </option>
@@ -25,9 +29,13 @@ export default function PeopleMembershipFields({
         </select>
       </Field>
       <Field label="Department">
-        <select value={value.departmentId} onChange={(e) => set('departmentId', e.target.value)}>
+        <select
+          disabled={disabled}
+          value={value.departmentId}
+          onChange={(e) => set('departmentId', e.target.value)}
+        >
           <option value="">No department</option>
-          {context.departments.map((d) => (
+          {context?.departments.map((d) => (
             <option key={d.id} value={d.id}>
               {d.name}
             </option>
@@ -35,9 +43,13 @@ export default function PeopleMembershipFields({
         </select>
       </Field>
       <Field label="Reporting manager">
-        <select value={value.managerId} onChange={(e) => set('managerId', e.target.value)}>
+        <select
+          disabled={disabled}
+          value={value.managerId}
+          onChange={(e) => set('managerId', e.target.value)}
+        >
           <option value="">No manager</option>
-          {context.people
+          {context?.people
             .filter((p) => p.active)
             .map((p) => (
               <option key={p.id} value={p.id}>

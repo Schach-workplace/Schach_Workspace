@@ -1,3 +1,4 @@
+import PeopleProjection from './PeopleProjection';
 import { useState } from 'react';
 import {
   usePeopleRead,
@@ -70,9 +71,11 @@ export default function PeoplePresetEditor({ onClose }: { onClose: () => void })
     <Modal open title="Onboarding presets" onClose={onClose}>
       <div className="entity-form people-form">
         <ErrorMessage error={error || action.error} />
-        {!ready && <p role="status">Checking current preset access…</p>}
-        {ready && (
-          <>
+        <div aria-hidden={ready} style={{ visibility: ready ? 'hidden' : 'visible' }}>
+          <p role="status">Checking current preset access…</p>
+        </div>
+        {
+          <PeopleProjection current={ready}>
             <button className="button" disabled={!!action.attempt} onClick={() => load()}>
               New preset
             </button>
@@ -87,12 +90,12 @@ export default function PeoplePresetEditor({ onClose }: { onClose: () => void })
                 {p.archived ? ' · Archived' : ''}
               </button>
             ))}
-          </>
-        )}
+          </PeopleProjection>
+        }
         {saved && ready && (
           <p role="status">Preset saved. Select it to inspect its current version.</p>
         )}
-        <fieldset disabled={!ready || !!action.attempt || action.busy}>
+        <fieldset disabled={!!action.attempt || action.busy}>
           <Field label="Preset name">
             <input
               value={draft.name}
@@ -105,13 +108,14 @@ export default function PeoplePresetEditor({ onClose }: { onClose: () => void })
               onChange={(e) => setDraft({ ...draft, description: e.target.value })}
             />
           </Field>
-          {context.data && (
+          {
             <MembershipFields
               context={context.data}
+              disabled={!ready}
               value={draft.membership}
               onChange={(membership) => setDraft({ ...draft, membership })}
             />
-          )}
+          }
           <p>Choose up to 20 optional starting task templates.</p>
           {templates.ready &&
             templates.data?.templates
