@@ -196,6 +196,9 @@ func (s *Server) matchFinanceReconciliation(w http.ResponseWriter, r *http.Reque
 			if e := syncFinanceReconciliationAttention(tx, a, row); e != nil {
 				return BusinessResult{}, e
 			}
+			if e := markFinanceReconciliationDirty(tx, a.Company.ID); e != nil {
+				return BusinessResult{}, e
+			}
 			return BusinessResult{Kind: "reconciliation_allocation", IDs: []string{allocation.ID}, Versions: []int64{1}}, nil
 		})
 		return e
@@ -256,6 +259,9 @@ func (s *Server) unmatchFinanceReconciliation(w http.ResponseWriter, r *http.Req
 				return BusinessResult{}, e
 			}
 			if e := syncFinanceReconciliationAttention(tx, a, row); e != nil {
+				return BusinessResult{}, e
+			}
+			if e := markFinanceReconciliationDirty(tx, a.Company.ID); e != nil {
 				return BusinessResult{}, e
 			}
 			return BusinessResult{Kind: "reconciliation_allocation", IDs: []string{allocation.ID}, Versions: []int64{allocation.Version}}, nil

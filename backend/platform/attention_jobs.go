@@ -127,6 +127,9 @@ func (s *Server) RunAttention(ctx context.Context, now time.Time, limit int) (in
 		limit = 100
 	}
 	now = now.UTC()
+	if e := s.repairFinanceReconciliationAttention(ctx, limit); e != nil {
+		return 0, e
+	}
 	var items []AttentionItem
 	q := s.db.WithContext(ctx).Where("state=?", "open")
 	if e := q.Order("updated_at,id").Limit(limit).Find(&items).Error; e != nil {

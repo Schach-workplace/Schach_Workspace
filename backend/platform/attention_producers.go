@@ -74,6 +74,11 @@ func syncTaskAttention(tx *gorm.DB, a *access, before *Task, after Task) error {
 	return nil
 }
 func syncExpenseAttention(tx *gorm.DB, a *access, before Expense, after Expense) error {
+	if (before.Status == "paid" || after.Status == "paid") && (before.Version != after.Version || before.Status != after.Status) {
+		if e := markFinanceReconciliationDirty(tx, a.Company.ID); e != nil {
+			return e
+		}
+	}
 	episode := fmt.Sprintf("expense:%d", after.Version)
 	keep := ""
 	if after.Status == "submitted" {
