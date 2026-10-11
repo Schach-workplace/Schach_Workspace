@@ -1,0 +1,2 @@
+DROP TABLE finance_reconciliation_decisions;
+DROP TABLE finance_reconciliation_allocations;
