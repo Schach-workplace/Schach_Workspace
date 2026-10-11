@@ -7,6 +7,15 @@ export default function More() {
   return (
     <Page>
       <Text style={styles.heading}>Modules</Text>
+      <Action
+        title="Local assistance history"
+        onPress={() =>
+          router.push({
+            pathname: "/intelligence/[id]",
+            params: { company: w.company, id: "history" },
+          })
+        }
+      />
       {w.foreground && w.work && (
         <>
           {w.work.me.role !== "viewer" && (

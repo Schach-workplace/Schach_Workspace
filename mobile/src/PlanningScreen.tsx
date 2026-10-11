@@ -1,3 +1,4 @@
+import IntelligenceLauncher from "./IntelligenceLauncher";
 import { useState } from "react";
 import { FlatList, Text, View } from "react-native";
 import { router } from "expo-router";
@@ -129,6 +130,25 @@ export default function PlanningScreen() {
           >
             <Action title="‹ Back" onPress={() => router.back()} />
             <Text style={ui.title}>Planning authorized work</Text>
+            <IntelligenceLauncher
+              label="Explain selected planning facts"
+              operation="report_explanation"
+              choices={
+                view
+                  ? [
+                      {
+                        label: "Current capacity projection",
+                        source: {
+                          kind: "planning_projection",
+                          id: view.projectionBasis,
+                          selectedFieldSet: "capacity",
+                          filters: { ...period, projectId: "" },
+                        },
+                      },
+                    ]
+                  : []
+              }
+            />
             <DeadlinePicker
               date={period.from}
               time=""

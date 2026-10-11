@@ -3,6 +3,7 @@ import { act, createElement } from "react";
 import { createRoot } from "react-dom/client";
 import { expect, it, vi } from "vitest";
 import Structured from "./Structured";
+vi.mock("./IntelligenceLauncher", () => ({ default: () => null }));
 const env = vi.hoisted(() => ({
   epoch: 0,
   record: 0,

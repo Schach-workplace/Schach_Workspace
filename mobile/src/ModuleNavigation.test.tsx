@@ -37,6 +37,7 @@ it("routes each retained module and account through a real company-qualified rou
   const r = createRoot(c);
   await act(async () => r.render(createElement(More)));
   expect([...c.querySelectorAll("button")].map((b) => b.textContent)).toEqual([
+    "Local assistance history",
     "Finance",
     "People",
     "Planning",
@@ -46,7 +47,11 @@ it("routes each retained module and account through a real company-qualified rou
     "Requests",
     "Account",
   ]);
-  await act(async () => c.querySelector("button")!.click());
+  await act(async () =>
+    [...c.querySelectorAll("button")]
+      .find((b) => b.textContent === "Finance")!
+      .click(),
+  );
   expect(h.push).toHaveBeenCalledWith({
     pathname: "/finance",
     params: { company: "company" },

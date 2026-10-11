@@ -1,3 +1,4 @@
+import IntelligenceLauncher from "./IntelligenceLauncher";
 import { NativeImpact, NativeSchedule, NativeTemplates } from "./Execution";
 import { readNativeDetail } from "./readScopes";
 import CaptureControl from "./CaptureControl";
@@ -115,6 +116,32 @@ export default function TaskDetailScreen({ id }: { id: string }) {
   }
   return (
     <Page safeBottom>
+      <IntelligenceLauncher
+        choices={
+          task && !loading
+            ? [
+                {
+                  label: "Selected task fields",
+                  source: {
+                    kind: "task_fields",
+                    id: task.id,
+                    expectedVersion: task.version,
+                    selectedFieldSet: "narrative",
+                  },
+                },
+                ...(task.comments ?? []).map((c) => ({
+                  label: "Task comment: " + c.body.slice(0, 80),
+                  source: {
+                    kind: "task_comment" as const,
+                    id: c.id,
+                    parentId: task.id,
+                    selectedFieldSet: "body",
+                  },
+                })),
+              ]
+            : []
+        }
+      />
       <Action
         title="Planning authorized work"
         onPress={() =>

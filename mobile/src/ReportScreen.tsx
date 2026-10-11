@@ -1,3 +1,6 @@
+import IntelligenceLauncher from "./IntelligenceLauncher";
+import { useExecutionRead } from "./execution";
+import { companyDate } from "./workDates";
 import { useState } from "react";
 import { FlatList, Text, View } from "react-native";
 import { router } from "expo-router";
@@ -53,11 +56,14 @@ export default function ReportScreen({
           data={w.foreground ? (w.work?.tasks ?? []) : []}
           keyExtractor={(t) => t.id}
           ListHeaderComponent={
-            <Text>
-              Current-state report · {w.work?.company.timezone} · later task
-              changes can change these values. {w.work?.tasks.length ?? 0}{" "}
-              currently authorized tasks.
-            </Text>
+            <View>
+              <CurrentReportAssistance />
+              <Text>
+                Current-state report · {w.work?.company.timezone} · later task
+                changes can change these values. {w.work?.tasks.length ?? 0}{" "}
+                currently authorized tasks.
+              </Text>
+            </View>
           }
           renderItem={({ item: t }) => (
             <Action
@@ -74,4 +80,27 @@ export default function ReportScreen({
       )}
     </Page>
   );
+}
+
+function CurrentReportAssistance() {
+  const w = useWorkspace();
+  const date = companyDate(new Date(), w.work?.company.timezone ?? "UTC");
+  const q = useExecutionRead<{ snapshot: string }>(
+    "/reports/tasks/summary?from=" + date.slice(0, 7) + "-01&to=" + date,
+  );
+  return q.ready && q.data ? (
+    <IntelligenceLauncher
+      operation="report_explanation"
+      choices={[
+        {
+          label: "Current month report facts",
+          source: {
+            kind: "report_current",
+            id: q.data.snapshot,
+            selectedFieldSet: "metrics",
+          },
+        },
+      ]}
+    />
+  ) : null;
 }

@@ -1,3 +1,4 @@
+import IntelligenceLauncher from "./IntelligenceLauncher";
 import {
   useEffect,
   useEffectEvent,
@@ -10,6 +11,7 @@ import * as Crypto from "expo-crypto";
 import { client } from "./client";
 import { useWorkspace, styles, type Message } from "./Workspace";
 interface RecordItem {
+  anchorMessageId: string;
   id: string;
   title: string;
   body: string;
@@ -287,6 +289,26 @@ export default function Structured({
           />
         </>
       )}
+      <IntelligenceLauncher
+        choices={(w.foreground && confirmed === scope ? records : []).flatMap(
+          (item) =>
+            ["content", "content_responses"].map((selectedFieldSet) => ({
+              label:
+                item.title +
+                (selectedFieldSet === "content_responses"
+                  ? " and current responses"
+                  : ""),
+              source: {
+                kind: "record",
+                id: item.id,
+                parentId: item.anchorMessageId,
+                conversationId: w.selected,
+                expectedRevision: item.revision,
+                selectedFieldSet,
+              },
+            })),
+        )}
+      />
       {(w.foreground && confirmed === scope ? records : []).map((item) => {
         const mine = responses.find(
           (r) =>

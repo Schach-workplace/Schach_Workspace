@@ -1,3 +1,4 @@
+import IntelligenceLauncher from "./IntelligenceLauncher";
 import ExpenseReceiptAssistance from "./ExpenseReceiptAssistance";
 import { formatExactMoney } from "../../shared/finance/money";
 import CaptureControl from "./CaptureControl";
@@ -57,20 +58,40 @@ export default function ExpenseDecision(props: {
     };
   }, [w.company, scope, props.expense.id]);
   const detail = loaded?.scope === scope ? loaded.expense : null;
-  if (!detail)
-    return (
-      <View>
-        <Text>{error || "Loading current finance record…"}</Text>
-        <Button title="Close" onPress={props.onClose} />
-      </View>
-    );
   return (
-    <ExpenseDecisionBody
-      key={scope}
-      expense={detail}
-      onClose={props.onClose}
-      onEvidenceAdded={() => setEvidenceEpoch((e) => e + 1)}
-    />
+    <>
+      <IntelligenceLauncher
+        operation="report_explanation"
+        choices={
+          detail
+            ? [
+                {
+                  label: "Selected expense facts",
+                  source: {
+                    kind: "expense_fields",
+                    id: detail.id,
+                    expectedVersion: detail.version,
+                    selectedFieldSet: "economics",
+                  },
+                },
+              ]
+            : []
+        }
+      />
+      {!detail ? (
+        <View>
+          <Text>{error || "Loading current finance record…"}</Text>
+          <Button title="Close" onPress={props.onClose} />
+        </View>
+      ) : (
+        <ExpenseDecisionBody
+          key={scope}
+          expense={detail}
+          onClose={props.onClose}
+          onEvidenceAdded={() => setEvidenceEpoch((e) => e + 1)}
+        />
+      )}
+    </>
   );
 }
 function ExpenseDecisionBody({

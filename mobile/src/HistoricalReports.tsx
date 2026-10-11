@@ -1,3 +1,4 @@
+import IntelligenceLauncher from "./IntelligenceLauncher";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Alert, FlatList, Text, View } from "react-native";
 import { router } from "expo-router";
@@ -415,7 +416,29 @@ export default function HistoricalReports({
       }}
       data={ready ? (rows.data?.rows ?? []) : []}
       keyExtractor={(r) => r.rowId}
-      ListHeaderComponent={header}
+      ListHeaderComponent={
+        <View>
+          {header}
+          <IntelligenceLauncher
+            label="Explain selected report facts"
+            operation="report_explanation"
+            choices={
+              snap.ready && snapshotId
+                ? [
+                    {
+                      label: "Selected historical report",
+                      source: {
+                        kind: "report_snapshot",
+                        id: snapshotId,
+                        selectedFieldSet: "metrics",
+                      },
+                    },
+                  ]
+                : []
+            }
+          />
+        </View>
+      }
       ListEmptyComponent={
         ready ? (
           <Text>No facts contribute to this metric membership.</Text>

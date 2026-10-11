@@ -20,6 +20,7 @@ import NativeConversation from "./NativeConversation";
 vi.mock("./KeyboardFrame", () => ({
   default: ({ children }: any) => createElement("div", {}, children),
 }));
+vi.mock("./IntelligenceLauncher", () => ({ default: () => null }));
 const state = vi.hoisted(() => ({
   events: [] as any[],
   target: "",
@@ -609,27 +610,23 @@ it.each(["message_edited", "message_removed", "message_created"])(
       sequence: 3,
       body: "New authorized incoming reply",
     };
-    state.thread = vi
-      .fn()
-      .mockResolvedValue({
-        root: dependencyRoot,
-        messages: [dependencyReply, incoming],
-      });
+    state.thread = vi.fn().mockResolvedValue({
+      root: dependencyRoot,
+      messages: [dependencyReply, incoming],
+    });
     state.events = [{ kind: "message_created", messageId: "incoming" }];
     await act(async () => vi.advanceTimersByTimeAsync(15000));
     expect(
       container.querySelector('[aria-label="Thread"]')?.textContent,
     ).toContain(incoming.body);
     state.events = [{ kind, messageId: "incoming" }];
-    state.thread = vi
-      .fn()
-      .mockResolvedValue({
-        root: dependencyRoot,
-        messages: [
-          dependencyReply,
-          { ...incoming, revision: 2, body: "Changed source" },
-        ],
-      });
+    state.thread = vi.fn().mockResolvedValue({
+      root: dependencyRoot,
+      messages: [
+        dependencyReply,
+        { ...incoming, revision: 2, body: "Changed source" },
+      ],
+    });
     await act(async () => vi.advanceTimersByTimeAsync(15000));
     expect(container.querySelector('[aria-label="Thread"]')).toBeNull();
   },

@@ -1,3 +1,4 @@
+import IntelligenceLauncher from "./IntelligenceLauncher";
 import KeyboardFrame from "./KeyboardFrame";
 import {
   createContext,
@@ -572,6 +573,34 @@ export default function NativeConversation() {
   }
   return (
     <Page scroll={false} safeBottom>
+      <IntelligenceLauncher
+        choices={messages
+          .filter((m) => !m.removed)
+          .flatMap((m) => [
+            {
+              label: "Message: " + m.body.slice(0, 100),
+              source: {
+                kind: "message" as const,
+                id: m.id,
+                conversationId: w.selected,
+                expectedRevision: m.revision,
+                selectedFieldSet: "body",
+              },
+            },
+            ...(m.mediaIds ?? []).map((id) => ({
+              label: "Attached audio from selected message",
+              source: {
+                kind: "voice_media" as const,
+                id,
+                parentId: m.id,
+                conversationId: w.selected,
+                expectedRevision: m.revision,
+                selectedFieldSet: "audio",
+              },
+            })),
+          ])}
+      />
+
       <KeyboardFrame>
         <View style={ui.header}>
           <Action title="‹ Back" onPress={() => router.back()} />

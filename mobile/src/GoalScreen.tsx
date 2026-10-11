@@ -1,3 +1,4 @@
+import IntelligenceLauncher from "./IntelligenceLauncher";
 import { useState } from "react";
 import { Text, View, FlatList } from "react-native";
 import { router } from "expo-router";
@@ -54,6 +55,38 @@ export default function GoalScreen({ id }: { id: string }) {
         ListHeaderComponent={
           <View style={{ gap: 12 }}>
             <Action title="‹ Back" onPress={() => router.back()} />
+            <IntelligenceLauncher
+              label="Explain selected goal facts"
+              operation="report_explanation"
+              choices={
+                goal
+                  ? [
+                      {
+                        label: "Current selected goal",
+                        source: {
+                          kind: "goal_fields",
+                          id: goal.id,
+                          expectedVersion: goal.version,
+                          selectedFieldSet: "measurement",
+                        },
+                      },
+                      ...(goal.currentMeasurementId
+                        ? [
+                            {
+                              label: "Recorded measurement",
+                              source: {
+                                kind: "goal_measurement" as const,
+                                id: goal.currentMeasurementId,
+                                parentId: goal.id,
+                                selectedFieldSet: "measurement_evidence",
+                              },
+                            },
+                          ]
+                        : []),
+                    ]
+                  : []
+              }
+            />
             <Text style={ui.title}>
               {goal?.name ?? "Checking current goal…"}
             </Text>
