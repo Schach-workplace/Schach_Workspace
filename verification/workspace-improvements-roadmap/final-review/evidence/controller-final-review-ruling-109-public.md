@@ -1,0 +1,5 @@
+# Final review ordered ruling addendum
+
+Prior97 M10 rulings and11 final-integration rulings remain immutable historical publications. This is next Ruling109, after the COMPLETE wholebranch review.
+
+Ruling: Correct the whole-roadmap current-state CSV streaming revocation gap despite M6’s inherited pre-header-only scope statement. Revalidate the original snapshot’s current principal/session/member and complete included source authority at bounded output boundaries; retain current CSV semantics/formula protection and release locks before network I/O, with already-written bytes explicitly qualified. — The binding roadmap requires removed members cannot continue exporting cached output, and source tracing confirms later frozen private rows are emitted after committed revocation; the narrow M6 historical-artifact scope does not waive this whole-branch requirement. — Cost if wrong: extra bounded authorization query cost or a truncated download requiring deliberate retry, never silently renewed snapshots, leaked later chunks or changed report metric meanings.

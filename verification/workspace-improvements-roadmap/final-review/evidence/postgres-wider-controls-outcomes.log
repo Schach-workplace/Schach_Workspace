@@ -1,0 +1,45 @@
+=== RUN   TestLoginCannotMintSessionAfterSuspension
+--- PASS: TestLoginCannotMintSessionAfterSuspension (0.92s)
+=== RUN   TestDepartureSourceLockOrderPostgres
+=== RUN   TestDepartureSourceLockOrderPostgres/source
+=== RUN   TestDepartureSourceLockOrderPostgres/departure
+--- PASS: TestDepartureSourceLockOrderPostgres (0.98s)
+    --- PASS: TestDepartureSourceLockOrderPostgres/source (0.49s)
+    --- PASS: TestDepartureSourceLockOrderPostgres/departure (0.49s)
+=== RUN   TestPeopleRejoinRetiresRawFinanceReportAndGoalOutputs
+--- PASS: TestPeopleRejoinRetiresRawFinanceReportAndGoalOutputs (0.79s)
+=== RUN   TestPeopleReportOwnerDistinctFromRecipient
+=== RUN   TestPeopleReportOwnerDistinctFromRecipient/scope/scheduled=true
+=== RUN   TestPeopleReportOwnerDistinctFromRecipient/scope/scheduled=false
+=== RUN   TestPeopleReportOwnerDistinctFromRecipient/rejoin/scheduled=true
+=== RUN   TestPeopleReportOwnerDistinctFromRecipient/rejoin/scheduled=false
+=== RUN   TestPeopleReportOwnerDistinctFromRecipient/final/scheduled=true
+=== RUN   TestPeopleReportOwnerDistinctFromRecipient/final/scheduled=false
+=== RUN   TestPeopleReportOwnerDistinctFromRecipient/stream/scheduled=true
+=== RUN   TestPeopleReportOwnerDistinctFromRecipient/stream/scheduled=false
+--- PASS: TestPeopleReportOwnerDistinctFromRecipient (4.47s)
+    --- PASS: TestPeopleReportOwnerDistinctFromRecipient/scope/scheduled=true (0.56s)
+    --- PASS: TestPeopleReportOwnerDistinctFromRecipient/scope/scheduled=false (0.59s)
+    --- PASS: TestPeopleReportOwnerDistinctFromRecipient/rejoin/scheduled=true (0.54s)
+    --- PASS: TestPeopleReportOwnerDistinctFromRecipient/rejoin/scheduled=false (0.55s)
+    --- PASS: TestPeopleReportOwnerDistinctFromRecipient/final/scheduled=true (0.55s)
+    --- PASS: TestPeopleReportOwnerDistinctFromRecipient/final/scheduled=false (0.55s)
+    --- PASS: TestPeopleReportOwnerDistinctFromRecipient/stream/scheduled=true (0.56s)
+    --- PASS: TestPeopleReportOwnerDistinctFromRecipient/stream/scheduled=false (0.57s)
+=== RUN   TestReportRuntimeWiderInvalidation
+=== RUN   TestReportRuntimeWiderInvalidation/owner_departure
+=== RUN   TestReportRuntimeWiderInvalidation/owner_source_loss
+=== RUN   TestReportRuntimeWiderInvalidation/definition_revision
+=== RUN   TestReportRuntimeWiderInvalidation/recipient_removed
+=== RUN   TestReportRuntimeWiderInvalidation/schedule_version
+=== RUN   TestReportRuntimeWiderInvalidation/artifact_expired
+--- FAIL: TestReportRuntimeWiderInvalidation (3.35s)
+    --- PASS: TestReportRuntimeWiderInvalidation/owner_departure (0.55s)
+    --- PASS: TestReportRuntimeWiderInvalidation/owner_source_loss (0.56s)
+    --- PASS: TestReportRuntimeWiderInvalidation/definition_revision (0.56s)
+    --- FAIL: TestReportRuntimeWiderInvalidation/recipient_removed (0.56s)
+    --- PASS: TestReportRuntimeWiderInvalidation/schedule_version (0.55s)
+    --- PASS: TestReportRuntimeWiderInvalidation/artifact_expired (0.57s)
+FAIL
+FAIL	schach.local/workspace/backend/platform	10.515s
+FAIL

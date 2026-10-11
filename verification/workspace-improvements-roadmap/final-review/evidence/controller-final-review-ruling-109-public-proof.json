@@ -1,0 +1,10 @@
+{
+  "approvedUTC": "2026-10-11T22:32:02.559311+00:00",
+  "orderedRulingCount": 109,
+  "newRulingNumber": 109,
+  "newPublicFile": "controller-final-review-ruling-109-public.md",
+  "sha256": "d22b364fb4e43cc14f8dbafba7fe199ab0cb454ea8cb9c3e2da641c1461e6820",
+  "bytes": 1076,
+  "fullReadAndPrivacyApproved": true,
+  "qualification": "Exact newest ordered ledger ruling, no private values or fingerprints. Prior97+11 immutable text remains unchanged; publication may map this proof path derivatively."
+}

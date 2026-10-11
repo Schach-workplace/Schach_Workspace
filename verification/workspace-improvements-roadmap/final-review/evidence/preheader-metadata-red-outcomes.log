@@ -1,0 +1,5 @@
+=== RUN   TestCurrentReportCSVPreheaderDenialMetadata
+--- FAIL: TestCurrentReportCSVPreheaderDenialMetadata (0.40s)
+FAIL
+FAIL	schach.local/workspace/backend/platform	0.409s
+FAIL

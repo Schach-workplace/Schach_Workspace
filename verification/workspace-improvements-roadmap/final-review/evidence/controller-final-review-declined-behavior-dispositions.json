@@ -1,0 +1,126 @@
+{
+  "checkedUTC": "2026-10-11T22:31:30.394973+00:00",
+  "report": "task-final-wholebranch-review.md",
+  "items": [
+    {
+      "reviewItem": 1,
+      "behavior": "Authenticated exact-release Android Goal/private-source/call behavior over protected HTTPS",
+      "reviewReason": "the exact release APK was launched on a fresh unauthenticated AVD; no trusted authenticated release target was available. Development-shell composite evidence does not prove this behavior.",
+      "executorDisposition": "EXTERNAL_ROLLOUT_GATE",
+      "requiredAction": "Retain in public security/verification/mobile/operations and AI checklist. Source/local tests do not certify missing target hardware, signing, hosted configuration or representative production measurements."
+    },
+    {
+      "reviewItem": 2,
+      "behavior": "Successful release MFA challenge, account recovery, or login",
+      "reviewReason": "Auth focus/cursor/Back checks deliberately never submitted Sign in. They prove input behavior, not authentication success.",
+      "executorDisposition": "EXTERNAL_ROLLOUT_GATE",
+      "requiredAction": "Retain in public security/verification/mobile/operations and AI checklist. Source/local tests do not certify missing target hardware, signing, hosted configuration or representative production measurements."
+    },
+    {
+      "reviewItem": 3,
+      "behavior": "Physical Android camera, permission denial/return, keyboard, focus, Back, and background recovery",
+      "reviewReason": "implementation and emulator/source evidence exist, but physical hardware/provider behavior is an explicit rollout gate.",
+      "executorDisposition": "EXTERNAL_ROLLOUT_GATE",
+      "requiredAction": "Retain in public security/verification/mobile/operations and AI checklist. Source/local tests do not certify missing target hardware, signing, hosted configuration or representative production measurements."
+    },
+    {
+      "reviewItem": 4,
+      "behavior": "Physical iOS UI, keyboard, accessibility, camera, and background behavior",
+      "reviewReason": "Hermes iOS export is not an iOS binary or device run.",
+      "executorDisposition": "EXTERNAL_ROLLOUT_GATE",
+      "requiredAction": "Retain in public security/verification/mobile/operations and AI checklist. Source/local tests do not certify missing target hardware, signing, hosted configuration or representative production measurements."
+    },
+    {
+      "reviewItem": 5,
+      "behavior": "Screen-reader and broader assistive-technology behavior on devices",
+      "reviewReason": "labels and structural tests are useful, but the supplied emulator geometry does not establish real screen-reader acceptance.",
+      "executorDisposition": "EXTERNAL_ROLLOUT_GATE",
+      "requiredAction": "Retain in public security/verification/mobile/operations and AI checklist. Source/local tests do not certify missing target hardware, signing, hosted configuration or representative production measurements."
+    },
+    {
+      "reviewItem": 6,
+      "behavior": "Organization/store signing and distribution",
+      "reviewReason": "the retained APK uses the Android Debug evaluation certificate; organization signing and store distribution are not established.",
+      "executorDisposition": "EXTERNAL_ROLLOUT_GATE",
+      "requiredAction": "Retain in public security/verification/mobile/operations and AI checklist. Source/local tests do not certify missing target hardware, signing, hosted configuration or representative production measurements."
+    },
+    {
+      "reviewItem": 7,
+      "behavior": "India production hosting and protected HTTPS",
+      "reviewReason": "local adapters/configuration do not demonstrate the final deployed region, certificates, or hosted network environment.",
+      "executorDisposition": "EXTERNAL_ROLLOUT_GATE",
+      "requiredAction": "Retain in public security/verification/mobile/operations and AI checklist. Source/local tests do not certify missing target hardware, signing, hosted configuration or representative production measurements."
+    },
+    {
+      "reviewItem": 8,
+      "behavior": "Production LiveKit/TURN and real incoming/background calls",
+      "reviewReason": "no such production/device matrix was established by this whole-branch review.",
+      "executorDisposition": "EXTERNAL_ROLLOUT_GATE",
+      "requiredAction": "Retain in public security/verification/mobile/operations and AI checklist. Source/local tests do not certify missing target hardware, signing, hosted configuration or representative production measurements."
+    },
+    {
+      "reviewItem": 9,
+      "behavior": "Real APNS/FCM background push delivery",
+      "reviewReason": "local IDs-only delivery and revocation logic do not certify provider/device delivery.",
+      "executorDisposition": "EXTERNAL_ROLLOUT_GATE",
+      "requiredAction": "Retain in public security/verification/mobile/operations and AI checklist. Source/local tests do not certify missing target hardware, signing, hosted configuration or representative production measurements."
+    },
+    {
+      "reviewItem": 10,
+      "behavior": "Backup retention, successful disaster recovery, RPO 15 minutes and RTO 4 hours",
+      "reviewReason": "these are documented unmeasured objectives; no production restore exercise was supplied.",
+      "executorDisposition": "EXTERNAL_ROLLOUT_GATE",
+      "requiredAction": "Retain in public security/verification/mobile/operations and AI checklist. Source/local tests do not certify missing target hardware, signing, hosted configuration or representative production measurements."
+    },
+    {
+      "reviewItem": 11,
+      "behavior": "Hindi or representative private-business transcription/model quality",
+      "reviewReason": "deterministic schema/source controls and bounded local provider proofs do not establish domain accuracy or acceptable error rates on representative data.",
+      "executorDisposition": "EXTERNAL_ROLLOUT_GATE",
+      "requiredAction": "Retain in public security/verification/mobile/operations and AI checklist. Source/local tests do not certify missing target hardware, signing, hosted configuration or representative production measurements."
+    },
+    {
+      "reviewItem": 12,
+      "behavior": "Production latency, concurrency, provider capacity and multi-replica admission",
+      "reviewReason": "owned fixture measurements and process-local admission are not a production capacity certification; shared-host multi-process inference is separately constrained.",
+      "executorDisposition": "EXTERNAL_ROLLOUT_GATE",
+      "requiredAction": "Retain in public security/verification/mobile/operations and AI checklist. Source/local tests do not certify missing target hardware, signing, hosted configuration or representative production measurements."
+    },
+    {
+      "reviewItem": 13,
+      "behavior": "Natural full-TTL expiry timing",
+      "reviewReason": "the native raw-expiry acceptance used a disclosed controlled expiry of its owned job. It proves the changed client/server path, not a natural 24-hour wall-clock run.",
+      "executorDisposition": "QUALIFIED_CONTROLLED_LOCAL_ACCEPTANCE",
+      "requiredAction": "Keep controlled owned-job expiry distinct from natural24h run. No TTL restoration or new inference."
+    },
+    {
+      "reviewItem": 14,
+      "behavior": "Wall-clock deletion of an already published OS share copy while the app is suspended/killed",
+      "reviewReason": "the explicit handoff exception provides cleanup on execution/resume/startup, not guaranteed JavaScript-timer execution during suspension. Unpublished downloads retain their immediate barriers.",
+      "executorDisposition": "DOCUMENTED_OS_HANDOFF_LIMIT",
+      "requiredAction": "Keep cleanup-on-execution/resume/startup and immediate unpublished-download checks explicit; no suspension-timer guarantee."
+    },
+    {
+      "reviewItem": 15,
+      "behavior": "Unsupported numbered PostgreSQL migration followed by GORM AutoMigrate",
+      "reviewReason": "the documented mixed-mode finance `42704` limitation was not treated as a failure of the separately tested supported deployment modes. No compatibility claim for that mixed mode is made.",
+      "executorDisposition": "DOCUMENTED_UNSUPPORTED_MODE",
+      "requiredAction": "Keep supported numbered-PostgreSQL and SQLite evaluation paths distinct; preserve actual finance42704 limitation, no mixed-mode claim."
+    },
+    {
+      "reviewItem": 16,
+      "behavior": "Original retained QEMU SIGABRT cause and absent fixture-process cause",
+      "reviewReason": "the supplied evidence qualifies these causes as unproven. They were not reclassified as an application crash or rerun during review.",
+      "executorDisposition": "UNPROVEN_ENVIRONMENT_CAUSE",
+      "requiredAction": "Preserve independent diagnosis and no-wipe recovery qualification; do not relabel as Schach application crash or claim root cause."
+    },
+    {
+      "reviewItem": 17,
+      "behavior": "Final preservation of the running main database, fast-forward cutover, normal-runtime restart, and private push",
+      "reviewReason": "these are root-owned later actions; this read-only review cannot certify actions that have not occurred. The frozen branch/proof checks do not waive the fresh cutover preservation comparison.",
+      "executorDisposition": "PENDING_ROOT_ACTION",
+      "requiredAction": "Complete fresh typed-row/media/key preservation, main fast-forward, normal app rerun and private non-force push after scoped fix approval; publish actual proof."
+    }
+  ],
+  "qualification": "Per-behavior executor disposition, not new verification. External rollout gates remain open; pending root cutover must acquire actual evidence. Three Important code findings separately enter ONE fix wave."
+}

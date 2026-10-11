@@ -1,0 +1,70 @@
+=== RUN   TestPeopleReportOwnerDistinctFromRecipient
+=== RUN   TestPeopleReportOwnerDistinctFromRecipient/scope/scheduled=true
+=== RUN   TestPeopleReportOwnerDistinctFromRecipient/scope/scheduled=false
+=== RUN   TestPeopleReportOwnerDistinctFromRecipient/rejoin/scheduled=true
+=== RUN   TestPeopleReportOwnerDistinctFromRecipient/rejoin/scheduled=false
+=== RUN   TestPeopleReportOwnerDistinctFromRecipient/final/scheduled=true
+=== RUN   TestPeopleReportOwnerDistinctFromRecipient/final/scheduled=false
+=== RUN   TestPeopleReportOwnerDistinctFromRecipient/stream/scheduled=true
+=== RUN   TestPeopleReportOwnerDistinctFromRecipient/stream/scheduled=false
+--- PASS: TestPeopleReportOwnerDistinctFromRecipient (28.35s)
+    --- PASS: TestPeopleReportOwnerDistinctFromRecipient/scope/scheduled=true (5.29s)
+    --- PASS: TestPeopleReportOwnerDistinctFromRecipient/scope/scheduled=false (3.66s)
+    --- PASS: TestPeopleReportOwnerDistinctFromRecipient/rejoin/scheduled=true (3.30s)
+    --- PASS: TestPeopleReportOwnerDistinctFromRecipient/rejoin/scheduled=false (3.22s)
+    --- PASS: TestPeopleReportOwnerDistinctFromRecipient/final/scheduled=true (3.18s)
+    --- PASS: TestPeopleReportOwnerDistinctFromRecipient/final/scheduled=false (3.09s)
+    --- PASS: TestPeopleReportOwnerDistinctFromRecipient/stream/scheduled=true (3.16s)
+    --- PASS: TestPeopleReportOwnerDistinctFromRecipient/stream/scheduled=false (3.46s)
+=== RUN   TestReportSnapshotRejectsTaskVisibilityRevocation
+--- PASS: TestReportSnapshotRejectsTaskVisibilityRevocation (3.33s)
+=== RUN   TestReportArtifactMidstreamAllSourceAndSessionRevocation
+=== RUN   TestReportArtifactMidstreamAllSourceAndSessionRevocation/source_outside_page
+=== RUN   TestReportArtifactMidstreamAllSourceAndSessionRevocation/session
+--- PASS: TestReportArtifactMidstreamAllSourceAndSessionRevocation (7.24s)
+    --- PASS: TestReportArtifactMidstreamAllSourceAndSessionRevocation/source_outside_page (3.65s)
+    --- PASS: TestReportArtifactMidstreamAllSourceAndSessionRevocation/session (3.59s)
+=== RUN   TestReportExportConcurrentClaimsAndDelivery
+--- PASS: TestReportExportConcurrentClaimsAndDelivery (1.86s)
+=== RUN   TestHistoricalHTTPActorRefreshRejectsLateSuspension
+--- PASS: TestHistoricalHTTPActorRefreshRejectsLateSuspension (2.00s)
+=== RUN   TestReportBlockedStorageLeavesCommunicationAndRevocationLive
+--- PASS: TestReportBlockedStorageLeavesCommunicationAndRevocationLive (4.26s)
+=== RUN   TestReportReadyPublicAttention
+=== RUN   TestReportReadyPublicAttention/ready
+=== RUN   TestReportReadyPublicAttention/expired
+=== RUN   TestReportReadyPublicAttention/source_loss
+=== RUN   TestReportReadyPublicAttention/epoch
+=== RUN   TestReportReadyPublicAttention/recipient
+=== RUN   TestReportReadyPublicAttention/company
+--- PASS: TestReportReadyPublicAttention (21.46s)
+    --- PASS: TestReportReadyPublicAttention/ready (3.68s)
+    --- PASS: TestReportReadyPublicAttention/expired (3.51s)
+    --- PASS: TestReportReadyPublicAttention/source_loss (3.36s)
+    --- PASS: TestReportReadyPublicAttention/epoch (3.72s)
+    --- PASS: TestReportReadyPublicAttention/recipient (3.43s)
+    --- PASS: TestReportReadyPublicAttention/company (3.76s)
+=== RUN   TestCurrentReportCSVChunkAuthority
+=== RUN   TestCurrentReportCSVChunkAuthority/unchanged
+=== RUN   TestCurrentReportCSVChunkAuthority/membership
+=== RUN   TestCurrentReportCSVChunkAuthority/session
+=== RUN   TestCurrentReportCSVChunkAuthority/source_later
+=== RUN   TestCurrentReportCSVChunkAuthority/reference_outside_period
+=== RUN   TestCurrentReportCSVChunkAuthority/frozen_values
+--- PASS: TestCurrentReportCSVChunkAuthority (19.27s)
+    --- PASS: TestCurrentReportCSVChunkAuthority/unchanged (3.28s)
+    --- PASS: TestCurrentReportCSVChunkAuthority/membership (3.22s)
+    --- PASS: TestCurrentReportCSVChunkAuthority/session (3.31s)
+    --- PASS: TestCurrentReportCSVChunkAuthority/source_later (3.18s)
+    --- PASS: TestCurrentReportCSVChunkAuthority/reference_outside_period (3.13s)
+    --- PASS: TestCurrentReportCSVChunkAuthority/frozen_values (3.15s)
+=== RUN   TestReportRuntimeRecipientDepartureIsolation
+=== RUN   TestReportRuntimeRecipientDepartureIsolation/departure
+=== RUN   TestReportRuntimeRecipientDepartureIsolation/suspension
+--- PASS: TestReportRuntimeRecipientDepartureIsolation (9.42s)
+    --- PASS: TestReportRuntimeRecipientDepartureIsolation/departure (4.81s)
+    --- PASS: TestReportRuntimeRecipientDepartureIsolation/suspension (4.61s)
+=== RUN   TestCurrentReportCSVPreheaderDenialMetadata
+--- PASS: TestCurrentReportCSVPreheaderDenialMetadata (1.68s)
+PASS
+ok  	schach.local/workspace/backend/platform	99.890s

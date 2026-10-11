@@ -1,0 +1,224 @@
+=== RUN   TestAttentionScopesAndRevocation
+--- PASS: TestAttentionScopesAndRevocation (0.83s)
+=== RUN   TestAttentionPaginationScopesBeforeLimit
+--- PASS: TestAttentionPaginationScopesBeforeLimit (0.47s)
+=== RUN   TestAttentionPublishedIntakeDetailIndependentOfPrivateSource
+--- PASS: TestAttentionPublishedIntakeDetailIndependentOfPrivateSource (0.62s)
+=== RUN   TestAttentionWindows
+=== RUN   TestAttentionWindows/disabled
+=== RUN   TestAttentionWindows/start
+=== RUN   TestAttentionWindows/end
+=== RUN   TestAttentionWindows/overnight
+=== RUN   TestAttentionWindows/quiet
+=== RUN   TestAttentionWindows/allquiet
+=== RUN   TestAttentionWindows/nooverlap
+=== RUN   TestAttentionWindows/badzone
+=== RUN   TestAttentionWindows/springgap
+=== RUN   TestAttentionWindows/repeated
+--- PASS: TestAttentionWindows (0.01s)
+    --- PASS: TestAttentionWindows/disabled (0.00s)
+    --- PASS: TestAttentionWindows/start (0.00s)
+    --- PASS: TestAttentionWindows/end (0.00s)
+    --- PASS: TestAttentionWindows/overnight (0.00s)
+    --- PASS: TestAttentionWindows/quiet (0.00s)
+    --- PASS: TestAttentionWindows/allquiet (0.00s)
+    --- PASS: TestAttentionWindows/nooverlap (0.00s)
+    --- PASS: TestAttentionWindows/badzone (0.00s)
+    --- PASS: TestAttentionWindows/springgap (0.00s)
+    --- PASS: TestAttentionWindows/repeated (0.00s)
+=== RUN   TestAttentionReminderLeaseAndEscalation
+--- PASS: TestAttentionReminderLeaseAndEscalation (0.40s)
+=== RUN   TestAttentionReminderDeferralCancellationAndEligibility
+--- PASS: TestAttentionReminderDeferralCancellationAndEligibility (0.51s)
+=== RUN   TestAttentionReminderExpiredLeaseRetriesSameIntent
+--- PASS: TestAttentionReminderExpiredLeaseRetriesSameIntent (0.40s)
+=== RUN   TestAttentionReminderEligibleEscalation
+--- PASS: TestAttentionReminderEligibleEscalation (0.49s)
+=== RUN   TestAttentionReminderRevokedBatchDoesNotStarveCurrentItems
+--- PASS: TestAttentionReminderRevokedBatchDoesNotStarveCurrentItems (0.41s)
+=== RUN   TestAttentionReminderReusesOpenTargetObligation
+--- PASS: TestAttentionReminderReusesOpenTargetObligation (0.49s)
+=== RUN   TestAttentionPreferenceEscalationLifecycle
+--- PASS: TestAttentionPreferenceEscalationLifecycle (0.57s)
+=== RUN   TestAttentionPreferenceTargetWindowRequeuesSameStage
+--- PASS: TestAttentionPreferenceTargetWindowRequeuesSameStage (0.57s)
+=== RUN   TestAttentionProducerAtomicityAndDedup
+--- PASS: TestAttentionProducerAtomicityAndDedup (0.50s)
+=== RUN   TestAttentionRecordRejoinBoundary
+--- PASS: TestAttentionRecordRejoinBoundary (0.57s)
+=== RUN   TestAttentionProducerFinanceIntakeAndEvidenceLifecycle
+--- PASS: TestAttentionProducerFinanceIntakeAndEvidenceLifecycle (0.73s)
+=== RUN   TestAttentionBookmarkOwnershipAndRecordResponseLifecycle
+--- PASS: TestAttentionBookmarkOwnershipAndRecordResponseLifecycle (0.57s)
+=== RUN   TestAttentionDeadlineAndBoundedLegacyReconciliation
+--- PASS: TestAttentionDeadlineAndBoundedLegacyReconciliation (0.49s)
+=== RUN   TestAttentionReconcilePrivateRecipientAfterCreatorRevocation
+--- PASS: TestAttentionReconcilePrivateRecipientAfterCreatorRevocation (0.56s)
+=== RUN   TestAttentionBookmarkRefreshUsesExactRevision
+--- PASS: TestAttentionBookmarkRefreshUsesExactRevision (0.58s)
+=== RUN   TestAttentionTransitionRetryAndSeparation
+--- PASS: TestAttentionTransitionRetryAndSeparation (0.41s)
+=== RUN   TestAttentionRoutingEligibility
+--- PASS: TestAttentionRoutingEligibility (0.47s)
+=== RUN   TestAttentionSnoozeValidation
+--- PASS: TestAttentionSnoozeValidation (0.39s)
+=== RUN   TestAttentionExpiredSnoozeCanonicalRetry
+--- PASS: TestAttentionExpiredSnoozeCanonicalRetry (0.99s)
+=== RUN   TestAttentionRouteClosedTargetAndConcurrentRetry
+--- PASS: TestAttentionRouteClosedTargetAndConcurrentRetry (0.46s)
+=== RUN   TestAttentionCanonicalReplayAfterBusinessSupersedes
+--- PASS: TestAttentionCanonicalReplayAfterBusinessSupersedes (0.48s)
+=== RUN   TestAttentionRecordRoutingDoesNotAddCreatorToFixedRecipients
+--- PASS: TestAttentionRecordRoutingDoesNotAddCreatorToFixedRecipients (0.55s)
+=== RUN   TestAttentionRouteCurrentTargetMembershipEpoch
+--- PASS: TestAttentionRouteCurrentTargetMembershipEpoch (0.49s)
+=== RUN   TestNativeVersionedUpgradeRunner
+--- PASS: TestNativeVersionedUpgradeRunner (0.46s)
+=== RUN   TestMilestone6NumberedUpgradeFrom32
+--- PASS: TestMilestone6NumberedUpgradeFrom32 (0.54s)
+=== RUN   TestReportSnapshotConsistentAndBoundToAccessFilters
+--- PASS: TestReportSnapshotConsistentAndBoundToAccessFilters (0.43s)
+=== RUN   TestReportSnapshotRejectsTaskVisibilityRevocation
+--- PASS: TestReportSnapshotRejectsTaskVisibilityRevocation (0.56s)
+=== RUN   TestReportSummaryCoversUnloadedRowsAndTabs
+--- PASS: TestReportSummaryCoversUnloadedRowsAndTabs (0.41s)
+=== RUN   TestReportExportCanonical
+--- PASS: TestReportExportCanonical (0.39s)
+=== RUN   TestReportArtifactAuthorizationAndCleanup
+--- PASS: TestReportArtifactAuthorizationAndCleanup (0.39s)
+=== RUN   TestReportExportLeaseLifecycle
+--- PASS: TestReportExportLeaseLifecycle (0.40s)
+=== RUN   TestReportArtifactStoreBoundsAndPrivacy
+--- PASS: TestReportArtifactStoreBoundsAndPrivacy (0.00s)
+=== RUN   TestReportArtifactCancellationImmediatelyDeniesBytes
+--- PASS: TestReportArtifactCancellationImmediatelyDeniesBytes (0.40s)
+=== RUN   TestReportExportLeaseCapsCrashAttempts
+--- PASS: TestReportExportLeaseCapsCrashAttempts (0.31s)
+=== RUN   TestReportArtifactMidstreamAllSourceAndSessionRevocation
+=== RUN   TestReportArtifactMidstreamAllSourceAndSessionRevocation/source_outside_page
+=== RUN   TestReportArtifactMidstreamAllSourceAndSessionRevocation/session
+--- PASS: TestReportArtifactMidstreamAllSourceAndSessionRevocation (1.66s)
+    --- PASS: TestReportArtifactMidstreamAllSourceAndSessionRevocation/source_outside_page (0.83s)
+    --- PASS: TestReportArtifactMidstreamAllSourceAndSessionRevocation/session (0.83s)
+=== RUN   TestReportExportConcurrentClaimsAndDelivery
+--- PASS: TestReportExportConcurrentClaimsAndDelivery (0.40s)
+=== RUN   TestScheduledExportsRejectDemotedOwnerBeforeDueTick
+=== RUN   TestScheduledExportsRejectDemotedOwnerBeforeDueTick/queued
+=== RUN   TestScheduledExportsRejectDemotedOwnerBeforeDueTick/ready
+--- PASS: TestScheduledExportsRejectDemotedOwnerBeforeDueTick (1.14s)
+    --- PASS: TestScheduledExportsRejectDemotedOwnerBeforeDueTick/queued (0.57s)
+    --- PASS: TestScheduledExportsRejectDemotedOwnerBeforeDueTick/ready (0.58s)
+=== RUN   TestReportObservedCoverage
+--- PASS: TestReportObservedCoverage (0.41s)
+=== RUN   TestReportObservedCoverageGapsAndNoAcceptance
+--- PASS: TestReportObservedCoverageGapsAndNoAcceptance (0.40s)
+=== RUN   TestHistoricalSnapshotImmutability
+--- PASS: TestHistoricalSnapshotImmutability (0.42s)
+=== RUN   TestHistoricalAllSourceAuthorization
+--- PASS: TestHistoricalAllSourceAuthorization (0.95s)
+=== RUN   TestHistoricalCalendarPolicy
+--- PASS: TestHistoricalCalendarPolicy (0.39s)
+=== RUN   TestHistoricalStateAndEpisodes
+--- PASS: TestHistoricalStateAndEpisodes (0.00s)
+=== RUN   TestHistoricalCalendarExactAndDST
+--- PASS: TestHistoricalCalendarExactAndDST (0.00s)
+=== RUN   TestHistoricalCompareBothManifests
+--- PASS: TestHistoricalCompareBothManifests (0.41s)
+=== RUN   TestHistoricalUniqueEpisodesAndInvalidCoverage
+--- PASS: TestHistoricalUniqueEpisodesAndInvalidCoverage (0.00s)
+=== RUN   TestHistoricalObservedMidPeriodDisclosesUnknownStart
+--- PASS: TestHistoricalObservedMidPeriodDisclosesUnknownStart (0.57s)
+=== RUN   TestHistoricalCaptureRejectsRowAndCanonicalByteLimits
+=== RUN   TestHistoricalCaptureRejectsRowAndCanonicalByteLimits/rows
+=== RUN   TestHistoricalCaptureRejectsRowAndCanonicalByteLimits/bytes
+--- PASS: TestHistoricalCaptureRejectsRowAndCanonicalByteLimits (6.53s)
+    --- PASS: TestHistoricalCaptureRejectsRowAndCanonicalByteLimits/rows (5.92s)
+    --- PASS: TestHistoricalCaptureRejectsRowAndCanonicalByteLimits/bytes (0.61s)
+=== RUN   TestHistoricalHTTPActorRefreshRejectsLateSuspension
+--- PASS: TestHistoricalHTTPActorRefreshRejectsLateSuspension (0.41s)
+=== RUN   TestHistoricalInteriorGapsRemainVisibleWithKnownCutoffState
+--- PASS: TestHistoricalInteriorGapsRemainVisibleWithKnownCutoffState (0.41s)
+=== RUN   TestHistoricalFilteredEventsBeyondCandidatePage
+=== RUN   TestHistoricalFilteredEventsBeyondCandidatePage/acceptance
+=== RUN   TestHistoricalFilteredEventsBeyondCandidatePage/time
+=== RUN   TestHistoricalFilteredEventsBeyondCandidatePage/overflow
+=== RUN   TestHistoricalFilteredEventsBeyondCandidatePage/scan_limit
+--- PASS: TestHistoricalFilteredEventsBeyondCandidatePage (13.34s)
+    --- PASS: TestHistoricalFilteredEventsBeyondCandidatePage/acceptance (0.86s)
+    --- PASS: TestHistoricalFilteredEventsBeyondCandidatePage/time (1.43s)
+    --- PASS: TestHistoricalFilteredEventsBeyondCandidatePage/overflow (0.96s)
+    --- PASS: TestHistoricalFilteredEventsBeyondCandidatePage/scan_limit (10.09s)
+=== RUN   TestHistoricalNarrowFilterBeyondVisibleTaskLimit
+--- PASS: TestHistoricalNarrowFilterBeyondVisibleTaskLimit (3.71s)
+=== RUN   TestReportSchedulesDSTAndCatchup
+--- PASS: TestReportSchedulesDSTAndCatchup (0.39s)
+=== RUN   TestReportLocalDeliveryDedup
+--- PASS: TestReportLocalDeliveryDedup (0.44s)
+=== RUN   TestReportSchedulesResolvedDSTPolicy
+--- PASS: TestReportSchedulesResolvedDSTPolicy (0.00s)
+=== RUN   TestReportWorkerIsolationAndShutdown
+--- PASS: TestReportWorkerIsolationAndShutdown (0.32s)
+=== RUN   TestReportSchedulesRecipientIsolationAndCatchup
+--- PASS: TestReportSchedulesRecipientIsolationAndCatchup (0.53s)
+=== RUN   TestReportWorkerCleanupRetainsHistory
+--- PASS: TestReportWorkerCleanupRetainsHistory (0.40s)
+=== RUN   TestReportBlockedStorageLeavesCommunicationAndRevocationLive
+--- PASS: TestReportBlockedStorageLeavesCommunicationAndRevocationLive (1.58s)
+=== RUN   TestReportSchedulesIsolateDeniedRecipientsAndLaterSchedules
+=== RUN   TestReportSchedulesIsolateDeniedRecipientsAndLaterSchedules/true
+=== RUN   TestReportSchedulesIsolateDeniedRecipientsAndLaterSchedules/false
+--- PASS: TestReportSchedulesIsolateDeniedRecipientsAndLaterSchedules (1.26s)
+    --- PASS: TestReportSchedulesIsolateDeniedRecipientsAndLaterSchedules/true (0.70s)
+    --- PASS: TestReportSchedulesIsolateDeniedRecipientsAndLaterSchedules/false (0.56s)
+=== RUN   TestScheduleReplayReturnsCommittedFieldsAndVersions
+--- PASS: TestScheduleReplayReturnsCommittedFieldsAndVersions (0.59s)
+=== RUN   TestReportSchedulesTransientCaptureHasBoundedBackoff
+--- PASS: TestReportSchedulesTransientCaptureHasBoundedBackoff (0.56s)
+=== RUN   TestReportSchedulesTimedOutFirstLeavesBackoffAndLaterWork
+--- PASS: TestReportSchedulesTimedOutFirstLeavesBackoffAndLaterWork (0.96s)
+=== RUN   TestReportReadyPublicAttention
+=== RUN   TestReportReadyPublicAttention/ready
+=== RUN   TestReportReadyPublicAttention/expired
+=== RUN   TestReportReadyPublicAttention/source_loss
+=== RUN   TestReportReadyPublicAttention/epoch
+=== RUN   TestReportReadyPublicAttention/recipient
+=== RUN   TestReportReadyPublicAttention/company
+--- PASS: TestReportReadyPublicAttention (4.37s)
+    --- PASS: TestReportReadyPublicAttention/ready (0.78s)
+    --- PASS: TestReportReadyPublicAttention/expired (0.61s)
+    --- PASS: TestReportReadyPublicAttention/source_loss (0.64s)
+    --- PASS: TestReportReadyPublicAttention/epoch (0.78s)
+    --- PASS: TestReportReadyPublicAttention/recipient (0.67s)
+    --- PASS: TestReportReadyPublicAttention/company (0.90s)
+=== RUN   TestCurrentReportCSVChunkAuthority
+=== RUN   TestCurrentReportCSVChunkAuthority/unchanged
+=== RUN   TestCurrentReportCSVChunkAuthority/membership
+=== RUN   TestCurrentReportCSVChunkAuthority/session
+=== RUN   TestCurrentReportCSVChunkAuthority/source_later
+=== RUN   TestCurrentReportCSVChunkAuthority/reference_outside_period
+=== RUN   TestCurrentReportCSVChunkAuthority/frozen_values
+--- PASS: TestCurrentReportCSVChunkAuthority (4.19s)
+    --- PASS: TestCurrentReportCSVChunkAuthority/unchanged (0.63s)
+    --- PASS: TestCurrentReportCSVChunkAuthority/membership (0.64s)
+    --- PASS: TestCurrentReportCSVChunkAuthority/session (0.77s)
+    --- PASS: TestCurrentReportCSVChunkAuthority/source_later (0.70s)
+    --- PASS: TestCurrentReportCSVChunkAuthority/reference_outside_period (0.83s)
+    --- PASS: TestCurrentReportCSVChunkAuthority/frozen_values (0.62s)
+=== RUN   TestReportRuntimeRecipientDepartureIsolation
+=== RUN   TestReportRuntimeRecipientDepartureIsolation/departure
+=== RUN   TestReportRuntimeRecipientDepartureIsolation/suspension
+--- PASS: TestReportRuntimeRecipientDepartureIsolation (1.94s)
+    --- PASS: TestReportRuntimeRecipientDepartureIsolation/departure (1.04s)
+    --- PASS: TestReportRuntimeRecipientDepartureIsolation/suspension (0.90s)
+=== RUN   TestSavedReportDefinitionVersions
+--- PASS: TestSavedReportDefinitionVersions (0.73s)
+=== RUN   TestSavedReportPeriodResolution
+--- PASS: TestSavedReportPeriodResolution (0.44s)
+=== RUN   TestSavedReportInvalidation
+--- PASS: TestSavedReportInvalidation (0.48s)
+=== RUN   TestSavedReportOrphanManagementIsMetadataOnly
+--- PASS: TestSavedReportOrphanManagementIsMetadataOnly (0.77s)
+=== RUN   TestSavedReplayReturnsCommittedRevisionAfterInterveningEdit
+--- PASS: TestSavedReplayReturnsCommittedRevisionAfterInterveningEdit (0.46s)
+PASS
+ok  	schach.local/workspace/backend/platform	69.845s

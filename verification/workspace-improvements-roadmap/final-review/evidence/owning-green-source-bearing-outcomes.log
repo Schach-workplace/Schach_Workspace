@@ -1,0 +1,36 @@
+=== RUN   TestReportReadyPublicAttention
+=== RUN   TestReportReadyPublicAttention/ready
+=== RUN   TestReportReadyPublicAttention/expired
+=== RUN   TestReportReadyPublicAttention/source_loss
+=== RUN   TestReportReadyPublicAttention/epoch
+=== RUN   TestReportReadyPublicAttention/recipient
+=== RUN   TestReportReadyPublicAttention/company
+--- PASS: TestReportReadyPublicAttention (1.82s)
+    --- PASS: TestReportReadyPublicAttention/ready (0.31s)
+    --- PASS: TestReportReadyPublicAttention/expired (0.30s)
+    --- PASS: TestReportReadyPublicAttention/source_loss (0.30s)
+    --- PASS: TestReportReadyPublicAttention/epoch (0.30s)
+    --- PASS: TestReportReadyPublicAttention/recipient (0.30s)
+    --- PASS: TestReportReadyPublicAttention/company (0.30s)
+=== RUN   TestCurrentReportCSVChunkAuthority
+=== RUN   TestCurrentReportCSVChunkAuthority/unchanged
+=== RUN   TestCurrentReportCSVChunkAuthority/membership
+=== RUN   TestCurrentReportCSVChunkAuthority/session
+=== RUN   TestCurrentReportCSVChunkAuthority/source_later
+=== RUN   TestCurrentReportCSVChunkAuthority/reference_outside_period
+=== RUN   TestCurrentReportCSVChunkAuthority/frozen_values
+--- PASS: TestCurrentReportCSVChunkAuthority (1.80s)
+    --- PASS: TestCurrentReportCSVChunkAuthority/unchanged (0.30s)
+    --- PASS: TestCurrentReportCSVChunkAuthority/membership (0.30s)
+    --- PASS: TestCurrentReportCSVChunkAuthority/session (0.30s)
+    --- PASS: TestCurrentReportCSVChunkAuthority/source_later (0.30s)
+    --- PASS: TestCurrentReportCSVChunkAuthority/reference_outside_period (0.30s)
+    --- PASS: TestCurrentReportCSVChunkAuthority/frozen_values (0.30s)
+=== RUN   TestReportRuntimeRecipientDepartureIsolation
+=== RUN   TestReportRuntimeRecipientDepartureIsolation/departure
+=== RUN   TestReportRuntimeRecipientDepartureIsolation/suspension
+--- PASS: TestReportRuntimeRecipientDepartureIsolation (0.89s)
+    --- PASS: TestReportRuntimeRecipientDepartureIsolation/departure (0.44s)
+    --- PASS: TestReportRuntimeRecipientDepartureIsolation/suspension (0.44s)
+PASS
+ok  	schach.local/workspace/backend/platform	4.512s

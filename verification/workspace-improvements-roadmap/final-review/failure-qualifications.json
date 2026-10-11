@@ -1,0 +1,65 @@
+{
+  "qualifications": [
+    {
+      "check": "owning-red",
+      "kind": "fixture compile failure",
+      "disposition": "Task.CreatedAt is string; corrected RFC3339Nano fixture before symptom RED."
+    },
+    {
+      "check": "owning-red-corrected",
+      "kind": "fixture validation failure",
+      "disposition": "Fictional September deadline initially preceded inherited October start; explicit September start corrected before symptom RED."
+    },
+    {
+      "check": "owning-red-valid-fixture",
+      "kind": "diagnostic product RED",
+      "disposition": "All three actual original symptoms; superseded by source-bearing RED with explicit completed-period observation/source assertion."
+    },
+    {
+      "check": "owning-green",
+      "kind": "implementation compile failure",
+      "disposition": "Extracted helper had undeclared e; fixed before behavioral GREEN."
+    },
+    {
+      "check": "owning-green-corrected",
+      "kind": "fixture source absence",
+      "disposition": "Source-loss negative initially had no completed-period included source; corrected explicit observation/source assertion, reran full BASE owning RED, then GREEN."
+    },
+    {
+      "check": "adapter-go-build",
+      "kind": "unsupported ordinary Go adapter compile",
+      "disposition": "Unchanged Encore api.go uses generated RunScheduled endpoint wrapper absent outside actual Encore compiler. Actual isolated Encore check/export/runtime subsequently passed; no adapter source altered to mask this."
+    },
+    {
+      "check": "encore-runtime",
+      "kind": "environment Unix socket length",
+      "disposition": "Private socket path exceeded Unix address length; bind invalid argument before compiler/runtime. New short owned SSD cache fixed path, own schema/namespace/slirp cleaned; successful subsequent actual Encore run."
+    },
+    {
+      "check": "standalone-runtime",
+      "kind": "source capture gap",
+      "disposition": "Actual backend runtime passed, but before-command inputs omitted new untracked Python harness. Final standalone run includes exact current harness and six current production inputs; original attempt retained, not represented as full final harness proof."
+    },
+    {
+      "check": "postgres-wider-controls",
+      "kind": "fixture JSON binding failure",
+      "disposition": "Five wider negative cases passed; explicit recipient removal fixture tried binding Go struct into raw PostgreSQL update. Serialize fixture JSON explicitly, final six cases and wider controls pass."
+    },
+    {
+      "check": "CSV revocation tests",
+      "kind": "expected interruption log",
+      "disposition": "Endpoint emits content-free response interrupted diagnostics on intentionally committed access loss after first CSV chunk; tests verify later bytes absent and no appended JSON. These diagnostics are expected fail-closed behavior."
+    },
+    {
+      "check": "preheader-metadata-red",
+      "kind": "owning product RED during same fix wave",
+      "disposition": "Real committed membership removal after preparing CSV metadata but before first bytes exposed stale Content-Length on403 JSON; minimal cleanup of all CSV-only headers now passes normal PG/race/full Go. Earlierpassing report_reads commands are retained as source-bound historical, not claimed final."
+    },
+    {
+      "check": "initial writer publication audit",
+      "kind": "unowned live coordination whitespace",
+      "disposition": "Initial global git diff --check failed on a concurrent root-owned AI_HANDOFF EOF blank line, outside owned source. Root fixed its own file; corrected audit checks only explicit owned paths. No coordination file was modified/staged by this writer and no application gate failed."
+    }
+  ],
+  "rawOutputs": "Retained privately with exact filenames/hash/exits in check-manifest.json; private DB/env/credentials/cookies/bodies/provider stderr/raw UI/binaries are not published."
+}

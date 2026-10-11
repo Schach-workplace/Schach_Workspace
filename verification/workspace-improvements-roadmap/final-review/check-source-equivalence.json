@@ -1,0 +1,249 @@
+{
+  "qualifiedChecks": [
+    {
+      "check": "backend-full",
+      "currentProductionFiles": [
+        "backend/platform/attention_access.go",
+        "backend/platform/attention_scopes.go",
+        "backend/platform/report_export_jobs.go",
+        "backend/platform/report_reads.go",
+        "backend/platform/report_schedules.go",
+        "backend/platform/saved_reports.go"
+      ],
+      "mismatch": [
+        "backend/platform/report_reads.go"
+      ],
+      "disposition": "HISTORICAL_BEFORE_PREHEADER_METADATA_EXTENSION"
+    },
+    {
+      "check": "backend-vet",
+      "currentProductionFiles": [
+        "backend/platform/attention_access.go",
+        "backend/platform/attention_scopes.go",
+        "backend/platform/report_export_jobs.go",
+        "backend/platform/report_reads.go",
+        "backend/platform/report_schedules.go",
+        "backend/platform/saved_reports.go"
+      ],
+      "mismatch": [
+        "backend/platform/report_reads.go"
+      ],
+      "disposition": "HISTORICAL_BEFORE_PREHEADER_METADATA_EXTENSION"
+    },
+    {
+      "check": "encore-runtime-short-socket",
+      "currentProductionFiles": [
+        "backend/platform/attention_access.go",
+        "backend/platform/attention_scopes.go",
+        "backend/platform/report_export_jobs.go",
+        "backend/platform/report_reads.go",
+        "backend/platform/report_schedules.go",
+        "backend/platform/saved_reports.go"
+      ],
+      "mismatch": [
+        "backend/platform/report_reads.go"
+      ],
+      "disposition": "HISTORICAL_BEFORE_PREHEADER_METADATA_EXTENSION"
+    },
+    {
+      "check": "final-backend-full",
+      "currentProductionFiles": [
+        "backend/platform/attention_access.go",
+        "backend/platform/attention_scopes.go",
+        "backend/platform/report_export_jobs.go",
+        "backend/platform/report_reads.go",
+        "backend/platform/report_schedules.go",
+        "backend/platform/saved_reports.go"
+      ],
+      "mismatch": [
+        "backend/platform/report_reads.go"
+      ],
+      "disposition": "HISTORICAL_BEFORE_PREHEADER_METADATA_EXTENSION"
+    },
+    {
+      "check": "final-postgres-owning",
+      "currentProductionFiles": [
+        "backend/platform/attention_access.go",
+        "backend/platform/attention_scopes.go",
+        "backend/platform/report_export_jobs.go",
+        "backend/platform/report_reads.go",
+        "backend/platform/report_schedules.go",
+        "backend/platform/saved_reports.go"
+      ],
+      "mismatch": [
+        "backend/platform/report_reads.go"
+      ],
+      "disposition": "HISTORICAL_BEFORE_PREHEADER_METADATA_EXTENSION"
+    },
+    {
+      "check": "final-standalone-runtime",
+      "currentProductionFiles": [
+        "backend/platform/attention_access.go",
+        "backend/platform/attention_scopes.go",
+        "backend/platform/report_export_jobs.go",
+        "backend/platform/report_reads.go",
+        "backend/platform/report_schedules.go",
+        "backend/platform/saved_reports.go"
+      ],
+      "mismatch": [
+        "backend/platform/report_reads.go"
+      ],
+      "disposition": "HISTORICAL_BEFORE_PREHEADER_METADATA_EXTENSION"
+    },
+    {
+      "check": "owning-green-source-bearing",
+      "currentProductionFiles": [
+        "backend/platform/attention_access.go",
+        "backend/platform/attention_scopes.go",
+        "backend/platform/report_export_jobs.go",
+        "backend/platform/report_reads.go",
+        "backend/platform/report_schedules.go",
+        "backend/platform/saved_reports.go"
+      ],
+      "mismatch": [
+        "backend/platform/report_reads.go"
+      ],
+      "disposition": "HISTORICAL_BEFORE_PREHEADER_METADATA_EXTENSION"
+    },
+    {
+      "check": "postgres-affected",
+      "currentProductionFiles": [
+        "backend/platform/attention_access.go",
+        "backend/platform/attention_scopes.go",
+        "backend/platform/report_export_jobs.go",
+        "backend/platform/report_reads.go",
+        "backend/platform/report_schedules.go",
+        "backend/platform/saved_reports.go"
+      ],
+      "mismatch": [
+        "backend/platform/report_reads.go"
+      ],
+      "disposition": "HISTORICAL_BEFORE_PREHEADER_METADATA_EXTENSION"
+    },
+    {
+      "check": "postgres-race",
+      "currentProductionFiles": [
+        "backend/platform/attention_access.go",
+        "backend/platform/attention_scopes.go",
+        "backend/platform/report_export_jobs.go",
+        "backend/platform/report_reads.go",
+        "backend/platform/report_schedules.go",
+        "backend/platform/saved_reports.go"
+      ],
+      "mismatch": [
+        "backend/platform/report_reads.go"
+      ],
+      "disposition": "HISTORICAL_BEFORE_PREHEADER_METADATA_EXTENSION"
+    },
+    {
+      "check": "preheader-metadata-green",
+      "currentProductionFiles": [
+        "backend/platform/attention_access.go",
+        "backend/platform/attention_scopes.go",
+        "backend/platform/report_export_jobs.go",
+        "backend/platform/report_reads.go",
+        "backend/platform/report_schedules.go",
+        "backend/platform/saved_reports.go"
+      ],
+      "mismatch": [
+        "backend/platform/report_reads.go"
+      ],
+      "disposition": "HISTORICAL_BEFORE_PREHEADER_METADATA_EXTENSION"
+    },
+    {
+      "check": "standalone-runtime",
+      "currentProductionFiles": [
+        "backend/platform/attention_access.go",
+        "backend/platform/attention_scopes.go",
+        "backend/platform/report_export_jobs.go",
+        "backend/platform/report_reads.go",
+        "backend/platform/report_schedules.go",
+        "backend/platform/saved_reports.go"
+      ],
+      "mismatch": [
+        "backend/platform/report_reads.go"
+      ],
+      "disposition": "HISTORICAL_BEFORE_PREHEADER_METADATA_EXTENSION"
+    },
+    {
+      "check": "verified-backend-full",
+      "currentProductionFiles": [
+        "backend/platform/attention_access.go",
+        "backend/platform/attention_scopes.go",
+        "backend/platform/report_export_jobs.go",
+        "backend/platform/report_reads.go",
+        "backend/platform/report_schedules.go",
+        "backend/platform/saved_reports.go"
+      ],
+      "mismatch": [],
+      "disposition": "CURRENT_SOURCE_EQUIVALENT"
+    },
+    {
+      "check": "verified-encore",
+      "currentProductionFiles": [
+        "backend/platform/attention_access.go",
+        "backend/platform/attention_scopes.go",
+        "backend/platform/report_export_jobs.go",
+        "backend/platform/report_reads.go",
+        "backend/platform/report_schedules.go",
+        "backend/platform/saved_reports.go"
+      ],
+      "mismatch": [],
+      "disposition": "CURRENT_SOURCE_EQUIVALENT"
+    },
+    {
+      "check": "verified-postgres",
+      "currentProductionFiles": [
+        "backend/platform/attention_access.go",
+        "backend/platform/attention_scopes.go",
+        "backend/platform/report_export_jobs.go",
+        "backend/platform/report_reads.go",
+        "backend/platform/report_schedules.go",
+        "backend/platform/saved_reports.go"
+      ],
+      "mismatch": [],
+      "disposition": "CURRENT_SOURCE_EQUIVALENT"
+    },
+    {
+      "check": "verified-race",
+      "currentProductionFiles": [
+        "backend/platform/attention_access.go",
+        "backend/platform/attention_scopes.go",
+        "backend/platform/report_export_jobs.go",
+        "backend/platform/report_reads.go",
+        "backend/platform/report_schedules.go",
+        "backend/platform/saved_reports.go"
+      ],
+      "mismatch": [],
+      "disposition": "CURRENT_SOURCE_EQUIVALENT"
+    },
+    {
+      "check": "verified-standalone",
+      "currentProductionFiles": [
+        "backend/platform/attention_access.go",
+        "backend/platform/attention_scopes.go",
+        "backend/platform/report_export_jobs.go",
+        "backend/platform/report_reads.go",
+        "backend/platform/report_schedules.go",
+        "backend/platform/saved_reports.go"
+      ],
+      "mismatch": [],
+      "disposition": "CURRENT_SOURCE_EQUIVALENT"
+    },
+    {
+      "check": "verified-vet",
+      "currentProductionFiles": [
+        "backend/platform/attention_access.go",
+        "backend/platform/attention_scopes.go",
+        "backend/platform/report_export_jobs.go",
+        "backend/platform/report_reads.go",
+        "backend/platform/report_schedules.go",
+        "backend/platform/saved_reports.go"
+      ],
+      "mismatch": [],
+      "disposition": "CURRENT_SOURCE_EQUIVALENT"
+    }
+  ],
+  "qualification": "Current equivalent passing checks consumed exact current six amended production Go files. Older passing checks with explicit report_reads mismatch are retained as historical before the owning pre-header metadata extension. Whole-suite test additions and Python harness revisions retain their own before-command bindings; no98b7 backend equivalence claimed for changed paths.",
+  "productSourceCommit": "ebc994dc6c2be442db595e468a716139b56ed721"
+}

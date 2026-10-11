@@ -1,0 +1,13 @@
+{
+  "productSourceCommit": "ebc994dc6c2be442db595e468a716139b56ed721",
+  "safeRecordsVerifiedBeforeAuditAddition": 73,
+  "checkRecords": 27,
+  "currentVerifiedCommands": 6,
+  "priorPublishedGitBlobs": 785,
+  "compiledNativeSharedInputs": 205,
+  "mirroredSQLFiles": 116,
+  "ownResourceCleanupVerified": true,
+  "unexpectedVerifiedFailures": [],
+  "auditScriptSHA256": "9700fad80b363d09f9fb23d149d4de3b80c5585a0a8908a487de81d7f40f0648",
+  "qualification": "Writer verification before metadata commit, scoped to explicit owned files. Root separately approves privacy, validates committed proof bytes and runs exactly one scoped re-review. Manifest excludes its own hash; this audit does not claim main/native/provider/preservation/cutover acceptance."
+}

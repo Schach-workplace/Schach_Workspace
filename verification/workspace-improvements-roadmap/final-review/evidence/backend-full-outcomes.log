@@ -1,0 +1,6 @@
+?   	schach.local/workspace/backend/cmd/migrate	[no test files]
+?   	schach.local/workspace/backend/cmd/reconcile-attention	[no test files]
+?   	schach.local/workspace/backend/cmd/reset-password	[no test files]
+?   	schach.local/workspace/backend/cmd/server	[no test files]
+?   	schach.local/workspace/backend/migrations	[no test files]
+ok  	schach.local/workspace/backend/platform	134.859s

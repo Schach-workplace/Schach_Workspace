@@ -1,0 +1,84 @@
+=== RUN   TestLoginCannotMintSessionAfterSuspension
+--- PASS: TestLoginCannotMintSessionAfterSuspension (1.06s)
+=== RUN   TestDepartureSourceLockOrderPostgres
+=== RUN   TestDepartureSourceLockOrderPostgres/source
+=== RUN   TestDepartureSourceLockOrderPostgres/departure
+--- PASS: TestDepartureSourceLockOrderPostgres (1.01s)
+    --- PASS: TestDepartureSourceLockOrderPostgres/source (0.51s)
+    --- PASS: TestDepartureSourceLockOrderPostgres/departure (0.50s)
+=== RUN   TestPeopleRejoinRetiresRawFinanceReportAndGoalOutputs
+--- PASS: TestPeopleRejoinRetiresRawFinanceReportAndGoalOutputs (0.80s)
+=== RUN   TestPeopleReportOwnerDistinctFromRecipient
+=== RUN   TestPeopleReportOwnerDistinctFromRecipient/scope/scheduled=true
+=== RUN   TestPeopleReportOwnerDistinctFromRecipient/scope/scheduled=false
+=== RUN   TestPeopleReportOwnerDistinctFromRecipient/rejoin/scheduled=true
+=== RUN   TestPeopleReportOwnerDistinctFromRecipient/rejoin/scheduled=false
+=== RUN   TestPeopleReportOwnerDistinctFromRecipient/final/scheduled=true
+=== RUN   TestPeopleReportOwnerDistinctFromRecipient/final/scheduled=false
+=== RUN   TestPeopleReportOwnerDistinctFromRecipient/stream/scheduled=true
+=== RUN   TestPeopleReportOwnerDistinctFromRecipient/stream/scheduled=false
+--- PASS: TestPeopleReportOwnerDistinctFromRecipient (4.72s)
+    --- PASS: TestPeopleReportOwnerDistinctFromRecipient/scope/scheduled=true (0.58s)
+    --- PASS: TestPeopleReportOwnerDistinctFromRecipient/scope/scheduled=false (0.57s)
+    --- PASS: TestPeopleReportOwnerDistinctFromRecipient/rejoin/scheduled=true (0.58s)
+    --- PASS: TestPeopleReportOwnerDistinctFromRecipient/rejoin/scheduled=false (0.66s)
+    --- PASS: TestPeopleReportOwnerDistinctFromRecipient/final/scheduled=true (0.61s)
+    --- PASS: TestPeopleReportOwnerDistinctFromRecipient/final/scheduled=false (0.57s)
+    --- PASS: TestPeopleReportOwnerDistinctFromRecipient/stream/scheduled=true (0.58s)
+    --- PASS: TestPeopleReportOwnerDistinctFromRecipient/stream/scheduled=false (0.58s)
+=== RUN   TestReportReadyPublicAttention
+=== RUN   TestReportReadyPublicAttention/ready
+=== RUN   TestReportReadyPublicAttention/expired
+=== RUN   TestReportReadyPublicAttention/source_loss
+=== RUN   TestReportReadyPublicAttention/epoch
+=== RUN   TestReportReadyPublicAttention/recipient
+=== RUN   TestReportReadyPublicAttention/company
+--- PASS: TestReportReadyPublicAttention (3.50s)
+    --- PASS: TestReportReadyPublicAttention/ready (0.57s)
+    --- PASS: TestReportReadyPublicAttention/expired (0.58s)
+    --- PASS: TestReportReadyPublicAttention/source_loss (0.59s)
+    --- PASS: TestReportReadyPublicAttention/epoch (0.58s)
+    --- PASS: TestReportReadyPublicAttention/recipient (0.58s)
+    --- PASS: TestReportReadyPublicAttention/company (0.59s)
+=== RUN   TestCurrentReportCSVChunkAuthority
+=== RUN   TestCurrentReportCSVChunkAuthority/unchanged
+=== RUN   TestCurrentReportCSVChunkAuthority/membership
+=== RUN   TestCurrentReportCSVChunkAuthority/session
+=== RUN   TestCurrentReportCSVChunkAuthority/source_later
+=== RUN   TestCurrentReportCSVChunkAuthority/reference_outside_period
+=== RUN   TestCurrentReportCSVChunkAuthority/frozen_values
+--- PASS: TestCurrentReportCSVChunkAuthority (3.45s)
+    --- PASS: TestCurrentReportCSVChunkAuthority/unchanged (0.58s)
+    --- PASS: TestCurrentReportCSVChunkAuthority/membership (0.58s)
+    --- PASS: TestCurrentReportCSVChunkAuthority/session (0.57s)
+    --- PASS: TestCurrentReportCSVChunkAuthority/source_later (0.57s)
+    --- PASS: TestCurrentReportCSVChunkAuthority/reference_outside_period (0.57s)
+    --- PASS: TestCurrentReportCSVChunkAuthority/frozen_values (0.57s)
+=== RUN   TestReportRuntimeRecipientDepartureIsolation
+=== RUN   TestReportRuntimeRecipientDepartureIsolation/departure
+=== RUN   TestReportRuntimeRecipientDepartureIsolation/suspension
+--- PASS: TestReportRuntimeRecipientDepartureIsolation (1.51s)
+    --- PASS: TestReportRuntimeRecipientDepartureIsolation/departure (0.75s)
+    --- PASS: TestReportRuntimeRecipientDepartureIsolation/suspension (0.76s)
+=== RUN   TestReportRuntimeWiderInvalidation
+=== RUN   TestReportRuntimeWiderInvalidation/owner_departure
+=== RUN   TestReportRuntimeWiderInvalidation/owner_source_loss
+=== RUN   TestReportRuntimeWiderInvalidation/definition_revision
+=== RUN   TestReportRuntimeWiderInvalidation/recipient_removed
+=== RUN   TestReportRuntimeWiderInvalidation/schedule_version
+=== RUN   TestReportRuntimeWiderInvalidation/artifact_expired
+--- PASS: TestReportRuntimeWiderInvalidation (3.82s)
+    --- PASS: TestReportRuntimeWiderInvalidation/owner_departure (0.56s)
+    --- PASS: TestReportRuntimeWiderInvalidation/owner_source_loss (0.60s)
+    --- PASS: TestReportRuntimeWiderInvalidation/definition_revision (0.57s)
+    --- PASS: TestReportRuntimeWiderInvalidation/recipient_removed (0.94s)
+    --- PASS: TestReportRuntimeWiderInvalidation/schedule_version (0.57s)
+    --- PASS: TestReportRuntimeWiderInvalidation/artifact_expired (0.57s)
+=== RUN   TestTaskReportScopeAndProjection
+--- PASS: TestTaskReportScopeAndProjection (0.56s)
+=== RUN   TestTaskReportFiltersAndCompanyBoundary
+--- PASS: TestTaskReportFiltersAndCompanyBoundary (0.55s)
+=== RUN   TestTaskReportCalendarAndValidation
+--- PASS: TestTaskReportCalendarAndValidation (0.40s)
+PASS
+ok  	schach.local/workspace/backend/platform	21.393s

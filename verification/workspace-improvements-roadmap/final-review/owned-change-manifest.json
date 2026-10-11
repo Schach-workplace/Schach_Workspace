@@ -1,0 +1,99 @@
+{
+  "baseCommit": "2e8fb06b5f62abb550df0e7aa8e8de0fac4be028",
+  "productSourceCommit": "ebc994dc6c2be442db595e468a716139b56ed721",
+  "implementationCommits": [
+    "ad5f51dc34a71f9281df2321961b96a9429e890f",
+    "ebc994dc6c2be442db595e468a716139b56ed721"
+  ],
+  "files": [
+    {
+      "path": "backend/platform/attention_access.go",
+      "added": 5,
+      "removed": 0,
+      "bytes": 12824,
+      "sha256": "1b1010a835c60928630ae52e8042579738959088ea8eddb162e36f760651cdf9"
+    },
+    {
+      "path": "backend/platform/attention_scopes.go",
+      "added": 10,
+      "removed": 1,
+      "bytes": 5701,
+      "sha256": "18020b9c2398b5aa51955b29a0396b6e9f8158792b8bc338c726b194cacfa8ab"
+    },
+    {
+      "path": "backend/platform/report_export_jobs.go",
+      "added": 1,
+      "removed": 1,
+      "bytes": 15367,
+      "sha256": "d41cbbe16a73b85f3e7bc5baec67c99e2139b2c14aa59b0a8d81a635872e6f67"
+    },
+    {
+      "path": "backend/platform/report_reads.go",
+      "added": 70,
+      "removed": 23,
+      "bytes": 16582,
+      "sha256": "85e544b0784435bc5e54c03ff0ef7176cca4f9770763fefd43e8a33ca784a6fb"
+    },
+    {
+      "path": "backend/platform/report_schedules.go",
+      "added": 1,
+      "removed": 1,
+      "bytes": 15901,
+      "sha256": "c85b166e4e137d3242afa2e267250052b7ca6a10cdedf5947da45a231cab9b16"
+    },
+    {
+      "path": "backend/platform/saved_reports.go",
+      "added": 19,
+      "removed": 2,
+      "bytes": 16199,
+      "sha256": "e659b73a2dde6a6ef5cb2dddc82b4f51988f337053a15c05f241769c0fc62b50"
+    },
+    {
+      "path": "backend/platform/reporting_final_test.go",
+      "added": 509,
+      "removed": 0,
+      "bytes": 20550,
+      "sha256": "18cb30ed5c77e5143860bf8c2c011c07814858134526be05308e3b87bfba22e9"
+    },
+    {
+      "path": "docs/API_CONTRACT.md",
+      "added": 7,
+      "removed": 1,
+      "bytes": 37039,
+      "sha256": "23739143baf4ace9b6fcca4c45a14ebe5947b15787efcc1bca97d2d330e21a53"
+    },
+    {
+      "path": "docs/SECURITY_AND_LIMITATIONS.md",
+      "added": 4,
+      "removed": 0,
+      "bytes": 17095,
+      "sha256": "92bcc864f7c0470dcf6faacbf13532f61ae5b623e41b8c451ee523e6830103a6"
+    },
+    {
+      "path": "docs/VERIFICATION.md",
+      "added": 9,
+      "removed": 0,
+      "bytes": 31243,
+      "sha256": "75177d5c6a2fa07f2bc5ddb7304a35ccc4a36a1e9f123e1b98ee5efeba8bd494"
+    },
+    {
+      "path": "docs/reports-storage.md",
+      "added": 3,
+      "removed": 1,
+      "bytes": 4779,
+      "sha256": "d283fc48649f1afb4c1535dc402aad6601f6e5c7ef1aaf7bfc8692c219b475bf"
+    },
+    {
+      "path": "verification/runtime/final_reporting_runtime.py",
+      "added": 149,
+      "removed": 0,
+      "bytes": 14197,
+      "sha256": "2d560e8a0b7b67efa559cfb995e15e0c9c980af4ce79de886c91a419d7c27391"
+    }
+  ],
+  "excludedRootOwnedCoordinationFiles": [
+    "docs/AI_HANDOFF.md",
+    "docs/AI_CHECKLIST.md",
+    "docs/AI_FILE_INDEX.json"
+  ]
+}

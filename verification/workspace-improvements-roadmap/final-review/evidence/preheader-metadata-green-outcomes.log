@@ -1,0 +1,18 @@
+=== RUN   TestCurrentReportCSVChunkAuthority
+=== RUN   TestCurrentReportCSVChunkAuthority/unchanged
+=== RUN   TestCurrentReportCSVChunkAuthority/membership
+=== RUN   TestCurrentReportCSVChunkAuthority/session
+=== RUN   TestCurrentReportCSVChunkAuthority/source_later
+=== RUN   TestCurrentReportCSVChunkAuthority/reference_outside_period
+=== RUN   TestCurrentReportCSVChunkAuthority/frozen_values
+--- PASS: TestCurrentReportCSVChunkAuthority (3.35s)
+    --- PASS: TestCurrentReportCSVChunkAuthority/unchanged (0.56s)
+    --- PASS: TestCurrentReportCSVChunkAuthority/membership (0.56s)
+    --- PASS: TestCurrentReportCSVChunkAuthority/session (0.56s)
+    --- PASS: TestCurrentReportCSVChunkAuthority/source_later (0.55s)
+    --- PASS: TestCurrentReportCSVChunkAuthority/reference_outside_period (0.56s)
+    --- PASS: TestCurrentReportCSVChunkAuthority/frozen_values (0.56s)
+=== RUN   TestCurrentReportCSVPreheaderDenialMetadata
+--- PASS: TestCurrentReportCSVPreheaderDenialMetadata (0.39s)
+PASS
+ok  	schach.local/workspace/backend/platform	3.746s

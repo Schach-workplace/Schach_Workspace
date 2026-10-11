@@ -1,0 +1,37 @@
+=== RUN   TestReportReadyPublicAttention
+=== RUN   TestReportReadyPublicAttention/ready
+=== RUN   TestReportReadyPublicAttention/expired
+=== RUN   TestReportReadyPublicAttention/source_loss
+=== RUN   TestReportReadyPublicAttention/epoch
+=== RUN   TestReportReadyPublicAttention/recipient
+=== RUN   TestReportReadyPublicAttention/company
+--- FAIL: TestReportReadyPublicAttention (1.78s)
+    --- FAIL: TestReportReadyPublicAttention/ready (0.31s)
+    --- FAIL: TestReportReadyPublicAttention/expired (0.31s)
+    --- FAIL: TestReportReadyPublicAttention/source_loss (0.30s)
+    --- FAIL: TestReportReadyPublicAttention/epoch (0.29s)
+    --- FAIL: TestReportReadyPublicAttention/recipient (0.29s)
+    --- FAIL: TestReportReadyPublicAttention/company (0.29s)
+=== RUN   TestCurrentReportCSVChunkAuthority
+=== RUN   TestCurrentReportCSVChunkAuthority/unchanged
+=== RUN   TestCurrentReportCSVChunkAuthority/membership
+=== RUN   TestCurrentReportCSVChunkAuthority/session
+=== RUN   TestCurrentReportCSVChunkAuthority/source_later
+=== RUN   TestCurrentReportCSVChunkAuthority/reference_outside_period
+=== RUN   TestCurrentReportCSVChunkAuthority/frozen_values
+--- FAIL: TestCurrentReportCSVChunkAuthority (1.91s)
+    --- FAIL: TestCurrentReportCSVChunkAuthority/unchanged (0.34s)
+    --- FAIL: TestCurrentReportCSVChunkAuthority/membership (0.33s)
+    --- FAIL: TestCurrentReportCSVChunkAuthority/session (0.30s)
+    --- FAIL: TestCurrentReportCSVChunkAuthority/source_later (0.33s)
+    --- FAIL: TestCurrentReportCSVChunkAuthority/reference_outside_period (0.32s)
+    --- FAIL: TestCurrentReportCSVChunkAuthority/frozen_values (0.29s)
+=== RUN   TestReportRuntimeRecipientDepartureIsolation
+=== RUN   TestReportRuntimeRecipientDepartureIsolation/departure
+=== RUN   TestReportRuntimeRecipientDepartureIsolation/suspension
+--- FAIL: TestReportRuntimeRecipientDepartureIsolation (0.91s)
+    --- FAIL: TestReportRuntimeRecipientDepartureIsolation/departure (0.48s)
+    --- FAIL: TestReportRuntimeRecipientDepartureIsolation/suspension (0.43s)
+FAIL
+FAIL	schach.local/workspace/backend/platform	4.605s
+FAIL
