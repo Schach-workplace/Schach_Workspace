@@ -88,17 +88,24 @@ export function ExpenseForm({
     receiptExceptionReason: expense?.receiptExceptionReason || '',
   });
   const formId = '$finance-draft:' + (item?.id ?? 'new');
-  const [draft, setDraft] = useExecutionInput<ExpenseDraft>(formId, 'draft', () => makeDraft(item));
+  const [authored, setAuthored, , retireAuthored] = useExecutionInput(formId, 'reviewedDraft', () => ({
+    draft: makeDraft(item),
+    version: item?.version || 0,
+  }));
+  const { draft, version } = authored;
+  const setDraft = (next: ExpenseDraft | ((current: ExpenseDraft) => ExpenseDraft)) =>
+    setAuthored((current) => ({
+      ...current,
+      draft: typeof next === 'function' ? next(current.draft) : next,
+    }));
   const create = useExecutionMutation(formId);
-  const [version, setVersion] = useState(item?.version || 0);
   const [error, setError] = useState('');
   const [reloadRequested, setReloadRequested] = useState(false);
   const latest = item ? data.expenses.find((expense) => expense.id === item.id) : undefined;
   const stale = !!latest && latest.version !== version;
   useEffect(() => {
     if (!reloadRequested || !latest) return;
-    setDraft(makeDraft(latest));
-    setVersion(latest.version);
+    setAuthored({ draft: makeDraft(latest), version: latest.version });
     setError('');
     setReloadRequested(false);
   }, [reloadRequested, latest]);
@@ -148,6 +155,7 @@ export function ExpenseForm({
         },
         item ? 'PATCH' : 'POST',
       );
+      retireAuthored(authored);
       onSaved(item?.id || String(result.id ?? ''));
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Unable to save this expense.');
