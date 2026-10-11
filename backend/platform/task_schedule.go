@@ -13,6 +13,7 @@ type ScheduleVersion struct {
 	Version int64  `json:"version"`
 }
 type ScheduleContext struct {
+	Sources    []ScheduleVersion `json:"sources,omitempty"`
 	Projects   []ScheduleVersion `json:"projects"`
 	Milestones []ScheduleVersion `json:"milestones"`
 }
@@ -80,6 +81,11 @@ func scheduleSources(tx *gorm.DB, a *access, p TaskScheduleProposal) error {
 			}
 		}
 	}
+	for _, v := range p.Context.Sources {
+		if _, e := scopedTask(tx, a, v.ID); e != nil {
+			return e
+		}
+	}
 	for _, v := range p.Context.Projects {
 		if _, e := scopedProject(tx, a, v.ID); e != nil {
 			return e
@@ -120,6 +126,23 @@ func inspectSchedule(tx *gorm.DB, a *access, input SchedulePreviewInput) ([]Task
 	}
 	if input.Method == "manual" && input.DayOffset != nil {
 		return nil, nil, nil, nil, invalid("Manual previews have no automatic day offset.")
+	}
+	if len(input.Context.Sources) > 1000 {
+		return nil, nil, nil, nil, invalid("Narrow selection to at most 1000 inspected sources.")
+	}
+	sourceVersions := map[string]int64{}
+	for _, v := range input.Context.Sources {
+		if v.ID == "" || v.Version < 1 || sourceVersions[v.ID] != 0 {
+			return nil, nil, nil, nil, invalid("Sources require unique positive inspected versions.")
+		}
+		t, e := scopedTask(tx, a, v.ID)
+		if e != nil {
+			return nil, nil, nil, nil, e
+		}
+		if t.Version != v.Version {
+			return nil, nil, nil, nil, conflict()
+		}
+		sourceVersions[v.ID] = v.Version
 	}
 	projectVersions := map[string]int64{}
 	for _, v := range input.Context.Projects {

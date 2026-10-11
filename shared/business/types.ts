@@ -144,6 +144,7 @@ export interface ScheduleChange extends Commitment {
   reason: string;
 }
 export interface ScheduleContext {
+  sources?: { id: string; version: number }[];
   projects: { id: string; version: number }[];
   milestones: { id: string; version: number }[];
 }

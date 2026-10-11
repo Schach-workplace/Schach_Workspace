@@ -29,6 +29,7 @@ import {
   type ScheduleChange,
   type ScheduleProposalView,
 } from "./execution";
+import type { ScheduleContext } from "../../shared/business/types";
 import { commitmentLabel } from "../../shared/business/types";
 export function ExecutionField({
   label,
@@ -229,16 +230,19 @@ export function NativeSchedule({
   tasks,
   onDone,
   project,
+  context,
 }: {
   tasks: WorkTask[];
   onDone?: () => void;
   project?: ExecutionProject;
+  context?: ScheduleContext;
 }) {
   const w = useWorkspace();
   const identity = tasks
     .map((t) => t.id)
     .sort()
     .join(":");
+  const [inspectedContext, freezeContext] = useRamInput<ScheduleContext | undefined>("$schedule:" + identity, "context", context);
   const retireSchedule = useAuthoredRetirement("$schedule:" + identity);
   const preview = useExecutionMutation("schedule-preview:" + identity);
   const apply = useExecutionMutation("schedule-apply:" + identity);
@@ -285,10 +289,12 @@ export function NativeSchedule({
   );
   const [error, setError] = useState("");
   const locked = preview.busy || !!preview.attempt;
-  const update = (id: string, key: keyof ScheduleChange, value: unknown) =>
+  const update = (id: string, key: keyof ScheduleChange, value: unknown) => {
+    freezeContext(inspectedContext);
     setRows((rows) =>
       rows.map((r) => (r.taskId === id ? { ...r, [key]: value } : r)),
     );
+  };
   const scrubProposal = useEffectEvent(() => {
     preview.abandon();
     apply.abandon();
@@ -383,13 +389,14 @@ export function NativeSchedule({
                     <ScheduleDeadline
                       row={r}
                       disabled={locked}
-                      onChange={(v) =>
-                        setRows((rows) =>
+                      onChange={(v) => {
+                        freezeContext(inspectedContext);
+    setRows((rows) =>
                           rows.map((old) =>
                             old.taskId === r.taskId ? { ...old, ...v } : old,
                           ),
-                        )
-                      }
+                        );
+                      }}
                     />
                   </>
                 )}
@@ -448,7 +455,7 @@ export function NativeSchedule({
                       .filter(Boolean),
                   ),
                 ];
-                const projects = await Promise.all(
+                const projects = inspectedContext?.projects ?? await Promise.all(
                   ids.map(async (id) => {
                     const p =
                       project?.id === id
@@ -470,7 +477,7 @@ export function NativeSchedule({
                     ? { dayOffset: Number(offset) }
                     : {}),
                   changes,
-                  context: { projects, milestones: [] },
+                  context: inspectedContext ?? { projects, milestones: [] },
                 });
                 setProposalId(result.proposal.id);
               })

@@ -1,3 +1,4 @@
+import type { ScheduleContext } from '../../../shared/business/types';
 import ExecutionRecovery from './ExecutionRecovery';
 import { useExecutionInput, clearExecutionForm } from '../data/executionInput';
 import { clearAttemptScope } from '../data/businessAttempts';
@@ -13,13 +14,14 @@ import {
 } from '../data/execution';
 import { deadlineCandidates, localDeadline } from '../data/deadlines';
 import { Field, ErrorMessage } from './UI';
-export default function ScheduleReview({ tasks, onDone }: { tasks: Task[]; onDone?: () => void }) {
+export default function ScheduleReview({ tasks, onDone, context }: { tasks: Task[]; onDone?: () => void; context?: ScheduleContext }) {
   const store = useWorkspace();
   const data = store.data!;
   const identity = tasks
     .map((t) => t.id)
     .sort()
     .join(':');
+  const [inspectedContext, freezeContext] = useExecutionInput<ScheduleContext | undefined>('$schedule:' + identity, 'context', context);
   const previewAction = useExecutionMutation('schedule-preview:' + identity);
   const applyAction = useExecutionMutation('schedule-apply:' + identity);
   const [rows, setRows] = useState<ScheduleChange[]>(
@@ -62,6 +64,7 @@ export default function ScheduleReview({ tasks, onDone }: { tasks: Task[]; onDon
     }
   }, [inspected.denied]);
   const update = (id: string, key: keyof ScheduleChange, value: unknown) => {
+    if (inspectedContext) freezeContext(inspectedContext);
     setProposalId('');
     setMethod('manual');
     setRows((rows) => rows.map((r) => (r.taskId === id ? { ...r, [key]: value } : r)));
@@ -267,7 +270,7 @@ export default function ScheduleReview({ tasks, onDone }: { tasks: Task[]; onDon
                       .filter(Boolean),
                   ),
                 ];
-                const projects = projectIds.map((id) => {
+                const projects = inspectedContext?.projects ?? projectIds.map((id) => {
                   const p = data.projects.find((p) => p.id === id);
                   if (!p?.version)
                     throw Error('Open and inspect the current project before previewing.');
@@ -279,7 +282,7 @@ export default function ScheduleReview({ tasks, onDone }: { tasks: Task[]; onDon
                     method,
                     ...(method === 'calendar_day_shift' ? { dayOffset: offset } : {}),
                     changes,
-                    context: { projects, milestones: [] },
+                    context: inspectedContext ?? { projects, milestones: [] },
                   },
                 );
                 setProposalId(result.proposal.id);
