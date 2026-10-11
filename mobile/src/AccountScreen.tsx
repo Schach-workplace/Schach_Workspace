@@ -66,7 +66,7 @@ export default function AccountScreen() {
     );
   return (
     <Page>
-      <Text style={styles.heading}>Account</Text>{" "}
+      <Text style={styles.heading}>Account</Text>
       <Action
         title="Enable private notification hints"
         onPress={() =>

@@ -2,12 +2,12 @@ import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import ts from "typescript";
 import { expect, it } from "vitest";
-it("keeps literal JSX text inside native Text in all finance consumers", () => {
+it("keeps literal JSX text inside native Text in all M7 finance and Account consumers", () => {
   const failures: string[] = [];
   const directory = join(import.meta.dirname);
   for (const file of readdirSync(directory).filter(
     (f) =>
-      /^(Finance|ExpenseReceiptAssistance).*\.tsx$/.test(f) &&
+      /^(AccountScreen|Finance|ExpenseReceiptAssistance).*\.tsx$/.test(f) &&
       !f.includes(".test."),
   )) {
     const source = ts.createSourceFile(
