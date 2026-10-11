@@ -53,6 +53,12 @@ export function useExecutionRead<T>(
     error?: string;
     denied?: boolean;
   }>();
+  // Returning to the same foreground scope must not revive its previous read.
+  const [previousScope, setPreviousScope] = useState(scope);
+  if (previousScope !== scope) {
+    setPreviousScope(scope);
+    setLoaded(undefined);
+  }
   useEffect(() => {
     let alive = true;
     const generation = client.generation;
@@ -106,7 +112,7 @@ export function useExecutionRead<T>(
             client.endpoint,
             w.company,
             w.session?.user.id ?? "",
-            path.split("?")[0],
+            path.includes("/evidence-preview?") ? path : path.split("?")[0],
           );
           const goal = path.match(/^\/goals\/([^/?]+)$/);
           if (goal)
@@ -312,6 +318,7 @@ export function useExecutionMutation(formId: string, sources: string[] = []) {
       return result;
     } catch (e) {
       if (
+        currentACK() &&
         e instanceof NativeApiError &&
         ([401, 403, 404].includes(e.status) ||
           (e.status === 409 && e.code === "access_changed"))

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import { useGoalRead, type GoalEvidenceInput } from '../data/goals';
 import { Field } from './UI';
 type Option = { sourceId: string; parentId?: string; label: string };
@@ -6,40 +6,66 @@ export default function GoalEvidencePicker({
   goalId,
   value,
   onChange,
+  onDenied = () => onChange([]),
   ready,
+  editable = ready,
+  footer,
 }: {
   goalId: string;
   value: GoalEvidenceInput[];
   onChange: (value: GoalEvidenceInput[]) => void;
   ready: boolean;
+  editable?: boolean;
+  onDenied?: () => void;
+  footer?: (authorized: boolean) => ReactNode;
 }) {
   const [kind, setKind] = useState<GoalEvidenceInput['kind']>('task');
   const [parent, setParent] = useState('');
   const [selected, setSelected] = useState<Option>();
   const tasks = useGoalRead<{ options: Option[] }>(
     `/goals/${goalId}/evidence-options?kind=task`,
-    ready && kind === 'task_comment',
+    editable && kind === 'task_comment',
   );
   const conversations = useGoalRead<{ conversations: { id: string; title: string }[] }>(
     '/conversations',
-    ready && kind === 'message',
+    editable && kind === 'message',
   );
   const options = useGoalRead<{ options: Option[] }>(
     `/goals/${goalId}/evidence-options?kind=${kind}${parent ? '&parentId=' + encodeURIComponent(parent) : ''}`,
-    ready && ((kind !== 'task_comment' && kind !== 'message') || !!parent),
+    editable && ((kind !== 'task_comment' && kind !== 'message') || !!parent),
   );
   const path = selected
     ? `/goals/${goalId}/evidence-preview?kind=${kind}&sourceId=${encodeURIComponent(selected.sourceId)}&parentId=${encodeURIComponent(selected.parentId ?? parent)}`
     : '';
   const preview = useGoalRead<
     GoalEvidenceInput & { label: string; excerpt: string; audienceNotice: string }
-  >(path, ready && !!selected);
+  >(path, editable && !!selected);
   useEffect(() => {
     if (options.denied || preview.denied) {
       setSelected(undefined);
       onChange([]);
     }
   }, [options.denied, preview.denied]);
+  // Fold all live exact-source checks into submission eligibility.
+  let bound: (authorized: boolean) => ReactNode = (authorized) => footer?.(authorized);
+  for (let i = value.length - 1; i >= 0; i--) {
+    const next = bound;
+    const binding = value[i];
+    bound = (authorized) => (
+      <BoundEvidence
+        goalId={goalId}
+        binding={binding}
+        ready={ready}
+        onDenied={() => {
+          setParent('');
+          setSelected(undefined);
+          onDenied();
+        }}
+      >
+        {(current) => next(authorized && current)}
+      </BoundEvidence>
+    );
+  }
   return (
     <section aria-label="Goal evidence">
       <h4>Selected evidence ({value.length}/50)</h4>
@@ -49,6 +75,7 @@ export default function GoalEvidencePicker({
       </p>
       <Field label="Evidence kind">
         <select
+          disabled={!editable}
           value={kind}
           onChange={(e) => {
             setKind(e.target.value as typeof kind);
@@ -65,6 +92,7 @@ export default function GoalEvidencePicker({
       {(kind === 'task_comment' || kind === 'message') && (
         <Field label={kind === 'message' ? 'Conversation' : 'Comment task'}>
           <select
+            disabled={!editable}
             value={parent}
             onChange={(e) => {
               setParent(e.target.value);
@@ -89,7 +117,7 @@ export default function GoalEvidencePicker({
           </select>
         </Field>
       )}
-      {!ready || !options.ready ? (
+      {!editable || !options.ready ? (
         <p role="status">Checking current evidence access…</p>
       ) : (
         <div>
@@ -116,7 +144,7 @@ export default function GoalEvidencePicker({
               <button
                 type="button"
                 className="button"
-                disabled={value.length >= 50}
+                disabled={!editable || value.length >= 50}
                 onClick={() => {
                   const p = preview.data!;
                   const binding: GoalEvidenceInput = {
@@ -146,20 +174,17 @@ export default function GoalEvidencePicker({
           )}
         </div>
       )}
-      {value.map((binding, i) => (
-        <BoundEvidence
-          key={i}
-          goalId={goalId}
-          binding={binding}
-          ready={ready}
-          onDenied={() => onChange([])}
-        />
-      ))}
       {value.length > 0 && (
-        <button type="button" className="button button-secondary" onClick={() => onChange([])}>
+        <button
+          type="button"
+          className="button button-secondary"
+          disabled={!editable}
+          onClick={() => onChange([])}
+        >
           Clear selected evidence
         </button>
       )}
+      {bound(ready)}
     </section>
   );
 }
@@ -169,11 +194,13 @@ function BoundEvidence({
   binding,
   ready,
   onDenied,
+  children,
 }: {
   goalId: string;
   binding: GoalEvidenceInput;
   ready: boolean;
   onDenied: () => void;
+  children: (authorized: boolean) => ReactNode;
 }) {
   const q = useGoalRead(
     `/goals/${goalId}/evidence-preview?kind=${binding.kind}&sourceId=${encodeURIComponent(binding.sourceId)}&parentId=${encodeURIComponent(binding.parentId)}`,
@@ -182,5 +209,5 @@ function BoundEvidence({
   useEffect(() => {
     if (q.denied) onDenied();
   }, [q.denied]);
-  return null;
+  return children(q.ready);
 }

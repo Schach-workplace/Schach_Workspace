@@ -94,7 +94,8 @@ export default function GoalMeasurementForm({
       if (e instanceof DeadlineChoiceError) candidates = e.candidates;
     }
   }
-  async function submit() {
+  async function submit(evidenceReady: boolean) {
+    if (!ready || !evidenceReady || action.busy) return;
     setError("");
     const captured = draft;
     try {
@@ -226,7 +227,7 @@ export default function GoalMeasurementForm({
       />
     </View>
   );
-  const footer = (
+  const footer = (evidenceReady: boolean) => (
     <View style={{ gap: 12 }}>
       <Text accessibilityRole="alert">{error || action.error}</Text>
       {saved && <Text>Measurement saved.</Text>}
@@ -237,13 +238,14 @@ export default function GoalMeasurementForm({
         primary
         disabled={
           !ready ||
+          !evidenceReady ||
           action.busy ||
           !draft.reason.trim() ||
           !draft.value.trim() ||
           !Number.isFinite(Number(draft.value)) ||
           (!correction && !candidates.length)
         }
-        onPress={() => void submit()}
+        onPress={() => void submit(evidenceReady)}
       />
       {!action.busy && ready && (
         <Action
@@ -275,11 +277,18 @@ export default function GoalMeasurementForm({
   return (
     <GoalEvidencePicker
       goalId={goal.id}
-      ready={ready && !action.busy && !action.attempt}
+      ready={ready}
+      editable={ready && !action.busy && !action.attempt}
       value={draft.evidence}
       onChange={(v) => {
         if (!action.busy) action.abandon();
         set("evidence", v);
+      }}
+      onDenied={() => {
+        action.abandon();
+        retire(storedDraft);
+        setError("");
+        setSaved(false);
       }}
       header={header}
       footer={footer}

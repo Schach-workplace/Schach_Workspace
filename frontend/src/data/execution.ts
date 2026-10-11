@@ -279,6 +279,7 @@ export function useExecutionMutation(formId: string, sources: string[] = []) {
     } catch (e) {
       if (committedResult !== undefined && currentACK()) return committedResult;
       if (
+        currentACK() &&
         e instanceof ApiError &&
         ([401, 403, 404].includes(e.status) || (e.status === 409 && e.code === 'access_changed'))
       )

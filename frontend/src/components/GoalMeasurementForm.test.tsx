@@ -21,7 +21,7 @@ vi.mock('../data/goals', () => ({
   }),
   useGoalRead: () => ({ ready: state.ready, data: undefined, denied: false }),
 }));
-vi.mock('./GoalEvidencePicker', () => ({ default: () => null }));
+vi.mock('./GoalEvidencePicker', () => ({ default: ({ footer }: any) => footer(true) }));
 afterEach(() => {
   cleanup();
   state.execute.mockReset();

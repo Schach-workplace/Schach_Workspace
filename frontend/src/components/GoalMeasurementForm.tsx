@@ -1,5 +1,5 @@
 import { frozenGoalDraft } from '../../../shared/goals/recovery';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useWorkspace } from '../store';
 import { useExecutionInput } from '../data/executionInput';
 import { localDeadline, deadlineCandidates } from '../data/deadlines';
@@ -63,10 +63,11 @@ export default function GoalMeasurementForm({
   const candidates = deadlineCandidates(draft.local, zone);
   const at = correction?.effectiveAt ?? (candidates.length === 1 ? candidates[0] : draft.instant);
   const locked = action.busy || !!action.attempt;
+  const submitButton = useRef<HTMLButtonElement>(null);
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     setError('');
-    if (!ready) return;
+    if (!ready || submitButton.current?.disabled) return;
     if (!action.attempt && (!draft.value.trim() || !Number.isFinite(Number(draft.value)))) {
       setError('Enter an explicit measured value.');
       return;
@@ -159,38 +160,50 @@ export default function GoalMeasurementForm({
           onChange={(e) => set('reason', e.target.value)}
         />
       </Field>
-      <GoalEvidencePicker
-        goalId={goal.id}
-        ready={ready && !locked}
-        value={draft.evidence}
-        onChange={(value) => {
-          set('evidence', value);
-          if (!value.length) action.abandon?.();
-        }}
-      />
       {!ready && (
         <p role="status">Checking current goal authority. Your authored input stays here.</p>
       )}
       <ErrorMessage error={error} />
       {saved && <p role="status">{saved}</p>}
-      <button
-        className="button button-primary"
-        disabled={
-          !ready ||
-          action.busy ||
-          (!action.attempt &&
-            (!draft.value.trim() ||
-              !draft.reason.trim() ||
-              !at ||
-              !Number.isFinite(Number(draft.value))))
-        }
-      >
-        {action.attempt
-          ? 'Retry same measurement'
-          : correction
-            ? 'Record correction'
-            : 'Record measurement'}
-      </button>
+      <GoalEvidencePicker
+        goalId={goal.id}
+        ready={ready}
+        editable={ready && !locked}
+        value={draft.evidence}
+        onChange={(value) => {
+          set('evidence', value);
+          if (!value.length) action.abandon?.();
+        }}
+        onDenied={() => {
+          action.abandon();
+          retire(storedDraft);
+          setError('');
+          setSaved('');
+        }}
+        footer={(evidenceReady) => (
+          <button
+            ref={submitButton}
+            className="button button-primary"
+            disabled={
+              !ready ||
+              !evidenceReady ||
+              action.busy ||
+              (!action.attempt &&
+                (!draft.value.trim() ||
+                  !draft.reason.trim() ||
+                  !at ||
+                  !Number.isFinite(Number(draft.value))))
+            }
+          >
+            {action.attempt
+              ? 'Retry same measurement'
+              : correction
+                ? 'Record correction'
+                : 'Record measurement'}
+          </button>
+        )}
+      />
+
       {!action.busy && ready && (
         <button
           type="button"

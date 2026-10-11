@@ -12,17 +12,21 @@ type Preview = GoalEvidenceInput & {
 export default function GoalEvidencePicker({
   goalId,
   ready,
+  editable = ready,
   value,
   onChange,
+  onDenied = () => onChange([]),
   header,
   footer,
 }: {
   goalId: string;
   ready: boolean;
+  editable?: boolean;
   value: GoalEvidenceInput[];
   onChange: (v: GoalEvidenceInput[]) => void;
+  onDenied?: () => void;
   header?: ReactNode;
-  footer?: ReactNode;
+  footer?: (authorized: boolean) => ReactNode;
 }) {
   const [kind, setKind] =
     useState<GoalEvidenceInput["kind"]>("report_snapshot");
@@ -36,19 +40,19 @@ export default function GoalEvidencePicker({
     kind === "message"
       ? "/conversations"
       : root + "/evidence-options?kind=task",
-    ready && ["message", "task_comment"].includes(kind),
+    editable && ["message", "task_comment"].includes(kind),
   );
   const opts = useExecutionRead<{ options: Option[] }>(
     root +
       "/evidence-options?" +
       new URLSearchParams({ kind, parentId: parent }),
-    ready && (!["message", "task_comment"].includes(kind) || !!parent),
+    editable && (!["message", "task_comment"].includes(kind) || !!parent),
   );
   const preview = useExecutionRead<Preview>(
     root +
       "/evidence-preview?" +
       new URLSearchParams({ kind, sourceId: chosen, parentId: parent }),
-    ready && !!chosen,
+    editable && !!chosen,
   );
   const scrub = useEffectEvent(() => {
     onChange([]);
@@ -71,6 +75,39 @@ export default function GoalEvidencePicker({
     : opts.ready
       ? (opts.data?.options ?? [])
       : [];
+  // Each bound read contributes its live result directly; no authorization cache.
+  let selected: (authorized: boolean) => ReactNode = (authorized) => (
+    <>
+      {value.length > 0 && (
+        <Action
+          title="Clear evidence selections"
+          disabled={!editable}
+          onPress={() => onChange([])}
+        />
+      )}
+      {footer?.(authorized)}
+    </>
+  );
+  for (let i = value.length - 1; i >= 0; i--) {
+    const next = selected;
+    const binding = value[i];
+    selected = (authorized) => (
+      <Bound
+        root={root}
+        binding={binding}
+        ready={ready}
+        editable={editable}
+        onDenied={() => {
+          setParent("");
+          setChosen("");
+          onDenied();
+        }}
+        onRemove={() => onChange(value.filter((_, n) => n !== i))}
+      >
+        {(current) => next(authorized && current)}
+      </Bound>
+    );
+  }
   return (
     <FlatList
       style={{ flex: 1 }}
@@ -81,7 +118,7 @@ export default function GoalEvidencePicker({
         <Action
           title={item.label}
           selected={chosen === item.sourceId}
-          disabled={!ready}
+          disabled={!editable}
           onPress={() => {
             if (choosingParent) {
               setParent(item.sourceId);
@@ -115,7 +152,7 @@ export default function GoalEvidencePicker({
                     ? "My historical reports"
                     : k.replace("_", " ")
                 }
-                disabled={!ready}
+                disabled={!editable}
                 selected={kind === k}
                 onPress={() => {
                   setKind(k);
@@ -128,7 +165,7 @@ export default function GoalEvidencePicker({
           {!!parent && (
             <Action
               title="Choose another parent source"
-              disabled={!ready}
+              disabled={!editable}
               onPress={() => {
                 setParent("");
                 setChosen("");
@@ -148,7 +185,7 @@ export default function GoalEvidencePicker({
                   <Text>{preview.data.audienceNotice}</Text>
                   <Action
                     title="Use selected evidence"
-                    disabled={!ready || value.length >= 50}
+                    disabled={!editable || value.length >= 50}
                     onPress={() => {
                       if (
                         preview.data &&
@@ -179,24 +216,7 @@ export default function GoalEvidencePicker({
             </View>
           )}
           <Text>{value.length} evidence selections</Text>
-          {value.map((binding, i) => (
-            <Bound
-              key={binding.kind + binding.parentId + binding.sourceId}
-              root={root}
-              binding={binding}
-              ready={ready}
-              onDenied={() => onChange([])}
-              onRemove={() => onChange(value.filter((_, n) => n !== i))}
-            />
-          ))}
-          {value.length > 0 && (
-            <Action
-              title="Clear evidence selections"
-              disabled={!ready}
-              onPress={() => onChange([])}
-            />
-          )}
-          {footer}
+          {selected(ready)}
         </View>
       }
     />
@@ -206,23 +226,21 @@ function Bound({
   root,
   binding,
   ready,
+  editable,
+  children,
   onDenied,
   onRemove,
 }: {
   root: string;
   binding: GoalEvidenceInput;
   ready: boolean;
+  editable: boolean;
+  children: (authorized: boolean) => ReactNode;
   onDenied: () => void;
   onRemove: () => void;
 }) {
   const q = useExecutionRead<Preview>(
-    root +
-      "/evidence-preview?" +
-      new URLSearchParams({
-        kind: binding.kind,
-        sourceId: binding.sourceId,
-        parentId: binding.parentId,
-      }),
+    `${root}/evidence-preview?kind=${binding.kind}&sourceId=${encodeURIComponent(binding.sourceId)}&parentId=${encodeURIComponent(binding.parentId)}`,
     ready,
   );
   const scrub = useEffectEvent(() => onDenied());
@@ -230,9 +248,16 @@ function Bound({
     if (q.denied) scrub();
   }, [q.denied]);
   return (
-    <View style={{ minHeight: 44 }}>
-      <Text>{q.ready ? q.data?.label : "Checking selected evidence…"}</Text>
-      <Action title="Remove evidence" disabled={!ready} onPress={onRemove} />
-    </View>
+    <>
+      <View style={{ minHeight: 44 }}>
+        <Text>{q.ready ? q.data?.label : "Checking selected evidence…"}</Text>
+        <Action
+          title="Remove evidence"
+          disabled={!editable}
+          onPress={onRemove}
+        />
+      </View>
+      {children(q.ready)}
+    </>
   );
 }
