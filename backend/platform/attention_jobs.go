@@ -127,6 +127,9 @@ func (s *Server) RunAttention(ctx context.Context, now time.Time, limit int) (in
 		limit = 100
 	}
 	now = now.UTC()
+	if e := s.generateGoalReminders(ctx, now, limit); e != nil {
+		return 0, e
+	}
 	if e := s.repairFinanceReconciliationAttention(ctx, limit); e != nil {
 		return 0, e
 	}
@@ -183,7 +186,7 @@ func (s *Server) RunAttention(ctx context.Context, now time.Time, limit int) (in
 			if e := deferAttentionAttempt(tx, item); e != nil {
 				return e
 			}
-			if pref.EscalationEnabled {
+			if pref.EscalationEnabled && item.SourceKind != "goal" {
 				escalateAt := item.CreatedAt.Add(time.Duration(pref.EscalationAfterMinutes) * time.Minute)
 				if escalateAt.Before(at) {
 					escalateAt = at

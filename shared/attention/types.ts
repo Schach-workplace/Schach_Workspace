@@ -10,6 +10,7 @@ export interface AttentionView {
   companyId: string;
   recipientId: string;
   sourceKind:
+    | "goal"
     | "task"
     | "expense"
     | "record"

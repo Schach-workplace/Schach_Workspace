@@ -4,29 +4,33 @@ import "time"
 
 // AttentionItem stores identifiers and attention outcomes, never source previews.
 type AttentionItem struct {
-	ID               string `gorm:"primaryKey;size:80"`
-	CompanyID        string `gorm:"uniqueIndex:attention_obligation;index"`
-	RecipientID      string `gorm:"uniqueIndex:attention_obligation;index"`
-	SourceKind       string `gorm:"uniqueIndex:attention_obligation"`
-	SourceID         string `gorm:"uniqueIndex:attention_obligation"`
-	SourceRevision   int64
-	RecordRevision   int64
-	OccurrenceKey    string `gorm:"uniqueIndex:attention_obligation"`
-	Kind             string `gorm:"uniqueIndex:attention_obligation"`
-	ConversationID   string
-	AnchorMessageID  string
-	MessageSequence  int64
-	RecipientEpoch   int64
-	State            string
-	Version          int64
-	SnoozedUntil     *time.Time
-	DueAt            *time.Time
-	RoutedToID       string
-	ResolvedBy       string
-	ResolvedAt       *time.Time
-	ResolutionReason string
-	CreatedAt        time.Time
-	UpdatedAt        time.Time
+	GoalPreferenceVersion int64
+	GoalPeriodStart       *time.Time
+	GoalPeriodEnd         *time.Time
+	GoalTimezone          string
+	ID                    string `gorm:"primaryKey;size:80"`
+	CompanyID             string `gorm:"uniqueIndex:attention_obligation;index"`
+	RecipientID           string `gorm:"uniqueIndex:attention_obligation;index"`
+	SourceKind            string `gorm:"uniqueIndex:attention_obligation"`
+	SourceID              string `gorm:"uniqueIndex:attention_obligation"`
+	SourceRevision        int64
+	RecordRevision        int64
+	OccurrenceKey         string `gorm:"uniqueIndex:attention_obligation"`
+	Kind                  string `gorm:"uniqueIndex:attention_obligation"`
+	ConversationID        string
+	AnchorMessageID       string
+	MessageSequence       int64
+	RecipientEpoch        int64
+	State                 string
+	Version               int64
+	SnoozedUntil          *time.Time
+	DueAt                 *time.Time
+	RoutedToID            string
+	ResolvedBy            string
+	ResolvedAt            *time.Time
+	ResolutionReason      string
+	CreatedAt             time.Time
+	UpdatedAt             time.Time
 }
 type AttentionRetry struct {
 	CompanyID     string `gorm:"primaryKey;size:80"`

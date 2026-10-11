@@ -42,8 +42,8 @@ func (s *Server) listAttention(w http.ResponseWriter, r *http.Request) error {
 	}
 	sourceKind, sourceID, kind := r.URL.Query().Get("sourceKind"), r.URL.Query().Get("sourceId"), r.URL.Query().Get("kind")
 	if sourceKind != "" || sourceID != "" || kind != "" {
-		if sourceKind != "task" || sourceID == "" || len(sourceID) > 100 || kind != "blocker" || state != "open" || decision == "true" {
-			return invalid("Source lookup requires sourceKind=task, sourceId and kind=blocker for open items.")
+		if !((sourceKind == "task" && kind == "blocker") || (sourceKind == "goal" && kind == "update")) || sourceID == "" || len(sourceID) > 100 || state != "open" || decision == "true" {
+			return invalid("Source lookup requires task/blocker or goal/update for open items.")
 		}
 	}
 	views := []AttentionView{}
@@ -69,8 +69,14 @@ func (s *Server) listAttention(w http.ResponseWriter, r *http.Request) error {
 		for {
 			q := attentionCandidates(tx, a).Where("state <> ?", "superseded")
 			if sourceKind != "" {
-				if _, err := scopedTask(tx, a, sourceID); err != nil {
-					return err
+				if sourceKind == "goal" {
+					if _, err := scopedGoal(tx, a, sourceID); err != nil {
+						return err
+					}
+				} else {
+					if _, err := scopedTask(tx, a, sourceID); err != nil {
+						return err
+					}
 				}
 				q = q.Where("source_kind = ? AND source_id = ? AND kind = ?", sourceKind, sourceID, kind)
 			}

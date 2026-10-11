@@ -82,6 +82,9 @@ func recordGoalRevision(tx *gorm.DB, a *access, before, after Goal, reason, acti
 	if e := tx.Create(&GoalRevision{ID: newID("goalrev"), CompanyID: a.Company.ID, GoalID: after.ID, ActorID: a.User.ID, Reason: reason, CreatedAt: now, Version: after.Version, Before: before, After: after}).Error; e != nil {
 		return e
 	}
+	if e := syncGoalAttention(tx, a, &before, after); e != nil {
+		return e
+	}
 	return tx.Create(&GoalAudit{ID: newID("goalaudit"), CompanyID: a.Company.ID, GoalID: after.ID, ActorID: a.User.ID, Action: action, Version: after.Version, CreatedAt: now}).Error
 }
 func prepareGoalMeasurement(tx *gorm.DB, a *access, g Goal, i GoalMeasurementInput, version int64) (GoalMeasurement, bool, error) {

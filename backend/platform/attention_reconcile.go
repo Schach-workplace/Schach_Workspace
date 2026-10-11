@@ -16,7 +16,7 @@ func (s *Server) ReconcileAttention(ctx context.Context, cid, cursor string, lim
 	kind, last := "task", ""
 	if cursor != "" {
 		parts := strings.SplitN(cursor, ":", 2)
-		if len(parts) != 2 || !in(parts[0], "task", "expense", "intake", "record", "bookmark") {
+		if len(parts) != 2 || !in(parts[0], "task", "expense", "intake", "record", "bookmark", "goal") {
 			return "", invalid("Invalid reconciliation cursor.")
 		}
 		kind, last = parts[0], parts[1]
@@ -53,6 +53,8 @@ func (s *Server) ReconcileAttention(ctx context.Context, cid, cursor string, lim
 		ids := []string{}
 		table, col := "tasks", "id"
 		switch kind {
+		case "goal":
+			table = "goals"
 		case "expense":
 			table = "expenses"
 		case "intake":
@@ -72,6 +74,14 @@ func (s *Server) ReconcileAttention(ctx context.Context, cid, cursor string, lim
 		}
 		for _, id := range ids {
 			switch kind {
+			case "goal":
+				var g Goal
+				if e := tx.First(&g, "company_id=? AND id=?", cid, id).Error; e != nil {
+					return e
+				}
+				if e := syncGoalAttention(tx, a, &g, g); e != nil {
+					return e
+				}
 			case "task":
 				var t Task
 				if e := tx.First(&t, "company_id=? AND id=?", cid, id).Error; e != nil {
@@ -175,6 +185,8 @@ func (s *Server) ReconcileAttention(ctx context.Context, cid, cursor string, lim
 				next = "record:"
 			case "record":
 				next = "bookmark:"
+			case "bookmark":
+				next = "goal:"
 			}
 		}
 		return nil

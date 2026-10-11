@@ -1,0 +1,6 @@
+CREATE TABLE goal_reminder_preferences(company_id text NOT NULL REFERENCES companies(id),goal_id text NOT NULL REFERENCES goals(id),user_id text NOT NULL,version bigint NOT NULL,enabled boolean NOT NULL DEFAULT false,cadence text NOT NULL CHECK(cadence IN ('weekly','monthly')),weekday integer NOT NULL CHECK(weekday BETWEEN 1 AND 7),month_day integer NOT NULL CHECK(month_day BETWEEN 1 AND 28),local_time text NOT NULL,created_at timestamptz NOT NULL,updated_at timestamptz NOT NULL,checked_at timestamptz,PRIMARY KEY(company_id,goal_id,user_id));
+CREATE INDEX goal_reminder_pending ON goal_reminder_preferences(checked_at,company_id,goal_id,user_id) WHERE enabled;
+ALTER TABLE attention_items ADD COLUMN goal_preference_version bigint NOT NULL DEFAULT 0,ADD COLUMN goal_period_start timestamptz,ADD COLUMN goal_period_end timestamptz,ADD COLUMN goal_timezone text NOT NULL DEFAULT '';
+ALTER TABLE attention_items DROP CONSTRAINT attention_items_source_kind_check;
+ALTER TABLE attention_items ADD CONSTRAINT attention_items_source_kind_check CHECK(source_kind IN ('task','expense','record','intake','bookmark','report_export','finance_extraction','finance_duplicate','finance_reconciliation','goal'));
+ALTER TABLE attention_items ADD CONSTRAINT attention_goal_source_pair CHECK(source_kind<>'goal' OR kind='update');

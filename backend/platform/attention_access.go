@@ -60,6 +60,12 @@ func projectAttentionSource(tx *gorm.DB, a *access, item AttentionItem, replay b
 		return v, missing()
 	}
 	switch item.SourceKind {
+	case "goal":
+		var e error
+		v, e = projectGoalAttention(tx, a, item, replay, v)
+		if e != nil {
+			return v, e
+		}
 	case "finance_extraction", "finance_duplicate", "finance_reconciliation":
 		var e error
 		v, e = projectFinanceAttention(tx, a, item, replay, v)
