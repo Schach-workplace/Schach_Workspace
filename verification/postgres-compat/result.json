@@ -1,6 +1,6 @@
 {
   "kind": "PGlite migration compatibility check",
-  "executedAt": "2026-10-11T03:45:30.028Z",
+  "executedAt": "2026-10-11T03:50:21.675Z",
   "nodeVersion": "v24.14.0",
   "pgliteVersion": "0.5.8",
   "migrationSha256": {
@@ -1018,6 +1018,34 @@
     {
       "name": "A financial foreign-key failure rolls back its preceding expense insert",
       "passed": true
+    },
+    {
+      "name": "SQL47 populated statement upgrade backfills exactly the dirty company cursor queue",
+      "passed": true
+    },
+    {
+      "name": "Repair cursor rejects nonexistent company",
+      "passed": true,
+      "detail": {
+        "sqlstate": "23503",
+        "constraint": "finance_reconciliation_attention_works_company_id_fkey"
+      }
+    },
+    {
+      "name": "Repair cursor rejects nonpositive revision",
+      "passed": true,
+      "detail": {
+        "sqlstate": "23514",
+        "constraint": "finance_reconciliation_attention_works_revision_check"
+      }
+    },
+    {
+      "name": "Repair cursor rejects processing a future revision",
+      "passed": true,
+      "detail": {
+        "sqlstate": "23514",
+        "constraint": "finance_reconciliation_attention_works_check"
+      }
     },
     {
       "name": "Version-two downgrade removes financial tables while preserving original version-one data",

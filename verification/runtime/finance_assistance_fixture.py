@@ -49,6 +49,22 @@ try:
    if purpose=='receipt':body['destinationDepartmentId']=department
    i,_=call('POST',root+'/finance/intakes',body);path=root+'/finance/intakes/'+i['id'];call('POST',path+'/upload',raw=data);u,_=call('GET',path)
    before=time.perf_counter();call('POST',path+'/finalize',{'retryKey':'finalize-'+i['id'],'expectedVersion':u['version']});clean=poll(path,'state','clean');return clean,round((time.perf_counter()-before)*1000,3)
+  # Standard fictional antivirus test string, confined to this owned intake.
+  rejected_bytes=b'X5O!P%@AP[4\\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*'
+  rejected,_=call('POST',root+'/finance/intakes',{'retryKey':'reject-'+suffix,'purpose':'statement','fileName':'fictional-rejected.csv','size':len(rejected_bytes),'sha256':hashlib.sha256(rejected_bytes).hexdigest()})
+  rejected_path=root+'/finance/intakes/'+rejected['id'];call('POST',rejected_path+'/upload',raw=rejected_bytes)
+  uploaded,_=call('GET',rejected_path);call('POST',rejected_path+'/finalize',{'retryKey':'reject-scan-'+suffix,'expectedVersion':uploaded['version']})
+  for _ in range(100):
+   verdict,_=call('GET',rejected_path)
+   if verdict.get('assessment',{}).get('status')=='rejected':break
+   time.sleep(.2)
+  else:raise RuntimeError('Actual rejected scanner verdict not observable')
+  assert verdict['assessment']['retryable'] is False and verdict['state']=='scanning'
+  call('GET',rejected_path+'/download',expected=404)
+  call('POST',rejected_path+'/finalize',{'retryKey':'reject-no-retry-'+suffix,'expectedVersion':verdict['version'],'retryAssessment':True},expected=422)
+  call('POST',root+'/finance/receipt-extractions',{'retryKey':'reject-no-provider-'+suffix,'optIn':True,'source':{'kind':'intake','id':rejected['id'],'expectedVersion':verdict['version']},'destinationDepartmentId':department},expected=422)
+  call('POST',rejected_path+'/upload',raw=rejected_bytes,expected=409)
+  result['rejectedIntake']=rejected['id'];checks.append('Actual ClamAV rejection is visible on authorized intake GET; retry/provider/download remain quarantined')
   clean,scan_ms=stage(data,'receipt','fictional-receipt.png')
   before=time.perf_counter();job,_=call('POST',root+'/finance/receipt-extractions',{'retryKey':'extract-'+suffix,'optIn':True,'source':{'kind':'intake','id':clean['id'],'expectedVersion':clean['version']},'destinationDepartmentId':department})
   jp=root+'/finance/receipt-extractions/'+job['id']

@@ -20,7 +20,7 @@ try{
  let next=0;const pending=new Map();socket.onmessage=({data})=>{const v=JSON.parse(data);if(v.id){const p=pending.get(v.id);pending.delete(v.id);v.error?p.reject(Error(v.error.message)):p.resolve(v.result)}if(v.method==='Runtime.exceptionThrown')errors.push(v.params.exceptionDetails.text)};
  const call=(method,params={})=>new Promise((resolve,reject)=>{const id=++next;pending.set(id,{resolve,reject});socket.send(JSON.stringify({id,method,params}))});
  run=async expression=>{const r=await call('Runtime.evaluate',{expression,returnByValue:true,awaitPromise:true});if(r.exceptionDetails)throw Error(r.exceptionDetails.exception?.description||r.exceptionDetails.text);return r.result.value};
- const click=async title=>{await wait(()=>run(`Array.from(document.querySelectorAll('button')).some(b=>b.textContent.trim()===${JSON.stringify(title)}&&!b.disabled)`));result.uiButtonActions++;return run(`Array.from(document.querySelectorAll('button')).find(b=>b.textContent.trim()===${JSON.stringify(title)}).click()`)};
+ const click=async title=>{result.uiButtonActions++;await wait(()=>run(`(()=>{const b=Array.from(document.querySelectorAll('button')).find(b=>b.textContent.trim()===${JSON.stringify(title)}&&!b.disabled);if(!b)return false;b.click();return true})()`))};
  await call('Runtime.enable');await call('Emulation.setDeviceMetricsOverride',{width:1440,height:1000,deviceScaleFactor:1,mobile:false});await call('Page.navigate',{url:base});
  await wait(()=>run('!!document.querySelector("input[type=password]")'));
  await run(`(()=>{const set=Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set;for(const [selector,value] of [['input[type=email]','founder@schach.demo'],['input[type=password]','SchachDemo!2026']]){const el=document.querySelector(selector);set.call(el,value);el.dispatchEvent(new Event('input',{bubbles:true}))}document.querySelector('form').requestSubmit()})()`);
@@ -29,7 +29,15 @@ try{
 
  const set=async(label,value,tag='input')=>run(`(()=>{const label=Array.from(document.querySelectorAll('label')).find(l=>l.textContent.trim().startsWith(${JSON.stringify(label)}));if(!label)throw Error('Missing label '+${JSON.stringify(label)});const el=label.querySelector(${JSON.stringify(tag)});Object.getOwnPropertyDescriptor(${tag==='select'?'HTMLSelectElement':'HTMLInputElement'}.prototype,'value').set.call(el,${JSON.stringify(value)});el.dispatchEvent(new Event(${JSON.stringify(tag==='select'?'change':'input')},{bubbles:true}))})()`);
  const check=async(label)=>run(`(()=>{const el=Array.from(document.querySelectorAll('label')).find(l=>l.textContent.includes(${JSON.stringify(label)})).querySelector('input[type=checkbox]');if(!el.checked)el.click()})()`);
- await call('Page.navigate',{url:base+'/#finance?extraction='+encodeURIComponent(fixture.job)});
+ if(fixture.rejectedIntake){
+  await call('Page.navigate',{url:base+'/#finance?intake='+encodeURIComponent(fixture.rejectedIntake)});
+  await wait(()=>run('document.body.innerText.includes("Scanner rejected this file")'));
+  assert(await run('!Array.from(document.querySelectorAll("button")).some(b=>/Retry unavailable clean assessment|Extract receipt candidates|Check clean assessment/.test(b.textContent))'));
+  await click('Cancel private intake');
+  assert.equal(await run(`(async()=>{const r=await fetch('/api/companies/'+${JSON.stringify(fixture.company)}+'/finance/intakes/'+${JSON.stringify(fixture.rejectedIntake)},{credentials:'include'});return r.status})()`),404);
+  result.checks.push('Actual rendered authorized rejected intake has truthful quarantine/cancel UI, no retry/extraction/check loop; cancel revokes GET');
+ }
+ await call('Page.navigate',{url:base+'/?owned-flow=receipt#finance?extraction='+encodeURIComponent(fixture.job)});
  await wait(()=>run('document.body.innerText.includes("Review receipt candidates")&&document.body.innerText.includes("Demo Stationery")'));
  for(const [label,value] of [['Reviewed title','Human reviewed fictional stationery'],['Reviewed vendor','Demo Stationery'],['Reviewed invoiceNumber','TEST-2026-001'],['Reviewed expenseDate','2026-10-10'],['Reviewed amount','1300.50']])await set(label,value);
  // These are explicit human choices; candidate/default values do not count.
@@ -59,23 +67,41 @@ try{
  await click('Preview exact statement rows');await wait(()=>run('document.body.innerText.includes("4 distinct records")'));
  assert(await run('document.body.innerText.includes("Record 3")&&document.body.innerText.includes("Record 4")'));
  await check('I reviewed the complete mapping and all normalized rows');
- await run(`window.statementPosts=[];window.refreshFault=false;window.refreshFaultConsumed=false;window.beforeStatementFetch=window.fetch;window.fetch=async(...args)=>{const path=String(args[0]);const r=await window.beforeStatementFetch(...args);if(path.endsWith('/import')&&args[1]?.method==='POST'&&r.ok){window.statementPosts.push(JSON.parse(args[1].body));window.refreshFault=true}if(window.refreshFault&&(!args[1]?.method||args[1]?.method==='GET')&&path.includes('/expenses?')){window.refreshFault=false;window.refreshFaultConsumed=true;throw new TypeError('Fictional refresh read acknowledgement lost after real import')}return r}`);
+ await run(`window.statementPosts=[];window.loseImportAck=true;window.previewPosts=0;window.refreshFault=false;window.refreshFaultConsumed=false;window.beforeStatementFetch=window.fetch;window.fetch=async(...args)=>{const path=String(args[0]);if(path.endsWith('/preview')&&args[1]?.method==='POST')window.previewPosts++;const r=await window.beforeStatementFetch(...args);if(path.endsWith('/import')&&args[1]?.method==='POST'&&r.ok){window.statementPosts.push(JSON.parse(args[1].body));if(window.loseImportAck){window.loseImportAck=false;throw new TypeError('Fictional import ACK lost after real commit')}window.refreshFault=true}if(window.refreshFault&&(!args[1]?.method||args[1]?.method==='GET')&&path.includes('/expenses?')){window.refreshFault=false;window.refreshFaultConsumed=true;throw new TypeError('Fictional refresh read acknowledgement lost after real import')}return r}`);
  await click('Import reviewed statement');
+ await wait(()=>run('window.statementPosts.length===1&&Array.from(document.querySelectorAll("button")).some(b=>b.textContent==="Retry same statement import"&&!b.disabled)'));
+ assert(await run('Array.from(document.querySelectorAll("fieldset")).some(f=>f.disabled)&&Array.from(document.querySelectorAll("button")).find(b=>b.textContent==="Preview exact statement rows").disabled'));
+ await run(`Array.from(document.querySelectorAll('button')).find(b=>b.textContent==='Preview exact statement rows').click()`);
+ await set('dateColumn','2');assert.equal(await run('window.previewPosts'),0);
+ await click('Retry same statement import');
  await wait(()=>run('window.refreshFaultConsumed'));
  await run(`document.querySelector('button[aria-label="Refresh workspace"]').click()`);
 
  await wait(()=>run('document.body.innerText.includes("Statement reconciliation")&&document.body.innerText.includes("Record 2")'));
- assert.equal(await run('window.statementPosts.length'),1);result.checks.push('Rendered explicit CSV mapping preserves four ordinals/equal occurrences; actual post-commit refresh failure recovers the canonical import with one POST');
+ const statementProof=await run(`(async()=>{const r=await fetch('/api/companies/'+${JSON.stringify(fixture.company)}+'/statement-imports',{credentials:'include'});return {items:(await r.json()).items,posts:window.statementPosts}})()`);assert.equal(statementProof.items.length,1);assert.equal(statementProof.items[0].rowCount,4);result.statementRetry={importId:statementProof.items[0].id,rows:4,requests:statementProof.posts,sameKeySamePayload:true};
+ assert.equal(await run('window.statementPosts.length'),2);assert(await run('JSON.stringify(window.statementPosts[0])===JSON.stringify(window.statementPosts[1])'));result.checks.push('Rendered CSV lost postcommit import ACK freezes mapping/re-preview; identical key/body retry yields one canonical four-occurrence import, then actual refresh-loss recovers it');
  if(fixture.paidExpense){
   const paidBefore=await run(`(async()=>{const r=await fetch('/api/companies/'+${JSON.stringify(fixture.company)}+'/expenses/'+${JSON.stringify(fixture.paidExpense)},{credentials:'include'});return (await r.json()).expense})()`);
   // Select a real full paid expense deliberately for the exact matching row.
   await run(`(()=>{const sections=Array.from(document.querySelectorAll('section'));const s=sections.find(s=>s.querySelector('select')&&s.querySelector('p')?.textContent.startsWith('Record 2'));if(!s)throw Error('First imported row missing');window.financeRowSection=s;const el=s.querySelector('select');Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype,'value').set.call(el,${JSON.stringify(fixture.paidExpense)});el.dispatchEvent(new Event('change',{bubbles:true}));const input=s.querySelector('input');Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set.call(input,'Fictional full paid accounting review');input.dispatchEvent(new Event('input',{bubbles:true}))})()`);
+  await run(`window.associationPosts=[];window.loseMatchAck=true;window.loseUnmatchAck=true;window.beforeAssociationFetch=window.fetch;window.fetch=async(...args)=>{const r=await window.beforeAssociationFetch(...args);const p=String(args[0]);if(args[1]?.method==='POST'&&(p.endsWith('/matches')||p.endsWith('/unmatch'))&&r.ok){const action=p.endsWith('/unmatch')?'unmatch':'match';window.associationPosts.push({action,body:JSON.parse(args[1].body)});const flag=action==='match'?'loseMatchAck':'loseUnmatchAck';if(window[flag]){window[flag]=false;throw new TypeError('Fictional association ACK lost after actual commit')}}return r}`);
   await run(`Array.from(window.financeRowSection.querySelectorAll('button')).find(b=>b.textContent==='Match full recorded payment').click()`);
+  await wait(()=>run('!window.loseMatchAck&&document.body.innerText.includes("Retry same full payment match")'));
+  await run(`document.querySelector('button[aria-label="Refresh workspace"]').click()`);
   await wait(()=>run('document.body.innerText.includes("Active full association")'));
+  await click('Retry same full payment match');
   await set('Reversal reason','Fictional reversal preserves payment history');await click('Unmatch reviewed association');
+  await wait(()=>run('!window.loseUnmatchAck&&document.body.innerText.includes("Retry same association unmatch")'));
+  await run(`document.querySelector('button[aria-label="Refresh workspace"]').click()`);
   await wait(()=>run('document.body.innerText.includes("Reversed association")'));
+  await click('Retry same association unmatch');
+  await wait(()=>run('window.associationPosts.length===4'));
+  const posts=await run('window.associationPosts');assert.equal(posts.length,4);assert.deepEqual(posts[0],posts[1]);assert.deepEqual(posts[2],posts[3]);
+  const allocations=await run(`(async()=>{const r=await fetch('/api/companies/'+${JSON.stringify(fixture.company)}+'/finance/reconciliation?state=all',{credentials:'include'});return (await r.json()).allocations})()`);
+  assert.equal(allocations.length,1);assert.equal(allocations[0].active,false);
+  result.associationRetries={requests:posts,allocations:allocations.length,active:allocations[0].active,sameKeySamePayload:true};
   const paidAfter=await run(`(async()=>{const r=await fetch('/api/companies/'+${JSON.stringify(fixture.company)}+'/expenses/'+${JSON.stringify(fixture.paidExpense)},{credentials:'include'});return (await r.json()).expense})()`);for(const key of ['status','version','amountMinor','currency','paidDate','paymentReference','paymentMethod'])assert.equal(paidAfter[key],paidBefore[key]);
-  result.checks.push('Rendered deliberate full recorded-paid match and audited unmatch leave original paid expense economics unchanged');
+  result.checks.push('Actual committed match/unmatch ACK loss plus current refetch retains identical retry despite missing candidate/inactive allocation; one association/reversal and unchanged paid expense economics');
  }
  await click('Duplicate review');await wait(()=>run('document.body.innerText.includes("Expense to compare")'));
  await set('Expense to compare',fixture.duplicateSource,'select');await click('Review duplicate suggestions');

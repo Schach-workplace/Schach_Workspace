@@ -177,6 +177,27 @@ try {
   await assertLegacyPreserved(legacy);
   pass('Upgrade preserves every populated version-one field and row, including evidence bytes and audit history');
   await financeChecks(pg, pass, rejects);
+  const repairMigration = migrations.find(m => m.version === 47);
+  assert(repairMigration, 'Reconciliation attention repair migration required');
+  await pg.exec(`
+    INSERT INTO finance_statement_imports(id,company_id,creator_id,internal_hash,mapping_hash,mapping,preview_id,version,row_count,totals,created_at) VALUES
+      ('repair-import-a','company-a','user-a','fictional-hash-a','mapping-a','{}','repair-preview-a',1,2,'{}',now()),
+      ('repair-import-b','company-b','user-b','fictional-hash-b','mapping-b','{}','repair-preview-b',1,1,'{}',now());
+    INSERT INTO finance_statement_rows(id,company_id,import_id,record_ordinal,booked_date,company_currency,signed_amount_minor,reference,description,reviewed_cells,version) VALUES
+      ('repair-row-a1','company-a','repair-import-a',2,'2026-10-10','INR',-130050,'equal','Fictional occurrence','[]',1),
+      ('repair-row-a2','company-a','repair-import-a',3,'2026-10-10','INR',-130050,'equal','Fictional occurrence','[]',1),
+      ('repair-row-b1','company-b','repair-import-b',2,'2026-10-10','INR',-130050,'other','Fictional occurrence','[]',1);
+  `);
+  const repairCompanies = (await pg.query('SELECT DISTINCT company_id FROM finance_statement_rows ORDER BY company_id')).rows;
+  assert(repairCompanies.length > 0, 'Populated finance statement upgrade fixture required');
+  await pg.transaction(tx => tx.exec(repairMigration.down));
+  await pg.transaction(tx => tx.exec(repairMigration.up));
+  const repaired = (await pg.query('SELECT company_id FROM finance_reconciliation_attention_works WHERE revision=1 AND processed_revision=0 AND cursor=\'\' ORDER BY company_id')).rows;
+  assert.deepEqual(repaired, repairCompanies);
+  pass('SQL47 populated statement upgrade backfills exactly the dirty company cursor queue');
+  await rejects('Repair cursor rejects nonexistent company', "INSERT INTO finance_reconciliation_attention_works(company_id,revision,updated_at) VALUES ('missing-company',1,now())", [], '23503');
+  await rejects('Repair cursor rejects nonpositive revision', 'UPDATE finance_reconciliation_attention_works SET revision=0');
+  await rejects('Repair cursor rejects processing a future revision', 'UPDATE finance_reconciliation_attention_works SET processed_revision=revision+1');
   for (const migration of migrations.slice(1).reverse()) await pg.transaction(tx => tx.exec(migration.down));
   assert.deepEqual((await pg.query("SELECT tablename FROM pg_tables WHERE schemaname='public' ORDER BY tablename")).rows.map(row => row.tablename), originalTables);
   await assertLegacyPreserved(legacy, true);
