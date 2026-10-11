@@ -22,17 +22,7 @@ export function parseMoney(input: string): number {
   return Number(minor);
 }
 
-export function formatMoney(minor: number, currency = 'INR'): string {
-  if (!Number.isSafeInteger(minor)) throw new Error('Money must use safe integer minor units.');
-  if (!SUPPORTED_CURRENCIES.includes(currency as (typeof SUPPORTED_CURRENCIES)[number]))
-    throw new Error('Choose a supported company currency.');
-  return new Intl.NumberFormat(currency === 'INR' ? 'en-IN' : 'en-US', {
-    style: 'currency',
-    currency,
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(minor / 100);
-}
+export { formatExactMoney as formatMoney } from '../../../shared/finance/money';
 
 function validDate(value: string): boolean {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;

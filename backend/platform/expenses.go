@@ -143,39 +143,38 @@ func (s *Server) createExpense(w http.ResponseWriter, r *http.Request) error {
 	if err != nil {
 		return err
 	}
-	f, err := readFields(w, r, expenseFields...)
+	f, err := readFields(w, r, append(append([]string{}, expenseFields...), "retryKey")...)
 	if err != nil {
 		return err
 	}
-	e := Expense{ID: newID("exp"), CompanyID: a.Company.ID, CreatedBy: a.User.ID, Status: "draft", CreatedAt: nowString(), UpdatedAt: nowString(), Version: 1, Receipts: []ExpenseReceipt{}}
-	if err = applyFields(f, &e); err != nil {
+	key, err := optionalBusinessKey(f)
+	if err != nil {
 		return err
 	}
+	delete(f, "retryKey")
+	var result BusinessResult
 	err = s.withAccessTransaction(r, a, func(tx *gorm.DB) error {
-		if a.financeScope() == "none" {
-			return denied()
+		apply := func() (BusinessResult, error) {
+			e, err := prepareExpenseCreate(tx, a, f)
+			if err != nil {
+				return BusinessResult{}, err
+			}
+			if err = insertExpenseDraft(tx, a, &e); err != nil {
+				return BusinessResult{}, err
+			}
+			return BusinessResult{Kind: "expense", IDs: []string{e.ID}, Versions: []int64{e.Version}}, nil
 		}
-		if err := validateExpense(tx, a, &e); err != nil {
+		if key == "" {
+			result, err = apply()
 			return err
 		}
-		if !a.canCreateExpense(e.DepartmentID) {
-			return denied()
-		}
-		e.Currency = a.Company.Currency
-		var err error
-		e.Code, err = nextExpenseCode(tx, a.Company.ID)
-		if err != nil {
-			return err
-		}
-		if err = tx.Omit("Receipts").Create(&e).Error; err != nil {
-			return err
-		}
-		return financeEvent(tx, e.CompanyID, e.DepartmentID, "expense", e.ID, a.User.ID, "expense_created", fmt.Sprintf("%s · %s · %s. Vendor: %s. Invoice: %s. Expense date: %s.", e.Code, e.Title, moneyLabel(e.Currency, e.AmountMinor), e.Vendor, e.InvoiceNumber, e.ExpenseDate))
+		result, err = businessMutation(tx, a, "expense_create", key, f, func() error { return authorizeExpenseCreation(tx, a, f) }, func(result BusinessResult) error { return authorizeExpenseResults(tx, a, result) }, apply)
+		return err
 	})
 	if err != nil {
 		return err
 	}
-	return ok(w, e.ID)
+	return ok(w, result.IDs[0])
 }
 func saveExpenseVersion(tx *gorm.DB, e *Expense, version int64) error {
 	e.Version = version + 1
@@ -206,33 +205,15 @@ func (s *Server) patchExpense(w http.ResponseWriter, r *http.Request) error {
 		return invalid("Provide an expense field to update.")
 	}
 	err = s.withAccessTransaction(r, a, func(tx *gorm.DB) error {
-		e, err := scopedExpense(tx, a, r.PathValue("id"))
+		old, err := scopedExpense(tx, a, r.PathValue("id"))
 		if err != nil {
 			return err
 		}
-		if a.financeScope() == "none" || e.CreatedBy != a.User.ID {
-			return denied()
-		}
-		if e.Version != version {
-			return financeConflict()
-		}
-		if !in(e.Status, "draft", "rejected") {
-			return invalid("Only the creator can correct draft or rejected expenses. Withdraw a submitted expense before editing; approved and paid fields stay frozen.")
-		}
-		old := e
-		if err = applyFields(f, &e); err != nil {
+		next, err := prepareExpenseDraftPatch(tx, a, old, version, f, true)
+		if err != nil {
 			return err
 		}
-		if err = validateExpense(tx, a, &e); err != nil {
-			return err
-		}
-		if !a.canCreateExpense(e.DepartmentID) {
-			return denied()
-		}
-		if err = saveExpenseVersion(tx, &e, version); err != nil {
-			return err
-		}
-		return financeEvent(tx, e.CompanyID, e.DepartmentID, "expense", e.ID, a.User.ID, "expense_updated", financialChanges(f, old, e))
+		return commitExpenseDraftPatch(tx, a, old, next, f)
 	})
 	if err != nil {
 		return err
