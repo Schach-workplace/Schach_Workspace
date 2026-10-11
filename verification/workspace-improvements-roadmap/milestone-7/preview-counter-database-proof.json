@@ -1,0 +1,8 @@
+{
+  "statementImports": 1,
+  "statementRows": 4,
+  "extractionJobs": 0,
+  "scanJobs": 1,
+  "previewRecords": 2,
+  "source": "Owned SQLite after stopped app; RED positive-control preview then GREEN preview/import"
+}

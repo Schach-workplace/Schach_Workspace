@@ -1,0 +1,136 @@
+{
+  "status": "passed",
+  "checks": [
+    "Sign-in succeeds against the current API build",
+    "Actual rendered authorized rejected intake has truthful quarantine/cancel UI, no retry/extraction/check loop; cancel revokes GET",
+    "Rendered human fields/category/destination/uncertainty/evidence/audience review creates one draft130050; actual post-commit lost ACK retries identical payload/key",
+    "Rendered CSV lost postcommit import ACK freezes mapping/re-preview; identical key/body retry yields one canonical four-occurrence import, then actual refresh-loss recovers it",
+    "Actual committed match/unmatch ACK loss plus current refetch retains identical retry despite missing candidate/inactive allocation; one association/reversal and unchanged paid expense economics",
+    "Rendered false-positive duplicate review and meaningful reason create one current audited dismissal without economic mutation",
+    "Actual rendered 320/375/430/1440px and 150% text finance layout has no horizontal overflow"
+  ],
+  "uiButtonActions": 14,
+  "acceptance": {
+    "id": "exp_6935772dc2cbfb44bed0c8d7cbdda66a",
+    "minor": 130050,
+    "status": "draft",
+    "retainedEvidence": 1,
+    "sameKeySamePayload": true
+  },
+  "canonicalRetry": {
+    "path": "/companies/c-schach/finance/receipt-extractions/fjob_2565bd62982f4af6d6dca5ee93961a84/accept",
+    "body": {
+      "expectedResultRevision": 1,
+      "sourceKind": "intake",
+      "sourceId": "fin_1a746f3e6064060b69868c41cde95e38",
+      "destinationDepartmentId": "d-eng",
+      "copyEvidence": true,
+      "fields": {
+        "title": "Human reviewed fictional stationery",
+        "vendor": "Demo Stationery",
+        "invoiceNumber": "TEST-2026-001",
+        "expenseDate": "2026-10-10",
+        "departmentId": "d-eng",
+        "categoryId": "c-schach-category-2",
+        "description": "",
+        "projectId": "",
+        "taskId": "",
+        "receiptExceptionReason": "",
+        "amountMinor": 130050
+      },
+      "confirmedUncertainties": [
+        "title"
+      ],
+      "retryKey": "7810a929-01d6-4003-b1d0-22ba2b10ad74"
+    }
+  },
+  "statementRetry": {
+    "importId": "fsi_906900462ed9eae3339aab6de0274b8e",
+    "rows": 4,
+    "requests": [
+      {
+        "expectedPreviewRevision": 1,
+        "retryKey": "1dedf7fc-ddff-44e0-918e-7e42c6fec5d0"
+      },
+      {
+        "expectedPreviewRevision": 1,
+        "retryKey": "1dedf7fc-ddff-44e0-918e-7e42c6fec5d0"
+      }
+    ],
+    "sameKeySamePayload": true
+  },
+  "associationRetries": {
+    "requests": [
+      {
+        "action": "match",
+        "body": {
+          "rowId": "fsr_bd9feb12dd801f29acb6ec6d54747915",
+          "expectedRowVersion": 1,
+          "expenseId": "c-schach-expense-8",
+          "expectedExpenseVersion": 4,
+          "reason": "Fictional full paid accounting review",
+          "retryKey": "f23cea06-b680-4b2f-910b-9795ce3b7875"
+        }
+      },
+      {
+        "action": "match",
+        "body": {
+          "rowId": "fsr_bd9feb12dd801f29acb6ec6d54747915",
+          "expectedRowVersion": 1,
+          "expenseId": "c-schach-expense-8",
+          "expectedExpenseVersion": 4,
+          "reason": "Fictional full paid accounting review",
+          "retryKey": "f23cea06-b680-4b2f-910b-9795ce3b7875"
+        }
+      },
+      {
+        "action": "unmatch",
+        "body": {
+          "expectedVersion": 1,
+          "reason": "Fictional reversal preserves payment history",
+          "retryKey": "72f4e418-daeb-4b1b-b920-f234d44d7201"
+        }
+      },
+      {
+        "action": "unmatch",
+        "body": {
+          "expectedVersion": 1,
+          "reason": "Fictional reversal preserves payment history",
+          "retryKey": "72f4e418-daeb-4b1b-b920-f234d44d7201"
+        }
+      }
+    ],
+    "allocations": 1,
+    "active": false,
+    "sameKeySamePayload": true
+  },
+  "completed": {
+    "receiptReviews": "1/1",
+    "statementImports": "1/1",
+    "paidAssociationAndReversal": "1/1",
+    "duplicateDismissals": "1/1",
+    "method": "One scripted human-choice fictional cohort per owned database; not user-study or accuracy/capacity certification"
+  },
+  "measurements": {
+    "/finance/intakes": {
+      "requests": 5,
+      "bytes": 570,
+      "p50": 4.199999988079071,
+      "p95": 6.5999999940395355
+    },
+    "/finance/receipt-extractions/fjob_2565bd62982f4af6d6dca5ee93961a84": {
+      "requests": 5,
+      "bytes": 960,
+      "p50": 2.9000000059604645,
+      "p95": 3.300000011920929
+    },
+    "/finance/reconciliation?state=all": {
+      "requests": 5,
+      "bytes": 7828,
+      "p50": 5,
+      "p95": 5.5
+    }
+  },
+  "browser": "Chrome/152.0.7977.82",
+  "scope": "Owned fictional actual HTTP and Chromium UI; single-user local measurements are not production capacity, native or physical certification."
+}

@@ -1,0 +1,294 @@
+{
+  "status": "passed",
+  "checks": [
+    "Actual TCP receipt capture reservation, unbound denial, immutable keyed binding/staging, cancellation and private-source denial",
+    "Actual ClamAV rejection is visible on authorized intake GET; retry/provider/download remain quarantined",
+    "Actual TCP private stage\u2192ClamAV clean\u2192durable extraction queue\u2192Tesseract receipt candidate result"
+  ],
+  "samples": [
+    {
+      "operation": "POST ",
+      "milliseconds": 74.703,
+      "bytes": 564
+    },
+    {
+      "operation": "GET ",
+      "milliseconds": 2.72,
+      "bytes": 99589
+    },
+    {
+      "operation": "POST intakes",
+      "milliseconds": 1.153,
+      "bytes": 260
+    },
+    {
+      "operation": "POST intakes",
+      "milliseconds": 0.794,
+      "bytes": 260
+    },
+    {
+      "operation": "POST intakes",
+      "milliseconds": 0.873,
+      "bytes": 148
+    },
+    {
+      "operation": "POST intakes",
+      "milliseconds": 1.028,
+      "bytes": 266
+    },
+    {
+      "operation": "POST intakes",
+      "milliseconds": 0.739,
+      "bytes": 266
+    },
+    {
+      "operation": "POST intakes",
+      "milliseconds": 1.22,
+      "bytes": 275
+    },
+    {
+      "operation": "GET intakes",
+      "milliseconds": 0.661,
+      "bytes": 275
+    },
+    {
+      "operation": "POST intakes",
+      "milliseconds": 0.882,
+      "bytes": 68
+    },
+    {
+      "operation": "GET intakes",
+      "milliseconds": 0.717,
+      "bytes": 101
+    },
+    {
+      "operation": "POST intakes",
+      "milliseconds": 0.76,
+      "bytes": 243
+    },
+    {
+      "operation": "POST intakes",
+      "milliseconds": 0.774,
+      "bytes": 251
+    },
+    {
+      "operation": "GET intakes",
+      "milliseconds": 0.508,
+      "bytes": 251
+    },
+    {
+      "operation": "POST intakes",
+      "milliseconds": 0.666,
+      "bytes": 68
+    },
+    {
+      "operation": "GET intakes",
+      "milliseconds": 0.835,
+      "bytes": 302
+    },
+    {
+      "operation": "GET intakes",
+      "milliseconds": 1.657,
+      "bytes": 302
+    },
+    {
+      "operation": "GET intakes",
+      "milliseconds": 1.618,
+      "bytes": 302
+    },
+    {
+      "operation": "GET intakes",
+      "milliseconds": 1.463,
+      "bytes": 302
+    },
+    {
+      "operation": "GET intakes",
+      "milliseconds": 1.883,
+      "bytes": 332
+    },
+    {
+      "operation": "GET intakes",
+      "milliseconds": 0.931,
+      "bytes": 101
+    },
+    {
+      "operation": "POST intakes",
+      "milliseconds": 1.165,
+      "bytes": 145
+    },
+    {
+      "operation": "POST receipt-extractions",
+      "milliseconds": 0.924,
+      "bytes": 80
+    },
+    {
+      "operation": "POST intakes",
+      "milliseconds": 0.977,
+      "bytes": 148
+    },
+    {
+      "operation": "POST intakes",
+      "milliseconds": 1.405,
+      "bytes": 277
+    },
+    {
+      "operation": "POST intakes",
+      "milliseconds": 1.264,
+      "bytes": 286
+    },
+    {
+      "operation": "GET intakes",
+      "milliseconds": 0.828,
+      "bytes": 286
+    },
+    {
+      "operation": "POST intakes",
+      "milliseconds": 1.051,
+      "bytes": 68
+    },
+    {
+      "operation": "GET intakes",
+      "milliseconds": 0.708,
+      "bytes": 337
+    },
+    {
+      "operation": "GET intakes",
+      "milliseconds": 1.725,
+      "bytes": 337
+    },
+    {
+      "operation": "GET intakes",
+      "milliseconds": 1.975,
+      "bytes": 337
+    },
+    {
+      "operation": "GET intakes",
+      "milliseconds": 1.705,
+      "bytes": 337
+    },
+    {
+      "operation": "GET intakes",
+      "milliseconds": 1.747,
+      "bytes": 337
+    },
+    {
+      "operation": "GET intakes",
+      "milliseconds": 1.758,
+      "bytes": 283
+    },
+    {
+      "operation": "POST receipt-extractions",
+      "milliseconds": 1.598,
+      "bytes": 69
+    },
+    {
+      "operation": "GET receipt-extractions",
+      "milliseconds": 0.954,
+      "bytes": 383
+    },
+    {
+      "operation": "GET receipt-extractions",
+      "milliseconds": 1.763,
+      "bytes": 383
+    },
+    {
+      "operation": "GET receipt-extractions",
+      "milliseconds": 1.831,
+      "bytes": 383
+    },
+    {
+      "operation": "GET receipt-extractions",
+      "milliseconds": 1.663,
+      "bytes": 383
+    },
+    {
+      "operation": "GET receipt-extractions",
+      "milliseconds": 1.762,
+      "bytes": 383
+    },
+    {
+      "operation": "GET receipt-extractions",
+      "milliseconds": 2.025,
+      "bytes": 390
+    },
+    {
+      "operation": "GET receipt-extractions",
+      "milliseconds": 1.703,
+      "bytes": 889
+    },
+    {
+      "operation": "POST ",
+      "milliseconds": 1.155,
+      "bytes": 56
+    },
+    {
+      "operation": "POST ",
+      "milliseconds": 0.982,
+      "bytes": 56
+    },
+    {
+      "operation": "POST intakes",
+      "milliseconds": 0.785,
+      "bytes": 240
+    },
+    {
+      "operation": "POST intakes",
+      "milliseconds": 0.893,
+      "bytes": 248
+    },
+    {
+      "operation": "GET intakes",
+      "milliseconds": 0.671,
+      "bytes": 248
+    },
+    {
+      "operation": "POST intakes",
+      "milliseconds": 0.876,
+      "bytes": 68
+    },
+    {
+      "operation": "GET intakes",
+      "milliseconds": 0.604,
+      "bytes": 299
+    },
+    {
+      "operation": "GET intakes",
+      "milliseconds": 1.604,
+      "bytes": 299
+    },
+    {
+      "operation": "GET intakes",
+      "milliseconds": 1.55,
+      "bytes": 299
+    },
+    {
+      "operation": "GET intakes",
+      "milliseconds": 1.584,
+      "bytes": 299
+    },
+    {
+      "operation": "GET intakes",
+      "milliseconds": 2.161,
+      "bytes": 245
+    }
+  ],
+  "providerExpected": true,
+  "company": "c-schach",
+  "department": "d-eng",
+  "category": "c-schach-category-2",
+  "captureIntake": "fin_364d394b1e07bc1c10902d5183e6ee3e",
+  "rejectedIntake": "fin_1dcb1619b665f4ebe64d69e8cd3bce7a",
+  "duplicateSource": "exp_e268bc400e1ca16343afe8eaebeef19e",
+  "receiptIntake": "fin_9c4daf7855e8b7cdf8d3a0b103e39ff1",
+  "job": "fjob_01da88e77a2062ddb3212d989c062833",
+  "statementIntake": "fin_610264bf7395c6163340e4371ef6a164",
+  "paidExpense": "c-schach-expense-8",
+  "fixtureSHA256": "b03b6de24de6a5fd63ddf84b7a41c998776057ddbe7c368bae6edc1f24254589",
+  "fixtureBytes": 21407,
+  "scanQueueMilliseconds": 1011.309,
+  "extractionQueueMilliseconds": 1214.094,
+  "engine": "tesseract",
+  "engineVersion": "tesseract 5.5.3",
+  "language": "eng",
+  "currency": "INR"
+}

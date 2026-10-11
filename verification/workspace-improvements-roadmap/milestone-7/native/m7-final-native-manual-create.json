@@ -1,0 +1,23 @@
+{
+  "sourceCommit": "69fdc77a86a4718695decbf7c127666fece278db",
+  "passed": true,
+  "expense": {
+    "id": "exp_a3e904a684a9c0c650db6cce035e4e7f",
+    "title": "ManualM7Final",
+    "vendor": "DemoVendorFixtureVendor",
+    "amount_minor": 130050,
+    "status": "draft",
+    "version": 1,
+    "department_id": "d-eng",
+    "category_id": "c-schach-category-7"
+  },
+  "independentMatchingRows": 1,
+  "actualNativeCreateButton": true,
+  "scriptedFictionalWorkflow": true,
+  "qualifications": [
+    "Owned Android API36 development shell, not physical Android/iOS or final APK.",
+    "Fast hardware double-R development reload excluded; final vendor typed with >=250ms character spacing.",
+    "First stale target/tap attempt did not create a draft; second observed currently enabled button did, independently verified exactly one row.",
+    "No submission, approval or payment."
+  ]
+}

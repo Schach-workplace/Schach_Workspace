@@ -1,0 +1,191 @@
+{
+  "acceptedImplementation": "a973fb458ad0d9489865b4356089f4332aa1f00c",
+  "artifacts": [
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-7-implementation.md",
+      "sha256": "aeceee01f739bd40a38b1e0c02d97a75660ac2eca25ddf8e8a16f3d9dfbe9579",
+      "bytes": 63013
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-7-initial-review.md",
+      "sha256": "b66cf49d15e54c5f16b60e940974a4ac3997fa345669386eb70fb706796ce28f",
+      "bytes": 15508
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-7-fix-1-review.md",
+      "sha256": "93ddfacacdfce386b3cf4da275fc40235ab016df08b34d8a189251c1efc5ba55",
+      "bytes": 14930
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-7-fix-2-review.md",
+      "sha256": "df0a6d86a204f55c7c94a75ec014b4e3787dd5d3cecf1fe7cbd2663938b58103",
+      "bytes": 2336
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-7/original-manifest.json",
+      "sha256": "08b2aad4988613c2d218fd79b286d248eb7cdfbf038cc1f16ae2b4c1abf2da6b",
+      "bytes": 66576
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-7/fix1-manifest.json",
+      "sha256": "8d1c94a15f8ea5187ad44daa8131c7fbe9299e28ca79606d9ed21e5d383b538b",
+      "bytes": 95224
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-7/fix1-checks.json",
+      "sha256": "10a0a9c9af638fee3ca7b0233d11048760260726d8fca476d522e8c13c46fd4e",
+      "bytes": 2882
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-7/fix2-manifest.json",
+      "sha256": "3b94cf2dfe1ac4c5d483e920bc77aacce1160456bf8172ed9be6b856393adab2",
+      "bytes": 89624
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-7/fix2-checks.json",
+      "sha256": "92d60dcb9f5d46c6d1385520311e663906d97fc499254bc692b73bc54fcb8b46",
+      "bytes": 1567
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-7/pg-result.json",
+      "sha256": "e30090785c6c47d51375b7886dadfa7a0b40f04750ad829c2d475681eb06eb5d",
+      "bytes": 818
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-7/pg-finance-browser.json",
+      "sha256": "a9d0361e241d8b637de180f93aa16351afc1fc5cacc9e6b1fc78217f2cae3fbe",
+      "bytes": 4775
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-7/pg-finance-result.json",
+      "sha256": "1198b6ce733eb0670019fd428ef7f48f1f9fe2b3d3116ae6371f7cd0ccff1839",
+      "bytes": 6442
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-7/sqlite-result.json",
+      "sha256": "4f4252e5c2e71abf2bdebfacc3af5878f8b43a48ea30ad040f965224de8a9cb4",
+      "bytes": 49
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-7/sqlite-browser.json",
+      "sha256": "480403041f57edcb98c01c567162ba373b8825e7a323784d38304148e97b6911",
+      "bytes": 3036
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-7/sqlite-finance-result.json",
+      "sha256": "f413699db10aba62cb8bbd29e7a532ffaae779942a3c880a06160d3e5e8916d8",
+      "bytes": 6358
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-7/encore-result.json",
+      "sha256": "cc59f1c79c96f90fa6246473ee916587ebafd5562e575883b116f32ec31567d6",
+      "bytes": 706
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-7/encore-finance-result.json",
+      "sha256": "67537a5d11e318b7adcaaef2ec86e25605c865bed85084f88571e5987081b526",
+      "bytes": 1513
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-7/preview-counter-result.json",
+      "sha256": "ec6100b6cfa02d06fbc20366b4c5d5108770d928f5d297ed5896894378e58d0f",
+      "bytes": 1507
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-7/preview-counter-red-browser.json",
+      "sha256": "80b792413f4b54c556041a707b3f46993103d19a5398c2b60402ad2a6f4f09dc",
+      "bytes": 9844
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-7/preview-counter-green-browser.json",
+      "sha256": "d3a57c4acca02ea892c39e9a2461c54b36dba5a7ac950bd533329dc52c5d6f54",
+      "bytes": 2123
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-7/preview-counter-database-proof.json",
+      "sha256": "a108c54190999a5c4dbdfaa703b20db074dcd47ae1db94ef72a30b5f0bc00897",
+      "bytes": 215
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-7/native/m7-final-native-manual-focus.json",
+      "sha256": "2a79c030b2a669d9734a0d5ddd12ae540e8a9c3821659b5f2cb90ad198a7ea3a",
+      "bytes": 1385
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-7/native/m7-final-native-manual-focus.png",
+      "sha256": "76f7efee648bd5c89ef9a4aa6c356e52005e5e0a24a4e80c092e1327ac1d2bef",
+      "bytes": 149286
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-7/native/m7-final-native-manual-create.json",
+      "sha256": "e647d8d85d71b6474b78cff5e9d20c849efa48d7ff831c0fa8f49f9f9889dae3",
+      "bytes": 881
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-7/native/m7-final-native-manual-create.png",
+      "sha256": "666d89002344560a4ccadd14d81ab80f84098c8192f92a6afcbcddc3065a209a",
+      "bytes": 148435
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-7/native/m7-native-receipt-create-observation.json",
+      "sha256": "eb40eec9bb387ff3622db18dc0e39826159a6b3e4607df4d5120e08d64850bb0",
+      "bytes": 1530
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-7/native/m7-native-camera-cancel.json",
+      "sha256": "db75e4b5f7cd6dd939b8b03e2f7bee2c7ec3f757f044f64c74d65eed4ed43111",
+      "bytes": 716
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-7/native/m7-fix1-chooser-route-red.json",
+      "sha256": "c85e788f3586ef7337e8674f5c98167a4eed682fb63dc62662bc93cb1bc91821",
+      "bytes": 913
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-7/native/m7-fix1-rejected-native.json",
+      "sha256": "fa8154346e2f73e6b963eeef3686429a695bcb269c0afd1c8774c9366dc684bb",
+      "bytes": 708
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-7/native/m7-fix1-rejected-native.png",
+      "sha256": "9b623a200555f5d457c3d9eec0b6a10134382aca6020cb2fbe8d9afb89dd7899",
+      "bytes": 70550
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-7/native/m7-finalfix-native-statement.json",
+      "sha256": "a4c3c01279b4ac3c7edcf2ceffb5b227f66e78c36f55c6da7f9431774d9221dc",
+      "bytes": 2163
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-7/native/m7-finalfix-native-exact-total.json",
+      "sha256": "83f52be9b5acf294badb8224d969ec176ad49bca043b8a2a5ea779e49e12964a",
+      "bytes": 1458
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-7/native/m7-finalfix-native-exact-total.png",
+      "sha256": "acca603f079715ad0131612b34cb628cda6774d06a87f5882dd4e0bae234c269",
+      "bytes": 173964
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-7/native/m7-finalfix-account-red.json",
+      "sha256": "0680642822d681c7560c7ea07c6661fda8b7c4183216f028533110be7bbd1a90",
+      "bytes": 608
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-7/native/m7-fix2-account-green.json",
+      "sha256": "1ad39b8341a09681d0ef36902022bade761adecbda311a1fe2e207034389f97a",
+      "bytes": 1560
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-7/native/m7-finalfix-normalized-rows.png",
+      "sha256": "085f2cbf1952877b84d2730e069ddd4be8d4ee97927a25e72c2f20d640aaea01",
+      "bytes": 155556
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-7/native/m7-fix2-account-devices.png",
+      "sha256": "429e03399785a4e4abe0a63d14dbeafdfc1928390500d535429383c8cb0189e8",
+      "bytes": 157918
+    }
+  ],
+  "qualification": "Fictional owned fixtures; initial and fix1 artifacts retain original source qualifications. Manifest temporary paths are historical build locations, not packaged binaries or claims of physical/production delivery."
+}

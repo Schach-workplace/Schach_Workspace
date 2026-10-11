@@ -1,0 +1,69 @@
+{
+  "sourceCommit": "edfafb19a72bbfa6f3e4b02be3fead62cdf2698c",
+  "compiledBackendCommit": "820921f977d5b083be9e57df8a3724f13dde1728",
+  "productionSqlByteEquivalent": true,
+  "file": {
+    "name": "fictional-bank-native-m7.csv",
+    "size": 212,
+    "sha256": "cd8f287fd4b72f4a8d7548b5b8383e6e01a42049ef270695a6fd56dd1ff4c907"
+  },
+  "intakeID": "fin_6e080dac371eb4fb8466e481aa0bc548",
+  "intakeState": [
+    "clean",
+    4,
+    212,
+    1
+  ],
+  "previews": [
+    [
+      "fsp_c65b1e7e7758eb6a02df0b5eb1df0859",
+      "fsi_b63da419a928f1d54cc85b77edad9c5a",
+      "{\"headerRow\":true,\"delimiter\":\"comma\",\"dateColumn\":0,\"dateFormat\":\"YYYY-MM-DD\",\"referenceColumn\":2,\"descriptionColumn\":3,\"amountMode\":\"signed\",\"signedAmountColumn\":1,\"debitSign\":\"negative\",\"decimalSeparator\":\"dot\",\"groupingSeparator\":\"none\"}",
+      "{\"debit\":\"3105100\",\"credit\":\"500\",\"net\":\"-3104600\"}",
+      "[]"
+    ]
+  ],
+  "imports": [
+    [
+      "fsi_b63da419a928f1d54cc85b77edad9c5a",
+      4,
+      "{\"debit\":\"3105100\",\"credit\":\"500\",\"net\":\"-3104600\"}",
+      1
+    ]
+  ],
+  "rows": [
+    [
+      2,
+      -2845000,
+      "DEMO-TRANSFER-0008"
+    ],
+    [
+      3,
+      -130050,
+      "SAME"
+    ],
+    [
+      4,
+      -130050,
+      "SAME"
+    ],
+    [
+      5,
+      500,
+      "CREDIT"
+    ]
+  ],
+  "actualFlow": [
+    "AndroidDocumentsUI\u2192freshcompany/financeauth\u2192one reservation",
+    "native Expo file upload\u2192explicitclean request\u2192realClamclean",
+    "human chooses6format options+4columns",
+    "actualnative4rows/exacttotals review PNG inspected",
+    "explicitallrowsconfirmation\u2192one import\u2192reconciliation display"
+  ],
+  "passed": true,
+  "harnessCorrections": [
+    "Wrong target labels in seek/poll discarded before writes; corrected from actual source/observed UI",
+    "First stage/request tap no effect; current retap applied once, no duplicate preview/import"
+  ],
+  "qualification": "Owned API36 Android dev shell actualsource/currentbackend; fictional212byte4records notcapacity/accuracy study, notphysical/iOS/finalAPK; postcommit ACK-loss separatelyprovenbrowser/component."
+}

@@ -1,0 +1,19 @@
+{
+  "sourceCommit": "820921f977d5b083be9e57df8a3724f13dde1728",
+  "actualAuthorizedGETFixture": "/tmp/schach-roadmap-native-runtime-20261011/m7-fix1-rejected-fixture.json",
+  "renderedRejection": "Scanner rejected this file. It remains quarantined and cannot be retried or used as evidence. Cancel this intake.",
+  "retryExtractionCheckAbsent": true,
+  "actualUICancel": true,
+  "postCancelDatabase": [
+    "cancelled",
+    4,
+    68
+  ],
+  "passed": true,
+  "evidence": [
+    "m7-fix1-rejected-native.xml",
+    "m7-fix1-rejected-native.png",
+    "m7-fix1-rejected-after-cancel.xml"
+  ],
+  "qualification": "Actual owned API36 Android dev shell with source/backend820921f. No physical/iOS/finalAPK claim."
+}

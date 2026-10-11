@@ -1,0 +1,13 @@
+{
+  "status": "passed",
+  "checks": [
+    "Versioned migrations and compiled standalone server start on owned PostgreSQL schema",
+    "Original workspace/finance TCP scenarios: 39 + 53 assertions",
+    "Actual PostgreSQL TCP staged scan/OCR and rendered finance review acceptance",
+    "Actual standalone reverse-proxy WebSocket hints/origin/removal",
+    "Acknowledged send and exact retry result survive SIGKILL crash and compiled-process restart",
+    "Actual finance extraction/result/claim/same-key accepted draft survive compiled-process crash/restart",
+    "Real pg_dump/restore plus private media copy preserve ACKs, retry identities, bytes and revoked membership",
+    "Coordinated real SQL/private finance-store restore preserves source/result/canonical acceptance and independently retained evidence"
+  ]
+}

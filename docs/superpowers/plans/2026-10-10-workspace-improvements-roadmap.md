@@ -65,7 +65,7 @@
 - Acceptance: reopen/reassign cannot rewrite an existing snapshot; current-state reports remain labelled; revoked users cannot fetch output; all figures drill down to included facts.
 
 ### Milestone 7: Finance assistance
-- [ ] Add reviewed receipt extraction into expense drafts, exact normalized duplicate-invoice candidates and payment reconciliation queues in finance APIs and forms.
+- [x] Add reviewed receipt extraction into expense drafts, exact normalized duplicate-invoice candidates and payment reconciliation queues in finance APIs and forms.
 - Acceptance: extraction never approves/pays; exact minor-unit amounts retained; review separation and budget exceptions preserved; false-positive duplicate flags are dismissible and audited; retry yields one draft.
 
 ### Milestone 8: Planning and outcomes

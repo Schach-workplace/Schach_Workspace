@@ -1,0 +1,69 @@
+{
+  "status": "passed",
+  "checks": [
+    "Actual TCP receipt capture reservation, unbound denial, immutable keyed binding/staging, cancellation and private-source denial"
+  ],
+  "samples": [
+    {
+      "operation": "POST ",
+      "milliseconds": 82.961,
+      "bytes": 1353
+    },
+    {
+      "operation": "GET ",
+      "milliseconds": 4.853,
+      "bytes": 99589
+    },
+    {
+      "operation": "POST intakes",
+      "milliseconds": 3.821,
+      "bytes": 260
+    },
+    {
+      "operation": "POST intakes",
+      "milliseconds": 2.105,
+      "bytes": 260
+    },
+    {
+      "operation": "POST intakes",
+      "milliseconds": 1.827,
+      "bytes": 148
+    },
+    {
+      "operation": "POST intakes",
+      "milliseconds": 2.717,
+      "bytes": 266
+    },
+    {
+      "operation": "POST intakes",
+      "milliseconds": 4.175,
+      "bytes": 266
+    },
+    {
+      "operation": "POST intakes",
+      "milliseconds": 3.885,
+      "bytes": 275
+    },
+    {
+      "operation": "GET intakes",
+      "milliseconds": 1.721,
+      "bytes": 275
+    },
+    {
+      "operation": "POST intakes",
+      "milliseconds": 2.489,
+      "bytes": 68
+    },
+    {
+      "operation": "GET intakes",
+      "milliseconds": 1.254,
+      "bytes": 101
+    }
+  ],
+  "providerExpected": false,
+  "company": "c-schach",
+  "department": "d-eng",
+  "category": "c-schach-category-2",
+  "captureIntake": "fin_566d287544e7ca2eca2a824dbd3c6764",
+  "capability": "Exported default: OCR disabled; no host Tesseract or scanner capability claimed"
+}

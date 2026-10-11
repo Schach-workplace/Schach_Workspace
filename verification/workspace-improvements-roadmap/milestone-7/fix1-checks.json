@@ -1,0 +1,83 @@
+{
+  "source": "edfafb19a72bbfa6f3e4b02be3fead62cdf2698c",
+  "origin": "Recorded actual tool command exits; no unchanged suite reruns solely to create this index",
+  "commands": [
+    {
+      "cwd": "backend",
+      "command": "go test ./... -count=1",
+      "exit": 0,
+      "platformSeconds": 92.762,
+      "coverage": "final backend production bytes identical"
+    },
+    {
+      "cwd": "backend",
+      "command": "TEST_DATABASE_URL=<owned55433> TEST_CLAMAV_ADDRESS=127.0.0.1:13310 FINANCE_REAL_FIXTURE=/tmp/schach-improvements-ai-fixtures/receipt.png go test ./... -count=1",
+      "exit": 0,
+      "platformSeconds": 188.632,
+      "coverage": "final backend production bytes identical"
+    },
+    {
+      "cwd": "backend",
+      "command": "TEST_DATABASE_URL=<owned55433> TEST_CLAMAV_ADDRESS=127.0.0.1:13310 go test -race ./platform -run TestFinanceScan|TestFinanceIntakeQuarantine|TestReceiptExtractionReauthorize -count=1",
+      "exit": 0,
+      "platformSeconds": 30.918
+    },
+    {
+      "cwd": "frontend",
+      "command": "npm test; npm run typecheck; npm run build; npm run build:demo",
+      "exit": 0,
+      "tests": 215,
+      "coverage": "final frontend/shared production bytes identical"
+    },
+    {
+      "cwd": "frontend",
+      "command": "npm run format:check",
+      "exit": 1,
+      "qualification": "15 warnings in files byte-identical to BASE; all changed TS/TSX formatted"
+    },
+    {
+      "cwd": "mobile",
+      "command": "npm test",
+      "exit": 0,
+      "tests": 181,
+      "qualification": "before final layout cleanup/authority route delta; focused covering checks and final export below cover those deltas"
+    },
+    {
+      "cwd": "mobile",
+      "command": "npm test -- --run src/financeChooserLifecycle.test.ts src/FinanceAssistanceScreen.test.tsx src/financeCapture.test.ts src/captureAdapter.test.ts; npm run typecheck; npm run lint",
+      "exit": 0,
+      "tests": 21,
+      "coverage": "exact corrected final edfafb1 native bytes"
+    },
+    {
+      "cwd": "mobile",
+      "command": "npm run export -- --output-dir /tmp/schach-m7-fix1-native-export-corrected",
+      "exit": 0,
+      "coverage": "exact corrected final edfafb1; Android+iOS exports, no physical execution claim"
+    },
+    {
+      "cwd": "verification/postgres-compat",
+      "command": "npm test",
+      "exit": 0,
+      "checks": 104,
+      "qualification": "PGlite compatibility only; pairedSQL1\u201347 including populated47 backfill/FK/revision checks"
+    },
+    {
+      "command": "owned SQLite finance runtime v8",
+      "exit": 0,
+      "checks": 7
+    },
+    {
+      "command": "owned PostgreSQL standalone runtime v2",
+      "exit": 0,
+      "checks": 8,
+      "browserChecks": 7
+    },
+    {
+      "command": "owned exported Encore runtime",
+      "exit": 0,
+      "checks": 7,
+      "qualification": "provider disabled/unavailable explicit"
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "sourceCommit": "edfafb19a72bbfa6f3e4b02be3fead62cdf2698c",
+  "passed": false,
+  "classification": "application_bug_original_M7_account_entry",
+  "finding": "I8",
+  "actualNativeLogBox": "Text strings must be rendered within a <Text> component.",
+  "source": "AccountScreen.tsx69 JSX whitespace outside Text, Page ScrollView child",
+  "evidence": [
+    "m7-finalfix-account.xml",
+    "m7-finalfix-account.png",
+    "metro.log"
+  ],
+  "qualification": "Owned exactedfafb1 Android API36 dev shell; not in fix1 diff, controller independently observed acceptance failure. No secrets/credential mutations."
+}

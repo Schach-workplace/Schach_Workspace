@@ -1,0 +1,52 @@
+{
+  "status": "passed",
+  "database": "SQLite",
+  "scope": "One owned statement-preview-only app; no OCR/provider, PG, Encore or controller runtime actions",
+  "redExit": 1,
+  "greenExit": 0,
+  "previewCounter": {
+    "path": "/api/companies/c-schach/finance/statement-previews",
+    "initialCount": 1,
+    "afterFrozenAttempts": 1,
+    "additionalRequests": 0,
+    "requests": [
+      {
+        "path": "/api/companies/c-schach/finance/statement-previews",
+        "body": {
+          "intakeId": "fin_ffd2c00c9fea476c235a56a3c71a7a84",
+          "expectedIntakeVersion": 4,
+          "mapping": {
+            "headerRow": true,
+            "delimiter": "comma",
+            "dateColumn": 0,
+            "dateFormat": "YYYY-MM-DD",
+            "amountMode": "signed",
+            "signedAmountColumn": 1,
+            "referenceColumn": 2,
+            "descriptionColumn": 3,
+            "decimalSeparator": "dot",
+            "groupingSeparator": "none",
+            "debitSign": "negative"
+          },
+          "retryKey": "0e9b3b94-8816-4200-88fe-f5c6f9d40616"
+        }
+      }
+    ],
+    "afterCanonicalRetry": 1
+  },
+  "statementRetry": {
+    "importId": "fsi_4b9bb7d77a5002f5aa1f048b75bd6b22",
+    "rows": 4,
+    "requests": [
+      {
+        "expectedPreviewRevision": 1,
+        "retryKey": "b1e9d634-eec3-4582-bcf8-d927ea14a6c4"
+      },
+      {
+        "expectedPreviewRevision": 1,
+        "retryKey": "b1e9d634-eec3-4582-bcf8-d927ea14a6c4"
+      }
+    ],
+    "sameKeySamePayload": true
+  }
+}

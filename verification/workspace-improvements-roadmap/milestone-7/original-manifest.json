@@ -1,0 +1,767 @@
+{
+  "head": "69fdc77a86a4718695decbf7c127666fece278db",
+  "base": "022c055e628eca9ba58d09840b81b4b630e75d85",
+  "createdUTC": "2026-10-11T03:06:14.540024+00:00",
+  "productionFiles": {
+    "backend/cmd/migrate/main.go": "ce5c5f01dce3d452d721674b32b2bbc11fdeca0b17a72bf3b7999eaf98b0ca38",
+    "backend/cmd/reconcile-attention/main.go": "8feab60d02456a3b8978555288e8f1b1e7718fa351ba0f153e69c8c03f3ceb0b",
+    "backend/cmd/reset-password/main.go": "9972738e1436b0d536e2c32709e4e1456ef6fcfe1eee72ddc4b0c78524c487f0",
+    "backend/cmd/server/main.go": "f9d148b9f3a96e163cf3787fa36c205873dc304f8a9b628b7ef88ab17be9a720",
+    "backend/go.mod": "0cf948df976b81e1453dd094a72059ccfa1cba685c9cd3e8f270352a4dd6d82b",
+    "backend/go.sum": "53c8e33dcfdaedebdc3312667edf363159f92af45855a8da26eeb22f43264f2d",
+    "backend/migrations/10_communication_calls.down.sql": "9e83ce58d8829389c6d091ae47462209bb47b3720ebe701ffb5ea5d8d04500fe",
+    "backend/migrations/10_communication_calls.up.sql": "8c70d5fbf6c1249dfc0104f94f7c77dfb418d6c5bc40e963ad2fd1a25f8f47e9",
+    "backend/migrations/11_account_offboarding.down.sql": "e31268c423a4de97b3bd49a222f765c4eaa703272f4c1076fa910cad96b6d43f",
+    "backend/migrations/11_account_offboarding.up.sql": "6937de37c89e884cdf73b19efaa68c5c668000463b0a8f83b2a0da73224a85e6",
+    "backend/migrations/12_communication_structured.down.sql": "5d0cf65d24ed7b3a6d68ee3408e5138050f6748300ea0b543c2e7f2c4ac6dc9a",
+    "backend/migrations/12_communication_structured.up.sql": "6c5ab5ff77140d496e6f1052aedabad7166ad8022ceae49c245da891ec2f1563",
+    "backend/migrations/13_communication_intake.down.sql": "d8cdfed751d1463024ffbbfb0624a9984cd07373b27cf4c95b39b731a16b2152",
+    "backend/migrations/13_communication_intake.up.sql": "e5593d2f25b7e3081e00887fd38a5688a65b32ab3e05217dd1f94fa1f87b8a3e",
+    "backend/migrations/14_communication_record_revisions.down.sql": "387b500dcbd85b60cb009b8bc8a92b2d6273c4b31954bd49fa5b282ae70c3504",
+    "backend/migrations/14_communication_record_revisions.up.sql": "1157bf54b775ab73d8fd0eb2dc39565d415f126a20a3dde60fa58b4261710c18",
+    "backend/migrations/15_communication_call_jobs.down.sql": "46d4203ed9849f327544a84961b8a710e90e037e903186c55e022c401502b113",
+    "backend/migrations/15_communication_call_jobs.up.sql": "da2bc6b6e70af4f3cb27928d264f0626e75a262e4e77c5f9375d982c14706c61",
+    "backend/migrations/16_communication_finance.down.sql": "49f6db1a2e38ddb44a5a4b2dab5f4b4f5a81eb1d0186668bbb73010d3861a6bd",
+    "backend/migrations/16_communication_finance.up.sql": "797ef4aede0f31cf6787facbe95aa6a8941d1a4dc8ea3b0a2589f42b203cdc8b",
+    "backend/migrations/17_communication_controls.down.sql": "05976179a1e2784540ef50ef3853ab98660414cfd070ff8a19d5be742ecbf9bc",
+    "backend/migrations/17_communication_controls.up.sql": "d9b677ed4d5e9a6a5358b3fa900d50a904241dc06471d3b04a75adf8cda868d0",
+    "backend/migrations/18_communication_bundles.down.sql": "a3e645b2913da95baa5f84f8298d96d15b3e27be5435887a7bdcbbb147303164",
+    "backend/migrations/18_communication_bundles.up.sql": "1a010b775ee9a3221b16121a3058fdfe3c81c071b93c177f0eb210c0e0a2d017",
+    "backend/migrations/19_communication_upload_retries.down.sql": "ada4480be033a792132ac3710e70fc8b17cf632cdb3ef782ae7b59d6effc4538",
+    "backend/migrations/19_communication_upload_retries.up.sql": "72ab862dd1b2eb91dfa0f1a81f3505e6bb10788e62059317a919e092ca2bb58d",
+    "backend/migrations/1_initial.down.sql": "2ef1edfbc7b654d00d84f061f55652fbe93124fe375d1d713c7caf4d9822ebb5",
+    "backend/migrations/1_initial.up.sql": "4502929647861a5abf59509dda73bc91ac2f847f190a9c37419b5627e361f8b5",
+    "backend/migrations/20_authenticator.down.sql": "cdcb1a28388a59b9be16091031cb25879ad270cfc907d6792f75d1d95a1c2b06",
+    "backend/migrations/20_authenticator.up.sql": "dbc7d66ca427c3eb394569803d91d54142ff7b983fb06b1fa5415c25bf961281",
+    "backend/migrations/21_communication_push.down.sql": "e752c4bb22bad1a61559116b04e70bbe2886933f0763624d16632b860e0b8de2",
+    "backend/migrations/21_communication_push.up.sql": "78e0b50cc41c146f5c83f1d24c191062876990c2f7d308858191e2c00d57e9e8",
+    "backend/migrations/22_communication_retention.down.sql": "0f4e90464f1dee451289d927b955f0e08558e20e4e93710b27b19ee9a2a71b94",
+    "backend/migrations/22_communication_retention.up.sql": "2131b21c9a18b09172e126bce6f0f8fd88c17fedeacb9c55ae186a7a7b063b08",
+    "backend/migrations/23_communication_call_outcomes.down.sql": "fca11502b78bb224d05672aa6ed0b4bb3cdc863584a7e72548f91881ff72fe12",
+    "backend/migrations/23_communication_call_outcomes.up.sql": "1c1fb5a47bf6fef5bf68aba12541e69368995e83fe85f97d8c5525ba2f685d52",
+    "backend/migrations/24_communication_exports.down.sql": "e6a2e8f313c6004dac343f3cbde8372cfd9e7d9e39b15d4d2b7549baa0ad6b2f",
+    "backend/migrations/24_communication_exports.up.sql": "5c61a6ad0faa43ecfda8adf261367a55ac4119ff6b645c1f4e6bd07b807632a5",
+    "backend/migrations/25_measured_task_pagination.down.sql": "dc7e8f8fd430cf4f05d48b0930c06536a96b95541c90f61e51c99c665b810b19",
+    "backend/migrations/25_measured_task_pagination.up.sql": "0e572e3e9d271feb12d8655a010af0b6c8db60b1a1ef80506125dc266f4c117e",
+    "backend/migrations/26_attention.down.sql": "b9321c7bc16374b1040c3f6e15516b8e790337c3556289b538def57a6db172af",
+    "backend/migrations/26_attention.up.sql": "83738a2d28f4a2110ee601caeff5504ce4641d53ffff754b6e4cea21338ccf1b",
+    "backend/migrations/27_attention_delivery.down.sql": "f8b123304f2d7674ca42cc1a6118394ee7a7fdcd439f1346428fca582c41f38d",
+    "backend/migrations/27_attention_delivery.up.sql": "d46654fa71034d1afbc17cef5289c961e81a8b3747aa4f02721faf085f13f14d",
+    "backend/migrations/28_business_mutation_retries.down.sql": "207c57e722dba2c264e41fe06cac028a31e8bda756f31f24d25be5a85680dbb5",
+    "backend/migrations/28_business_mutation_retries.up.sql": "d9832f6a7f2ffbf8c8b38bb9bd8c0d33c2835c6432ae4cb45fee104855eec7ac",
+    "backend/migrations/29_task_templates.down.sql": "c222e58301948e669711c2e45ae8f88f9459a877b237516ce49b8e56ab35a9d9",
+    "backend/migrations/29_task_templates.up.sql": "4ee1a520ca830e733c1f1ad61d052d1430b62cb21529f498725bb3301bd65245",
+    "backend/migrations/2_department_finance.down.sql": "cd2fef467bd3b1124fa441fcd212fd5ffc67e9a335ae57c21ee0645f4bb41432",
+    "backend/migrations/2_department_finance.up.sql": "e0c46f3d6db61d4c85450a69314bed36f5caba84b47db4e9b3fc31be96a46646",
+    "backend/migrations/30_project_milestones.down.sql": "f2087fed684713aa1d6c9e8995df5c3eff58f44324553c0e9664df43f2f39793",
+    "backend/migrations/30_project_milestones.up.sql": "3f6ae749f49abf32ea2e692d9db207f68b70e302f338e8498744655cae129eec",
+    "backend/migrations/31_task_schedule_proposals.down.sql": "b4a1995bc9f660056c986860367bce46dd47532cd2f2af1af41a94c1a1a429a7",
+    "backend/migrations/31_task_schedule_proposals.up.sql": "00fe1294a1f8b129a5711b30e1d270532f467e303beb2383f4dc2c73a6cc264a",
+    "backend/migrations/32_milestone_submission_history.down.sql": "0eeee310b35f9e998587376a07900ca3bc3da22e4451ddb83b1dc36f86da9a89",
+    "backend/migrations/32_milestone_submission_history.up.sql": "fdea426d8f62b108857ff0a46a1df74db6385e75a9e1c9a04d9088c1be3f6ca2",
+    "backend/migrations/33_report_history.down.sql": "c6a28a42ee395256c7227b85bd09a3b9457bc8a3d5b97efb24118c0a471eb42d",
+    "backend/migrations/33_report_history.up.sql": "1872774a6385ad69294218181f5634436542975cb1cc636186bd8243e8ad7af0",
+    "backend/migrations/34_historical_snapshots.down.sql": "32472f6f13590662d851325eb5c9803ec108321b971d4a8bbb338256e02ed871",
+    "backend/migrations/34_historical_snapshots.up.sql": "fc35eb23c70cf65e461e32ec5c19c925b0f5ce4ccc395e80adc1b387dd3efd45",
+    "backend/migrations/35_saved_reports_exports.down.sql": "88e51a56c036fd2cb99892cdc3e4e054cf407fee2ac07acffc8e876ff1dfc208",
+    "backend/migrations/35_saved_reports_exports.up.sql": "84630af2ba39c92300579334231ac2f37d3870b92d7df9982664cc94cdc55d24",
+    "backend/migrations/36_attention_report_source.down.sql": "8bcd75623f7e3744f1db7304eb38822b7566b19c7736d84cb6b326d59c993f69",
+    "backend/migrations/36_attention_report_source.up.sql": "8463727f0a2d9576d7fb68f1563fa4164c750165517accf5fcac657f8c8709cb",
+    "backend/migrations/37_report_schedule_failures.down.sql": "eae59cf56e4246c1473d459fa166bd0449797a47723904b81e12c8bdde38324c",
+    "backend/migrations/37_report_schedule_failures.up.sql": "b99cdfaace0fed34e21f33b9ad8b3536220961198774da37ba9576a63a82450a",
+    "backend/migrations/38_finance_assistance_sources.down.sql": "718e80ba17a9d4e1bfc872d0834036bfe0270e2d4b5e8b7597f11a7ac11ef455",
+    "backend/migrations/38_finance_assistance_sources.up.sql": "8a558b4ff9b8aa7862dcffae56b361d4b9f18ba06f0e79a3674fbbc5fb0ab9a8",
+    "backend/migrations/39_finance_receipt_results.down.sql": "e0125a1435e1716144ce7929058ff8e4f3defc16b6a65eb325e0885178c59901",
+    "backend/migrations/39_finance_receipt_results.up.sql": "93d72ab9e82d6983e608f2c83ae31e05e627a1c091271e37f5b5ed437be89b40",
+    "backend/migrations/3_communication_core.down.sql": "f53ab8a277b705598e0473db48bf1477d99f77f9eb72c1a23c6bd65bd1abd87d",
+    "backend/migrations/3_communication_core.up.sql": "508fedd724b05fa93fcf0d3c867f46e200bb87449ecbdbd03840ca3bf3aab2c5",
+    "backend/migrations/40_finance_receipt_acceptance.down.sql": "252a978c416b8a58c6d9356d3b46d86a86e9bb01416e486692fe20937ce405f5",
+    "backend/migrations/40_finance_receipt_acceptance.up.sql": "b6328bd5a5af03146dbf6f76127a5ee98e9a47d80955eeba07b376c660d7455c",
+    "backend/migrations/41_finance_duplicates.down.sql": "ae89d716b902bf16e660eeaa377497a62908f4375ef0454294a71610c8581655",
+    "backend/migrations/41_finance_duplicates.up.sql": "abc7768aa6dd5baec5b55b49d2d2edd7a319c9c70a5f9a306abd2873aa38c0b9",
+    "backend/migrations/42_finance_statements.down.sql": "45cec8160089af321a3089408aa7fd3cd1c04eec18f8320e88ecd33c2449590a",
+    "backend/migrations/42_finance_statements.up.sql": "1a692253fa2cde7d892e9004e9776e4f42c9765bd81aa164c4ab58046df29424",
+    "backend/migrations/43_finance_reconciliation.down.sql": "61beda792514a6ec7b01b471bfce817db20f65c12e49b64d830fac987f9a41d2",
+    "backend/migrations/43_finance_reconciliation.up.sql": "f16980865d0da633b4a45e4caae4f93b42a044e4141a26a5d59fa7ec75098312",
+    "backend/migrations/44_finance_capture_reservations.down.sql": "666bb4863d005cea699c7760ab827a7351d260fa027756bf946a02eef80316b0",
+    "backend/migrations/44_finance_capture_reservations.up.sql": "ffcfc89bc7f92a1e902c88856ebb644a953cb15d045dfef7a1df2c9871a5aa4b",
+    "backend/migrations/45_finance_assistance_attention.down.sql": "d6d7786854f0412af72fa8eebd9359c35a6b85d0bfef3cb4b60be46b81fe1bdb",
+    "backend/migrations/45_finance_assistance_attention.up.sql": "317c839984cf0ed05d46e41a738c4efac7a5dc9dac3cc12f6242ca4b28b5e2b0",
+    "backend/migrations/46_finance_assistance_history.down.sql": "c648951ec31c0fe930d4d2fed845020b7af2aa275f766e373eb0d4f6430d3647",
+    "backend/migrations/46_finance_assistance_history.up.sql": "3e847e044a1e9fd2782d3288f6613c7d98ec2ec954d8f67a8da2c295337e6502",
+    "backend/migrations/4_communication_messages.down.sql": "90e18d887b22062f183ae6df3ce8ee285ded7274b36b848842bd11e3b7ddd126",
+    "backend/migrations/4_communication_messages.up.sql": "b5672c537d1ef0465a9d1b4eab4c2f39ff1f5244b01259f154b8ac73e6040708",
+    "backend/migrations/5_timed_deadlines.down.sql": "784550a142fd4ac5d55c8bbab26c12284468f4b40bcee5184664aea8b4281e37",
+    "backend/migrations/5_timed_deadlines.up.sql": "366790aae9fc0c734c00cbb46ac62503f9feb04041b50af83e9b929c709f5261",
+    "backend/migrations/6_communication_work.down.sql": "da95d664f0101f0da7893bd54c649c901f67540b130ac299fae216f324530b39",
+    "backend/migrations/6_communication_work.up.sql": "9af28fa540f8dc2bf308a0755bf2000a0a38e931dcd0cd6c71082631b7cb2b8e",
+    "backend/migrations/7_communication_daily.down.sql": "d79845e1394e64dfc045715df03d69f17710c6250ecd04584639acd1e8ab2ebf",
+    "backend/migrations/7_communication_daily.up.sql": "03885b510c9b7b4271279ef4d64220498c74bbf10e998f391ab79ce960e6e7b3",
+    "backend/migrations/8_communication_media.down.sql": "44eea999040517ff1459cafe070a72d5c645d10d2be5e2f0ba3b7f9ef48c0eaa",
+    "backend/migrations/8_communication_media.up.sql": "74bf7f94802e32fce77e58d4818941b82ceb80687c486afa79a486d1f77d6daa",
+    "backend/migrations/9_communication_devices.down.sql": "9d522d264d06b37478ab09d858439787432775b970b5ebfdabac7bb2614dcb91",
+    "backend/migrations/9_communication_devices.up.sql": "7444081ca84c5e27f5e3b08cd39a15031abe89b7af8d48e3f5a126a05909ea8f",
+    "backend/migrations/runner.go": "a67d8f7bfab69072e900a0f7648c2756d43daa97198d1f0c255487d7d09103dd",
+    "backend/platform/attention.go": "53ae14da41e6df7885e7637796e6423fd164886bb7c861ad75c34b27f4919bd8",
+    "backend/platform/attention_access.go": "5aafa49ac52edb53df290e692ea9372844d27a26b9ee00179b905acfef64409a",
+    "backend/platform/attention_jobs.go": "76bc77a114702294b74f2d41665dddb8aad300db157bd1fdb5c1bae7f1831f71",
+    "backend/platform/attention_models.go": "8096c4b0b87fc51040bdfb86c7c5fa0b7e58581b39fc1640a5cae945ab8a043b",
+    "backend/platform/attention_preferences.go": "1562d1f4a1c1dc814f83cb0d361b8da9fd04cee48b4e3bd154097f2215e91c2f",
+    "backend/platform/attention_producers.go": "87bdf3f83e2286e2c21967f68ff1c7333ce6b77d3d544854747cf2c6770f52a5",
+    "backend/platform/attention_reconcile.go": "9cfc50ea71ab048128300ea5dc265f911bec6580e6f8e0d7f992f9fc14717e99",
+    "backend/platform/attention_scopes.go": "ffa9a42696e3fbdf851fdd46ae420a9a87b70cb6fcf98864fcd25401ba22a277",
+    "backend/platform/attention_transitions.go": "486b6388a6c105da168e2d6504f2da689cce8e6e7c1acd7477e50cb5c0b09cf3",
+    "backend/platform/auth.go": "c061e840de6f71136c98623bd59f7646a32506932383476936be213db4413c5b",
+    "backend/platform/automations.go": "2bb6c90cd952144b050234de8d478290daf108e5d890696e8d515bb1572e6d9f",
+    "backend/platform/business_retries.go": "62bb0de40f462d34550d0beae2846b2c896fd2f9abed2644299639d5affbee29",
+    "backend/platform/call_jobs.go": "516758327e6e442be2e50d11694fa86c48df1e991a5f8038f70d6d74e7fcdd5b",
+    "backend/platform/call_provider.go": "f5fcd6f742f94621ff6b4440bde49fd47cb85ea5b0b758d6ca4a7ac22cbd4d73",
+    "backend/platform/collaboration.go": "72ba498780e55f32238d093b383faac7ce1b7fea1557f7c140e95f6cebaf9338",
+    "backend/platform/communication_access.go": "ed4a646754af0a787690388297dfe9002eb91c24ae19ce7c75e4443dabc85d83",
+    "backend/platform/communication_bundles.go": "95a4cee6bada785cc251d33b4dbfe2ef5740ca77158c8500266949c0130f77c5",
+    "backend/platform/communication_calls.go": "5801d95b5b4902db57923bf7c7dc0449c69ebdf6f9c4e5870f00d5e8d8819488",
+    "backend/platform/communication_controls.go": "c8e72b3e3422a9ea0f882e5ab1fb54782a59b9d24ffaf45dafbbe7eb31bb6a42",
+    "backend/platform/communication_conversion.go": "81590e8797abbe9a0e9600ee2638eee53d79c24942ce007fcb02a913ef87814e",
+    "backend/platform/communication_daily.go": "6ee70ef3ade7cf7845b37e3b4cea30f1fed2ae3653d3db280c144b07fa04e72b",
+    "backend/platform/communication_devices.go": "149b2dc7da8533ddbecba3e82961df91bfa24e4575897d1ea90fd106abb2aa83",
+    "backend/platform/communication_exports.go": "e2509c9c70e1092d7b1cc5c999b005746ebd5da1997f50c2ac71a4e27a7d52b8",
+    "backend/platform/communication_finance.go": "4b67bc3eee27805051bd951888ab8c4d74f7f77946d313fdcae66b4f783bd766",
+    "backend/platform/communication_media.go": "c1727c4d493ae20476a4bd7372cf86f0c52bf3e34ead50dee834f2aa7fc10106",
+    "backend/platform/communication_models.go": "35c012a1b4c55bbf2d637a73fc954b660eecefee8b836670e98666c78f43be18",
+    "backend/platform/communication_notifications.go": "a455782bf21c6382d0295fd03425992e7d08c595e62edf35b87691aaabe639ce",
+    "backend/platform/communication_outbox.go": "38d6e8127b1b619bfaba722feb623e821dae0f927843181bab8406281ef643ea",
+    "backend/platform/communication_projection.go": "35f2a32e075754d62dccf328f2330e04a5f222e95898aea576075a63228baedb",
+    "backend/platform/communication_record_revisions.go": "74b652b478c51436d9bd40334b9f9065a36c4fa6811231c1c863d4c2c5ace73f",
+    "backend/platform/communication_requests.go": "b4f57c131e5f2f5170189c9772f29d5a23b46f505652965532900857e66f858b",
+    "backend/platform/communication_retention.go": "fb25703469e11d5e507a017cdde64a841af795c413ec0afe6db869007acfc23a",
+    "backend/platform/communication_runtime.go": "b9f4a4a8546e8f09fff7e3618db88f3477e57aa8f797873a4896ea3af461df69",
+    "backend/platform/communication_stream.go": "487cc6666eddfe5c3e74a23389b787ce2789aeaeebb479eb55869117acc68ffa",
+    "backend/platform/communication_structured.go": "55d79f63edbd329e5880d921d638924aa1867e7ae69845b43349a07bfaf6f4b1",
+    "backend/platform/communication_sync.go": "ed45af2713e00da6e99d4a902a86abb9a84cbc4f3cb8b071589d98d5759cc0a7",
+    "backend/platform/conversations.go": "a978097501b9e557ef5b63e3b41a3e5ab35f59db7b26569d502d417e1ad0f3f2",
+    "backend/platform/deadlines.go": "0f26804262b253543d2473beb68d8d395176e5bc0ad3fcb70d08cac134ff4ea6",
+    "backend/platform/expenses.go": "e173e7e01af6819667da4b7a49edd87a106094e2fb4df8ce920d30892190c91e",
+    "backend/platform/finance.go": "51fc71cb9fe341c3e45f00e15f8b64504ba28a8cbc634aa600470fe206a6d64c",
+    "backend/platform/finance_assistance_attention.go": "b58718d8f52e9fcb359f07f68fc03a554ecb97fe63dbe3cfe545e166e90dda56",
+    "backend/platform/finance_assistance_history.go": "4b6e51c44c240256828041dcaf004c7e7b07d909f79647836fcc8881a588a8a7",
+    "backend/platform/finance_assistance_jobs.go": "ff8411164b690422786beb5954de4d9047d81c185de71b59820c8d58ee1028b7",
+    "backend/platform/finance_assistance_models.go": "c17b4eceb1a45b82868ad50f1eebadfac6dcc6596b06fa043c0373f94ac1e3e2",
+    "backend/platform/finance_assistance_runtime.go": "08f8bb5f05b2fcfe23a1e453a49fe1c546592d8a85edb2cadcaed4739d8639cf",
+    "backend/platform/finance_capture.go": "5ef7770a245cae57fbd816a5d45ed6465acf65875a69ded03583a3235630866d",
+    "backend/platform/finance_duplicates.go": "10abae7af439cb698d71702990062cf9d2a3d4e62299bfe75c0fb616241554e8",
+    "backend/platform/finance_extraction_acceptance.go": "e0d930e7613b0d2acdaf36ab65339e5f714abb1282ae0c546554b175b9523edd",
+    "backend/platform/finance_models.go": "d9c03adaf4afd8da71759b7dbcc12dafcfa6ef224dcbf596ae7dde4e36a27b02",
+    "backend/platform/finance_money.go": "6758d5702b76195ba3db61b8e557d3e84cd95f6c268b489519fb9759ef0ac703",
+    "backend/platform/finance_mutations.go": "83895b559d52fefd82684ebe58746bc55d2a4f1166587e05fab585eda16d45df",
+    "backend/platform/finance_ocr_tesseract.go": "6e3410588122b0d45ad10898e874aa60a5c5870433fba8998c92ae2b6690ae56",
+    "backend/platform/finance_receipt_assessments.go": "3e35a589d7f31851d1751317339aea5b27c9d21c78b4de28578b84e3f660f7a3",
+    "backend/platform/finance_receipt_extractions.go": "4a8e5b59e8f72a65d68f4547aebd48df0b2e40bb81750f8c0223ea6aa4a783f7",
+    "backend/platform/finance_receipt_intakes.go": "36039cf21424beba44b417d5039762c7ef59fbee9ed6413b2fdb3e81f3d55530",
+    "backend/platform/finance_receipts.go": "02e1c2677b05a9f096090d7536802d422de36482299b910522a4f58613b084f3",
+    "backend/platform/finance_reconciliation.go": "f55c452a405c6576eb3e347357e258262570a8a483801151b20891618b775b4e",
+    "backend/platform/finance_reconciliation_history.go": "b26cde276d16600f4af39c70f8954fd3c8690266fc8ef093b2312103933a22df",
+    "backend/platform/finance_statements.go": "dc65e6651a46f0ebb61910713447bf3430b559e8774840ef63ff993ff7afca14",
+    "backend/platform/finance_workspace.go": "c5f2f0e7d08c6a8f4e37b1c4569be3140fa0cb622782a09fb5a2250f65c54d9a",
+    "backend/platform/local_provider_budget.go": "e1a4d4f25fcfe15eb296b3ff4c4354bb8ff27ac43c9bc5a0d29c11a933f077e8",
+    "backend/platform/media_jobs.go": "afc5c7e8c4316132d5ecb7e9dbeb33b18a8641ea1157e4627aa215ef589d61f2",
+    "backend/platform/media_storage.go": "a2978ff4042d6e15e40541796b949312c6449aecfdc07aa0ddeff6ac1b587b9e",
+    "backend/platform/messages.go": "20226d60a905372a6e7844593408ac650970596a355bf9308c3c7eff2ddb751b",
+    "backend/platform/mfa.go": "2822931f6cee67aceb4fd8752ad384500445848d638352763e49ecc18ed0741d",
+    "backend/platform/models.go": "46aef06ecfbb19c0901fe04a17079c487ce63c2a0292eca81c379afeb3d4faea",
+    "backend/platform/offboarding.go": "ba777488ea0a2a62b32daa581729f5757ca56f9f13299b2c5616d7eaf0e72e8c",
+    "backend/platform/organization.go": "ecd2615dfede8a9b7f41c18ad8f0266fa542893172c962a6fb4a4f49ec10add1",
+    "backend/platform/permissions.go": "e3a2c2ca78551eaf369fb9202e7bf83a4af9b99f15003ddb8c6919d0f4fd3323",
+    "backend/platform/project_milestones.go": "77e7d783d9fbcae8bf32e3779fae0f164ac993ceaad4734a84cd995d720f7874",
+    "backend/platform/push_providers.go": "08127f464ebc35e317e5c754b60a56f08fed203b8ba8cd814d26986b3763eeb7",
+    "backend/platform/read_metrics.go": "86294fa4afda6991cbb1de0fc7683a371e7e15b1f1e61f07d2b5916437adc265",
+    "backend/platform/read_scopes.go": "17f3465b9f8291d78b96d61b994d1a1a3b9eec9e5c3b89baf8cd049cd8a208b8",
+    "backend/platform/report_artifacts.go": "da5c973a9c943c140213c85396923824a30f7342d72b9f5654eef2dd96a3b8ae",
+    "backend/platform/report_export_jobs.go": "0bbe5113b3519372f79407755f6f2664cecb5b1988fbf4cf80a9b6711d02b32f",
+    "backend/platform/report_export_models.go": "658b61cf79b2ed8db472f8b34f4cf346edc4e129682bcc71edfbb359ba6f7631",
+    "backend/platform/report_facts.go": "0afcee3aafa7c0a14999f27b5416b4c5415791e2b568d1d0812d4e250240cd10",
+    "backend/platform/report_history.go": "50af7fe8533f3ee53ce6bc2d51233bd14f7b85154ae88216bed63f357b8e60a3",
+    "backend/platform/report_history_access.go": "094cb6116182011a9f640f6ffda5870825c90a0d26cd42a5b109659b222ba569",
+    "backend/platform/report_history_models.go": "8a0005a247c413c32fb269e17a6ba6df0e6769b01bdb3a9fabab11567436458a",
+    "backend/platform/report_history_reads.go": "b4b3079db94bcf75f3cffa118c8bf220db44d79d73e2d5254eb12512be81fb9e",
+    "backend/platform/report_orphans.go": "4f99d5be12e8bd330306fc04ebe92df2f7275ee01856ea0615dbb1701d1ed2ac",
+    "backend/platform/report_reads.go": "820d7d63ebef14630225e256c612f637b8fa39c1174c73ca3b99994f9c94f1cd",
+    "backend/platform/report_runtime.go": "38349a0dbd555e3515167686a9fae154ad5765cc65422b156f92f634c72620c2",
+    "backend/platform/report_schedules.go": "ba4143ef6a3f6f555b81bf4bf38057a48cfb63190e754d888174869d3fd4ca7a",
+    "backend/platform/reports.go": "0a53c7062de7e39d3d9f5f272c2f38d63a1a7005941e11fe971df1c776d0b79e",
+    "backend/platform/saved_reports.go": "255167c31abe3a2e30855d590a4dfb88680a890ef215b52c69ce2d8ac87cfdcc",
+    "backend/platform/seed.go": "0931577d90438987ec8aee48c6fbb1a1af0f6245a9b73344a59b64ea66c512fb",
+    "backend/platform/server.go": "5f5bf4e5857ffef79602c19261bd014f70d556504993d87ecc4d25d8aad734ec",
+    "backend/platform/task_evidence.go": "ee3df25d21889cf7b617173ac5981f0e02903fbdcf13e565518fdbd0e2e1aba1",
+    "backend/platform/task_impact.go": "9853e650f478fa8a7d56edf3740e34694461cf35a01a0756062527ed85a5b5aa",
+    "backend/platform/task_mutations.go": "42ebc7d86cd1f7ce026bda2b8362e401d3f2120fd9745b5e6366d8a03a715675",
+    "backend/platform/task_schedule.go": "539f6961fbe941a623dc774808e0fcf58470b0fd546e010250dfe838c748a019",
+    "backend/platform/task_templates.go": "5c4ec3d6db59443c01f8aff98e1d778447519dc1099a5976c858ef3e36a597e6",
+    "backend/platform/tasks.go": "1ed05032c9221eb60452ef1640513cbc2985249f401117d82ac86e4b5cede904",
+    "backend/platform/workspace.go": "86429cb208b2d3bd0d4e8ed97fd2ffc505a9f833f1691f7d849a89cd7381ad81",
+    "encore/api/api.go": "936703278610c94dcd76949630c97af496aa90ff697bcf2ebdd9ea22941ab470",
+    "encore/api/migrations/10_communication_calls.down.sql": "9e83ce58d8829389c6d091ae47462209bb47b3720ebe701ffb5ea5d8d04500fe",
+    "encore/api/migrations/10_communication_calls.up.sql": "8c70d5fbf6c1249dfc0104f94f7c77dfb418d6c5bc40e963ad2fd1a25f8f47e9",
+    "encore/api/migrations/11_account_offboarding.down.sql": "e31268c423a4de97b3bd49a222f765c4eaa703272f4c1076fa910cad96b6d43f",
+    "encore/api/migrations/11_account_offboarding.up.sql": "6937de37c89e884cdf73b19efaa68c5c668000463b0a8f83b2a0da73224a85e6",
+    "encore/api/migrations/12_communication_structured.down.sql": "5d0cf65d24ed7b3a6d68ee3408e5138050f6748300ea0b543c2e7f2c4ac6dc9a",
+    "encore/api/migrations/12_communication_structured.up.sql": "6c5ab5ff77140d496e6f1052aedabad7166ad8022ceae49c245da891ec2f1563",
+    "encore/api/migrations/13_communication_intake.down.sql": "d8cdfed751d1463024ffbbfb0624a9984cd07373b27cf4c95b39b731a16b2152",
+    "encore/api/migrations/13_communication_intake.up.sql": "e5593d2f25b7e3081e00887fd38a5688a65b32ab3e05217dd1f94fa1f87b8a3e",
+    "encore/api/migrations/14_communication_record_revisions.down.sql": "387b500dcbd85b60cb009b8bc8a92b2d6273c4b31954bd49fa5b282ae70c3504",
+    "encore/api/migrations/14_communication_record_revisions.up.sql": "1157bf54b775ab73d8fd0eb2dc39565d415f126a20a3dde60fa58b4261710c18",
+    "encore/api/migrations/15_communication_call_jobs.down.sql": "46d4203ed9849f327544a84961b8a710e90e037e903186c55e022c401502b113",
+    "encore/api/migrations/15_communication_call_jobs.up.sql": "da2bc6b6e70af4f3cb27928d264f0626e75a262e4e77c5f9375d982c14706c61",
+    "encore/api/migrations/16_communication_finance.down.sql": "49f6db1a2e38ddb44a5a4b2dab5f4b4f5a81eb1d0186668bbb73010d3861a6bd",
+    "encore/api/migrations/16_communication_finance.up.sql": "797ef4aede0f31cf6787facbe95aa6a8941d1a4dc8ea3b0a2589f42b203cdc8b",
+    "encore/api/migrations/17_communication_controls.down.sql": "05976179a1e2784540ef50ef3853ab98660414cfd070ff8a19d5be742ecbf9bc",
+    "encore/api/migrations/17_communication_controls.up.sql": "d9b677ed4d5e9a6a5358b3fa900d50a904241dc06471d3b04a75adf8cda868d0",
+    "encore/api/migrations/18_communication_bundles.down.sql": "a3e645b2913da95baa5f84f8298d96d15b3e27be5435887a7bdcbbb147303164",
+    "encore/api/migrations/18_communication_bundles.up.sql": "1a010b775ee9a3221b16121a3058fdfe3c81c071b93c177f0eb210c0e0a2d017",
+    "encore/api/migrations/19_communication_upload_retries.down.sql": "ada4480be033a792132ac3710e70fc8b17cf632cdb3ef782ae7b59d6effc4538",
+    "encore/api/migrations/19_communication_upload_retries.up.sql": "72ab862dd1b2eb91dfa0f1a81f3505e6bb10788e62059317a919e092ca2bb58d",
+    "encore/api/migrations/1_initial.down.sql": "2ef1edfbc7b654d00d84f061f55652fbe93124fe375d1d713c7caf4d9822ebb5",
+    "encore/api/migrations/1_initial.up.sql": "4502929647861a5abf59509dda73bc91ac2f847f190a9c37419b5627e361f8b5",
+    "encore/api/migrations/20_authenticator.down.sql": "cdcb1a28388a59b9be16091031cb25879ad270cfc907d6792f75d1d95a1c2b06",
+    "encore/api/migrations/20_authenticator.up.sql": "dbc7d66ca427c3eb394569803d91d54142ff7b983fb06b1fa5415c25bf961281",
+    "encore/api/migrations/21_communication_push.down.sql": "e752c4bb22bad1a61559116b04e70bbe2886933f0763624d16632b860e0b8de2",
+    "encore/api/migrations/21_communication_push.up.sql": "78e0b50cc41c146f5c83f1d24c191062876990c2f7d308858191e2c00d57e9e8",
+    "encore/api/migrations/22_communication_retention.down.sql": "0f4e90464f1dee451289d927b955f0e08558e20e4e93710b27b19ee9a2a71b94",
+    "encore/api/migrations/22_communication_retention.up.sql": "2131b21c9a18b09172e126bce6f0f8fd88c17fedeacb9c55ae186a7a7b063b08",
+    "encore/api/migrations/23_communication_call_outcomes.down.sql": "fca11502b78bb224d05672aa6ed0b4bb3cdc863584a7e72548f91881ff72fe12",
+    "encore/api/migrations/23_communication_call_outcomes.up.sql": "1c1fb5a47bf6fef5bf68aba12541e69368995e83fe85f97d8c5525ba2f685d52",
+    "encore/api/migrations/24_communication_exports.down.sql": "e6a2e8f313c6004dac343f3cbde8372cfd9e7d9e39b15d4d2b7549baa0ad6b2f",
+    "encore/api/migrations/24_communication_exports.up.sql": "5c61a6ad0faa43ecfda8adf261367a55ac4119ff6b645c1f4e6bd07b807632a5",
+    "encore/api/migrations/25_measured_task_pagination.down.sql": "dc7e8f8fd430cf4f05d48b0930c06536a96b95541c90f61e51c99c665b810b19",
+    "encore/api/migrations/25_measured_task_pagination.up.sql": "0e572e3e9d271feb12d8655a010af0b6c8db60b1a1ef80506125dc266f4c117e",
+    "encore/api/migrations/26_attention.down.sql": "b9321c7bc16374b1040c3f6e15516b8e790337c3556289b538def57a6db172af",
+    "encore/api/migrations/26_attention.up.sql": "83738a2d28f4a2110ee601caeff5504ce4641d53ffff754b6e4cea21338ccf1b",
+    "encore/api/migrations/27_attention_delivery.down.sql": "f8b123304f2d7674ca42cc1a6118394ee7a7fdcd439f1346428fca582c41f38d",
+    "encore/api/migrations/27_attention_delivery.up.sql": "d46654fa71034d1afbc17cef5289c961e81a8b3747aa4f02721faf085f13f14d",
+    "encore/api/migrations/28_business_mutation_retries.down.sql": "207c57e722dba2c264e41fe06cac028a31e8bda756f31f24d25be5a85680dbb5",
+    "encore/api/migrations/28_business_mutation_retries.up.sql": "d9832f6a7f2ffbf8c8b38bb9bd8c0d33c2835c6432ae4cb45fee104855eec7ac",
+    "encore/api/migrations/29_task_templates.down.sql": "c222e58301948e669711c2e45ae8f88f9459a877b237516ce49b8e56ab35a9d9",
+    "encore/api/migrations/29_task_templates.up.sql": "4ee1a520ca830e733c1f1ad61d052d1430b62cb21529f498725bb3301bd65245",
+    "encore/api/migrations/2_department_finance.down.sql": "cd2fef467bd3b1124fa441fcd212fd5ffc67e9a335ae57c21ee0645f4bb41432",
+    "encore/api/migrations/2_department_finance.up.sql": "e0c46f3d6db61d4c85450a69314bed36f5caba84b47db4e9b3fc31be96a46646",
+    "encore/api/migrations/30_project_milestones.down.sql": "f2087fed684713aa1d6c9e8995df5c3eff58f44324553c0e9664df43f2f39793",
+    "encore/api/migrations/30_project_milestones.up.sql": "3f6ae749f49abf32ea2e692d9db207f68b70e302f338e8498744655cae129eec",
+    "encore/api/migrations/31_task_schedule_proposals.down.sql": "b4a1995bc9f660056c986860367bce46dd47532cd2f2af1af41a94c1a1a429a7",
+    "encore/api/migrations/31_task_schedule_proposals.up.sql": "00fe1294a1f8b129a5711b30e1d270532f467e303beb2383f4dc2c73a6cc264a",
+    "encore/api/migrations/32_milestone_submission_history.down.sql": "0eeee310b35f9e998587376a07900ca3bc3da22e4451ddb83b1dc36f86da9a89",
+    "encore/api/migrations/32_milestone_submission_history.up.sql": "fdea426d8f62b108857ff0a46a1df74db6385e75a9e1c9a04d9088c1be3f6ca2",
+    "encore/api/migrations/33_report_history.down.sql": "c6a28a42ee395256c7227b85bd09a3b9457bc8a3d5b97efb24118c0a471eb42d",
+    "encore/api/migrations/33_report_history.up.sql": "1872774a6385ad69294218181f5634436542975cb1cc636186bd8243e8ad7af0",
+    "encore/api/migrations/34_historical_snapshots.down.sql": "32472f6f13590662d851325eb5c9803ec108321b971d4a8bbb338256e02ed871",
+    "encore/api/migrations/34_historical_snapshots.up.sql": "fc35eb23c70cf65e461e32ec5c19c925b0f5ce4ccc395e80adc1b387dd3efd45",
+    "encore/api/migrations/35_saved_reports_exports.down.sql": "88e51a56c036fd2cb99892cdc3e4e054cf407fee2ac07acffc8e876ff1dfc208",
+    "encore/api/migrations/35_saved_reports_exports.up.sql": "84630af2ba39c92300579334231ac2f37d3870b92d7df9982664cc94cdc55d24",
+    "encore/api/migrations/36_attention_report_source.down.sql": "8bcd75623f7e3744f1db7304eb38822b7566b19c7736d84cb6b326d59c993f69",
+    "encore/api/migrations/36_attention_report_source.up.sql": "8463727f0a2d9576d7fb68f1563fa4164c750165517accf5fcac657f8c8709cb",
+    "encore/api/migrations/37_report_schedule_failures.down.sql": "eae59cf56e4246c1473d459fa166bd0449797a47723904b81e12c8bdde38324c",
+    "encore/api/migrations/37_report_schedule_failures.up.sql": "b99cdfaace0fed34e21f33b9ad8b3536220961198774da37ba9576a63a82450a",
+    "encore/api/migrations/38_finance_assistance_sources.down.sql": "718e80ba17a9d4e1bfc872d0834036bfe0270e2d4b5e8b7597f11a7ac11ef455",
+    "encore/api/migrations/38_finance_assistance_sources.up.sql": "8a558b4ff9b8aa7862dcffae56b361d4b9f18ba06f0e79a3674fbbc5fb0ab9a8",
+    "encore/api/migrations/39_finance_receipt_results.down.sql": "e0125a1435e1716144ce7929058ff8e4f3defc16b6a65eb325e0885178c59901",
+    "encore/api/migrations/39_finance_receipt_results.up.sql": "93d72ab9e82d6983e608f2c83ae31e05e627a1c091271e37f5b5ed437be89b40",
+    "encore/api/migrations/3_communication_core.down.sql": "f53ab8a277b705598e0473db48bf1477d99f77f9eb72c1a23c6bd65bd1abd87d",
+    "encore/api/migrations/3_communication_core.up.sql": "508fedd724b05fa93fcf0d3c867f46e200bb87449ecbdbd03840ca3bf3aab2c5",
+    "encore/api/migrations/40_finance_receipt_acceptance.down.sql": "252a978c416b8a58c6d9356d3b46d86a86e9bb01416e486692fe20937ce405f5",
+    "encore/api/migrations/40_finance_receipt_acceptance.up.sql": "b6328bd5a5af03146dbf6f76127a5ee98e9a47d80955eeba07b376c660d7455c",
+    "encore/api/migrations/41_finance_duplicates.down.sql": "ae89d716b902bf16e660eeaa377497a62908f4375ef0454294a71610c8581655",
+    "encore/api/migrations/41_finance_duplicates.up.sql": "abc7768aa6dd5baec5b55b49d2d2edd7a319c9c70a5f9a306abd2873aa38c0b9",
+    "encore/api/migrations/42_finance_statements.down.sql": "45cec8160089af321a3089408aa7fd3cd1c04eec18f8320e88ecd33c2449590a",
+    "encore/api/migrations/42_finance_statements.up.sql": "1a692253fa2cde7d892e9004e9776e4f42c9765bd81aa164c4ab58046df29424",
+    "encore/api/migrations/43_finance_reconciliation.down.sql": "61beda792514a6ec7b01b471bfce817db20f65c12e49b64d830fac987f9a41d2",
+    "encore/api/migrations/43_finance_reconciliation.up.sql": "f16980865d0da633b4a45e4caae4f93b42a044e4141a26a5d59fa7ec75098312",
+    "encore/api/migrations/44_finance_capture_reservations.down.sql": "666bb4863d005cea699c7760ab827a7351d260fa027756bf946a02eef80316b0",
+    "encore/api/migrations/44_finance_capture_reservations.up.sql": "ffcfc89bc7f92a1e902c88856ebb644a953cb15d045dfef7a1df2c9871a5aa4b",
+    "encore/api/migrations/45_finance_assistance_attention.down.sql": "d6d7786854f0412af72fa8eebd9359c35a6b85d0bfef3cb4b60be46b81fe1bdb",
+    "encore/api/migrations/45_finance_assistance_attention.up.sql": "317c839984cf0ed05d46e41a738c4efac7a5dc9dac3cc12f6242ca4b28b5e2b0",
+    "encore/api/migrations/46_finance_assistance_history.down.sql": "c648951ec31c0fe930d4d2fed845020b7af2aa275f766e373eb0d4f6430d3647",
+    "encore/api/migrations/46_finance_assistance_history.up.sql": "3e847e044a1e9fd2782d3288f6613c7d98ec2ec954d8f67a8da2c295337e6502",
+    "encore/api/migrations/4_communication_messages.down.sql": "90e18d887b22062f183ae6df3ce8ee285ded7274b36b848842bd11e3b7ddd126",
+    "encore/api/migrations/4_communication_messages.up.sql": "b5672c537d1ef0465a9d1b4eab4c2f39ff1f5244b01259f154b8ac73e6040708",
+    "encore/api/migrations/5_timed_deadlines.down.sql": "784550a142fd4ac5d55c8bbab26c12284468f4b40bcee5184664aea8b4281e37",
+    "encore/api/migrations/5_timed_deadlines.up.sql": "366790aae9fc0c734c00cbb46ac62503f9feb04041b50af83e9b929c709f5261",
+    "encore/api/migrations/6_communication_work.down.sql": "da95d664f0101f0da7893bd54c649c901f67540b130ac299fae216f324530b39",
+    "encore/api/migrations/6_communication_work.up.sql": "9af28fa540f8dc2bf308a0755bf2000a0a38e931dcd0cd6c71082631b7cb2b8e",
+    "encore/api/migrations/7_communication_daily.down.sql": "d79845e1394e64dfc045715df03d69f17710c6250ecd04584639acd1e8ab2ebf",
+    "encore/api/migrations/7_communication_daily.up.sql": "03885b510c9b7b4271279ef4d64220498c74bbf10e998f391ab79ce960e6e7b3",
+    "encore/api/migrations/8_communication_media.down.sql": "44eea999040517ff1459cafe070a72d5c645d10d2be5e2f0ba3b7f9ef48c0eaa",
+    "encore/api/migrations/8_communication_media.up.sql": "74bf7f94802e32fce77e58d4818941b82ceb80687c486afa79a486d1f77d6daa",
+    "encore/api/migrations/9_communication_devices.down.sql": "9d522d264d06b37478ab09d858439787432775b970b5ebfdabac7bb2614dcb91",
+    "encore/api/migrations/9_communication_devices.up.sql": "7444081ca84c5e27f5e3b08cd39a15031abe89b7af8d48e3f5a126a05909ea8f",
+    "encore/go.mod": "fa0ec1b3195cf55afb75726a725e0f0ec5bbfe5d475e95ee52d36f875b5ca708",
+    "encore/go.sum": "bff0dfc5ef23e5be7f889ecdd79e5b2f300f8477cb51682a03f419d77659524e",
+    "frontend/package-lock.json": "d2e4ffdf670a79b0830598b93bc6ffd31ebe29cafd5b85adf25c1a8b8caf218e",
+    "frontend/package.json": "c9599b2181a298dd33f84a54aa8b4fd5d15cf191905c7ae7d7d8b6e4e5fca8bb",
+    "frontend/src/App.tsx": "b21a38eefa70e15754fad15458687e7cf02db4c673cef7866a471c250f7f143a",
+    "frontend/src/communication/Calls.tsx": "75df804e04d699a61ceada9db1e4ba5a05e946f2f5345b63dc14e7d1a65e1f67",
+    "frontend/src/communication/Composer.tsx": "65aafdda968cb50bdea2cd95f711c7c260ed9f438f24248c2caecaabaaf73cbd",
+    "frontend/src/communication/Connect.css": "4a376d7fcadad52422c725e338f32b2b960b7e746bf2fd12e444a1d6551965e8",
+    "frontend/src/communication/Connect.tsx": "4515674e0bf5998ef6ea231692ba4ff3e0e47ef97ba745a6a27473c664d78003",
+    "frontend/src/communication/ConversationSettings.tsx": "d0981ea02ef7bf0a650078a1b2fa5c5946ba7fdc6406c1852ece8aa0b31e7669",
+    "frontend/src/communication/DailyTools.tsx": "87a4bda4617145e84201927e264d8b5ef56717b4238a5539298553eb55c56c20",
+    "frontend/src/communication/MediaComposer.tsx": "8cf6b5ace9676620f14b382914a9869b49e36fc7ccad1a7752cab30acfa1c794",
+    "frontend/src/communication/NewConversation.tsx": "d69b8422a2a0f571969d75c4449ca01783b26af3dad5d85dd6c716570237d2f6",
+    "frontend/src/communication/Structured.tsx": "35051f084cf25c3ff369895e16fc8ef384759fb912aa98ed73950a688e64029e",
+    "frontend/src/communication/WorkflowTools.tsx": "3ca464b62aa27fc43b2ececce3f4f5fdc50b0ad543ff07ae485c7917561d60be",
+    "frontend/src/communication/api.ts": "4ea2df644331c60ed0cd52c5ee2fa614254f53906f020d88acf3f2a6aefc3c5c",
+    "frontend/src/communication/drafts.ts": "06a35ea795f09579198c28665b6a62703cd5788d6f4c1b1d88b36aae57ca23b4",
+    "frontend/src/communication/history.ts": "ad1e2bcdf4f3c37f3e363581e5733d7b351717b019ecca54bb4278917ac3b901",
+    "frontend/src/communication/store.tsx": "24274caea021e0661fd23b4de48f554091dad027220acd673093fe49168059dd",
+    "frontend/src/communication/types.ts": "15c1888f457cd4aef8c28ff9d83c2271a7832c04dc16c6e6e9f0f78b754cde44",
+    "frontend/src/components/AttentionInbox.tsx": "460a254d7ec68111a7af633c9afba341135fddb1cdd3df70fe24eb89c4c1b883",
+    "frontend/src/components/AttentionPreferences.tsx": "621519a70f0815bc42fd52517134899c0a2b8296773489fea3a2980cd4ccbc1e",
+    "frontend/src/components/AttentionSource.tsx": "10e69e2131b32528c97d0d6cb8364bb643ed696c60081f9d79deae231349e28e",
+    "frontend/src/components/AuthenticatorSettings.tsx": "7a2a6f2e1edcb293e8f158898799b2e9586dc5dc121cbff09fb4ef6368a3ee45",
+    "frontend/src/components/CommitmentFields.tsx": "ffae050906f1750a6c9a01ed5fc0a730a928653d20ecb53a713014c8d3a9f590",
+    "frontend/src/components/DeviceSessions.tsx": "dace185cdacee757f7f69b22488d60cd5c8d11add1d2c4c312e76133d1decf49",
+    "frontend/src/components/EntityForm.tsx": "36b27610e497fbc6c502e1c48e167bc270ccc061d1df3c778967a6ea85890667",
+    "frontend/src/components/ExecutionRecovery.tsx": "31b33c7bd9ecd18c10dd284393867da724b617bdda54de56eacd6325ef5ff31a",
+    "frontend/src/components/ExpenseReceiptAssistance.tsx": "bcc1afaa8cfcdad3933732c40b70c46def49dba43de2c68aafacead17acb06f3",
+    "frontend/src/components/FinanceAssistance.tsx": "2d80dbe1b7fad6db4ba53497531de790577cad16e619c5b0410f44c33ee4adf0",
+    "frontend/src/components/FinanceDetail.tsx": "0609992b14ce63c6034d572ed2ae58e6813e7c12468d91d0a2ff39f19fa5aec7",
+    "frontend/src/components/FinanceDuplicateReview.tsx": "915819e84bb93b459c158ae54905ba7cc50415dd571f7d19e079dccfbf915443",
+    "frontend/src/components/FinanceForms.tsx": "1079575e59d3773df1716277494eb123eb5b537d18ce7d345a2a5912866ef6c3",
+    "frontend/src/components/FinanceReconciliation.tsx": "6d10fe0fac789f2f9c1982797d415c52385c17832b58e953e9646fe1c4e11ad7",
+    "frontend/src/components/HistoricalReports.tsx": "0278f35f4415c2e6f7edbed423013c1ae07b0ad95ab19c0ae1219002a2eb487e",
+    "frontend/src/components/MessageTaskConversion.tsx": "6a24485cd3958e292610e2e566fc4c60026225ab242b0ab6b89b56fb4f12c39f",
+    "frontend/src/components/OrphanReports.tsx": "6bd3b830dd523a773573eede2df7869d79976b6152a8e6ddb22cf1f5eb3de8db",
+    "frontend/src/components/ProjectMilestones.tsx": "24f0f49a5f2d7762e78dc5fcae08eb99a5259eab6c1d9961a99c7620c5e931f2",
+    "frontend/src/components/ReceiptExtractionReview.tsx": "e02cf86208aaf6f27de4218f10ce465258f314e5d6708c5038239b48b349b77b",
+    "frontend/src/components/SavedReports.tsx": "eca467dce9e3c491e235cc68854c04e025c323de5cc6ececf5a6c88885f17434",
+    "frontend/src/components/ScheduleReview.tsx": "66c01da4cd6a7aeb036077defd023e8c4652612537f89f8f1a4720c48f1c787e",
+    "frontend/src/components/StatementImportReview.tsx": "5c41807a4e5dda8c034069a65a03603f06ab2849eb9659309e1eddf257e1ff46",
+    "frontend/src/components/TaskDrawer.tsx": "5a031af322dee8b8d8b8a0dc181e2a5efea25aa896a6da8c1a86bec68c13447f",
+    "frontend/src/components/TaskImpact.tsx": "a2007f2b04e409331841635b8c06ae867808bab52a531ce3495f4c97343af949",
+    "frontend/src/components/TaskTemplates.tsx": "310c94b8b06bcdc9ec8062844234559de6617d8274ceb9d5fc4cd0728efa3296",
+    "frontend/src/components/UI.tsx": "b364253e703d01c0f0c4372a266fdb83c993f9838ef1e1842072a90d6205bbe0",
+    "frontend/src/components/useRecordDraft.ts": "a181e03aa7ee7a1c6dfa2d4c94eb88145802a34f1eaa5a4f231fb3f2c601c7ea",
+    "frontend/src/data/api.ts": "4098ba3b177182c2df6de069c337690ef3d6b92032213f4a972af9522b089577",
+    "frontend/src/data/attention.ts": "d3216d402f868ad24a6f46bff64eb8c0bea5ff7cc6dad6ac48a8eeca15f9a574",
+    "frontend/src/data/attentionInput.ts": "6fe02d1e3efda4647878fee29b6734df25ef8f180b722c96b0f96a6ab1415928",
+    "frontend/src/data/businessAttempts.ts": "eb9ec5ca92bb31cef43677341e090aaec5f390aca5a71eba71262a41a090a901",
+    "frontend/src/data/deadlines.ts": "92344102c36ba9da02436f67952ff073c0e75812b6fecb2e77d3e8c76d9bdc4a",
+    "frontend/src/data/demo-finance.ts": "7ffc848dc105cfb99210010f363451dc21b9c2984b9af7bba564614861e1ca6f",
+    "frontend/src/data/demo.ts": "ce830503cbed998f2e9fc82afb42456ea8ca62367cdcf1d23826c13146296796",
+    "frontend/src/data/execution.ts": "86d643fa25abeb5daf6d5918b2c176817cf70ff5986730ad5319d54a3dbd44dc",
+    "frontend/src/data/executionInput.ts": "e7be22cc3f1044b380e102b7ab4bd98a3ca9284a8e6bb2ed7e96d09e6defcd17",
+    "frontend/src/data/finance.ts": "705e94c67bfff7f301c5207e9601cad9a44ec7e867ad56f424281ea8c0905243",
+    "frontend/src/data/financeAssistance.ts": "710ee468b89ba989a9f215864d6365f06575151ba151bc5fb6517bd0a3e52df3",
+    "frontend/src/data/historicalReports.ts": "20abda38cb0cc1ad0f48a23309b3e636d02bb310fcf3cbed645b77b152167189",
+    "frontend/src/data/imports.ts": "3ce12fb78212f1e83f5e3a86666e53a4db57bed4c11b1c66672122930df1889e",
+    "frontend/src/data/metrics.ts": "a3b28a79653fd5fa37d849b328cc4fc280ee49bd0bd9b0269429de73e00844a2",
+    "frontend/src/data/readScopes.ts": "e711b4a44b8994ff14521c3fa92aa578675226dc286cd65b9cdb223c596f7bb4",
+    "frontend/src/data/reports.ts": "4ffe65c9da462776790420c8025769920a84206f106eab470ea6379db464415b",
+    "frontend/src/data/sample.json": "c030eb6317a5a8f4972c851679325fc9ee7ffb0e47e7003d780bce1ae2280661",
+    "frontend/src/data/useHistoricalReport.ts": "d973f39d44be5acfc09125ef7f7f57a49f57229d4125eb8f5b782aa6772421f3",
+    "frontend/src/data/useTaskReport.ts": "4e562b91aa4660292061c56509c685f66f854da787310a91d559eaa6f0621f0a",
+    "frontend/src/main.tsx": "ed69ae5191ca6b1cd3bcb472143f12d778ab131d7995e204cbc526fe9f997300",
+    "frontend/src/pages/CalendarWorkload.tsx": "088f0ab0c1413b5a19f59ee0a6ab88e51849229316b3e01c162e8dad23430b2d",
+    "frontend/src/pages/Finance.css": "ca00b50038461d81d710bd75e70dd6d646dd115b123fc5a8673c2ae86926defd",
+    "frontend/src/pages/Finance.tsx": "d6903fc5a2a0aacc7315e02fb053f921c1e57775ee43a94b4410c867ab1703e3",
+    "frontend/src/pages/GoalsReports.tsx": "e7fa67e52bbb26451f1d2f305e9568c6e3b18946c0cc166ef6eb3fa1db95e684",
+    "frontend/src/pages/InboxSettings.tsx": "9feee49aab783682370514044ded3cd5d6f5075a8ad13d7ba26c92375780b3f7",
+    "frontend/src/pages/Organization.tsx": "4a31d5c4864beddea8a95f8bd83e25fcc99c56a35e68a972a27d1ebc259d29b7",
+    "frontend/src/pages/Overview.tsx": "3fc3ab844ee0dfacfe99f1d1505b676611018c5c7facd79b8af9b375e0509b9b",
+    "frontend/src/pages/Projects.tsx": "9b700fec1e0ceb155a1a996fb22f3e2b4924e351eb32af5fd9f5b58e0fe14be9",
+    "frontend/src/pages/Tasks.tsx": "4c6b11b768d5d739b3d164f75dd5af80e8d8fb13a45289fa00a9a4e65ae513f1",
+    "frontend/src/store.tsx": "fbda3e20ee73bcc843bf7ef280379ba40a44c1c7bc1f3a1df48ed2caa838e190",
+    "frontend/src/styles.css": "d743ba4aceaf4760b0a67bb63d890925cca7d2a5baf5038a22d806dfa3920dde",
+    "frontend/src/types.ts": "c4f4c055357c184671a0889cfd87d9ea40e0cad21aebb000e12fe4850b28785a",
+    "mobile/app.json": "d916ac5b57ccef6ffe89f994a4524c0682e2ac6605ebad43d4a66c2556bfc29e",
+    "mobile/package-lock.json": "c5f6eb506c30dd3270af880f7fcc898413df22ecd0850a90c598c32777854818",
+    "mobile/package.json": "f3e40d3888d3290ba96091b15dd8f5aa68224abcc2729f8f60f2fe2806d0aa4b",
+    "mobile/plugins/withCallService.js": "33bd4578bce36d11d39b2aa5839c3a73f4f576ac87d1ee6c4d6d4e693b2e8bea",
+    "mobile/src/AccountScreen.tsx": "b57f0b40f1b91b7c1918deba86b53903842cbe3a7da0022371d9af08b9ab285f",
+    "mobile/src/AttentionInbox.tsx": "63d657193b48464560b537c02d0578ba43447d21b454601329434f3be699d210",
+    "mobile/src/Calls.tsx": "15294632cc6ec08a08b9dc2009801a7d7628099600875567e878e360c9a66712",
+    "mobile/src/CaptureControl.tsx": "81f0055001f2c366f2fd38cbd0e40c00fb609ec228fdfe3c9561236e7b03b6bc",
+    "mobile/src/ChatControls.tsx": "3f09a7516c22ab1c620d9a7404eb24716368e8a33a3ce38afeb76ddf576c6ee1",
+    "mobile/src/ConnectList.tsx": "8318411277e18d54af82b4cdf2e8872ef2a5fcbe6b1a89bd89d70b1b1c03cec2",
+    "mobile/src/ConnectUI.tsx": "54ecaaf373d55c4eeae894aac9e6b3ee69306c2db3accb3b590848eab55013ec",
+    "mobile/src/DeadlinePicker.tsx": "136086a7eeb4683a74582a30ab69706d25cfdf06fd989816fbefaa101f2b091b",
+    "mobile/src/Execution.tsx": "9ce1139de4c5d01362ac568b23f00d6a6001c0f67c456b0824c01aca4505cf4a",
+    "mobile/src/ExpenseDecision.tsx": "8eb2932e24eddceb009d72cf0864125acba91b6191eb10be2a5ebeb12a28a9aa",
+    "mobile/src/ExpenseReceiptAssistance.tsx": "1579e4692b3c0a44584eae89234fae8d502dc1eb083e573e6e70c6569e332be5",
+    "mobile/src/FinanceAssistanceScreen.tsx": "eda7bd3a7f28829333f37c05cde477af9006a509e16a5c7959fca2c452874ac3",
+    "mobile/src/FinanceDraftForm.tsx": "d6bef5bb9d059e0ab40af70119133a2ab120c97ff41f91f52ee586b1bc233e4a",
+    "mobile/src/FinanceDuplicateReview.tsx": "89f8ced4d0de7589ca34209a46dc690b941188759709e2bedfdc6d70f549c4f6",
+    "mobile/src/FinanceIntakeReview.tsx": "650dfa1601ada8eba3db14513515a04ec481d9f5a0be1a86cb4b2799f426f8f0",
+    "mobile/src/FinanceReceiptReview.tsx": "187a68d1258933fbd20e2f758ca91930b1585ad824a25c62a76cde26ff7d42a3",
+    "mobile/src/FinanceReconciliation.tsx": "6544e1aaf3fa4e20ae2773c1b6287f8b71fb7fe8ccb96f9c39462a9a6a36d389",
+    "mobile/src/FinanceScreen.tsx": "7435fd8e824059169b4a1d4baf22135958241f85948cf7657bf9ac6e3e4bf43d",
+    "mobile/src/FinanceStatementReview.tsx": "27ff8876fbc473dc9e3c92e0482a609ea3c1bd1793090be8a69caee6ff77d1c1",
+    "mobile/src/HistoricalReports.tsx": "8350f8da991c9171205a9de4563303147415ac6180edbafba821079607bd7fa0",
+    "mobile/src/Intake.tsx": "026d62c87704a01b465dacd757563fce29d9b4a2e1539baf0be0628610eea970",
+    "mobile/src/KeyboardFrame.tsx": "916245ebe9e0d8f68ac9509605f707aa31eab56c9f375e742fbdc813123396d5",
+    "mobile/src/LinkedWork.tsx": "4105a0815c284e9374276095968a28badf4d94706fd60f4a5b8b8cf5480fb5be",
+    "mobile/src/Media.tsx": "3605fc427b64514476e5aad733b2b6164a17c258bc9ddf2079303cf112920178",
+    "mobile/src/NativeComposer.tsx": "f0cb9d381117e9247256dc6d039124043ce6dd6e2bdd2d04c144032b1bd99eb5",
+    "mobile/src/NativeConversation.tsx": "4f481960f9481170b93d4e0c5a2cf40423ef50b379558872df6899bf6debbf0f",
+    "mobile/src/OrphanReports.tsx": "26264fa68c36f3b1ac15297f6eec12068e5f038c32a7d4c5fe9454c821dcd761",
+    "mobile/src/PersonPicker.tsx": "62375baaab034d9ac4af7c80755802bb32bfa12c0b637ec29f04e0adc0b2ad6a",
+    "mobile/src/ProjectScreen.tsx": "69f417b2c9226de2780264e414ea38e4d4224c961224dd87239e757a36f54a5a",
+    "mobile/src/Publication.tsx": "efeeff1c47f1671f57c1b8034d20c255e6e31ab47f7c4657ac30cfcea16bb254",
+    "mobile/src/ReportControls.tsx": "b4e45752887389d9ca85bb445fea48477075ae38cda1579ae5b41f452982571b",
+    "mobile/src/ReportScreen.tsx": "736799874d0c3ee5169faf9e68bb32f96dac88a49d30c1ddbda4c28a60c1f353",
+    "mobile/src/SavedReports.tsx": "6900a481366f7969346bb8ef18d81f73723ddfc092cf02020b501e9f46a55a1c",
+    "mobile/src/Structured.tsx": "628ff31e7b59f6e2555f965706f57ee1d4728cfef2df6518ea8debcad1e46b4e",
+    "mobile/src/TaskDetailScreen.tsx": "277fe5fc4a949a9074a6890aa64c9bc03222aa712f2f767c1adcc88334a7d36b",
+    "mobile/src/WorkScreen.tsx": "705ca533dcca5c431aed08bebae4170c0d498fdfb89d7aa7350978d3521bc1cf",
+    "mobile/src/Workspace.tsx": "4f10d4824f2792c2d1335438a9fe74d9bf8ff372b3dfb3cad6241dcb04ee6cbd",
+    "mobile/src/app/(tabs)/_layout.tsx": "4ab3a37c029150f99cb2ffe5204c4cd6713c4fa6aa689ddeb6a3c034ab21f3b1",
+    "mobile/src/app/(tabs)/calls.tsx": "82ed7efee62413eaf4276ea7f356664dba24b10b67ca67949e93d8b5020921f1",
+    "mobile/src/app/(tabs)/chats.tsx": "90ef2055985ac6c8fc78ee91ab6befd12be4673962db5ed0b047a19c27f18e73",
+    "mobile/src/app/(tabs)/inbox.tsx": "e5078d3a2d1d714bf46d6010e5505b202ffc11b7d3839bb989866ddb29b3a8f1",
+    "mobile/src/app/(tabs)/more.tsx": "468d40904f55c0645e7772bd770e1983729deea7a8bf48e79c0466411f3d0e3a",
+    "mobile/src/app/(tabs)/work.tsx": "7f4801e1cb0b2a1a253737871a8af4494d692f8847c2558852f4b24821a49ab3",
+    "mobile/src/app/_layout.tsx": "b91e8e160b1340e97cd19327ccc0e8f362b8970c5dc05e75f2a68aa77a668a24",
+    "mobile/src/app/account.tsx": "bf368c380ce83c16bc74fd9d5a638eb74e4d397251e4a651435c5d1d10477336",
+    "mobile/src/app/chat/[id].tsx": "3a5318735029a90d18dac1a2cb7baadf9319c9eda90eb793e8f19792afe60a18",
+    "mobile/src/app/expense/[id].tsx": "2eea09c6af45642125be8c3156c4f20a4cf465b902ed3010866ab6e5ae0c9c22",
+    "mobile/src/app/finance/assistance.tsx": "31fbd4c2f8bbb82741c8cef92d32103b33377d3c3737f845de3eba9cef0ee1d3",
+    "mobile/src/app/finance/index.tsx": "5b94b7405692cf3520657afd84e0488b90b482bbae81b39414b6e02c1a3a1f62",
+    "mobile/src/app/index.tsx": "fd9323b232ca53cb13dcb7dfc537a6d701a3a06bb17fdcae5c9c6b4368be9d0a",
+    "mobile/src/app/intake/[id].tsx": "7b3a1cfb7e16745d721c5136853d52d1a7cc85af49fac3252f3df655fd333306",
+    "mobile/src/app/login.tsx": "295371aee211d78555bac873705d26b5da421bad1073b762b029ac5a0b27f137",
+    "mobile/src/app/project/[id].tsx": "13098a819157375a1a016f2654df78995e5d4d39fd4f2c2a7dc67c2503d52d22",
+    "mobile/src/app/projects.tsx": "439035f4f5ef361c095a3373e97484c418d91c0dc5566b4734c4d63296b6c7b6",
+    "mobile/src/app/report/[id].tsx": "c1787412f556146b5136b93fe73db9b16d88a933799bc28b78646a2ae2d8c3cc",
+    "mobile/src/app/reports.tsx": "ef53b1ba91e66b563f776706f7efc211a1c55a5b52efaa1d1127fa22d901514b",
+    "mobile/src/app/requests.tsx": "4d5e5e107c4e5e1c67e2196e635b2b16dee1cd833d25dd2696f47f8d7ddf97de",
+    "mobile/src/app/task/[id].tsx": "89b3bab1cadbfb5c7a6115edb525274b163cbc3ae13351bb00cb310a6fa6174d",
+    "mobile/src/businessAttempts.ts": "632980e225504acfa4a76750aa52e30f8dcc60c8f22479541ad20faedf1673be",
+    "mobile/src/capture.ts": "e3e9b28f4a00ebc7a8e3b8b43243d0c874ccc70843ba706afaa6681b651184c7",
+    "mobile/src/captureOwner.ts": "c9d49e9735d43943ebbee7b68ffbcc9c989444b645c53c89a8a361d6e39ad0d8",
+    "mobile/src/client.ts": "059c717ecb7fc49578a0f74c42f287ec81f97a0797b702b7a35fcd253bafea67",
+    "mobile/src/conversationDrafts.ts": "44e2dadf13193f7dcbf37501b0c32f6aebb908d0f16fad0c4e6959bb1bb57507",
+    "mobile/src/conversationSync.ts": "031970fd303db93ef262c86d40516e0ea2a17d2fbbb0f2a33e852ec545b402c5",
+    "mobile/src/conversationViewport.ts": "b1efca6ded7a667e98fc23bed5ba42b0769dcbca91ab11bbd3dfa1667eec2e2e",
+    "mobile/src/deadlinePickerModel.ts": "177a481293234069f65bfe5f418e06a097048543093796e7085cec15e0a738c9",
+    "mobile/src/execution.ts": "cfba500d932c636f72e4aae00fa427f0cac7d8b4680482bc59ff213ebc2c5e79",
+    "mobile/src/notificationTarget.ts": "ff605776349ca3d79339ca20793679000af4d25084116a0fdf8df880850e14a4",
+    "mobile/src/personSelection.ts": "91e5e6026c3e39fde6b6ad43a4529b09443ac91d17bc42c96811494cb9eb327c",
+    "mobile/src/publication.ts": "05487ff3b8c6e931bd08dd7708e78867e65daab8288a8726bbb1606ac0c0909f",
+    "mobile/src/ramInput.ts": "e9dca14720c12a9f4b52f1b589e68e0f74cac21cdf269b5e3d588eb81c698404",
+    "mobile/src/readScopes.ts": "51d0f8fe5689c3dfcf7a942182d66c159ad22c9d7545d60d312aaffcb47c0e1d",
+    "mobile/src/reportClient.ts": "da4aaa0595f15dc7101dc800a70241c0852bcb96305f16ee4577e11f28a1a6b5",
+    "mobile/src/workDates.ts": "e6522602ce46c1df52490ba0fcfff30dd04a0848ffbcfb818569cb8e929d0b51",
+    "shared/attention/types.ts": "0f0e7daef0b22ef6a1735bb1445c745f590ea0770a212573383391b418cf386f",
+    "shared/business/attempts.ts": "ce582cbfde66341088d37c9766daae3b1acd800d82d4629ae53c8553e6e14faa",
+    "shared/business/pagination.ts": "c866e38e6c727178d5684575fe13caa6fe89e5330c39f73e04aa5b23d9b46e55",
+    "shared/business/types.ts": "92894f7f432df5c997b5e84011e8843aecac9807de85b7c4a8ecf2c124a29671",
+    "shared/communication/drafts.cases.ts": "744af9856dfe46c92604e291f0c9d8005db0f51db16074327efadfc1528186e8",
+    "shared/communication/drafts.ts": "1bd3c41654184cd0d45406635d958c9ff42920e9a8ec45d3fa9648a8f607d637",
+    "shared/communication/history.cases.ts": "fc13dba56b6db7da431d8fd1ce6b91c98dc2f5ad88dac9062f27e8d9868d8d4d",
+    "shared/communication/history.ts": "d269f38e19ef4f7b400eddce90872b5dcd395a38ff1ffdb1ae2dbf923529643b",
+    "shared/finance/assistanceIntent.ts": "95f23011ee3d0a25394be3e03ea6c3addc5bc71f37dcae68e5be36c52c777abe",
+    "shared/finance/money.ts": "1500d1d3cd80c7a1c817d65c43af79404d9661788d68ceae1fcd98dcc9dc61c1",
+    "shared/reports/types.ts": "fbf1a82a93d5986484a8a7b35a1e598b8fdbd174b77b38a3b35cba535ccc7bcf"
+  },
+  "buildArtifacts": {
+    "frontend/dist/assets/Calls-C1T-DhLv.js": {
+      "sha256": "83fed9534f73cd679e7fbea42e96b4f125b47fe96d6dbfd2af67bee36a4cf21e",
+      "bytes": 649392
+    },
+    "frontend/dist/assets/Calls-C7z1-d2S.css": {
+      "sha256": "54beb6fa5d06a09fa3ee837b8c1cc5543666ddf317e7859b91167c15a977edb7",
+      "bytes": 19294
+    },
+    "frontend/dist/assets/index--FEoDEDy.css": {
+      "sha256": "129e16c61108924ce487991f0ee99ff9450c31f8e30f7fbf5546c377dee320a4",
+      "bytes": 161446
+    },
+    "frontend/dist/assets/index-ChPmieHW.js": {
+      "sha256": "50ad373cbc756cc79a541ba707e1db2ddc02ffedf8796fd6ed5b777782ff3806",
+      "bytes": 838798
+    },
+    "frontend/dist/favicon.svg": {
+      "sha256": "ed1551c8e4a888081ab0b4b9d2a7d29c2b07e314e44519ba785b3370572be705",
+      "bytes": 183
+    },
+    "frontend/dist/fonts/README.md": {
+      "sha256": "e6fea2391466c9ce75d3954dd7e9a946f8457be65641347d265bf2787a221ae3",
+      "bytes": 2531
+    },
+    "frontend/dist/fonts/chivo-OFL.txt": {
+      "sha256": "c9b69fa18c372df2b187b49efc57b1ea643b86a938e5af32f6b5a7af1017c891",
+      "bytes": 4385
+    },
+    "frontend/dist/fonts/chivo-latin-variable.woff2": {
+      "sha256": "4b1f32027ce991997893f63a6b3bfd6ed887f1628b7baa2d3390d86bc67f6e28",
+      "bytes": 33252
+    },
+    "frontend/dist/fonts/ibm-plex-sans-OFL.txt": {
+      "sha256": "7e6b2818edbd8f6a01ae80641cc8f16a51080d08fb4e532be3a0b6f74adb07da",
+      "bytes": 4456
+    },
+    "frontend/dist/fonts/ibm-plex-sans-latin-variable.woff2": {
+      "sha256": "056e4e2459f57a0033c8c9c844ff19d6e42ac8602027803d4345823bcc939818",
+      "bytes": 40240
+    },
+    "frontend/dist/index.html": {
+      "sha256": "54ab354cd766deb11bbc40223150a7c430dc5ffa7d8e680fa25f54d0b9ecbbd1",
+      "bytes": 672
+    },
+    "frontend/dist/schach-logo.webp": {
+      "sha256": "ae8586a0dedf0c3ee3ee3f7802105f32756036a658a73016855b2379aa32fa13",
+      "bytes": 12890
+    },
+    "frontend/dist-demo/assets/Calls-BHXLi9a9.js": {
+      "sha256": "fb5d6259091ba0c08efa2fb83065b9281672e504921cea8da8df4a407e704024",
+      "bytes": 649392
+    },
+    "frontend/dist-demo/assets/Calls-C7z1-d2S.css": {
+      "sha256": "54beb6fa5d06a09fa3ee837b8c1cc5543666ddf317e7859b91167c15a977edb7",
+      "bytes": 19294
+    },
+    "frontend/dist-demo/assets/index--FEoDEDy.css": {
+      "sha256": "129e16c61108924ce487991f0ee99ff9450c31f8e30f7fbf5546c377dee320a4",
+      "bytes": 161446
+    },
+    "frontend/dist-demo/assets/index-CFkArDTv.js": {
+      "sha256": "6fadd59e263d0fe9850a9fef1a95021e242cf7ddc270296996e8448dd5c935dd",
+      "bytes": 876904
+    },
+    "frontend/dist-demo/favicon.svg": {
+      "sha256": "ed1551c8e4a888081ab0b4b9d2a7d29c2b07e314e44519ba785b3370572be705",
+      "bytes": 183
+    },
+    "frontend/dist-demo/fonts/README.md": {
+      "sha256": "e6fea2391466c9ce75d3954dd7e9a946f8457be65641347d265bf2787a221ae3",
+      "bytes": 2531
+    },
+    "frontend/dist-demo/fonts/chivo-OFL.txt": {
+      "sha256": "c9b69fa18c372df2b187b49efc57b1ea643b86a938e5af32f6b5a7af1017c891",
+      "bytes": 4385
+    },
+    "frontend/dist-demo/fonts/chivo-latin-variable.woff2": {
+      "sha256": "4b1f32027ce991997893f63a6b3bfd6ed887f1628b7baa2d3390d86bc67f6e28",
+      "bytes": 33252
+    },
+    "frontend/dist-demo/fonts/ibm-plex-sans-OFL.txt": {
+      "sha256": "7e6b2818edbd8f6a01ae80641cc8f16a51080d08fb4e532be3a0b6f74adb07da",
+      "bytes": 4456
+    },
+    "frontend/dist-demo/fonts/ibm-plex-sans-latin-variable.woff2": {
+      "sha256": "056e4e2459f57a0033c8c9c844ff19d6e42ac8602027803d4345823bcc939818",
+      "bytes": 40240
+    },
+    "frontend/dist-demo/index.html": {
+      "sha256": "8ff64e579856595e4e1be1d6b059cd6f4b82eea0f7fc29a54767112e13af247c",
+      "bytes": 672
+    },
+    "frontend/dist-demo/schach-logo.webp": {
+      "sha256": "ae8586a0dedf0c3ee3ee3f7802105f32756036a658a73016855b2379aa32fa13",
+      "bytes": 12890
+    },
+    "mobile/dist/_expo/static/js/android/entry-0285eaeacfb10ddaf963a298afb23b4b.hbc": {
+      "sha256": "9fd2773ac8cab2d6f8038265f71fe9b80b1756a652fb305990fc90c21aaccc32",
+      "bytes": 5511464
+    },
+    "mobile/dist/_expo/static/js/ios/entry-eb81e5dd07204c2e824343e25ea751eb.hbc": {
+      "sha256": "a118347aa7a77d47eecc8e92fff1810b135b8b86390bbab46edae358d5f39128",
+      "bytes": 5197069
+    },
+    "mobile/dist/assets/017bc6ba3fc25503e5eb5e53826d48a8": {
+      "sha256": "6deca32b56b97fa1fa87facd6996b46cc45190a553400e7febdf1d2093099b57",
+      "bytes": 9456
+    },
+    "mobile/dist/assets/02bc1fa7c0313217bde2d65ccbff40c9": {
+      "sha256": "ffa7ee45b76405ba73921495008f7d68c9de6395f4b6941db063465f6e382320",
+      "bytes": 167
+    },
+    "mobile/dist/assets/069d99eb1fa6712c0b9034a58c6b57dd": {
+      "sha256": "5300f50be3659d17d8cee868ec4e6c0d3f4e89944fd5899d3c20f6a767a045f5",
+      "bytes": 483
+    },
+    "mobile/dist/assets/0747a1317bbe9c6fc340b889ef8ab3ae": {
+      "sha256": "2325c53a73e54c438cbbc60dffdd8b513d471ba42e2f56713ef404b95e0ca1fc",
+      "bytes": 332
+    },
+    "mobile/dist/assets/0a328cd9c1afd0afe8e3b1ec5165b1b4": {
+      "sha256": "9adb8c5efca932e2b732b293da813bd2e31952263056bce9e2517fec0f0b6a76",
+      "bytes": 653
+    },
+    "mobile/dist/assets/0ea69b5077e7c4696db85dbcba75b0e1": {
+      "sha256": "3ddd0773ed27e23d25789f301731b3ac455ad8be5aa27a0a1b838f89c6d27225",
+      "bytes": 761
+    },
+    "mobile/dist/assets/1190ab078c57159f4245a328118fcd9a": {
+      "sha256": "cbdf9213e55f65c48d076acd8423b7c9aee4f1b81101ff6c95a38c4cd8a86461",
+      "bytes": 201
+    },
+    "mobile/dist/assets/19eeb73b9593a38f8e9f418337fc7d10": {
+      "sha256": "a69a2edb5b6c60b8433d5b6d23c69f520ccd8a602f3f60e7996e489718bc175c",
+      "bytes": 138
+    },
+    "mobile/dist/assets/20e71bdf79e3a97bf55fd9e164041578": {
+      "sha256": "efc79da3c4c97dfb1571bff6202958ab0529c5aa31e8392600578b3e359d1447",
+      "bytes": 4752
+    },
+    "mobile/dist/assets/286d67d3f74808a60a78d3ebf1a5fb57": {
+      "sha256": "5d075e0c287c4f4441b5b5c8fc7ea5cd27c11bb617ecea09755955bcb1889083",
+      "bytes": 928
+    },
+    "mobile/dist/assets/2d0a9133e39524f138be6d4db9f4851f": {
+      "sha256": "92ed8176ac8cb44362a5fc6a3703626a0006ac6b7cb272ee99f5850262ec070e",
+      "bytes": 809
+    },
+    "mobile/dist/assets/35ba0eaec5a4f5ed12ca16fabeae451d": {
+      "sha256": "84cf5eb3b20250f69e0e4733beb4da5f417f0682892a5ad1b5e62570753c21b1",
+      "bytes": 207
+    },
+    "mobile/dist/assets/3cd68ccdb8938e3711da2e8831b85493": {
+      "sha256": "c86bb485eee687e06c500fc4234f51a6784b4530c2ae11d0c76481110bce3105",
+      "bytes": 645
+    },
+    "mobile/dist/assets/412dd9275b6b48ad28f5e3d81bb1f626": {
+      "sha256": "acf691957a3bcce7d195856dce98a5cf14dce10bea28aa5c10b3550c078e23b5",
+      "bytes": 465
+    },
+    "mobile/dist/assets/4403c6117ec30c859bc95d70ce4a71d3": {
+      "sha256": "ba722fb24bff0a4c52e656cdf205deac5c5df85e5bae2bf6d30713bd50c6d5f7",
+      "bytes": 258
+    },
+    "mobile/dist/assets/61ca7e64b7d605716c57706cef640b9a": {
+      "sha256": "d03a5cd7a66ef10c5147916f9d5878b2d0a0a5ad46f405a31cd9967efaa55afd",
+      "bytes": 220
+    },
+    "mobile/dist/assets/778ffc9fe8773a878e9c30a6304784de": {
+      "sha256": "8b61a4c7ef70dc92753f0494976482f66fd4150ec23dfc772ab65e10373afa55",
+      "bytes": 100
+    },
+    "mobile/dist/assets/78c625386b4d0690b421eb0fc78f7b9c": {
+      "sha256": "d05c9d30d79f45a78e5585a2e7ec67c6a06a883dd9137e1d5059e8c87b33ce76",
+      "bytes": 266
+    },
+    "mobile/dist/assets/7d40544b395c5949f4646f5e150fe020": {
+      "sha256": "2cdfeb8e5ccde7976f7012fb8cce73af2229029ee21d4f1509fed114871c6cd8",
+      "bytes": 290
+    },
+    "mobile/dist/assets/98a4e3d00dbf5d65da99a69b38a7def2": {
+      "sha256": "e53f1e69f862e595f5d119c042863ff2a444fe42996d22bbab876b30073d0fba",
+      "bytes": 307
+    },
+    "mobile/dist/assets/9b5cb09b4e669ed0f28f3b3f2871a0a5": {
+      "sha256": "fda3f183ae85e63bcbce70a74276ea220332ae841f746c370b0b2ab40355a357",
+      "bytes": 312
+    },
+    "mobile/dist/assets/a132ecc4ba5c1517ff83c0fb321bc7fc": {
+      "sha256": "2b7443a9a58e92ca11a575bdc11598615a57dde305cd8ce70d602606b302cd98",
+      "bytes": 405
+    },
+    "mobile/dist/assets/a1525894e1eb1edaa185654fe42c3f1a": {
+      "sha256": "e4d791fc0dc1e28b54652faf13a2a6a90d90f48637f539f7a8249605732cb4e5",
+      "bytes": 970528
+    },
+    "mobile/dist/assets/ab19f4cbc543357183a20571f68380a3": {
+      "sha256": "27f4d229d440925bf7212d5dfffa45d596b2c7b3bb2905c96b839b2081a1dbeb",
+      "bytes": 364
+    },
+    "mobile/dist/assets/aff2c65b39a296d4f7e96d0f58169170": {
+      "sha256": "ab5613d2ce70fa67c5926e831353664945199fc195fa6fe76c5fe3cec452e31a",
+      "bytes": 334
+    },
+    "mobile/dist/assets/c3273c9e5321f20d1e42c2efae2578c4": {
+      "sha256": "6c8f11bfd1c7e22769dc135c16ecd0e053bb55554da88b9611d9cf71d12136f1",
+      "bytes": 728
+    },
+    "mobile/dist/assets/c79c3606a1cf168006ad3979763c7e0c": {
+      "sha256": "906666dd689346ada232ce3689adef907b4257fa1b593f03638d2b9497f64884",
+      "bytes": 134
+    },
+    "mobile/dist/assets/d1ea1496f9057eb392d5bbf3732a61b7": {
+      "sha256": "c15ec72a74d13957211808313d5c35deb7f7606c6d22dbddceb0000d4e0547ad",
+      "bytes": 469
+    },
+    "mobile/dist/assets/d62ddc38b69aff346c20a28774933d6a": {
+      "sha256": "b434a7cf18c2d4ce747c70942ea2fee2d4412d93967ed92b372f810bb9261ea5",
+      "bytes": 839
+    },
+    "mobile/dist/assets/d84e297c3b3e49a614248143d53e40ca": {
+      "sha256": "b1bc1810ca23e2c38cd76971c43591d726161061240d8b792b05757196ddb528",
+      "bytes": 141
+    },
+    "mobile/dist/assets/d8b800c443b8972542883e0b9de2bdc6": {
+      "sha256": "708a79cf561b8a2a4850ce0254584d3a5231046be08fb7fadf4b6edfdb31178b",
+      "bytes": 188
+    },
+    "mobile/dist/assets/d8e7601e3df962f83c62371ac14964d8": {
+      "sha256": "c4e54e6a0a7de636aa153378fbc62ea4a41695bfedf807f90df7b18ffd733f67",
+      "bytes": 502
+    },
+    "mobile/dist/assets/dad2fa9f4394a630f0f9a0d6dabd44bc": {
+      "sha256": "dc56b976bd45638e1125f6689743525e6886ae0bef2c8f4651994833685a831f",
+      "bytes": 317
+    },
+    "mobile/dist/assets/f3a81967828232c893d547162e922764": {
+      "sha256": "ef13fc0dfc52ec23817585fd7e109fbdf593a3b2549c40ce71ac9b0eda12cc2c",
+      "bytes": 589
+    },
+    "mobile/dist/metadata.json": {
+      "sha256": "e4936cd3c9735b32ec6eee1149577a7d13e1d34bb59163119c38504fd9fdcfc9",
+      "bytes": 3392
+    }
+  },
+  "evidenceArtifacts": {
+    "/tmp/schach-m7-owned-standalone-final-head/result.json": {
+      "sha256": "e30090785c6c47d51375b7886dadfa7a0b40f04750ad829c2d475681eb06eb5d",
+      "bytes": 818
+    },
+    "/tmp/schach-m7-owned-standalone-final-head/finance-browser.json": {
+      "sha256": "e6329df5500ffe1f37e3fede6a250fc2a7bafb934321fbcfcaae076a01553b95",
+      "bytes": 2828
+    },
+    "/tmp/schach-m7-owned-standalone-final-head/api-result.json": {
+      "sha256": "2bf7ada4110a0edb3bb9078220a744830d2e105180392dbb4f71ab0daa92fdda",
+      "bytes": 7192
+    },
+    "/tmp/schach-m7-owned-standalone-final-head/finance/result.json": {
+      "sha256": "7151dc0dc47318b96d37248d8f8103212bf75812724b230c60017ea0f765da50",
+      "bytes": 4542
+    },
+    "/tmp/schach-m7-owned-sqlite-final-head/result.json": {
+      "sha256": "4f4252e5c2e71abf2bdebfacc3af5878f8b43a48ea30ad040f965224de8a9cb4",
+      "bytes": 49
+    },
+    "/tmp/schach-m7-owned-sqlite-final-head/browser.json": {
+      "sha256": "8c996929516779f13f8ec45ce638420c78facfcdd9482b415b011a0d70125064",
+      "bytes": 2810
+    },
+    "/tmp/schach-m7-owned-sqlite-final-head/finance/result.json": {
+      "sha256": "28b8b53a8782ef16218c872163f35e384dba23c7b3eec16abe43862b1d63f4b5",
+      "bytes": 4839
+    },
+    "/tmp/schach-m7-owned-encore-final-head/result.json": {
+      "sha256": "cc59f1c79c96f90fa6246473ee916587ebafd5562e575883b116f32ec31567d6",
+      "bytes": 706
+    },
+    "/tmp/schach-m7-owned-encore-final-head/api-result.json": {
+      "sha256": "670614241abcc97eff58eed80985118d4069dce6f1fc7728103e76c1b963e712",
+      "bytes": 7142
+    },
+    "/tmp/schach-m7-owned-encore-final-head/finance/result.json": {
+      "sha256": "532459d526005896a375111cf4570ae95948bd94286984fb4fe2c92ff8581279",
+      "bytes": 1511
+    },
+    "/tmp/schach-m7-owned-sqlite-final-head/server": {
+      "sha256": "ecdfcd77a8a693c968a6f5c3613522175f9d3642d004c2b001dbeadb6487af45",
+      "bytes": 29521712
+    }
+  },
+  "productionUnchangedSince": "d67d8d51bf4670a5713a996a9e339a91fd09ddc6",
+  "postRuntimeSourceDelta": [
+    "backend/platform/finance_provider_boundaries_test.go"
+  ],
+  "runtimeQualification": {
+    "PostgreSQLStandalone": "Compiled and exercised HEAD69fdc77 including browser/post-import-refresh failure/crash/SQL+private-store restore",
+    "SQLiteStandalone": "Compiled and exercised d67d8d5; byte-identical final production source69fdc77; only later test-file additions",
+    "EncoreExport": "Exported and exercised d67d8d5; byte-identical final production source69fdc77; OCR disabled/manual fallback, not host-provider equivalence"
+  },
+  "immutableSQL1to37": true,
+  "allSQLMirrored": true,
+  "nativeRuntimeGate": "Parent-owned fresh final-source Android and above-safe aggregate consumer; pending controller evidence"
+}

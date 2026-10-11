@@ -1,0 +1,35 @@
+{
+  "sourceCommit": "69fdc77a86a4718695decbf7c127666fece278db",
+  "passed": true,
+  "expense": {
+    "id": "exp_42c4f48c9e4e72b88004a2ba61060201",
+    "title": "ReceiptM7Native",
+    "vendor": "Demo Stationery",
+    "invoice_number": "TEST-2026-001",
+    "amount_minor": 130050,
+    "status": "draft",
+    "version": 2
+  },
+  "independentlyRetainedReceipts": [
+    {
+      "id": "rcp_8e5ff224bbcb83424437a834506fa6a3",
+      "file_name": "fictional-receipt.png",
+      "mime_type": "image/png",
+      "size": 21407
+    }
+  ],
+  "originalJob": "fjob_4ff039a412f85fe8f0649318d869a42c",
+  "actualNativeCandidatePicks": true,
+  "manualTitle": "ReceiptM7Native",
+  "explicitUncertaintyAndEvidenceCopy": true,
+  "currentAudiencePreviewObserved": true,
+  "explicitConfirmAndCreate": true,
+  "qualifications": [
+    "Owned Android API36 matched development shell; not final APK, physical Android/iOS or production OCR quality.",
+    "Original69 Text invariant was observed and separately dispatched; final repaired-source rerun is required.",
+    "Initial unconfirmed toggle caused correctly blocked preview; final selected flags and fresh audience preview verified before create.",
+    "The first independent-read query named a nonexistent receipt_media_id; corrected to the actual expense_receipts relationship without another mutation.",
+    "Expense version2 reflects canonical creator draft plus retained evidence, not a second expense; exactly one matching expense and one receipt.",
+    "No submission, approval or payment."
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "source": "a973fb458ad0d9489865b4356089f4332aa1f00c",
+  "nativeAST_RED": {
+    "command": "npm test -- --run src/FinanceNativeText.test.ts src/AccountScreen.test.tsx",
+    "exit": 1,
+    "result": "One failure AccountScreen.tsx:69; Account test passed; observed tool output before product fix"
+  },
+  "nativeAST_GREEN": {
+    "sameCommand": true,
+    "exit": 0,
+    "files": 2,
+    "tests": 2
+  },
+  "nativeTypecheck": {
+    "command": "npm run typecheck",
+    "exit": 0
+  },
+  "nativeLint": {
+    "command": "npm run lint",
+    "exit": 0,
+    "warnings": 0
+  },
+  "browserSyntax": {
+    "command": "node --check verification/runtime/finance_assistance_smoke.mjs",
+    "exit": 0
+  },
+  "actualOwnedBrowser": {
+    "launcher": "/tmp/schach-m7-fix2-preview/run.py",
+    "redExit": 1,
+    "greenExit": 0,
+    "launcherExit": 0,
+    "greenChecks": 3,
+    "oneApp": true,
+    "database": "SQLite",
+    "OCRJobs": 0
+  },
+  "nativeExport": {
+    "command": "npm run export -- --output-dir /tmp/schach-m7-fix2-native-export",
+    "exit": 0,
+    "platforms": [
+      "Android",
+      "iOS"
+    ],
+    "scope": "Hermes bundles, not actual device acceptance"
+  },
+  "equivalence": {
+    "productionFiles": 461,
+    "onlyDelta": [
+      "mobile/src/AccountScreen.tsx"
+    ],
+    "SQLPairs1to47UnchangedAndMirrored": true
+  },
+  "outputQualification": "Native focused commands/typecheck/lint/export stdout observed directly in tool outputs; not retrospectively fabricated log files. Actual browser logs/results preserved at named paths. No unaffected broad suite repeated."
+}

@@ -1,0 +1,22 @@
+{
+  "sourceCommit": "820921f977d5b083be9e57df8a3724f13dde1728",
+  "passed": false,
+  "classification": "application_bug_introduced_in_I7_fix",
+  "actualFlow": [
+    "Choose bank CSV",
+    "actual Android DocumentsUI Downloads",
+    "select same owned212byte CSV",
+    "background clearing and wait occur",
+    "fresh statement authority requests wrong route",
+    "resource not found before any intake reserve"
+  ],
+  "sourceCause": "mobile/src/capture.ts263 requests /companies/{cid}/statement-imports; actual route /companies/{cid}/finance/statement-imports",
+  "mirroredTestIssue": "financeChooserLifecycle.test.ts74 asserts the same wrong URL",
+  "matchingIntakes": [],
+  "evidence": [
+    "m7-fix1-picker-return.xml",
+    "m7-fix1-picker-return-wait.xml",
+    "m7-fix1-picker-return-wait.png"
+  ],
+  "qualification": "Owned Android API36 dev shell actual source+backend820921f; not physical/iOS/finalAPK."
+}

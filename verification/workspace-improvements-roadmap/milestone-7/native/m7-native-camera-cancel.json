@@ -1,0 +1,17 @@
+{
+  "sourceCommit": "69fdc77a86a4718695decbf7c127666fece278db",
+  "passed": true,
+  "originalNativeReservation": "fin_d04ba04b408b299bce3372b74f128c8f",
+  "actualAndroidOneTimePermission": true,
+  "cameraPackage": "com.android.camera2",
+  "actualCameraUIObserved": true,
+  "explicitBackCancelled": true,
+  "intake": {
+    "id": "fin_d04ba04b408b299bce3372b74f128c8f",
+    "state": "cancelled",
+    "version": 2,
+    "size": 0,
+    "clean_generation": 0
+  },
+  "qualification": "Owned API36 virtual camera, matched development shell; actual reservation-before-camera and cancellation-on-return only. Does not certify captured photo, physical privacy/camera, iOS, final APK or post-return content-binding workflow."
+}

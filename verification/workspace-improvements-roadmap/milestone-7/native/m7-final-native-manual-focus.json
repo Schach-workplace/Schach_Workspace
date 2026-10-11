@@ -1,0 +1,47 @@
+{
+  "sourceCommit": "69fdc77a86a4718695decbf7c127666fece278db",
+  "backendCompiledCommit": "69fdc77a86a4718695decbf7c127666fece278db",
+  "backendProductionAndSQLByteEquivalentToSource": true,
+  "excludedGoTestOnlyDifferences": [],
+  "platform": "owned Android API36 virtual device emulator-5574; development shell",
+  "samples": [
+    {
+      "elapsedSeconds": 1.97,
+      "uniqueInputPresent": true,
+      "authoredTextMatches": true,
+      "focused": true
+    },
+    {
+      "elapsedSeconds": 7.96,
+      "uniqueInputPresent": true,
+      "authoredTextMatches": true,
+      "focused": true
+    },
+    {
+      "elapsedSeconds": 13.97,
+      "uniqueInputPresent": true,
+      "authoredTextMatches": true,
+      "focused": true
+    },
+    {
+      "elapsedSeconds": 19.95,
+      "uniqueInputPresent": true,
+      "authoredTextMatches": true,
+      "focused": true
+    },
+    {
+      "elapsedSeconds": 26.57,
+      "uniqueInputPresent": true,
+      "authoredTextMatches": true,
+      "focused": true
+    },
+    {
+      "elapsedSeconds": 31.96,
+      "uniqueInputPresent": true,
+      "authoredTextMatches": true,
+      "focused": true
+    }
+  ],
+  "passed": true,
+  "qualification": "Sampled authored focus across ordinary polling. Does not prove every pending privacy frame, physical device behavior, or a final APK build. Screenshot requires separate visual inspection for keyboard."
+}

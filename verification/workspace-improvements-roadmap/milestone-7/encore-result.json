@@ -1,0 +1,12 @@
+{
+  "status": "passed",
+  "checks": [
+    "Actual Encore exporter builds current code without a development watcher",
+    "Exported Encore boots against native PostgreSQL with all numbered migrations",
+    "Unauthenticated and spoofed scheduled invocations rejected by exported private boundary",
+    "Original 38 workspace + 53 finance assertions pass on actual exported Encore TCP",
+    "Actual exported finance capture reservation/bind/upload/canonical replay; OCR disabled and scanner unavailable are explicit",
+    "Actual exported Encore/proxy socket upgrade, origin refusal, private hints and revocation close",
+    "Actual exported Encore restart preserves message ACK, session and retry ID"
+  ]
+}
