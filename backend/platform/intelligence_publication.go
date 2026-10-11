@@ -167,7 +167,7 @@ func (s *Server) intelligencePublicationFirstWrite(tx *gorm.DB, a *access, b *In
 	}
 	return nil
 }
-func (s *Server) recordIntelligencePublication(tx *gorm.DB, a *access, b *IntelligenceBasis, kind, id, operation, key string, payload any) error {
+func (s *Server) recordIntelligencePublication(tx *gorm.DB, a *access, b *IntelligenceBasis, kind, id, operation, key string, payload any, outcome ...string) error {
 	if b == nil {
 		return nil
 	}
@@ -179,7 +179,11 @@ func (s *Server) recordIntelligencePublication(tx *gorm.DB, a *access, b *Intell
 	if e != nil {
 		return e
 	}
-	return tx.Create(&IntelligencePublication{ID: newID("ipub"), JobID: b.JobID, CompanyID: a.Company.ID, ActorID: a.User.ID, ResultHash: b.ResultHash, DestinationKind: kind, CanonicalResultID: id, CanonicalOperation: operation, RetryKey: key, ReviewedPayloadHash: hash, Manifest: m}).Error
+	resultOutcome := "created"
+	if len(outcome) > 0 {
+		resultOutcome = outcome[0]
+	}
+	return tx.Create(&IntelligencePublication{Outcome: resultOutcome, ID: newID("ipub"), JobID: b.JobID, CompanyID: a.Company.ID, ActorID: a.User.ID, ResultHash: b.ResultHash, DestinationKind: kind, CanonicalResultID: id, CanonicalOperation: operation, RetryKey: key, ReviewedPayloadHash: hash, Manifest: m}).Error
 }
 func conversionIntelligenceMessages(input ConversionInput) []string {
 	ids := []string{}
@@ -206,7 +210,7 @@ func (s *Server) intelligenceTaskPreview(w http.ResponseWriter, r *http.Request)
 	}
 	var audience []string
 	hash := ""
-	e = s.withAccessTransaction(r, a, func(tx *gorm.DB) error {
+	e = s.withIntelligenceAccessTransaction(r, a, func(tx *gorm.DB) error {
 		m, e := s.intelligencePublicationManifest(tx, a, input.IntelligenceBasis, true)
 		if e != nil {
 			return e
@@ -317,7 +321,7 @@ func (s *Server) intelligencePublicationCurrent(w http.ResponseWriter, r *http.R
 		return invalid("Choose the original submitted draft.")
 	}
 	committed := false
-	e = s.withAccessTransaction(r, a, func(tx *gorm.DB) error {
+	e = s.withIntelligenceAccessTransaction(r, a, func(tx *gorm.DB) error {
 		var publication IntelligencePublication
 		e := tx.First(&publication, "job_id=? AND company_id=? AND actor_id=? AND canonical_operation=? AND retry_key=?", input.Basis.JobID, a.Company.ID, a.User.ID, input.Operation, input.RetryKey).Error
 		if e == gorm.ErrRecordNotFound {

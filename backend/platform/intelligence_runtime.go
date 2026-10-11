@@ -2,10 +2,12 @@ package platform
 
 import (
 	"context"
+	"database/sql"
 	"encoding/json"
 	"errors"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
+	"net/http"
 	"time"
 )
 
@@ -17,7 +19,7 @@ type IntelligenceLease struct {
 
 func (s *Server) withIntelligenceWorkerFence(ctx context.Context, job IntelligenceJob, fn func(*gorm.DB, *access) error) error {
 	return s.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
-		if e := lockCompany(tx, job.CompanyID); e != nil {
+		if e := lockIntelligenceCompany(tx, job.CompanyID); e != nil {
 			return e
 		}
 		a, e := currentAttentionActorLocked(tx, job.CompanyID, job.ActorID)
@@ -263,15 +265,14 @@ func (s *Server) failIntelligenceLease(lease IntelligenceLease, cause error) {
 	})
 }
 func (s *Server) RunIntelligenceWorker(ctx context.Context) {
-	if s.opts.Intelligence == nil {
-		return
-	}
 	ticker := time.NewTicker(time.Second)
 	defer ticker.Stop()
 	maintenanceCtx, stopMaintenance := context.WithCancel(ctx)
 	maintenanceDone := make(chan struct{})
 	go func() {
 		defer close(maintenanceDone)
+		// Raw retention is independent of optional provider availability and admission.
+		_, _ = s.RunIntelligenceMaintenance(maintenanceCtx, time.Now().UTC(), 100)
 		ticker := time.NewTicker(60 * time.Second)
 		defer ticker.Stop()
 		for {
@@ -284,6 +285,10 @@ func (s *Server) RunIntelligenceWorker(ctx context.Context) {
 		}
 	}()
 	defer func() { stopMaintenance(); <-maintenanceDone }()
+	if s.opts.Intelligence == nil || s.opts.Intelligence.DisabledReason != "" {
+		<-ctx.Done()
+		return
+	}
 	for {
 		select {
 		case <-ctx.Done():
@@ -324,7 +329,7 @@ func (s *Server) RunIntelligenceMaintenance(ctx context.Context, now time.Time, 
 	n := 0
 	for _, job := range rows {
 		e := s.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
-			if e := lockCompany(tx, job.CompanyID); e != nil {
+			if e := lockIntelligenceCompany(tx, job.CompanyID); e != nil {
 				return e
 			}
 			var current IntelligenceJob
@@ -374,4 +379,25 @@ func (s *Server) RunIntelligenceMaintenance(ctx context.Context, now time.Time, 
 		}
 	}
 	return n, nil
+}
+
+// M10 never changes a company key (including slug) or deletes a company. Its
+// only company writes are canonical task/expense number counters. Keep the
+// same writer/authority exclusion while allowing private-writer FK KEY SHARE
+// checks, which can occur after that writer's session/member/conversation locks.
+// All ordinary callers and key mutators retain lockCompany's strongest fence.
+func lockIntelligenceCompany(tx *gorm.DB, cid string) error {
+	if tx.Dialector.Name() != "postgres" {
+		return lockCompany(tx, cid)
+	}
+	var c Company
+	return tx.Clauses(clause.Locking{Strength: "NO KEY UPDATE"}).First(&c, "id=?", cid).Error
+}
+func (s *Server) withIntelligenceAccessTransaction(r *http.Request, a *access, fn func(*gorm.DB) error, opts ...*sql.TxOptions) error {
+	if s.db.Dialector.Name() == "postgres" && len(opts) > 0 && opts[0] != nil && opts[0].Isolation == sql.LevelRepeatableRead {
+		current := *opts[0]
+		current.Isolation = sql.LevelReadCommitted
+		opts = []*sql.TxOptions{&current}
+	}
+	return s.withCompanyAccessFenceUsing(r, a, nil, lockIntelligenceCompany, fn, opts...)
 }

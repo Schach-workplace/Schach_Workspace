@@ -64,7 +64,7 @@ func (s *Server) intelligenceEnqueue(w http.ResponseWriter, r *http.Request) err
 		return e
 	}
 	var job IntelligenceJob
-	e = s.withAccessTransaction(r, a, func(tx *gorm.DB) error {
+	e = s.withIntelligenceAccessTransaction(r, a, func(tx *gorm.DB) error {
 		var found IntelligenceJob
 		err := tx.Omit("result_json").Where("company_id=? AND actor_id=? AND retry_key=?", a.Company.ID, a.User.ID, input.RetryKey).First(&found).Error
 		if err == nil {

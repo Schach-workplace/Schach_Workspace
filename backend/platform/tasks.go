@@ -329,7 +329,11 @@ func (s *Server) createTask(w http.ResponseWriter, r *http.Request) error {
 	}
 	delete(f, "intelligenceBasis")
 	var result BusinessResult
-	e = s.withAccessTransaction(r, a, func(tx *gorm.DB) error {
+	fence := s.withAccessTransaction
+	if basis != nil {
+		fence = s.withIntelligenceAccessTransaction
+	}
+	e = fence(r, a, func(tx *gorm.DB) error {
 		authorize := func() error {
 			if e := s.intelligencePublicationAccess(tx, a, basis, "", nil); e != nil {
 				return e

@@ -1,20 +1,21 @@
 // @vitest-environment happy-dom
-import { render, screen, fireEvent, cleanup, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent, cleanup, waitFor, act } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { beforeEach, afterEach, it, expect, vi } from 'vitest';
 import IntelligencePanel from './IntelligencePanel';
+import IntelligenceResult from './IntelligenceResult';
 import {
   intelligenceReviewRequest,
   emptyIntelligenceAuthored,
 } from '../../../shared/intelligence/publication';
 import { clearAllDrafts } from '../communication/drafts';
 import { clearAllBusinessAttempts } from '../../../shared/business/attempts';
-const state = vi.hoisted(() => ({ mutate: vi.fn(), company: 'co' }));
+const state = vi.hoisted(() => ({ mutate: vi.fn(), company: 'co', user: 'actor' }));
 vi.mock('../store', () => ({
   useWorkspace: () => ({
     mode: 'api',
     companyId: state.company,
-    session: { user: { id: 'actor' } },
+    session: { user: { id: state.user } },
     mutate: state.mutate,
     data: {
       readBasis: 'stable',
@@ -56,6 +57,7 @@ beforeEach(() => {
   clearAllDrafts();
   clearAllBusinessAttempts();
   state.company = 'co';
+  state.user = 'actor';
   state.mutate.mockReset();
   held = undefined;
   vi.stubGlobal(
@@ -89,9 +91,9 @@ function mount() {
     </QueryClientProvider>,
   );
 }
-async function edit() {
+async function edit(candidateIndex = 0) {
   await screen.findByText('Generated seed');
-  fireEvent.click(screen.getByText('Review task draft'));
+  fireEvent.click(screen.getAllByText('Review task draft')[candidateIndex]);
   expect(screen.getByLabelText('Intelligence owner')).toHaveProperty('value', '');
   expect(screen.getByLabelText('Intelligence reviewer')).toHaveProperty('value', '');
   expect(screen.getByLabelText('Intelligence deadline')).toHaveProperty('value', '');
@@ -244,6 +246,7 @@ it('builds company-currency expense input accepted by the existing field contrac
     title: 'Human review',
     amount: '1300.50',
     currency: 'INR',
+    anchorMessageId: 'message',
     categoryId: 'category',
     expenseDate: '2026-10-11',
   };
@@ -254,3 +257,412 @@ it('builds company-currency expense input accepted by the existing field contrac
     intelligenceReviewRequest(expenseJob, candidate, { ...authored, currency: 'USD' }, '', 'INR'),
   ).toThrow('company currency');
 });
+
+it('keeps the actual frozen canonical attempt across first raw expiry403 then terminal200 while independent proof is pending', async () => {
+  let releaseProof: (r: Response) => void = () => {};
+  const originalFetch = globalThis.fetch;
+  vi.stubGlobal(
+    'fetch',
+    vi.fn((input: RequestInfo) =>
+      String(input).endsWith('/publication-access')
+        ? new Promise<Response>((r) => {
+            releaseProof = r;
+          })
+        : originalFetch(input),
+    ),
+  );
+  state.mutate
+    .mockRejectedValueOnce(Error('Lost response'))
+    .mockImplementationOnce(async (_p, _body, _m, committed) => {
+      committed({ id: 'created' });
+      return { id: 'created' };
+    });
+  mount();
+  await edit();
+  fireEvent.click(screen.getByText('Preview content and audience'));
+  await screen.findByText('Publish to the reviewed audience.');
+  fireEvent.click(screen.getByLabelText('I reviewed these fields and this audience.'));
+  fireEvent.click(screen.getByText('Confirm reviewed creation'));
+  const retry = await screen.findByText('Retry original submitted draft');
+  const original = state.mutate.mock.calls[0][1];
+  held = Promise.resolve(response({ error: { code: 'expired', message: 'Expired' } }, 403));
+  fireEvent.click(screen.getByText('Recheck current result'));
+  await waitFor(() => expect(screen.queryByText('Generated seed')).toBeNull());
+  await waitFor(() => expect(screen.getByText('Retry original submitted draft')).toBe(retry));
+  expect(retry).toHaveProperty('disabled', true);
+  held = Promise.resolve(response({ jobId: 'job', state: 'expired' }));
+  fireEvent.click(screen.getByText('Recheck current result'));
+  releaseProof(response({ current: true, committed: true }));
+  await waitFor(() => expect(retry).toHaveProperty('disabled', false));
+  fireEvent.click(retry);
+  await screen.findByText('Created work successfully.');
+  expect(state.mutate.mock.calls[1][1]).toEqual(original);
+});
+it('merges21plus jobs by jobId through the actual owner history consumer', async () => {
+  const jobs = Array.from({ length: 23 }, (_, i) => ({
+    jobId: 'history-' + i,
+    operation: 'summary',
+    state: 'ready',
+  }));
+  const originalFetch = globalThis.fetch;
+  vi.stubGlobal(
+    'fetch',
+    vi.fn((input: RequestInfo) =>
+      String(input).endsWith('/intelligence/jobs')
+        ? Promise.resolve(response({ jobs: jobs.slice(0, 20), cursor: 'next' }))
+        : String(input).includes('/intelligence/jobs?cursor=next')
+          ? Promise.resolve(response({ jobs: jobs.slice(19), cursor: '' }))
+          : originalFetch(input),
+    ),
+  );
+  mount();
+  await waitFor(() => expect(screen.getAllByText(/summary request \d+ · ready/)).toHaveLength(23));
+});
+
+it('requires a human-selected supported anchor/action and preserves them in the reviewed request', () => {
+  const sourceJob: any = {
+    ...job,
+    publication: {
+      allowed: true,
+      conversationId: 'conversation',
+      policyVersion: 2,
+      sources: [
+        { messageId: 'first', revision: 1 },
+        { messageId: 'second', revision: 2 },
+      ],
+    },
+  };
+  const authored: any = {
+    ...emptyIntelligenceAuthored,
+    title: 'Chosen candidate',
+    ownerId: 'actor',
+    reviewerId: 'reviewer',
+    dueDate: '2026-11-15',
+    anchorMessageId: 'second',
+    actionId: 'supported-alternate',
+  };
+  expect(
+    intelligenceReviewRequest(sourceJob, job.result.candidates[0] as any, authored).payload,
+  ).toMatchObject({ anchorMessageId: 'second', actionId: 'supported-alternate' });
+  expect(() =>
+    intelligenceReviewRequest(sourceJob, job.result.candidates[0] as any, {
+      ...authored,
+      actionId: '',
+    }),
+  ).toThrow('instruction action');
+});
+
+it('binds record citation navigation to registered exact200 and denies navigation on current404', async () => {
+  const recordJob: any = {
+    ...job,
+    sources: [
+      {
+        sourceKey: 'source',
+        kind: 'record',
+        id: 'record',
+        parentId: 'message',
+        conversationId: 'conversation',
+        label: 'Exact poll',
+      },
+    ],
+  };
+  const fetcher = vi
+    .fn()
+    .mockResolvedValueOnce(response({ record: { id: 'record' }, responses: [] }))
+    .mockResolvedValueOnce(response({ error: { code: 'not_found' } }, 404));
+  vi.stubGlobal('fetch', fetcher);
+  render(
+    <IntelligenceResult
+      job={recordJob}
+      onReview={() => {}}
+      onTranscript={() => {}}
+      onOpenJob={() => {}}
+    />,
+  );
+  fireEvent.click(screen.getByText('Open Exact poll'));
+  await waitFor(() => expect(window.location.hash).toContain('record=record'));
+  expect(String(fetcher.mock.calls[0][0])).toContain('/conversations/conversation/records/record');
+  window.location.hash = 'unchanged';
+  fireEvent.click(screen.getByText('Open Exact poll'));
+  await screen.findByText('This source is unavailable. Reselect current sources.');
+  expect(window.location.hash).toBe('#unchanged');
+});
+it('selects supported private actions for multiple candidates and recovers actual existing work after lostACK', async () => {
+  const privateJob = {
+    ...job,
+    publication: {
+      allowed: true,
+      conversationId: 'conversation',
+      policyVersion: 2,
+      sources: [
+        { messageId: 'first', revision: 1 },
+        { messageId: 'second', revision: 2 },
+      ],
+    },
+    result: {
+      ...job.result,
+      candidates: [
+        job.result.candidates[0],
+        { ...job.result.candidates[0], title: 'Second candidate' },
+      ],
+    },
+  };
+  const baseFetch = globalThis.fetch;
+  const previews: any[] = [];
+  vi.stubGlobal(
+    'fetch',
+    vi.fn(async (input: RequestInfo, init?: RequestInit) => {
+      const path = String(input);
+      if (path.endsWith('/jobs/job')) return response(privateJob);
+      if (path.includes('/work-actions?'))
+        return response({
+          actions: [
+            { id: 'alternate', title: 'Human alternate action', sourceRevision: 2 },
+            { id: 'stale', title: 'Stale action', sourceRevision: 1 },
+          ],
+        });
+      if (path.endsWith('/task-conversions/preview')) {
+        const body = JSON.parse(init?.body as string);
+        previews.push(body);
+        return response({
+          audienceUserIds: ['actor'],
+          notice: 'Existing reviewed audience',
+          intelligenceReviewHash: 'existing-review',
+          outcome: body.actionId === 'primary' ? 'existing' : 'created',
+          existingTaskId: 'actual-existing',
+          existingTaskTitle: 'Actual existing title',
+        });
+      }
+      return baseFetch(input, init);
+    }),
+  );
+  state.mutate
+    .mockRejectedValueOnce(Error('Lost response'))
+    .mockImplementationOnce(async (_p, _b, _m, committed) => {
+      const r = { id: 'actual-existing', outcome: 'existing' };
+      committed(r);
+      return r;
+    });
+  mount();
+  await screen.findByText('Second candidate');
+  fireEvent.click(screen.getAllByText('Review task draft')[1]);
+  fireEvent.change(screen.getByLabelText('Source anchor'), { target: { value: 'second' } });
+  await waitFor(() => expect(screen.getByText('Human alternate action')).toBeDefined());
+  expect(screen.queryByText('Stale action')).toBeNull();
+  fireEvent.change(screen.getByLabelText('Instruction action'), { target: { value: 'primary' } });
+  fireEvent.change(screen.getByLabelText('Intelligence owner'), { target: { value: 'actor' } });
+  fireEvent.change(screen.getByLabelText('Intelligence reviewer'), {
+    target: { value: 'reviewer' },
+  });
+  fireEvent.change(screen.getByLabelText('Intelligence deadline'), {
+    target: { value: '2026-11-15' },
+  });
+  fireEvent.click(screen.getByText('Preview content and audience'));
+  await screen.findByText(/Existing work: Actual existing title/);
+  expect(previews[0]).toMatchObject({
+    anchorMessageId: 'second',
+    actionId: 'primary',
+    task: { title: 'Second candidate' },
+  });
+  fireEvent.click(screen.getByLabelText('I reviewed these fields and this audience.'));
+  fireEvent.click(screen.getByText('Confirm existing work'));
+  const retry = await screen.findByText('Retry original submitted draft');
+  await waitFor(() => expect(retry).toHaveProperty('disabled', false));
+  const original = state.mutate.mock.calls[0][1];
+  fireEvent.click(screen.getAllByText('Review task draft')[0]);
+  expect(screen.getByLabelText('Source anchor')).toHaveProperty('value', '');
+  expect(screen.queryByText('Retry original submitted draft')).toBeNull();
+  fireEvent.click(screen.getAllByText('Review task draft')[1]);
+  const restoredRetry = await screen.findByText('Retry original submitted draft');
+  await waitFor(() => expect(restoredRetry).toHaveProperty('disabled', false));
+  fireEvent.change(screen.getByLabelText('Instruction action'), { target: { value: 'alternate' } });
+  fireEvent.click(restoredRetry);
+  await screen.findByText('This action already has work. Reviewed fields were not applied.');
+  expect(state.mutate.mock.calls[1][1]).toEqual(original);
+  expect(screen.queryByText('Created work successfully.')).toBeNull();
+  const opened = vi.fn();
+  window.addEventListener('schach-open-task', opened);
+  fireEvent.click(screen.getByText('Open existing work'));
+  expect(opened.mock.calls[0][0].detail.id).toBe('actual-existing');
+  window.removeEventListener('schach-open-task', opened);
+  fireEvent.click(screen.getAllByText('Review task draft')[0]);
+  expect(
+    screen.queryByText('This action already has work. Reviewed fields were not applied.'),
+  ).toBeNull();
+  expect(screen.getByLabelText('Source anchor')).toHaveProperty('value', '');
+});
+it.each([403, 404, 401])(
+  'hard clears actual unknown form when independent publication proof denies %s',
+  async (status) => {
+    let deny = false;
+    const originalFetch = globalThis.fetch;
+    vi.stubGlobal(
+      'fetch',
+      vi.fn((input: RequestInfo) =>
+        String(input).endsWith('/publication-access')
+          ? Promise.resolve(
+              response(
+                deny
+                  ? { error: { code: 'not_found', message: 'Unavailable' } }
+                  : { current: true, committed: true },
+                deny ? status : 200,
+              ),
+            )
+          : originalFetch(input),
+      ),
+    );
+    state.mutate.mockRejectedValue(Error('Lost response'));
+    const first = mount();
+    await edit();
+    fireEvent.click(screen.getByText('Preview content and audience'));
+    await screen.findByText('Publish to the reviewed audience.');
+    fireEvent.click(screen.getByLabelText('I reviewed these fields and this audience.'));
+    fireEvent.click(screen.getByText('Confirm reviewed creation'));
+    await screen.findByText('Retry original submitted draft');
+    first.unmount();
+    deny = true;
+    held = Promise.resolve(response({ jobId: 'job', state: 'expired' }));
+    mount();
+    await waitFor(() => expect(screen.queryByText('Retry original submitted draft')).toBeNull());
+    expect(state.mutate).toHaveBeenCalledTimes(1);
+  },
+);
+
+it.each([
+  ['ack', false],
+  ['error', false],
+  ['ack', true],
+  ['error', true],
+] as const)(
+  'late old %s cannot retire or resurrect a new actual canonical attempt (candidate switch %s)',
+  async (mode, candidateSwitch) => {
+    if (candidateSwitch) {
+      const baseFetch = globalThis.fetch;
+      vi.stubGlobal(
+        'fetch',
+        vi.fn((input: RequestInfo) =>
+          String(input).endsWith('/jobs/job')
+            ? Promise.resolve(
+                response({
+                  ...job,
+                  result: {
+                    ...job.result,
+                    candidates: [
+                      ...job.result.candidates,
+                      { ...job.result.candidates[0], title: 'Second candidate' },
+                    ],
+                  },
+                }),
+              )
+            : baseFetch(input),
+        ),
+      );
+    }
+    let finish: (v: any) => void = () => {},
+      fail: (e: unknown) => void = () => {},
+      oldACK: (v: any) => void = () => {};
+    state.mutate
+      .mockImplementationOnce((_p, _b, _m, commit) => {
+        oldACK = commit;
+        return new Promise((r, j) => {
+          finish = r;
+          fail = j;
+        });
+      })
+      .mockRejectedValueOnce(Error('New response lost'))
+      .mockImplementationOnce(async (_p, _b, _m, commit) => {
+        commit({ id: 'new' });
+        return { id: 'new' };
+      });
+    const submit = async (candidateIndex = 0) => {
+      await edit(candidateIndex);
+      fireEvent.click(screen.getByText('Preview content and audience'));
+      await screen.findByText('Publish to the reviewed audience.');
+      fireEvent.click(screen.getByLabelText('I reviewed these fields and this audience.'));
+      fireEvent.click(screen.getByText('Confirm reviewed creation'));
+    };
+    const first = mount();
+    await submit();
+    await waitFor(() => expect(state.mutate).toHaveBeenCalledTimes(1));
+    if (!candidateSwitch) {
+      act(() => {
+        clearAllBusinessAttempts();
+        clearAllDrafts();
+      });
+      first.unmount();
+      mount();
+    }
+    await submit(candidateSwitch ? 1 : 0);
+    const retry = await screen.findByText('Retry original submitted draft');
+    await waitFor(() => expect(retry).toHaveProperty('disabled', false));
+    const newer = state.mutate.mock.calls[1][1];
+    await act(async () => {
+      if (mode === 'ack') {
+        oldACK({ id: 'old' });
+        finish({ id: 'old' });
+      } else fail(Error('Late old error'));
+    });
+    expect(screen.queryByText('Created work successfully.')).toBeNull();
+    expect(screen.getByText('Retry original submitted draft')).toBe(retry);
+    fireEvent.click(retry);
+    await screen.findByText('Created work successfully.');
+    expect(state.mutate.mock.calls[2][1]).toEqual(newer);
+    expect(newer.retryKey).not.toBe(state.mutate.mock.calls[0][1].retryKey);
+  },
+);
+it.each(['company', 'session'])(
+  'discards old cursor page after %s switch in the actual history consumer',
+  async (kind) => {
+    let finish: (v: Response) => void = () => {};
+    let switched = false;
+    const baseFetch = globalThis.fetch;
+    vi.stubGlobal(
+      'fetch',
+      vi.fn((input: RequestInfo) => {
+        const path = String(input);
+        if (path.includes('/intelligence/jobs?cursor=held'))
+          return new Promise<Response>((r) => {
+            finish = r;
+          });
+        if (path.endsWith('/intelligence/jobs'))
+          return Promise.resolve(
+            response(
+              switched
+                ? { jobs: [] }
+                : {
+                    jobs: Array.from({ length: 20 }, (_, i) => ({
+                      jobId: 'old-' + i,
+                      operation: 'summary',
+                      state: 'ready',
+                    })),
+                    cursor: 'held',
+                  },
+            ),
+          );
+        return baseFetch(input);
+      }),
+    );
+    const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+    const node = () => (
+      <QueryClientProvider client={client}>
+        <IntelligencePanel initialJob="job" />
+      </QueryClientProvider>
+    );
+    const view = render(node());
+    await waitFor(() =>
+      expect(vi.mocked(fetch).mock.calls.some((c) => String(c[0]).includes('cursor=held'))).toBe(
+        true,
+      ),
+    );
+    switched = true;
+    if (kind === 'company') state.company = 'new-company';
+    else state.user = 'new-user';
+    view.rerender(node());
+    await act(async () =>
+      finish(response({ jobs: [{ jobId: 'old-20', operation: 'summary', state: 'ready' }] })),
+    );
+    await waitFor(() =>
+      expect(screen.queryAllByText(/summary request \d+ · ready/)).toHaveLength(0),
+    );
+  },
+);

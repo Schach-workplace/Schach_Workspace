@@ -273,3 +273,73 @@ func TestIntelligenceRealOverflowIsTerminalInApplication(t *testing.T) {
 	}
 	t.Log("actual adapter overflow → terminal source_too_large; one attempt, zero result bytes, zero publications and unchanged business rows")
 }
+
+func TestIntelligencePinnedCurrentReportFacts(t *testing.T) {
+	if os.Getenv("TEST_INTELLIGENCE_REAL") != "1" {
+		t.Skip("explicit owned current-report adapter acceptance")
+	}
+	p, e := NewLocalOllama("http://127.0.0.1:11435")
+	if e != nil {
+		t.Fatal(e)
+	}
+	ctx, cancel := context.WithTimeout(t.Context(), 15*time.Second)
+	e = p.Verify(ctx)
+	cancel()
+	if e != nil {
+		t.Fatal(e)
+	}
+	s, c, cid, owner, _, _ := conversationFixture(t)
+	createTask(t, s, c, cid, taskBody(owner))
+	base := "/api/companies/" + cid
+	summary := financeOK(t, s, "GET", base+"/reports/tasks/summary?from=2026-10-01&to=2026-10-11", nil, c)
+	s.opts.Intelligence = &IntelligenceConfig{Summary: p, Identity: p.Identity}
+	id := enqueueSelectedIntelligence(t, s, c, cid, "report_explanation", []map[string]any{{"kind": "report_current", "id": summary["snapshot"], "selectedFieldSet": "metrics"}}, "actual-current-report")
+	lease, e := s.claimIntelligence(t.Context())
+	if e != nil || lease == nil {
+		t.Fatal(e)
+	}
+	started := time.Now()
+	if e = s.runIntelligenceLease(t.Context(), *lease); e != nil {
+		t.Fatal("actual current-report bounded adapter outcome", e)
+	}
+	view := financeOK(t, s, "GET", base+"/intelligence/jobs/"+id, nil, c)
+	if view["state"] != "ready" {
+		t.Fatal(view["state"], view["reasonCode"])
+	}
+	var job IntelligenceJob
+	s.db.First(&job, "id=?", id)
+	manifest, e := loadIntelligenceManifest(s.db, job)
+	if e != nil {
+		t.Fatal(e)
+	}
+	// Re-capture through the same actual frozen producer, then verify every model
+	// selection is rendered with exact server prose, period and independent rates.
+	var source IntelligenceSource
+	s.db.First(&source, "job_id=?", id)
+	snap := s.reportSnapshots[summary["snapshot"].(string)]
+	source.Binding.Value = snap
+	manifest.Sources = []BoundIntelligenceSource{source.Binding}
+	facts, e := buildIntelligenceFacts(manifest)
+	if e != nil {
+		t.Fatal(e)
+	}
+	var result IntelligenceResult
+	if e = json.Unmarshal([]byte(job.ResultJSON), &result); e != nil {
+		t.Fatal(e)
+	}
+	if len(result.Items) == 0 {
+		t.Fatal("no actual fact selections")
+	}
+	for _, item := range result.Items {
+		if item.Text != facts[item.FactKey].Text {
+			t.Fatal("renderer departed from server fact")
+		}
+	}
+	for _, suffix := range []string{"original_deadline", "current_deadline"} {
+		fact := facts[source.SourceKey+":"+suffix]
+		if !strings.Contains(fact.Text, "Rate unavailable") || !strings.Contains(fact.Text, "2026-10-01 through 2026-10-11") {
+			t.Fatal("actual zero-denominator period fact", fact.Text)
+		}
+	}
+	t.Logf("actual_current_report elapsed_ms=%d selected_items=%d server_facts=%d period=2026-10-01..2026-10-11 model=%s config=%s", time.Since(started).Milliseconds(), len(result.Items), len(facts), p.Identity.Name, p.Identity.ConfigHash)
+}

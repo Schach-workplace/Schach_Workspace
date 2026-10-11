@@ -53,7 +53,7 @@ try:
    except OSError:pass
    time.sleep(.1)
   else:raise RuntimeError('actual exported Encore startup failed')
-  cmd(['python3',str(ROOT/'verification/runtime/intelligence_fixture.py'),'--url',base,'--output',str(out/'api.json'),'--allow-demo-mutations'],log='api.log');result['checks'].append('Actual exported gateway M10 selected-source TCP flows and optional-provider manual fallback on nativePG57');result['status']='passed'
+  cmd(['python3',str(ROOT/'verification/runtime/intelligence_fixture.py'),'--url',base,'--output',str(out/'api.json'),'--allow-demo-mutations'],log='api.log');result['checks'].append('Actual exported gateway M10 selected-source TCP flows and optional-provider manual fallback on nativePG58');result['status']='passed'
 finally:
  if daemon is not None and daemon.poll() is None:daemon.terminate();daemon.wait(10)
  if slirp is not None and slirp.poll() is None:slirp.terminate();slirp.wait(10)

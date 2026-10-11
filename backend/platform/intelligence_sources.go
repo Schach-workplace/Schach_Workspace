@@ -240,7 +240,7 @@ func (s *Server) captureIntelligenceSource(tx *gorm.DB, a *access, r Intelligenc
 			return b, missing()
 		}
 		m, e := scopedMessage(tx, scope, mid)
-		if e != nil || m.Removed || m.ContentPurged {
+		if e != nil || m.Removed || m.ContentPurged || (r.Kind == "record" && rec.SourceRevision != m.Revision) {
 			return b, missing()
 		}
 		created, e := time.Parse(time.RFC3339Nano, m.CreatedAt)
@@ -454,7 +454,7 @@ func (s *Server) captureIntelligenceSource(tx *gorm.DB, a *access, r Intelligenc
 				}
 				b.Roots = append(b.Roots, IntelligenceRoot{Kind: "task", ID: id})
 			}
-			value = []any{snap.Token, snap.Generated, snap.Timezone, snap.Filters, snap.Rows, snap.Summary}
+			value = []any{snap.Token, snap.Generated, snap.Timezone, snap.Filters, snap.Period, snap.MetricVersion, snap.Rows, snap.Summary}
 		case "transcript":
 			if r.ParentID != "" {
 				return b, missing()
@@ -595,7 +595,7 @@ func (s *Server) intelligenceSelectionPreview(w http.ResponseWriter, r *http.Req
 		return e
 	}
 	var manifest SourceManifest
-	e = s.withAccessTransaction(r, a, func(tx *gorm.DB) error {
+	e = s.withIntelligenceAccessTransaction(r, a, func(tx *gorm.DB) error {
 		var err error
 		manifest, err = s.captureIntelligenceSources(tx, a, input)
 		return err

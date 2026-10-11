@@ -53,7 +53,7 @@ func (s *Server) previewCommunicationRequest(w http.ResponseWriter, r *http.Requ
 	}
 	audience := []string{}
 	reviewHash := ""
-	e := s.conversionTransaction(r, func(tx *gorm.DB, a *access, scope *conversationScope) error {
+	e := s.conversionTransaction(r, input.IntelligenceBasis, func(tx *gorm.DB, a *access, scope *conversationScope) error {
 		if scope.Conversation.Forwarding != "selected" {
 			return denied()
 		}
@@ -108,7 +108,7 @@ func (s *Server) createCommunicationRequest(w http.ResponseWriter, r *http.Reque
 		return invalid("Supply a retry key, request title and selected summary.")
 	}
 	id := ""
-	e := s.conversionTransaction(r, func(tx *gorm.DB, a *access, scope *conversationScope) error {
+	e := s.conversionTransaction(r, input.IntelligenceBasis, func(tx *gorm.DB, a *access, scope *conversationScope) error {
 		if scope.Conversation.Forwarding != "selected" {
 			return denied()
 		}

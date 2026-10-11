@@ -56,7 +56,7 @@ func (s *Server) previewExpenseConversion(w http.ResponseWriter, r *http.Request
 	}
 	audience := []string{}
 	reviewHash := ""
-	e := s.conversionTransaction(r, func(tx *gorm.DB, a *access, scope *conversationScope) error {
+	e := s.conversionTransaction(r, input.IntelligenceBasis, func(tx *gorm.DB, a *access, scope *conversationScope) error {
 		if e := verifyConversionSources(tx, scope, input.ConversionInput, true); e != nil {
 			return e
 		}
@@ -95,7 +95,7 @@ func (s *Server) convertMessageToExpense(w http.ResponseWriter, r *http.Request)
 		return e
 	}
 	id := ""
-	e := s.conversionTransaction(r, func(tx *gorm.DB, a *access, scope *conversationScope) error {
+	e := s.conversionTransaction(r, input.IntelligenceBasis, func(tx *gorm.DB, a *access, scope *conversationScope) error {
 		if e := verifyConversionSources(tx, scope, input.ConversionInput, false); e != nil {
 			return e
 		}

@@ -72,20 +72,24 @@ func ConfigureIntelligence(o *Options) error {
 	python := os.Getenv("INTELLIGENCE_PYTHON")
 	script := os.Getenv("INTELLIGENCE_WHISPER_SCRIPT")
 	model := os.Getenv("INTELLIGENCE_WHISPER_MODEL")
-	if root == "" || python == "" || script == "" || model == "" {
+	if root == "" || !filepath.IsAbs(root) {
 		return nil
 	}
-	for _, path := range []string{root, python, script, model} {
-		if !filepath.IsAbs(path) {
+	real, e := filepath.EvalSymlinks(root)
+	info, statErr := os.Lstat(root)
+	if e != nil || real != filepath.Clean(root) || statErr != nil || !info.IsDir() || info.Mode().Perm() != 0700 || info.Mode()&os.ModeSymlink != 0 {
+		return nil
+	}
+	// A validated owned scratch root remains maintainable if providers are
+	// missing or identity probes fail. Never derive a path from job metadata.
+	config.ScratchRoot = root
+	for _, path := range []string{python, script, model} {
+		if path == "" || !filepath.IsAbs(path) {
 			return nil
 		}
 		if _, e := filepath.EvalSymlinks(path); e != nil {
 			return nil
 		}
-	}
-	info, e := os.Lstat(root)
-	if e != nil || !info.IsDir() || info.Mode().Perm()&0077 != 0 || info.Mode()&os.ModeSymlink != 0 {
-		return nil
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
 	defer cancel()
@@ -113,7 +117,6 @@ func ConfigureIntelligence(o *Options) error {
 	config.Identity.Digest = intelligenceOllamaDigest + ":dcb76c6586fc06cbdac6dd21f14cfd129cc4cdd9dce19bf4ffa62e59cbe6e6d1"
 	config.Summary = ollama
 	config.Transcription = &LocalWhisper{Python: python, Script: script, Model: model, Identity: config.Identity}
-	config.ScratchRoot = root
 	config.FFprobe = probe
 	config.FFmpeg = ffmpeg
 	config.DisabledReason = ""

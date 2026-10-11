@@ -280,6 +280,7 @@ func (s *Server) getPublishedIntake(w http.ResponseWriter, r *http.Request) erro
 	return respond(w, 200, map[string]any{"request": item})
 }
 func (s *Server) getAttentionRecord(w http.ResponseWriter, r *http.Request) error {
+	w.Header().Set("Cache-Control", "no-store")
 	var record CommunicationRecord
 	responses := []CommunicationRecipient{}
 	e := s.withCommunicationTransaction(r, nil, func(tx *gorm.DB, a *conversationScope) error {
@@ -289,7 +290,7 @@ func (s *Server) getAttentionRecord(w http.ResponseWriter, r *http.Request) erro
 			return err
 		}
 		source, err := scopedMessage(tx, a, record.AnchorMessageID)
-		if err != nil || source.Removed || source.Revision != record.SourceRevision {
+		if err != nil || source.Removed || source.ContentPurged || source.Revision != record.SourceRevision {
 			return missing()
 		}
 		var recipient CommunicationRecipient

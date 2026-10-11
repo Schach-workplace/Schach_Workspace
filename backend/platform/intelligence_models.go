@@ -116,6 +116,7 @@ type IntelligenceSource struct {
 	Binding   BoundIntelligenceSource `gorm:"serializer:json;type:jsonb"`
 }
 type IntelligencePublication struct {
+	Outcome             string `gorm:"not null;default:created"`
 	ID                  string `gorm:"primaryKey"`
 	JobID               string `gorm:"index"`
 	CompanyID           string

@@ -1,5 +1,7 @@
 import type { IntelligenceCandidate, IntelligenceJob } from "./types";
 export interface IntelligenceAuthored {
+  anchorMessageId: string;
+  actionId: string;
   title: string;
   description: string;
   ownerId: string;
@@ -13,6 +15,8 @@ export interface IntelligenceAuthored {
   expenseDate: string;
 }
 export const emptyIntelligenceAuthored: IntelligenceAuthored = {
+  anchorMessageId: "",
+  actionId: "",
   title: "",
   description: "",
   ownerId: "",
@@ -78,11 +82,15 @@ export function intelligenceReviewRequest(
       previewPayload: { task, intelligenceBasis } as Record<string, unknown>,
     };
   }
-  const source = publication.sources[0];
-  if (!source) throw Error("Current publication sources are unavailable.");
+  const source = publication.sources.find(
+    (s) => s.messageId === authored.anchorMessageId,
+  );
+  if (!source) throw Error("Choose a current selected source anchor.");
+  if (candidate.kind === "task" && !authored.actionId)
+    throw Error("Choose an instruction action explicitly.");
   const conversion = {
     anchorMessageId: source.messageId,
-    actionId: "primary",
+    actionId: candidate.kind === "task" ? authored.actionId : "primary",
     sources: publication.sources,
     expectedPolicyVersion: publication.policyVersion,
     publication: { excerpt: "", attachmentIds: [] },

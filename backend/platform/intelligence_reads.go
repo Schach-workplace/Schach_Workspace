@@ -34,7 +34,7 @@ func (s *Server) intelligenceRead(w http.ResponseWriter, r *http.Request) error 
 	}
 	var out IntelligenceJobView
 	var deniedRead error
-	e = s.withAccessTransaction(r, a, func(tx *gorm.DB) error {
+	e = s.withIntelligenceAccessTransaction(r, a, func(tx *gorm.DB) error {
 		var job IntelligenceJob
 		if e := tx.Omit("result_json").First(&job, "id=? AND company_id=? AND actor_id=?", r.PathValue("id"), a.Company.ID, a.User.ID).Error; e != nil {
 			return missing()
@@ -110,7 +110,7 @@ func (s *Server) intelligenceList(w http.ResponseWriter, r *http.Request) error 
 		return invalid("Invalid cursor.")
 	}
 	var rows []IntelligenceJob
-	e = s.withAccessTransaction(r, a, func(tx *gorm.DB) error {
+	e = s.withIntelligenceAccessTransaction(r, a, func(tx *gorm.DB) error {
 		q := tx.Select("id,operation,state,reason_code,expires_at").Where("company_id=? AND actor_id=?", a.Company.ID, a.User.ID)
 		if cursor != "" {
 			q = q.Where("id < ?", cursor)
@@ -138,7 +138,7 @@ func (s *Server) intelligenceCancel(w http.ResponseWriter, r *http.Request) erro
 	if e != nil {
 		return e
 	}
-	e = s.withAccessTransaction(r, a, func(tx *gorm.DB) error {
+	e = s.withIntelligenceAccessTransaction(r, a, func(tx *gorm.DB) error {
 		var j IntelligenceJob
 		if e := tx.Select("id").First(&j, "id=? AND company_id=? AND actor_id=?", r.PathValue("id"), a.Company.ID, a.User.ID).Error; e != nil {
 			return missing()

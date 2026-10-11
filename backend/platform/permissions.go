@@ -189,8 +189,13 @@ func (s *Server) withPeopleAccessTransaction(r *http.Request, a *access, affecte
 	return s.withCompanyAccessFence(r, a, affected, fn)
 }
 func (s *Server) withCompanyAccessFence(r *http.Request, a *access, affected []string, fn func(*gorm.DB) error, opts ...*sql.TxOptions) error {
+	return s.withCompanyAccessFenceUsing(r, a, affected, lockCompany, fn, opts...)
+}
+
+// The caller declares its company fence before any session or member lock.
+func (s *Server) withCompanyAccessFenceUsing(r *http.Request, a *access, affected []string, companyFence func(*gorm.DB, string) error, fn func(*gorm.DB) error, opts ...*sql.TxOptions) error {
 	return s.db.WithContext(r.Context()).Transaction(func(tx *gorm.DB) error {
-		if err := lockCompany(tx, a.Company.ID); err != nil {
+		if err := companyFence(tx, a.Company.ID); err != nil {
 			return err
 		}
 		raw, e := sessionToken(r)

@@ -15,19 +15,21 @@ import (
 )
 
 type reportSnapshot struct {
-	Token       string
-	Company     string
-	User        string
-	Access      string
-	Filters     string
-	Timezone    string
-	Generated   time.Time
-	Rows        []Task
-	Summary     map[string]any
-	People      map[string]Person
-	Departments map[string]string
-	Projects    map[string]string
-	Bytes       int
+	Period        *ResolvedReportPeriod
+	MetricVersion int
+	Token         string
+	Company       string
+	User          string
+	Access        string
+	Filters       string
+	Timezone      string
+	Generated     time.Time
+	Rows          []Task
+	Summary       map[string]any
+	People        map[string]Person
+	Departments   map[string]string
+	Projects      map[string]string
+	Bytes         int
 }
 
 const reportRowLimit = 10000
@@ -156,6 +158,12 @@ func (s *Server) createReportSnapshot(r *http.Request) (*reportSnapshot, error) 
 		snap.User = a.User.ID
 		snap.Access = accessBasis(a)
 		snap.Timezone = a.Company.Timezone
+		period, e := resolveReportPeriod(r.URL.Query().Get("from"), r.URL.Query().Get("to"), a.Company.Timezone)
+		if e != nil {
+			return e
+		}
+		snap.Period = &period
+		snap.MetricVersion = 1
 		snap.People = map[string]Person{}
 		for id, m := range a.Members {
 			snap.People[id] = person(a.Users[id], m, a.Company.PermissionEpoch)
@@ -318,7 +326,7 @@ func (s *Server) reportSummary(w http.ResponseWriter, r *http.Request) error {
 	if e != nil {
 		return e
 	}
-	return respond(w, 200, map[string]any{"snapshot": snap.Token, "summary": snap.Summary, "timezone": snap.Timezone, "generatedAt": snap.Generated.Format(time.RFC3339Nano), "basis": "snapshot_current_state", "expiresAt": snap.Generated.Add(5 * time.Minute).Format(time.RFC3339Nano)})
+	return respond(w, 200, map[string]any{"snapshot": snap.Token, "summary": snap.Summary, "period": snap.Period, "metricVersion": snap.MetricVersion, "timezone": snap.Timezone, "generatedAt": snap.Generated.Format(time.RFC3339Nano), "basis": "snapshot_current_state", "expiresAt": snap.Generated.Add(5 * time.Minute).Format(time.RFC3339Nano)})
 }
 func (s *Server) reportRows(w http.ResponseWriter, r *http.Request) error {
 	snap, e := s.readReportSnapshot(r)

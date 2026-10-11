@@ -52,7 +52,7 @@ type ConversionInput struct {
 
 // Optional company business lock is acquired before session/member/conversation
 // rows. This invokes the existing task engine, not a parallel task model.
-func (s *Server) conversionTransaction(r *http.Request, fn func(*gorm.DB, *access, *conversationScope) error) error {
+func (s *Server) conversionTransaction(r *http.Request, basis *IntelligenceBasis, fn func(*gorm.DB, *access, *conversationScope) error) error {
 	a, e := s.access(r)
 	if e != nil {
 		return e
@@ -60,7 +60,11 @@ func (s *Server) conversionTransaction(r *http.Request, fn func(*gorm.DB, *acces
 	if a.Member.Role == "viewer" {
 		return denied()
 	}
-	return s.withAccessTransaction(r, a, func(tx *gorm.DB) error {
+	fence := s.withAccessTransaction
+	if basis != nil {
+		fence = s.withIntelligenceAccessTransaction
+	}
+	return fence(r, a, func(tx *gorm.DB) error {
 		var c Conversation
 		if e := lockCommunicationRow(tx, "UPDATE").First(&c, "company_id = ? AND id = ?", a.Company.ID, r.PathValue("id")).Error; e != nil {
 			return missing()
@@ -89,6 +93,19 @@ func verifyConversionSources(tx *gorm.DB, a *conversationScope, input Conversion
 		var action CommunicationBundleAction
 		if e := tx.First(&action, "company_id=? AND conversation_id=? AND anchor_message_id=? AND id=?", a.CompanyID, a.Conversation.ID, input.AnchorMessageID, input.ActionID).Error; e != nil {
 			return missing()
+		}
+		if revisions && input.IntelligenceBasis != nil {
+			var bundle CommunicationBundle
+			if e := tx.First(&bundle, "id=? AND company_id=?", action.BundleID, a.CompanyID).Error; e != nil {
+				return missing()
+			}
+			anchor, e := scopedMessage(tx, a, input.AnchorMessageID)
+			if e != nil {
+				return e
+			}
+			if bundle.SourceRevision != anchor.Revision {
+				return conflict()
+			}
 		}
 	}
 	anchor := false
@@ -162,7 +179,8 @@ func (s *Server) previewTaskConversion(w http.ResponseWriter, r *http.Request) e
 	}
 	var audience []string
 	reviewHash := ""
-	e := s.conversionTransaction(r, func(tx *gorm.DB, a *access, scope *conversationScope) error {
+	outcome, existingID, existingTitle := "created", "", ""
+	e := s.conversionTransaction(r, input.IntelligenceBasis, func(tx *gorm.DB, a *access, scope *conversationScope) error {
 		if e := verifyConversionSources(tx, scope, input, true); e != nil {
 			return e
 		}
@@ -191,13 +209,33 @@ func (s *Server) previewTaskConversion(w http.ResponseWriter, r *http.Request) e
 			}
 		}
 		audience = taskAudience(a, task)
+		actionID := input.ActionID
+		if actionID == "" {
+			actionID = "primary"
+		}
+		var claim CommunicationAction
+		err := tx.First(&claim, "company_id=? AND anchor_message_id=? AND action_id=?", a.Company.ID, input.AnchorMessageID, actionID).Error
+		if err == nil {
+			existing, e := scopedTask(tx, a, claim.TaskID)
+			if e != nil {
+				return missing()
+			}
+			outcome, existingID, existingTitle = "existing", existing.ID, existing.Title
+			audience = taskAudience(a, existing)
+		} else if err != gorm.ErrRecordNotFound {
+			return err
+		}
 		reviewHash = intelligenceReviewedHash(a, input.IntelligenceBasis, input, audience)
 		return nil
 	})
 	if e != nil {
 		return e
 	}
-	return respond(w, 200, map[string]any{"intelligenceReviewHash": reviewHash, "audienceUserIds": audience, "policyVersion": input.ExpectedPolicyVersion, "notice": "Task titles, descriptions and selected excerpts become work records visible to this broader audience. Future roles and reporting changes can change the audience. Source removal does not retract published work records."})
+	notice := "Task titles, descriptions and selected excerpts become work records visible to this broader audience. Future roles and reporting changes can change the audience. Source removal does not retract published work records."
+	if outcome == "existing" {
+		notice = "This instruction action already has work. Confirmation opens the existing task; reviewed fields and selected excerpts are not applied. The listed audience belongs to that existing task."
+	}
+	return respond(w, 200, map[string]any{"outcome": outcome, "existingTaskId": existingID, "existingTaskTitle": existingTitle, "intelligenceReviewHash": reviewHash, "audienceUserIds": audience, "policyVersion": input.ExpectedPolicyVersion, "notice": notice})
 }
 func (s *Server) convertMessageToTask(w http.ResponseWriter, r *http.Request) error {
 	var input ConversionInput
@@ -205,7 +243,8 @@ func (s *Server) convertMessageToTask(w http.ResponseWriter, r *http.Request) er
 		return e
 	}
 	id := ""
-	e := s.conversionTransaction(r, func(tx *gorm.DB, a *access, scope *conversationScope) error {
+	outcome := "created"
+	e := s.conversionTransaction(r, input.IntelligenceBasis, func(tx *gorm.DB, a *access, scope *conversationScope) error {
 		if e := verifyConversionSources(tx, scope, input, false); e != nil {
 			return e
 		}
@@ -223,6 +262,16 @@ func (s *Server) convertMessageToTask(w http.ResponseWriter, r *http.Request) er
 				return missing()
 			}
 			id = retry.TaskID
+			outcome = "existing"
+			if input.IntelligenceBasis != nil {
+				var publication IntelligencePublication
+				err := tx.First(&publication, "job_id=? AND company_id=? AND actor_id=? AND canonical_operation=? AND retry_key=?", input.IntelligenceBasis.JobID, a.Company.ID, a.User.ID, "task_conversion", input.RetryKey).Error
+				if err == nil {
+					outcome = publication.Outcome
+				} else if err != gorm.ErrRecordNotFound {
+					return err
+				}
+			}
 			return nil
 		}
 		if e != gorm.ErrRecordNotFound {
@@ -238,10 +287,18 @@ func (s *Server) convertMessageToTask(w http.ResponseWriter, r *http.Request) er
 		var claim CommunicationAction
 		e = tx.First(&claim, "company_id = ? AND anchor_message_id = ? AND action_id = ?", a.Company.ID, input.AnchorMessageID, actionID).Error
 		if e == nil {
-			if _, e := scopedTask(tx, a, claim.TaskID); e != nil {
+			existing, e := scopedTask(tx, a, claim.TaskID)
+			if e != nil {
 				return missing()
 			}
+			if e = s.intelligencePublicationFirstWrite(tx, a, input.IntelligenceBasis, scope.Conversation.ID, conversionIntelligenceMessages(input), input, taskAudience(a, existing)); e != nil {
+				return e
+			}
 			id = claim.TaskID
+			outcome = "existing"
+			if e = s.recordIntelligencePublication(tx, a, input.IntelligenceBasis, "task", id, "task_conversion", input.RetryKey, input, "existing"); e != nil {
+				return e
+			}
 			return tx.Create(&CommunicationRetry{CompanyID: a.Company.ID, ActorID: a.User.ID, Operation: "task_conversion", RetryKey: input.RetryKey, RequestHash: hash, TaskID: id}).Error
 		}
 		if e != gorm.ErrRecordNotFound {
@@ -320,7 +377,7 @@ func (s *Server) convertMessageToTask(w http.ResponseWriter, r *http.Request) er
 	if e != nil {
 		return e
 	}
-	return ok(w, id)
+	return respond(w, 200, map[string]any{"id": id, "outcome": outcome})
 }
 func (s *Server) conversationWorkLinks(w http.ResponseWriter, r *http.Request) error {
 	links := []Task{}

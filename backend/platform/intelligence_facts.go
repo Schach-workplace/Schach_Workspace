@@ -68,17 +68,48 @@ func buildIntelligenceFacts(manifest SourceManifest) (DeterministicFacts, error)
 			add(b, "deadline_definition", "Original and current deadlines have separate denominators. Timed deadlines compare exact instants including equality; all-day deadlines use the report company calendar. Acceptance episodes and unique task counts are different measures.", "deadline_definition")
 			add(b, "coverage", "Coverage: "+strings.Join(v.Summary.Coverage, "; "), "coverage")
 		case *reportSnapshot:
-			keys := []string{}
-			for key := range v.Summary {
-				keys = append(keys, key)
+			if v.MetricVersion != 0 && v.MetricVersion != 1 {
+				return nil, intelligenceError(422, "unsupported_facts")
 			}
-			sort.Strings(keys)
-			for _, key := range keys {
-				switch value := v.Summary[key].(type) {
-				case int, float64, string, bool:
-					add(b, key, fmt.Sprintf("Current-state %s: %v. Snapshot generated %s in %s; this is not a historical observation.", key, value, v.Generated.UTC().Format("2006-01-02T15:04:05Z"), v.Timezone), "value")
+			period := "Selected period unavailable for this legacy snapshot."
+			if v.Period != nil && validDate(v.Period.From) && validDate(v.Period.To) && v.Period.Zone == v.Timezone {
+				period = fmt.Sprintf("Selected period %s through %s in %s.", v.Period.From, v.Period.To, v.Period.Zone)
+			}
+			prefix := "Current-state report. " + period + " Generated " + v.Generated.UTC().Format("2006-01-02T15:04:05Z") + ". "
+			count := func(key string) (int64, bool) {
+				switch n := v.Summary[key].(type) {
+				case int:
+					return int64(n), n >= 0
+				case int64:
+					return n, n >= 0
+				case float64:
+					return int64(n), n >= 0 && n <= 9007199254740991 && math.Trunc(n) == n
 				}
+				return 0, false
 			}
+			for key, label := range map[string]string{"rows": "Visible selected tasks", "cohort": "Tasks with current due dates in the selected period", "accepted": "Currently accepted tasks with acceptance dates in the selected period", "done": "Currently accepted tasks in the due-date cohort", "needsAttention": "Due-date cohort tasks needing attention", "overdue": "Currently overdue cohort tasks", "changed": "Cohort tasks with changed deadlines", "blocked": "Currently blocked cohort tasks", "pending": "Cohort tasks awaiting review"} {
+				n, ok := count(key)
+				text := label + ": unavailable."
+				if ok {
+					text = fmt.Sprintf("%s: %d tasks.", label, n)
+				}
+				add(b, key, prefix+text, "value")
+			}
+			for _, metric := range []struct{ key, num, den, label string }{{"original_deadline", "ontime", "originals", "Original deadline punctuality"}, {"current_deadline", "currentOnTime", "currents", "Current deadline punctuality"}} {
+				n, nok := count(metric.num)
+				d, dok := count(metric.den)
+				text := metric.label + ". Numerator or denominator unavailable. Rate unavailable."
+				if nok && dok && n <= d {
+					rate := "Rate unavailable because denominator is zero."
+					if d > 0 {
+						rate = "Rate " + number(float64(n)*100/float64(d)) + "%."
+					}
+					text = fmt.Sprintf("%s. Numerator %d; denominator %d. %s", metric.label, n, d, rate)
+				}
+				add(b, metric.key, prefix+text, "value", "coverage")
+			}
+			add(b, "deadline_definition", prefix+"Original and current deadline punctuality use separate denominators: currently accepted tasks in the selected period with each respective valid deadline. Timed deadlines compare exact instants including equality; all-day deadlines use the company calendar. Counts describe current task state and are not historical acceptance episodes.", "deadline_definition")
+			add(b, "coverage", prefix+"Coverage is current state of authorized selected tasks, not historical observations. Missing valid deadlines are excluded from their respective punctuality denominators. Zero denominators have unavailable rates; absent data never implies 100%. Current accepted-task counts do not reconstruct deleted or earlier acceptance episodes.", "coverage")
 		case PlanningView:
 			add(b, "method", v.MethodDescription+" Method: "+v.Method+". Company timezone: "+v.Timezone+".", "limitation")
 			add(b, "coverage", fmt.Sprintf("Visible tasks %d; unique remaining effort %s hours; weekly overlapping exposure %s hours; undated %d; invalid intervals %d; zero estimates %d. Missing or zero recorded capacity does not imply available time.", v.Coverage.VisibleTasks, number(v.Coverage.UniqueSelectedRemainingHours), number(v.Coverage.WeeklyExposureHours), v.Coverage.Undated, v.Coverage.InvalidInterval, v.Coverage.RecordedZeroEstimate), "coverage")

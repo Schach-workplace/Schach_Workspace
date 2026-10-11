@@ -34,7 +34,9 @@ export default function IntelligenceDraftReview({
   );
   const candidate =
     job?.result?.operation === 'action_draft' ? job.result.candidates[index] : undefined;
-  const mutation = useExecutionMutation(form, ['/intelligence/jobs/' + jobId]);
+  const mutation = useExecutionMutation(form, [
+    '/intelligence/jobs/' + jobId + '/publication-access',
+  ]);
   const frozen = useBusinessAttempt<Record<string, unknown>>(form);
   const unknown = frozen.attempt?.state === 'unknown';
   const proof = useExecutionRead<{ current: boolean; committed: boolean }>(
@@ -46,6 +48,29 @@ export default function IntelligenceDraftReview({
       operation: intelligencePublicationOperation(frozen.attempt?.target?.path),
     },
   );
+  const privateReview = !!job?.publication?.conversationId || !!authored.anchorMessageId;
+  const actionPath =
+    '/conversations/' +
+    (job?.publication?.conversationId ?? '') +
+    '/work-actions?anchorMessageId=' +
+    encodeURIComponent(authored.anchorMessageId);
+  const actions = useExecutionRead<{
+    actions: { id: string; title: string; sourceRevision: number }[];
+  }>(
+    actionPath,
+    !!job && kind === 'task' && !!job.publication?.conversationId && !!authored.anchorMessageId,
+  );
+  const selectedAnchor = job?.publication?.sources.find(
+    (s) => s.messageId === authored.anchorMessageId,
+  );
+  const actionOptions = actions.ready
+    ? [
+        { id: 'primary', name: 'Primary instruction' },
+        ...(actions.data?.actions ?? [])
+          .filter((a) => a.sourceRevision === selectedAnchor?.revision)
+          .map((a) => ({ id: a.id, name: a.title })),
+      ]
+    : [];
   const sourceDenied = unknown ? !!proof.denied : denied;
   const canConfirm = unknown ? proof.ready && !!proof.data?.current : authorized && !denied;
   useEffect(() => {
@@ -57,10 +82,13 @@ export default function IntelligenceDraftReview({
     audienceUserIds: string[];
     notice: string;
     intelligenceReviewHash: string;
+    outcome?: 'created' | 'existing';
+    existingTaskId?: string;
+    existingTaskTitle?: string;
   }>();
   const [ack, setAck] = useState(false);
   const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const [success, setSuccess] = useState<{ id: string; outcome?: string }>();
   const scope = w.companyId + ':' + w.session?.user.id;
   const current = useRef(scope);
   current.current = scope;
@@ -85,7 +113,11 @@ export default function IntelligenceDraftReview({
   }, [sourceDenied, form, scope]);
   const write = (key: keyof IntelligenceAuthored, value: string) => {
     revision.current++;
-    setAuthored({ ...authored, [key]: value });
+    setAuthored({
+      ...authored,
+      [key]: value,
+      ...(key === 'anchorMessageId' ? { actionId: '' } : {}),
+    });
     setPreview(undefined);
     setAck(false);
   };
@@ -96,6 +128,14 @@ export default function IntelligenceDraftReview({
   };
   async function review() {
     if (!job || !candidate) return;
+    if (
+      privateReview &&
+      kind === 'task' &&
+      (!actions.ready || !actionOptions.some((a) => a.id === authored.actionId))
+    ) {
+      setError('Choose a current supported instruction action.');
+      return;
+    }
     try {
       const plan = intelligenceReviewRequest(
         job,
@@ -125,11 +165,11 @@ export default function IntelligenceDraftReview({
     if (!canConfirm) return;
     try {
       if (frozen.attempt?.state === 'unknown' && frozen.attempt.target) {
-        await mutation.execute<{ id: string }>(
+        await mutation.execute<{ id: string; outcome?: string }>(
           frozen.attempt.target.path,
           frozen.attempt.payload,
           'POST',
-          (r) => setSuccess(r.id),
+          (r) => setSuccess(r),
         );
         return;
       }
@@ -141,8 +181,11 @@ export default function IntelligenceDraftReview({
         preview.intelligenceReviewHash,
         w.data?.company?.currency,
       );
-      await mutation.execute<{ id: string }>(plan.path, plan.payload, 'POST', (r) =>
-        setSuccess(r.id),
+      await mutation.execute<{ id: string; outcome?: string }>(
+        plan.path,
+        plan.payload,
+        'POST',
+        (r) => setSuccess(r),
       );
     } catch (e) {
       setError((e as Error).message);
@@ -157,7 +200,25 @@ export default function IntelligenceDraftReview({
       <h3>Review selected draft</h3>
       {pending && <p role="status">Checking current sources. Authored fields remain here.</p>}
       {success ? (
-        <p role="status">Created work successfully.</p>
+        <div>
+          <p role="status">
+            {success.outcome === 'existing'
+              ? 'This action already has work. Reviewed fields were not applied.'
+              : 'Created work successfully.'}
+          </p>
+          {success.outcome === 'existing' && (
+            <button
+              className="button"
+              onClick={() =>
+                window.dispatchEvent(
+                  new CustomEvent('schach-open-task', { detail: { id: success.id } }),
+                )
+              }
+            >
+              Open existing work
+            </button>
+          )}
+        </div>
       ) : (
         <>
           <label>
@@ -176,6 +237,44 @@ export default function IntelligenceDraftReview({
               onChange={(e) => write('description', e.target.value)}
             />
           </label>
+          {privateReview && (
+            <>
+              <label>
+                Source anchor
+                <select
+                  aria-label="Source anchor"
+                  value={authored.anchorMessageId}
+                  disabled={!job}
+                  onChange={(e) => write('anchorMessageId', e.target.value)}
+                >
+                  <option value="">Choose selected message</option>
+                  {job?.publication?.sources.map((s, i) => (
+                    <option key={s.messageId} value={s.messageId}>
+                      Selected message {i + 1} (revision {s.revision})
+                    </option>
+                  ))}
+                </select>
+              </label>
+              {kind === 'task' && (
+                <label>
+                  Instruction action
+                  <select
+                    aria-label="Instruction action"
+                    value={authored.actionId}
+                    disabled={!job || !actions.ready}
+                    onChange={(e) => write('actionId', e.target.value)}
+                  >
+                    <option value="">Choose supported action</option>
+                    {actionOptions.map((a) => (
+                      <option key={a.id} value={a.id}>
+                        {a.name}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              )}
+            </>
+          )}
           {(['ownerId', 'reviewerId'] as const).map((key) => (
             <label key={key}>
               {key === 'ownerId' ? 'Owner' : 'Independent reviewer'}
@@ -260,6 +359,11 @@ export default function IntelligenceDraftReview({
           {job && preview && (
             <>
               <p>{preview.notice}</p>
+              {preview.outcome === 'existing' && (
+                <p>
+                  Existing work: {preview.existingTaskTitle}. Reviewed fields will not be applied.
+                </p>
+              )}
               <p>
                 {preview.audienceUserIds
                   .map(
@@ -281,7 +385,11 @@ export default function IntelligenceDraftReview({
             }
             onClick={() => void confirm()}
           >
-            {frozen.attempt ? 'Retry original submitted draft' : 'Confirm reviewed creation'}
+            {frozen.attempt
+              ? 'Retry original submitted draft'
+              : preview?.outcome === 'existing'
+                ? 'Confirm existing work'
+                : 'Confirm reviewed creation'}
           </button>
         </>
       )}

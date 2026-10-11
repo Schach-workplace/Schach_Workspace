@@ -5,6 +5,7 @@ export function mergeExecutionPage(
 ) {
   for (const key of [
     "items",
+    "jobs",
     "goals",
     "measurements",
     "tasks",
@@ -30,7 +31,9 @@ export function mergeExecutionPage(
             ? JSON.stringify(value)
             : key === "warnings"
               ? JSON.stringify(value)
-              : (value.id ?? value.sourceId ?? value.row?.id);
+              : key === "jobs"
+                ? value.jobId
+                : (value.id ?? value.sourceId ?? value.row?.id);
       if (seen.has(identity)) return false;
       seen.add(identity);
       return true;

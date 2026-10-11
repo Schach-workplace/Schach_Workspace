@@ -269,6 +269,7 @@ export default function IntelligencePanel({
           </IntelligenceGeometry>
           {draft !== null && (
             <IntelligenceDraftReview
+              key={`${jobId}:${draft.kind}:${draft.index}`}
               jobId={jobId}
               index={draft.index}
               kind={draft.kind}
