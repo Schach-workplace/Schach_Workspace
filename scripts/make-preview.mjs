@@ -3,6 +3,9 @@ import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const dist=path.join(root,'frontend','dist-demo');
+const compiledAssets = await readdir(path.join(dist, 'assets'));
+if (compiledAssets.filter(name => name.endsWith('.js')).length !== 1 || compiledAssets.filter(name => name.endsWith('.css')).length !== 1)
+  throw new Error('Demo must be built as one JavaScript entry and one stylesheet before inlining.');
 let html=await readFile(path.join(dist,'index.html'),'utf8');
 const assetPath=p=>path.join(dist,p.replace(/^\.?\//,''));
 const scripts=[...html.matchAll(/<script\b[^>]*\bsrc="([^"]+)"[^>]*><\/script>/g)];

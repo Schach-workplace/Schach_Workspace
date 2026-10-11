@@ -1,6 +1,6 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   plugins: [react()],
   base: './',
   server: {
@@ -13,5 +13,12 @@ export default defineConfig({
       },
     },
   },
-  build: { target: 'es2022', sourcemap: false, chunkSizeWarningLimit: 900 },
-});
+  build: {
+    target: 'es2022',
+    sourcemap: false,
+    chunkSizeWarningLimit: 900,
+    ...(mode === 'demo'
+      ? { cssCodeSplit: false, rolldownOptions: { output: { codeSplitting: false } } }
+      : {}),
+  },
+}));

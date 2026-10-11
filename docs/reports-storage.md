@@ -1,6 +1,6 @@
 # Private historical report storage
 
-Apply mirrored numbered SQL33–37 using the deployment's existing migration owner. Do not run production AutoMigrate. Historical facts and snapshots are durable business history; CSV artifact expiry deletes bytes and link availability only.
+Historical reports introduced SQL33–37; apply the current full mirrored inventory through SQL58 using the deployment's existing migration owner. Do not run production AutoMigrate. Historical facts and snapshots are durable business history; CSV artifact expiry deletes bytes and link availability only.
 
 Set `REPORT_ARTIFACT_ROOT` to a dedicated private persistent volume, separate from media, frontend static content and public object URLs. Every ancestor must be a real directory; the root is0700 and files0600. Both standalone and Encore accept this setting via `platform.ConfigureReports`. `REPORT_ARTIFACT_TTL_HOURS` defaults to168 and permits1–8760. Local standalone defaults alongside its selected SQLite database; local Encore defaults `.encore/report-artifacts`. Production without configured private storage still supports historical reads and returns `export_unavailable` for new exports.
 

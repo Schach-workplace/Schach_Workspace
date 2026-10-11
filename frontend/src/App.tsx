@@ -1,7 +1,8 @@
 import IntelligenceLauncher from './components/IntelligenceLauncher';
 import PeopleTools from './components/PeopleTools';
-import Connect from './communication/Connect';
-import { useEffect, useRef, useState, type FormEvent } from 'react';
+import AsyncView from './components/AsyncView';
+const Connect = lazy(() => import('./communication/Connect'));
+import { lazy, useEffect, useRef, useState, type FormEvent } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 import {
   ArrowRight,
@@ -764,10 +765,21 @@ function WorkspaceApp() {
           {view === 'goals' && <GoalsPage onTask={openTask} />}
           {view === 'reports' && <ReportsPage onTask={openTask} />}
           {view === 'connect' && (
-            <Connect
-              onTask={openTask}
-              key={store.companyId + ':' + (store.session?.user.id ?? '')}
-            />
+            <AsyncView
+              label="Connect"
+              key={
+                store.companyId +
+                ':' +
+                (store.session?.user.id ?? '') +
+                ':' +
+                data.me.memberAccessEpoch
+              }
+            >
+              <Connect
+                onTask={openTask}
+                key={store.companyId + ':' + (store.session?.user.id ?? '')}
+              />
+            </AsyncView>
           )}
           {view === 'people' && <Organization onNavigate={navigate} />}
           {view === 'finance' && (

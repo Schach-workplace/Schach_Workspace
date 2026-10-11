@@ -1000,6 +1000,15 @@ function ConnectView({
           <div className="connect-dialog-body">
             <Structured
               conversation={conversation}
+              members={chat.members}
+              sourceReady={
+                !disabled &&
+                chat.selected === conversation.id &&
+                !!structured &&
+                chat.messages.some(
+                  (m) => m.id === structured.id && m.revision === structured.revision && !m.removed,
+                )
+              }
               source={structured}
               data={data}
               command={chat.command}

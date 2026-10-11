@@ -6,6 +6,7 @@ import {
   useEffect,
   useEffectEvent,
   useLayoutEffect,
+  useMemo,
   useRef,
   useState,
 } from "react";
@@ -21,7 +22,7 @@ export default function TaskDetailScreen({ id }: { id: string }) {
   const [task, setTask] = useState<WorkTask | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [busy, setBusy] = useState(false);
+  const [busyOwner, setBusyOwner] = useState<object | null>(null);
   const [execution, setExecution] = useState<
     "templates" | "impact" | "schedule" | ""
   >("");
@@ -32,22 +33,36 @@ export default function TaskDetailScreen({ id }: { id: string }) {
   const requestRevision = useRef(0);
   const editable = !!w.work && w.work.me.role !== "viewer";
   const zone = w.work?.company.timezone ?? "Asia/Kolkata";
+  const completionIdentity = useMemo(
+    () => ({
+      id,
+      company: w.company,
+      actor: w.session?.user.id,
+      readBasis: w.work?.readBasis,
+      policyEpoch: w.policyEpoch,
+      foreground: w.foreground,
+    }),
+    [
+      id,
+      w.company,
+      w.session?.user.id,
+      w.work?.readBasis,
+      w.policyEpoch,
+      w.foreground,
+    ],
+  );
+  const busy = busyOwner === completionIdentity;
+  const setBusy = (value: boolean) =>
+    setBusyOwner(value ? completionIdentity : null);
   useLayoutEffect(() => {
-    const owner = {};
-    completionOwner.current = owner;
+    completionOwner.current = completionIdentity;
     pending.current = null;
-    setBusy(false);
     return () => {
-      if (completionOwner.current === owner) completionOwner.current = null;
+      if (completionOwner.current === completionIdentity)
+        completionOwner.current = null;
     };
-  }, [
-    id,
-    w.company,
-    w.session?.user.id,
-    w.work?.readBasis,
-    w.policyEpoch,
-    w.foreground,
-  ]);
+  }, [completionIdentity]);
+
   async function load() {
     if (!w.foreground || !w.work) return;
     const revision = ++requestRevision.current;

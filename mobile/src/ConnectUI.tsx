@@ -7,6 +7,8 @@ import {
   StyleSheet,
   Text,
   View,
+  type StyleProp,
+  type ViewStyle,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 export function Action({
@@ -15,12 +17,14 @@ export function Action({
   disabled = false,
   primary = false,
   selected = false,
+  style,
 }: {
   title: string;
   onPress: () => void;
   disabled?: boolean;
   primary?: boolean;
   selected?: boolean;
+  style?: StyleProp<ViewStyle>;
 }) {
   return (
     <Pressable
@@ -33,6 +37,7 @@ export function Action({
         ui.action,
         primary && ui.primary,
         selected && ui.selected,
+        style,
         (disabled || pressed) && { opacity: disabled ? 0.45 : 0.7 },
       ]}
     >

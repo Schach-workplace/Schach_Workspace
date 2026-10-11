@@ -1,10 +1,15 @@
 # Verification record
 
+**Roadmap continuation, 12 October 2026:** All ten milestone implementations now exist. M10 acceptance is bounded and source-qualified in the [published milestone evidence](../verification/workspace-improvements-roadmap/milestone-10/publication-report.md). Native PostgreSQL, standalone TCP, Chromium and isolated Encore exporter checks ran in later owned fixtures; earlier host-blocked statements below are historical. Final integration changes client recovery/choices, release packaging, bundles and harnesses and requires its own final command/source/binary bindings. Earlier APK/Metro proofs do not certify the new release APK or protected HTTPS authentication.
+
+Local acceptance does not certify physical Android/iOS, an iOS binary, organizational signing, India HTTPS/TURN/push deployment, disaster-recovery objectives, production capacity or Hindi/private-business model quality. Existing failing preliminary predicates, limited native positive cases and raw neutral200 versus an expected404 remain in their source-qualified records. No new inference is required for final client/doc/harness changes.
+
+
 **Local continuation, 10 October 2026:** [Fresh native baseline and failures](LOCAL_BASELINE_2026-10-10.md) records successful PostgreSQL, TCP, browser and Compose checks on the current host, plus three Encore adapter source defects. The original environment limits below are historical; the new record distinguishes the unchanged adapter from its disposable corrected diagnostic copy.
 
 Recorded on **10 October 2026**. This document separates executed checks from deployment checks that remain open. It is a technical delivery record, not an external security audit or production certification.
 
-## Runtime and dependency versions
+## Historical finance-release runtime and dependency record
 
 | Item | Version and evidence |
 | --- | --- |
@@ -77,7 +82,7 @@ ENCORERUNTIME_NOPANIC=1 go test ./...
 go vet ./...
 ```
 
-On a supported deployment host, the separate required Encore gate is `encore check` followed by a configured `encore run` and real API flows. For native PostgreSQL, run the backend suite with `TEST_DATABASE_URL` pointing to a disposable database; [backend instructions](../backend/IMPLEMENTATION_REPORT.md) describe schema permissions and cleanup. Neither of these native gates passed in this workspace, because they could not run here.
+On a supported deployment host, the separate required Encore gate is `encore check` followed by a configured `encore run` and real API flows. For native PostgreSQL, run the backend suite with `TEST_DATABASE_URL` pointing to a disposable database; [backend instructions](../backend/IMPLEMENTATION_REPORT.md) describe schema permissions and cleanup. Neither native gate passed in that historical finance-release execution; later source-qualified roadmap evidence below supersedes host-availability limits.
 
 ## PGlite migration compatibility — passed
 
@@ -162,7 +167,7 @@ A separate Go HTTP probe used the shared `platform.Server`, real session cookies
 
 The first four scenarios exposed concrete defects during review and were re-executed after the backend owner corrected them. Task parent/dependency edits also now use the company transaction lock and refreshed permissions; simultaneous different-task edge edits on native PostgreSQL remain a deployment test, because the SQLite probe does not exercise multiple PostgreSQL backend processes.
 
-## Environment limits and open deployment checks
+## Historical finance-release environment limits
 
 Native PostgreSQL initialization was blocked in this environment: `initdb` refused execution as root, and the available privilege-changing path could not create the required process identity. The PGlite run supplied SQL compatibility evidence without bypassing that restriction. It does not verify native PostgreSQL persistence, TLS, credentials, connection pools, concurrent locking, scheduler overlap, or a backup restore.
 
@@ -172,7 +177,7 @@ Browser automation and Encore's native Unix-socket path were also blocked by the
 
 Before real team use, run the complete Go/Encore/PostgreSQL path, verify the production proxy and cookie/origin policy, rehearse restoration, and test scheduler overlap on the target database. Exercise desktop and mobile flows in actual browsers: sign-in, company switching, task creation/edit/review, upload/download, navigation, filters, reports and keyboard focus. Record those results against the deployed revision. [Operations guide](OPERATIONS.md); [security boundaries and limitations](SECURITY_AND_LIMITATIONS.md).
 
-## Release inclusion and documentation audit
+## Historical finance-release inclusion and documentation audit
 
 Relative Markdown links were checked across the project's **24 Markdown documents**, excluding dependency, Git and generated distribution directories; **zero broken relative links** were found. The release selector included **155 files**, including the required finance source, both migration versions, finance documentation, module/lock files, frontend data adapters and fixtures, compiled API/demo bundles, the self-contained preview, font licenses, configuration examples and verification scripts/results. No ELF binaries, runtime databases, local secret files or dependency directories were selected. Environment-file inclusion was limited to the intentional `.env.example`, frontend `.env.example`, and frontend `.env.demo` configuration files.
 
@@ -188,9 +193,9 @@ The original finance/M0 evidence above is historical. Current communication capa
 
 The bounded browser/native redesign and nameless direct-message reuse have fresh evidence in [the Connect verification record](../verification/connect-ux-2026-10-10/result.json) and [independent review](../verification/connect-ux-2026-10-10/review.md). The implementation, acceptance cases, API compatibility and device limits are in [CONNECT_UX.md](CONNECT_UX.md). These results supersede older frontend/native test counts for this follow-up, without rewriting the historical communication/provider evidence.
 
-## Workspace improvement foundation — 10 October 2026
+## Historical workspace improvement foundation — 10 October 2026
 
-The first milestone of the new [workspace roadmap](superpowers/plans/2026-10-10-workspace-improvements-roadmap.md) is implemented in `improve/workspace-improvements`: exact current-state report deadline metrics, project/date controls, a lean authorized task report input API and native Work search/sheets/company-time deadline capture. This is not completion of the ten-milestone roadmap.
+The first milestone of the new [workspace roadmap](superpowers/plans/2026-10-10-workspace-improvements-roadmap.md) is implemented in `improve/workspace-improvements`: exact current-state report deadline metrics, project/date controls, a lean authorized task report input API and native Work search/sheets/company-time deadline capture. This was the first-milestone state on 10 October, before the later nine milestones.
 
 Fresh checks: 96 web tests, 20 native tests, 108 top-level SQLite backend tests passing (6 environment/provider-specific skips), 3 report integration tests against owned PostgreSQL schemas using all existing migrations, both web builds, native typecheck/lint and Android/iOS Hermes exports. Encore initialized successfully with explicit local SEED_DEMO=true; no custom check commands configured (0/0). Chromium desktop/390px acceptance passed six checks. No updated Android APK/iOS signed build or physical-device certification is claimed for these new native changes.
 

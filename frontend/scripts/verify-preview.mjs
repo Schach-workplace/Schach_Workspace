@@ -10,6 +10,7 @@ const inspection = new Window({ settings: { disableJavaScriptFileLoading: true, 
 inspection.document.write(html);
 const errors = [];
 const checks = [];
+const externalRequests = [];
 function check(name, condition) {
   assert.ok(condition, name);
   checks.push(name);
@@ -26,7 +27,7 @@ const window = new Window({
   },
 });
 window.structuredClone = globalThis.structuredClone; // Browser API absent from Happy DOM.
-window.fetch = async () => { throw new Error('The self-contained preview requested a network resource.'); };
+window.fetch = async (...args) => { externalRequests.push({ kind: 'fetch', target: String(args[0]) }); throw new Error('The self-contained preview requested a network resource.'); };
 window.addEventListener('error', (event) => errors.push(event.message));
 async function until(predicate) {
   for (let i = 0; i < 60; i++) {
@@ -50,11 +51,12 @@ try {
       meta.url = 'https://preview.invalid/preview.html';
       meta.resolve = (specifier) => new URL(specifier, meta.url).href;
     },
-    importModuleDynamically() {
+    importModuleDynamically(specifier) {
+      externalRequests.push({ kind: 'dynamic module', target: specifier });
       throw new Error('The self-contained preview requested another module.');
     },
   });
-  await module.link(() => { throw new Error('The self-contained preview imports another module.'); });
+  await module.link((specifier) => { externalRequests.push({ kind: 'static module', target: specifier }); throw new Error('The self-contained preview imports another module.'); });
   await module.evaluate();
   await until(() => window.document.querySelector('h1')?.textContent === 'Your business, in focus.');
   check('Compiled application mounts the leadership overview', true);
@@ -83,6 +85,17 @@ try {
   secondFinanceNav.click();
   await until(() => window.document.body.textContent.includes('Northstar site mobilisation visit'));
   check('Second company financial records stay separate in the compiled preview', !window.document.body.textContent.includes('Design software annual renewal'));
+  const connectNav = [...window.document.querySelectorAll('nav[aria-label="Main navigation"] button')].find(button => button.textContent.trim() === 'Connect');
+  assert.ok(connectNav, 'Connect navigation exists');
+  connectNav.click();
+  await until(() => window.document.body.textContent.includes('Connect requires the shared server'));
+  check('Offline Connect states its actual shared-server requirement', true);
+  const assistance = [...window.document.querySelectorAll('button')].find(button => button.textContent.trim() === 'Local assistance history');
+  assert.ok(assistance, 'Manual assistance entry exists');
+  assistance.click();
+  await until(() => window.document.body.textContent.includes('Local inference is unavailable in demo mode. Continue manually.'));
+  check('Offline assistance preserves the explicit local-provider-unavailable manual flow', true);
+  check('No external module or fetch was attempted, including caught failures', externalRequests.length === 0);
   check('No application error was reported during the compiled flow', errors.length === 0);
   const result = {
     status: 'passed',

@@ -49,19 +49,21 @@ Current accepted boundary:660 source hashes/636safe+3reports639 independently ve
 
 Saved requirements/reports: `task-final-integration-brief-preparation.md`, `task-final-integration-readonly-preparation-report.md`, `task-final-integration-current-dispositions-preparation.md`, current exhaustive ledger/ruling/observation extracts. Active /root/final_integration at exactacceptedbc3b7c7 BASE, task-final-integration-brief.md. Never redispatch completed read-only preparation. Root separately activates native owner after exactAPK signature/data check.
 
-- [ ] Release selector: .git FILE/nested .worktrees exclusion and selected file/directory symlink preflight BEFORE environment/config/mirror reads; synthetic GREEN and required inclusions before actual ZIP.
-- [ ] Human CSV/expense labels and native amount keyboard; retain exact API/currency/frozen retry payload.
-- [ ] Goal/preset409 resource-specific guidance and deliberate latest inspection; onboarding hard-clear honest reentry/fresh preview; no stale CAS rebase/unknown-body rewrite.
-- [ ] Fast A/B held-response owning regression before any current-target/authority callback fix; preserve original legitimate canonical commits.
-- [ ] Structured current eligible conversation members/historyFromSeq/public roles/reviewer exclusions; native searchable choices/company-zone deadline fold-gap/optional blank/frozen unknown payload.
+- [x] Release selector: .git FILE/nested .worktrees exclusion and selected file/directory symlink preflight BEFORE environment/config/mirror reads; synthetic GREEN and required inclusions before actual ZIP.
+- [x] Human CSV/expense labels and native amount keyboard; retain exact API/currency/frozen retry payload.
+- [x] Goal/preset409 resource-specific guidance and deliberate latest inspection; onboarding hard-clear honest reentry/fresh preview; no stale CAS rebase/unknown-body rewrite.
+- [x] Fast A/B held-response owning regression before any current-target/authority callback fix; preserve original legitimate canonical commits.
+- [x] Structured current eligible conversation members/historyFromSeq/public roles/reviewer exclusions; native searchable choices/company-zone deadline fold-gap/optional blank/frozen unknown payload.
 - [ ] Measure app-owned Auth and Goal evidence actual44dp hit areas/clipping before minimal fix; no OS-calendar certification/global threshold bump.
-- [ ] Auth-safe Connect/assistance lazy loading and manual recovery; measure normal chunks against unchanged900kB warning threshold.
-- [ ] Coherent single-entry offline DEMO using installed Vite8/Rolldown configuration; regenerate preview, actual offline Connect/manual assistance zero external requests; honest intentional inline-DEMO warning.
-- [ ] Harness invalid flags exit2 before side effects; derive contiguous58 SQL/mirror/checksum/legacy inventory; safe environment scrub/color setup and actual executed-proof labels.
-- [ ] README/VERIFICATION/API/SECURITY/OPERATIONS/mobile/module documentation: actual APIs, dated qualified results, provider pins/limits, key backup, history and rollout gates. Clean attached audio is distinct from disabled call recording/transcription.
+- [x] Source/focused gate only: auth-safe Connect/assistance lazy loading and manual recovery; measure normal chunks against unchanged900kB warning threshold.
+- [x] Source/HappyDOM gate only: coherent single-entry offline DEMO using installed Vite8/Rolldown configuration; regenerate preview, actual offline Connect/manual assistance zero external requests; honest intentional inline-DEMO warning.
+- [x] Source/synthetic gate only: harness invalid flags exit2 before side effects; derive contiguous58 SQL/mirror/checksum/legacy inventory; safe environment scrub/color setup and actual executed-proof labels.
+- [x] Draft source gate only, final evidence reconciliation pending: README/VERIFICATION/API/SECURITY/OPERATIONS/mobile/module documentation: actual APIs, dated qualified results, provider pins/limits, key backup, history and rollout gates. Clean attached audio is distinct from disabled call recording/transcription.
 - [ ] Final affected full clients/types/lint/normal/demo/offline/Hermes/current browser320/375/430 and20px focus/scroll/pending/unknown evidence. Reuse unchanged heavy backend proofs only with exact source equivalence.
 - [ ] Fresh Android evaluation APK from EXACT committed isolated source, SDK57 lock/config/prebuild, embedded Hermes, ABIs/certificate/permissions/provenance. SAME native owner actual launch/Auth hit areas; release HTTPS requirement remains, physical/iOS/signing gates qualified.
 - [ ] Final clean source/build/check/evidence manifests, full report/self-review and exclusive ownership yield.
+
+Partial checkpoint47bfbae: ROOTverified7060inputhashes/3captured docs,focusedweb59/native87/typespass; wholeintegration/fullchecks/finalreview remainpending. Areas5–13 active, task-final-integration-resume.md current. ReleaseAPK must useisolatedAVD: retainedHTTPsession can be erased by release restore; trustedHTTPSauthgap explicit, noTLSbypass.
 
 ## Whole-branch review, publication and authorized cutover
 
@@ -109,3 +111,17 @@ Latest instrumentation boundary 2026-10-11T19:44:27.903754+00:00: `task-10-nativ
 
 
 2026-10-11T20:37:42.619268+00:00 — Final integration owner reports selector owning RED→GREEN5tests; incomplete partial checkpoint, not final release acceptance. Root3docs FINALCAPTURE YIELDED for first natural source commit. Resume active task-final-integration-brief.md and owner-written task-final-integration-resume.md; no duplicate writer.
+
+
+2026-10-11T20:50:57.020824+00:00 — Root3doc updates resumed after firstcommittedcapture47bfbae verification. Finalsourcewriter continues5–13; no device/runtime/userDB mutations.
+
+
+2026-10-11T20:58:33.050866+00:00 — Scope5 owning web6/native21 and normalbuildtypespass; source-binding/finalreviewstillpending. Auth44dpAction sourceimplemented, actualgeometryunverified. Lazy normalentry663.81kB no900warning; inlineDEMO1641.19warningretained, HappyDOM14 offlinecases0network attemptsPASS; realChromium/fullchecksnotyet. Scope9syntheticcontracts/conditionallyownNEWruntime active, nofixture/provider mutation.
+
+
+2026-10-11T21:05:08.180357+00:00 — SAMEoriginalnativeowner ACTIVE read-only unchangedGoal ancestorgeometry/font1/1.3 under task-final-native-goal-geometry-brief.md; no canonicalwrites/install/inference/source/Git/runtime/provider mutation. SourcewriterholdsGoalEvidencePicker/ConnectUI/GoalScreen layoutstable. Actual44dpresultpending; restorestate and separatelyyield. ReleaseAPKisolatedAVDstillpending. Planning firstbrowsercountpredicate failed from selectedcurrentdayvsfixtureday, ownercorrectingharnessselection only; preserve failure and qualified correctedrun, notCalendarproductbug.
+
+
+2026-10-11T21:10:04.460200+00:00 — Final scopes5–10 checkpoint validation ACTIVE. Fullweb346/71 reportedPASS; native351PASS/1 stale lowercaselabel query corrected, affected/full rerun pending. Native busy-layout lint corrected owner-bound state and owninglint reportedPASS. Thirteen webformat failures independently source-owner matched unchanged acceptedBASE; baseline qualification retained, no unrelated formatting. Corrected actualplanning fresh58/legacy47→58/idempotent/API/browser7/320375430/30.5s/exactretry and owncleanup reportedPASS; people owningruntime ACTIVE. Root full log/hash/source independent verification stillpending.
+
+Native actual owning geometry reports Message kind and Choose another parent source120px=43.636dp at440dpi/font1.0, no ancestor clipping. Remaining font1.3/preservation/restoration observation pending; wait owner yield before narrowly fixing picker layout. Actual existing GoalScreen binding replaces nonexistent PlanningGoals shorthand; all3 owninglayout bytes independently matched4420 in task-final-native-goal-controller-owning-source-proof.json. No globaltarget bump/inference/install/provider/canonical mutation.

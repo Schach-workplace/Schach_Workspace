@@ -1,6 +1,6 @@
 # Schach Workspace
 
-Release **1.1.0 · Department finance upgrade**
+Package version **1.1.0** (the finance-release version; no new release version has been assigned).
 
 Communication development adds Connect, timed commitments, native clients and self-hosted calls. See [current implementation and verification](docs/COMMUNICATION_IMPLEMENTATION.md) and [rollout operations](docs/COMMUNICATION_OPERATIONS.md) for tested behavior and remaining launch gates.
 
@@ -85,13 +85,13 @@ For a guided product walkthrough, read [USER_GUIDE.md](docs/USER_GUIDE.md).
 | Projects | Separate initiatives with accountable owners, deadlines, department links, status and related tasks. |
 | Calendar | Month/week planning, day agendas, filters and deadline drill-downs. |
 | Workload | Declared weekly capacity and transparent remaining-effort estimates with individual task drill-downs. |
-| Goals | Baseline, target, current outcome, unit, owner, deadline and linked work; lower-is-better outcomes are supported. |
+| Goals | Versioned metadata, append-only observed outcomes/corrections and reviewed evidence; lower-is-better outcomes and owner-only reminder preferences. |
 | Reports | Date/person/department filters, original versus revised commitments, accepted work trends, exception tables and CSV export. |
 | Department budgets | Financial-year envelopes, draft/active/closed lifecycle, non-overlap, versioned revisions with reasons and visible overruns. |
 | Expenses | Company categories, department allocation, vendor/invoice, exact monetary amounts, incurred dates, optional work links, receipts and decision history. |
 | Expense controls | Independent approval, receipt-exception review, budget checks and recorded overrides, rejection/resubmission, withdrawal, voiding and external payment records. |
 | Finance reports | Financial-year and department drilldowns, pending/approved/paid totals, category spending, budget availability, personal expenses and filtered CSV export. |
-| People | Departments, employees, company-specific roles including Finance, reporting managers and weekly capacity. |
+| People | Company roles/managers/capacity, onboarding presets and reviewed onboarding, complete access attestation and separately confirmed departure. |
 | Inbox | In-app assignment, comment, review, deadline and nudge notifications with read state. |
 | Recurring work | Daily/weekly/monthly successor tasks and idempotent deadline reminders; manual processing and a standalone background scheduler. |
 | Company administration | Add environments, switch only between authorised memberships, manage company identity, timezone, currency and financial-year start, change password. |
@@ -144,7 +144,7 @@ This reference Compose configuration starts as **local development** on `127.0.0
 
 For deployment, follow [OPERATIONS.md](docs/OPERATIONS.md): TLS/reverse proxy, exact allowed origin, secure cookies, production mode, least-privilege database roles, encrypted backups with a tested restore, monitoring, and your own infrastructure validation. Production startup deliberately refuses SQLite, demo accounts, insecure cookies and non-HTTPS allowed origins. Protect the database and keep the application on the intended private/company network until the deployment is verified.
 
-Compose initialization scripts run only when the database volume is new. For an existing version-1 installation, back up the database, stop writers, and apply only migration 2 using the [upgrade procedure](docs/FINANCE_GUIDE.md#upgrading-an-existing-installation). Keep the database volume intact.
+Compose initialization scripts run only when the database volume is new. For an existing version-1 installation, back up the database, stop writers, and follow the current numbered migration/adoption owner in the [operations guide](docs/OPERATIONS.md). Migration 2 alone does not upgrade the current 58-pair schema. The historical finance-only procedure is in the [upgrade procedure](docs/FINANCE_GUIDE.md#upgrading-an-existing-installation). Keep the database volume intact.
 
 ## Build and test
 
@@ -184,7 +184,7 @@ verification/           Reproducible API scenarios and PostgreSQL compatibility 
 
 ## Before inviting the team
 
-Use the real server to choose each company’s currency and financial year, create departments and budgets, configure expense categories, and add people with initial passwords through an authorised administrator, set reporting managers/capacity, create projects and import a small set of live tasks. People can change their own passwords after sign-in. An authorised database operator can recover an existing account with `backend/cmd/reset-password`, revoking its active sessions. Account email delivery, self-service forgotten-password recovery, enterprise SSO/MFA, WhatsApp/email notifications and malware scanning are not silently represented as configured integrations; their status is listed in the security/operations documents.
+Use the real server to choose each company’s currency and financial year, create departments and budgets, configure expense categories, and add people with initial passwords through an authorised administrator, set reporting managers/capacity, create projects and import a small set of live tasks. People can change their own passwords after sign-in. An authorised database operator can recover an existing account with `backend/cmd/reset-password`, revoking its active sessions. Account email delivery, self-service forgotten-password recovery, enterprise SSO, WhatsApp/email notifications and operator-provisioned scanner/push delivery are not silently represented as configured integrations; MFA and single-use recovery codes are implemented, with operator key setup required; their status is listed in the security/operations documents.
 
 The fresh fictional fixture contains 2 companies, 44 tasks, 14 department budgets, 19 expenses and 17 downloadable sample receipt files. Existing browser work is preserved on upgrade; use Reset sample data only when you intentionally want to replace local demo changes with this fixture.
 
@@ -194,7 +194,7 @@ This package is ready for technical review and a controlled pilot. It is not a c
 
 Connect now provides company-scoped private DMs/groups/channels, durable text/media, scoped search and attention, selected publication into tasks/intake/expense drafts, structured acknowledgements/polls/events/decisions, and self-hosted calls. Private chat membership is independent of company leadership and existing task/finance controls. Timed task commitments preserve original instants and zones; added evidence invalidates stale acceptance.
 
-`mobile/` contains Android/iOS React Native clients with secure session storage, communication/media, work and independent finance review, structured responses and call integration. The tested Android artifact is a development build; iOS signing, physical-device push/background calls and real TLS/TURN remain rollout gates. The browser demo continues to label its fictional data and does not simulate shared communication.
+`mobile/` contains Android/iOS React Native clients with secure session storage, communication/media, work and independent finance review, structured responses and call integration. Historical Android artifacts are source-qualified development/evaluation builds. Final integration builds a separate embedded release evaluation APK; protected HTTPS authentication, organizational signing, iOS, physical-device push/background calls and real TLS/TURN remain separate gates. The browser demo continues to label its fictional data and does not simulate shared communication.
 
 Read [implementation evidence and remaining gates](docs/COMMUNICATION_IMPLEMENTATION.md), [communication operations](docs/COMMUNICATION_OPERATIONS.md), and [mobile setup](mobile/README.md). The full implementation sequence remains in [the development plan](docs/superpowers/plans/2026-10-10-communication-implementation.md); its unchecked rollout gates must not be represented as completed adoption.
 
@@ -204,4 +204,4 @@ Connect now separates the conversation list from the chat history and composer o
 
 ## Workspace improvement roadmap
 
-The next [dependency-ordered roadmap](docs/superpowers/plans/2026-10-10-workspace-improvements-roadmap.md) covers reporting, data efficiency, Connect/mobile usability, attention, project execution, finance assistance, planning, administration and grounded intelligence. Its [first milestone](docs/superpowers/plans/2026-10-10-reporting-mobile-foundation.md) adds exact timed report metrics and native Work usability. Remaining milestones and physical-device rollout gates stay explicit; see the [foundation verification](verification/workspace-improvements-2026-10-10/result.json).
+The ten [dependency-ordered roadmap milestones](docs/superpowers/plans/2026-10-10-workspace-improvements-roadmap.md) are implemented: exact and historical reporting, bounded data reads, Connect/native usability, attention, execution, finance assistance, planning/outcome facts, People administration and grounded local intelligence. Final integration and deployment acceptance remain separately qualified in [VERIFICATION.md](docs/VERIFICATION.md). Read [People administration](docs/PEOPLE_ADMINISTRATION.md), [private report storage](docs/reports-storage.md), [local intelligence](docs/intelligence-local.md) and [planning and goals](docs/PLANNING_AND_GOALS.md) for operational boundaries. Optional intelligence works on explicit selected sources and opt-in; suggestions never approve work/payments or fabricate observations. The self-contained demo labels shared Connect and local inference unavailable and supports manual work offline.

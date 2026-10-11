@@ -147,6 +147,9 @@ export default function GoalEvidencePicker({
             ).map((k) => (
               <Action
                 key={k}
+                // Fractional row positions rounded some 44dp owners below 44dp
+                // on the measured Android device. Keep the margin local here.
+                style={{ minHeight: 45 }}
                 title={
                   k === "report_snapshot"
                     ? "My historical reports"
@@ -165,6 +168,7 @@ export default function GoalEvidencePicker({
           {!!parent && (
             <Action
               title="Choose another parent source"
+              style={{ minHeight: 45 }}
               disabled={!editable}
               onPress={() => {
                 setParent("");

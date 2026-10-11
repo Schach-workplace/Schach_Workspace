@@ -522,9 +522,9 @@ it("N2b: first private Source anchor Sheet survives real polling with options wi
   activeJob = copy(privateJob);
   await mount(false);
   await click("Review expense draft");
-  await input("amount", "31.50");
+  await input("Amount", "31.50");
   const amount = container.querySelector<HTMLInputElement>(
-    '[aria-label="amount"]',
+    '[aria-label="Amount"]',
   )!;
   amount.focus();
   await click("Source anchor: Choose");
@@ -539,7 +539,7 @@ it("N2b: first private Source anchor Sheet survives real polling with options wi
   expect(container.textContent).not.toContain("Private source label");
   expect(container.textContent).not.toContain("Private generated suggestion");
   expect(button("Preview content and audience")!.disabled).toBe(true);
-  expect(container.querySelector('[aria-label="amount"]')).toBe(amount);
+  expect(container.querySelector('[aria-label="Amount"]')).toBe(amount);
   expect(amount.value).toBe("31.50");
   expect(document.activeElement).toBe(amount);
   await releaseRaw();

@@ -954,6 +954,15 @@ export default function NativeConversation() {
         >
           <Structured
             source={recordSource}
+            conversation={conversation ?? undefined}
+            members={members}
+            sourceReady={
+              !disabled &&
+              current() &&
+              !!recordSource &&
+              !recordSource.removed &&
+              recordSource.conversationId === conversation?.id
+            }
             recordId={recordId}
             onClose={() => {
               setRecords(false);

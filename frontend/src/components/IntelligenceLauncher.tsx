@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { lazy, useState } from 'react';
 import { Modal } from './UI';
 import { useWorkspace } from '../store';
-import IntelligencePanel from './IntelligencePanel';
+import AsyncView from './AsyncView';
+const IntelligencePanel = lazy(() => import('./IntelligencePanel'));
 import type { IntelligenceChoice } from './IntelligenceSelection';
 import type { IntelligenceOperation } from '../data/intelligence';
 export default function IntelligenceLauncher({
@@ -38,12 +39,17 @@ export default function IntelligenceLauncher({
             onClose?.();
           }}
         >
-          <IntelligencePanel
+          <AsyncView
+            label="Local assistance"
             key={w.companyId + ':' + w.session?.user.id + ':' + w.data?.me.memberAccessEpoch}
-            choices={choices}
-            sourceRead={sourceRead}
-            initialOperation={operation}
-          />
+          >
+            <IntelligencePanel
+              key={w.companyId + ':' + w.session?.user.id + ':' + w.data?.me.memberAccessEpoch}
+              choices={choices}
+              sourceRead={sourceRead}
+              initialOperation={operation}
+            />
+          </AsyncView>
         </Modal>
       )}
     </>

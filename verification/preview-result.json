@@ -1,7 +1,7 @@
 {
   "status": "passed",
-  "checkedAt": "2026-10-10T14:54:02.267Z",
-  "checks": 11,
+  "checkedAt": "2026-10-11T21:18:02.548Z",
+  "checks": 14,
   "details": [
     "No external script or stylesheet is needed",
     "CSS assets are embedded",
@@ -13,6 +13,9 @@
     "Both demonstration companies are available",
     "Company switch and task navigation use the second company data",
     "Second company financial records stay separate in the compiled preview",
+    "Offline Connect states its actual shared-server requirement",
+    "Offline assistance preserves the explicit local-provider-unavailable manual flow",
+    "No external module or fetch was attempted, including caught failures",
     "No application error was reported during the compiled flow"
   ],
   "scope": "Compiled self-contained artifact executed in Happy DOM. Asset completeness and DOM interactions only; no real browser, device, screenshot or layout verification."
