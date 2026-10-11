@@ -1,0 +1,23 @@
+{
+  "sourceCommit": "8f24b55ab168fb227cb4efe5915432937f968356",
+  "platform": "owned Android API36 emulator5574, development shell",
+  "status": "passed",
+  "route": "native Planning /planning",
+  "calendarControl": "DeadlinePicker Choose Planning from \u2192 Android calendar06 October2026 \u2192 OK",
+  "initialMonday": "2026-10-05",
+  "selectedFrom": "2026-10-06",
+  "to": "2026-10-11",
+  "companyTimezone": "Asia/Kolkata",
+  "normalAPIMethod": "visible_remaining_overlap_v1",
+  "normalAPIFilters": {
+    "from": "2026-10-06",
+    "to": "2026-10-11",
+    "departmentId": "",
+    "ownerId": "",
+    "projectId": ""
+  },
+  "currentProjectionBasis": "81d6c0e1bdb7020958203408759631e534bbecbb4049b342e013f933e1479271",
+  "warningsSameBasisAccepted": true,
+  "currentMethodDescriptionVisibleNative": true,
+  "qualification": "No standalone native Calendar route exists in8f24; this is actual native Planning plus its Android calendar picker, per controller ruling. Web Calendar civil-range proof remains source-qualified separately."
+}

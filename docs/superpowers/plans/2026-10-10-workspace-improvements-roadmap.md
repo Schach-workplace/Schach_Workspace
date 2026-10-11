@@ -73,7 +73,9 @@
 - Acceptance: estimated capacity is labelled; suggestions never silently revise commitments; goal outcomes do not advance from task completion alone; company timezone used at date boundaries.
 
 ### Milestone 9: People and administration
-- [ ] Add guided onboarding, reviewed company-scoped permission presets, access reviews and departure handover extending `offboarding.go` and People/Settings.
+- [x] Add guided onboarding, reviewed company-scoped permission presets, access reviews and departure handover extending `offboarding.go` and People/Settings.
+
+Controller accepted reviewed backend `8f24b55` plus client overlay `f2d39bf`, with source-qualified actual native evidence. [Acceptance and retained qualifications](../../../verification/workspace-improvements-roadmap/milestone-9/task-9-controller-acceptance.md); [safe proof inventory](../../../verification/workspace-improvements-roadmap/milestone-9/index.json). This does not accept interleaved M10 changes or the whole checkout.
 - Acceptance: reassignment is explicit; role changes revoke relevant sessions/caches/queued delivery; depart/rejoin private history boundaries remain correct; existing task/finance histories persist.
 
 ### Milestone 10: Grounded intelligence

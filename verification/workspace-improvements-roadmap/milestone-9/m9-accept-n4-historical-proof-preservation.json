@@ -1,0 +1,15 @@
+{
+  "status": "passed",
+  "historicalFreezeAllVerified": true,
+  "changedOriginalPaths": [
+    {
+      "name": "js-snapshot.json",
+      "type": ".json"
+    },
+    {
+      "name": "m9-unknown-source-input.xml",
+      "type": ".xml"
+    }
+  ],
+  "changedHistoricalXMLRestoredFromExactFreezeNewCopyRetained": true
+}

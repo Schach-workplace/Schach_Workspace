@@ -1,0 +1,37 @@
+{
+  "status": "VERIFIED_SOURCE_HANDOFF_NOT_ACCEPTANCE",
+  "base": "af39129c2be682aad39087dfc383d3215e1b6dd8",
+  "head": "f2d39bf7ce3e98f4e6380e746400d6784d09bf27",
+  "finalManifestSHA256": "c2f58729322ddc7a97ae233a70953ce9aa6ddb52961fedee8bd751739071ee43",
+  "sourceFilesCheckedAgainstGit": 1153,
+  "allEnumeratedHashChecks": 3786,
+  "currentArtifacts": 49,
+  "allRoundSafeOutputs": 27,
+  "SQLMirroredUnchangedFromFixBase": 114,
+  "changedPaths": [
+    "frontend/src/components/GoalEvidencePicker.tsx",
+    "frontend/src/components/GoalEvidenceRecovery.test.tsx",
+    "frontend/src/components/GoalMeasurementForm.test.tsx",
+    "frontend/src/components/GoalMeasurementForm.tsx",
+    "frontend/src/data/execution.ts",
+    "mobile/src/GoalEvidencePicker.tsx",
+    "mobile/src/GoalEvidenceRecovery.test.tsx",
+    "mobile/src/GoalMeasurementForm.tsx",
+    "mobile/src/execution.ts"
+  ],
+  "protectedStashesRetained": [
+    "7ce725633933c1019a6c4c34bd37f3bf2e4e1765",
+    "3ea1950e0f71af380ebfac7887e2aad4b84346f7"
+  ],
+  "sourceTreeSHA256": "1b67525b4efe42842d5df8d02d4d8854837bb8b5fc6a2b04ee7beb11bac89ce9",
+  "qualifications": [
+    "Normal production frontend build only; no new demo build.",
+    "Actual compiled full-web application against fictional owned HTTP boundary proves client behavior. It does not prove compiled-Go canonical storage/ACL or actual native device behavior.",
+    "Native unit tests run real application hooks/components over platform/request fixtures; original native agent still owns post-review device acceptance.",
+    "Backend/SQL/shared byte equivalence is against FIX_BASE, which includes preserved M10 internals. No M10 acceptance or original8f24backend composite runtime claim is made.",
+    "No Go, PostgreSQL, race, Encore, provider or unchanged broad backend gate rerun/restamp.",
+    "Current Android/iOS Hermes artifacts are only in task-9-fix5-native-final-export; prior export is superseded.",
+    "Native export retains NO_COLOR/FORCE_COLOR environment warnings; final tests, types, lint and exports pass.",
+    "Source remains frozen at clean committed HEAD; original scoped review and affected actual native gate remain pending."
+  ]
+}

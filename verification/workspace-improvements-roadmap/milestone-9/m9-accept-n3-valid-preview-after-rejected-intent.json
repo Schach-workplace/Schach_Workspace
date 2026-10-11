@@ -1,0 +1,30 @@
+{
+  "sourceCommit": "8f24b55ab168fb227cb4efe5915432937f968356",
+  "platform": "owned Android API36 emulator5574, development shell",
+  "status": "passed",
+  "actualNativePreviewStatuses": [
+    422,
+    200
+  ],
+  "events": [
+    {
+      "method": "POST",
+      "path": "/api/companies/c-schach/people/onboarding/preview",
+      "upstreamStatus": 422,
+      "acknowledgementDropped": false,
+      "credentialEvidenceRedacted": true
+    },
+    {
+      "method": "POST",
+      "path": "/api/companies/c-schach/people/onboarding/preview",
+      "upstreamStatus": 200,
+      "acknowledgementDropped": false,
+      "credentialEvidenceRedacted": true
+    }
+  ],
+  "invalidAnchor": "2026-13-16",
+  "correctedAnchor": "2026-10-16",
+  "existingAccountReviewVisible": true,
+  "passwordAbsent": true,
+  "qualification": "Fresh actual rejected-anchor request then valid correction proves abandon/new execute uses new body; pre-refresh334 RAM was legitimately cleared by company switch and reload."
+}

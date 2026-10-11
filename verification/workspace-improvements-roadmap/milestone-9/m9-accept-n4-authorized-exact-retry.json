@@ -1,0 +1,33 @@
+{
+  "sourceCommit": "f2d39bf7ce3e98f4e6380e746400d6784d09bf27",
+  "backendCommit": "8f24b55ab168fb227cb4efe5915432937f968356",
+  "platform": "owned Android API36 emulator5574, development shell",
+  "status": "passed",
+  "twoSelectedBindingsIncludingPrivate": true,
+  "posts": [
+    {
+      "method": "POST",
+      "path": "/api/companies/c-schach/goals/goal_6a3aaf193d4faf3e970ac03e79e880fe/measurements",
+      "upstreamStatus": 200,
+      "acknowledgementDropped": true,
+      "credentialEvidenceRedacted": true
+    },
+    {
+      "method": "POST",
+      "path": "/api/companies/c-schach/goals/goal_6a3aaf193d4faf3e970ac03e79e880fe/measurements",
+      "upstreamStatus": 200,
+      "acknowledgementDropped": false,
+      "matchesDroppedRequest": true,
+      "credentialEvidenceRedacted": true
+    }
+  ],
+  "exactRecapturedOriginalNativeUnknownRAMRequestMatch": true,
+  "oneCanonicalMeasurement": true,
+  "measurementId": "measurement_1a698acae2c7b3d1355faf2f16212a52",
+  "goalVersion": 5,
+  "historyCount": 4,
+  "originalValue": 4.5,
+  "originalEffectiveAt": "2026-10-11T05:30:00Z",
+  "noFetchedRevisionRebase": true,
+  "recaptureQualification": "Same preserved unknown canonical replay200/ACKdrop followed final byte-exact RAM replay200. Initial commit and both canonical retries leave one fact/GoalV5."
+}

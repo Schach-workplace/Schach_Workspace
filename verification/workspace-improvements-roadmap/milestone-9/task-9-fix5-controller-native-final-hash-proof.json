@@ -1,0 +1,35 @@
+{
+  "manifestSHA256": "5ab723530add163440354c884d5f6a695cc9413814ee0a81c136739ce2294f86",
+  "artifactsVerified": 1105,
+  "artifactBytes": 18426677,
+  "mismatches": [],
+  "clientCommit": "f2d39bf7ce3e98f4e6380e746400d6784d09bf27",
+  "backendCommit": "8f24b55ab168fb227cb4efe5915432937f968356",
+  "sourceBlobVerification": "171 client records against f2 Git and actual frozen bytes;434 retained backend records against8f24 Git; actual running backend executable hash",
+  "notAllHistoricalArtifactsPASS": true,
+  "reportSHA256": "efc4c020d61180b871bac800a92590c38eb92718c35ea872e640f768b8af18e0",
+  "reportVerified": true,
+  "sourceBlobRecordsVerified": 605,
+  "currentFrozenClientFilesVerified": 171,
+  "backendBinaryVerified": true,
+  "compiledBackendSHA256": "ca95265f8f9e6049215b22aed0fd9ea322062ad930466355863a25ad6ef46d34",
+  "acceptance": "M9 affected native gates accepted with exact source and timing qualifications",
+  "decisiveProofsFullyRead": [
+    "all-selected-pending",
+    "authorized-exact-retry",
+    "private-source-automatic-hardclear",
+    "late-old-source-get",
+    "final-hygiene",
+    "harness-and-observer-qualification",
+    "historical-proof-preservation"
+  ],
+  "timingQualification": {
+    "pendingEpisodeSecondsAtLeast": 32.304,
+    "observedFirstSampleSeconds": 2.572,
+    "observedLastSampleSeconds": 32.304,
+    "sampleSpanSeconds": 29.732,
+    "unknownReasonFocused": false,
+    "unknownReasonIME": false,
+    "reportPrecisionRefreshPending": false
+  }
+}

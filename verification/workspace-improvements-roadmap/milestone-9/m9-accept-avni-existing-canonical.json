@@ -1,0 +1,53 @@
+{
+  "sourceCommit": "8f24b55ab168fb227cb4efe5915432937f968356",
+  "platform": "owned Android API36 emulator5574, development shell",
+  "status": "passed",
+  "requests": [
+    {
+      "method": "POST",
+      "path": "/api/companies/c-schach/people/onboarding/apply",
+      "upstreamStatus": 200,
+      "acknowledgementDropped": true,
+      "credentialEvidenceRedacted": true
+    },
+    {
+      "method": "POST",
+      "path": "/api/companies/c-schach/people/onboarding/apply",
+      "upstreamStatus": 200,
+      "acknowledgementDropped": false,
+      "matchesDroppedRequest": true,
+      "credentialEvidenceRedacted": true
+    }
+  ],
+  "nativePasswordAbsent": true,
+  "originalCredentialNormalLoginAfter": true,
+  "safeGlobalSettingsPreserved": true,
+  "globalSessionEpochBefore": 1,
+  "globalSessionEpochAfter": 2,
+  "otherCompanyMembershipExactPreserved": true,
+  "person": {
+    "companyPermissionEpoch": 5,
+    "membershipVersion": 1,
+    "memberAccessEpoch": 1,
+    "id": "u-meridian",
+    "membershipId": "mem_ee44b3d3b7a02c35f97598ffb0c22590",
+    "name": "Avni Desai",
+    "email": "avni@meridian.demo",
+    "role": "member",
+    "departmentId": "",
+    "managerId": "",
+    "title": "",
+    "capacityHours": 31.5,
+    "avatar": "",
+    "active": true
+  },
+  "oneOnboardingApplication": true,
+  "oneTaskId": "tsk_af284adf326765f309ec7efd72caa44f",
+  "orderedTaskChecklist": [
+    "Read company guidance",
+    "Discuss with independent reviewer",
+    "Record the reviewed onboarding outcome"
+  ],
+  "originalDueDate": "2026-10-18",
+  "taskVersion": 1
+}

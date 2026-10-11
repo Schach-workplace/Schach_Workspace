@@ -1,0 +1,14 @@
+{
+  "sourceCommit": "8f24b55ab168fb227cb4efe5915432937f968356",
+  "platform": "owned Android API36 emulator5574, development shell",
+  "status": "passed",
+  "nativeDeviceIdRevoked": "dev_bc75cf0f0af186e2a1efc6a95d1485a7",
+  "unknownPresetSuccessful200ACKDropped": true,
+  "actualNativeReturnedToLogin": true,
+  "actualNativeFreshLoginSameActor": true,
+  "draftNameEmptyAfterFreshLogin": true,
+  "oldUnknownRecoveryAndDiscardControlsAbsent": true,
+  "canonicalPresetExistsExactlyOnce": true,
+  "credentialValuesExcluded": true,
+  "qualification": "Real owned-device session revocation; no global account suspension or founder membership change. SIGN IN is existing smaller legacy control outside new People44dp scope; no universal app-wide44dp claim."
+}

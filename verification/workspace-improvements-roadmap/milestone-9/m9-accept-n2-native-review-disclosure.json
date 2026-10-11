@@ -1,0 +1,12 @@
+{
+  "sourceCommit": "8f24b55ab168fb227cb4efe5915432937f968356",
+  "platform": "owned Android API36 emulator5574, development shell",
+  "status": "passed",
+  "orderedRequirements": [
+    "Read company guidance",
+    "Discuss with independent reviewer"
+  ],
+  "templateVersion": 1,
+  "nativeReviewBeforeApply": true,
+  "existingAccountPasswordAbsent": true
+}

@@ -1,0 +1,42 @@
+{
+  "sourceCommit": "8f24b55ab168fb227cb4efe5915432937f968356",
+  "platform": "owned Android API36 emulator5574, development shell",
+  "status": "passed",
+  "actualNativeConfirmedDeparture": true,
+  "taskId": "tsk_761b1de5af9925ba19f82261534c8a30",
+  "versionBefore": 1,
+  "versionAfter": 2,
+  "ownerBefore": "u-meridian",
+  "ownerAfter": "u-founder",
+  "independentReviewer": "u-ceo",
+  "exactDeadlineFields": {
+    "deadlineMode": "timed",
+    "dueDate": "2026-10-21",
+    "dueAt": "2026-10-21T10:30:00.123456Z",
+    "dueTimezone": "Asia/Kolkata",
+    "originalDeadlineMode": "timed",
+    "originalDueDate": "2026-10-21",
+    "originalDueAt": "2026-10-21T10:30:00.123456Z",
+    "originalDueTimezone": "Asia/Kolkata"
+  },
+  "allDeadlineFieldsExactlyPreserved": true,
+  "fontScale": 1.3,
+  "disabledBeforeConfirmation": true,
+  "disabledActionBoundsDp": {
+    "widthDp": 356.72727272727275,
+    "heightDp": 44.0,
+    "minimumDp": 44
+  },
+  "confirmBoundsDp": {
+    "widthDp": 356.72727272727275,
+    "heightDp": 44.0,
+    "minimumDp": 44
+  },
+  "completeBoundsDp": {
+    "widthDp": 356.72727272727275,
+    "heightDp": 44.0,
+    "minimumDp": 44
+  },
+  "membershipVersion": 2,
+  "memberAccessEpoch": 2
+}

@@ -1,0 +1,37 @@
+{
+  "sourceCommit": "f2d39bf7ce3e98f4e6380e746400d6784d09bf27",
+  "backendCommit": "8f24b55ab168fb227cb4efe5915432937f968356",
+  "platform": "owned Android API36 emulator5574, development shell",
+  "status": "passed",
+  "actualNativeUnknownTwoSelectedBindings": true,
+  "privateOwnerRemovedActorInterval": true,
+  "actorBootstrapMeExactlyUnchanged": true,
+  "ordinaryGoalDTOExactlyUnchanged": true,
+  "currentPrivateGETForwardedAfterRemovalStatus": 404,
+  "otherSelectedSourceStillHeld": true,
+  "nativeZeroBindings": true,
+  "scopedAuthoredReasonCleared": true,
+  "pickerParentAndChosenContextAbsent": true,
+  "oldRetryAndAbandonControlsGone": true,
+  "privateTextAbsent": true,
+  "noStaleRetryTapOrExtraPOST": true,
+  "sourceReadMetadata": [
+    {
+      "method": "GET",
+      "path": "/api/companies/c-schach/goals/goal_6a3aaf193d4faf3e970ac03e79e880fe/evidence-preview",
+      "bindingLabel": "A",
+      "phase": "binding_held_before_forward",
+      "elapsedSeconds": 0
+    },
+    {
+      "method": "GET",
+      "path": "/api/companies/c-schach/goals/goal_6a3aaf193d4faf3e970ac03e79e880fe/evidence-preview",
+      "bindingLabel": "B",
+      "phase": "binding_released_before_forward",
+      "elapsedSeconds": 0.116,
+      "upstreamStatus": 404
+    }
+  ],
+  "canonicalMeasurementId": "measurement_63acccae80801009c52b2886f825dd0f",
+  "goalVersion": 6
+}

@@ -1,0 +1,196 @@
+{
+  "sourceCommit": "f2d39bf7ce3e98f4e6380e746400d6784d09bf27",
+  "backendCommit": "8f24b55ab168fb227cb4efe5915432937f968356",
+  "platform": "owned Android API36 emulator5574, development shell",
+  "status": "passed",
+  "samples": [
+    {
+      "atSeconds": 2.572,
+      "retryDisabled": true,
+      "privateLabelBodyAbsent": true,
+      "reasonMatches": true,
+      "xmlBounds": "[50,327][1031,575]",
+      "observerBounds": [
+        50,
+        327,
+        1031,
+        575
+      ],
+      "observerFocused": false,
+      "observerEditable": true,
+      "selectionStart": 37,
+      "selectionEnd": 37,
+      "keyboardShown": false,
+      "AReleased": false
+    },
+    {
+      "atSeconds": 8.301,
+      "retryDisabled": true,
+      "privateLabelBodyAbsent": true,
+      "reasonMatches": true,
+      "xmlBounds": "[50,327][1031,575]",
+      "observerBounds": [
+        50,
+        327,
+        1031,
+        575
+      ],
+      "observerFocused": false,
+      "observerEditable": true,
+      "selectionStart": 37,
+      "selectionEnd": 37,
+      "keyboardShown": false,
+      "AReleased": false
+    },
+    {
+      "atSeconds": 14.274,
+      "retryDisabled": true,
+      "privateLabelBodyAbsent": true,
+      "reasonMatches": true,
+      "xmlBounds": "[50,327][1031,575]",
+      "observerBounds": [
+        50,
+        327,
+        1031,
+        575
+      ],
+      "observerFocused": false,
+      "observerEditable": true,
+      "selectionStart": 37,
+      "selectionEnd": 37,
+      "keyboardShown": false,
+      "AReleased": false
+    },
+    {
+      "atSeconds": 20.686,
+      "retryDisabled": true,
+      "privateLabelBodyAbsent": true,
+      "reasonMatches": true,
+      "xmlBounds": "[50,327][1031,575]",
+      "observerBounds": [
+        50,
+        327,
+        1031,
+        575
+      ],
+      "observerFocused": false,
+      "observerEditable": true,
+      "selectionStart": 37,
+      "selectionEnd": 37,
+      "keyboardShown": false,
+      "AReleased": true
+    },
+    {
+      "atSeconds": 26.291,
+      "retryDisabled": true,
+      "privateLabelBodyAbsent": true,
+      "reasonMatches": true,
+      "xmlBounds": "[50,327][1031,575]",
+      "observerBounds": [
+        50,
+        327,
+        1031,
+        575
+      ],
+      "observerFocused": false,
+      "observerEditable": true,
+      "selectionStart": 37,
+      "selectionEnd": 37,
+      "keyboardShown": false,
+      "AReleased": true
+    },
+    {
+      "atSeconds": 32.304,
+      "retryDisabled": true,
+      "privateLabelBodyAbsent": true,
+      "reasonMatches": true,
+      "xmlBounds": "[50,327][1031,575]",
+      "observerBounds": [
+        50,
+        327,
+        1031,
+        575
+      ],
+      "observerFocused": false,
+      "observerEditable": true,
+      "selectionStart": 37,
+      "selectionEnd": 37,
+      "keyboardShown": false,
+      "AReleased": true
+    }
+  ],
+  "sourceReadEvents": [
+    {
+      "method": "GET",
+      "path": "/api/companies/c-schach/goals/goal_6a3aaf193d4faf3e970ac03e79e880fe/evidence-preview",
+      "bindingLabel": "B",
+      "phase": "binding_held_before_forward",
+      "elapsedSeconds": 0
+    },
+    {
+      "method": "GET",
+      "path": "/api/companies/c-schach/goals/goal_6a3aaf193d4faf3e970ac03e79e880fe/evidence-preview",
+      "bindingLabel": "A",
+      "phase": "binding_released_before_forward",
+      "elapsedSeconds": 18.026,
+      "upstreamStatus": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/companies/c-schach/goals/goal_6a3aaf193d4faf3e970ac03e79e880fe/evidence-preview",
+      "bindingLabel": "A",
+      "phase": "binding_released_before_forward",
+      "elapsedSeconds": 17.765,
+      "upstreamStatus": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/companies/c-schach/goals/goal_6a3aaf193d4faf3e970ac03e79e880fe/evidence-preview",
+      "bindingLabel": "B",
+      "phase": "binding_held_before_forward",
+      "elapsedSeconds": 0
+    },
+    {
+      "method": "GET",
+      "path": "/api/companies/c-schach/goals/goal_6a3aaf193d4faf3e970ac03e79e880fe/evidence-preview",
+      "bindingLabel": "B",
+      "phase": "binding_held_before_forward",
+      "elapsedSeconds": 0
+    },
+    {
+      "method": "GET",
+      "path": "/api/companies/c-schach/goals/goal_6a3aaf193d4faf3e970ac03e79e880fe/evidence-preview",
+      "bindingLabel": "A",
+      "phase": "binding_released_before_forward",
+      "elapsedSeconds": 0.0,
+      "upstreamStatus": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/companies/c-schach/goals/goal_6a3aaf193d4faf3e970ac03e79e880fe/evidence-preview",
+      "bindingLabel": "B",
+      "phase": "binding_held_before_forward",
+      "elapsedSeconds": 0
+    },
+    {
+      "method": "GET",
+      "path": "/api/companies/c-schach/goals/goal_6a3aaf193d4faf3e970ac03e79e880fe/evidence-preview",
+      "bindingLabel": "A",
+      "phase": "binding_released_before_forward",
+      "elapsedSeconds": 0.0,
+      "upstreamStatus": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/companies/c-schach/goals/goal_6a3aaf193d4faf3e970ac03e79e880fe/evidence-preview",
+      "bindingLabel": "B",
+      "phase": "binding_held_before_forward",
+      "elapsedSeconds": 0
+    }
+  ],
+  "allTwoSelectedSourcesActuallyRequested": true,
+  "firstSourceAuthorizedSecondStillPendingRetryDisabled": true,
+  "sameAuthoredReasonExtentDuringObservedHold": true,
+  "focusQualification": "Unknown editor already locked, not editable/focused; actual cursor/keyboard values only, no editable focus continuity claim. Foreground/observer/scroll settled before baseline.",
+  "priorFailedGeometryQualification": "Initial earlier XML reason clipped115px then full248px; stable current observer extent is separately measured, not a passing claim for initial viewport."
+}

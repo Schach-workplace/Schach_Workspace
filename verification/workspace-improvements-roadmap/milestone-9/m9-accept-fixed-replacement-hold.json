@@ -1,0 +1,178 @@
+{
+  "status": "passed",
+  "sourceCommit": "8f24b55ab168fb227cb4efe5915432937f968356",
+  "compiledBackendCommit": "8f24b55ab168fb227cb4efe5915432937f968356",
+  "backendProductionAndSQLByteEquivalent": true,
+  "excludedGoTestOnlyDifferences": [],
+  "platform": "owned Android API36 emulator5574, development shell",
+  "baseline": {
+    "elapsedSeconds": 0,
+    "uniqueNode": true,
+    "focused": true,
+    "editable": true,
+    "enabled": true,
+    "visible": true,
+    "secure": false,
+    "authoredTextMatches": true,
+    "credentialTextExcluded": false,
+    "selectionStart": 5,
+    "selectionEnd": 5,
+    "bounds": [
+      50,
+      398,
+      1031,
+      540
+    ],
+    "keyboardShown": true,
+    "fetchedLabelsPresent": true,
+    "fetchedLabelsAbsent": false,
+    "pendingLabelPresent": false
+  },
+  "samples": [
+    {
+      "elapsedSeconds": 0.0,
+      "uniqueNode": true,
+      "focused": true,
+      "editable": true,
+      "enabled": true,
+      "visible": true,
+      "secure": false,
+      "authoredTextMatches": true,
+      "credentialTextExcluded": false,
+      "selectionStart": 5,
+      "selectionEnd": 5,
+      "bounds": [
+        50,
+        398,
+        1031,
+        540
+      ],
+      "keyboardShown": true,
+      "fetchedLabelsPresent": false,
+      "fetchedLabelsAbsent": true,
+      "pendingLabelPresent": true
+    },
+    {
+      "elapsedSeconds": 6.0,
+      "uniqueNode": true,
+      "focused": true,
+      "editable": true,
+      "enabled": true,
+      "visible": true,
+      "secure": false,
+      "authoredTextMatches": true,
+      "credentialTextExcluded": false,
+      "selectionStart": 5,
+      "selectionEnd": 5,
+      "bounds": [
+        50,
+        398,
+        1031,
+        540
+      ],
+      "keyboardShown": true,
+      "fetchedLabelsPresent": false,
+      "fetchedLabelsAbsent": true,
+      "pendingLabelPresent": true
+    },
+    {
+      "elapsedSeconds": 12.0,
+      "uniqueNode": true,
+      "focused": true,
+      "editable": true,
+      "enabled": true,
+      "visible": true,
+      "secure": false,
+      "authoredTextMatches": true,
+      "credentialTextExcluded": false,
+      "selectionStart": 5,
+      "selectionEnd": 5,
+      "bounds": [
+        50,
+        398,
+        1031,
+        540
+      ],
+      "keyboardShown": true,
+      "fetchedLabelsPresent": false,
+      "fetchedLabelsAbsent": true,
+      "pendingLabelPresent": true
+    },
+    {
+      "elapsedSeconds": 18.0,
+      "uniqueNode": true,
+      "focused": true,
+      "editable": true,
+      "enabled": true,
+      "visible": true,
+      "secure": false,
+      "authoredTextMatches": true,
+      "credentialTextExcluded": false,
+      "selectionStart": 5,
+      "selectionEnd": 5,
+      "bounds": [
+        50,
+        398,
+        1031,
+        540
+      ],
+      "keyboardShown": true,
+      "fetchedLabelsPresent": false,
+      "fetchedLabelsAbsent": true,
+      "pendingLabelPresent": true
+    },
+    {
+      "elapsedSeconds": 24.0,
+      "uniqueNode": true,
+      "focused": true,
+      "editable": true,
+      "enabled": true,
+      "visible": true,
+      "secure": false,
+      "authoredTextMatches": true,
+      "credentialTextExcluded": false,
+      "selectionStart": 5,
+      "selectionEnd": 5,
+      "bounds": [
+        50,
+        398,
+        1031,
+        540
+      ],
+      "keyboardShown": true,
+      "fetchedLabelsPresent": false,
+      "fetchedLabelsAbsent": true,
+      "pendingLabelPresent": true
+    },
+    {
+      "elapsedSeconds": 30.0,
+      "uniqueNode": true,
+      "focused": true,
+      "editable": true,
+      "enabled": true,
+      "visible": true,
+      "secure": false,
+      "authoredTextMatches": true,
+      "credentialTextExcluded": false,
+      "selectionStart": 5,
+      "selectionEnd": 5,
+      "bounds": [
+        50,
+        398,
+        1031,
+        540
+      ],
+      "keyboardShown": true,
+      "fetchedLabelsPresent": false,
+      "fetchedLabelsAbsent": true,
+      "pendingLabelPresent": true
+    }
+  ],
+  "credentialValueNeverReadOrCompared": false,
+  "qualifications": [
+    "Sampling proves observed continuity, not every frame or physical/iOS keyboard behavior.",
+    "Secure authored value retention is proved separately by RAM-only exact retry comparison, not this cursor probe."
+  ],
+  "passed": true,
+  "proxyCredentialCaptureCleared": true
+}

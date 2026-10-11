@@ -1,0 +1,69 @@
+{
+  "sourceCommit": "f2d39bf7ce3e98f4e6380e746400d6784d09bf27",
+  "backendCommit": "8f24b55ab168fb227cb4efe5915432937f968356",
+  "platform": "owned Android API36 emulator5574, development shell",
+  "status": "qualified",
+  "lockedReasonSemantics": "XML enabled=false; source editable=false during unknown. Android accessibility observer still reports editable=true for EditText, and that exact field is retained in samples. Not focused; cursor37; no IME. Earlier not editable phrasing describes product interaction lock, not isEditable metadata.",
+  "initialGeometryOutcome": "Failed: clipped115px initial reason then full248px with lower controls shifted154px. Initial viewport not accepted; full extent stable in separate settled32.304s observation. Specific cause of initial offset not established.",
+  "offscreenHarnessOutcome": "Failed StopIteration because Retry not in tree after scrolling to reason; absence was not asserted disabled. Final settled episode has actual visible disabled footer.",
+  "rapidInputClassification": "Unchanged development shell double-R key within200ms triggered reload, no POST. Root accepted fixture input classification; >=250ms used afterward.",
+  "canonicalReplayCountQualification": "One original commit plus one early successful canonical recapture ACKdrop followed one final canonical recapture ACKdrop and final exact RAM200 replay: four total200 POSTs for the same measurement, history4/GoalV5 unchanged after first.",
+  "nativeXMLControls": [
+    {
+      "artifact": "m9-accept-n4-settled-pending-0-1791725130731010431.xml",
+      "reasonEnabled": "false",
+      "reasonBounds": "[50,1659][1031,1907]",
+      "retryPresent": false,
+      "retryEnabled": null,
+      "retryBounds": null
+    },
+    {
+      "artifact": "m9-accept-n4-settled-pending-0-1791725175739622007.xml",
+      "reasonEnabled": "false",
+      "reasonBounds": "[50,327][1031,575]",
+      "retryPresent": true,
+      "retryEnabled": "false",
+      "retryBounds": "[50,1890][1031,2011]"
+    },
+    {
+      "artifact": "m9-accept-n4-settled-pending-12-1791725187739691229.xml",
+      "reasonEnabled": "false",
+      "reasonBounds": "[50,327][1031,575]",
+      "retryPresent": true,
+      "retryEnabled": "false",
+      "retryBounds": "[50,1890][1031,2011]"
+    },
+    {
+      "artifact": "m9-accept-n4-settled-pending-18-1791725194141527287.xml",
+      "reasonEnabled": "false",
+      "reasonBounds": "[50,327][1031,575]",
+      "retryPresent": true,
+      "retryEnabled": "false",
+      "retryBounds": "[50,1890][1031,2011]"
+    },
+    {
+      "artifact": "m9-accept-n4-settled-pending-24-1791725199739677402.xml",
+      "reasonEnabled": "false",
+      "reasonBounds": "[50,327][1031,575]",
+      "retryPresent": true,
+      "retryEnabled": "false",
+      "retryBounds": "[50,1890][1031,2011]"
+    },
+    {
+      "artifact": "m9-accept-n4-settled-pending-30-1791725205739686095.xml",
+      "reasonEnabled": "false",
+      "reasonBounds": "[50,327][1031,575]",
+      "retryPresent": true,
+      "retryEnabled": "false",
+      "retryBounds": "[50,1890][1031,2011]"
+    },
+    {
+      "artifact": "m9-accept-n4-settled-pending-6-1791725181739699513.xml",
+      "reasonEnabled": "false",
+      "reasonBounds": "[50,327][1031,575]",
+      "retryPresent": true,
+      "retryEnabled": "false",
+      "retryBounds": "[50,1890][1031,2011]"
+    }
+  ]
+}

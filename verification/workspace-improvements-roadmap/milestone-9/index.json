@@ -1,0 +1,184 @@
+{
+  "acceptedBackendCommit": "8f24b55ab168fb227cb4efe5915432937f968356",
+  "acceptedClientOverlay": "f2d39bf7ce3e98f4e6380e746400d6784d09bf27",
+  "nativeManifestSHA256": "5ab723530add163440354c884d5f6a695cc9413814ee0a81c136739ce2294f86",
+  "files": [
+    {
+      "stagedPath": "task-9-report.md",
+      "sha256": "68c749a2ca3fa2ee237e36b00e074ff1bdaba61a8d1ddeb8240aa6e4a6aa2598",
+      "bytes": 94611,
+      "source": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-9-report.md"
+    },
+    {
+      "stagedPath": "task-9-review.md",
+      "sha256": "6c668ec7c94a392f475a8cdd3eb58ad4c806f2cca298ebc76579e418e019a10a",
+      "bytes": 13297,
+      "source": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-9-review.md"
+    },
+    {
+      "stagedPath": "task-9-fix1-review.md",
+      "sha256": "621186267a7406b5447251376f8dd31b0d89ba771c962d5ae06465597d6a2f41",
+      "bytes": 10094,
+      "source": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-9-fix1-review.md"
+    },
+    {
+      "stagedPath": "task-9-fix2-review.md",
+      "sha256": "5b5498d43b82681c607c2074799d1948b2f903e95fbdde1d76beef55e2c711ce",
+      "bytes": 4466,
+      "source": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-9-fix2-review.md"
+    },
+    {
+      "stagedPath": "task-9-fix3-review.md",
+      "sha256": "378d143da21d8dffdc8476f853a1fce194bd58b0420e6a26941b90bc7e0ba341",
+      "bytes": 4658,
+      "source": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-9-fix3-review.md"
+    },
+    {
+      "stagedPath": "task-9-fix4-review.md",
+      "sha256": "551797ca7110967a257e00a444ba0f92ec703f677fafca532ff66a8ce47c70b7",
+      "bytes": 7358,
+      "source": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-9-fix4-review.md"
+    },
+    {
+      "stagedPath": "task-9-fix5-review.md",
+      "sha256": "0fbf25973fe59d806c51f87ce3258224159cac26024e2461bc497f6f43bea3d9",
+      "bytes": 8548,
+      "source": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-9-fix5-review.md"
+    },
+    {
+      "stagedPath": "task-9-controller-acceptance.md",
+      "sha256": "298ff52417be0c9b083bd838ed46812034e98443c62d7bad647f258209e7baec",
+      "bytes": 4767,
+      "source": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-9-controller-acceptance.md"
+    },
+    {
+      "stagedPath": "task-9-controller-native-acceptance-report.md",
+      "sha256": "efc4c020d61180b871bac800a92590c38eb92718c35ea872e640f768b8af18e0",
+      "bytes": 30884,
+      "source": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-9-controller-native-acceptance-report.md"
+    },
+    {
+      "stagedPath": "task-9-controller-native-manifest.json",
+      "sha256": "5ab723530add163440354c884d5f6a695cc9413814ee0a81c136739ce2294f86",
+      "bytes": 304849,
+      "source": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-9-controller-native-manifest.json"
+    },
+    {
+      "stagedPath": "task-9-fix5-controller-source-proof.json",
+      "sha256": "45b4ded081b7bc0dad2080869bad6b5edd638d744813320bb2660d98b5c8fb28",
+      "bytes": 2179,
+      "source": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-9-fix5-controller-source-proof.json"
+    },
+    {
+      "stagedPath": "task-9-fix5-controller-native-final-hash-proof.json",
+      "sha256": "08df473e1e41aa363af7d3a60641ff67cd41995eb100eaff0af67d50a3a1ab54",
+      "bytes": 1487,
+      "source": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-9-fix5-controller-native-final-hash-proof.json"
+    },
+    {
+      "stagedPath": "task-9-fix5-final-manifest.json",
+      "sha256": "c2f58729322ddc7a97ae233a70953ce9aa6ddb52961fedee8bd751739071ee43",
+      "bytes": 235280,
+      "source": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-9-fix5-final-manifest.json"
+    },
+    {
+      "stagedPath": "m9-accept-n4-all-selected-pending.json",
+      "sha256": "468cba3e610a0bb0c2cd6b92424b41359c16a725a0544aa9d53f9ae98260fa46",
+      "bytes": 5722,
+      "source": "/tmp/schach-roadmap-native-runtime-20261011/m9-accept-n4-all-selected-pending.json"
+    },
+    {
+      "stagedPath": "m9-accept-n4-authorized-exact-retry.json",
+      "sha256": "7e25ec7beb83c575eead7beab1ce64b9e9dbbc5c40c74a2670e8200c2f94ab23",
+      "bytes": 1309,
+      "source": "/tmp/schach-roadmap-native-runtime-20261011/m9-accept-n4-authorized-exact-retry.json"
+    },
+    {
+      "stagedPath": "m9-accept-n4-private-source-automatic-hardclear.json",
+      "sha256": "b70320cb08ff2286bae9cc33c3c07584c4f20d5adebdb475af029a016e933233",
+      "bytes": 1356,
+      "source": "/tmp/schach-roadmap-native-runtime-20261011/m9-accept-n4-private-source-automatic-hardclear.json"
+    },
+    {
+      "stagedPath": "m9-accept-n4-late-old-source-get.json",
+      "sha256": "e04f2aac12213f326d93910830c66ecadb140fa9ac494d0241b10dc9fc20ba40",
+      "bytes": 757,
+      "source": "/tmp/schach-roadmap-native-runtime-20261011/m9-accept-n4-late-old-source-get.json"
+    },
+    {
+      "stagedPath": "m9-accept-n4-final-hygiene.json",
+      "sha256": "1ba5444ad3870487d7d27a04104b36a753c394bbe29604ade0ef144a9c28f4c9",
+      "bytes": 1518,
+      "source": "/tmp/schach-roadmap-native-runtime-20261011/m9-accept-n4-final-hygiene.json"
+    },
+    {
+      "stagedPath": "m9-accept-n4-harness-and-observer-qualification.json",
+      "sha256": "e8c588566a41994d9c16cef587c76740f91b71926faf5277416bd1118efa0a5d",
+      "bytes": 3355,
+      "source": "/tmp/schach-roadmap-native-runtime-20261011/m9-accept-n4-harness-and-observer-qualification.json"
+    },
+    {
+      "stagedPath": "m9-accept-n4-historical-proof-preservation.json",
+      "sha256": "6e208752aa6c74f900000e0121ebeedbc928abb87a70d0c7c0cedcda57d37796",
+      "bytes": 313,
+      "source": "/tmp/schach-roadmap-native-runtime-20261011/m9-accept-n4-historical-proof-preservation.json"
+    },
+    {
+      "stagedPath": "m9-n4-composite-source-manifest.json",
+      "sha256": "36ccbd3e22dce418b9f0b8539a37b83b2fd62ab9d484496fcfbd0edc95fb1db4",
+      "bytes": 71290,
+      "source": "/tmp/schach-roadmap-native-runtime-20261011/m9-n4-composite-source-manifest.json"
+    },
+    {
+      "stagedPath": "m9-accept-timed-native-handover.json",
+      "sha256": "f33f78c6890ab5d497fcf51aceb5a8d06992473c8f354c71c8303f418e051256",
+      "bytes": 1202,
+      "source": "/tmp/schach-roadmap-native-runtime-20261011/m9-accept-timed-native-handover.json"
+    },
+    {
+      "stagedPath": "m9-accept-avni-existing-canonical.json",
+      "sha256": "eac17c6615c86c943044ec5f67d6137da260f86a19213c0393f8dc29e8743a89",
+      "bytes": 1559,
+      "source": "/tmp/schach-roadmap-native-runtime-20261011/m9-accept-avni-existing-canonical.json"
+    },
+    {
+      "stagedPath": "m9-accept-n2-native-review-disclosure.json",
+      "sha256": "2cf9fdd3a3819c6f01c7ae98ae70e9b945c07565fd34f05a66348062006b0f4b",
+      "bytes": 357,
+      "source": "/tmp/schach-roadmap-native-runtime-20261011/m9-accept-n2-native-review-disclosure.json"
+    },
+    {
+      "stagedPath": "m9-accept-n3-valid-preview-after-rejected-intent.json",
+      "sha256": "056565183c6a5da3f7b1666730a60ff2dae72e8298637f6366881628c5490e4b",
+      "bytes": 988,
+      "source": "/tmp/schach-roadmap-native-runtime-20261011/m9-accept-n3-valid-preview-after-rejected-intent.json"
+    },
+    {
+      "stagedPath": "m9-accept-fixed-replacement-hold.json",
+      "sha256": "f25c788b2be2c5342193c71abcb78ab431ca7a5028bc8086374a7d5d7dc25db0",
+      "bytes": 4310,
+      "source": "/tmp/schach-roadmap-native-runtime-20261011/m9-accept-fixed-replacement-hold.json"
+    },
+    {
+      "stagedPath": "m9-accept-actor-session-unknown-hardclear.json",
+      "sha256": "7ef8f497f6e465b6cf3418edad7e2095f9cc364c48dfebf36dcfbfc129036dab",
+      "bytes": 753,
+      "source": "/tmp/schach-roadmap-native-runtime-20261011/m9-accept-actor-session-unknown-hardclear.json"
+    },
+    {
+      "stagedPath": "m9-accept-documents-policy-return.json",
+      "sha256": "7ffff2ebcfde634726888944580dc5847ec212bbf6cb1c3b04dc5ba623c3f10e",
+      "bytes": 801,
+      "source": "/tmp/schach-roadmap-native-runtime-20261011/m9-accept-documents-policy-return.json"
+    },
+    {
+      "stagedPath": "m9-accept-planning-calendar-picker.json",
+      "sha256": "f5193404035f13d18d0f7657d74361acc01d84262a94f5d0948e2f8be440bcb2",
+      "bytes": 1034,
+      "source": "/tmp/schach-roadmap-native-runtime-20261011/m9-accept-planning-calendar-picker.json"
+    }
+  ],
+  "whitelistOnly": true,
+  "privacyReviewRequiredBeforeTrackedPublication": true,
+  "notAllHistoricalArtifactsPASS": true
+}

@@ -1,0 +1,14 @@
+{
+  "sourceCommit": "f2d39bf7ce3e98f4e6380e746400d6784d09bf27",
+  "backendCommit": "8f24b55ab168fb227cb4efe5915432937f968356",
+  "platform": "owned Android API36 emulator5574, development shell",
+  "status": "passed_observed_get_scope",
+  "oldSelectedTaskGETReleasedAfterPrivateDenialAndNewDraft": true,
+  "oldGETUpstreamStatus": 200,
+  "newScopedAuthoredReasonPreserved": true,
+  "noOldRetryOrSuccessResurrection": true,
+  "canonicalHistoryIDsAndCountUnchanged": true,
+  "historyCount": 5,
+  "goalVersion": 6,
+  "qualification": "Actual late selected-source GET200 only; not held mutation ACK or late404. Scoped source tests own delayed old mutation success AND denial. Native denialGET404 and opposite exact canonical retry are separate actual proofs."
+}

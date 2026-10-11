@@ -1,0 +1,20 @@
+{
+  "sourceCommit": "8f24b55ab168fb227cb4efe5915432937f968356",
+  "platform": "owned Android API36 emulator5574, development shell",
+  "status": "passed",
+  "actualAndroidDocumentsUIBackground": true,
+  "graph": {
+    "unrelatedMemberId": "u-isha",
+    "beforeMemberVersion": 5,
+    "afterMemberVersion": 6,
+    "readBasisChanged": true,
+    "actorAuthorityFieldsUnchanged": true
+  },
+  "nativeDenialText": [
+    "Company access changed while choosing the file."
+  ],
+  "noNewIntake": true,
+  "newOwnedTemporaryCopyAbsentAfterDenial": true,
+  "baselineOwnedCopyCount": 1,
+  "qualification": "Unrelated real membership/title graph change changes policy basis while actor authority unchanged. File selected after change; fresh return rejects old chooser intent. Baseline prior-runtime copy excluded."
+}
