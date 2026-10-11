@@ -4,6 +4,7 @@ import (
 	"encoding/csv"
 	"encoding/json"
 	"fmt"
+	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
@@ -448,5 +449,61 @@ func TestReportRuntimeWiderInvalidation(t *testing.T) {
 				t.Fatal("wider invalidation delivered", n, e)
 			}
 		})
+	}
+}
+
+// Authorization can fail after CSV metadata is prepared but before any response
+// status/bytes are committed. The ordinary JSON denial must not inherit CSV's
+// Content-Length or attachment metadata.
+type currentReportPreheaderWriter struct {
+	*httptest.ResponseRecorder
+	cross   func()
+	crossed bool
+}
+
+func (w *currentReportPreheaderWriter) Header() http.Header {
+	h := w.ResponseRecorder.Header()
+	if !w.crossed && h.Get("Content-Type") == "text/csv; charset=utf-8" {
+		w.crossed = true
+		w.cross()
+	}
+	return h
+}
+func TestCurrentReportCSVPreheaderDenialMetadata(t *testing.T) {
+	s, db := testServer(t)
+	c := login(t, s, "founder@example.com")
+	cid := firstCompany(t, s, c)
+	uid := me(t, s, c)
+	body := taskBody(uid)
+	body["startDate"] = "2026-09-01"
+	body["dueDate"] = "2026-09-20"
+	createTask(t, s, c, cid, body)
+	root := "/api/companies/" + cid + "/reports/tasks"
+	filters := "?from=2026-09-01&to=2026-09-30"
+	b := financeOK(t, s, "GET", root+"/summary"+filters, nil, c)
+	w := &currentReportPreheaderWriter{ResponseRecorder: httptest.NewRecorder(), cross: func() {
+		if e := db.Transaction(func(tx *gorm.DB) error {
+			if e := lockCompany(tx, cid); e != nil {
+				return e
+			}
+			return tx.Model(&Membership{}).Where("company_id=? AND user_id=?", cid, uid).Update("active", false).Error
+		}); e != nil {
+			t.Fatal(e)
+		}
+	}}
+	r := httptest.NewRequest("GET", root+"/export"+filters+"&snapshot="+b["snapshot"].(string), nil)
+	r.AddCookie(c)
+	s.ServeHTTP(w, r)
+	if !w.crossed || w.Code != 403 || strings.Contains(w.Body.String(), "Original deadline") {
+		t.Fatal("preheader denial failed", w.crossed, w.Code)
+	}
+	h := w.ResponseRecorder.Header()
+	for _, name := range []string{"Content-Length", "Content-Disposition", "X-Report-Basis", "X-Report-Rows"} {
+		if h.Get(name) != "" {
+			t.Fatal("JSON denial inherited CSV metadata", name)
+		}
+	}
+	if !strings.HasPrefix(h.Get("Content-Type"), "application/json") {
+		t.Fatal("wrong denial content type")
 	}
 }

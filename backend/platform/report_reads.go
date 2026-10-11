@@ -461,10 +461,17 @@ func (s *Server) reportExport(w http.ResponseWriter, r *http.Request) error {
 	w.Header().Set("Content-Length", strconv.Itoa(content.Len()))
 	data := content.Bytes()
 	for start := 0; start < len(data); start += 64 << 10 {
-		if e = r.Context().Err(); e != nil {
-			return e
+		if e = r.Context().Err(); e == nil {
+			e = s.recheckCurrentReportSnapshot(r, snap)
 		}
-		if e = s.recheckCurrentReportSnapshot(r, snap); e != nil {
+		if e != nil {
+			if start == 0 {
+				// No bytes/status have started: preserve the normal JSON denial
+				// instead of declaring the frozen CSV's length/attachment.
+				for _, name := range []string{"Content-Type", "Content-Length", "Content-Disposition", "X-Report-Basis", "X-Report-Rows"} {
+					w.Header().Del(name)
+				}
+			}
 			return e
 		}
 		end := min(start+(64<<10), len(data))
