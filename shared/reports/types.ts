@@ -111,8 +111,23 @@ export interface ReportSchedule {
   localMinute: string;
   scheduleZone: string;
   nextOccurrenceUTC: string;
+  failureCode?: string;
+  failureCount?: number;
+  attemptCount?: number;
+  nextAttemptAt?: string | null;
   state: "active" | "paused" | "deleted";
 }
+/** A mutation receipt acknowledges these committed fields, independent of runtime timing. */
+export type ReportScheduleCommit = Pick<
+  ReportSchedule,
+  | "id"
+  | "version"
+  | "definitionRevision"
+  | "weekdays"
+  | "localMinute"
+  | "scheduleZone"
+  | "state"
+>;
 export interface ExportJob {
   id: string;
   snapshotId: string;

@@ -37,6 +37,7 @@ export function ReportField({
         timezone={timezone}
         disabled={disabled}
         pickerDisabled={pickerDisabled}
+        retainWhilePending
         calendarOnly={calendar === "date"}
         timeOnly={calendar === "time"}
         onChange={(next) =>

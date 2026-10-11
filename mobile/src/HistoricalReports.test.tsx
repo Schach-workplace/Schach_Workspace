@@ -6,7 +6,11 @@ import HistoricalReports from "./HistoricalReports";
 import { clearAllDrafts } from "./conversationDrafts";
 import { NativeApiError } from "./client";
 import { clearAllBusinessAttempts } from "../../shared/business/attempts";
-const s = vi.hoisted(() => ({ w: {} as any, request: vi.fn() }));
+const s = vi.hoisted(() => ({
+  w: {} as any,
+  request: vi.fn(),
+  size: (_width: number, _height: number) => {},
+}));
 vi.mock("./client", () => ({
   client: { endpoint: "https://owned.test", generation: 1, request: s.request },
   NativeApiError: class extends Error {
@@ -52,14 +56,18 @@ vi.mock("react-native", () => ({
     renderItem,
     ListHeaderComponent,
     ListFooterComponent,
-  }: any) =>
-    createElement(
+    onContentSizeChange,
+    contentContainerStyle,
+  }: any) => {
+    s.size = onContentSizeChange ?? (() => {});
+    return createElement(
       "div",
-      {},
+      { style: contentContainerStyle, "data-report-list": true },
       ListHeaderComponent,
       ...data.map((item: any) => renderItem({ item })),
       ListFooterComponent,
-    ),
+    );
+  },
   View: ({ children }: any) => createElement("div", {}, children),
   Text: ({ children }: any) => createElement("span", {}, children),
   TextInput: ({ value, onChangeText, accessibilityLabel }: any) =>
@@ -160,9 +168,13 @@ it("hides summary, rows and download together during a same-key all-source reche
   await render(<HistoricalReports initialId="snap" />);
   expect(c.textContent).toContain("Private historical task");
   expect(c.textContent).toContain("Tasks due as of period end: 150");
+  await act(async () => s.size(400, 7200));
   held = true;
   s.w = { ...s.w, executionEpoch: 1 };
   await render(<HistoricalReports initialId="snap" />);
+  expect(
+    (c.querySelector("[data-report-list]") as HTMLElement).style.minHeight,
+  ).toBe("7200px");
   expect(c.textContent).not.toContain("Private historical task");
   expect(c.textContent).not.toContain("Tasks due as of period end: 150");
   s.request.mockImplementationOnce(async () => {
@@ -177,6 +189,9 @@ it("hides summary, rows and download together during a same-key all-source reche
     await new Promise((r) => setTimeout(r, 5));
   });
   expect(c.textContent).toContain("Report access changed");
+  expect(
+    (c.querySelector("[data-report-list]") as HTMLElement).style.minHeight,
+  ).not.toBe("7200px");
   expect(c.textContent).not.toContain("Private historical task");
 });
 it("discards a delayed company A snapshot after switching to B", async () => {

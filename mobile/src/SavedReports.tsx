@@ -11,12 +11,19 @@ import type {
   SavedConfiguration,
   SavedDefinition,
   ReportSchedule,
+  ReportScheduleCommit,
 } from "../../shared/reports/types";
 export default function SavedReports({
   onOpen,
 }: {
   onOpen: (id: string) => void;
 }) {
+  const workspace = useWorkspace();
+  const scope = [workspace.company, workspace.session?.user.id].join(":");
+  const [created, setCreated] = useState<{
+    scope: string;
+    definition: SavedDefinition;
+  } | null>(null);
   const q = useExecutionRead<{ definitions: SavedDefinition[] }>(
     "/reports/definitions",
   );
@@ -30,7 +37,10 @@ export default function SavedReports({
       renderItem={({ item }) => (
         <Action
           title={item.configuration.name + " · " + item.state}
-          onPress={() => setSelected(item.id)}
+          onPress={() => {
+            setCreated(null);
+            setSelected(item.id);
+          }}
         />
       )}
       ListHeaderComponent={
@@ -40,14 +50,31 @@ export default function SavedReports({
             Fixed dates or previous completed week/month. Each recipient
             receives independently scoped output.
           </Text>
-          <Action title="New saved report" onPress={() => setSelected("")} />
+          <Action
+            title="New saved report"
+            onPress={() => {
+              setCreated(null);
+              setSelected("");
+            }}
+          />
           {q.loading && <Text>Checking definitions…</Text>}
           {q.error && <Text>{q.error}</Text>}
           <OrphanReports />
           <DefinitionForm
             key={selected || "new"}
             id={selected}
-            onCreated={setSelected}
+            committed={
+              created?.scope === scope && created.definition.id === selected
+                ? created.definition
+                : undefined
+            }
+            onCreated={(definition, authored) => {
+              setCreated({
+                scope,
+                definition: { ...definition, configuration: authored },
+              });
+              setSelected(definition.id);
+            }}
             onOpen={onOpen}
           />
         </View>
@@ -59,9 +86,14 @@ export function DefinitionForm({
   id,
   onCreated,
   onOpen,
+  committed,
 }: {
   id: string;
-  onCreated: (id: string) => void;
+  committed?: SavedDefinition;
+  onCreated: (
+    definition: SavedDefinition,
+    authored: SavedConfiguration,
+  ) => void;
   onOpen: (id: string) => void;
 }) {
   const w = useWorkspace();
@@ -76,11 +108,11 @@ export function DefinitionForm({
   const people = useExecutionRead<{
     recipients: { id: string; name: string }[];
   }>("/reports/definitions/recipients");
-  const [initialized, setInitialized] = useState(!id);
+  const [initialized, setInitialized] = useState(!id || !!committed);
   const [config, setConfig, , , prefill] = useRamInput<SavedConfiguration>(
     form,
     "configuration",
-    {
+    committed?.configuration ?? {
       name: "",
       basis: "task_history_v1",
       filters: { ownerId: "", departmentId: "", projectId: "" },
@@ -93,7 +125,7 @@ export function DefinitionForm({
     },
   );
   const [basis, setBasis, , , basisPrefill] = useRamInput(form, "basis", {
-    definitionVersion: 0,
+    definitionVersion: committed?.version ?? 0,
     scheduleVersion: 0,
   });
   const [schedule, setSchedule, , , schedulePrefill] = useRamInput(
@@ -175,7 +207,7 @@ export function DefinitionForm({
         id ? "PATCH" : "POST",
         (r) => {
           setBasis({ ...basis, definitionVersion: r.definition.version });
-          if (!id) onCreated(r.definition.id);
+          if (!id) onCreated(r.definition, config);
           else q.retry();
           setReview(false);
         },
@@ -189,7 +221,7 @@ export function DefinitionForm({
       setBasis(basis);
       await scheduling.execute<{
         definition: SavedDefinition;
-        schedule: ReportSchedule;
+        schedule: ReportScheduleCommit;
       }>(
         `/reports/definitions/${encodeURIComponent(id)}/schedule`,
         scheduling.attempt?.payload ?? {
@@ -522,6 +554,14 @@ export function DefinitionForm({
             people.error}
         </Text>
       )}
+      {q.ready && q.data?.schedule?.failureCode && (
+        <Text>
+          Delivery needs attention:{" "}
+          {q.data.schedule.failureCode.replaceAll("_", " ")} ·{" "}
+          {q.data.schedule.failureCount ?? 0} affected recipients · retry
+          attempt {q.data.schedule.attemptCount ?? 0}.
+        </Text>
+      )}
       {id &&
         q.ready &&
         q.data &&
@@ -543,6 +583,20 @@ export function DefinitionForm({
                       text: "Replace",
                       onPress: () => {
                         setConfig(q.data!.definition.configuration);
+                        setSchedule(
+                          q.data!.schedule?.id
+                            ? {
+                                weekdays: q.data!.schedule.weekdays,
+                                localMinute: q.data!.schedule.localMinute,
+                                scheduleZone: q.data!.schedule.scheduleZone,
+                              }
+                            : {
+                                weekdays: [1],
+                                localMinute: "09:00",
+                                scheduleZone:
+                                  w.work?.company.timezone ?? "Asia/Kolkata",
+                              },
+                        );
                         setBasis({
                           definitionVersion: q.data!.definition.version,
                           scheduleVersion: q.data!.schedule?.id

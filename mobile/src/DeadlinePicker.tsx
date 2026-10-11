@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useLayoutEffect, useCallback } from "react";
 import { Platform, Text, TextInput, View } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { Action, ui } from "./ConnectUI";
@@ -16,6 +16,7 @@ export default function DeadlinePicker({
   timeLabel = "Deadline time",
   calendarOnly = false,
   timeOnly = false,
+  retainWhilePending = false,
 }: {
   date: string;
   time: string;
@@ -28,14 +29,55 @@ export default function DeadlinePicker({
   timeLabel?: string;
   calendarOnly?: boolean;
   timeOnly?: boolean;
+  retainWhilePending?: boolean;
 }) {
   const [mode, setMode] = useState<"date" | "time" | null>(null);
   const [error, setError] = useState("");
+  const [pendingChoice, setPendingChoice] = useState<{
+    date: string;
+    time: string;
+  } | null>(null);
+  const current = useRef({
+    mode,
+    date,
+    time,
+    timezone,
+    onChange,
+    retainWhilePending,
+  });
+  useLayoutEffect(() => {
+    current.current = {
+      mode,
+      date,
+      time,
+      timezone,
+      onChange,
+      retainWhilePending,
+    };
+  });
+  // Android ignores callback replacements on an already-open dialog. Stable
+  // callbacks read the current authored context without reopening/resetting it.
+  const dismiss = useCallback(() => setMode(null), []);
+  const select = useCallback((_event: unknown, selected: Date) => {
+    const context = current.current;
+    try {
+      const fields = pickerFields(selected, context.timezone);
+      const next = {
+        date: context.mode === "date" ? fields.date : context.date,
+        time: context.mode === "time" ? fields.time : context.time,
+      };
+      if (context.retainWhilePending) setPendingChoice(next);
+      else context.onChange(next);
+      if (Platform.OS === "android") setMode(null);
+    } catch (e) {
+      setError((e as Error).message);
+    }
+  }, []);
   let value = new Date();
   try {
     value = pickerInstant(
-      date || companyDate(value, timezone),
-      mode === "time" ? time : "12:00",
+      pendingChoice?.date || date || companyDate(value, timezone),
+      mode === "time" ? (pendingChoice?.time ?? time) : "12:00",
       timezone,
     );
   } catch {
@@ -45,6 +87,7 @@ export default function DeadlinePicker({
     try {
       pickerFields(value, timezone);
       setError("");
+      setPendingChoice(null);
       setMode(next);
     } catch (e) {
       setError((e as Error).message);
@@ -111,28 +154,43 @@ export default function DeadlinePicker({
           />
         )}
       </View>
-      {mode && !pickerDisabled && Platform.OS !== "web" && (
-        <DateTimePicker
-          value={value}
-          mode={mode}
-          timeZoneName={timezone}
-          onDismiss={() => setMode(null)}
-          onValueChange={(_event, value) => {
-            try {
-              const fields = pickerFields(value, timezone);
-              onChange({
-                date: mode === "date" ? fields.date : date,
-                time: mode === "time" ? fields.time : time,
-              });
-              if (Platform.OS === "android") setMode(null);
-            } catch (e) {
-              setError((e as Error).message);
-            }
-          }}
-        />
-      )}
-      {mode && Platform.OS === "ios" && (
+      {mode &&
+        (!pickerDisabled || (retainWhilePending && !disabled)) &&
+        Platform.OS !== "web" && (
+          <DateTimePicker
+            value={value}
+            mode={mode}
+            timeZoneName={timezone}
+            onDismiss={dismiss}
+            onValueChange={select}
+          />
+        )}
+      {mode && !retainWhilePending && Platform.OS === "ios" && (
         <Action title="Done with picker" onPress={() => setMode(null)} />
+      )}
+      {retainWhilePending && pendingChoice && (
+        <View>
+          <Text>
+            Selected {timeOnly ? pendingChoice.time : pendingChoice.date}
+          </Text>
+          <Action
+            title={"Confirm selected " + label}
+            disabled={pickerDisabled || disabled}
+            onPress={() => {
+              if (pickerDisabled || disabled) return;
+              onChange(pendingChoice);
+              setPendingChoice(null);
+              setMode(null);
+            }}
+          />
+          <Action
+            title={"Discard selected " + label}
+            onPress={() => {
+              setPendingChoice(null);
+              setMode(null);
+            }}
+          />
+        </View>
       )}
       {!!error && <Text accessibilityRole="alert">{error}</Text>}
     </View>

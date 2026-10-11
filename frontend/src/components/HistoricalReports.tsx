@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useWorkspace } from '../store';
 import { useExecutionMutation, executionRead } from '../data/execution';
@@ -57,6 +57,24 @@ export default function HistoricalReports({
   const scope = JSON.stringify([store.companyId, data.me.id, data.readBasis]);
   const currentScope = useRef(scope);
   currentScope.current = scope;
+  const publicationReady =
+    job.ready && result.ready && !job.denied && !result.denied && job.data?.job.state === 'ready';
+  const authorization = useRef({ scope, ready: false, serial: 0, artifact: '' });
+  useLayoutEffect(() => {
+    const previous = authorization.current;
+    const artifact = job.data?.artifact?.id ?? '';
+    const changed =
+      previous.scope !== scope ||
+      previous.artifact !== artifact ||
+      previous.ready !== publicationReady;
+    authorization.current = {
+      scope,
+      ready: publicationReady,
+      serial: previous.serial + (changed ? 1 : 0),
+      artifact,
+    };
+    if (!publicationReady || changed) download.current?.abort();
+  }, [scope, publicationReady, job.data?.artifact?.id]);
   const comparison = useQuery({
     queryKey: [
       'workspace',
@@ -93,7 +111,7 @@ export default function HistoricalReports({
     return () => document.removeEventListener('visibilitychange', hide);
   }, []);
   useEffect(() => {
-    if (result.denied) {
+    if (result.denied || job.denied) {
       download.current?.abort();
       setCompare(false);
       queryClient.removeQueries({
@@ -101,7 +119,7 @@ export default function HistoricalReports({
         type: 'inactive',
       });
     }
-  }, [result.denied, queryClient, data.company.id, data.me.id, store.mode]);
+  }, [result.denied, job.denied, queryClient, data.company.id, data.me.id, store.mode]);
   if (store.mode === 'demo')
     return (
       <p className="panel">
@@ -143,17 +161,48 @@ export default function HistoricalReports({
   }
   async function downloadCSV() {
     if (!job.ready || !job.data?.artifact || !result.ready) return;
-    const captured = currentScope.current;
+    const captured = { ...authorization.current };
+    const artifact = job.data.artifact;
     const controller = new AbortController();
     download.current = controller;
     setDownloading(true);
+    const valid = () =>
+      !controller.signal.aborted &&
+      authorization.current.ready &&
+      authorization.current.scope === captured.scope &&
+      authorization.current.serial === captured.serial &&
+      authorization.current.artifact === artifact.id &&
+      document.visibilityState !== 'hidden';
     try {
       const blob = await fetchHistoricalCSV(
         `/companies/${encodeURIComponent(data.company.id)}/reports/artifacts/${encodeURIComponent(job.data.artifact.id)}`,
         controller.signal,
         job.data.artifact.length,
       );
-      if (controller.signal.aborted || currentScope.current !== captured) return;
+      if (!valid()) return;
+      // The ready endpoint checks the actual current session and whole source
+      // manifest. Publication gets a fresh check after receiving all bytes.
+      const final = await executionRead<{
+        job: { state: string; snapshotId: string };
+        artifact: { id: string; length: number; sha256: string; expiresAt: string } | null;
+      }>(
+        store.mode,
+        data.company.id,
+        data.me.id,
+        `/reports/exports/${encodeURIComponent(jobId)}`,
+        undefined,
+        controller.signal,
+      );
+      if (
+        !valid() ||
+        final.job.state !== 'ready' ||
+        final.job.snapshotId !== snapshotId ||
+        final.artifact?.id !== artifact.id ||
+        final.artifact.length !== artifact.length ||
+        final.artifact.sha256 !== artifact.sha256 ||
+        Date.parse(final.artifact.expiresAt) <= Date.now()
+      )
+        return;
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
@@ -163,8 +212,8 @@ export default function HistoricalReports({
     } catch (e) {
       if ((e as Error).name !== 'AbortError') setError((e as Error).message);
     } finally {
-      download.current = null;
-      if (currentScope.current === captured) setDownloading(false);
+      if (download.current === controller) download.current = null;
+      if (currentScope.current === captured.scope) setDownloading(false);
     }
   }
   return (

@@ -57,6 +57,16 @@ it("offers actual zoned calendar selection alongside labelled manual input and k
     await act(async () =>
       env.picker.onValueChange({}, new Date("2026-09-03T06:30:00Z")),
     );
+    expect(change).not.toHaveBeenCalled();
+    await act(async () =>
+      Array.from(c.querySelectorAll("button"))
+        .find(
+          (b) =>
+            b.textContent ===
+            "Confirm selected Historical start date YYYY-MM-DD",
+        )!
+        .click(),
+    );
     expect(change).toHaveBeenCalledWith("2026-09-03");
     await act(async () =>
       root.render(
@@ -78,6 +88,56 @@ it("offers actual zoned calendar selection alongside labelled manual input and k
         b.textContent?.startsWith("Choose"),
       )?.disabled,
     ).toBe(true);
+  } finally {
+    await act(() => root.unmount());
+  }
+});
+
+it("retains an open native calendar through pending authorization and stages selection until authorized confirmation", async () => {
+  Object.assign(globalThis, { IS_REACT_ACT_ENVIRONMENT: true });
+  const c = document.createElement("div"),
+    root = createRoot(c),
+    change = vi.fn();
+  const props = {
+    label: "Saved start date YYYY-MM-DD",
+    value: "2026-09-01",
+    calendar: "date" as const,
+    timezone: "UTC",
+    onChange: change,
+  };
+  const render = async (pending: boolean) =>
+    act(async () =>
+      root.render(<ReportField {...props} pickerDisabled={pending} />),
+    );
+  try {
+    await render(false);
+    await act(async () =>
+      Array.from(c.querySelectorAll("button"))
+        .find((b) => b.textContent === "Choose Saved start date YYYY-MM-DD")!
+        .click(),
+    );
+    expect(c.textContent).toContain("Native picker date");
+    await render(true);
+    expect(c.textContent).toContain("Native picker date");
+    await act(async () =>
+      env.picker.onValueChange({}, new Date("2026-09-03T12:00:00Z")),
+    );
+    expect(change).not.toHaveBeenCalled();
+    const confirm = Array.from(c.querySelectorAll("button")).find(
+      (b) => b.textContent === "Confirm selected Saved start date YYYY-MM-DD",
+    )!;
+    expect(confirm).toBeTruthy();
+    expect(confirm.disabled).toBe(true);
+    await render(false);
+    await act(async () =>
+      Array.from(c.querySelectorAll("button"))
+        .find(
+          (b) =>
+            b.textContent === "Confirm selected Saved start date YYYY-MM-DD",
+        )!
+        .click(),
+    );
+    expect(change).toHaveBeenCalledWith("2026-09-03");
   } finally {
     await act(() => root.unmount());
   }

@@ -7,11 +7,16 @@ import {
   type SavedConfiguration,
   type SavedDefinition,
   type ReportSchedule,
+  type ReportScheduleCommit,
 } from '../data/historicalReports';
 export default function SavedReports({ onOpen }: { onOpen: (id: string) => void }) {
   const w = useWorkspace();
   const list = useExecutionRead<{ definitions: SavedDefinition[] }>('/reports/definitions');
   const [selected, setSelected] = useState('');
+  const scope = [w.companyId, w.session?.user.id].join(':');
+  const [created, setCreated] = useState<{ scope: string; definition: SavedDefinition } | null>(
+    null,
+  );
   if (w.mode === 'demo')
     return (
       <p className="panel">
@@ -27,7 +32,13 @@ export default function SavedReports({ onOpen }: { onOpen: (id: string) => void 
           Fixed periods preserve dates. Previous week or month resolves the completed period at
           generation. Recipients receive independently authorized reports.
         </p>
-        <button className="button button-primary" onClick={() => setSelected('')}>
+        <button
+          className="button button-primary"
+          onClick={() => {
+            setCreated(null);
+            setSelected('');
+          }}
+        >
           New saved report
         </button>
         {list.loading && <p role="status">Checking definitions…</p>}
@@ -37,7 +48,10 @@ export default function SavedReports({ onOpen }: { onOpen: (id: string) => void 
             <button
               className="button button-secondary"
               key={d.id}
-              onClick={() => setSelected(d.id)}
+              onClick={() => {
+                setCreated(null);
+                setSelected(d.id);
+              }}
             >
               {d.configuration.name} · {d.state}
             </button>
@@ -47,7 +61,15 @@ export default function SavedReports({ onOpen }: { onOpen: (id: string) => void 
       <DefinitionForm
         key={selected || 'new'}
         id={selected}
-        onCreated={setSelected}
+        committed={
+          created?.scope === scope && created.definition.id === selected
+            ? created.definition
+            : undefined
+        }
+        onCreated={(definition, authored) => {
+          setCreated({ scope, definition: { ...definition, configuration: authored } });
+          setSelected(definition.id);
+        }}
         onOpen={onOpen}
       />
     </div>
@@ -57,9 +79,11 @@ function DefinitionForm({
   id,
   onCreated,
   onOpen,
+  committed,
 }: {
   id: string;
-  onCreated: (id: string) => void;
+  committed?: SavedDefinition;
+  onCreated: (definition: SavedDefinition, authored: SavedConfiguration) => void;
   onOpen: (id: string) => void;
 }) {
   const w = useWorkspace();
@@ -72,11 +96,11 @@ function DefinitionForm({
   const people = useExecutionRead<{ recipients: { id: string; name: string }[] }>(
     '/reports/definitions/recipients',
   );
-  const [initialized, setInitialized] = useState(!id);
+  const [initialized, setInitialized] = useState(!id || !!committed);
   const [config, setConfig, prefill] = useExecutionInput<SavedConfiguration>(
     form,
     'configuration',
-    {
+    committed?.configuration ?? {
       name: '',
       basis: 'task_history_v1',
       filters: { ownerId: '', departmentId: '', projectId: '' },
@@ -89,7 +113,7 @@ function DefinitionForm({
     },
   );
   const [basis, setBasis, prefillBasis] = useExecutionInput(form, 'basis', {
-    definitionVersion: 0,
+    definitionVersion: committed?.version ?? 0,
     scheduleVersion: 0,
   });
   const [schedule, setSchedule, schedulePrefill] = useExecutionInput(form, 'schedule', {
@@ -158,7 +182,7 @@ function DefinitionForm({
         id ? 'PATCH' : 'POST',
         (r) => {
           setBasis({ ...basis, definitionVersion: r.definition.version });
-          if (!id) onCreated(r.definition.id);
+          if (!id) onCreated(r.definition, config);
           else void source.retry();
         },
       );
@@ -170,7 +194,7 @@ function DefinitionForm({
   async function scheduleSave(state = 'active') {
     try {
       setBasis(basis);
-      await scheduling.execute<{ definition: SavedDefinition; schedule: ReportSchedule }>(
+      await scheduling.execute<{ definition: SavedDefinition; schedule: ReportScheduleCommit }>(
         `/reports/definitions/${encodeURIComponent(id)}/schedule`,
         scheduling.attempt?.payload ?? {
           ...schedule,
@@ -471,6 +495,13 @@ function DefinitionForm({
             people.error?.message}
         </p>
       )}
+      {source.ready && source.data?.schedule?.failureCode && (
+        <p role="status">
+          Delivery needs attention: {source.data.schedule.failureCode.replaceAll('_', ' ')} ·{' '}
+          {source.data.schedule.failureCount ?? 0} affected recipients · retry attempt{' '}
+          {source.data.schedule.attemptCount ?? 0}.
+        </p>
+      )}
       {id &&
         source.ready &&
         source.data &&
@@ -489,6 +520,19 @@ function DefinitionForm({
                   )
                 ) {
                   setConfig(source.data!.definition.configuration);
+                  setSchedule(
+                    source.data!.schedule?.id
+                      ? {
+                          weekdays: source.data!.schedule.weekdays,
+                          localMinute: source.data!.schedule.localMinute,
+                          scheduleZone: source.data!.schedule.scheduleZone,
+                        }
+                      : {
+                          weekdays: [1],
+                          localMinute: '09:00',
+                          scheduleZone: data.company.timezone,
+                        },
+                  );
                   setBasis({
                     definitionVersion: source.data!.definition.version,
                     scheduleVersion: source.data!.schedule?.id ? source.data!.schedule.version : 0,

@@ -109,6 +109,19 @@ export default function HistoricalReports({
     if (!ready || !job.ready) void transfer.current.cancel();
   }, [ready, job.ready]);
 
+  // Retain only neutral layout geometry. Hidden fetched sections must not
+  // shrink the scroll extent and clamp the user's offset during a recheck.
+  const layoutKey = [scope, jobId || id].join(":");
+  const [layout, setLayout] = useState({ key: "", height: 0 });
+  const holdGeometry =
+    !ready &&
+    w.foreground &&
+    !!w.work &&
+    !snap.denied &&
+    !rows.denied &&
+    !job.denied &&
+    layout.key === layoutKey;
+
   const disabled = !w.foreground || !w.work || capture.busy;
   async function generate() {
     try {
@@ -373,7 +386,7 @@ export default function HistoricalReports({
                     <Action
                       title="Cancel private download"
                       onPress={() => {
-                        void transfer.current.cancel();
+                        void transfer.current.cancel(true);
                       }}
                     />
                   )}
@@ -389,6 +402,17 @@ export default function HistoricalReports({
     <FlatList
       style={{ flex: 1 }}
       keyboardShouldPersistTaps="handled"
+      contentContainerStyle={
+        holdGeometry ? { minHeight: layout.height } : undefined
+      }
+      onContentSizeChange={(_width, height) => {
+        if (ready && Number.isFinite(height))
+          setLayout((previous) =>
+            previous.key === layoutKey && previous.height === height
+              ? previous
+              : { key: layoutKey, height },
+          );
+      }}
       data={ready ? (rows.data?.rows ?? []) : []}
       keyExtractor={(r) => r.rowId}
       ListHeaderComponent={header}
