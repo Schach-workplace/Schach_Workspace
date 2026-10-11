@@ -1,0 +1,38 @@
+{
+  "diagnosticFile": "task-10-fix1-concurrent-diagnostic6.log",
+  "diagnosticSHA256": "26754b6c0ad220048c6711cfd2ae1d41e14414797b674476cebabcf4e23e5e58",
+  "classification": "genuine product RED under required simultaneous PostgreSQL consumer proof",
+  "postgresSQLSTATE": "40P01",
+  "fkContext": "SELECT 1 FROM ONLY <owned-test-schema>.companies x WHERE id = $1 FOR KEY SHARE OF x",
+  "opposingOrder": [
+    "publication: Company UPDATE -> Membership UPDATE",
+    "private membership revoker: Membership SHARE -> Conversation UPDATE -> implicit Company FK KEY SHARE"
+  ],
+  "approvedFix": "M10-only Company NO KEY UPDATE adapter; same downstream fence; ordinary/slug strongest UPDATE unchanged",
+  "greenSource": "98b7fb6",
+  "greenTests": [
+    "TestIntelligencePostgresPublicationRevokeLockOrders/revoke_first",
+    "TestIntelligencePostgresPublicationRevokeLockOrders/publication_first",
+    "TestIntelligencePostgresConcurrentWorkerClaim",
+    "TestIntelligencePostgresCompanyFenceCompatibility"
+  ],
+  "greenEvidence": "task-10-fix1-final-pg.log",
+  "diagnosticQualification": "Raw diagnostic log retained ignored; safe excerpt removes schema and never includes sessions, credentials or payloads.",
+  "callbackCompanyWriteInventory": {
+    "tasks.go/nextCode": "UpdateColumn(next_task_number, next_task_number+1) only",
+    "expenses.go/nextExpenseCode": "UpdateColumn(next_expense_number, next_expense_number+1) only",
+    "intelligence routes, job worker/maintenance, intake": "No Company key/delete updates",
+    "organization.go/patchCompany and all ordinary withAccessTransaction callers": "Unchanged lockCompany UPDATE; slug unique-index mutator excluded from M10 adapter"
+  },
+  "adapterInventory": [
+    "intelligenceSelectionPreview",
+    "intelligenceEnqueue",
+    "intelligenceRead/List/Cancel",
+    "intelligenceTaskPreview",
+    "intelligencePublicationCurrent",
+    "withIntelligenceWorkerFence",
+    "RunIntelligenceMaintenance",
+    "createTask iff decoded IntelligenceBasis nonnil",
+    "conversionTransaction task/expense/intake preview/write iff decoded IntelligenceBasis nonnil"
+  ]
+}

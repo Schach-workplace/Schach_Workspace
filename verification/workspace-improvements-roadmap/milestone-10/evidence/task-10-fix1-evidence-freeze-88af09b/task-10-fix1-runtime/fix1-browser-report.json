@@ -1,0 +1,28 @@
+{
+  "status": "passed",
+  "checks": [
+    "Actual frozen current-report producer \u2192 explicit selected opt-in \u2192 pinned model \u2192 server-rendered selected period/semantic facts in compiled browser"
+  ],
+  "heldMilliseconds": 0,
+  "qualification": "Actual compiled browser and HTTP providers; only explicit owned raw-expiry and terminal-history fixture rows are SQL controlled.",
+  "renderedServerFactAssertions": {
+    "selectedFrom": "2026-10-01",
+    "selectedThrough": "2026-10-11",
+    "timezone": "Asia/Kolkata",
+    "current": {
+      "numerator": 8,
+      "denominator": 10,
+      "ratePercent": 80
+    },
+    "original": {
+      "numerator": 8,
+      "denominator": 10,
+      "ratePercent": 80
+    },
+    "currentCoverageDefinitionPresent": true,
+    "zeroAbsentDefinitionsPresent": true,
+    "internalValidAbsent": true,
+    "qualification": "Allowlisted deterministic server semantic facts extracted from actual rendered text; full generated body excluded."
+  },
+  "privacyQualification": "Full visible DOM and generated/source prose excluded. Fixed failure predicates, authored fictional title, protocol IDs and deterministic server fact assertions only; originals remain private/excluded."
+}

@@ -1,0 +1,186 @@
+{
+  "status": "failed",
+  "sourceHead": "0c64b5a0cf5ba0f55ed67d4e010257995a62a439",
+  "clientSource": "0c64b5a0cf5ba0f55ed67d4e010257995a62a439",
+  "checks": [
+    "Actual selected structured-record model citation performs registered exact GET200 and navigates to its record",
+    "Current compiled editable authoring survives sampled32.5s actual raw fetch: same mounted node/focus/cursor/value/scroll/bounds, fetched prose/actions withheld and preview disabled"
+  ],
+  "heldMilliseconds": 0,
+  "qualification": "Actual compiled browser and HTTP providers; only explicit owned raw-expiry and terminal-history fixture rows are SQL controlled.",
+  "actionJob": "[REDACTED_RUNTIME_ID]",
+  "prepublicationGeometry": {
+    "spanMilliseconds": 32507,
+    "before": {
+      "sameNode": true,
+      "connected": true,
+      "focused": true,
+      "disabled": false,
+      "selectionStart": 6,
+      "selectionEnd": 12,
+      "value": "Human fields must not overwrite existing task",
+      "scroll": 0,
+      "bounds": {
+        "x": 471,
+        "y": 480.1875,
+        "width": 483,
+        "height": 39
+      },
+      "rawWithheld": false,
+      "generatedActionsWithheld": false,
+      "authoringActionDisabled": false
+    },
+    "samples": [
+      {
+        "elapsed": 0,
+        "sameNode": true,
+        "connected": true,
+        "focused": true,
+        "disabled": false,
+        "selectionStart": 6,
+        "selectionEnd": 12,
+        "value": "Human fields must not overwrite existing task",
+        "scroll": 0,
+        "bounds": {
+          "x": 471,
+          "y": 512.1875,
+          "width": 483,
+          "height": 39
+        },
+        "rawWithheld": true,
+        "generatedActionsWithheld": true,
+        "authoringActionDisabled": true
+      },
+      {
+        "elapsed": 16251,
+        "sameNode": true,
+        "connected": true,
+        "focused": true,
+        "disabled": false,
+        "selectionStart": 6,
+        "selectionEnd": 12,
+        "value": "Human fields must not overwrite existing task",
+        "scroll": 0,
+        "bounds": {
+          "x": 471,
+          "y": 512.1875,
+          "width": 483,
+          "height": 39
+        },
+        "rawWithheld": true,
+        "generatedActionsWithheld": true,
+        "authoringActionDisabled": true
+      },
+      {
+        "elapsed": 32504,
+        "sameNode": true,
+        "connected": true,
+        "focused": true,
+        "disabled": false,
+        "selectionStart": 6,
+        "selectionEnd": 12,
+        "value": "Human fields must not overwrite existing task",
+        "scroll": 0,
+        "bounds": {
+          "x": 471,
+          "y": 512.1875,
+          "width": 483,
+          "height": 39
+        },
+        "rawWithheld": true,
+        "generatedActionsWithheld": true,
+        "authoringActionDisabled": true
+      }
+    ],
+    "semantics": "Programmatic focus and selection range on mounted editable input; no physical keyboard/IME claim."
+  },
+  "unknownGeometry": {
+    "spanMilliseconds": 32506,
+    "samples": [
+      {
+        "elapsed": 0,
+        "sameNode": true,
+        "connected": true,
+        "focused": true,
+        "disabled": false,
+        "selectionStart": 6,
+        "selectionEnd": 12,
+        "value": "Human fields must not overwrite existing task",
+        "scroll": 0,
+        "bounds": {
+          "x": 471,
+          "y": 544.1875,
+          "width": 483,
+          "height": 39
+        },
+        "rawWithheld": true,
+        "generatedActionsWithheld": true,
+        "authoringActionDisabled": true,
+        "retryDisabled": true,
+        "requestObservation": {
+          "route": "POST /api/companies/:company/conversations/:conversation/task-conversions",
+          "status": 200,
+          "outcome": "existing",
+          "originalKeyBodyTargetEqualAcrossSamples": true
+        }
+      },
+      {
+        "elapsed": 16251,
+        "sameNode": true,
+        "connected": true,
+        "focused": true,
+        "disabled": false,
+        "selectionStart": 6,
+        "selectionEnd": 12,
+        "value": "Human fields must not overwrite existing task",
+        "scroll": 0,
+        "bounds": {
+          "x": 471,
+          "y": 544.1875,
+          "width": 483,
+          "height": 39
+        },
+        "rawWithheld": true,
+        "generatedActionsWithheld": true,
+        "authoringActionDisabled": true,
+        "retryDisabled": true,
+        "requestObservation": {
+          "route": "POST /api/companies/:company/conversations/:conversation/task-conversions",
+          "status": 200,
+          "outcome": "existing",
+          "originalKeyBodyTargetEqualAcrossSamples": true
+        }
+      },
+      {
+        "elapsed": 32503,
+        "sameNode": true,
+        "connected": true,
+        "focused": true,
+        "disabled": false,
+        "selectionStart": 6,
+        "selectionEnd": 12,
+        "value": "Human fields must not overwrite existing task",
+        "scroll": 0,
+        "bounds": {
+          "x": 471,
+          "y": 544.1875,
+          "width": 483,
+          "height": 39
+        },
+        "rawWithheld": true,
+        "generatedActionsWithheld": true,
+        "authoringActionDisabled": true,
+        "retryDisabled": true,
+        "requestObservation": {
+          "route": "POST /api/companies/:company/conversations/:conversation/task-conversions",
+          "status": 200,
+          "outcome": "existing",
+          "originalKeyBodyTargetEqualAcrossSamples": true
+        }
+      }
+    ],
+    "semantics": "Frozen unknown input is disabled; browser focus/selection are observed, not editable/IME guarantees. Original submitted body includes canonical retry key and target path in RAM."
+  },
+  "error": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert(v.sameNode&&v.connected&&v.disabled&&v.rawWithheld&&v.generatedActionsWithheld&&v.retryDisabled)\n",
+  "privacyQualification": "Original canonical key/body/target equality validated in RAM before sanitation. No canonical body/result identifiers/body digests/private source citations or full DOM retained; only safe route template/status/outcome/equality booleans, authored fictional title and geometry. Original capture is private/excluded."
+}

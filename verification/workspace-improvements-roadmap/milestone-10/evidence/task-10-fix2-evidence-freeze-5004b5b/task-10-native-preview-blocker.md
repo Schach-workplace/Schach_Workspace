@@ -1,0 +1,24 @@
+# M10 actual native preview blocker — Important, controller confirmed
+
+Frozen reviewed source88af09b91dcdf0da0e02739b080713e8088b8f74; backend product98b7fb6 / executable SHA256324b71ebb8aa8e5676f13b1bc22a53b8bbbe05ecc8ff20b8349a808b403d2ce7; client product0c64b5a; installed old development shell1d74c31132b8246603dbc853556ca29b1a134e4f. Actual Metro bundle binding is safe008, source658-file binding safe002. No product edits or substitute model output.
+
+## Proven reproduction and impact
+
+1. New ordinary conversation-backed record selected through native Records→Local assistance. Explicit Suggest reviewed actions, current selection review and per-generation opt-in. First and only actual generation completes ready in46.122s with two task candidates (safe013).
+2. Select **first actual candidate, zero-based index0, kindtask**. Both candidates have same fixed Review task draft label; the first was uniquely visible above the second in observed source order. Select actual message1/revision1 anchor and Primary instruction, ownerRohan Mehta/u-founder, independent reviewerAditi Rao/u-ceo. Type human title `M10 reviewed checklist`, description `Human reviewed checklist with explicit ownership`, due2026-11-15. Exact field-match booleans verified in RAM, no source/model title stored.
+3. Tap observed enabled Preview content and audience. Exact native POST `/api/companies/c-schach/conversations/{private}/task-conversions/preview` returns **HTTP200 in0.004s**, observed without holding/dropping/injecting response.
+4. Actual UI samples at2.127,5.056,7.028,8.997,10.968s after tap each show **no acknowledgement action and Confirm disabled**; checking placeholder absent at these instants. Earlier independent samples2.698,4.683,6.664,8.634s also lacked acknowledgement. Authored fields/current selections remain. No known validation error, no confirm tap, no publication/new generation. We do not claim the UI was continuously absent between samples or that a brief preview was observed.
+
+This blocks human audience review/confirmation and therefore actual created→existing claim, raw-expiry and exact-retry acceptance. Controller classified Important. No attempt to race human acknowledgement. The same ready job, selected candidate and authored form are retained for a scoped reviewed fix; there is no need to regenerate.
+
+## Qualified causal hypothesis, distinct from symptom
+
+Native `intelligenceClient.ts:25` polls useIntelligence every5seconds; useExecutionRead includes epoch in scope and clears loaded on scope change (`execution.ts:47,58–60`), then supplies a fresh parsed job object on success. `IntelligenceScreen.ts:282` supplies ready result or undefined to the mounted review. `IntelligenceDraftReview.ts:121–125` compares previewJob by reference and clears preview/ack whenever job object changes, including pendingundefined and semantically identical current200. Its layout effect increments revision on job change (`127–130`), while review accepts response only for captured revision. These are the suspected producer→consumer invalidation paths. Exact correlation of one observed preview200 with the specific job render/revision transition was not instrumented; no unsupported statement that the five-second poll alone caused every missing sample.
+
+## Evidence, privacy and retained boundary
+
+Safe files under `/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe`:013 first generation,014 preview samples,015 owned observer syntheticprivacy/allowlist/backup/verifiedPID restart,016 decisive actual200+native samples,017 read-only final boundary. Default-deny UI XML redaction precedes persistence. No raw body/header/cookie/credential, model/source prose, private conversation/job identifiers, result/source-set hash or request digest published. Candidate identity is the actual preserved fixture job handle held in private tooling plus ordinal0/kindtask; not a replacement candidate.
+
+Observer is exact selected read-like previewPOST, labelH within combined8 labels,55second arm window, method/templated query-stripped route/status/timing only. No hold/drop or payload capture. Explicit finally release/clear completed. Historical tool/events preserved privately. Final read-only SQLite witness: one actual job, same expected company/actor/ready state, two actual task candidates, **zero intelligence publications for this job**. No new inference/rows after blocker ruling.
+
+Runtime retained: backendPID230537 reviewed SHA324b…, MetroPID186384, proxyPID321885 owned observer tool, emulator5574/app retained. Provider processes untouched, enabled worker retained by controller request. No font change in M10 (retained1.0). Device ownership yields to controller pending explicit scoped written fix review and affected refresh authorization. Full M10 acceptance is incomplete; later independent cases remain pending, no final workerStop or provider capacity handoff claim yet.

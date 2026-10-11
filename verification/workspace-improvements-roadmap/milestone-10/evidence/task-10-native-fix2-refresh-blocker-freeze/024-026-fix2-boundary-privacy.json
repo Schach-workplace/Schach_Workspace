@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "knownCredentialMatches": 0,
+  "unapprovedActualModelProseMatches": 0,
+  "priorHumanRecordSelectionAttributeOverlaps": 2,
+  "defaultDenyXMLRedactionBeforePersistence": true
+}

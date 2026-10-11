@@ -1,0 +1,53 @@
+
+> schach-workspace-frontend@1.1.0 test
+> vitest run src/pages/Reports.intelligence.test.tsx
+
+
+ RUN  v5.0.3 /home/brahma/Projects/Schach_Workspace/.worktrees/workspace-improvements/frontend
+
+ ❯ src/pages/Reports.intelligence.test.tsx (18 tests | 2 failed) 3549ms
+   × N2 web: actual notification retires late report inspection (error=true) 1059ms
+   × N2 web counterpart: actual task-version refresh retains the Modal and original running job 1093ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/pages/Reports.intelligence.test.tsx > N2 web: actual notification retires late report inspection (error=true)
+AssertionError: expected true to be false // Object.is equality
+
+[SYNTHETIC_TEST_DOM_DUMP_OMITTED]
+
+ ❯ src/pages/Reports.intelligence.test.tsx:181:131
+    179|     expect(enqueues).toHaveLength(0);
+    180|     if (change === 'notification')
+    181|       await waitFor(() => expect((screen.getByRole('button', { name: '…
+       |                                                                                                                                   ^
+    182|   },
+    183| );
+ ❯ runWithExpensiveErrorDiagnosticsDisabled node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/pages/Reports.intelligence.test.tsx > N2 web counterpart: actual task-version refresh retains the Modal and original running job
+TestingLibraryElementError: Unable to find role="checkbox" and name "Selected current report facts"
+
+[SYNTHETIC_TEST_DOM_DUMP_OMITTED]
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/pages/Reports.intelligence.test.tsx:354:16
+    352|   snapshot = 'replacement-report-facts';
+    353|   await releaseReport();
+    354|   await screen.findByRole('checkbox', { name: 'Selected current report…
+       |                ^
+    355|   expect(screen.getByRole('dialog')).toBe(modal);
+    356|   expect(
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 16 passed (18)
+   Start at  00:43:43
+   Duration  4.18s (tests 86%, transform 7%, import 4%, environment 3%)
+

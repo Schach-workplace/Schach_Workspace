@@ -1,0 +1,30 @@
+{
+  "sourceCommit": "b6ba0e2260de7c1219387006b6b5b8ab5ca55aab",
+  "backendProductCommit": "98b7fb6",
+  "clientProductCommit": "ca13ef3",
+  "nativeShell": "1d74c31132b8246603dbc853556ca29b1a134e4f",
+  "status": "passed",
+  "sameReadyReportDisplayedAfterOpeningNativeHistory": true,
+  "noSeparateHistoryRowTapProven": true,
+  "exactCurrentResultFactTextsInRAMMatchVisibleNativeText": [
+    true,
+    true,
+    false
+  ],
+  "rateChecks": [
+    {
+      "kind": "current_deadline",
+      "rate": 81.81818181818181,
+      "independent9over11RateMatches": true
+    },
+    {
+      "kind": "original_deadline",
+      "rate": 81.81818181818181,
+      "independent9over11RateMatches": true
+    }
+  ],
+  "resultProseRedactedBeforeXMLPersistence": true,
+  "noSecondInference": "true",
+  "originalReportSheetClosureRemainsIssue": true,
+  "visibilityQualification": "RAM comparison is to accessible native text nodes. It does not prove every line of both long facts is fully unclipped; coverage item was not in the sampled viewport."
+}

@@ -1,0 +1,25 @@
+
+> schach-workspace-frontend@1.1.0 build:demo
+> tsc --noEmit && vite build --mode demo --outDir dist-demo --outDir /home/brahma/Projects/Schach_Workspace/.worktrees/workspace-improvements/.superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix4-web-demo-dist
+
+vite v8.3.4 building client environment for demo...
+transforming...
+✓ 2128 modules transformed.
+
+(!) outDir /home/brahma/Projects/Schach_Workspace/.worktrees/workspace-improvements/.superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix4-web-demo-dist is not inside project root and will not be emptied.
+Use --emptyOutDir to override.
+
+rendering chunks...
+computing gzip size...
+../.superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix4-web-demo-dist/index.html                   0.67 kB │ gzip:   0.39 kB
+../.superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix4-web-demo-dist/assets/Calls-C7z1-d2S.css   19.29 kB │ gzip:   4.19 kB
+../.superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix4-web-demo-dist/assets/index-DUehReo7.css  162.21 kB │ gzip:  31.41 kB
+../.superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix4-web-demo-dist/assets/Calls-CyxsY5iw.js   649.39 kB │ gzip: 175.33 kB
+../.superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix4-web-demo-dist/assets/index-DsQigRqP.js   975.60 kB │ gzip: 254.20 kB
+
+[plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 900 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 617ms

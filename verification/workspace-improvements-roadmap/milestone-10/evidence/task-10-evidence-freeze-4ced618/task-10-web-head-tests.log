@@ -1,0 +1,17 @@
+
+> schach-workspace-frontend@1.1.0 test
+> vitest run
+
+
+ RUN  v5.0.3 /home/brahma/Projects/Schach_Workspace/.worktrees/workspace-improvements/frontend
+
+
+ Test Files  68 passed (68)
+      Tests  268 passed (268)
+   Start at  19:23:59
+   Duration  9.60s (tests 34%, transform 29%, environment 22%, import 14%, worker 1%)
+
+  Transform  transforming modules took 39.48s · 29% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+

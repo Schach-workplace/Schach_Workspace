@@ -1,0 +1,54 @@
+{
+  "sourceHead": "8beed856313386efbbcfdd16755d29dcd03ef45b",
+  "whisperVerification": {
+    "verified": true
+  },
+  "ollamaVersion": {
+    "version": "0.40.2"
+  },
+  "selectedModels": [
+    {
+      "name": "qwen3:4b",
+      "digest": "359d7dd4bcdab3d86b87d73ac27966f4dbb9f5efdfcc75d34a8764a09474fae7"
+    }
+  ],
+  "publicWav": {
+    "bytes": 352078,
+    "sha256": "40caa4d41e4f0458f9ccaaaa1a16dff9fe47c14f5bc5d40713bde536325f967a"
+  },
+  "noInstallRestartDownload": true,
+  "dockerProviderImage": "sha256:b86366bb528bbf7f1424435d165028497a5b69bf6ddb4fa5a87102e2b79f44fb ollama/ollama@sha256:b86366bb528bbf7f1424435d165028497a5b69bf6ddb4fa5a87102e2b79f44fb",
+  "toolchain": {
+    "go": "go version go1.26.1 linux/amd64",
+    "node": "v24.14.0",
+    "python": "Python 3.14.7"
+  },
+  "configuredProvider": {
+    "name": "local-whisper-tiny+qwen3:4b",
+    "version": "0.40.2",
+    "digest": "359d7dd4bcdab3d86b87d73ac27966f4dbb9f5efdfcc75d34a8764a09474fae7:dcb76c6586fc06cbdac6dd21f14cfd129cc4cdd9dce19bf4ffa62e59cbe6e6d1",
+    "configHash": "9106fbb26d948daca7d846dfb156d035873c70a31a60b50185544e3e947f6093"
+  },
+  "whisperFiles": [
+    {
+      "name": "config.json",
+      "bytes": 2249,
+      "sha256": "a73a28cdfe1c43ccc7202fa333d1f89c202477271407ae9a7f19afa52039cac8"
+    },
+    {
+      "name": "model.bin",
+      "bytes": 75538270,
+      "sha256": "dcb76c6586fc06cbdac6dd21f14cfd129cc4cdd9dce19bf4ffa62e59cbe6e6d1"
+    },
+    {
+      "name": "tokenizer.json",
+      "bytes": 2203239,
+      "sha256": "fb7b63191e9bb045082c79fd742a3106a12c99513ab30df4a0d47fa6cb6fd0ab"
+    },
+    {
+      "name": "vocabulary.txt",
+      "bytes": 459861,
+      "sha256": "34ce3fe1c5041027b3f8d42912270993f986dbc4bb34cf27f951e34a1e453913"
+    }
+  ]
+}

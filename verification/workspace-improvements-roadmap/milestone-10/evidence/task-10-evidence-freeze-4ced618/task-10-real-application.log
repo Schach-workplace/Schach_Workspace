@@ -1,0 +1,9 @@
+=== RUN   TestIntelligencePinnedProviderApplication
+    intelligence_real_provider_test.go:117: operation=transcript elapsed_ms=561 validated_result_bytes=772
+    intelligence_real_provider_test.go:129: operation=summary elapsed_ms=27211 validated_result_bytes=933
+    intelligence_real_provider_test.go:130: operation=action_draft elapsed_ms=28183 validated_result_bytes=900
+    intelligence_real_provider_test.go:178: operation=report_explanation elapsed_ms=108585 validated_result_bytes=1448
+    intelligence_real_provider_test.go:179: reviewed task/expense/intake canonical retries each returned one business record; historical explanation validated against server facts
+--- PASS: TestIntelligencePinnedProviderApplication (165.42s)
+PASS
+ok  	schach.local/workspace/backend/platform	165.424s

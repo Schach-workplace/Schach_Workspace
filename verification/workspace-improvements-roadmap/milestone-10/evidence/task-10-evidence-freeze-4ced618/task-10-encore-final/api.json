@@ -1,0 +1,18 @@
+{
+  "status": "passed",
+  "checks": [
+    "Current gateway selection preview, explicit consent denial, no-store and ordinary canonical task creation",
+    "Missing optional providers preserve manual task workflow and create zero jobs"
+  ],
+  "providerExpected": false,
+  "company": "c-schach",
+  "owner": "u-founder",
+  "reviewer": "u-ceo",
+  "task": "[REDACTED_RUNTIME_ID]",
+  "source": {
+    "kind": "task_fields",
+    "id": "[REDACTED_RUNTIME_ID]",
+    "expectedVersion": 1,
+    "selectedFieldSet": "narrative"
+  }
+}

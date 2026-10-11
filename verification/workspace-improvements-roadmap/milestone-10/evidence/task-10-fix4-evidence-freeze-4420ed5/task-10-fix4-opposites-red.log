@@ -1,0 +1,281 @@
+
+> mobile@1.0.0 test
+> vitest run src/IntelligenceLifetime.test.tsx
+
+
+ RUN  v5.0.3 /home/brahma/Projects/Schach_Workspace/.worktrees/workspace-improvements/mobile
+
+ ❯ src/IntelligenceLifetime.test.tsx (40 tests | 8 failed) 327ms
+   × N2: real report Sheet and original running job survive ordinary Workspace refresh 44ms
+   × N2: inspected report consent is withheld during pending and restored only for the same current selection 14ms
+   × N2b: first private Source anchor Sheet survives real polling with options withheld 24ms
+   × N2: a replaced report requires new selection, inspection and consent without replacing the owned job 14ms
+   × N2: real report selection retires late inspection (error=true) 5ms
+   × N2: real report hard retires late inspection (error=false) 4ms
+   × N2: real report hard retires late inspection (error=true) 4ms
+   × N2b: actual hard change retires the first-anchor picker 5ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 8 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/IntelligenceLifetime.test.tsx > N2: real report Sheet and original running job survive ordinary Workspace refresh
+AssertionError: expected 'Schach · Test userTest company ✓Other…' to contain 'running'
+
+Expected: "running"
+Received: "Schach · Test userTest company ✓Other company‹ BackCurrent stateHistorical reportsSaved reportsLocal assistanceCurrent-state report · Asia/Kolkata · later task changes can change these values. 0 currently authorized tasks."
+
+ ❯ src/IntelligenceLifetime.test.tsx:219:33
+    217|   const sheet = container.querySelector('[role="dialog"]');
+    218|   const recheck = button("Recheck current result");
+    219|   expect(container.textContent).toContain("running");
+       |                                 ^
+    220|   expect(enqueues).toHaveLength(1);
+    221|   const submitted = copy(enqueues[0]);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/8]⎯
+
+ FAIL  src/IntelligenceLifetime.test.tsx > N2: inspected report consent is withheld during pending and restored only for the same current selection
+AssertionError: expected null to be <section role="dialog">…(1)</section> // Object.is equality
+
+- Expected:
+<section
+  role="dialog"
+>
+  <div>
+    <div>
+      <div>
+        <div>
+          <span>
+            Local assistance
+          </span>
+          <button
+            aria-label="Close"
+            aria-pressed="false"
+          >
+            <span>
+              Close
+            </span>
+          </button>
+        </div>
+        <div>
+          <div>
+            <span>
+              Local assistance
+            </span>
+            <span>
+              Select sources explicitly. Continue normal work while local assistance is unavailable.
+            </span>
+            <div>
+              <button
+                aria-label="Operation: Explain selected facts"
+                aria-pressed="false"
+              >
+                <span … />
+              </button>
+            </div>
+            <div>
+              <span>
+                Explicit selected sources (
+                1
+                /50)
+              </span>
+              <button
+                aria-label="Current month report facts"
+                aria-pressed="true"
+              >
+                <span … />
+              </button>
+            </div>
+            <button
+              aria-label="Review selected sources"
+              aria-pressed="false"
+            >
+              <span>
+                Review selected sources
+              </span>
+            </button>
+            <span>
+              Inspected original report facts
+            </span>
+            <button
+              aria-label="I agree to local processing of these selected sources"
+              aria-pressed="true"
+            >
+              <span>
+                I agree to local processing of these selected sources
+              </span>
+            </button>
+            <button
+              aria-label="Generate local result"
+              aria-pressed="false"
+            >
+              <span>
+                Generate local result
+              </span>
+            </button>
+            <span>
+              Your local request history
+            </span>
+            <span>
+              Continue manually using the existing conversation, task, finance or report tools.
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
++ Received:
+null
+
+ ❯ src/IntelligenceLifetime.test.tsx:251:54
+    249|   reportHold = true;
+    250|   await act(async () => vi.advanceTimersByTimeAsync(15000));
+    251|   expect(container.querySelector('[role="dialog"]')).toBe(sheet);
+       |                                                      ^
+    252|   expect(container.textContent).not.toContain("Inspected original repo…
+    253|   expect(button("Generate local result")?.disabled ?? true).toBe(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/8]⎯
+
+ FAIL  src/IntelligenceLifetime.test.tsx > N2b: first private Source anchor Sheet survives real polling with options withheld
+AssertionError: expected null to be <section role="dialog">…(1)</section> // Object.is equality
+
+- Expected:
+<section
+  role="dialog"
+>
+  <div>
+    <div>
+      <div>
+        <div>
+          <span>
+            Source anchor
+          </span>
+          <button
+            aria-label="Close"
+            aria-pressed="false"
+          >
+            <span>
+              Close
+            </span>
+          </button>
+        </div>
+        <div>
+          <div>
+            <div>
+              <button
+                aria-label="Selected message 1 (revision 1)"
+                aria-pressed="false"
+              >
+                <span … />
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
++ Received:
+null
+
+ ❯ src/IntelligenceLifetime.test.tsx:276:54
+    274|   await act(async () => vi.advanceTimersByTimeAsync(15000));
+    275|   expect(rawWaiters.length).toBeGreaterThan(0);
+    276|   expect(container.querySelector('[role="dialog"]')).toBe(picker);
+       |                                                      ^
+    277|   expect(picker?.textContent).toContain("Checking current choices");
+    278|   expect(button("Selected message 1 (revision 1)")).toBeUndefined();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/8]⎯
+
+ FAIL  src/IntelligenceLifetime.test.tsx > N2: a replaced report requires new selection, inspection and consent without replacing the owned job
+AssertionError: Review selected sources: expected undefined to be defined
+ ❯ src/IntelligenceLifetime.test.tsx:131:27
+    129|   await act(async () => {
+    130|     const control = button(text);
+    131|     expect(control, text).toBeDefined();
+       |                           ^
+    132|     expect(control!.disabled, text).toBe(false);
+    133|     control!.click();
+ ❯ process.env.NODE_ENV.exports.act node_modules/react/cjs/react.development.js:814:22
+ ❯ click src/IntelligenceLifetime.test.tsx:129:9
+ ❯ src/IntelligenceLifetime.test.tsx:299:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/8]⎯
+
+ FAIL  src/IntelligenceLifetime.test.tsx > N2: real report selection retires late inspection (error=true)
+AssertionError: expected 'Schach · Test userTest company ✓Other…' not to contain 'Obsolete inspection failure'
+
+Expected: "Obsolete inspection failure"
+Received: "Schach · Test userTest company ✓Other company‹ BackCurrent stateHistorical reportsSaved reportsLocal assistanceLocal assistanceCloseLocal assistanceSelect sources explicitly. Continue normal work while local assistance is unavailable.Operation: Summarize selected sourcesExplicit selected sources (1/50)Current month report factsReview selected sourcesYour local request historyObsolete inspection failureContinue manually using the existing conversation, task, finance or report tools.Current-state report · Asia/Kolkata · later task changes can change these values. 0 currently authorized tasks."
+
+ ❯ src/IntelligenceLifetime.test.tsx:366:39
+    364|     await act(async () => previewWaiters.splice(0).forEach((w) => erro…
+    365|     expect(container.textContent).not.toContain("Inspected original re…
+    366|     expect(container.textContent).not.toContain("Obsolete inspection f…
+       |                                       ^
+    367|     expect(button("Generate local result")?.disabled ?? true).toBe(tru…
+    368|     expect(enqueues).toHaveLength(0);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/8]⎯
+
+ FAIL  src/IntelligenceLifetime.test.tsx > N2: real report hard retires late inspection (error=false)
+AssertionError: expected 'Schach · Test userTest company ✓Other…' not to contain 'Inspected original report facts'
+
+Expected: "Inspected original report facts"
+Received: "Schach · Test userTest company ✓Other company‹ BackCurrent stateHistorical reportsSaved reportsLocal assistanceLocal assistanceCloseLocal assistanceSelect sources explicitly. Continue normal work while local assistance is unavailable.Operation: Explain selected factsExplicit selected sources (1/50)Current month report factsReview selected sourcesInspected original report factsI agree to local processing of these selected sourcesGenerate local resultYour local request historyContinue manually using the existing conversation, task, finance or report tools.Current-state report · Asia/Kolkata · later task changes can change these values. 0 currently authorized tasks."
+
+ ❯ src/IntelligenceLifetime.test.tsx:365:39
+    363|     } else await changeAuthority(change);
+    364|     await act(async () => previewWaiters.splice(0).forEach((w) => erro…
+    365|     expect(container.textContent).not.toContain("Inspected original re…
+       |                                       ^
+    366|     expect(container.textContent).not.toContain("Obsolete inspection f…
+    367|     expect(button("Generate local result")?.disabled ?? true).toBe(tru…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/8]⎯
+
+ FAIL  src/IntelligenceLifetime.test.tsx > N2: real report hard retires late inspection (error=true)
+AssertionError: expected 'Schach · Test userTest company ✓Other…' not to contain 'Inspected original report facts'
+
+Expected: "Inspected original report facts"
+Received: "Schach · Test userTest company ✓Other company‹ BackCurrent stateHistorical reportsSaved reportsLocal assistanceLocal assistanceCloseLocal assistanceSelect sources explicitly. Continue normal work while local assistance is unavailable.Operation: Explain selected factsExplicit selected sources (1/50)Current month report factsReview selected sourcesInspected original report factsI agree to local processing of these selected sourcesGenerate local resultYour local request historyObsolete inspection failureContinue manually using the existing conversation, task, finance or report tools.Current-state report · Asia/Kolkata · later task changes can change these values. 0 currently authorized tasks."
+
+ ❯ src/IntelligenceLifetime.test.tsx:365:39
+    363|     } else await changeAuthority(change);
+    364|     await act(async () => previewWaiters.splice(0).forEach((w) => erro…
+    365|     expect(container.textContent).not.toContain("Inspected original re…
+       |                                       ^
+    366|     expect(container.textContent).not.toContain("Obsolete inspection f…
+    367|     expect(button("Generate local result")?.disabled ?? true).toBe(tru…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/8]⎯
+
+ FAIL  src/IntelligenceLifetime.test.tsx > N2b: actual hard change retires the first-anchor picker
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ src/IntelligenceLifetime.test.tsx:392:33
+    390|       await act(async () => [...container.querySelectorAll("button")].…
+    391|     } else await changeAuthority(change);
+    392|     expect(picker!.isConnected).toBe(false);
+       |                                 ^
+    393|     expect(container.querySelector('[role="dialog"]')).toBeNull();
+    394|     expect(button("Selected message 1 (revision 1)")).toBeUndefined();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/8]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  8 failed | 32 passed (40)
+   Start at  00:29:11
+   Duration  652ms (tests 55%, transform 20%, environment 17%, import 7%)
+

@@ -1,0 +1,30 @@
+
+ RUN  v5.0.3 /home/brahma/Projects/Schach_Workspace/.worktrees/workspace-improvements/mobile
+
+ ❯ src/IntelligenceWorkspace.test.tsx (29 tests | 1 failed | 28 skipped) 94ms
+   × actual refresh gates inspected private audience until current supported actions return 93ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/IntelligenceWorkspace.test.tsx > actual refresh gates inspected private audience until current supported actions return
+AssertionError: expected 'Local assistanceSelect sources explic…' not to contain 'Inspected private audience'
+
+Expected: "Inspected private audience"
+Received: "Local assistanceSelect sources explicitly. Continue normal work while local assistance is unavailable.Operation: Summarize selected sourcesExplicit selected sources (0/50)Choose sources from a readable conversation, task or report.Review selected sourcesreadyRecheck current resultCancel and clear this resultGenerated seedPrivate generated suggestionResolve: Open Private source labelReview task draftSecond candidateOther suggestionResolve: Open Private source labelReview task draftReview selected draftReviewed intelligence titleReviewed intelligence descriptionSource anchor: Selected message 1 (revision 1)Instruction action: Checking accessIntelligence owner: Human ownerIntelligence reviewer: Independent reviewerIntelligence deadline · Asia/KolkataChoose Intelligence deadlineDepartment: ChoosePreview content and audienceInspected private audienceHuman owner, Independent reviewerI reviewed these fields and this audienceConfirm reviewed creationYour local request historyContinue manually using the existing conversation, task, finance or report tools."
+
+ ❯ src/IntelligenceWorkspace.test.tsx:520:28
+    518|  holdActions=true; await act(async()=>w.refresh());
+    519|  expect(actionWaiters.length).toBeGreaterThan(0);
+    520|  expect(c.textContent).not.toContain("Inspected private audience");
+       |                            ^
+    521|  expect(button("Preview content and audience")!.disabled).toBe(true);
+    522|  expect(button("Confirm reviewed creation")!.disabled).toBe(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 28 skipped (29)
+   Start at  23:18:38
+   Duration  461ms (environment 33%, transform 30%, tests 24%, import 13%, worker 1%)
+

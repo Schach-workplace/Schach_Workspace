@@ -1,0 +1,21 @@
+
+> mobile@1.0.0 lint
+> expo lint
+
+
+/home/brahma/Projects/Schach_Workspace/.worktrees/workspace-improvements/mobile/src/IntelligenceScreen.tsx
+  141:51  error  Error: Cannot call impure function during render
+
+`Date.now` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+/home/brahma/Projects/Schach_Workspace/.worktrees/workspace-improvements/mobile/src/IntelligenceScreen.tsx:141:51
+  139 |       selectedReport.ready &&
+  140 |       !!selectedReport.data &&
+> 141 |       Date.parse(selectedReport.data.expiresAt) > Date.now());
+      |                                                   ^^^^^^^^^^ Cannot call impure function
+  142 |   const sourcesCurrent =
+  143 |     w.foreground && !!w.work && !sourceRead?.denied && reportProofCurrent();
+  144 |   const previewCurrent =  react-hooks/purity
+
+✖ 1 problem (1 error, 0 warnings)
+

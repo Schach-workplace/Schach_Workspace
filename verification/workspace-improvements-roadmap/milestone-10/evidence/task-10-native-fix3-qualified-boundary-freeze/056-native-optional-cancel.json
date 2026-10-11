@@ -1,0 +1,34 @@
+{
+  "sourceCommit": "b6ba0e2260de7c1219387006b6b5b8ab5ca55aab",
+  "backendProductCommit": "98b7fb6",
+  "clientProductCommit": "ca13ef3",
+  "nativeShell": "1d74c31132b8246603dbc853556ca29b1a134e4f",
+  "status": "passed",
+  "actualGenerationOrdinal": 6,
+  "statesBeforeNativeCancel": [
+    "queued",
+    "queued",
+    "queued",
+    "queued",
+    "queued",
+    "queued",
+    "queued",
+    "queued",
+    "queued",
+    "running"
+  ],
+  "runningObserved": true,
+  "nativeCancelPressed": true,
+  "terminalState": "cancelled",
+  "nativeResultRecheckAbsentAfterClear": false,
+  "elapsedSeconds": 5.408,
+  "noBusinessPublication": true,
+  "cancelTargetDp": {
+    "label": "Native cancel",
+    "widthDp": 356.72727272727275,
+    "heightDp": 44.0,
+    "minimumDp": 44
+  },
+  "noClaimOfWhisperChildCancellation": true,
+  "qualification": "Cancellation is proved by actual running state, native Cancel press, terminal cancelled. Recheck control was still present at immediate sample; no UI-unmount/clear-control claim."
+}

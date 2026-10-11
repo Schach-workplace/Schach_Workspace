@@ -1,0 +1,40 @@
+
+> mobile@1.0.0 test
+> vitest run src/IntelligenceScreen.test.tsx
+
+
+ RUN  v5.0.3 /home/brahma/Projects/Schach_Workspace/.worktrees/workspace-improvements/mobile
+
+ ❯ src/IntelligenceScreen.test.tsx (4 tests | 1 failed) 120ms
+   × keeps the selected expense amount editor mounted through a current fetch 32ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/IntelligenceScreen.test.tsx > keeps the selected expense amount editor mounted through a current fetch
+AssertionError: expected null to be <input aria-label="amount" …(1)></input> // Object.is equality
+
+- Expected:
+<input
+  aria-label="amount"
+  value="1300.50"
+/>
+
++ Received:
+null
+
+ ❯ src/IntelligenceScreen.test.tsx:339:52
+    337|   await click("Recheck current result");
+    338|   expect(c.textContent).not.toContain("Selected source suggestion");
+    339|   expect(c.querySelector('[aria-label="amount"]')).toBe(amount);
+       |                                                    ^
+    340|   expect(amount.value).toBe("1300.50");
+    341|   expect(document.activeElement).toBe(amount);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 3 passed (4)
+   Start at  19:33:36
+   Duration  413ms (tests 34%, environment 32%, transform 23%, import 10%, worker 1%)
+

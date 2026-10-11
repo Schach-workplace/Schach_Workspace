@@ -1,0 +1,6 @@
+--- FAIL: TestIntelligenceLeaseRacesCurrentFinalFence (1.24s)
+    --- FAIL: TestIntelligenceLeaseRacesCurrentFinalFence/original_session_expiry (0.18s)
+        intelligence_lifecycle_test.go:53: stale final commit accepted
+FAIL
+FAIL	schach.local/workspace/backend/platform	6.572s
+FAIL

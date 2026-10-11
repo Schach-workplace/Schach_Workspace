@@ -1,0 +1,42 @@
+
+> mobile@1.0.0 test
+> vitest run src/IntelligenceLifetime.test.tsx
+
+
+ RUN  v5.0.3 /home/brahma/Projects/Schach_Workspace/.worktrees/workspace-improvements/mobile
+
+ ❯ src/IntelligenceLifetime.test.tsx (49 tests | 5 failed) 522ms
+   × N2: exact original report hash change retires consent; latest choice requires human review 31ms
+   × N2: exact original report policy change retires consent; latest choice requires human review 25ms
+   × N2: exact original report expired change retires consent; latest choice requires human review 24ms
+   × N2: exact original report removed change retires consent; latest choice requires human review 13ms
+   × N2: exact original report acl change retires consent; latest choice requires human review 14ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/IntelligenceLifetime.test.tsx > N2: exact original report hash change retires consent; latest choice requires human review
+ FAIL  src/IntelligenceLifetime.test.tsx > N2: exact original report policy change retires consent; latest choice requires human review
+ FAIL  src/IntelligenceLifetime.test.tsx > N2: exact original report expired change retires consent; latest choice requires human review
+ FAIL  src/IntelligenceLifetime.test.tsx > N2: exact original report removed change retires consent; latest choice requires human review
+ FAIL  src/IntelligenceLifetime.test.tsx > N2: exact original report acl change retires consent; latest choice requires human review
+AssertionError: expected 'snapshot-one-nonce-2' to be 'snapshot-one-nonce-4' // Object.is equality
+
+Expected: "snapshot-one-nonce-4"
+Received: "snapshot-one-nonce-2"
+
+ ❯ src/IntelligenceLifetime.test.tsx:581:39
+    579|     await click("Generate local result");
+    580|     expect(enqueues).toHaveLength(1);
+    581|     expect(enqueues[0].sources[0].id).toBe(latestSnapshot);
+       |                                       ^
+    582|   },
+    583| );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  5 failed | 44 passed (49)
+   Start at  00:48:33
+   Duration  882ms (tests 63%, transform 17%, environment 13%, import 6%)
+

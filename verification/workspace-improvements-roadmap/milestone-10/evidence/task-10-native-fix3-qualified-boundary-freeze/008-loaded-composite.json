@@ -1,0 +1,14 @@
+{
+  "sourceCommit": "88af09b91dcdf0da0e02739b080713e8088b8f74",
+  "backendProductCommit": "98b7fb6",
+  "clientProductCommit": "0c64b5a",
+  "nativeShell": "1d74c31132b8246603dbc853556ca29b1a134e4f",
+  "status": "passed",
+  "actualDevClientLaunchAndNewNativeSheet": true,
+  "bundleURL": "http://localhost:8087/node_modules/expo-router/entry.bundle?platform=android&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.bytecode=1&transform.routerRoot=src%2Fapp&unstable_transformProfile=hermes-stable",
+  "bundleBytes": 10019582,
+  "bundleSHA256": "6bfa2e9017378f8d12a43fce0234c915de344dae04889546b5fc2c77b267901e",
+  "binarySHA256": "324b71ebb8aa8e5676f13b1bc22a53b8bbbe05ecc8ff20b8349a808b403d2ce7",
+  "nativeConfigurationAndDependenciesMatchRetainedShell": true,
+  "qualification": "Reviewed M10 backend/current JS in retained1d74 Android development shell, not final matched APK"
+}

@@ -1,0 +1,33 @@
+{
+  "updatedUtc": "2026-10-11T20:08:26.816248+00:00",
+  "sourceHead": "4420ed540dc253ad024ecb61b343be97b57b5b68",
+  "sourceSpec": "PASS",
+  "sourceQuality": "Approved",
+  "nativeManifestSHA256": "defa45ebdddf5e3c34c94200e006a6e347e8b20cd8c2280133bdfae5441e8c8d",
+  "nativeHashProof": "task-10-native-fix4-controller-final-hash-proof.json",
+  "nativeFreezeIndex": "task-10-native-fix4-qualified-boundary-freeze/index.json",
+  "sourceComparisons": 660,
+  "safeAndReportComparisons": 639,
+  "mismatches": 0,
+  "predecessorSafeAndFrozenUnchanged": [
+    537,
+    539
+  ],
+  "implementationAndBoundedLocalAcceptance": "ACCEPTED_WITH_EXPLICIT_QUALIFICATIONS",
+  "task10Complete": false,
+  "remainingTask10": "safe publication and exact48 action-row completion mapping/newcleanhandoff",
+  "nativeProviderWorkers": "manual-disabled; explicit original-owner cleared yield; actual324b binary verified PID1871279",
+  "newGenerationCount": 0,
+  "actualTotalGenerationCount": 6,
+  "canonicalTasks": 1,
+  "canonicalExpenses": 1,
+  "totalPublications": 3,
+  "privateCanonicalRetry": "one real expense ACKloss then genuine loss/editor retirement/exact-original same-session transport404; no separate successful native expense replay",
+  "rawStatusQualification": "native publication-access403; current private source404; later neutral rawjob200 invalidated/source_unavailable/no result; whole expected-job404 harness failed",
+  "externalGates": [
+    "matched final Android evaluation APK and protectedTLS auth",
+    "physical Android/iOS and signing",
+    "IndiaTLS/TURN/push/restore/capacity/Hindi quality"
+  ],
+  "ruling": "Ruling: Accept M10 reviewed implementation and bounded local acceptance at4420 after written scoped Spec PASS/Quality Approved, independently verified660 current native sources and639 safe/report records, unchanged537 predecessor safe/539 frozen records, FULL current and affected reports, concrete N2/N2b/private canonical unknown\u2192genuine loss/current denial/preservation and cleared manual-disabled yield. Preserve all composite, harness/status, numeric-scroll, report text coverage, controlled-expiry, no extra positive native expense replay, source/browser/priorM9 lifecycle, physical/iOS/production qualifications. Safe evidence publication and exact48-row completion mapping must finish before roadmap Task10 complete/newcleanBASE/final integration. \u2014 Required implementation and owning local contracts now have specific source/runtime proof; qualified rollout gaps do not justify fabricated device/provider results or duplicate generation. \u2014 Cost if wrong: narrowly revisit the concrete uncovered contract before cutover, never weaken task/finance/current-source authority or silently assert production readiness."
+}

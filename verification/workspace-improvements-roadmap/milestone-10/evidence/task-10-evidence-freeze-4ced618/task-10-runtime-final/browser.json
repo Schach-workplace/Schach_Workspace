@@ -1,0 +1,32 @@
+{
+  "status": "passed",
+  "checks": [
+    "Actual browser explicit audio selection/preview/opt-in → compiled worker → pinned Whisper transcript",
+    "Actual browser selects ready transcript and generates pinned local summary",
+    "32.5s genuine same-key held GET hides generated content/actions and preserves exact authored editor/focus/scroll",
+    "Actual human owner/reviewer/date/audience review and committed ACK loss retry create exactly one task with identical key/body"
+  ],
+  "widths": [
+    {
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "width": 430,
+      "scroll": 430
+    }
+  ],
+  "heldMilliseconds": 32501,
+  "heldAssertions": {
+    "sameNode": true,
+    "focus": true,
+    "active": "Reviewed intelligence title",
+    "value": "Human reviewed fictional delivery",
+    "disabled": true,
+    "hidden": true
+  }
+}

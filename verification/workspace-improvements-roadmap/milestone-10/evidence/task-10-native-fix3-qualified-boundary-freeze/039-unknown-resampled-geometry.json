@@ -1,0 +1,121 @@
+{
+  "sourceCommit": "b6ba0e2260de7c1219387006b6b5b8ab5ca55aab",
+  "status": "passed",
+  "samples": [
+    {
+      "bounds": [
+        50,
+        604,
+        1031,
+        730
+      ],
+      "focused": true,
+      "enabled": true,
+      "visible": true,
+      "editable": true,
+      "selectionStart": 12,
+      "selectionEnd": 12,
+      "seconds": 2.349,
+      "authoredMarkerMatches": true,
+      "imeShown": true,
+      "scrollViewportBounds": [
+        "[50,275][1031,361]",
+        "[50,361][1031,2165]"
+      ]
+    },
+    {
+      "bounds": [
+        50,
+        604,
+        1031,
+        730
+      ],
+      "focused": true,
+      "enabled": true,
+      "visible": true,
+      "editable": true,
+      "selectionStart": 12,
+      "selectionEnd": 12,
+      "seconds": 10.291,
+      "authoredMarkerMatches": true,
+      "imeShown": true,
+      "scrollViewportBounds": [
+        "[50,275][1031,361]",
+        "[50,361][1031,2165]"
+      ]
+    },
+    {
+      "bounds": [
+        50,
+        604,
+        1031,
+        730
+      ],
+      "focused": true,
+      "enabled": true,
+      "visible": true,
+      "editable": true,
+      "selectionStart": 12,
+      "selectionEnd": 12,
+      "seconds": 18.301,
+      "authoredMarkerMatches": true,
+      "imeShown": true,
+      "scrollViewportBounds": [
+        "[50,275][1031,361]",
+        "[50,361][1031,2165]"
+      ]
+    },
+    {
+      "bounds": [
+        50,
+        604,
+        1031,
+        730
+      ],
+      "focused": true,
+      "enabled": true,
+      "visible": true,
+      "editable": true,
+      "selectionStart": 12,
+      "selectionEnd": 12,
+      "seconds": 26.325,
+      "authoredMarkerMatches": true,
+      "imeShown": true,
+      "scrollViewportBounds": [
+        "[50,275][1031,361]",
+        "[50,361][1031,2165]"
+      ]
+    },
+    {
+      "bounds": [
+        50,
+        604,
+        1031,
+        730
+      ],
+      "focused": true,
+      "enabled": true,
+      "visible": true,
+      "editable": true,
+      "selectionStart": 12,
+      "selectionEnd": 12,
+      "seconds": 35.309,
+      "authoredMarkerMatches": true,
+      "imeShown": true,
+      "scrollViewportBounds": [
+        "[50,275][1031,361]",
+        "[50,361][1031,2165]"
+      ]
+    }
+  ],
+  "sampleSpanSeconds": 32.96,
+  "boundsCursorStable": true,
+  "footerDisabledSeparatelyDuringSamePendingEpisode": {
+    "visible": true,
+    "disabled": true,
+    "bounds": "[50,1913][1031,2034]"
+  },
+  "rawAlreadyExpiredProseWithheldNotNewRaw403Case": true,
+  "noToolScrollDuringSamples": true,
+  "exactScrollOffsetUnavailableViewportBoundsObserved": true
+}

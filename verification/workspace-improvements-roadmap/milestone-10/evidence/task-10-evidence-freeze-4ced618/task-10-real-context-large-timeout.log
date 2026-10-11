@@ -1,0 +1,7 @@
+=== RUN   TestIntelligenceRealContextBoundaryAndCancellation
+    intelligence_real_provider_test.go:207: actual_context_overflow mapped=source_too_large result_bytes=0 elapsed_ms=2146
+    intelligence_real_provider_test.go:213: configured full-context success context deadline exceeded
+--- FAIL: TestIntelligenceRealContextBoundaryAndCancellation (120.03s)
+FAIL
+FAIL	schach.local/workspace/backend/platform	120.032s
+FAIL

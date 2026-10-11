@@ -1,0 +1,35 @@
+
+ RUN  v5.0.3 /home/brahma/Projects/Schach_Workspace/.worktrees/workspace-improvements/mobile
+
+ ❯ src/IntelligenceScreen.test.tsx (32 tests | 2 failed) 12245ms
+   × keeps native held canonical ACK only for exact raw expiry 401/expired 70ms
+   × keeps native held canonical ACK only for exact raw expiry 404/expired 67ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/IntelligenceScreen.test.tsx > keeps native held canonical ACK only for exact raw expiry 401/expired
+ FAIL  src/IntelligenceScreen.test.tsx > keeps native held canonical ACK only for exact raw expiry 404/expired
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/IntelligenceScreen.test.tsx:925:67
+    923|     await click("Recheck current result");
+    924|     await act(async () => finish({ id: "created" }));
+    925|     expect(c.textContent?.includes("Created work successfully.")).toBe(
+       |                                                                   ^
+    926|       code === "expired",
+    927|     );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 30 passed (32)
+   Start at  22:41:53
+   Duration  12.58s (tests 98%, environment 1%, transform 1%)
+

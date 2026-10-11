@@ -1,0 +1,9 @@
+
+ RUN  v5.0.3 /home/brahma/Projects/Schach_Workspace/.worktrees/workspace-improvements/mobile
+
+
+ Test Files  1 passed (1)
+      Tests  3 passed (3)
+   Start at  23:15:00
+   Duration  455ms (tests 40%, environment 25%, transform 24%, import 10%, worker 1%)
+

@@ -1,0 +1,7 @@
+{
+  "stage": "first final manifest whitelist scan",
+  "exitCode": 1,
+  "cause": "Credential-key pattern matched the generic authorization metadata field in coordination-capture.json. Its value was solely the root final-capture/yield ruling, not a credential.",
+  "correction": "Rename metadata field to coordinationRuling. Root document hash entries unchanged. No product-source changes or test restamping.",
+  "finalAudit": "Final manifests generated only after the unchanged whitelist scan passes."
+}

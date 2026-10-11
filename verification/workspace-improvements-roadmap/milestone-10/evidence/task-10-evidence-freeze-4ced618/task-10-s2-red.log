@@ -1,0 +1,7 @@
+--- FAIL: TestIntelligenceEnqueueRetry (0.16s)
+    intelligence_jobs_test.go:11: optional missing provider must preserve manual path 404 map[error:map[code:not_found message:This resource was not found in your accessible workspace.]]
+--- FAIL: TestIntelligenceSourceAuthorizationOriginalEpoch (0.17s)
+    intelligence_jobs_test.go:24: 404 map[error:map[code:not_found message:This resource was not found in your accessible workspace.]]
+FAIL
+FAIL	schach.local/workspace/backend/platform	0.333s
+FAIL

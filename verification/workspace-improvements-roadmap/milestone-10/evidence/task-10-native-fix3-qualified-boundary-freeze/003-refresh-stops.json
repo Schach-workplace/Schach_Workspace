@@ -1,0 +1,20 @@
+{
+  "status": "passed",
+  "stops": [
+    {
+      "pidFile": "server.pid",
+      "pid": 3007301,
+      "elapsedSeconds": 0.1,
+      "verifiedOwned": true
+    },
+    {
+      "pidFile": "metro.pid",
+      "pid": 3319042,
+      "elapsedSeconds": 0.101,
+      "verifiedOwned": true
+    }
+  ],
+  "sourceFiles": 658,
+  "noDemoSeedReset": true,
+  "configurationMatchesInstalledShell": true
+}

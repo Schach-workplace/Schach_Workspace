@@ -1,0 +1,134 @@
+{
+  "finalHead": "4ced618d0a8454bbc1dc339519d9f9f539c73a70",
+  "status": "owning checks; acceptance qualified in report",
+  "checks": [
+    {
+      "name": "backend full",
+      "invocationSource": "1396eef",
+      "command": "cd backend && go test ./... -count=1 -timeout=2400s",
+      "exitCode": 0,
+      "evidence": "task-10-backend-full-final.log",
+      "qualification": "PASS152.080s; backend identical at final"
+    },
+    {
+      "name": "backend race",
+      "invocationSource": "1396eef",
+      "command": "cd backend && go test -race ./... -count=1 -timeout=2400s",
+      "exitCode": 0,
+      "evidence": "task-10-backend-race-final.log",
+      "qualification": "PASS1114.492s; backend identical at final;600000KDF unchanged"
+    },
+    {
+      "name": "PostgreSQL Intelligence",
+      "invocationSource": "1396eef",
+      "command": "cd backend && TEST_DATABASE_URL=ownedPG go test ./platform -run TestIntelligence -count=1",
+      "exitCode": 0,
+      "evidence": "task-10-postgres-final.log",
+      "qualification": "PASS17.768s; dedicated test schemas"
+    },
+    {
+      "name": "web full",
+      "invocationSource": "8beed85",
+      "command": "cd frontend && npm test",
+      "exitCode": 0,
+      "evidence": "task-10-web-final-tests.log",
+      "qualification": "270tests/68files"
+    },
+    {
+      "name": "web normal build",
+      "invocationSource": "8beed85",
+      "command": "cd frontend && npm run build",
+      "exitCode": 0,
+      "evidence": "task-10-web-final-build.log",
+      "qualification": "includes tsc; chunk-size warning"
+    },
+    {
+      "name": "web demo build",
+      "invocationSource": "8beed85",
+      "command": "cd frontend && npm run build:demo",
+      "exitCode": 0,
+      "evidence": "task-10-web-final-demo.log",
+      "qualification": "includes tsc; explicit unavailable intelligence in demo"
+    },
+    {
+      "name": "native full",
+      "invocationSource": "8beed85",
+      "command": "cd mobile && npm test",
+      "exitCode": 0,
+      "evidence": "task-10-native-final-tests.log",
+      "qualification": "222tests/50files"
+    },
+    {
+      "name": "native types",
+      "invocationSource": "8beed85",
+      "command": "cd mobile && npm run typecheck",
+      "exitCode": 0,
+      "evidence": "task-10-native-final-types.log",
+      "qualification": "PASS"
+    },
+    {
+      "name": "native lint",
+      "invocationSource": "8beed85",
+      "command": "cd mobile && npm run lint",
+      "exitCode": 0,
+      "evidence": "task-10-native-final-lint.log",
+      "qualification": "PASS0warnings"
+    },
+    {
+      "name": "native Hermes",
+      "invocationSource": "8beed85",
+      "command": "cd mobile && npm run export",
+      "exitCode": 0,
+      "evidence": "task-10-native-final-export.log",
+      "qualification": "Android+iOS"
+    },
+    {
+      "name": "native held component",
+      "invocationSource": "8beed85",
+      "command": "cd mobile && TEST_INTELLIGENCE_HELD=1 npm test -- src/IntelligenceScreen.test.tsx",
+      "exitCode": 0,
+      "evidence": "task-10-native-handoff-held.log",
+      "qualification": "4tests;32.5s wait; mockedRN/Workspace/Page, not installeddevice"
+    },
+    {
+      "name": "standalone",
+      "invocationSource": "8beed85",
+      "command": "python3 verification/runtime/intelligence_standalone.py --output .superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-runtime-handoff --allow-demo-mutations",
+      "exitCode": 0,
+      "evidence": "task-10-runtime-handoff/result.json",
+      "qualification": "compiledfresh57/populated56\u219257/gateway/gracefuljoin/cleanup"
+    },
+    {
+      "name": "browser",
+      "invocationSource": "8beed85",
+      "command": "SCHACH_INTELLIGENCE_RUNTIME=.superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-runtime-handoff node verification/runtime/intelligence_smoke.mjs --allow-demo-mutations",
+      "exitCode": 0,
+      "evidence": "task-10-runtime-handoff/browser.json",
+      "qualification": "realproviders/fullflow/32502msheld/widths/canonicalretry"
+    },
+    {
+      "name": "Encore",
+      "invocationSource": "1396eef",
+      "command": "python3 verification/runtime/intelligence_encore.py --output .superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-encore-final --allow-demo-mutations",
+      "exitCode": 0,
+      "evidence": "task-10-encore-final/result.json",
+      "qualification": "actualexport/nativePG57gateway;0/0compile commands nottests"
+    },
+    {
+      "name": "real providers with race concurrent",
+      "invocationSource": "1396eef",
+      "command": "cd backend && TEST_INTELLIGENCE_REAL=1 TEST_DATABASE_URL=ownedPG go test ./platform -run TestIntelligence\\(PinnedProviderApplication\\|RealContextBoundaryAndCancellation\\|RealOverflowIsTerminalInApplication\\) -v -count=1 -timeout=600s",
+      "exitCode": 1,
+      "evidence": "task-10-real-head.log",
+      "qualification": "voice/summary/action+publication pass;historicalexplanation120sdeadline;context2155tokens/cancel/terminaloverflowPASS"
+    },
+    {
+      "name": "isolated final real application",
+      "invocationSource": "4ced618d0a8454bbc1dc339519d9f9f539c73a70",
+      "command": "cd backend && TEST_INTELLIGENCE_REAL=1 TEST_DATABASE_URL=ownedPG go test ./platform -run ^TestIntelligencePinnedProviderApplication$ -v -count=1 -timeout=600s",
+      "exitCode": 0,
+      "evidence": "task-10-real-isolated-final.log",
+      "qualification": "PASS166.143s; unchanged120sdeadline; historical116788ms; previous timeout retained"
+    }
+  ]
+}

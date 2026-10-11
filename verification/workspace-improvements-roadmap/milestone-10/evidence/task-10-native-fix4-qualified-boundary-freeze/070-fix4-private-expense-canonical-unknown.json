@@ -1,0 +1,21 @@
+{
+  "sourceCommit": "4420ed540dc253ad024ecb61b343be97b57b5b68",
+  "backendProductCommit": "98b7fb6",
+  "clientProductCommit": "4420ed5",
+  "nativeShell": "1d74c31132b8246603dbc853556ca29b1a134e4f",
+  "status": "passed",
+  "actualReviewedExpenseCommit200ACKdrop": true,
+  "canonicalPublications": 1,
+  "exactHumanAmountMinor": 3150,
+  "exactHumanVendorDateTitleConfirmed": true,
+  "financeState": "draft",
+  "version": 1,
+  "notSubmittedApprovedOrPaid": true,
+  "visibleRetryEnabledBeforeLoss": true,
+  "confirmTargetDp": {
+    "widthDp": 356.72727272727275,
+    "heightDp": 44.0,
+    "minimumDp": 44
+  },
+  "actualGenerationCount": 6
+}

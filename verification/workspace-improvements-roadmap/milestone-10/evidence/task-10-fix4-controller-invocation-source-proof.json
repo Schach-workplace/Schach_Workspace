@@ -1,0 +1,8 @@
+{
+  "head": "4420ed540dc253ad024ecb61b343be97b57b5b68",
+  "finalInvocations": 10,
+  "distinctClientInputs": 392,
+  "individualComparisons": 3920,
+  "mismatches": [],
+  "qualification": "Independent comparison of exact invoked dirty-baseline bytes to later committed client/shared inputs; no postcommit test invocation or device acceptance inferred."
+}

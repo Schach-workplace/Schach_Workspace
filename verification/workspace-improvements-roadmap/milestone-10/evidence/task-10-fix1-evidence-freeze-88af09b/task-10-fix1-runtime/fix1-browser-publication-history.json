@@ -1,0 +1,15 @@
+{
+  "status": "failed",
+  "checks": [
+    "Actual selected structured-record model citation performs registered exact GET200 and navigates to its record",
+    "Human anchor/current alternate choice, honest preclaimed primary preview, commit200 ACK drop, first raw403 then terminal200, 32.5s independent-proof pending disables retry, identical existing replay yields one minimal provenance and unchanged work",
+    "Actual existing-work outcome opens canonical existing task",
+    "Actual paginated endpoint/consumer merges23 distinct jobs in order (21 explicitly seeded cancelled metadata; remaining jobs genuinely processed and expired)"
+  ],
+  "heldMilliseconds": 32502,
+  "qualification": "Actual compiled browser and HTTP providers; only explicit owned raw-expiry and terminal-history fixture rows are SQL controlled.",
+  "actionJob": "[REDACTED_RUNTIME_ID]",
+  "historyFixtureRows": 21,
+  "error": "Error: Current rendered intelligence workflow timed out",
+  "privacyQualification": "Full visible DOM and generated/source prose excluded. Fixed failure predicates, authored fictional title, protocol IDs and deterministic server fact assertions only; originals remain private/excluded."
+}

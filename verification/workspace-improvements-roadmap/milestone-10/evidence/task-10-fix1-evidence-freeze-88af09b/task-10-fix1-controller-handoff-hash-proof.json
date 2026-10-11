@@ -1,0 +1,14 @@
+{
+  "head": "88af09b91dcdf0da0e02739b080713e8088b8f74",
+  "clean": true,
+  "counts": {
+    "trackedFiles": 1221,
+    "sqlFilesMirrored": 232,
+    "build": 63,
+    "evidence": 70
+  },
+  "mismatchCount": 0,
+  "mismatches": [],
+  "backendEncoreEquivalentTo": "98b7fb6e6df0b208715bf01f4191b950390750c7",
+  "qualification": "Independent byte/hash/source provenance only; written scoped review and installed-native acceptance remain separate."
+}

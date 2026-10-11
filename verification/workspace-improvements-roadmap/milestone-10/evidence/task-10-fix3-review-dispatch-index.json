@@ -1,0 +1,42 @@
+{
+  "utc": "2026-10-11T18:03:01.997273+00:00",
+  "base": "5004b5bcbe777d8779287c4c618c344393105529",
+  "head": "b6ba0e2260de7c1219387006b6b5b8ab5ca55aab",
+  "files": [
+    {
+      "path": "task-10-fix3-rereview-preparation.md",
+      "bytes": 3950,
+      "sha256": "0fbe5dfed000a367cd8514efb84ce38c39bd931e94e4f25ad9fce21d94a1516d"
+    },
+    {
+      "path": "task-10-fix3-brief.md",
+      "bytes": 6908,
+      "sha256": "94967ab4f07659704f2c0b71b085c236b4926d6eb4a42ffd92939cf91543c6af"
+    },
+    {
+      "path": "task-10-fix3-report.md",
+      "bytes": 8949,
+      "sha256": "4e8241446317713141cae841d29105d2377ffde40b13ca8613db5c4862eec3b9"
+    },
+    {
+      "path": "review-5004b5b..b6ba0e2.diff",
+      "bytes": 229511,
+      "sha256": "2843192944bea97ccae92583b4eb7dd2db01c9ea01b0842d098d615d9196a671"
+    },
+    {
+      "path": "task-10-fix3-controller-handoff-hash-proof.json",
+      "bytes": 517,
+      "sha256": "e3b040801991b4a42fb1c6a2b1951650a597278816bd0e2e55a8e03f59c5a49c"
+    },
+    {
+      "path": "task-10-fix3-build-freeze-b6ba0e2/index.json",
+      "bytes": 21680,
+      "sha256": "1ee23d2139aed8caec2b8a5facab5e43053934ee04474629c442d315bf0c3acf"
+    },
+    {
+      "path": "task-10-fix3-evidence-freeze-b6ba0e2/index.json",
+      "bytes": 15754,
+      "sha256": "38d189f64867f574b7bbf2b1c3abb60183a4c734f46b58d3ce2b37f62c54a578"
+    }
+  ]
+}

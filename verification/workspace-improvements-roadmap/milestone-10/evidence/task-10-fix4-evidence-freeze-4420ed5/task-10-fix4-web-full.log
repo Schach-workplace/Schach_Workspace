@@ -1,0 +1,47 @@
+
+> schach-workspace-frontend@1.1.0 test
+> vitest run
+
+
+ RUN  v5.0.3 /home/brahma/Projects/Schach_Workspace/.worktrees/workspace-improvements/frontend
+
+ ❯ src/pages/Reports.intelligence.test.tsx (33 tests | 2 failed) 3789ms
+   × N2 web: actual hash retires late report inspection (error=true) 272ms
+   × N2 web: actual proofPolicy retires late report inspection (error=true) 120ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/pages/Reports.intelligence.test.tsx > N2 web: actual hash retires late report inspection (error=true)
+ FAIL  src/pages/Reports.intelligence.test.tsx > N2 web: actual proofPolicy retires late report inspection (error=true)
+AssertionError: expected <p role="alert"></p> to be null
+
+- Expected:
+null
+
++ Received:
+<p
+  role="alert"
+>
+  Obsolete inspection failure
+</p>
+
+ ❯ src/pages/Reports.intelligence.test.tsx:226:63
+    224|     );
+    225|     expect(screen.queryByText('Inspected original report facts')).toBe…
+    226|     expect(screen.queryByText('Obsolete inspection failure')).toBeNull…
+       |                                                               ^
+    227|     expect(screen.queryByRole('button', { name: 'Generate local result…
+    228|     expect(enqueues).toHaveLength(0);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+
+ Test Files  1 failed | 68 passed (69)
+      Tests  2 failed | 337 passed (339)
+   Start at  00:49:25
+   Duration  7.66s (tests 39%, transform 26%, environment 21%, import 14%, worker 1%)
+
+  Transform  transforming modules took 31.26s · 26% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+

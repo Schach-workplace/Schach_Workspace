@@ -1,0 +1,6 @@
+--- FAIL: TestIntelligenceOllamaRejectsRemoteIdentityAndPartialCompletion (0.00s)
+    --- FAIL: TestIntelligenceOllamaRejectsRemoteIdentityAndPartialCompletion/cloud_tags (0.00s)
+        intelligence_ollama_test.go:152: unsafe provider output accepted cloud_tags
+FAIL
+FAIL	schach.local/workspace/backend/platform	0.186s
+FAIL

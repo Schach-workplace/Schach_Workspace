@@ -1,0 +1,115 @@
+{
+  "finalHead": "5004b5bcbe777d8779287c4c618c344393105529",
+  "base": "88af09b91dcdf0da0e02739b080713e8088b8f74",
+  "status": "clean fixround2 owning verification; scoped review/native pending",
+  "checks": [
+    {
+      "name": "web-full",
+      "command": "npm test",
+      "cwd": "frontend",
+      "exitCode": 0,
+      "evidence": "task-10-fix2-web-full.log",
+      "result": "68files305PASS7.78s",
+      "invocationQualification": "Invoked at88af dirty final bytes, exact hashes committed5004b5bcbe777d8779287c4c618c344393105529"
+    },
+    {
+      "name": "web-build",
+      "command": "npm run build",
+      "cwd": "frontend",
+      "exitCode": 0,
+      "evidence": "task-10-fix2-web-build.log",
+      "result": "tsc/normalPASS;923.97kB warning",
+      "invocationQualification": "Invoked at88af dirty final bytes, exact hashes committed5004b5bcbe777d8779287c4c618c344393105529"
+    },
+    {
+      "name": "web-demo",
+      "command": "npm run build:demo",
+      "cwd": "frontend",
+      "exitCode": 0,
+      "evidence": "task-10-fix2-web-demo.log",
+      "result": "tsc/demoPASS;973.49kB warning",
+      "invocationQualification": "Invoked at88af dirty final bytes, exact hashes committed5004b5bcbe777d8779287c4c618c344393105529"
+    },
+    {
+      "name": "native-full",
+      "command": "npm test",
+      "cwd": "mobile",
+      "exitCode": 0,
+      "evidence": "task-10-fix2-native-full.log",
+      "result": "50files257PASS64.79s",
+      "invocationQualification": "Invoked at88af dirty final bytes, exact hashes committed5004b5bcbe777d8779287c4c618c344393105529"
+    },
+    {
+      "name": "native-types",
+      "command": "npm run typecheck",
+      "cwd": "mobile",
+      "exitCode": 0,
+      "evidence": "task-10-fix2-native-types.log",
+      "result": "PASS",
+      "invocationQualification": "Invoked at88af dirty final bytes, exact hashes committed5004b5bcbe777d8779287c4c618c344393105529"
+    },
+    {
+      "name": "native-lint",
+      "command": "npm run lint",
+      "cwd": "mobile",
+      "exitCode": 0,
+      "evidence": "task-10-fix2-native-lint.log",
+      "result": "PASS clean lint",
+      "invocationQualification": "Invoked at88af dirty final bytes, exact hashes committed5004b5bcbe777d8779287c4c618c344393105529"
+    },
+    {
+      "name": "native-export",
+      "command": "npm run export",
+      "cwd": "mobile",
+      "exitCode": 0,
+      "evidence": "task-10-fix2-native-export.log",
+      "result": "Android+iOS HermesPASS;NO_COLOR/FORCE_COLOR warning",
+      "invocationQualification": "Invoked at88af dirty final bytes, exact hashes committed5004b5bcbe777d8779287c4c618c344393105529"
+    },
+    {
+      "name": "format",
+      "command": "npx prettier --check <seven changed paths>",
+      "cwd": ".",
+      "exitCode": 0,
+      "evidence": "task-10-fix2-format.log",
+      "result": "PASS",
+      "invocationQualification": "Invoked at88af dirty final bytes, exact hashes committed5004b5bcbe777d8779287c4c618c344393105529"
+    }
+  ],
+  "expectedFailures": [
+    {
+      "evidence": "task-10-fix2-native-red.log",
+      "exitCode": 1,
+      "qualification": "3meaningfulRED/1oppositePASS"
+    },
+    {
+      "evidence": "task-10-fix2-web-red.log",
+      "exitCode": 1,
+      "qualification": "3meaningfulRED/1oppositePASS"
+    },
+    {
+      "evidence": "task-10-fix2-native-retirement-red.log",
+      "exitCode": 1,
+      "qualification": "1meaningful hard-retirement late-preview RED"
+    },
+    {
+      "evidence": "task-10-fix2-web-retirement-red.log",
+      "exitCode": 1,
+      "qualification": "1meaningful hard-retirement late-preview RED"
+    },
+    {
+      "evidence": "task-10-fix2-native-final-focused.log",
+      "exitCode": 1,
+      "qualification": "intermediate401/404 expectation used code alone; product correctly denied; final status+code expectation fixed"
+    }
+  ],
+  "notRerun": [
+    "backend",
+    "race",
+    "PostgreSQL",
+    "Encore",
+    "providers",
+    "actual native"
+  ],
+  "priorEquivalentBackendEvidence": "task-10-fix1-report.md"
+}

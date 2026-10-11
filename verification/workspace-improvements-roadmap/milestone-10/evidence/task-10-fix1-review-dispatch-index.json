@@ -1,0 +1,37 @@
+{
+  "base": "4ced618d0a8454bbc1dc339519d9f9f539c73a70",
+  "head": "88af09b91dcdf0da0e02739b080713e8088b8f74",
+  "scope": "Consolidated fixround1 originalR1\u2013R5/correctedR2/mandatedmissingcases/C1/C2 andnewfixbreakage only",
+  "entries": [
+    {
+      "path": "review-4ced618..88af09b.diff",
+      "bytes": 212948,
+      "sha256": "5827b451c421fc3619abdb8b459fc32d98f73ca85c5b6453ee7093a993337f39"
+    },
+    {
+      "path": "task-10-fix1-report.md",
+      "bytes": 18962,
+      "sha256": "53536ece4ed7d63d92582c35a099667fa3bba646292d2aaed2ea1280490ba3d1"
+    },
+    {
+      "path": "task-10-fix1-manifest.json",
+      "bytes": 16811,
+      "sha256": "57261b60fff3db750bbb55262a9b86b0d4c715bbbf0e7e3ed226561d00e5ea4e"
+    },
+    {
+      "path": "task-10-fix1-controller-handoff-hash-proof.json",
+      "bytes": 440,
+      "sha256": "04783a4fe26b875d19ba052405311fbcab80efd397c6cdcada1563ae6b2f5ccb"
+    },
+    {
+      "path": "task-10-fix1-controller-geometry-proof.json",
+      "bytes": 1312,
+      "sha256": "57bd7605a82feb4c195f62f0c04d54d4bf5524ddd2a463aef6dcd043badf6334"
+    },
+    {
+      "path": "task-10-fix1-controller-browser-privacy-proof.json",
+      "bytes": 255,
+      "sha256": "e5bd191f8b728849a8d9201a378e03c6652ea431626e84f745aebc7f4bf14a4f"
+    }
+  ]
+}

@@ -1,0 +1,86 @@
+{
+  "sourceCommit": "b6ba0e2260de7c1219387006b6b5b8ab5ca55aab",
+  "backendProductCommit": "98b7fb6",
+  "clientProductCommit": "ca13ef3",
+  "nativeShell": "1d74c31132b8246603dbc853556ca29b1a134e4f",
+  "status": "observed_issue",
+  "samples": [
+    {
+      "seconds": 1.971,
+      "anchorPickerHeading": true,
+      "sourceOptionPresent": true,
+      "parentExpenseAmountPresent": false,
+      "checkingChoices": false
+    },
+    {
+      "seconds": 7.587,
+      "anchorPickerHeading": false,
+      "sourceOptionPresent": false,
+      "parentExpenseAmountPresent": false,
+      "checkingChoices": false
+    },
+    {
+      "seconds": 10.559,
+      "anchorPickerHeading": false,
+      "sourceOptionPresent": false,
+      "parentExpenseAmountPresent": false,
+      "checkingChoices": false
+    },
+    {
+      "seconds": 13.535,
+      "anchorPickerHeading": false,
+      "sourceOptionPresent": false,
+      "parentExpenseAmountPresent": false,
+      "checkingChoices": false
+    },
+    {
+      "seconds": 16.81,
+      "anchorPickerHeading": false,
+      "sourceOptionPresent": false,
+      "parentExpenseAmountPresent": false,
+      "checkingChoices": false
+    }
+  ],
+  "noUserDismissalOrSourceSelectionAfterOpen": true,
+  "sameReadyExpenseJobNoInferenceOrPublication": true,
+  "selectedRawGETActuallyHeld": true,
+  "latestCurrentReadHoldEvents": [
+    {
+      "method": "GET",
+      "path": "/api/companies/c-schach/intelligence/jobs/{owned-private-job}",
+      "bindingLabel": "C",
+      "phase": "binding_released_before_forward",
+      "elapsedSeconds": 9.056,
+      "upstreamStatus": 200,
+      "structuredRawExpired": false
+    },
+    {
+      "method": "GET",
+      "path": "/api/companies/c-schach/intelligence/jobs/{owned-private-job}",
+      "bindingLabel": "C",
+      "phase": "binding_released_before_forward",
+      "elapsedSeconds": 7.201,
+      "upstreamStatus": 200,
+      "structuredRawExpired": false
+    },
+    {
+      "method": "GET",
+      "path": "/api/companies/c-schach/intelligence/jobs/{owned-private-job}",
+      "bindingLabel": "C",
+      "phase": "binding_released_before_forward",
+      "elapsedSeconds": 7.073,
+      "upstreamStatus": 200,
+      "structuredRawExpired": false
+    },
+    {
+      "method": "GET",
+      "path": "/api/companies/c-schach/intelligence/jobs/{owned-private-job}",
+      "bindingLabel": "C",
+      "phase": "binding_released_before_forward",
+      "elapsedSeconds": 1.933,
+      "upstreamStatus": 200,
+      "structuredRawExpired": false
+    }
+  ],
+  "holdQualification": "Proxy updates held events in place to released phase. Latest four C current200 releases held9.056/7.201/7.073/1.933seconds in this diagnostic; earlier C events belong to safe051. No exact closure instant claimed."
+}

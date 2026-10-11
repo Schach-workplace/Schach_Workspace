@@ -1,0 +1,8 @@
+{
+  "namespacePid": 3553707,
+  "hostNetNamespace": "net:[4026531833]",
+  "ownedNetNamespace": "net:[4026535403]",
+  "postgresContainer": "schach-m10-pg-88a8756d24bc",
+  "postgresPublishedPort": 50425,
+  "sourceHead": "1396eefd514d03885ffa37d246374c14fe7cd4bf"
+}

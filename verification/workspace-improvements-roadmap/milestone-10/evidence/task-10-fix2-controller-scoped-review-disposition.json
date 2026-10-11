@@ -1,0 +1,15 @@
+{
+  "status": "Scoped Spec PASS / Quality Approved; native acceptance pending",
+  "head": "5004b5bcbe777d8779287c4c618c344393105529",
+  "findings": [
+    "N1 addressed in source",
+    "M1 addressed"
+  ],
+  "newFindings": 0,
+  "reviewPath": "task-10-fix2-review.md",
+  "reviewSha256": "5603d3cccf20de2bfaf5047b1a14e195dc657161cd4ebd9b9bdefb9314d47240",
+  "nativeRefreshAuthorized": true,
+  "backendProduct": "98b7fb6e6df0b208715bf01f4191b950390750c7",
+  "serverSha256": "324b71ebb8aa8e5676f13b1bc22a53b8bbbe05ecc8ff20b8349a808b403d2ce7",
+  "milestone10Accepted": false
+}

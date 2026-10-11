@@ -1,0 +1,194 @@
+
+> schach-workspace-frontend@1.1.0 test
+> vitest run src/pages/Reports.intelligence.test.tsx
+
+
+ RUN  v5.0.3 /home/brahma/Projects/Schach_Workspace/.worktrees/workspace-improvements/frontend
+
+ ❯ src/pages/Reports.intelligence.test.tsx (2 tests | 2 failed) 206ms
+   × N2 web counterpart: same-query pending withholds inspected choices while retaining consent and Modal 116ms
+   × N2 web counterpart: actual task-version refresh retains the Modal and original running job 89ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/pages/Reports.intelligence.test.tsx > N2 web counterpart: same-query pending withholds inspected choices while retaining consent and Modal
+AssertionError: expected <p></p> to be null
+
+- Expected:
+null
+
++ Received:
+<p>
+  Inspected original report facts
+</p>
+
+ ❯ src/pages/Reports.intelligence.test.tsx:82:65
+     80|   await waitFor(() => expect(reportWaiters.length).toBeGreaterThan(0));
+     81|   expect(screen.getByRole('dialog')).toBe(modal);
+     82|   expect(screen.queryByText('Inspected original report facts')).toBeNu…
+       |                                                                 ^
+     83|   expect(screen.queryByRole('checkbox', { name: 'Selected current repo…
+     84|   expect(screen.queryByRole('button', { name: 'Generate local result' …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/pages/Reports.intelligence.test.tsx > N2 web counterpart: actual task-version refresh retains the Modal and original running job
+AssertionError: expected null to be <div role="dialog" …(7)>…(2)</div> // Object.is equality
+
+- Expected:
+<div
+  aria-describedby="radix-_r_5_"
+  aria-labelledby="radix-_r_4_"
+  class="dialog-content"
+  data-state="open"
+  id="radix-_r_3_"
+  role="dialog"
+  style="z-index: 111; pointer-events: auto;"
+  tabindex="-1"
+>
+  <div
+    class="dialog-header"
+  >
+    <div>
+      <h2
+        id="radix-_r_4_"
+      >
+        Local assistance
+      </h2>
+      <p
+        id="radix-_r_5_"
+      >
+        Complete the details below.
+      </p>
+    </div>
+    <button
+      aria-label="Close dialog"
+      class="icon-button"
+      type="button"
+    >
+      <svg
+        aria-hidden="true"
+        class="lucide lucide-x"
+        fill="none"
+        height="19"
+        stroke="currentColor"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        viewBox="0 0 24 24"
+        width="19"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M18 6 6 18"
+        />
+        <path
+          d="m6 6 12 12"
+        />
+      </svg>
+    </button>
+  </div>
+  <section
+    class="intelligence-panel"
+    style="display: grid; gap: 12px; padding: 20px; max-width: 100%; min-width: 0; box-sizing: border-box; overflow-wrap: anywhere;"
+  >
+    <h2>
+      Local assistance
+    </h2>
+    <p>
+      Select sources explicitly. You can continue normal work while local assistance is unavailable.
+    </p>
+    <label>
+      Operation
+      <select>
+        <option
+          value="summary"
+        >
+          Summarize selected sources
+        </option>
+        <option
+          value="transcript"
+        >
+          Transcribe selected audio
+        </option>
+        <option
+          value="action_draft"
+        >
+          Suggest reviewed actions
+        </option>
+        <option
+          value="report_explanation"
+        >
+          Explain selected facts
+        </option>
+      </select>
+    </label>
+    <fieldset>
+      <legend>
+        Explicit selected sources (
+        1
+        /50)
+      </legend>
+      <label
+        style="display: flex; align-items: center; min-height: 44px; gap: 8px;"
+      >
+        <input
+          type="checkbox"
+        />
+        Selected current report facts
+      </label>
+    </fieldset>
+    <button
+      class="button"
+    >
+      Review selected sources
+    </button>
+    <p
+      role="status"
+    >
+      running
+    </p>
+    <button
+      class="button"
+    >
+      Recheck current result
+    </button>
+    <button
+      class="button"
+    >
+      Cancel and clear this result
+    </button>
+    <div
+      aria-hidden="true"
+      style="height: 0px;"
+    />
+    <details>
+      <summary>
+        Your local request history
+      </summary>
+    </details>
+    <p>
+      Continue manually using the existing conversation, task, finance or report tools.
+    </p>
+  </section>
+</div>
+
++ Received:
+null
+
+ ❯ src/pages/Reports.intelligence.test.tsx:101:40
+     99|   await act(async () => { void workspace.refresh(); });
+    100|   await waitFor(() => expect(reportWaiters.length).toBeGreaterThan(0));
+    101|   expect(screen.queryByRole('dialog')).toBe(modal);
+       |                                        ^
+    102|   expect(screen.getByRole('button', { name: 'Recheck current result' }…
+    103|   expect(screen.queryByRole('checkbox', { name: 'Selected current repo…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed (2)
+   Start at  00:33:46
+   Duration  767ms (transform 32%, tests 29%, import 22%, environment 17%)
+

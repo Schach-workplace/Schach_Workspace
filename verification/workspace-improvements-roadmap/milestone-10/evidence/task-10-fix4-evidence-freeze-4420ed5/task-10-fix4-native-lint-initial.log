@@ -1,0 +1,14 @@
+
+> mobile@1.0.0 lint
+> expo lint
+
+
+/home/brahma/Projects/Schach_Workspace/.worktrees/workspace-improvements/mobile/src/IntelligenceLifetime.test.tsx
+  113:5  warning  'request' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/home/brahma/Projects/Schach_Workspace/.worktrees/workspace-improvements/mobile/src/IntelligenceScreen.tsx
+  125:6   warning  React Hook useLayoutEffect has a missing dependency: 'w.work'. Either include it or remove the dependency array                                 react-hooks/exhaustive-deps
+  125:42  warning  React Hook useLayoutEffect has a complex expression in the dependency array. Extract it to a separate variable so it can be statically checked  react-hooks/exhaustive-deps
+
+✖ 3 problems (0 errors, 3 warnings)
+

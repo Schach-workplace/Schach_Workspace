@@ -1,0 +1,17 @@
+
+> mobile@1.0.0 test
+> vitest run
+
+
+ RUN  v5.0.3 /home/brahma/Projects/Schach_Workspace/.worktrees/workspace-improvements/mobile
+
+
+ Test Files  50 passed (50)
+      Tests  222 passed (222)
+   Start at  19:34:57
+   Duration  65.39s (tests 55%, transform 26%, environment 11%, import 8%)
+
+  Transform  transforming modules took 32.86s · 26% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+

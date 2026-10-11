@@ -1,0 +1,17 @@
+=== RUN   TestIntelligencePinnedProviderApplication
+    intelligence_real_provider_test.go:119: operation=transcript elapsed_ms=585 validated_result_bytes=772
+    intelligence_real_provider_test.go:131: operation=summary elapsed_ms=29900 validated_result_bytes=933
+    intelligence_real_provider_test.go:132: operation=action_draft elapsed_ms=27875 validated_result_bytes=900
+    intelligence_real_provider_test.go:180: real adapter report_explanation context deadline exceeded
+--- FAIL: TestIntelligencePinnedProviderApplication (179.17s)
+=== RUN   TestIntelligenceRealContextBoundaryAndCancellation
+    intelligence_real_provider_test.go:207: actual_context_overflow mapped=source_too_large result_bytes=0 elapsed_ms=2167
+    intelligence_real_provider_test.go:221: actual_configured_context_success input_tokens=2155 output_tokens=51 elapsed_ms=45218
+    intelligence_real_provider_test.go:229: actual adapter request cancellation joined without output
+--- PASS: TestIntelligenceRealContextBoundaryAndCancellation (47.41s)
+=== RUN   TestIntelligenceRealOverflowIsTerminalInApplication
+    intelligence_real_provider_test.go:274: actual adapter overflow → terminal source_too_large; one attempt, zero result bytes, zero publications and unchanged business rows
+--- PASS: TestIntelligenceRealOverflowIsTerminalInApplication (2.66s)
+FAIL
+FAIL	schach.local/workspace/backend/platform	229.234s
+FAIL

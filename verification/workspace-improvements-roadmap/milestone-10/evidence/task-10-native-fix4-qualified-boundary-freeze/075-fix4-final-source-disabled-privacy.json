@@ -1,0 +1,41 @@
+{
+  "sourceCommit": "4420ed540dc253ad024ecb61b343be97b57b5b68",
+  "backendProductCommit": "98b7fb6",
+  "clientProductCommit": "4420ed5",
+  "nativeShell": "1d74c31132b8246603dbc853556ca29b1a134e4f",
+  "status": "passed",
+  "actualFrozenSourceFiles": 660,
+  "sourceMismatches": 0,
+  "configurationMismatches": 0,
+  "binarySHA256": "324b71ebb8aa8e5676f13b1bc22a53b8bbbe05ecc8ff20b8349a808b403d2ce7",
+  "bundleBindingFrom063": "71fcab09ee628daed33a9b4b71c8fbba91f6c11bc7402cbbd7c8d06fdb39b4dc",
+  "toolHashes": {
+    "current-read-barrier-proxy-m10-fix4.py": "a61c2182335f765542e720ade09cc4500d21222beee9511232f3954119b1ca0b",
+    "m10_controls.py": "b9ad0c1772d1da804210dd6799a256c6f3c3739a84b60596a15ace387873c663",
+    "run-owned-m10-server.py": "1ed69b95fbc7e8b2418f01a9aa849a677fa1cb56cf36fabbb581dca6da3e4e1b",
+    "run-metro.py": "a7312b9df7553e07f66650cafba2b9e47047ed09e389316871863d168bf8e1f8"
+  },
+  "currentOwnedPIDs": {
+    "server.pid": 1871279,
+    "metro.pid": 1768295,
+    "current-read-barrier-proxy.pid": 1855813
+  },
+  "previousEnabledLauncherExitCode": 0,
+  "sameBinaryRestartedAllCapabilitiesFalse": true,
+  "sixStoredTerminalJobs": true,
+  "canonicalPublicationsTotal": 3,
+  "privateExpenseOneUnchangedDraft": true,
+  "privateSource404JobInvalidated": true,
+  "sqliteIntegrity": "ok",
+  "nativeAuthenticatedTabsRestored": true,
+  "font1": true,
+  "deviceTransientXMLAbsent": true,
+  "allProxyArmsSelectorsObserversSensitiveRAMCleared": true,
+  "knownCredentialMatches": 0,
+  "survivingTranscriptSummaryProseMatches": 0,
+  "invalidatedPrivateAndExpiredRawProseQualification": "No post-purge raw comparison claimed. Default-deny redaction before persistence; earlier per-phase private samples performed RAM comparisons.",
+  "privateDirectories0700Files0600": true,
+  "sharedProvidersNotMutated": true,
+  "nativeProviderConsumptionDisabled": true,
+  "noNewInferenceBeyondSix": true
+}

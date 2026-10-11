@@ -1,0 +1,11 @@
+{
+  "status": "passed",
+  "syntheticAllowlistAndNineLabelRejection": true,
+  "aggregateOneMiBOverflowRejected": true,
+  "privateRouteAndQueryRedaction": true,
+  "allInstrumentedRequestsSensitiveNoDigest": true,
+  "priorQuiescenceVerified": true,
+  "verifiedOwnedOldPID": 3327455,
+  "priorSHA256": "94106f7cf078a3ac7324a7c5b9bf1a6ad97d11331a709b958c001a183d6f4a6a",
+  "newSHA256": "dc0f574802cbe55dbcf0ea3905bc16614d6598c34d4e56728286af10a36cf54e"
+}

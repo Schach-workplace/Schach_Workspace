@@ -1,0 +1,9 @@
+{
+  "head": "88af09b91dcdf0da0e02739b080713e8088b8f74",
+  "cleanGit": true,
+  "evidenceFilesVerified": 70,
+  "sourceFilesVerified": 1221,
+  "artifactHashesVerified": 63,
+  "sensitivePatternFindings": [],
+  "qualification": "Explicit whitelist plus manual structured-browser sanitation. Scan is supplemental, not proof arbitrary DOM/log text is safe. Safe browser proofs exclude full DOM/canonical body/digest/generated text; raw captures excluded. Final whitelist includes this scan record; all70 entry hashes reverified after generation."
+}

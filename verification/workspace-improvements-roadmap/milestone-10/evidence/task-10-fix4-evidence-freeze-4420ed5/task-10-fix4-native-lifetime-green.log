@@ -1,0 +1,13 @@
+
+> mobile@1.0.0 test
+> vitest run src/IntelligenceLifetime.test.tsx src/IntelligenceWorkspace.test.tsx
+
+
+ RUN  v5.0.3 /home/brahma/Projects/Schach_Workspace/.worktrees/workspace-improvements/mobile
+
+
+ Test Files  2 passed (2)
+      Tests  72 passed (72)
+   Start at  00:32:19
+   Duration  845ms (tests 63%, transform 16%, environment 14%, import 7%)
+

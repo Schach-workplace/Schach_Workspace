@@ -1,0 +1,9 @@
+{
+  "updatedUtc": "2026-10-11T19:54:02.292475+00:00",
+  "sourceHead": "4420ed540dc253ad024ecb61b343be97b57b5b68",
+  "nativeSourceArtifact": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/061-fix4-source-preservation.json",
+  "nativeSourceArtifactSHA256": "da109798d300d6c29b84d591c7e1298612d827479ec6ebd34f8af291fd6af5fe",
+  "sourceComparisons": 660,
+  "mismatches": [],
+  "qualification": "Current refreshed native source binding only. Report/picker/expense installed behavior and final manifest/privacy not yet accepted."
+}

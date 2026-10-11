@@ -1,0 +1,70 @@
+
+> schach-workspace-frontend@1.1.0 test
+> vitest run src/store.scopes.test.tsx
+
+
+ RUN  v5.0.3 /home/brahma/Projects/Schach_Workspace/.worktrees/workspace-improvements/frontend
+
+ ❯ src/store.scopes.test.tsx (9 tests | 1 failed) 94ms
+   × real workspace transport raw expiry classification GET /intelligence/jobs/raw 403 expired 10ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/store.scopes.test.tsx > real workspace transport raw expiry classification GET /intelligence/jobs/raw 403 expired
+AssertionError: expected undefined to be { retryKey: 'original-key', …(4) } // Object.is equality
+
+- Expected:
+{
+  "actorBasis": {
+    "active": true,
+    "avatar": "RM",
+    "capacityHours": 40,
+    "companyPermissionEpoch": 1,
+    "departmentId": "",
+    "email": "founder@schach.demo",
+    "id": "expiry-actor",
+    "managerId": "",
+    "memberAccessEpoch": 1,
+    "membershipId": "m-u-founder",
+    "membershipVersion": 1,
+    "name": "Rohan Mehta",
+    "role": "founder",
+    "title": "Founder",
+  },
+  "payload": {
+    "intelligenceBasis": {
+      "jobId": "raw",
+    },
+    "title": "Human authored",
+  },
+  "retryKey": "original-key",
+  "state": "unknown",
+  "target": {
+    "canonical": true,
+    "method": "POST",
+    "path": "/tasks",
+    "sources": [
+      "/intelligence/jobs/raw/publication-access",
+    ],
+  },
+}
+
++ Received:
+undefined
+
+ ❯ src/store.scopes.test.tsx:188:30
+    186|   writeDraft(draft,{body:'Human authored'});
+    187|   await expect(request('/companies/'+data.company.id+path,{method})).r…
+    188|   expect(readAttempt(scope)).toBe(preserve?original:undefined);
+       |                              ^
+    189|   expect(readDraft(draft).body).toBe(preserve?'Human authored':'');
+    190|   clearAllBusinessAttempts();clearAllDrafts();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 8 passed (9)
+   Start at  21:31:27
+   Duration  450ms (transform 31%, environment 27%, tests 24%, import 17%, worker 1%)
+

@@ -1,0 +1,15 @@
+{
+  "sourceCommit": "4420ed540dc253ad024ecb61b343be97b57b5b68",
+  "backendProductCommit": "98b7fb6",
+  "clientProductCommit": "4420ed5",
+  "nativeShell": "1d74c31132b8246603dbc853556ca29b1a134e4f",
+  "status": "passed",
+  "oldToolSHA256": "d009c2ef6777a055705296b96a426ad4847142cdc88df81aff021ef2bea8b3de",
+  "newToolSHA256": "915556cff9122f5c648b49149cedad6355c2ba35142d15db6fc09bb6a36b6907",
+  "syntheticExactMethodPathRangeExtraQueryDuplicateQueryPrivacyOverflow": true,
+  "oneExactSelectedRangeGETBeforeUpstreamOnly": true,
+  "selectionPreviewPOSTObserveOnly": true,
+  "maximum55Seconds8CombinedLabels1MiBAggregate": true,
+  "quiescentOldOwnedPID": 1779190,
+  "noInferenceTokenInjectionOrTTLChange": true
+}

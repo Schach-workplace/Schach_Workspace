@@ -1,0 +1,61 @@
+
+> schach-workspace-frontend@1.1.0 test
+> vitest run src/pages/Reports.intelligence.test.tsx
+
+
+ RUN  v5.0.3 /home/brahma/Projects/Schach_Workspace/.worktrees/workspace-improvements/frontend
+
+ ❯ src/pages/Reports.intelligence.test.tsx (23 tests | 6 failed) 2785ms
+   × N2 web: actual notification retires late report inspection (error=true) 1050ms
+   × N2 web: exact original hash change requires renewed explicit latest selection and inspection 134ms
+   × N2 web: exact original policy change requires renewed explicit latest selection and inspection 96ms
+   × N2 web: exact original expired change requires renewed explicit latest selection and inspection 74ms
+   × N2 web: exact original removed change requires renewed explicit latest selection and inspection 72ms
+   × N2 web: exact original acl change requires renewed explicit latest selection and inspection 76ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/pages/Reports.intelligence.test.tsx > N2 web: actual notification retires late report inspection (error=true)
+AssertionError: expected true to be false // Object.is equality
+
+[SYNTHETIC_TEST_DOM_DUMP_OMITTED]
+
+ ❯ src/pages/Reports.intelligence.test.tsx:220:11
+    218|           (screen.getByRole('button', { name: 'Review selected sources…
+    219|             .disabled,
+    220|         ).toBe(false),
+       |           ^
+    221|       );
+    222|   },
+ ❯ runWithExpensiveErrorDiagnosticsDisabled node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  src/pages/Reports.intelligence.test.tsx > N2 web: exact original hash change requires renewed explicit latest selection and inspection
+ FAIL  src/pages/Reports.intelligence.test.tsx > N2 web: exact original policy change requires renewed explicit latest selection and inspection
+ FAIL  src/pages/Reports.intelligence.test.tsx > N2 web: exact original expired change requires renewed explicit latest selection and inspection
+ FAIL  src/pages/Reports.intelligence.test.tsx > N2 web: exact original removed change requires renewed explicit latest selection and inspection
+ FAIL  src/pages/Reports.intelligence.test.tsx > N2 web: exact original acl change requires renewed explicit latest selection and inspection
+AssertionError: expected 'snapshot-one-nonce-2' to be 'snapshot-one-nonce-3' // Object.is equality
+
+Expected: "snapshot-one-nonce-3"
+Received: "snapshot-one-nonce-2"
+
+ ❯ src/pages/Reports.intelligence.test.tsx:424:39
+    422|     fireEvent.click(screen.getByRole('button', { name: 'Generate local…
+    423|     await waitFor(() => expect(enqueues).toHaveLength(1));
+    424|     expect(enqueues[0].sources[0].id).toBe(latestSnapshot);
+       |                                       ^
+    425|   },
+    426| );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  6 failed | 17 passed (23)
+   Start at  00:48:33
+   Duration  3.36s (tests 84%, transform 8%, import 5%, environment 3%)
+

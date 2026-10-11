@@ -1,0 +1,363 @@
+{
+  "head": "88af09b91dcdf0da0e02739b080713e8088b8f74",
+  "base": "4ced618d0a8454bbc1dc339519d9f9f539c73a70",
+  "status": "CLEAN_FIXROUND1_HANDOFF_SCOPED_REVIEW_AND_NATIVE_PENDING",
+  "caseCount": 48,
+  "sourceManifest": "task-10-source-manifest.json",
+  "reviewReport": "task-10-fix1-report.md",
+  "initialEvidenceManifest": "task-10-evidence-freeze-4ced618/index.json",
+  "privacyBoundary": "Explicit safe whitelist. Fictional data only. Excludes runtime logs/SQL diagnostic bodies/provider stderr/cookies/keys/environments/stores/binaries. Runtime SQL fixtures affect only random owned schema;21 terminal history metadata rows are explicitly seeded, never model successes. Controlled raw expiry applies only to individually identified owned action jobs; actual provider operations are separately enumerated.",
+  "files": [
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix1-r1r3-web-red.log",
+      "bytes": 23466,
+      "sha256": "e93dc1cdf7f632833423e9cdf2a2b5d25f070a2ffc2fce008d44d7d9ba63360e"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix1-r1r3-native-red.log",
+      "bytes": 1738,
+      "sha256": "993002f5e1fc374f59b0a7fb8c408f9bbec2e557abf9933e4a58fb19f617032f"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix1-r1r3-web-green.log",
+      "bytes": 344,
+      "sha256": "5b912939fd6fb1e8b4415443607d64cf9d5ddb88208c70fa2b82dada27b9978b"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix1-r1r3-native-green.log",
+      "bytes": 312,
+      "sha256": "6414cda0c54bee5f944916c21387413dbab575e3ffb073871fa0ec6fc772f8c5"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix1-r2r5-red.log",
+      "bytes": 325,
+      "sha256": "e84425770b119ee73f8d2a4218302e596fb6d083f59f46adcb819d88aba26536"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix1-r2r5-green.log",
+      "bytes": 52,
+      "sha256": "c80faab3a3f9270e27e133465014dc8fd518be0a3df40a401b4183acfae4eb6f"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix1-r4-red.log",
+      "bytes": 618,
+      "sha256": "550e218318170e8f137cbf2a9d24802d3ac72f42b65d5a3ddcfc2ab189bc8efe"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix1-r4-green.log",
+      "bytes": 52,
+      "sha256": "ec36f0e66330910f015d086dceb81b5b2bff6bd1ddf1c419619b987ada607d7b"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix1-r4-client-red.log",
+      "bytes": 1652,
+      "sha256": "2dd94bd2b048dd51bb1f6fab73734bc3db83c42f24d9a7b34c07e7ec0ee2f8e8"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix1-maintenance-red.log",
+      "bytes": 485,
+      "sha256": "f1894cbcdb4e775753edec1c48883a1fef1fe45f2aaadb86a15ff425db116ce8"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix1-candidate-web-red.log",
+      "bytes": 1512,
+      "sha256": "e0559efa83d923b3fa40cc5f9691fba1ee8a5a09908179f44675596cf8734eb5"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix1-candidate-native-red.log",
+      "bytes": 2145,
+      "sha256": "70d52f4d172635799cb3d0962503280f8f527964bbf4891cf0c201065ddc8989"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix1-candidate-web-green.log",
+      "bytes": 345,
+      "sha256": "c388ae132f693a9651c3f1ed76c7489cf770381ea6b987bbf568baf2a1638ace"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix1-candidate-native-green.log",
+      "bytes": 312,
+      "sha256": "80d811157e81b6110e57bf427d0cddb3c4f649cc0dac85a1ac8f3017bfddc23e"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix1-transport-web-red.log",
+      "bytes": 2052,
+      "sha256": "66cb8f74bac4ca1a9935ecfe9b7c06c6d3cddeb830412f9c5e0ebd762ad83c1c"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix1-transport-native-red.log",
+      "bytes": 1271,
+      "sha256": "a15d0a35a06806e9fcb2b45633af4893e357ec69e5e6464308ee603d12ce8756"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix1-transport-web-green.log",
+      "bytes": 372,
+      "sha256": "73621e6ad2099a93f647f5d9eeaab3f9343bd093e67f3acb4c432b47f9b1cb64"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix1-transport-native-green.log",
+      "bytes": 331,
+      "sha256": "3791c0790de5face70c1820aadde9c2a7b73b8ac6bc548c45d5a29fbb4c8746f"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix1-transport-full-web.log",
+      "bytes": 575,
+      "sha256": "a64e72658a8999978f3a9668ba2435ead454799f28da98e19bb6f9203a1b07dd"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix1-transport-full-native.log",
+      "bytes": 287,
+      "sha256": "e3274c0f9b63fb34ff671b02ebcf386dfb7dbe7964d76b56b743f016157c1da5"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix1-transport-web-build.log",
+      "bytes": 908,
+      "sha256": "298cadde97ebf83302bfe6c136fc16cdc918d69fde63ffdaf89c11190e3ef209"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix1-transport-web-demo.log",
+      "bytes": 963,
+      "sha256": "a2bc51db441ea46518b90b02dd1ba52cbef97ad54838117286c7e47fe2cb60c9"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix1-transport-native-types.log",
+      "bytes": 42,
+      "sha256": "6a5365a7bb40c3ca387f36db78409447c32d44f69ec1737ce498eae83f040589"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix1-transport-native-lint.log",
+      "bytes": 34,
+      "sha256": "d3f78a60c2585717d1813a084d3a7b86d56cf287b70dcab02fb5917698dc6d0c"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix1-transport-native-export.log",
+      "bytes": 1751,
+      "sha256": "640b2d25a058e70d666bd34439d53965ac9c0239328b04531a19941bb2cb446c"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix1-browser-raw-expiry-product-red.log",
+      "bytes": 961,
+      "sha256": "88c0bce71888bb9d6fb3bdc52ac5c053cffb45f0bd73b4a80a3c75146381d2a9"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix1-final-backend.log",
+      "bytes": 391,
+      "sha256": "dc14c40faf3674bc89e804363328c452b632de60b0150c12c3385663256d121f"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix1-final-pg.log",
+      "bytes": 53,
+      "sha256": "8c7232f997b0636c225827fb0f008a3aba3a70d8c1d2d1b576266c487988ce07"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix1-final-web.log",
+      "bytes": 575,
+      "sha256": "7c91c1974999b12dd217feae84b20753a2fa1abd36ef8a59408ab2035182170c"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix1-final-native.log",
+      "bytes": 287,
+      "sha256": "38e6220c2efbe17ee70e6b6ae5a8937be8bb4eaadcda46f74ed5e40ad92c5024"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix1-final-web-build.log",
+      "bytes": 908,
+      "sha256": "5059512e54ae78b95ed3d7f0d9bc0ab14b1382cc12f14c06109a1a8efc69858e"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix1-final-web-demo.log",
+      "bytes": 963,
+      "sha256": "837c63d7ff711fefb9e8f028a41cbc26cabad81d4417a3a2e74c5de4f642a867"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix1-final-native-types.log",
+      "bytes": 42,
+      "sha256": "6a5365a7bb40c3ca387f36db78409447c32d44f69ec1737ce498eae83f040589"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix1-final-native-lint.log",
+      "bytes": 34,
+      "sha256": "d3f78a60c2585717d1813a084d3a7b86d56cf287b70dcab02fb5917698dc6d0c"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix1-final-native-export.log",
+      "bytes": 1753,
+      "sha256": "f6d00c008b8434aa24e45ca5e4527278c5aba5ee01f6ecaba1e000a57e8b21a0"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix1-final-race.log",
+      "bytes": 392,
+      "sha256": "b8813455222d29da644e34b9e54cebae9e899172f7e7162d256a875fedede4c7"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix1-browser-publication-history.log",
+      "bytes": 967,
+      "sha256": "4a99b4e3fa6998fd39e3c07c24a39ea5c20803d15cb694f1c1096f5ae4c9bdaf"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix1-browser-report.log",
+      "bytes": 52,
+      "sha256": "f5c5fb286275f78ed21a7508008389c90db2eba98f48cb80e705ff4a9e7b95fc"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix1-browser-geometry.log",
+      "bytes": 592,
+      "sha256": "9ac7e60025e0eb580e8084bdff3cc1a9060b7de9d80f4416d585b6f1b19beadf"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix1-browser-harness-navigation-failure.log",
+      "bytes": 961,
+      "sha256": "ae6477a5fed9d5de4d45076194faf229a33ca2aaf3eb36dc85ef116e9fc1098f"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix1-encore.log",
+      "bytes": 286,
+      "sha256": "6edb5a368f7bdcb84908b302745fa23cbea3638b1e0f7174f2bd2a484fbe824c"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix1-report.md",
+      "bytes": 18962,
+      "sha256": "53536ece4ed7d63d92582c35a099667fa3bba646292d2aaed2ea1280490ba3d1"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix1-race-source.json",
+      "bytes": 41420,
+      "sha256": "ad9af124692342ecd2fcd721fecb20a60b5014af6e46aea2d5acee4bbd6fd5e1"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix1-source-equivalence.json",
+      "bytes": 43746,
+      "sha256": "09256006d0cb8e44ef6a1f394591fc4806e8edba22b41a016f0eadc62ae5ce73"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix1-checks.json",
+      "bytes": 8895,
+      "sha256": "8a47f307fd0dc2a21816a61d1dded9bddc4319a0a2ffbe7cd62373998ab654dc"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix1-cleanup-proof.json",
+      "bytes": 484,
+      "sha256": "67b1f69a7f811b76e5fa9a2bd34ae6203472e6693f402fd6befa1a1840a16f58"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix1-failure-disposition.json",
+      "bytes": 1759,
+      "sha256": "ac015d7691aacc2235fa07c66ffb3d55b2f608ef2074794c0bb6320dca3cef7d"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix1-c2-proof.json",
+      "bytes": 2112,
+      "sha256": "fc2a7157bd1aa25bdb5ef99c6f5af32178cd17b3030541daa34c61454af70c1e"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix1-controller-geometry-proof.json",
+      "bytes": 1312,
+      "sha256": "57bd7605a82feb4c195f62f0c04d54d4bf5524ddd2a463aef6dcd043badf6334"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix1-safe-log-scan.json",
+      "bytes": 542,
+      "sha256": "fb50e4e15762d03fe6d347a0073cf30a8d2e10b7bcb81ab5bbf885d33097ee44"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix1-runtime/result.json",
+      "bytes": 357,
+      "sha256": "c2c52c630c1856d75d6b9fb949851531330423b2abc27c0671f857664f3908b8"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix1-runtime/fixture.json",
+      "bytes": 1136,
+      "sha256": "c59bcb32b2449c57ac5569951cc906979b9b020ce00e16abb5f7657f440202d3"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix1-runtime/fix1-fixture.json",
+      "bytes": 295,
+      "sha256": "7a194ce32334b2fa5b5f614bfdceb5d6af921a3b9f160f87585d8972d213f207"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix1-runtime/fix1-browser.json",
+      "bytes": 6210,
+      "sha256": "c474b52283ceeb06492d876eb978bedb88becdee459be046348eb89051e1d3ea"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix1-runtime/fix1-browser-harness-navigation-failure.json",
+      "bytes": 517,
+      "sha256": "192066592ee5f9c7f6a34e6c5a1afcf35d42209816f50899c071053729c07c72"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix1-runtime/fix1-browser-raw-expiry-product-red.json",
+      "bytes": 693,
+      "sha256": "f1e58c15b5d779d22b80f1c4e9fec400b40d3ed1b78a4bcbb55aa4e5f2197c98"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix1-runtime/fix1-browser-publication-history.json",
+      "bytes": 1210,
+      "sha256": "50a4011576c3827f3c5c5bc49b0765d5bddd0c9985b620024af98c7ad5e367c0"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix1-runtime/fix1-browser-report.json",
+      "bytes": 1214,
+      "sha256": "91adf97cee483a2d9368095e710a3bb5a968d686da1335ae82352893f2aa19ca"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix1-runtime/fix1-browser-geometry.json",
+      "bytes": 6210,
+      "sha256": "c474b52283ceeb06492d876eb978bedb88becdee459be046348eb89051e1d3ea"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix1-runtime/fix1-browser-aggregate.json",
+      "bytes": 2369,
+      "sha256": "7f6da633270c25e8951c77923e62b03959ee703e3747e73f94a7ea5ffa77c7cd"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix1-runtime/provider-operation-summary.json",
+      "bytes": 2140,
+      "sha256": "90b575200c2bfbf9f744e26cf42f3129ed935f76129a096da6adcc3e0230791b"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix1-maintenance-runtime/result.json",
+      "bytes": 668,
+      "sha256": "08fd5843ea82999091a2df792a4a5a95b075788dbb9a30bede65fbf4f5aefc8b"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix1-encore/result.json",
+      "bytes": 306,
+      "sha256": "25230c681c0bd5dac9762ec381e0c052f9ab5d620180f78fe37a181947cc5010"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix1-encore/api.json",
+      "bytes": 550,
+      "sha256": "6f479f737651502b57005942e64d1a87ecbdcfdcac9d5aa3d3fa073274bda15b"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-source-manifest.json",
+      "bytes": 300857,
+      "sha256": "c243ae3cb09e2ddc0f570434e7311c5f9a634887d036e8a515ebf2650dd80347"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-sql-manifest.json",
+      "bytes": 40538,
+      "sha256": "da4b6079aa2a6ff36c22dc4887b158e5dd84fd3664fc78787cb899009f890bf2"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-build-manifest.json",
+      "bytes": 12196,
+      "sha256": "b3b020f57a0cce5338c9208f709e8a08168b320742e69e65b8a4182e338ad58f"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-case-mapping.json",
+      "bytes": 64042,
+      "sha256": "f3b41b395dccc01b2416c1791f22f514adaf8c600c8999eed32ea93d14b4e389"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-checks.json",
+      "bytes": 14721,
+      "sha256": "bf933709a51f5610bf34a711ceca3944b75f8620aff2034691b2e5ef96936fa7"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-report.md",
+      "bytes": 19837,
+      "sha256": "624dbe7c6fc0143024a7e121d26dcd7b599cbc2979e756deb88e538655836271"
+    }
+  ],
+  "evidenceCount": 70
+}

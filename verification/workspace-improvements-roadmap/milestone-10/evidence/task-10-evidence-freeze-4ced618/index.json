@@ -1,0 +1,704 @@
+{
+  "head": "4ced618d0a8454bbc1dc339519d9f9f539c73a70",
+  "qualification": "Exact candidate source-bound freeze before later integration changes; no independent review or installed-native acceptance implied. Compiled binaries freeze is ignored/local only, never included in safe public evidence.",
+  "records": [
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-backend-full-current.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0000/task-10-backend-full-current.log",
+      "bytes": 391,
+      "sha256": "92d3c4ee787834e44795568d89488b8a9d3b181e2620910218d588a495fe96ee"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-backend-full-final.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0001/task-10-backend-full-final.log",
+      "bytes": 391,
+      "sha256": "5d2636740251707295a58cd73994c21a6f3b66055e759d3f0705e1c5260d562e"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-backend-full.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0002/task-10-backend-full.log",
+      "bytes": 391,
+      "sha256": "77b18bea9206eeb7fedd5e5ab19838afef2b741746ea45dbd7c231a966823004"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-backend-race-current.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0003/task-10-backend-race-current.log",
+      "bytes": 392,
+      "sha256": "0b1fb8ad60170c5312a86acf31562525dfe9dd84daf9b38c7fcfa0e5426a5021"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-backend-race-final.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0004/task-10-backend-race-final.log",
+      "bytes": 392,
+      "sha256": "cc27b53810b1a23cdd90fa6c0026bbf913d06309d493d3d9642ecd4fd8abc62e"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-build-manifest.json",
+      "snapshot": "task-10-evidence-freeze-4ced618/0005/task-10-build-manifest.json",
+      "bytes": 12365,
+      "sha256": "74daf4919f385410b6018670d963988906f76fbbd2a27420a5cb34ba3216a41b"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-case-mapping.json",
+      "snapshot": "task-10-evidence-freeze-4ced618/0006/task-10-case-mapping.json",
+      "bytes": 51639,
+      "sha256": "6b1410487478c6a52ae1fa403126f88426a07628758fc71605547ea934dd6e71"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-checks.json",
+      "snapshot": "task-10-evidence-freeze-4ced618/0007/task-10-checks.json",
+      "bytes": 5515,
+      "sha256": "5a67f005161343ae724f5ef0c7325d612483826608d33a630d312fe064fc41f1"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-cleanup-proof.json",
+      "snapshot": "task-10-evidence-freeze-4ced618/0008/task-10-cleanup-proof.json",
+      "bytes": 1404,
+      "sha256": "5435510c31650666f42063335b934363d3f7aa77bbb675a3a18fdac1c8696972"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-current-backend.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0009/task-10-current-backend.log",
+      "bytes": 285,
+      "sha256": "23e036283cd53d02fd22ec6dbd4a9b984b7fdeaec5f94a63fd302e6620730717"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-current-pg.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0010/task-10-current-pg.log",
+      "bytes": 53,
+      "sha256": "ecff0d591f350eaf2c4e616e303ca8fcf4620c432fe46158aafd37e3c528a2b7"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-demo-build-current.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0011/task-10-demo-build-current.log",
+      "bytes": 963,
+      "sha256": "3e854de6e6fac0bbee7c5b8c43d0a4cd21625683c97bcc79f3c1819a8a65525d"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-demo-build-final.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0012/task-10-demo-build-final.log",
+      "bytes": 963,
+      "sha256": "506e2147c36f34957035af270f6b0325a0994e1440bb0931d7b102bf9bca8b36"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-encore-final/api.json",
+      "snapshot": "task-10-evidence-freeze-4ced618/0013/api.json",
+      "bytes": 550,
+      "sha256": "e46fbe262958a60ae98109dd1c92c978f2baa43e1514c1effe3ec99d5dfc7dd3"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-encore-final/api.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0014/api.log",
+      "bytes": 34,
+      "sha256": "b5f4739643642a4cfca3a924b79da96123425f55ea542fae823d4bf11e7ed9f4"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-encore-final/build.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0015/build.log",
+      "bytes": 1271,
+      "sha256": "d3aa45ee1f74ecc69c1500c8a55f87cc74e1af0a17ff6294f23526d18fcc9059"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-encore-final/check.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0016/check.log",
+      "bytes": 1251,
+      "sha256": "5d679da640edfa1f4bf49109d9d12849ec0ea320664c0d7dae3354bc09d20af3"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-encore-final/migrations.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0017/migrations.log",
+      "bytes": 3365,
+      "sha256": "2ed643272ec5164e099699abd94f1e2ad81481a82dfbba1371464783a6a6dfa4"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-encore-final/namespace.json",
+      "snapshot": "task-10-evidence-freeze-4ced618/0018/namespace.json",
+      "bytes": 262,
+      "sha256": "75ee784d14af84a2a7a558f4a9800da6d6ff9421d23f60bf80667315629db416"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-encore-final/result.json",
+      "snapshot": "task-10-evidence-freeze-4ced618/0019/result.json",
+      "bytes": 306,
+      "sha256": "2de449a6019a3800b32d6bd8e5d9dec5478ac9ed260f53f55e6228c6342d6156"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-encore-final/runtime.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0020/runtime.log",
+      "bytes": 397,
+      "sha256": "fe0531402e31c1dd318c40fa6952093af3a98ca44ecf5d0bd68728ba483a1a36"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-expanded-current.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0021/task-10-expanded-current.log",
+      "bytes": 52,
+      "sha256": "503359f1d64a299a223f3e53d62a11a4bb792ca300813123aa77b9c5b4fe710b"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-expense-frontend-green.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0022/task-10-expense-frontend-green.log",
+      "bytes": 344,
+      "sha256": "1c6d54589532c31a7fc85f2bb52cdd9220faba1ad1eea55f0b9829e1d3584b68"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-expense-frontend-red.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0023/task-10-expense-frontend-red.log",
+      "bytes": 8032,
+      "sha256": "5576cfb4f51dc1d743aadc6083a3ffca8822500d00f3ee7f3293e2050fe3aba4"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-expense-mobile-green.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0024/task-10-expense-mobile-green.log",
+      "bytes": 324,
+      "sha256": "889b73c89236edcce7ef8027065c3401e9a1218c5724f7e6177deda93f1dd860"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-expense-mobile-red.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0025/task-10-expense-mobile-red.log",
+      "bytes": 1337,
+      "sha256": "4ad8492e3dad71461f3403113e160d909d990ec36caaa278add49ae29eefe1de"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-expense-native-lint.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0026/task-10-expense-native-lint.log",
+      "bytes": 34,
+      "sha256": "d3f78a60c2585717d1813a084d3a7b86d56cf287b70dcab02fb5917698dc6d0c"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-expense-native-types.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0027/task-10-expense-native-types.log",
+      "bytes": 42,
+      "sha256": "6a5365a7bb40c3ca387f36db78409447c32d44f69ec1737ce498eae83f040589"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-expense-web-red.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0028/task-10-expense-web-red.log",
+      "bytes": 344,
+      "sha256": "9dbba09dfed5d826f2e1b616fddda7ab704a6e2b90636ef57542b4496f2b605c"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-extra-boundaries.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0029/task-10-extra-boundaries.log",
+      "bytes": 325,
+      "sha256": "d5453ca46d3e0343d898073c6aaac9a1c77b504910dee84abd95f948ac7479ce"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-focused-current.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0030/task-10-focused-current.log",
+      "bytes": 52,
+      "sha256": "f185d52b8779fc1ca9d56d8bfc2038fc3ae3a304290be684fb8214f7c512db28"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-focused-final.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0031/task-10-focused-final.log",
+      "bytes": 52,
+      "sha256": "6847acf6f5ab8f070a8a5e3e095668ca5b53b3df721cad633ba6ead85e719c5f"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-implementation-progress.md",
+      "snapshot": "task-10-evidence-freeze-4ced618/0032/task-10-implementation-progress.md",
+      "bytes": 7450,
+      "sha256": "0b48fc0f2ea1b8533134b24effb9397806ebd02b4f620343748cc689d3feadd7"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-maintenance-red.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0033/task-10-maintenance-red.log",
+      "bytes": 439,
+      "sha256": "9419207aed06cdeb648cd1973e425cce3f7cb602a636f51c7f54003def51843b"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-native-export-current.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0034/task-10-native-export-current.log",
+      "bytes": 4473,
+      "sha256": "aabdf384b4e0fc1769865b83f82a1e6fa9fccc670d3c2b48a5b2266e282aac73"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-native-final-export.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0035/task-10-native-final-export.log",
+      "bytes": 1923,
+      "sha256": "3bd6787fad7754b85d3f51c0dafcfc09417ce08fe9c71626c6a944fb284a7cf9"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-native-final-lint.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0036/task-10-native-final-lint.log",
+      "bytes": 34,
+      "sha256": "d3f78a60c2585717d1813a084d3a7b86d56cf287b70dcab02fb5917698dc6d0c"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-native-final-tests.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0037/task-10-native-final-tests.log",
+      "bytes": 543,
+      "sha256": "75007263ea7c75a0ffaa3561990d0980538a0068860d5af7bf94588596066197"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-native-final-types.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0038/task-10-native-final-types.log",
+      "bytes": 42,
+      "sha256": "6a5365a7bb40c3ca387f36db78409447c32d44f69ec1737ce498eae83f040589"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-native-full-current.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0039/task-10-native-full-current.log",
+      "bytes": 543,
+      "sha256": "9d9215091fdecc35b9c01cb428b8685580308e1373763ce3847b8130c806147e"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-native-full-final.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0040/task-10-native-full-final.log",
+      "bytes": 286,
+      "sha256": "548920fc5d99f75df49ad86ec686d3447867575921811a130613b4d39838f8bc"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-native-full.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0041/task-10-native-full.log",
+      "bytes": 2879,
+      "sha256": "0df19ab5e00f76796b1f9779ac6b59e1acd7d3d6b3145eff5c74d9841880ea89"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-native-handoff-held.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0042/task-10-native-handoff-held.log",
+      "bytes": 270,
+      "sha256": "202d778eaf72c3bf80f133a61275ed908c63f0aeca05070e91353072b0cf2540"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-native-head-export.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0043/task-10-native-head-export.log",
+      "bytes": 1923,
+      "sha256": "e775e6b70fac79403b6084bad27d5c7300f46c859c8bddd31e97af2b103ada11"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-native-head-lint.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0044/task-10-native-head-lint.log",
+      "bytes": 34,
+      "sha256": "d3f78a60c2585717d1813a084d3a7b86d56cf287b70dcab02fb5917698dc6d0c"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-native-head-tests.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0045/task-10-native-head-tests.log",
+      "bytes": 298,
+      "sha256": "2e93f604840752404e2cd5f0cdcf86bd459c5e9ca2563d85beeabc9d0016b41a"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-native-head-types.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0046/task-10-native-head-types.log",
+      "bytes": 42,
+      "sha256": "6a5365a7bb40c3ca387f36db78409447c32d44f69ec1737ce498eae83f040589"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-native-held-component.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0047/task-10-native-held-component.log",
+      "bytes": 270,
+      "sha256": "71935048f946b03fd9e5076d7261368edee74d1abcdef6b2cfd83a533c82cb66"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-native-intelligence.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0048/task-10-native-intelligence.log",
+      "bytes": 257,
+      "sha256": "c798ad7f87aee5bdb3eb041ec530b5f18de59bb04945cabbe750f90d8e70fffb"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-native-lifecycle-current.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0049/task-10-native-lifecycle-current.log",
+      "bytes": 324,
+      "sha256": "dc98994d66f8d53c37b9a1bbdd5163e73cf535d9f5f436ae1093747a264c5ce6"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-native-lifecycle-final.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0050/task-10-native-lifecycle-final.log",
+      "bytes": 324,
+      "sha256": "c5cf85b5d63c166250d721354828a5c245a3f96295574a8a44a7409b8b1e53e7"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-native-lint-current.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0051/task-10-native-lint-current.log",
+      "bytes": 591,
+      "sha256": "28a7575b2d3b563052b0fc25bb9d8a0091d1afe32920973f4d763968f430f202"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-native-lint-final.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0052/task-10-native-lint-final.log",
+      "bytes": 34,
+      "sha256": "d3f78a60c2585717d1813a084d3a7b86d56cf287b70dcab02fb5917698dc6d0c"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-native-types.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0053/task-10-native-types.log",
+      "bytes": 42,
+      "sha256": "6a5365a7bb40c3ca387f36db78409447c32d44f69ec1737ce498eae83f040589"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-operation-retry-red.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0054/task-10-operation-retry-red.log",
+      "bytes": 182,
+      "sha256": "f44b53b982b498d33e60defcb189c0afe432a8aed145f1afcb256e2f6aa12326"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-postgres-current.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0055/task-10-postgres-current.log",
+      "bytes": 53,
+      "sha256": "57a3761b476822d7ddeaea8736ab2cd54084a9c24ad31877c1d158be5250bb6c"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-postgres-final.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0056/task-10-postgres-final.log",
+      "bytes": 53,
+      "sha256": "71342401c52b5edb8202d740a6c40d5e04ea4183ace45403ab946395f53c01c8"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-provider-current-identity.json",
+      "snapshot": "task-10-evidence-freeze-4ced618/0057/task-10-provider-current-identity.json",
+      "bytes": 1733,
+      "sha256": "9a2a7f629c422cd515f66d779cb01ebfbc931d6337a5ce570f8203cceb8af6ce"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-publication-build.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0058/task-10-publication-build.log",
+      "bytes": 52,
+      "sha256": "7f383e1705fd6f7a142022ddeb472931d26d575f609f53df2d0359f3c3c592b2"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-publication-current-green.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0059/task-10-publication-current-green.log",
+      "bytes": 52,
+      "sha256": "d0ec84f6d6eb4389d506da154b7ac6b2f3cbec46c0d773f737ed6e5832b64154"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-publication-current-red.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0060/task-10-publication-current-red.log",
+      "bytes": 303,
+      "sha256": "90f64b513beaa9f52fb65321d01d530a3df213be9dfa2cedb0312ffb595450d2"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-real-application.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0061/task-10-real-application.log",
+      "bytes": 796,
+      "sha256": "baf1d169be72a97b6d2370e3fecd5076dc1efac967e3f55514c1f9ef79dd40dc"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-real-context-large-timeout.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0062/task-10-real-context-large-timeout.log",
+      "bytes": 421,
+      "sha256": "94b813358134a3d4649e8dcbaa47105b7e705872c821b07b0c29d970f750c4d2"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-real-context.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0063/task-10-real-context.log",
+      "bytes": 544,
+      "sha256": "ac67453417d6f2ca424c8fb175c8efff0afbc8be4216f81e2b201c6d99958a2a"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-real-head.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0064/task-10-real-head.log",
+      "bytes": 1399,
+      "sha256": "9f7479670e0bc7f56a7a3a063cfe86a2a71c95f8b78b05806d3014e57b432847"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-real-isolated-final.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0065/task-10-real-isolated-final.log",
+      "bytes": 796,
+      "sha256": "1018ad25134d09bc7248ca5b298056aa47cf7f52c3bcc952970d33d20fdc471d"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-real-overflow-application.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0066/task-10-real-overflow-application.log",
+      "bytes": 366,
+      "sha256": "dbbaf5bbb997481fc54e49f03f3e1ea77db003d3bc29d517f30bebabfe9f3476"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-report.md",
+      "snapshot": "task-10-evidence-freeze-4ced618/0067/task-10-report.md",
+      "bytes": 19385,
+      "sha256": "2d0913c082d51cadfc155f078048882d6c71d7a6018c4899af04934a3ba66d43"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-runtime/browser-focus-red.json",
+      "snapshot": "task-10-evidence-freeze-4ced618/0068/browser-focus-red.json",
+      "bytes": 6253,
+      "sha256": "d2244735e1c121fd2204fd9023845c0ad214eb4f665eb11e40cc4472d9e69cf8"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-runtime-final/browser.json",
+      "snapshot": "task-10-evidence-freeze-4ced618/0069/browser.json",
+      "bytes": 900,
+      "sha256": "410fd05fa02589d22d158dedb6cc352aa548675caa069450db1190dcf565e2c0"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-runtime-final/fixture.json",
+      "snapshot": "task-10-evidence-freeze-4ced618/0070/fixture.json",
+      "bytes": 1136,
+      "sha256": "7c08eaba80c1ccf5afe720169d85135082b42d44442c9409a2deb4ef58bbcef7"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-runtime-final/result.json",
+      "snapshot": "task-10-evidence-freeze-4ced618/0071/result.json",
+      "bytes": 357,
+      "sha256": "51457bb8adceb1efce034a0280a5fa50330536e945a8e505ae7e81e93744f35b"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-runtime-final/runtime.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0072/runtime.log",
+      "bytes": 960,
+      "sha256": "b91bdbda7eb75cddda962eab8c0f3aa556d17e0985c113c750549f6dca5b0d02"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-runtime-handoff/browser.json",
+      "snapshot": "task-10-evidence-freeze-4ced618/0073/browser.json",
+      "bytes": 900,
+      "sha256": "b7bdc922aadeff88038bafd7eb7dc3697a26660c29bd3ae2350123004426a6ef"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-runtime-handoff/browser.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0074/browser.log",
+      "bytes": 56,
+      "sha256": "2e18236eac21a7b62c3d3f73401d33dbcd94d2408e2b8bc3d2386c484b26012e"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-runtime-handoff/fixture.json",
+      "snapshot": "task-10-evidence-freeze-4ced618/0075/fixture.json",
+      "bytes": 1136,
+      "sha256": "6aedc2f36e6d6b7c4528d216b00f67cd7f49e2fc2ea96d9f88c7f53b8db3e10a"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-runtime-handoff/fixture.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0076/fixture.log",
+      "bytes": 34,
+      "sha256": "b5f4739643642a4cfca3a924b79da96123425f55ea542fae823d4bf11e7ed9f4"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-runtime-handoff/fresh-migrations.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0077/fresh-migrations.log",
+      "bytes": 53,
+      "sha256": "d134db671d228348f5e55a7ead67267931b75d84e0663894420b3f8bb1fbffb3"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-runtime-handoff/held-desktop.png",
+      "snapshot": "task-10-evidence-freeze-4ced618/0078/held-desktop.png",
+      "bytes": 194475,
+      "sha256": "d8bd5caa82b37e0bac02a177c54bd1ffe8d0df2c048b5a673e1d5fea227eaa61"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-runtime-handoff/populated-upgrade.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0079/populated-upgrade.log",
+      "bytes": 53,
+      "sha256": "d134db671d228348f5e55a7ead67267931b75d84e0663894420b3f8bb1fbffb3"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-runtime-handoff/result.json",
+      "snapshot": "task-10-evidence-freeze-4ced618/0080/result.json",
+      "bytes": 357,
+      "sha256": "ec2bd2c34ee8620f99d29f0be06e8f71ba705d5ae99f058fa3fd85ab5dd04cd9"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-runtime-handoff/review-320.png",
+      "snapshot": "task-10-evidence-freeze-4ced618/0081/review-320.png",
+      "bytes": 68239,
+      "sha256": "2d89efa22a0b866dfb271a07c91e2dc518f25e94c3140652087eca21564875f1"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-runtime-handoff/review-390.png",
+      "snapshot": "task-10-evidence-freeze-4ced618/0082/review-390.png",
+      "bytes": 70366,
+      "sha256": "756d312b9a99f5ce3b128db6849d737fd8d5122ca0f250517b4b0e8cad1472a5"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-runtime-handoff/review-430.png",
+      "snapshot": "task-10-evidence-freeze-4ced618/0083/review-430.png",
+      "bytes": 72520,
+      "sha256": "259544e73923c45ecf7e88f91741a185fca3f5e030699536092b9312c6cdf632"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-runtime-handoff/runtime.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0084/runtime.log",
+      "bytes": 777,
+      "sha256": "763cbeb6acc759213f82dc5bfb4a5ac52fd69aaba2895529025176431d4cd48a"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-runtime-handoff-driver.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0085/task-10-runtime-handoff-driver.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-s1-expanded.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0086/task-10-s1-expanded.log",
+      "bytes": 52,
+      "sha256": "ef8427267dc1579484f8454c9a2ff687416afa068f2f9ed1d7efedd40cace6fe"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-s1-green.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0087/task-10-s1-green.log",
+      "bytes": 52,
+      "sha256": "766c8b3c8d7b1fe1b43c20598576a46246494f0e1df1cb5727e8d2e37cc04ae4"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-s1-red.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0088/task-10-s1-red.log",
+      "bytes": 479,
+      "sha256": "ff6214c9e25d582537dd5def83136c98cb0f091b97bc5d6dd93eebb02a150f91"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-s2-green.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0089/task-10-s2-green.log",
+      "bytes": 52,
+      "sha256": "02a919345ec7a3dffece7d41ca5037ab3a1e3da284840e1ea020e1f4a36afa25"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-s2-pg.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0090/task-10-s2-pg.log",
+      "bytes": 52,
+      "sha256": "62ec87f66d157360befece33e70709fdce657c531dacddb364504434fa4ca370"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-s2-red.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0091/task-10-s2-red.log",
+      "bytes": 498,
+      "sha256": "6c7f0c4ef547a9749e4688794c96af37113934a1099b2087131bd60e0c55a39d"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-s3-green.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0092/task-10-s3-green.log",
+      "bytes": 52,
+      "sha256": "013f3d61acb022936c6bb99cd27721e3585e86fd6208668ba17d35d61b34139c"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-s3-red.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0093/task-10-s3-red.log",
+      "bytes": 1198,
+      "sha256": "eaae281af0a781793aea5012cba974ab19e45aae2a9fe7ce2a2d162c77a013ca"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-s7-test.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0094/task-10-s7-test.log",
+      "bytes": 52,
+      "sha256": "0f4efb857d5d89688691d14de708559b6a938356de3afb7412695c74f0523b0b"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-schema-emptytext-red.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0095/task-10-schema-emptytext-red.log",
+      "bytes": 184,
+      "sha256": "83439f9a2ff7cdeb3ed3e7ab46b944c947d18fe25e5c1f9519dceadd98bfcce5"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-source-manifest.json",
+      "snapshot": "task-10-evidence-freeze-4ced618/0096/task-10-source-manifest.json",
+      "bytes": 298901,
+      "sha256": "bf6b0cfe0951354f3eea51506cf569dbb4962cd07f2607e4d61245778827ed64"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-sql-manifest.json",
+      "snapshot": "task-10-evidence-freeze-4ced618/0097/task-10-sql-manifest.json",
+      "bytes": 40825,
+      "sha256": "c243aa5bfa3bf9ce907f2d2ea724393a25fbe93bc035751a5cea83ae95f80d82"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-voice-bounds.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0098/task-10-voice-bounds.log",
+      "bytes": 884,
+      "sha256": "f24011cccf9bda925e2d3c2fcc237ce69b7289d35184a43c37f6cd11f3685f2a"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-web-build-current.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0099/task-10-web-build-current.log",
+      "bytes": 908,
+      "sha256": "6f82398c5351f4bd2d3924faeeae8faa1b29574e504dee5ab1dfde34369834cd"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-web-build-focus.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0100/task-10-web-build-focus.log",
+      "bytes": 908,
+      "sha256": "cdfbebeb7453373959c98dec0317187f026b731330630a1e2a408837eec4b338"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-web-build.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0101/task-10-web-build.log",
+      "bytes": 908,
+      "sha256": "148a85f9dd4e7fa04e1ea8dd437787ec684c464f08bc339e1313b8a5f5875878"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-web-final-build.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0102/task-10-web-final-build.log",
+      "bytes": 908,
+      "sha256": "ac169e96b4902b1425ffec40a39fd964f79da151b338b7e5c44de8d6b066da2b"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-web-final-demo.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0103/task-10-web-final-demo.log",
+      "bytes": 963,
+      "sha256": "68ed4b9c6efde3d9360bfff72086c82edd2eeb692c44335f6ecd9f6536f82d3b"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-web-final-tests.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0104/task-10-web-final-tests.log",
+      "bytes": 575,
+      "sha256": "4d676a3df843d8bc48292a6a515fc05895d2232437d20fe2afb9c155cba1f7ad"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-web-full-current.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0105/task-10-web-full-current.log",
+      "bytes": 575,
+      "sha256": "0d84564c52e4c6bcebc50fc45c8bd4bd85188691ab63589a4357f7d5b1014b93"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-web-full-final.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0106/task-10-web-full-final.log",
+      "bytes": 519,
+      "sha256": "93eff56e2316acfb5d58315ff30039a38e0946b7a97d300cb13d1f4bf7eb63f7"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-web-full.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0107/task-10-web-full.log",
+      "bytes": 519,
+      "sha256": "ce920d47fd77662e47deb076f51026e1c786e5df6f2be7b1b8bfc4c746b0160a"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-web-head-build.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0108/task-10-web-head-build.log",
+      "bytes": 908,
+      "sha256": "846fba04c2275c8ae751aae69daf24c0b77e1e2e36bf777f0c054f4e08d44285"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-web-head-demo.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0109/task-10-web-head-demo.log",
+      "bytes": 963,
+      "sha256": "be2874f22dd4f1ab3ed94abb6d20cae62f89705f3d204f51b3ed2a9a6f5c5e20"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-web-head-tests.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0110/task-10-web-head-tests.log",
+      "bytes": 575,
+      "sha256": "ca9ebd37771f936a9503023bcc685c179b2ff316a0dc3fe7f523cbb8faafbc43"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-web-intelligence.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0111/task-10-web-intelligence.log",
+      "bytes": 259,
+      "sha256": "1464a227a2bfaf780116acc163e6561c68952a866bde1888cda811eb66231f62"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-web-lifecycle-current.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0112/task-10-web-lifecycle-current.log",
+      "bytes": 355,
+      "sha256": "8a4f4b32ef37ab846a45d7101bfdcda78a6c62314ca4c5f8a260d56e41b4add9"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-web-types.log",
+      "snapshot": "task-10-evidence-freeze-4ced618/0113/task-10-web-types.log",
+      "bytes": 61,
+      "sha256": "66309dd7fe34610f6cf557dafe27940e549262bd7a328fd9807c45c21b173bbd"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-manifest.json",
+      "snapshot": "task-10-evidence-freeze-4ced618/0114/task-10-manifest.json",
+      "bytes": 35456,
+      "sha256": "da8396efa34019386c59ce0cfd522d5a22c1597d553fcb5a81a1fecebd5442a9"
+    },
+    {
+      "original": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-controller-handoff-hash-proof.json",
+      "snapshot": "task-10-evidence-freeze-4ced618/0115/task-10-controller-handoff-hash-proof.json",
+      "bytes": 649,
+      "sha256": "695bedbcc570d7f1369768d592c5e8e6e88366748e7a48bf54ed30cef3dd6344"
+    }
+  ],
+  "recordCount": 116,
+  "totalBytes": 950536
+}

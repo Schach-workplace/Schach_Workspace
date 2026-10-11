@@ -1,0 +1,16 @@
+--- FAIL: TestIntelligenceVoiceBoundsAndCleanup (0.53s)
+    --- FAIL: TestIntelligenceVoiceBoundsAndCleanup/success (0.09s)
+        intelligence_whisper_test.go:70: invalid media key
+    --- FAIL: TestIntelligenceVoiceBoundsAndCleanup/byte_mismatch (0.09s)
+        intelligence_whisper_test.go:70: invalid media key
+    --- FAIL: TestIntelligenceVoiceBoundsAndCleanup/corrupt (0.09s)
+        intelligence_whisper_test.go:70: invalid media key
+    --- FAIL: TestIntelligenceVoiceBoundsAndCleanup/video (0.09s)
+        intelligence_whisper_test.go:70: invalid media key
+    --- FAIL: TestIntelligenceVoiceBoundsAndCleanup/too_long (0.09s)
+        intelligence_whisper_test.go:70: invalid media key
+    --- FAIL: TestIntelligenceVoiceBoundsAndCleanup/cancel (0.09s)
+        intelligence_whisper_test.go:70: invalid media key
+FAIL
+FAIL	schach.local/workspace/backend/platform	0.589s
+FAIL

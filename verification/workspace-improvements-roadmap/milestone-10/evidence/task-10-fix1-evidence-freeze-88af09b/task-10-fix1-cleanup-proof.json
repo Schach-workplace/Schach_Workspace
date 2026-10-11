@@ -1,0 +1,11 @@
+{
+  "head": "88af09b91dcdf0da0e02739b080713e8088b8f74",
+  "standaloneDriverExit": 0,
+  "standaloneServerAbsent": true,
+  "ownedListener53295Closed": true,
+  "ownedPGSchemaRemoved": true,
+  "ownedScratchEmpty": true,
+  "maintenanceDBRemoved": true,
+  "encoreResult": "task-10-fix1-encore/result.json",
+  "boundary": "Only owned runtime stopped/schema dropped; root app/user DB/providers/retained native fixture untouched. Shared providers remain running; no restart/download/reset."
+}

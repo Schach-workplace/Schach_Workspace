@@ -1,0 +1,13 @@
+
+> mobile@1.0.0 test
+> vitest run src/IntelligenceLifetime.test.tsx src/IntelligenceWorkspace.test.tsx src/IntelligenceScreen.test.tsx src/ReportRoute.test.tsx src/ReportControls.test.tsx src/HistoricalReports.test.tsx
+
+
+ RUN  v5.0.3 /home/brahma/Projects/Schach_Workspace/.worktrees/workspace-improvements/mobile
+
+
+ Test Files  6 passed (6)
+      Tests  114 passed (114)
+   Start at  00:31:43
+   Duration  12.57s (tests 89%, environment 5%, transform 4%, import 2%)
+

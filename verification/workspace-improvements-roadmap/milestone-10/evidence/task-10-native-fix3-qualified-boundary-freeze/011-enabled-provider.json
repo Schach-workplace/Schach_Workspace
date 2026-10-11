@@ -1,0 +1,22 @@
+{
+  "sourceCommit": "88af09b91dcdf0da0e02739b080713e8088b8f74",
+  "backendProductCommit": "98b7fb6",
+  "clientProductCommit": "0c64b5a",
+  "nativeShell": "1d74c31132b8246603dbc853556ca29b1a134e4f",
+  "status": "passed",
+  "operations": {
+    "action_draft": true,
+    "report_explanation": true,
+    "summary": true,
+    "transcript": true
+  },
+  "provider": {
+    "name": "local-whisper-tiny+qwen3:4b",
+    "version": "0.40.2",
+    "digest": "359d7dd4bcdab3d86b87d73ac27966f4dbb9f5efdfcc75d34a8764a09474fae7:dcb76c6586fc06cbdac6dd21f14cfd129cc4cdd9dce19bf4ffa62e59cbe6e6d1",
+    "configHash": "9106fbb26d948daca7d846dfb156d035873c70a31a60b50185544e3e947f6093"
+  },
+  "sameApprovedBinary": true,
+  "sharedProviderNotRestarted": true,
+  "ocrConfigurationPreserved": true
+}

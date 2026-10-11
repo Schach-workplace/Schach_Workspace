@@ -1,0 +1,86 @@
+{
+  "sourceCommit": "4420ed540dc253ad024ecb61b343be97b57b5b68",
+  "backendProductCommit": "98b7fb6",
+  "clientProductCommit": "4420ed5",
+  "nativeShell": "1d74c31132b8246603dbc853556ca29b1a134e4f",
+  "status": "passed",
+  "samples": [
+    {
+      "phase": "current",
+      "seconds": 1.969,
+      "anchorPickerHeading": true,
+      "sourceOptionPresent": true,
+      "checkingChoices": false
+    },
+    {
+      "phase": "pending",
+      "seconds": 6.333,
+      "anchorPickerHeading": true,
+      "sourceOptionPresent": false,
+      "checkingChoices": true
+    },
+    {
+      "phase": "pending",
+      "seconds": 10.291,
+      "anchorPickerHeading": true,
+      "sourceOptionPresent": false,
+      "checkingChoices": true
+    },
+    {
+      "phase": "pending",
+      "seconds": 14.246,
+      "anchorPickerHeading": true,
+      "sourceOptionPresent": false,
+      "checkingChoices": true
+    },
+    {
+      "phase": "restored",
+      "seconds": 18.608,
+      "anchorPickerHeading": true,
+      "sourceOptionPresent": true,
+      "checkingChoices": false
+    }
+  ],
+  "sameReadyPrivateExpenseCandidate": true,
+  "noUserDismissalOrChoiceUntilCurrentRestored": true,
+  "deliberateFirstSourceChoiceAfterRestoration": true,
+  "actualRawGETEvents": [
+    {
+      "method": "GET",
+      "path": "/api/companies/c-schach/intelligence/jobs/{owned-private-job}",
+      "bindingLabel": "C",
+      "phase": "binding_released_before_forward",
+      "elapsedSeconds": 11.942,
+      "upstreamStatus": 200,
+      "structuredRawExpired": false
+    },
+    {
+      "method": "GET",
+      "path": "/api/companies/c-schach/intelligence/jobs/{owned-private-job}",
+      "bindingLabel": "C",
+      "phase": "binding_released_before_forward",
+      "elapsedSeconds": 7.405,
+      "upstreamStatus": 200,
+      "structuredRawExpired": false
+    },
+    {
+      "method": "GET",
+      "path": "/api/companies/c-schach/intelligence/jobs/{owned-private-job}",
+      "bindingLabel": "C",
+      "phase": "binding_released_before_forward",
+      "elapsedSeconds": 7.306,
+      "upstreamStatus": 200,
+      "structuredRawExpired": false
+    },
+    {
+      "method": "GET",
+      "path": "/api/companies/c-schach/intelligence/jobs/{owned-private-job}",
+      "bindingLabel": "C",
+      "phase": "binding_released_before_forward",
+      "elapsedSeconds": 2.118,
+      "upstreamStatus": 200,
+      "structuredRawExpired": false
+    }
+  ],
+  "generationCount": 6
+}

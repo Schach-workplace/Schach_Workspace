@@ -1,0 +1,35 @@
+{
+  "sourceCommit": "b6ba0e2260de7c1219387006b6b5b8ab5ca55aab",
+  "backendProductCommit": "98b7fb6",
+  "clientProductCommit": "ca13ef3",
+  "nativeShell": "1d74c31132b8246603dbc853556ca29b1a134e4f",
+  "status": "passed",
+  "nativeCurrentReportSelectedPreviewAndNoConsentGate": true,
+  "period": {
+    "from": "2026-10-01",
+    "to": "2026-10-12",
+    "zone": "Asia/Kolkata",
+    "startInclusive": "2026-10-01T00:00:00+05:30",
+    "endExclusive": "2026-10-13T00:00:00+05:30"
+  },
+  "timezone": "Asia/Kolkata",
+  "metricVersion": 1,
+  "summary": {
+    "accepted": 11,
+    "blocked": 2,
+    "changed": 2,
+    "cohort": 24,
+    "currentOnTime": 9,
+    "currents": 11,
+    "done": 10,
+    "needsAttention": 11,
+    "ontime": 9,
+    "originals": 11,
+    "overdue": 11,
+    "pending": 4,
+    "rows": 25,
+    "valid": true
+  },
+  "snapshotTokensExcluded": true,
+  "summaryScope": "Top-level numeric/boolean facts only; department breakdown and buckets excluded"
+}

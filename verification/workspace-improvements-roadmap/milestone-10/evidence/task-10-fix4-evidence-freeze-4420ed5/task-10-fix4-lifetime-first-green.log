@@ -1,0 +1,37 @@
+
+> mobile@1.0.0 test
+> vitest run src/IntelligenceLifetime.test.tsx
+
+
+ RUN  v5.0.3 /home/brahma/Projects/Schach_Workspace/.worktrees/workspace-improvements/mobile
+
+ ❯ src/IntelligenceLifetime.test.tsx (40 tests | 1 failed) 356ms
+   × N2b: actual hard change retires the first-anchor picker 7ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/IntelligenceLifetime.test.tsx > N2b: actual hard change retires the first-anchor picker
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ src/IntelligenceLifetime.test.tsx:392:33
+    390|       await act(async () => [...container.querySelectorAll("button")].…
+    391|     } else await changeAuthority(change);
+    392|     expect(picker!.isConnected).toBe(false);
+       |                                 ^
+    393|     expect(container.querySelector('[role="dialog"]')).toBeNull();
+    394|     expect(button("Selected message 1 (revision 1)")).toBeUndefined();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 39 passed (40)
+   Start at  00:30:12
+   Duration  719ms (tests 54%, transform 21%, environment 17%, import 7%)
+

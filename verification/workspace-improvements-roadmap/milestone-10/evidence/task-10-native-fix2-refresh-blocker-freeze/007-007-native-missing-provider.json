@@ -1,0 +1,12 @@
+{
+  "sourceCommit": "88af09b91dcdf0da0e02739b080713e8088b8f74",
+  "backendProductCommit": "98b7fb6",
+  "clientProductCommit": "0c64b5a",
+  "nativeShell": "1d74c31132b8246603dbc853556ca29b1a134e4f",
+  "status": "passed_manual_guard_with_notice_qualification",
+  "actualTaskDetailLocalAssistance": true,
+  "reviewGenerationDisabled": true,
+  "openingCreatedZeroJobs": true,
+  "ordinaryCreatedTaskStillReadable": true,
+  "noticeQualification": "Actual capability notice is generic selected-source/local-model consent guidance, not an explicit provider unavailable message. Manual guidance is visible. First harness unavailable-word assertion failed; UI not restamped as explicit unavailability notice."
+}

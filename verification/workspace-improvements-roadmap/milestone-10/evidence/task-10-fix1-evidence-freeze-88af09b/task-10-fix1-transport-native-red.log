@@ -1,0 +1,37 @@
+
+> mobile@1.0.0 test
+> vitest run src/client.test.ts
+
+
+ RUN  v5.0.3 /home/brahma/Projects/Schach_Workspace/.worktrees/workspace-improvements/mobile
+
+ ❯ src/client.test.ts (16 tests | 1 failed) 29ms
+   × actual native raw expiry transport classification GET /intelligence/jobs/raw 403 expired 8ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/client.test.ts > actual native raw expiry transport classification GET /intelligence/jobs/raw 403 expired
+AssertionError: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ src/client.test.ts:200:24
+    198|   vi.stubGlobal('fetch',vi.fn(async()=>({ok:false,status,json:async()=…
+    199|   await expect(c.request('/companies/co'+path,method)).rejects.toMatch…
+    200|   expect(c.generation).toBe(generation+(preserve?0:1));
+       |                        ^
+    201|   expect(retired).toHaveBeenCalledTimes(preserve?0:1);expect(cancel).t…
+    202|   expect(readAttempt(scope)).toBe(preserve?original:undefined);clearAl…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 15 passed (16)
+   Start at  21:30:40
+   Duration  126ms (tests 42%, transform 40%, import 15%, worker 3%)
+

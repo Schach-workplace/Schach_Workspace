@@ -1,0 +1,5 @@
+--- FAIL: TestIntelligenceExistingClaimAndExplicitAction (0.30s)
+    intelligence_fix1_test.go:93: preclaimed outcome undisclosed map[audienceUserIds:[usr_0131bd9bd8cc476312b863ce9e5eecaa usr_dba82ee57acee4cad130ecd3046285b6] intelligenceReviewHash:0e11e42e09d0aa0c34087766afab98c21bba56ed0549fad0b351218172c2f588 notice:Task titles, descriptions and selected excerpts become work records visible to this broader audience. Future roles and reporting changes can change the audience. Source removal does not retract published work records. policyVersion:2]
+FAIL
+FAIL	schach.local/workspace/backend/platform	0.305s
+FAIL

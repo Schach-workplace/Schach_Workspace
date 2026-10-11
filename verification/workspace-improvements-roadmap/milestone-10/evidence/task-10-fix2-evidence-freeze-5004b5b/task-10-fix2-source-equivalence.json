@@ -1,0 +1,14 @@
+{
+  "head": "5004b5bcbe777d8779287c4c618c344393105529",
+  "invocationHead": "88af09b91dcdf0da0e02739b080713e8088b8f74",
+  "finalClientHashCount": 389,
+  "finalClientHashMismatchCount": 0,
+  "backendProductSource": "98b7fb6e6df0b208715bf01f4191b950390750c7",
+  "backendEncoreChangedPaths": [],
+  "sqlImmutableComparedBases": [
+    "88af09b91dcdf0da0e02739b080713e8088b8f74",
+    "98b7fb6e6df0b208715bf01f4191b950390750c7"
+  ],
+  "sqlPairedFiles": 116,
+  "qualification": "Verified all pre-invocation client/shared hashes and exact git/backend/Encore/SQL contents; prior Go/race/PG/Encore/provider tests are historical unchanged-backend evidence, not new executions."
+}

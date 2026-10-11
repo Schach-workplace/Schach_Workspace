@@ -1,0 +1,71 @@
+{
+  "base": "b6ba0e2260de7c1219387006b6b5b8ab5ca55aab",
+  "head": "4420ed540dc253ad024ecb61b343be97b57b5b68",
+  "files": [
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix4-brief.md",
+      "bytes": 11456,
+      "sha256": "e564dbc79892902fcae7073d5cf9a5e50c70ce1e96f27411676e2e1e6b414255"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix4-report.md",
+      "bytes": 17871,
+      "sha256": "96032667a7d720756a0669de8e04440b0572bebf69d6d37acb2e25a29d9dafb6"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix4-source-manifest.json",
+      "bytes": 303390,
+      "sha256": "5d36108b2e6411cf776f14a311ad0535d7d3e055d7a06fdf7f585c939dced01a"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix4-sql-manifest.json",
+      "bytes": 45696,
+      "sha256": "52145e8524e8d80acd45c0fc450f634d7f75e1560f9f76c71b88f90765df28b8"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix4-build-manifest.json",
+      "bytes": 15900,
+      "sha256": "21e37cef8e77bae7f873d702d4ea140f6d7e45a35c23f9be0547830b822a79b8"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix4-checks.json",
+      "bytes": 29441,
+      "sha256": "4db21aea01a20c928f4e4828075c502ce5f676572ca34ce77558559f6b75858a"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix4-source-equivalence.json",
+      "bytes": 4876,
+      "sha256": "5ed4095d6483c546921f1776f43be10b8ff67c577c94d77fd704e4282a9623cb"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix4-case-mapping.json",
+      "bytes": 66900,
+      "sha256": "783cddcefe8e645ad1ce1c029aedb8feff48225319904f6a77e0f64adfae22cc"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix4-safe-evidence.json",
+      "bytes": 20996,
+      "sha256": "d012a69da14eb672367d8d7996d1accd003c4089be1869eb41d641643d2c41e7"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix4-manifest.json",
+      "bytes": 21830,
+      "sha256": "90c4a51c864b366ffda32b8729d2ae774f278487e3a0595ac5619bed24d5044b"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix4-controller-handoff-hash-proof.json",
+      "bytes": 517,
+      "sha256": "6a7d8e8cc516e7bc3a133ab1e6d5d5a70b7f25ebd8d503a7ea3b4198449a21b8"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix4-controller-invocation-source-proof.json",
+      "bytes": 352,
+      "sha256": "84096470e07bc26f2a73d7346e00d32406434eecbfee9c52bb92a33dc360f81a"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/review-b6ba0e2..4420ed5.diff",
+      "bytes": 188448,
+      "sha256": "d9fa19cc5ab3f4b4973e0d1af180e7103b3ce0443dcc00236e44246926508669"
+    }
+  ]
+}

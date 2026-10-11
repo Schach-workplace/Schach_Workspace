@@ -1,0 +1,33 @@
+{
+  "sourceCommit": "b6ba0e2260de7c1219387006b6b5b8ab5ca55aab",
+  "backendProductCommit": "98b7fb6",
+  "clientProductCommit": "ca13ef3",
+  "nativeShell": "1d74c31132b8246603dbc853556ca29b1a134e4f",
+  "status": "passed",
+  "sameReadyJobFirstCandidate": true,
+  "originalNativeSessionRestoredWithoutLogin": true,
+  "reloadUnmoutedEditorKnownHumanFieldsReentered": true,
+  "samples": [
+    {
+      "seconds": 1.995,
+      "ackPresent": true,
+      "confirmEnabledBeforeAck": false
+    },
+    {
+      "seconds": 7.993,
+      "ackPresent": true,
+      "confirmEnabledBeforeAck": false
+    },
+    {
+      "seconds": 14.621,
+      "ackPresent": true,
+      "confirmEnabledBeforeAck": false
+    },
+    {
+      "seconds": 20.612,
+      "ackPresent": true,
+      "confirmEnabledBeforeAck": false
+    }
+  ],
+  "noNewInference": true
+}

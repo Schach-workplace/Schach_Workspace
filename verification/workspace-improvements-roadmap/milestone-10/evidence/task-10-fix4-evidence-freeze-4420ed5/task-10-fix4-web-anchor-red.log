@@ -1,0 +1,54 @@
+
+> schach-workspace-frontend@1.1.0 test
+> vitest run src/pages/Reports.intelligence.test.tsx
+
+
+ RUN  v5.0.3 /home/brahma/Projects/Schach_Workspace/.worktrees/workspace-improvements/frontend
+
+ ❯ src/pages/Reports.intelligence.test.tsx (15 tests | 1 failed) 947ms
+   × N2b web counterpart: first private anchor selector remains mounted under actual raw-job pending 22ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/pages/Reports.intelligence.test.tsx > N2b web counterpart: first private anchor selector remains mounted under actual raw-job pending
+AssertionError: expected null to be <select …(1)>…(2)</select> // Object.is equality
+
+- Expected:
+<select
+  aria-label="Source anchor"
+>
+  <option
+    value=""
+  >
+    Choose selected message
+  </option>
+  <option
+    value="message"
+  >
+    Selected message 
+    1
+     (revision 
+    1
+    )
+  </option>
+</select>
+
++ Received:
+null
+
+ ❯ src/pages/Reports.intelligence.test.tsx:111:52
+    109|   fireEvent.click(screen.getByRole('button', { name: 'Recheck current …
+    110|   await waitFor(() => expect(rawWaiters.length).toBeGreaterThan(0));
+    111|   expect(screen.queryByLabelText('Source anchor')).toBe(anchor);
+       |                                                    ^
+    112|   expect(anchor.disabled).toBe(true);
+    113|   expect(anchor.textContent).not.toContain('Selected message 1');
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 14 passed (15)
+   Start at  00:35:43
+   Duration  1.48s (tests 67%, transform 16%, import 11%, environment 7%)
+

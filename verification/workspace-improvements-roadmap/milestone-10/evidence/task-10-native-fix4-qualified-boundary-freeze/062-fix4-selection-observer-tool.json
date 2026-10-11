@@ -1,0 +1,17 @@
+{
+  "sourceCommit": "4420ed540dc253ad024ecb61b343be97b57b5b68",
+  "backendProductCommit": "98b7fb6",
+  "clientProductCommit": "4420ed5",
+  "nativeShell": "1d74c31132b8246603dbc853556ca29b1a134e4f",
+  "status": "passed",
+  "historicalToolSHA256": "fb2eecfbc3a1bbe423afbeef1f1bd5fedb533c5f767499b1c1995926cf409829",
+  "newToolSHA256": "d009c2ef6777a055705296b96a426ad4847142cdc88df81aff021ef2bea8b3de",
+  "syntheticExactAllowlistPrivacyOverflowSameChangedAndTimerCleanup": true,
+  "noPOSTHoldDropOrInjectionAdded": true,
+  "combinedMaximum8OpaqueLabels": true,
+  "aggregateRAMMaximumBytes": 1048576,
+  "timerCleanupMaximumSeconds": 55,
+  "metadataAndEqualityBooleanOnly": true,
+  "quiescentOldOwnedPID": 898901,
+  "sameSixJobsNoInference": true
+}

@@ -1,0 +1,15 @@
+{
+  "status": "passed",
+  "qualification": "Actual compiled worker with INTELLIGENCE_ENABLED=false. Explicit expired fictional raw fixture is not generated model output. No external provider calls.",
+  "binarySHA256": "324b71ebb8aa8e5676f13b1bc22a53b8bbbe05ecc8ff20b8349a808b403d2ce7",
+  "checks": [
+    "Actual compiled provider-disabled restart immediately expires and scrubs preexisting owned raw row",
+    "Both actual signal stops return0 and join worker lifecycle"
+  ],
+  "stopMilliseconds": [
+    7,
+    3
+  ],
+  "ownedDatabaseRemoved": true,
+  "cleanupQualification": "owned DB removal verified after both signal stops; same cleanup now codified in harness"
+}

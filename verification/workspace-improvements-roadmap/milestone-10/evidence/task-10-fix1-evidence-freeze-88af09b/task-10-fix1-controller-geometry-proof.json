@@ -1,0 +1,29 @@
+{
+  "clientSource": "0c64b5a0cf5ba0f55ed67d4e010257995a62a439",
+  "originalInvocationStatus": "failed",
+  "qualification": "Independent assertions over actual captured samples inRAM before publication sanitation; no model rerun, no whole invocationPASS, no raw request/result/value/hash persisted. Existing earlier same-source canonical replay remains separate; unknown editing semantics await scoped review. Invocation HEAD0c64 is separate from runtime backend98b7; backend bytes are unchanged.",
+  "observations": {
+    "prepublicationGeometry": {
+      "samples": 3,
+      "effectiveSampleSpanMilliseconds": 32504,
+      "nodeConnectedFocused": true,
+      "cursorValueScrollBoundsStable": true,
+      "rawAndGeneratedActionsWithheld": true,
+      "authoringActionGated": true,
+      "titleEnabled": true
+    },
+    "unknownGeometry": {
+      "samples": 3,
+      "effectiveSampleSpanMilliseconds": 32503,
+      "nodeConnectedFocused": true,
+      "cursorValueScrollBoundsStable": true,
+      "rawAndGeneratedActionsWithheld": true,
+      "authoringActionGated": true,
+      "titleEnabled": true,
+      "retryGated": true,
+      "originalRequestKeyBodyTargetEqual": true
+    }
+  },
+  "invocationHead": "0c64b5a0cf5ba0f55ed67d4e010257995a62a439",
+  "backendSource": "98b7fb6e6df0b208715bf01f4191b950390750c7"
+}

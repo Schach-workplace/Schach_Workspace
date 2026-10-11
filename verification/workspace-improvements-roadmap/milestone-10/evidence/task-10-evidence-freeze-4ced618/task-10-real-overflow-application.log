@@ -1,0 +1,5 @@
+=== RUN   TestIntelligenceRealOverflowIsTerminalInApplication
+    intelligence_real_provider_test.go:274: actual adapter overflow → terminal source_too_large; one attempt, zero result bytes, zero publications and unchanged business rows
+--- PASS: TestIntelligenceRealOverflowIsTerminalInApplication (2.88s)
+PASS
+ok  	schach.local/workspace/backend/platform	2.883s

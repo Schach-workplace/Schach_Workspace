@@ -1,0 +1,20 @@
+{
+  "sourceCommit": "4420ed540dc253ad024ecb61b343be97b57b5b68",
+  "backendProductCommit": "98b7fb6",
+  "clientProductCommit": "4420ed5",
+  "nativeShell": "1d74c31132b8246603dbc853556ca29b1a134e4f",
+  "status": "loaded_current_composite",
+  "bundleBytes": 10027038,
+  "bundleSHA256": "71fcab09ee628daed33a9b4b71c8fbba91f6c11bc7402cbbd7c8d06fdb39b4dc",
+  "launchAssetFromOwnedMetroManifest": true,
+  "actualOwnedPIDs": {
+    "server.pid": 1767997,
+    "metro.pid": 1768295,
+    "current-read-barrier-proxy.pid": 1779190
+  },
+  "sixJobsNoNewInference": true,
+  "sameBinaryTemporaryCapabilitiesEnabledReadOnlyReportInspection": true,
+  "originalNativeSessionRestoredWithoutLogin": true,
+  "metroIPv6LoopbackObserverAddressCorrected": true,
+  "providerServicesUnchanged": true
+}

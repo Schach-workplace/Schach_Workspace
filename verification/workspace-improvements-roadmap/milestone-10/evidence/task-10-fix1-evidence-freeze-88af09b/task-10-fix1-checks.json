@@ -1,0 +1,175 @@
+{
+  "status": "final owning verification qualified; scoped review and installed-native pending",
+  "productSource": "98b7fb6e6df0b208715bf01f4191b950390750c7",
+  "checks": [
+    {
+      "name": "backend full",
+      "command": "cd backend && go test ./... -count=1 -timeout=2400s",
+      "exitCode": 0,
+      "evidence": "task-10-fix1-final-backend.log",
+      "invocationQualification": "PASS133.338s on precommit dirty product bytes exactly committed98b7fb6",
+      "productSource": "98b7fb6e6df0b208715bf01f4191b950390750c7"
+    },
+    {
+      "name": "PostgreSQL Intelligence",
+      "command": "cd backend && TEST_DATABASE_URL=ownedPG go test ./platform -run Intelligence -count=1 -timeout=2400s",
+      "exitCode": 0,
+      "evidence": "task-10-fix1-final-pg.log",
+      "invocationQualification": "PASS28.516s; unique per-test owned schemas; true simultaneous cases observe both waiters before release",
+      "productSource": "98b7fb6e6df0b208715bf01f4191b950390750c7"
+    },
+    {
+      "name": "web full",
+      "command": "cd frontend && npm test",
+      "exitCode": 0,
+      "evidence": "task-10-fix1-final-web.log",
+      "invocationQualification": "68files284tests PASS6.63s; actual consumers/hooks with mocked HTTP",
+      "productSource": "98b7fb6e6df0b208715bf01f4191b950390750c7"
+    },
+    {
+      "name": "native full",
+      "command": "cd mobile && npm test",
+      "exitCode": 0,
+      "evidence": "task-10-fix1-final-native.log",
+      "invocationQualification": "50files235tests PASS65.12s; DOM/mocked RN, not installed native",
+      "productSource": "98b7fb6e6df0b208715bf01f4191b950390750c7"
+    },
+    {
+      "name": "web types/normal",
+      "command": "cd frontend && npm run build",
+      "exitCode": 0,
+      "evidence": "task-10-fix1-final-web-build.log",
+      "invocationQualification": "PASS on exact final product bytes; web923.09kB entry warning retained",
+      "productSource": "98b7fb6e6df0b208715bf01f4191b950390750c7"
+    },
+    {
+      "name": "web types/demo",
+      "command": "cd frontend && npm run build:demo",
+      "exitCode": 0,
+      "evidence": "task-10-fix1-final-web-demo.log",
+      "invocationQualification": "PASS on exact final product bytes; web923.09kB entry warning retained",
+      "productSource": "98b7fb6e6df0b208715bf01f4191b950390750c7"
+    },
+    {
+      "name": "native types",
+      "command": "cd mobile && npm run typecheck",
+      "exitCode": 0,
+      "evidence": "task-10-fix1-final-native-types.log",
+      "invocationQualification": "PASS on exact final product bytes",
+      "productSource": "98b7fb6e6df0b208715bf01f4191b950390750c7"
+    },
+    {
+      "name": "native lint",
+      "command": "cd mobile && npm run lint",
+      "exitCode": 0,
+      "evidence": "task-10-fix1-final-native-lint.log",
+      "invocationQualification": "PASS on exact final product bytes",
+      "productSource": "98b7fb6e6df0b208715bf01f4191b950390750c7"
+    },
+    {
+      "name": "native both Hermes",
+      "command": "cd mobile && npm run export",
+      "exitCode": 0,
+      "evidence": "task-10-fix1-final-native-export.log",
+      "invocationQualification": "PASS on exact final product bytes",
+      "productSource": "98b7fb6e6df0b208715bf01f4191b950390750c7"
+    },
+    {
+      "name": "actual Encore",
+      "command": "python3 verification/runtime/intelligence_encore.py --output <owned> --allow-demo-mutations",
+      "exitCode": 0,
+      "evidence": "task-10-fix1-encore/result.json",
+      "invocationQualification": "Actual current export, nativePG58, authenticated gateway and no-provider manual fallback, owned namespace/container cleanup",
+      "productSource": "98b7fb6e6df0b208715bf01f4191b950390750c7"
+    },
+    {
+      "name": "compiled disabled-provider maintenance",
+      "command": "python3 verification/runtime/intelligence_maintenance.py --binary <owned current binary> --output <owned> --allow-demo-mutations",
+      "exitCode": 0,
+      "evidence": "task-10-fix1-maintenance-runtime/result.json",
+      "invocationQualification": "Actual compiled nil-provider restart expired/scrubbed explicit fictional preexisting raw row; not inference. Signal stop0/join7ms/3ms, DBremoved. Cleanup codified after invocation and manuallyverified on originalownedDB.",
+      "productSource": "98b7fb6e6df0b208715bf01f4191b950390750c7"
+    },
+    {
+      "name": "backend full race",
+      "command": "cd backend && go test -race ./... -count=1 -timeout=2400s",
+      "exitCode": 0,
+      "evidence": "task-10-fix1-final-race.log",
+      "productSource": "98b7fb6e6df0b208715bf01f4191b950390750c7",
+      "invocationQualification": "PASS1141.178s;600000KDF/2400s unchanged; precommit invocation exact backend hashes unchanged at committed98b7fb6 and at completion"
+    },
+    {
+      "name": "current web full",
+      "command": "cd frontend && npm test",
+      "exitCode": 0,
+      "evidence": "task-10-fix1-transport-full-web.log",
+      "productSource": "0c64b5a0cf5ba0f55ed67d4e010257995a62a439",
+      "invocationQualification": "68files290PASS6.37s; actual global Workspace+transport included; invoked on exact dirty transport bytes committed0c64b5a"
+    },
+    {
+      "name": "current native full",
+      "command": "cd mobile && npm test",
+      "exitCode": 0,
+      "evidence": "task-10-fix1-transport-full-native.log",
+      "productSource": "0c64b5a0cf5ba0f55ed67d4e010257995a62a439",
+      "invocationQualification": "50files242PASS65.05s; actual NativeClient global generation/policy included; installed native pending; invoked on exact dirty transport bytes committed0c64b5a"
+    },
+    {
+      "name": "current web normal/types",
+      "command": "cd frontend && npm run build",
+      "exitCode": 0,
+      "evidence": "task-10-fix1-transport-web-build.log",
+      "productSource": "0c64b5a0cf5ba0f55ed67d4e010257995a62a439",
+      "invocationQualification": "PASS; retained entry chunk warning above900kB; invoked on exact dirty transport bytes committed0c64b5a"
+    },
+    {
+      "name": "current web demo/types",
+      "command": "cd frontend && npm run build:demo",
+      "exitCode": 0,
+      "evidence": "task-10-fix1-transport-web-demo.log",
+      "productSource": "0c64b5a0cf5ba0f55ed67d4e010257995a62a439",
+      "invocationQualification": "PASS; retained entry chunk warning above900kB; invoked on exact dirty transport bytes committed0c64b5a"
+    },
+    {
+      "name": "current native types",
+      "command": "cd mobile && npm run typecheck",
+      "exitCode": 0,
+      "evidence": "task-10-fix1-transport-native-types.log",
+      "productSource": "0c64b5a0cf5ba0f55ed67d4e010257995a62a439",
+      "invocationQualification": "PASS; invoked on exact dirty transport bytes committed0c64b5a"
+    },
+    {
+      "name": "current native lint",
+      "command": "cd mobile && npm run lint",
+      "exitCode": 0,
+      "evidence": "task-10-fix1-transport-native-lint.log",
+      "productSource": "0c64b5a0cf5ba0f55ed67d4e010257995a62a439",
+      "invocationQualification": "PASS; invoked on exact dirty transport bytes committed0c64b5a"
+    },
+    {
+      "name": "current native both Hermes",
+      "command": "cd mobile && npm run export",
+      "exitCode": 0,
+      "evidence": "task-10-fix1-transport-native-export.log",
+      "productSource": "0c64b5a0cf5ba0f55ed67d4e010257995a62a439",
+      "invocationQualification": "PASS Android+iOS; existing NO_COLOR/FORCE_COLOR environment warning retained; invoked on exact dirty transport bytes committed0c64b5a"
+    },
+    {
+      "name": "actual standalone fresh58/populated57 upgrade/API/cleanup",
+      "command": "python3 verification/runtime/intelligence_standalone.py --output <owned> --allow-demo-mutations",
+      "exitCode": 0,
+      "evidence": "task-10-fix1-runtime/result.json",
+      "productSource": "98b7fb6e6df0b208715bf01f4191b950390750c7",
+      "invocationQualification": "Current compiled binary; real public WAV upload/Clam clean, genuine current selected-source API. Stop0, scratch empty, owned schema removed. Upload is not fresh transcription claim."
+    },
+    {
+      "name": "actual current browser completed owning steps",
+      "command": "node verification/runtime/intelligence_fix1_smoke.mjs --allow-demo-mutations [--report-only | --geometry-only]",
+      "evidence": "task-10-fix1-runtime/fix1-browser-aggregate.json",
+      "productSource": "0c64b5a0cf5ba0f55ed67d4e010257995a62a439",
+      "invocationQualification": "Publication/history exit1 after4completed checks at report navigation; report-only exit0 first report inference; geometry exit1 after both sampled spans due unjustified disabled-title assumption. Independent retained sample assertions PASS; no whole-suite PASS or geometry replay claim. Final harness corrects assertion without another model invocation."
+    }
+  ],
+  "clientProductSource": "0c64b5a0cf5ba0f55ed67d4e010257995a62a439",
+  "finalHead": "88af09b91dcdf0da0e02739b080713e8088b8f74"
+}

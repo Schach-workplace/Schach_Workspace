@@ -1,0 +1,7 @@
+=== RUN   TestIntelligenceRealContextBoundaryAndCancellation
+    intelligence_real_provider_test.go:207: actual_context_overflow mapped=source_too_large result_bytes=0 elapsed_ms=2204
+    intelligence_real_provider_test.go:221: actual_configured_context_success input_tokens=2155 output_tokens=51 elapsed_ms=39798
+    intelligence_real_provider_test.go:229: actual adapter request cancellation joined without output
+--- PASS: TestIntelligenceRealContextBoundaryAndCancellation (42.02s)
+PASS
+ok  	schach.local/workspace/backend/platform	42.028s

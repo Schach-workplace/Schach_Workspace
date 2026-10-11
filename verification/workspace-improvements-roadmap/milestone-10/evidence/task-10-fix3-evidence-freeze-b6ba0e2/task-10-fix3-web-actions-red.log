@@ -1,0 +1,30 @@
+
+ RUN  v5.0.3 /home/brahma/Projects/Schach_Workspace/.worktrees/workspace-improvements/frontend
+
+ ❯ src/components/IntelligencePanel.test.tsx (37 tests | 1 failed | 36 skipped) 76ms
+   × gates inspected private audience until current supported actions return after refresh 75ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/IntelligencePanel.test.tsx > gates inspected private audience until current supported actions return after refresh
+AssertionError: expected <p></p> to be null
+
+- Expected:
+null
+
++ Received:
+<p>
+  Current private audience
+</p>
+
+ ❯ src/components/IntelligencePanel.test.tsx:858:58
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 36 skipped (37)
+   Start at  23:19:14
+   Duration  510ms (transform 37%, environment 26%, import 19%, tests 17%, worker 1%)
+

@@ -1,0 +1,8 @@
+--- FAIL: TestIntelligenceDisabledWorkerMaintainsRawTTL (4.34s)
+    --- FAIL: TestIntelligenceDisabledWorkerMaintainsRawTTL/missing (2.17s)
+        intelligence_fix1_test.go:177: provider configuration prevented independent startup retirement
+    --- FAIL: TestIntelligenceDisabledWorkerMaintainsRawTTL/disabled (2.17s)
+        intelligence_fix1_test.go:177: provider configuration prevented independent startup retirement
+FAIL
+FAIL	schach.local/workspace/backend/platform	4.344s
+FAIL

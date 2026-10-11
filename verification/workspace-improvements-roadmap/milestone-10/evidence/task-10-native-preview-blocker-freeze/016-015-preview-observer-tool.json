@@ -1,0 +1,14 @@
+{
+  "sourceCommit": "88af09b91dcdf0da0e02739b080713e8088b8f74",
+  "backendProductCommit": "98b7fb6",
+  "clientProductCommit": "0c64b5a",
+  "nativeShell": "1d74c31132b8246603dbc853556ca29b1a134e4f",
+  "status": "passed",
+  "historicalToolSHA256": "dc0f574802cbe55dbcf0ea3905bc16614d6598c34d4e56728286af10a36cf54e",
+  "newToolSHA256": "fb2eecfbc3a1bbe423afbeef1f1bd5fedb533c5f767499b1c1995926cf409829",
+  "syntheticAllowlistAndPrivatePathRedaction": true,
+  "bounded55sObserverLabelHCombinedMaximum8": true,
+  "noHoldDropBodyDigestHeaderLogging": true,
+  "quiescentOldProxyPID": 197699,
+  "retainedNativeJobAndRAM": true
+}

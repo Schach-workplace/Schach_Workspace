@@ -1,0 +1,42 @@
+
+> schach-workspace-frontend@1.1.0 test
+> vitest run src/components/IntelligencePanel.test.tsx
+
+
+ RUN  v5.0.3 /home/brahma/Projects/Schach_Workspace/.worktrees/workspace-improvements/frontend
+
+ ❯ src/components/IntelligencePanel.test.tsx (10 tests | 1 failed) 192ms
+   × requires a human-selected supported anchor/action and preserves them in the reviewed request 4ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/IntelligencePanel.test.tsx > requires a human-selected supported anchor/action and preserves them in the reviewed request
+AssertionError: expected { anchorMessageId: 'first', …(6) } to match object { anchorMessageId: 'second', …(1) }
+(28 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "actionId": "supported-alternate",
+-   "anchorMessageId": "second",
++   "actionId": "primary",
++   "anchorMessageId": "first",
+  }
+
+ ❯ src/components/IntelligencePanel.test.tsx:294:96
+    292|  const sourceJob:any={...job,publication:{allowed:true,conversationId:…
+    293|  const authored:any={...emptyIntelligenceAuthored,title:'Chosen candid…
+    294|  expect(intelligenceReviewRequest(sourceJob,job.result.candidates[0] a…
+       |                                                                                                ^
+    295|  expect(()=>intelligenceReviewRequest(sourceJob,job.result.candidates[…
+    296| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 9 passed (10)
+   Start at  20:20:24
+   Duration  605ms (tests 36%, transform 28%, environment 21%, import 15%)
+

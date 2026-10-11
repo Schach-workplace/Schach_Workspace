@@ -1,0 +1,45 @@
+
+> mobile@1.0.0 test
+> vitest run src/IntelligenceScreen.test.tsx
+
+
+ RUN  v5.0.3 /home/brahma/Projects/Schach_Workspace/.worktrees/workspace-improvements/mobile
+
+ ❯ src/IntelligenceScreen.test.tsx (6 tests | 2 failed) 208ms
+   × preserves the actual submitted frozen attempt through first raw403 then terminal200 and independent proof 69ms
+   × merges21plus owner jobs through the actual history consumer 20ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/IntelligenceScreen.test.tsx > preserves the actual submitted frozen attempt through first raw403 then terminal200 and independent proof
+AssertionError: expected undefined to be defined
+ ❯ src/IntelligenceScreen.test.tsx:381:16
+    379|  expect(c.textContent).not.toContain("Generated seed");
+    380|  let retry=[...c.querySelectorAll("button")].find(b=>b.textContent==="…
+    381|  expect(retry).toBeDefined();expect(retry.disabled).toBe(true);
+       |                ^
+    382|  rawState=2;await click("Recheck current result"); await act(async()=>…
+    383|  expect(retry.disabled).toBe(false);await click("Retry original submit…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/IntelligenceScreen.test.tsx > merges21plus owner jobs through the actual history consumer
+AssertionError: expected [ <button></button>, …(19) ] to have a length of 23 but got 20
+
+- Expected
++ Received
+
+- 23
++ 20
+
+ ❯ src/IntelligenceScreen.test.tsx:389:111
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 4 passed (6)
+   Start at  20:14:33
+   Duration  514ms (tests 46%, environment 25%, transform 20%, import 8%, worker 1%)
+

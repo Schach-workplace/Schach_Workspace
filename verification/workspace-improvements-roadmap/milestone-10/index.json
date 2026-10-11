@@ -1,0 +1,2695 @@
+{
+  "milestone": 10,
+  "status": "IMPLEMENTATION_AND_BOUNDED_LOCAL_ACCEPTANCE_PUBLISHED_WITH_QUALIFICATIONS",
+  "reviewedSource": "4420ed540dc253ad024ecb61b343be97b57b5b68",
+  "controllerAcceptance": "evidence/task-10-controller-bounded-acceptance-disposition.json",
+  "publicationReport": "publication-report.md",
+  "cases": "acceptance-case-mapping.json",
+  "catalog": "catalog.json",
+  "referenceClosure": "reference-closure.json",
+  "privacyDecisions": "privacy-decisions.md",
+  "checks": "checks.json",
+  "sourceEquivalence": "source-equivalence.json",
+  "sqlEquivalence": "sql-equivalence.json",
+  "rulings": "../rulings.md",
+  "qualification": "This index excludes its own hash. Exact publication commit is bound by Git and the ignored postcommit handoff manifest. Absolute original paths are historical; use reference closure published destinations. Raw UI/binaries/private runtime material are excluded, not claimed distributed.",
+  "evidenceRecords": 522,
+  "exactEvidence": 504,
+  "sanitizedDerivatives": 18,
+  "actionRows": 48,
+  "rulingCount": 97,
+  "fileCountExcludingSelf": 534,
+  "bytesExcludingSelf": 8568872,
+  "files": [
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/README.md",
+      "bytes": 9291,
+      "sha256": "53efa3fd78f5426c460138908939352165515184750ac8bcc66194f206e43f22"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/acceptance-case-mapping.json",
+      "bytes": 97870,
+      "sha256": "643c93c8591e400e73666c0d80a04a39c98612407e0811d0f078708c5d586de8"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/acceptance-case-mapping.md",
+      "bytes": 46268,
+      "sha256": "21e4aece56ff71f084958a737e3666fab2541ff1e551c9631d031c081fdaf1be"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/catalog.json",
+      "bytes": 2548,
+      "sha256": "01755e191600a22f4e2dc95c0c02a425a077cb1c16c71938c9edbe19d3d41afc"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/checks.json",
+      "bytes": 1403,
+      "sha256": "02df35cd7394a2cbe736ab2d4cd9bb70ad7167a98befcf2c8448629fb0392a4d"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/controller-extracts-current-index.json",
+      "bytes": 928,
+      "sha256": "884ca82848a12c9c2ab9db65927a6972d7163e3f741bbca9b2bdc2ddcd183aa2"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/controller-rulings-current-extract.md",
+      "bytes": 74684,
+      "sha256": "7680d10e56f0eebf96a5ed91df31eb1c703e8b368d263f65b3cea1c830e29edc"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-acceptance-publication-brief.md",
+      "bytes": 4113,
+      "sha256": "244fd7ef8059340295ab4b5f7f4c877ca5a390aff3e95718d10833fbe22dc273"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-brief.md",
+      "bytes": 10161,
+      "sha256": "d44c7f03166b089c172e88d8419b638442e4de5a62aba878317cddb00a2961d4"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-build-freeze-4ced618/index.json",
+      "bytes": 17878,
+      "sha256": "fb23bade55d10ae32562d5b965d4038f430beed850f8d1800a066e53a61a507b"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-controller-action-row-count-proof.json",
+      "bytes": 59922,
+      "sha256": "f732f2c3069eef7a5090876d2b6684cf62377aa6fd97963da53060c47e89bec4"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-controller-bounded-acceptance-disposition.json",
+      "bytes": 2750,
+      "sha256": "4ab20ef849878c87f8a9989d41c9f3fe1bbd157f62c430e2722353785386ce80"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-controller-pause-round5-proof.json",
+      "bytes": 220,
+      "sha256": "8179e1164ee2a7681c7557295895dd15c8e8326daedd95ff1da903c392b338af"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-controller-product-freeze.md",
+      "bytes": 3566,
+      "sha256": "ab6a4982cfb7744f296cbd773c18c086e0a0745cadf26332f03f0bcfe2112098"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-controller-scoped-review-disposition.json",
+      "bytes": 484,
+      "sha256": "fc3d1d4c8156bb15579b0851bf1300e32af8e86cc2d52877abe74a7dee113194"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-controller-source-equivalence-proof.json",
+      "bytes": 751,
+      "sha256": "49c06813ad5641cacd87ad1ca3c7fc01bbd167cd2c24531a9305fd3c42c32e84"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/index.json",
+      "bytes": 36324,
+      "sha256": "c471f474a3db41554c3f8e8fec1e2903cb2f8d98d34327c03467a297638014b3"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-backend-full-current.log",
+      "bytes": 391,
+      "sha256": "92d3c4ee787834e44795568d89488b8a9d3b181e2620910218d588a495fe96ee"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-backend-full-final.log",
+      "bytes": 391,
+      "sha256": "5d2636740251707295a58cd73994c21a6f3b66055e759d3f0705e1c5260d562e"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-backend-full.log",
+      "bytes": 391,
+      "sha256": "77b18bea9206eeb7fedd5e5ab19838afef2b741746ea45dbd7c231a966823004"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-backend-race-current.log",
+      "bytes": 392,
+      "sha256": "0b1fb8ad60170c5312a86acf31562525dfe9dd84daf9b38c7fcfa0e5426a5021"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-backend-race-final.log",
+      "bytes": 392,
+      "sha256": "cc27b53810b1a23cdd90fa6c0026bbf913d06309d493d3d9642ecd4fd8abc62e"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-build-manifest.json",
+      "bytes": 12365,
+      "sha256": "74daf4919f385410b6018670d963988906f76fbbd2a27420a5cb34ba3216a41b"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-case-mapping.json",
+      "bytes": 51639,
+      "sha256": "6b1410487478c6a52ae1fa403126f88426a07628758fc71605547ea934dd6e71"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-checks.json",
+      "bytes": 5515,
+      "sha256": "5a67f005161343ae724f5ef0c7325d612483826608d33a630d312fe064fc41f1"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-cleanup-proof.json",
+      "bytes": 1404,
+      "sha256": "5435510c31650666f42063335b934363d3f7aa77bbb675a3a18fdac1c8696972"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-controller-handoff-hash-proof.json",
+      "bytes": 649,
+      "sha256": "695bedbcc570d7f1369768d592c5e8e6e88366748e7a48bf54ed30cef3dd6344"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-current-backend.log",
+      "bytes": 285,
+      "sha256": "23e036283cd53d02fd22ec6dbd4a9b984b7fdeaec5f94a63fd302e6620730717"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-current-pg.log",
+      "bytes": 53,
+      "sha256": "ecff0d591f350eaf2c4e616e303ca8fcf4620c432fe46158aafd37e3c528a2b7"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-demo-build-current.log",
+      "bytes": 963,
+      "sha256": "3e854de6e6fac0bbee7c5b8c43d0a4cd21625683c97bcc79f3c1819a8a65525d"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-demo-build-final.log",
+      "bytes": 963,
+      "sha256": "506e2147c36f34957035af270f6b0325a0994e1440bb0931d7b102bf9bca8b36"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-encore-final/api.json",
+      "bytes": 520,
+      "sha256": "cfe83ade2eda935f042140895479d6074db032aa2f00bc58536b020557415492"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-encore-final/api.log",
+      "bytes": 34,
+      "sha256": "b5f4739643642a4cfca3a924b79da96123425f55ea542fae823d4bf11e7ed9f4"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-encore-final/build.log",
+      "bytes": 1271,
+      "sha256": "d3aa45ee1f74ecc69c1500c8a55f87cc74e1af0a17ff6294f23526d18fcc9059"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-encore-final/check.log",
+      "bytes": 1251,
+      "sha256": "5d679da640edfa1f4bf49109d9d12849ec0ea320664c0d7dae3354bc09d20af3"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-encore-final/migrations.log",
+      "bytes": 3365,
+      "sha256": "2ed643272ec5164e099699abd94f1e2ad81481a82dfbba1371464783a6a6dfa4"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-encore-final/namespace.json",
+      "bytes": 262,
+      "sha256": "75ee784d14af84a2a7a558f4a9800da6d6ff9421d23f60bf80667315629db416"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-encore-final/result.json",
+      "bytes": 306,
+      "sha256": "2de449a6019a3800b32d6bd8e5d9dec5478ac9ed260f53f55e6228c6342d6156"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-expanded-current.log",
+      "bytes": 52,
+      "sha256": "503359f1d64a299a223f3e53d62a11a4bb792ca300813123aa77b9c5b4fe710b"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-expense-frontend-green.log",
+      "bytes": 344,
+      "sha256": "1c6d54589532c31a7fc85f2bb52cdd9220faba1ad1eea55f0b9829e1d3584b68"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-expense-frontend-red.log",
+      "bytes": 2531,
+      "sha256": "247ba1bc85be93df48a20fa84515707ef55907240d34f35e2b2537cba0e16bfd"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-expense-mobile-green.log",
+      "bytes": 324,
+      "sha256": "889b73c89236edcce7ef8027065c3401e9a1218c5724f7e6177deda93f1dd860"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-expense-mobile-red.log",
+      "bytes": 1337,
+      "sha256": "4ad8492e3dad71461f3403113e160d909d990ec36caaa278add49ae29eefe1de"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-expense-native-lint.log",
+      "bytes": 34,
+      "sha256": "d3f78a60c2585717d1813a084d3a7b86d56cf287b70dcab02fb5917698dc6d0c"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-expense-native-types.log",
+      "bytes": 42,
+      "sha256": "6a5365a7bb40c3ca387f36db78409447c32d44f69ec1737ce498eae83f040589"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-expense-web-red.log",
+      "bytes": 344,
+      "sha256": "9dbba09dfed5d826f2e1b616fddda7ab704a6e2b90636ef57542b4496f2b605c"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-extra-boundaries.log",
+      "bytes": 325,
+      "sha256": "d5453ca46d3e0343d898073c6aaac9a1c77b504910dee84abd95f948ac7479ce"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-focused-current.log",
+      "bytes": 52,
+      "sha256": "f185d52b8779fc1ca9d56d8bfc2038fc3ae3a304290be684fb8214f7c512db28"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-focused-final.log",
+      "bytes": 52,
+      "sha256": "6847acf6f5ab8f070a8a5e3e095668ca5b53b3df721cad633ba6ead85e719c5f"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-implementation-progress.md",
+      "bytes": 7450,
+      "sha256": "0b48fc0f2ea1b8533134b24effb9397806ebd02b4f620343748cc689d3feadd7"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-maintenance-red.log",
+      "bytes": 439,
+      "sha256": "9419207aed06cdeb648cd1973e425cce3f7cb602a636f51c7f54003def51843b"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-manifest.json",
+      "bytes": 35456,
+      "sha256": "da8396efa34019386c59ce0cfd522d5a22c1597d553fcb5a81a1fecebd5442a9"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-native-export-current.log",
+      "bytes": 4473,
+      "sha256": "aabdf384b4e0fc1769865b83f82a1e6fa9fccc670d3c2b48a5b2266e282aac73"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-native-final-export.log",
+      "bytes": 1923,
+      "sha256": "3bd6787fad7754b85d3f51c0dafcfc09417ce08fe9c71626c6a944fb284a7cf9"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-native-final-lint.log",
+      "bytes": 34,
+      "sha256": "d3f78a60c2585717d1813a084d3a7b86d56cf287b70dcab02fb5917698dc6d0c"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-native-final-tests.log",
+      "bytes": 543,
+      "sha256": "75007263ea7c75a0ffaa3561990d0980538a0068860d5af7bf94588596066197"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-native-final-types.log",
+      "bytes": 42,
+      "sha256": "6a5365a7bb40c3ca387f36db78409447c32d44f69ec1737ce498eae83f040589"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-native-full-current.log",
+      "bytes": 543,
+      "sha256": "9d9215091fdecc35b9c01cb428b8685580308e1373763ce3847b8130c806147e"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-native-full-final.log",
+      "bytes": 286,
+      "sha256": "548920fc5d99f75df49ad86ec686d3447867575921811a130613b4d39838f8bc"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-native-full.log",
+      "bytes": 2879,
+      "sha256": "0df19ab5e00f76796b1f9779ac6b59e1acd7d3d6b3145eff5c74d9841880ea89"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-native-handoff-held.log",
+      "bytes": 270,
+      "sha256": "202d778eaf72c3bf80f133a61275ed908c63f0aeca05070e91353072b0cf2540"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-native-head-export.log",
+      "bytes": 1923,
+      "sha256": "e775e6b70fac79403b6084bad27d5c7300f46c859c8bddd31e97af2b103ada11"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-native-head-lint.log",
+      "bytes": 34,
+      "sha256": "d3f78a60c2585717d1813a084d3a7b86d56cf287b70dcab02fb5917698dc6d0c"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-native-head-tests.log",
+      "bytes": 298,
+      "sha256": "2e93f604840752404e2cd5f0cdcf86bd459c5e9ca2563d85beeabc9d0016b41a"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-native-head-types.log",
+      "bytes": 42,
+      "sha256": "6a5365a7bb40c3ca387f36db78409447c32d44f69ec1737ce498eae83f040589"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-native-held-component.log",
+      "bytes": 270,
+      "sha256": "71935048f946b03fd9e5076d7261368edee74d1abcdef6b2cfd83a533c82cb66"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-native-intelligence.log",
+      "bytes": 257,
+      "sha256": "c798ad7f87aee5bdb3eb041ec530b5f18de59bb04945cabbe750f90d8e70fffb"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-native-lifecycle-current.log",
+      "bytes": 324,
+      "sha256": "dc98994d66f8d53c37b9a1bbdd5163e73cf535d9f5f436ae1093747a264c5ce6"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-native-lifecycle-final.log",
+      "bytes": 324,
+      "sha256": "c5cf85b5d63c166250d721354828a5c245a3f96295574a8a44a7409b8b1e53e7"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-native-lint-current.log",
+      "bytes": 591,
+      "sha256": "28a7575b2d3b563052b0fc25bb9d8a0091d1afe32920973f4d763968f430f202"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-native-lint-final.log",
+      "bytes": 34,
+      "sha256": "d3f78a60c2585717d1813a084d3a7b86d56cf287b70dcab02fb5917698dc6d0c"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-native-types.log",
+      "bytes": 42,
+      "sha256": "6a5365a7bb40c3ca387f36db78409447c32d44f69ec1737ce498eae83f040589"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-operation-retry-red.log",
+      "bytes": 182,
+      "sha256": "f44b53b982b498d33e60defcb189c0afe432a8aed145f1afcb256e2f6aa12326"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-postgres-current.log",
+      "bytes": 53,
+      "sha256": "57a3761b476822d7ddeaea8736ab2cd54084a9c24ad31877c1d158be5250bb6c"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-postgres-final.log",
+      "bytes": 53,
+      "sha256": "71342401c52b5edb8202d740a6c40d5e04ea4183ace45403ab946395f53c01c8"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-provider-current-identity.json",
+      "bytes": 1733,
+      "sha256": "9a2a7f629c422cd515f66d779cb01ebfbc931d6337a5ce570f8203cceb8af6ce"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-publication-build.log",
+      "bytes": 52,
+      "sha256": "7f383e1705fd6f7a142022ddeb472931d26d575f609f53df2d0359f3c3c592b2"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-publication-current-green.log",
+      "bytes": 52,
+      "sha256": "d0ec84f6d6eb4389d506da154b7ac6b2f3cbec46c0d773f737ed6e5832b64154"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-publication-current-red.log",
+      "bytes": 303,
+      "sha256": "90f64b513beaa9f52fb65321d01d530a3df213be9dfa2cedb0312ffb595450d2"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-real-application.log",
+      "bytes": 796,
+      "sha256": "baf1d169be72a97b6d2370e3fecd5076dc1efac967e3f55514c1f9ef79dd40dc"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-real-context-large-timeout.log",
+      "bytes": 421,
+      "sha256": "94b813358134a3d4649e8dcbaa47105b7e705872c821b07b0c29d970f750c4d2"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-real-context.log",
+      "bytes": 544,
+      "sha256": "ac67453417d6f2ca424c8fb175c8efff0afbc8be4216f81e2b201c6d99958a2a"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-real-head.log",
+      "bytes": 1399,
+      "sha256": "9f7479670e0bc7f56a7a3a063cfe86a2a71c95f8b78b05806d3014e57b432847"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-real-isolated-final.log",
+      "bytes": 796,
+      "sha256": "1018ad25134d09bc7248ca5b298056aa47cf7f52c3bcc952970d33d20fdc471d"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-real-overflow-application.log",
+      "bytes": 366,
+      "sha256": "dbbaf5bbb997481fc54e49f03f3e1ea77db003d3bc29d517f30bebabfe9f3476"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-report.md",
+      "bytes": 19385,
+      "sha256": "2d0913c082d51cadfc155f078048882d6c71d7a6018c4899af04934a3ba66d43"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-runtime/browser-focus-red.json",
+      "bytes": 6253,
+      "sha256": "d2244735e1c121fd2204fd9023845c0ad214eb4f665eb11e40cc4472d9e69cf8"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-runtime-final/browser.json",
+      "bytes": 900,
+      "sha256": "410fd05fa02589d22d158dedb6cc352aa548675caa069450db1190dcf565e2c0"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-runtime-final/result.json",
+      "bytes": 357,
+      "sha256": "51457bb8adceb1efce034a0280a5fa50330536e945a8e505ae7e81e93744f35b"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-runtime-handoff/browser.json",
+      "bytes": 900,
+      "sha256": "b7bdc922aadeff88038bafd7eb7dc3697a26660c29bd3ae2350123004426a6ef"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-runtime-handoff/browser.log",
+      "bytes": 56,
+      "sha256": "2e18236eac21a7b62c3d3f73401d33dbcd94d2408e2b8bc3d2386c484b26012e"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-runtime-handoff/fresh-migrations.log",
+      "bytes": 53,
+      "sha256": "d134db671d228348f5e55a7ead67267931b75d84e0663894420b3f8bb1fbffb3"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-runtime-handoff/populated-upgrade.log",
+      "bytes": 53,
+      "sha256": "d134db671d228348f5e55a7ead67267931b75d84e0663894420b3f8bb1fbffb3"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-runtime-handoff/result.json",
+      "bytes": 357,
+      "sha256": "ec2bd2c34ee8620f99d29f0be06e8f71ba705d5ae99f058fa3fd85ab5dd04cd9"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-runtime-handoff-driver.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-s1-expanded.log",
+      "bytes": 52,
+      "sha256": "ef8427267dc1579484f8454c9a2ff687416afa068f2f9ed1d7efedd40cace6fe"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-s1-green.log",
+      "bytes": 52,
+      "sha256": "766c8b3c8d7b1fe1b43c20598576a46246494f0e1df1cb5727e8d2e37cc04ae4"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-s1-red.log",
+      "bytes": 479,
+      "sha256": "ff6214c9e25d582537dd5def83136c98cb0f091b97bc5d6dd93eebb02a150f91"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-s2-green.log",
+      "bytes": 52,
+      "sha256": "02a919345ec7a3dffece7d41ca5037ab3a1e3da284840e1ea020e1f4a36afa25"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-s2-pg.log",
+      "bytes": 52,
+      "sha256": "62ec87f66d157360befece33e70709fdce657c531dacddb364504434fa4ca370"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-s2-red.log",
+      "bytes": 498,
+      "sha256": "6c7f0c4ef547a9749e4688794c96af37113934a1099b2087131bd60e0c55a39d"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-s3-green.log",
+      "bytes": 52,
+      "sha256": "013f3d61acb022936c6bb99cd27721e3585e86fd6208668ba17d35d61b34139c"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-s3-red.log",
+      "bytes": 1198,
+      "sha256": "eaae281af0a781793aea5012cba974ab19e45aae2a9fe7ce2a2d162c77a013ca"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-s7-test.log",
+      "bytes": 52,
+      "sha256": "0f4efb857d5d89688691d14de708559b6a938356de3afb7412695c74f0523b0b"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-schema-emptytext-red.log",
+      "bytes": 184,
+      "sha256": "83439f9a2ff7cdeb3ed3e7ab46b944c947d18fe25e5c1f9519dceadd98bfcce5"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-source-manifest.json",
+      "bytes": 298901,
+      "sha256": "bf6b0cfe0951354f3eea51506cf569dbb4962cd07f2607e4d61245778827ed64"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-sql-manifest.json",
+      "bytes": 40825,
+      "sha256": "c243aa5bfa3bf9ce907f2d2ea724393a25fbe93bc035751a5cea83ae95f80d82"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-voice-bounds.log",
+      "bytes": 884,
+      "sha256": "f24011cccf9bda925e2d3c2fcc237ce69b7289d35184a43c37f6cd11f3685f2a"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-web-build-current.log",
+      "bytes": 908,
+      "sha256": "6f82398c5351f4bd2d3924faeeae8faa1b29574e504dee5ab1dfde34369834cd"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-web-build-focus.log",
+      "bytes": 908,
+      "sha256": "cdfbebeb7453373959c98dec0317187f026b731330630a1e2a408837eec4b338"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-web-build.log",
+      "bytes": 908,
+      "sha256": "148a85f9dd4e7fa04e1ea8dd437787ec684c464f08bc339e1313b8a5f5875878"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-web-final-build.log",
+      "bytes": 908,
+      "sha256": "ac169e96b4902b1425ffec40a39fd964f79da151b338b7e5c44de8d6b066da2b"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-web-final-demo.log",
+      "bytes": 963,
+      "sha256": "68ed4b9c6efde3d9360bfff72086c82edd2eeb692c44335f6ecd9f6536f82d3b"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-web-final-tests.log",
+      "bytes": 575,
+      "sha256": "4d676a3df843d8bc48292a6a515fc05895d2232437d20fe2afb9c155cba1f7ad"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-web-full-current.log",
+      "bytes": 575,
+      "sha256": "0d84564c52e4c6bcebc50fc45c8bd4bd85188691ab63589a4357f7d5b1014b93"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-web-full-final.log",
+      "bytes": 519,
+      "sha256": "93eff56e2316acfb5d58315ff30039a38e0946b7a97d300cb13d1f4bf7eb63f7"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-web-full.log",
+      "bytes": 519,
+      "sha256": "ce920d47fd77662e47deb076f51026e1c786e5df6f2be7b1b8bfc4c746b0160a"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-web-head-build.log",
+      "bytes": 908,
+      "sha256": "846fba04c2275c8ae751aae69daf24c0b77e1e2e36bf777f0c054f4e08d44285"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-web-head-demo.log",
+      "bytes": 963,
+      "sha256": "be2874f22dd4f1ab3ed94abb6d20cae62f89705f3d204f51b3ed2a9a6f5c5e20"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-web-head-tests.log",
+      "bytes": 575,
+      "sha256": "ca9ebd37771f936a9503023bcc685c179b2ff316a0dc3fe7f523cbb8faafbc43"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-web-intelligence.log",
+      "bytes": 259,
+      "sha256": "1464a227a2bfaf780116acc163e6561c68952a866bde1888cda811eb66231f62"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-web-lifecycle-current.log",
+      "bytes": 355,
+      "sha256": "8a4f4b32ef37ab846a45d7101bfdcda78a6c62314ca4c5f8a260d56e41b4add9"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-evidence-freeze-4ced618/task-10-web-types.log",
+      "bytes": 61,
+      "sha256": "66309dd7fe34610f6cf557dafe27940e549262bd7a328fd9807c45c21b173bbd"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix1-brief.md",
+      "bytes": 5615,
+      "sha256": "90803a05b156e0f683b2f5f0058489d39c162e141d946a8314d1c5e0d5265459"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix1-build-freeze-88af09b/index.json",
+      "bytes": 22550,
+      "sha256": "6be2f88f73d9a12a7821d6ee2f5fab13e36259fc63cfc29039814155b3e75670"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix1-controller-browser-privacy-proof.json",
+      "bytes": 255,
+      "sha256": "e5bd191f8b728849a8d9201a378e03c6652ea431626e84f745aebc7f4bf14a4f"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix1-evidence-freeze-88af09b/index.json",
+      "bytes": 32490,
+      "sha256": "56c3cc57016c28f22c8bf9f52ddda41a0dddc0488a5e98bca2d1a1a561b62914"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix1-evidence-freeze-88af09b/task-10-build-manifest.json",
+      "bytes": 12196,
+      "sha256": "b3b020f57a0cce5338c9208f709e8a08168b320742e69e65b8a4182e338ad58f"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix1-evidence-freeze-88af09b/task-10-case-mapping.json",
+      "bytes": 64042,
+      "sha256": "f3b41b395dccc01b2416c1791f22f514adaf8c600c8999eed32ea93d14b4e389"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix1-evidence-freeze-88af09b/task-10-checks.json",
+      "bytes": 14721,
+      "sha256": "bf933709a51f5610bf34a711ceca3944b75f8620aff2034691b2e5ef96936fa7"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix1-evidence-freeze-88af09b/task-10-fix1-browser-geometry.log",
+      "bytes": 592,
+      "sha256": "9ac7e60025e0eb580e8084bdff3cc1a9060b7de9d80f4416d585b6f1b19beadf"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix1-evidence-freeze-88af09b/task-10-fix1-browser-harness-navigation-failure.log",
+      "bytes": 961,
+      "sha256": "ae6477a5fed9d5de4d45076194faf229a33ca2aaf3eb36dc85ef116e9fc1098f"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix1-evidence-freeze-88af09b/task-10-fix1-browser-publication-history.log",
+      "bytes": 967,
+      "sha256": "4a99b4e3fa6998fd39e3c07c24a39ea5c20803d15cb694f1c1096f5ae4c9bdaf"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix1-evidence-freeze-88af09b/task-10-fix1-browser-raw-expiry-product-red.log",
+      "bytes": 961,
+      "sha256": "88c0bce71888bb9d6fb3bdc52ac5c053cffb45f0bd73b4a80a3c75146381d2a9"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix1-evidence-freeze-88af09b/task-10-fix1-browser-report.log",
+      "bytes": 52,
+      "sha256": "f5c5fb286275f78ed21a7508008389c90db2eba98f48cb80e705ff4a9e7b95fc"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix1-evidence-freeze-88af09b/task-10-fix1-c2-proof.json",
+      "bytes": 2112,
+      "sha256": "fc2a7157bd1aa25bdb5ef99c6f5af32178cd17b3030541daa34c61454af70c1e"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix1-evidence-freeze-88af09b/task-10-fix1-candidate-native-green.log",
+      "bytes": 312,
+      "sha256": "80d811157e81b6110e57bf427d0cddb3c4f649cc0dac85a1ac8f3017bfddc23e"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix1-evidence-freeze-88af09b/task-10-fix1-candidate-native-red.log",
+      "bytes": 2145,
+      "sha256": "70d52f4d172635799cb3d0962503280f8f527964bbf4891cf0c201065ddc8989"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix1-evidence-freeze-88af09b/task-10-fix1-candidate-web-green.log",
+      "bytes": 345,
+      "sha256": "c388ae132f693a9651c3f1ed76c7489cf770381ea6b987bbf568baf2a1638ace"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix1-evidence-freeze-88af09b/task-10-fix1-candidate-web-red.log",
+      "bytes": 1512,
+      "sha256": "e0559efa83d923b3fa40cc5f9691fba1ee8a5a09908179f44675596cf8734eb5"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix1-evidence-freeze-88af09b/task-10-fix1-checks.json",
+      "bytes": 8895,
+      "sha256": "8a47f307fd0dc2a21816a61d1dded9bddc4319a0a2ffbe7cd62373998ab654dc"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix1-evidence-freeze-88af09b/task-10-fix1-cleanup-proof.json",
+      "bytes": 484,
+      "sha256": "67b1f69a7f811b76e5fa9a2bd34ae6203472e6693f402fd6befa1a1840a16f58"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix1-evidence-freeze-88af09b/task-10-fix1-controller-geometry-proof.json",
+      "bytes": 1312,
+      "sha256": "57bd7605a82feb4c195f62f0c04d54d4bf5524ddd2a463aef6dcd043badf6334"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix1-evidence-freeze-88af09b/task-10-fix1-controller-handoff-hash-proof.json",
+      "bytes": 440,
+      "sha256": "04783a4fe26b875d19ba052405311fbcab80efd397c6cdcada1563ae6b2f5ccb"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix1-evidence-freeze-88af09b/task-10-fix1-encore/api.json",
+      "bytes": 520,
+      "sha256": "cfe83ade2eda935f042140895479d6074db032aa2f00bc58536b020557415492"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix1-evidence-freeze-88af09b/task-10-fix1-encore/result.json",
+      "bytes": 306,
+      "sha256": "25230c681c0bd5dac9762ec381e0c052f9ab5d620180f78fe37a181947cc5010"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix1-evidence-freeze-88af09b/task-10-fix1-encore.log",
+      "bytes": 286,
+      "sha256": "6edb5a368f7bdcb84908b302745fa23cbea3638b1e0f7174f2bd2a484fbe824c"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix1-evidence-freeze-88af09b/task-10-fix1-failure-disposition.json",
+      "bytes": 1759,
+      "sha256": "ac015d7691aacc2235fa07c66ffb3d55b2f608ef2074794c0bb6320dca3cef7d"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix1-evidence-freeze-88af09b/task-10-fix1-final-backend.log",
+      "bytes": 391,
+      "sha256": "dc14c40faf3674bc89e804363328c452b632de60b0150c12c3385663256d121f"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix1-evidence-freeze-88af09b/task-10-fix1-final-native-export.log",
+      "bytes": 1753,
+      "sha256": "f6d00c008b8434aa24e45ca5e4527278c5aba5ee01f6ecaba1e000a57e8b21a0"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix1-evidence-freeze-88af09b/task-10-fix1-final-native-lint.log",
+      "bytes": 34,
+      "sha256": "d3f78a60c2585717d1813a084d3a7b86d56cf287b70dcab02fb5917698dc6d0c"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix1-evidence-freeze-88af09b/task-10-fix1-final-native-types.log",
+      "bytes": 42,
+      "sha256": "6a5365a7bb40c3ca387f36db78409447c32d44f69ec1737ce498eae83f040589"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix1-evidence-freeze-88af09b/task-10-fix1-final-native.log",
+      "bytes": 287,
+      "sha256": "38e6220c2efbe17ee70e6b6ae5a8937be8bb4eaadcda46f74ed5e40ad92c5024"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix1-evidence-freeze-88af09b/task-10-fix1-final-pg.log",
+      "bytes": 53,
+      "sha256": "8c7232f997b0636c225827fb0f008a3aba3a70d8c1d2d1b576266c487988ce07"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix1-evidence-freeze-88af09b/task-10-fix1-final-race.log",
+      "bytes": 392,
+      "sha256": "b8813455222d29da644e34b9e54cebae9e899172f7e7162d256a875fedede4c7"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix1-evidence-freeze-88af09b/task-10-fix1-final-web-build.log",
+      "bytes": 908,
+      "sha256": "5059512e54ae78b95ed3d7f0d9bc0ab14b1382cc12f14c06109a1a8efc69858e"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix1-evidence-freeze-88af09b/task-10-fix1-final-web-demo.log",
+      "bytes": 963,
+      "sha256": "837c63d7ff711fefb9e8f028a41cbc26cabad81d4417a3a2e74c5de4f642a867"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix1-evidence-freeze-88af09b/task-10-fix1-final-web.log",
+      "bytes": 575,
+      "sha256": "7c91c1974999b12dd217feae84b20753a2fa1abd36ef8a59408ab2035182170c"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix1-evidence-freeze-88af09b/task-10-fix1-maintenance-red.log",
+      "bytes": 485,
+      "sha256": "f1894cbcdb4e775753edec1c48883a1fef1fe45f2aaadb86a15ff425db116ce8"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix1-evidence-freeze-88af09b/task-10-fix1-maintenance-runtime/result.json",
+      "bytes": 668,
+      "sha256": "08fd5843ea82999091a2df792a4a5a95b075788dbb9a30bede65fbf4f5aefc8b"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix1-evidence-freeze-88af09b/task-10-fix1-manifest.json",
+      "bytes": 16811,
+      "sha256": "57261b60fff3db750bbb55262a9b86b0d4c715bbbf0e7e3ed226561d00e5ea4e"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix1-evidence-freeze-88af09b/task-10-fix1-r1r3-native-green.log",
+      "bytes": 312,
+      "sha256": "6414cda0c54bee5f944916c21387413dbab575e3ffb073871fa0ec6fc772f8c5"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix1-evidence-freeze-88af09b/task-10-fix1-r1r3-native-red.log",
+      "bytes": 1738,
+      "sha256": "993002f5e1fc374f59b0a7fb8c408f9bbec2e557abf9933e4a58fb19f617032f"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix1-evidence-freeze-88af09b/task-10-fix1-r1r3-web-green.log",
+      "bytes": 344,
+      "sha256": "5b912939fd6fb1e8b4415443607d64cf9d5ddb88208c70fa2b82dada27b9978b"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix1-evidence-freeze-88af09b/task-10-fix1-r1r3-web-red.log",
+      "bytes": 2426,
+      "sha256": "cb502729485bfeac1135140a030a3ebb5adf1ab8dc9c7917e7d2b36ff5a8475a"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix1-evidence-freeze-88af09b/task-10-fix1-r2r5-green.log",
+      "bytes": 52,
+      "sha256": "c80faab3a3f9270e27e133465014dc8fd518be0a3df40a401b4183acfae4eb6f"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix1-evidence-freeze-88af09b/task-10-fix1-r2r5-red.log",
+      "bytes": 325,
+      "sha256": "e84425770b119ee73f8d2a4218302e596fb6d083f59f46adcb819d88aba26536"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix1-evidence-freeze-88af09b/task-10-fix1-r4-client-red.log",
+      "bytes": 1652,
+      "sha256": "2dd94bd2b048dd51bb1f6fab73734bc3db83c42f24d9a7b34c07e7ec0ee2f8e8"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix1-evidence-freeze-88af09b/task-10-fix1-r4-green.log",
+      "bytes": 52,
+      "sha256": "ec36f0e66330910f015d086dceb81b5b2bff6bd1ddf1c419619b987ada607d7b"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix1-evidence-freeze-88af09b/task-10-fix1-r4-red.log",
+      "bytes": 618,
+      "sha256": "550e218318170e8f137cbf2a9d24802d3ac72f42b65d5a3ddcfc2ab189bc8efe"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix1-evidence-freeze-88af09b/task-10-fix1-race-source.json",
+      "bytes": 41420,
+      "sha256": "ad9af124692342ecd2fcd721fecb20a60b5014af6e46aea2d5acee4bbd6fd5e1"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix1-evidence-freeze-88af09b/task-10-fix1-report.md",
+      "bytes": 18962,
+      "sha256": "53536ece4ed7d63d92582c35a099667fa3bba646292d2aaed2ea1280490ba3d1"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix1-evidence-freeze-88af09b/task-10-fix1-runtime/fix1-browser-aggregate.json",
+      "bytes": 2369,
+      "sha256": "7f6da633270c25e8951c77923e62b03959ee703e3747e73f94a7ea5ffa77c7cd"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix1-evidence-freeze-88af09b/task-10-fix1-runtime/fix1-browser-geometry.json",
+      "bytes": 6193,
+      "sha256": "0127550ddd155e1279fbb65902aa100d6953f87acc11dd7af61751c61d0d608a"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix1-evidence-freeze-88af09b/task-10-fix1-runtime/fix1-browser-harness-navigation-failure.json",
+      "bytes": 517,
+      "sha256": "192066592ee5f9c7f6a34e6c5a1afcf35d42209816f50899c071053729c07c72"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix1-evidence-freeze-88af09b/task-10-fix1-runtime/fix1-browser-publication-history.json",
+      "bytes": 1193,
+      "sha256": "37cf3ededa0287851c9568a5c4226f626602d2a51c8f814f1d2a75ece1bb2e36"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix1-evidence-freeze-88af09b/task-10-fix1-runtime/fix1-browser-raw-expiry-product-red.json",
+      "bytes": 676,
+      "sha256": "1c43eb67ade78054f991d57dffe6c71c388793d4b0c797cd33306f5b9bab02c5"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix1-evidence-freeze-88af09b/task-10-fix1-runtime/fix1-browser-report.json",
+      "bytes": 1214,
+      "sha256": "91adf97cee483a2d9368095e710a3bb5a968d686da1335ae82352893f2aa19ca"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix1-evidence-freeze-88af09b/task-10-fix1-runtime/fix1-browser.json",
+      "bytes": 6193,
+      "sha256": "0127550ddd155e1279fbb65902aa100d6953f87acc11dd7af61751c61d0d608a"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix1-evidence-freeze-88af09b/task-10-fix1-runtime/provider-operation-summary.json",
+      "bytes": 2072,
+      "sha256": "0e74007574435967ac30992d112ceb5ae8dd2e125f13c31eb550f43e73e030e5"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix1-evidence-freeze-88af09b/task-10-fix1-runtime/result.json",
+      "bytes": 357,
+      "sha256": "c2c52c630c1856d75d6b9fb949851531330423b2abc27c0671f857664f3908b8"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix1-evidence-freeze-88af09b/task-10-fix1-safe-log-scan.json",
+      "bytes": 542,
+      "sha256": "fb50e4e15762d03fe6d347a0073cf30a8d2e10b7bcb81ab5bbf885d33097ee44"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix1-evidence-freeze-88af09b/task-10-fix1-source-equivalence.json",
+      "bytes": 43746,
+      "sha256": "09256006d0cb8e44ef6a1f394591fc4806e8edba22b41a016f0eadc62ae5ce73"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix1-evidence-freeze-88af09b/task-10-fix1-transport-full-native.log",
+      "bytes": 287,
+      "sha256": "e3274c0f9b63fb34ff671b02ebcf386dfb7dbe7964d76b56b743f016157c1da5"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix1-evidence-freeze-88af09b/task-10-fix1-transport-full-web.log",
+      "bytes": 575,
+      "sha256": "a64e72658a8999978f3a9668ba2435ead454799f28da98e19bb6f9203a1b07dd"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix1-evidence-freeze-88af09b/task-10-fix1-transport-native-export.log",
+      "bytes": 1751,
+      "sha256": "640b2d25a058e70d666bd34439d53965ac9c0239328b04531a19941bb2cb446c"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix1-evidence-freeze-88af09b/task-10-fix1-transport-native-green.log",
+      "bytes": 331,
+      "sha256": "3791c0790de5face70c1820aadde9c2a7b73b8ac6bc548c45d5a29fbb4c8746f"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix1-evidence-freeze-88af09b/task-10-fix1-transport-native-lint.log",
+      "bytes": 34,
+      "sha256": "d3f78a60c2585717d1813a084d3a7b86d56cf287b70dcab02fb5917698dc6d0c"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix1-evidence-freeze-88af09b/task-10-fix1-transport-native-red.log",
+      "bytes": 1271,
+      "sha256": "a15d0a35a06806e9fcb2b45633af4893e357ec69e5e6464308ee603d12ce8756"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix1-evidence-freeze-88af09b/task-10-fix1-transport-native-types.log",
+      "bytes": 42,
+      "sha256": "6a5365a7bb40c3ca387f36db78409447c32d44f69ec1737ce498eae83f040589"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix1-evidence-freeze-88af09b/task-10-fix1-transport-web-build.log",
+      "bytes": 908,
+      "sha256": "298cadde97ebf83302bfe6c136fc16cdc918d69fde63ffdaf89c11190e3ef209"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix1-evidence-freeze-88af09b/task-10-fix1-transport-web-demo.log",
+      "bytes": 963,
+      "sha256": "a2bc51db441ea46518b90b02dd1ba52cbef97ad54838117286c7e47fe2cb60c9"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix1-evidence-freeze-88af09b/task-10-fix1-transport-web-green.log",
+      "bytes": 372,
+      "sha256": "73621e6ad2099a93f647f5d9eeaab3f9343bd093e67f3acb4c432b47f9b1cb64"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix1-evidence-freeze-88af09b/task-10-fix1-transport-web-red.log",
+      "bytes": 2052,
+      "sha256": "66cb8f74bac4ca1a9935ecfe9b7c06c6d3cddeb830412f9c5e0ebd762ad83c1c"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix1-evidence-freeze-88af09b/task-10-report.md",
+      "bytes": 19837,
+      "sha256": "624dbe7c6fc0143024a7e121d26dcd7b599cbc2979e756deb88e538655836271"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix1-evidence-freeze-88af09b/task-10-source-manifest.json",
+      "bytes": 300857,
+      "sha256": "c243ae3cb09e2ddc0f570434e7311c5f9a634887d036e8a515ebf2650dd80347"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix1-evidence-freeze-88af09b/task-10-sql-manifest.json",
+      "bytes": 40538,
+      "sha256": "da4b6079aa2a6ff36c22dc4887b158e5dd84fd3664fc78787cb899009f890bf2"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix1-review-dispatch-index.json",
+      "bytes": 1276,
+      "sha256": "69afb99c5a3cb9a877235b2d9a854b8a03122814f89fc355ece3dd3727b7f095"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix1-review.md",
+      "bytes": 20976,
+      "sha256": "94f57d118b2a5387fc36c066dd96b1fe6925000ccdfb9e9a913ebd2394afe120"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix2-brief.md",
+      "bytes": 6991,
+      "sha256": "b3e24d80ebbca032334709f120de1cdea7ae11d5e969696a3e5d1d64369cf316"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix2-build-freeze-5004b5b/index.json",
+      "bytes": 21680,
+      "sha256": "35aa8f5ceaaa0044f2445a2e6f27decd63ddadd2a5254ecf2fa038dc511bf6ce"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix2-controller-scoped-review-disposition.json",
+      "bytes": 570,
+      "sha256": "06cb05dc36530204507405857ddbd7673729ec08ad30e9324a04d93900957320"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix2-evidence-freeze-5004b5b/index.json",
+      "bytes": 13885,
+      "sha256": "98cef9278498335edba01886d0e628115021df89b66be49c6327524535c9fada"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix2-evidence-freeze-5004b5b/task-10-fix2-build-manifest.json",
+      "bytes": 11542,
+      "sha256": "bd1cc3fd245c6eea969127eb169d97de408fe39042ec12a09ebc98f5f2714c41"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix2-evidence-freeze-5004b5b/task-10-fix2-case-mapping.json",
+      "bytes": 65608,
+      "sha256": "bac83a0143f3898c0a5b24f4f7fa9dc47b4c1de5d327f504287af1e79dd0b794"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix2-evidence-freeze-5004b5b/task-10-fix2-checks.json",
+      "bytes": 4005,
+      "sha256": "540fc274f6490e12cf7af48f7e15501897bf1e9f00bc00e968ea68557b256e94"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix2-evidence-freeze-5004b5b/task-10-fix2-controller-handoff-hash-proof.json",
+      "bytes": 517,
+      "sha256": "becebae61289674b472f5c8c6fabb2c6af96b76477d596607303e470b9df7ca5"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix2-evidence-freeze-5004b5b/task-10-fix2-format.log",
+      "bytes": 66,
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix2-evidence-freeze-5004b5b/task-10-fix2-invocation-source.json",
+      "bytes": 43276,
+      "sha256": "7f7b7bd65631b4d50f7c5297a97f638abf2c3e52a693847552f604eede5e51c5"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix2-evidence-freeze-5004b5b/task-10-fix2-manifest.json",
+      "bytes": 7373,
+      "sha256": "a732f15569678949883e3c82bdeaef7bd74ecb3acde61726176d1534b498a868"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix2-evidence-freeze-5004b5b/task-10-fix2-native-export.log",
+      "bytes": 1752,
+      "sha256": "21e31e8eea9566e38b104c9844d916f93bbd0c048a4b82adc5cf298ab757e8e6"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix2-evidence-freeze-5004b5b/task-10-fix2-native-final-focused.log",
+      "bytes": 1313,
+      "sha256": "9293b6b6adb2599ea36002def53c24c05a85b0c1f49dcbbd0c2caa34d297de85"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix2-evidence-freeze-5004b5b/task-10-fix2-native-focused.log",
+      "bytes": 235,
+      "sha256": "efc3f38600ffeaa26fcf7f21920f33fe130b97ef7a50a25f074b46724623a913"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix2-evidence-freeze-5004b5b/task-10-fix2-native-full.log",
+      "bytes": 286,
+      "sha256": "55b5cca42094f29c1742e4be02ad72957da76e2c2fa454bae189ff72213184b9"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix2-evidence-freeze-5004b5b/task-10-fix2-native-green.log",
+      "bytes": 247,
+      "sha256": "3f5429039dc1796f0eb6a0864e1f23f0a613ff06521938f7b8572c3814a712af"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix2-evidence-freeze-5004b5b/task-10-fix2-native-lint.log",
+      "bytes": 34,
+      "sha256": "d3f78a60c2585717d1813a084d3a7b86d56cf287b70dcab02fb5917698dc6d0c"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix2-evidence-freeze-5004b5b/task-10-fix2-native-red.log",
+      "bytes": 3167,
+      "sha256": "5fcc8d1056880fdc9d8fc56d598c88f98a3d4324bfd49d06e67bf137f7fbdd9f"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix2-evidence-freeze-5004b5b/task-10-fix2-native-retirement-red.log",
+      "bytes": 2136,
+      "sha256": "77949448dede39d1e8874da8a487bd2650ebe14cec50554b7c9eec356e98dda6"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix2-evidence-freeze-5004b5b/task-10-fix2-native-types.log",
+      "bytes": 42,
+      "sha256": "6a5365a7bb40c3ca387f36db78409447c32d44f69ec1737ce498eae83f040589"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix2-evidence-freeze-5004b5b/task-10-fix2-report.md",
+      "bytes": 9084,
+      "sha256": "8f8c6073f1b917c23b0c3a054fd12c1a1bf72438bfb8003f75c444e02620a47f"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix2-evidence-freeze-5004b5b/task-10-fix2-source-equivalence.json",
+      "bytes": 668,
+      "sha256": "189eaa5badb53d960a2de37172168a0b76de289e898783e69f5535b56ccc1b3a"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix2-evidence-freeze-5004b5b/task-10-fix2-source-manifest.json",
+      "bytes": 301281,
+      "sha256": "0fe1e906084658cdfbcb700ca6962848ac6f6e78506e35fda6b17861026f1225"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix2-evidence-freeze-5004b5b/task-10-fix2-sql-manifest.json",
+      "bytes": 45696,
+      "sha256": "eb6fa54f4b0f5f65f295c6bd9755efd2b463c469c822a0334fb0fa67ade4dca8"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix2-evidence-freeze-5004b5b/task-10-fix2-web-build.log",
+      "bytes": 908,
+      "sha256": "76d151caec0dbd29fb9fcaa124a72b40899dd50a5bc397be20f1c5ee8d6c674a"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix2-evidence-freeze-5004b5b/task-10-fix2-web-demo.log",
+      "bytes": 963,
+      "sha256": "2646b42457980c7a1d61badb45aefc277d9841207ed3de128d11739d90cfd784"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix2-evidence-freeze-5004b5b/task-10-fix2-web-final-focused.log",
+      "bytes": 248,
+      "sha256": "f7b720f33e634a75a74716e440d8e83e2b11edc80aea0a5f33d4ee3398a96bf6"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix2-evidence-freeze-5004b5b/task-10-fix2-web-focused.log",
+      "bytes": 248,
+      "sha256": "4472237aceb84056f4326d5d8b3a061b80192f91fffdf7d5066c039473beaa6b"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix2-evidence-freeze-5004b5b/task-10-fix2-web-full.log",
+      "bytes": 519,
+      "sha256": "3c01886f7a56288250b62cb7aa6e6fbfcc5bf3bf2eb0599aca8995ff56e875f5"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix2-evidence-freeze-5004b5b/task-10-fix2-web-green.log",
+      "bytes": 262,
+      "sha256": "97a53d8f9b817b7029928b70a6ad249d69cfcb9a49afbf4cab1956ccb73dc56f"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix2-evidence-freeze-5004b5b/task-10-fix2-web-red.log",
+      "bytes": 2956,
+      "sha256": "ee43bf33336c1de3d414d6edeefff6a49c2706c3616e7a7200f81ce4d9d4de26"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix2-evidence-freeze-5004b5b/task-10-fix2-web-retirement-red.log",
+      "bytes": 1143,
+      "sha256": "c060589a0b9fb2e78cb4d4f2cd0d0d7a10ef0dd733e3b91b24edcb2753e69b4b"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix2-evidence-freeze-5004b5b/task-10-native-preview-blocker-controller-proof.json",
+      "bytes": 31978,
+      "sha256": "856aaf7b04a20f2e3a3ed9c959eba4d6933bf8f19bb8555f1aa29c108f1618cd"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix2-evidence-freeze-5004b5b/task-10-native-preview-blocker.md",
+      "bytes": 4924,
+      "sha256": "f8cdefba7eeea4b3eb4794084c43f0cb052039c067c010cc749668f01f14ebee"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix2-evidence-freeze-5004b5b/task-10-report.md",
+      "bytes": 20382,
+      "sha256": "6e364004cf8b16f5a1c78da68277bb5b132c117ac3c59d2deeb3b2f737c870e2"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix2-review-dispatch-index.json",
+      "bytes": 356,
+      "sha256": "87d16ff6077d19b11e8990990dde25e8729f5bac913bff1a95a4cfd4fc33659f"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix2-review.md",
+      "bytes": 10159,
+      "sha256": "5603d3cccf20de2bfaf5047b1a14e195dc657161cd4ebd9b9bdefb9314d47240"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix3-brief.md",
+      "bytes": 6908,
+      "sha256": "94967ab4f07659704f2c0b71b085c236b4926d6eb4a42ffd92939cf91543c6af"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix3-build-freeze-b6ba0e2/index.json",
+      "bytes": 21680,
+      "sha256": "1ee23d2139aed8caec2b8a5facab5e43053934ee04474629c442d315bf0c3acf"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix3-controller-scoped-review-disposition.json",
+      "bytes": 604,
+      "sha256": "15afb7869c5c5f1171ca9d122bc292ad8b9c518354f8c52615081f18d53b1ee9"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix3-evidence-freeze-b6ba0e2/index.json",
+      "bytes": 15754,
+      "sha256": "38d189f64867f574b7bbf2b1c3abb60183a4c734f46b58d3ce2b37f62c54a578"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix3-evidence-freeze-b6ba0e2/task-10-fix3-actions-green.log",
+      "bytes": 246,
+      "sha256": "eeb66a653a83c6cea3b2f840a0121cd647b865e4308ea68d4486b8c4e229afcb"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix3-evidence-freeze-b6ba0e2/task-10-fix3-actions-red.log",
+      "bytes": 2391,
+      "sha256": "786f7131efe0f273ec694100a73b6cc51f7520b33c9f9eb6b1a9e896a85b38cc"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix3-evidence-freeze-b6ba0e2/task-10-fix3-before-actions-invocation-source.json",
+      "bytes": 43516,
+      "sha256": "d37eb71717a6ebc12367be0d2480f5f633decc1b669a1032ad34f24980ae885d"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix3-evidence-freeze-b6ba0e2/task-10-fix3-before-actions-native-export.log",
+      "bytes": 4456,
+      "sha256": "2ffbfa7a3e4829f58e8810901d13ccdd7ed5d6a58a1910038befa4ced1df7d17"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix3-evidence-freeze-b6ba0e2/task-10-fix3-before-actions-native-full.log",
+      "bytes": 286,
+      "sha256": "17928a99664684c9409936b8480663dbd5a479deaf555531c03ce5189786d6e5"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix3-evidence-freeze-b6ba0e2/task-10-fix3-before-actions-native-lint.log",
+      "bytes": 34,
+      "sha256": "d3f78a60c2585717d1813a084d3a7b86d56cf287b70dcab02fb5917698dc6d0c"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix3-evidence-freeze-b6ba0e2/task-10-fix3-before-actions-native-types.log",
+      "bytes": 42,
+      "sha256": "6a5365a7bb40c3ca387f36db78409447c32d44f69ec1737ce498eae83f040589"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix3-evidence-freeze-b6ba0e2/task-10-fix3-before-types-source.json",
+      "bytes": 43487,
+      "sha256": "320c1060ed69ad1e19c14bb0e3848a69b37220c18ea5a5bb76cb10ae5c5271e6"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix3-evidence-freeze-b6ba0e2/task-10-fix3-build-manifest.json",
+      "bytes": 11547,
+      "sha256": "ca4073fd5e3187bb7e1412891b6a63078c23da1917009f7763bd3abcfbe64f90"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix3-evidence-freeze-b6ba0e2/task-10-fix3-case-mapping.json",
+      "bytes": 65792,
+      "sha256": "af3ff420325212003beaa28c690c0ef67fb169b4409cc9005e3cd628c1d12642"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix3-evidence-freeze-b6ba0e2/task-10-fix3-checks.json",
+      "bytes": 4054,
+      "sha256": "776a2e54c11c3287971a10a317be51caae5b687c87ff7451a22e9598deeeffce"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix3-evidence-freeze-b6ba0e2/task-10-fix3-controller-handoff-hash-proof.json",
+      "bytes": 517,
+      "sha256": "e3b040801991b4a42fb1c6a2b1951650a597278816bd0e2e55a8e03f59c5a49c"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix3-evidence-freeze-b6ba0e2/task-10-fix3-final-producer.log",
+      "bytes": 247,
+      "sha256": "639c305eae616a9eef650dea6b042d9eba8820e3eb6e054efff3ac984cfe97ac"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix3-evidence-freeze-b6ba0e2/task-10-fix3-focused.log",
+      "bytes": 246,
+      "sha256": "157c500cb96f5dc3e4225b1b282745088558dd47c5b190bc53f65162db726ef5"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix3-evidence-freeze-b6ba0e2/task-10-fix3-format.log",
+      "bytes": 66,
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix3-evidence-freeze-b6ba0e2/task-10-fix3-invocation-source.json",
+      "bytes": 43491,
+      "sha256": "a004f9f68e3d46b1d5b2746a7335eb9846cd14939f49a7d4792d58f869af3eab"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix3-evidence-freeze-b6ba0e2/task-10-fix3-manifest.json",
+      "bytes": 8361,
+      "sha256": "a6938eeeabeb71d24b89f94350d67c1c5dacc80b3d0457f40c60b3c7d760ac9a"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix3-evidence-freeze-b6ba0e2/task-10-fix3-native-export.log",
+      "bytes": 1752,
+      "sha256": "f405281fb5d9d0d9cc107dc270516558ba9496c72446ba21526619d73ce3467d"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix3-evidence-freeze-b6ba0e2/task-10-fix3-native-full.log",
+      "bytes": 286,
+      "sha256": "d179d5cbf82d79877ac21b856ca4c051fd286c66aceedb87af98e29663775bea"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix3-evidence-freeze-b6ba0e2/task-10-fix3-native-lint.log",
+      "bytes": 34,
+      "sha256": "d3f78a60c2585717d1813a084d3a7b86d56cf287b70dcab02fb5917698dc6d0c"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix3-evidence-freeze-b6ba0e2/task-10-fix3-native-types.log",
+      "bytes": 42,
+      "sha256": "6a5365a7bb40c3ca387f36db78409447c32d44f69ec1737ce498eae83f040589"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix3-evidence-freeze-b6ba0e2/task-10-fix3-producer-green.log",
+      "bytes": 257,
+      "sha256": "e91787cc180a79851034811a5b80e8f9d7b67667d1e52155d5f502599baffdbe"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix3-evidence-freeze-b6ba0e2/task-10-fix3-producer-red.log",
+      "bytes": 4065,
+      "sha256": "4acfcf0d722ea5aee26fea0f04f9197c14d7e72db32eb40a6962dbd1b280eba7"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix3-evidence-freeze-b6ba0e2/task-10-fix3-report.md",
+      "bytes": 8949,
+      "sha256": "4e8241446317713141cae841d29105d2377ffde40b13ca8613db5c4862eec3b9"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix3-evidence-freeze-b6ba0e2/task-10-fix3-source-equivalence.json",
+      "bytes": 668,
+      "sha256": "675c5fac9fb57663350e1d5f22ff7977d6cb11028ff22d03b349614bb06df58a"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix3-evidence-freeze-b6ba0e2/task-10-fix3-source-manifest.json",
+      "bytes": 302658,
+      "sha256": "f03428fe544ca40684c1417d4504b6a6ee2a433dd5db49a6087101b4fe33762a"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix3-evidence-freeze-b6ba0e2/task-10-fix3-sql-manifest.json",
+      "bytes": 45696,
+      "sha256": "2054c60068cf1218e3fae22576ea6cb1ff4bc9fd52401ee58ba5eb5f76e9aa51"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix3-evidence-freeze-b6ba0e2/task-10-fix3-test-types-failure.log",
+      "bytes": 474,
+      "sha256": "0aee97b6a1915175465d7bff664f7425b83c43c2fe47acbc9b5d3014b170867f"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix3-evidence-freeze-b6ba0e2/task-10-fix3-web-actions-green.log",
+      "bytes": 249,
+      "sha256": "05afac437d6e0df1ed5c2e73541a397b3777078f11379e2c70af58ecd71373da"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix3-evidence-freeze-b6ba0e2/task-10-fix3-web-actions-red.log",
+      "bytes": 905,
+      "sha256": "4e65a63ef888142eb8b239805da32a28feb876206990b42e28fc208eee8ed20c"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix3-evidence-freeze-b6ba0e2/task-10-fix3-web-build.log",
+      "bytes": 908,
+      "sha256": "0e1837ef5a85bcbb83b123809913b8c3971916149f1ebcc111223471ba51a922"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix3-evidence-freeze-b6ba0e2/task-10-fix3-web-demo.log",
+      "bytes": 963,
+      "sha256": "1f1dffe8453ff24628fc76374257a8fd05905989b3a3c203cd70a7ed937dd393"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix3-evidence-freeze-b6ba0e2/task-10-fix3-web-full.log",
+      "bytes": 519,
+      "sha256": "8e5423b9b009b2464f46eea8f617a220a953063cd8828dca43f34a8c2a29c77e"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix3-evidence-freeze-b6ba0e2/task-10-native-fix2-refresh-blocker.md",
+      "bytes": 6430,
+      "sha256": "ba6ceec7e4ca91bfe145213dbc7988179405de917d87cd60e23478384be37305"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix3-evidence-freeze-b6ba0e2/task-10-report.md",
+      "bytes": 21666,
+      "sha256": "c7209da119da79404c971495de925f7d6f0b4eb3560e655f97c4e613b9e20142"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix3-review-dispatch-index.json",
+      "bytes": 1366,
+      "sha256": "c344f2459c6e6b4bcc64edb581eeee86c023b94e1a6ca94995a8a4385536dec5"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix3-review.md",
+      "bytes": 10786,
+      "sha256": "3d3c77226f83c796903ce328c739d46757bec07723c5c3426ba7259569b5b8a3"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-build-freeze-4420ed5/index.json",
+      "bytes": 30372,
+      "sha256": "deb834df21ed7811ea94bdbcd42f81a5ae59f88befc602500264b8485e9f2e8f"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-controller-invocation-source-proof.json",
+      "bytes": 352,
+      "sha256": "84096470e07bc26f2a73d7346e00d32406434eecbfee9c52bb92a33dc360f81a"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-controller-scoped-review-disposition.json",
+      "bytes": 514,
+      "sha256": "b7171a77c354c8ca6b8880030800ebfedd9ee84cbe2da7d6c1e29c862ed40853"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/index.json",
+      "bytes": 41261,
+      "sha256": "f8e2e9dbafebc0a59535e62551c89393ff298617abe290f51bb6c955bc700927"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-brief.md",
+      "bytes": 11456,
+      "sha256": "e564dbc79892902fcae7073d5cf9a5e50c70ce1e96f27411676e2e1e6b414255"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-build-manifest.json",
+      "bytes": 15900,
+      "sha256": "21e37cef8e77bae7f873d702d4ea140f6d7e45a35c23f9be0547830b822a79b8"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-case-mapping.json",
+      "bytes": 66900,
+      "sha256": "783cddcefe8e645ad1ce1c029aedb8feff48225319904f6a77e0f64adfae22cc"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-checks.json",
+      "bytes": 29441,
+      "sha256": "4db21aea01a20c928f4e4828075c502ce5f676572ca34ce77558559f6b75858a"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-controller-handoff-hash-proof.json",
+      "bytes": 517,
+      "sha256": "6a7d8e8cc516e7bc3a133ab1e6d5d5a70b7f25ebd8d503a7ea3b4198449a21b8"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-coordination-capture.json",
+      "bytes": 695,
+      "sha256": "93ec5833642ca44944b5953ea160672fcf282014e07f075d43aefc866febe54b"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-diff-check-source.json",
+      "bytes": 43750,
+      "sha256": "5de550b1495543b7256f2f18abd1b68e7da8927dbf8bc262d785a658ec1d6f27"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-diff-check.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-format-source.json",
+      "bytes": 44249,
+      "sha256": "52b880af7251a5e37f4b4642ed1a47530c9b7da28606db14b548bdb018a6f25d"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-format.log",
+      "bytes": 66,
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-hard-retirement-red-source.json",
+      "bytes": 43710,
+      "sha256": "400b3f4e2ae0fa9d30b2a246b85df969ea8a72281a6dba29768832ea7c55d692"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-hard-retirement-red.log",
+      "bytes": 1286,
+      "sha256": "eec8fd14bfc77be55181ae47613292c065774469e9fa98d0eca636f95d7d6e9c"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-invocation-source.json",
+      "bytes": 47185,
+      "sha256": "447d797c59739a3dc6245ba21a83c29167aedb75514340dbc79775704e21e7c1"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-lifetime-first-green-source.json",
+      "bytes": 43677,
+      "sha256": "797453a2b1a65b630d2062c99e7dffecd96a20ed3fdcd12346136e9e234c052e"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-lifetime-first-green.log",
+      "bytes": 1240,
+      "sha256": "9fbb28ccac0c9c5505605e5b39c13af58f06a3c9621faf7f9cc8ddf594e9e877"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-lifetime-red-source.json",
+      "bytes": 43669,
+      "sha256": "4c45fb4a4601bec68f7156799e07749b2f8c427c85184ef2f8e3573b384f2056"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-lifetime-red.log",
+      "bytes": 6207,
+      "sha256": "8cca7a35cdd395460fb3ba44b1dc2f0caf908ee2d121aa6b2b7316bbf7a62445"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-manifest-audit.json",
+      "bytes": 503,
+      "sha256": "698278ca81b1867be61f04bace78737369d5128722ea42640e0ad4eb870c6e80"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-manifest.json",
+      "bytes": 21830,
+      "sha256": "90c4a51c864b366ffda32b8729d2ae774f278487e3a0595ac5619bed24d5044b"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-native-export-source.json",
+      "bytes": 43953,
+      "sha256": "dc57800882c01bab3af3e0785a7e4d5937e7c749ca6e2f72f08a7e1be43c60f5"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-native-export.log",
+      "bytes": 4799,
+      "sha256": "dd8f7bc6dba1cac41e0d356c4b353673e0f7329b83ddcc15ee26be6faaab7162"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-native-focused-source.json",
+      "bytes": 43858,
+      "sha256": "4529c51fe33c87e858284339ca31daabaf36911853d59261cc505982e9069fcb"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-native-focused.log",
+      "bytes": 468,
+      "sha256": "5ae5667a36c417921eb35b2ed888238eaeddb589481f4d111a32a6386bd2bd41"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-native-full-final-source.json",
+      "bytes": 43748,
+      "sha256": "66a356d8ae77afad83a1ff1bb84c3ee240fa0eab65703184689f3189daecdbf9"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-native-full-final.log",
+      "bytes": 287,
+      "sha256": "097b97cc267f4fa53a0f02c1e15c79c1c41ed99135307f44bb488ba7fef86180"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-native-full-source.json",
+      "bytes": 43742,
+      "sha256": "8672e2b7a4dda2ac83c5cb750060fba59a9fab212a3efac51dd411733f09b6c2"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-native-full.log",
+      "bytes": 287,
+      "sha256": "29f72d55a2899fa2673c42468ed653ac5c5c6a3db7ebd825cc79f2c6686896ca"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-native-lifetime-green-source.json",
+      "bytes": 43720,
+      "sha256": "2fbf1104522c90a7bc4dfdeacea50d1cdf66394d40ab4a1f5d785a8f34a3e6f0"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-native-lifetime-green.log",
+      "bytes": 351,
+      "sha256": "83fd2936aa1d62632f82303a96ada3066f5c70a6380b1c3ff451780b0f7c5143"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-native-lint-complete-source.json",
+      "bytes": 43761,
+      "sha256": "516ed8ce37d733dad4808041d2b379873e9443dfc096fc04f29072a4de56288a"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-native-lint-complete.log",
+      "bytes": 34,
+      "sha256": "d3f78a60c2585717d1813a084d3a7b86d56cf287b70dcab02fb5917698dc6d0c"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-native-lint-final-source.json",
+      "bytes": 43758,
+      "sha256": "4860d85729646f642d30ee5a8615ec0a79f207fbacfe0f314768d3d7d2de43f6"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-native-lint-final.log",
+      "bytes": 34,
+      "sha256": "d3f78a60c2585717d1813a084d3a7b86d56cf287b70dcab02fb5917698dc6d0c"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-native-lint-initial-source.json",
+      "bytes": 43759,
+      "sha256": "ba8ec3ccc3aa8e926af1dc3489eb0785bcb9949bf7ac9f0d414867fc6ffff453"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-native-lint-initial.log",
+      "bytes": 777,
+      "sha256": "d715aec876d34dc47fa430447323e0d2a98ff3fa4003264faaa2ca5cd4a6936e"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-native-lint-source.json",
+      "bytes": 43752,
+      "sha256": "6c478f1d8dcc94e9a91c90055dbcdb22a7a3c20c848abf4c76197053350eeda1"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-native-lint.log",
+      "bytes": 1046,
+      "sha256": "36fa066940ac48ddf24f05fbd0b9854d2712e282d5436afb0bdecb6c7fd62387"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-native-rotating-red-source.json",
+      "bytes": 43826,
+      "sha256": "cf585c6891a94031ef4d9171ae8dba54b49b41a7568e95cad31ce2c61a21a8eb"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-native-rotating-red.log",
+      "bytes": 1429,
+      "sha256": "f402237772ad013a3681ac59ca5f97c9e00788b690ee025ca024d8bab561cda9"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-native-selected-first-source.json",
+      "bytes": 43801,
+      "sha256": "55658e70b429da15f9eba3edfa5dcd8ac0539ad15df00fa9eea057fc97684a1f"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-native-selected-first.log",
+      "bytes": 6019,
+      "sha256": "02055a83cbb40e087871600ec0f10feffd03fc07d9bc1b3b7975667056100823"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-native-selected-opposites-source.json",
+      "bytes": 43805,
+      "sha256": "2863ed5289c7a469f27ef38797a28554c69bdd318677c50ad7b6aa0a68558a8b"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-native-selected-opposites.log",
+      "bytes": 2187,
+      "sha256": "00a7d7e548857412f5d825cb0744c4d96cbbcb1e96239a679d5e1b9b10b62dc4"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-native-types-final-source.json",
+      "bytes": 43764,
+      "sha256": "315981c91d85623e6b22fcb3d2649e8ede7340e757e09e95b57aa22227b5dc87"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-native-types-final.log",
+      "bytes": 42,
+      "sha256": "6a5365a7bb40c3ca387f36db78409447c32d44f69ec1737ce498eae83f040589"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-native-types-initial-source.json",
+      "bytes": 43642,
+      "sha256": "8c0d52dc0e53b990a1272198547f55b779c41135ce07540f034f307cbcb7d47c"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-native-types-initial.log",
+      "bytes": 42,
+      "sha256": "6a5365a7bb40c3ca387f36db78409447c32d44f69ec1737ce498eae83f040589"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-native-types-source.json",
+      "bytes": 43758,
+      "sha256": "8d045f4710a05d55e075ffbaf78a7ed042be7db61a0f928087ff7fccbe509098"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-native-types.log",
+      "bytes": 42,
+      "sha256": "6a5365a7bb40c3ca387f36db78409447c32d44f69ec1737ce498eae83f040589"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-opposites-red-source.json",
+      "bytes": 43670,
+      "sha256": "2d061182f5aec5376a0eab712f087b672bb21c43e3ee26066299387978cba1a1"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-opposites-red.log",
+      "bytes": 12607,
+      "sha256": "39ab6b7c6443db86aca4724200f1b5608627db3288ccc1bca0a0365be89d1af7"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-report.md",
+      "bytes": 17871,
+      "sha256": "96032667a7d720756a0669de8e04440b0572bebf69d6d37acb2e25a29d9dafb6"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-safe-evidence.json",
+      "bytes": 20996,
+      "sha256": "d012a69da14eb672367d8d7996d1accd003c4089be1869eb41d641643d2c41e7"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-source-equivalence.json",
+      "bytes": 4876,
+      "sha256": "5ed4095d6483c546921f1776f43be10b8ff67c577c94d77fd704e4282a9623cb"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-source-manifest.json",
+      "bytes": 303390,
+      "sha256": "5d36108b2e6411cf776f14a311ad0535d7d3e055d7a06fdf7f585c939dced01a"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-sql-manifest.json",
+      "bytes": 45696,
+      "sha256": "52145e8524e8d80acd45c0fc450f634d7f75e1560f9f76c71b88f90765df28b8"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-web-anchor-red-source.json",
+      "bytes": 43802,
+      "sha256": "e64e809d417e70e763c2b016cfb24598a88399af2719e25fdda0d99e6bed57b3"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-web-anchor-red.log",
+      "bytes": 1633,
+      "sha256": "ee9ec1c4d3da17434636eecf24055dca1e3aca719304f90ec2aff2226838e3e3"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-web-build-source.json",
+      "bytes": 43940,
+      "sha256": "a3e051ac791eb5af19eb6ce7be3bc67627635ea9d1fc0c2887352d4391ba4fed"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-web-build.log",
+      "bytes": 1716,
+      "sha256": "5313419161bdfb266b93dc3caba1454d17267b9ef0e830266b7731d4bb1c56c0"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-web-demo-source.json",
+      "bytes": 43949,
+      "sha256": "ac02cd83994ad171b3910ec08c2240dff44e9939038c71ab1df857a8049f1a7e"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-web-demo.log",
+      "bytes": 1781,
+      "sha256": "e13ce1bf9d1c3c45216fa37b032452b3c7d96e2ab799032516f090b52011751d"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-web-full-final-source.json",
+      "bytes": 43747,
+      "sha256": "7fad19c4d60d1e5180c7fdf715826318a7052c0387c461e22e0ddd2a6ea0e845"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-web-full-final.log",
+      "bytes": 576,
+      "sha256": "fb797fde9276735deea70b6dfbc7f23f1f84688bf99020eb0692d294a2398fb0"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-web-full-source.json",
+      "bytes": 43740,
+      "sha256": "d27e3c02c237f87a1f3b57d7427ab671bfd53b1745f073f849935ef19d5fc125"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-web-full.log",
+      "bytes": 1788,
+      "sha256": "de139c1bc20f245623ca68eac1517586b7f0041f0a0e484b58aa3d2f3a3a1993"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-web-lifetime-green-source.json",
+      "bytes": 43890,
+      "sha256": "ba90ac1e4d6b852b9b7c9fc3e52c74b2d5e87f45baf7de1ebd5eb54105668c58"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-web-lifetime-green.log",
+      "bytes": 412,
+      "sha256": "886b911836f4a1c000e2036ea526d0c6aa3c11b220054447c8ad3b2742777fc5"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-web-notification-green-source.json",
+      "bytes": 43841,
+      "sha256": "8a68678256be30771c8bdc0228c2ab76a8af61f1b12c62df22bd681c25b8e4c2"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-web-notification-green.log",
+      "bytes": 372,
+      "sha256": "1ebc9b09ef725240a176af6a25cfc70fc0c49a7be4d7f794bbe574ea08797174"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-web-notification-red-source.json",
+      "bytes": 43839,
+      "sha256": "662aa0e02af831c2e8e70897e8293858a2d588a36e1d4b02c10795a9ebf14250"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-web-notification-red.log",
+      "bytes": 1781,
+      "sha256": "857138500378bfc23996d3f3e2a72423e500d3080faf41326c8809f1c59ff0b9"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-web-owning-green-source.json",
+      "bytes": 43888,
+      "sha256": "1ec21cb657cc8126229ed96fbc2bba54747001ce832d4f92f420e953d98ea025"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-web-owning-green.log",
+      "bytes": 413,
+      "sha256": "96497a94a8f331a7a8b83a74860d39c664f6629cfddeadee3430ae08a9cc2256"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-web-owning-red-source.json",
+      "bytes": 43803,
+      "sha256": "6b6aef1a68130de6099b4ba97a98ffa2652c7eed78985d911312531cb6405949"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-web-owning-red.log",
+      "bytes": 5160,
+      "sha256": "0c1c926037909253cf6420a26a40701dce78e020a61ab921e16d32372606114b"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-web-rotating-red-source.json",
+      "bytes": 43831,
+      "sha256": "9393943d9d0c993954ed5e44efbb7093edd5490d496578f05eea9fddc0bc845c"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-web-rotating-red.log",
+      "bytes": 1745,
+      "sha256": "4a790ef40391a637d12699d5df1185e35a9a40b4d3f517e91c1d7c1892959d40"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-web-selected-final-source.json",
+      "bytes": 43807,
+      "sha256": "08228db917ae1a82154fd40619af31ecf5271935e7a4aa71c2b11e2b9e4926d8"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-web-selected-final.log",
+      "bytes": 341,
+      "sha256": "04ae35e6e17dc6879bfef208f1eb631df308b2152e48c07eb6c3d582ebb69e53"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-web-selected-first-source.json",
+      "bytes": 43807,
+      "sha256": "95a30c92ab7d5e3636915ae817f8705dfd6c655163952a3b2e55ca72d52d8503"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-web-selected-first.log",
+      "bytes": 2473,
+      "sha256": "cac934852a3adb72d834c1a382d9c8410033a476b09848d915e5ec4d02d48b54"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-web-selected-opposites-source.json",
+      "bytes": 43811,
+      "sha256": "b8594521b05ac1aa05b3033e7042d395a6d048adbc6fc091431ce414507eb06d"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-web-selected-opposites.log",
+      "bytes": 3243,
+      "sha256": "5973c1ecb113a8fab3a1063a9f19a9f2885256400c9f0b61d252235e93d94a60"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-web-types-complete-source.json",
+      "bytes": 43765,
+      "sha256": "3a5458068f8386b84eb4a74a918372716682053869726b35392667998878ae7a"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-web-types-complete.log",
+      "bytes": 61,
+      "sha256": "66309dd7fe34610f6cf557dafe27940e549262bd7a328fd9807c45c21b173bbd"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-web-types-final-source.json",
+      "bytes": 43763,
+      "sha256": "ae77363fa6cc84f586a47487a729732361697406b1d7b27d30ad166a93d92922"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-web-types-final.log",
+      "bytes": 61,
+      "sha256": "66309dd7fe34610f6cf557dafe27940e549262bd7a328fd9807c45c21b173bbd"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-web-types-source.json",
+      "bytes": 43757,
+      "sha256": "d3ac270464cc92162589de063bbab8be2d0b0dcdd0ff75eb09871c1a04824263"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-fix4-web-types.log",
+      "bytes": 61,
+      "sha256": "66309dd7fe34610f6cf557dafe27940e549262bd7a328fd9807c45c21b173bbd"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-evidence-freeze-4420ed5/task-10-report.md",
+      "bytes": 23806,
+      "sha256": "ade335ffaa5e92462e869d293f76748593a6445bf93136636fdb9f1343cbfd5a"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-review-dispatch-index.json",
+      "bytes": 3072,
+      "sha256": "e445113b006b974fd94ddbef138769754907bb8fff2526726e3f67ba7ebf9270"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-fix4-review.md",
+      "bytes": 14004,
+      "sha256": "2375258dde9d211a0e3bbf72f5d4d4a30e2b531d837419e8447717932a99bd36"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-initial-handoff/task-10-build-manifest.json",
+      "bytes": 12365,
+      "sha256": "74daf4919f385410b6018670d963988906f76fbbd2a27420a5cb34ba3216a41b"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-initial-handoff/task-10-case-mapping.json",
+      "bytes": 51639,
+      "sha256": "6b1410487478c6a52ae1fa403126f88426a07628758fc71605547ea934dd6e71"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-initial-handoff/task-10-checks.json",
+      "bytes": 5515,
+      "sha256": "5a67f005161343ae724f5ef0c7325d612483826608d33a630d312fe064fc41f1"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-initial-handoff/task-10-manifest.json",
+      "bytes": 35456,
+      "sha256": "da8396efa34019386c59ce0cfd522d5a22c1597d553fcb5a81a1fecebd5442a9"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-initial-handoff/task-10-report.md",
+      "bytes": 19385,
+      "sha256": "2d0913c082d51cadfc155f078048882d6c71d7a6018c4899af04934a3ba66d43"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-initial-handoff/task-10-source-manifest.json",
+      "bytes": 298901,
+      "sha256": "bf6b0cfe0951354f3eea51506cf569dbb4962cd07f2607e4d61245778827ed64"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-initial-handoff/task-10-sql-manifest.json",
+      "bytes": 40825,
+      "sha256": "c243aa5bfa3bf9ce907f2d2ea724393a25fbe93bc035751a5cea83ae95f80d82"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-m9-reviewed-source-binding.json",
+      "bytes": 17939,
+      "sha256": "02df1f1eba7b5cbc68fae1d023eda72178510841e1bddc45c621bd45761b1b37"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-manifest.json",
+      "bytes": 16811,
+      "sha256": "57261b60fff3db750bbb55262a9b86b0d4c715bbbf0e7e3ed226561d00e5ea4e"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-acceptance-manifest.json",
+      "bytes": 125390,
+      "sha256": "ca2219c95679a031dc65a62de5bb9c25c72ffca3c00ab7f786d4b75bfd256453"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-acceptance-report.md",
+      "bytes": 29663,
+      "sha256": "ab6d2d9711598e30fc159d6fa97ed38f8e2d9cd635b1fd3c99957394a8ce2117"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-current-report-observation.md",
+      "bytes": 4105,
+      "sha256": "1faf9eb0c5e5844a9bb7120d21be98cfa2ba573a2a4c01eb9e7026857f913589"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix2-refresh-blocker-controller-proof.json",
+      "bytes": 221,
+      "sha256": "10ec975044b152d57871148224148f4a20bdd5ce329d8b171a747cf409058655"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix2-refresh-blocker-freeze/001-001-preservation-baseline.json",
+      "bytes": 3805,
+      "sha256": "ab1aecc29a31fe7ef24d80b6e716573779aa8413608450d4c508cfda70e1c528"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix2-refresh-blocker-freeze/002-002-source-manifest.json",
+      "bytes": 77754,
+      "sha256": "2875cb9148c1dbb465eb33aedc50000e015e25181896a782fca9f46653904a87"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix2-refresh-blocker-freeze/003-003-refresh-stops.json",
+      "bytes": 383,
+      "sha256": "686b7fee388fc43e8a97106b4ace97134e467aefdd334ad355f6525a6822fefc"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix2-refresh-blocker-freeze/004-004-proxy-synthetic-privacy.json",
+      "bytes": 448,
+      "sha256": "6bdc6f43ec8d8d08b6a6ae5d6bed8f0ca2df15fcd2f04b6bafb7d1f5233c3dc1"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix2-refresh-blocker-freeze/005-005-disabled-and-migration.json",
+      "bytes": 448,
+      "sha256": "544cc19478fd8ab80b45bd8629753ad7505001eb60271da0ef440d77ed129ebe"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix2-refresh-blocker-freeze/006-006-manual-fixture-created-disabled.json",
+      "bytes": 495,
+      "sha256": "72f5ca9888bc8de82bcdfb1c64382d1918d5f3115bca0c382d13e4ee31dd3724"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix2-refresh-blocker-freeze/007-007-native-missing-provider.json",
+      "bytes": 701,
+      "sha256": "c0151aaa040dfe3c3657e863f48e034e0618b1c355fc1cd762afd421c11732f9"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix2-refresh-blocker-freeze/008-008-loaded-composite.json",
+      "bytes": 892,
+      "sha256": "f8c4874df45c27885b6bc7f990ea2780d6d9fda7d8fa29259a9410014043e687"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix2-refresh-blocker-freeze/009-009-ui-sanitizer-synthetic.json",
+      "bytes": 401,
+      "sha256": "3685a4ec3c56da8957029a3df0526d09eea0f3bef2bd01117fa1977b77ba0b06"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix2-refresh-blocker-freeze/010-010-disabled-stop.json",
+      "bytes": 120,
+      "sha256": "d174a540f35b913c6bbeb1092353b08b6b7e4acb75c553ad7961a79b8d6960e1"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix2-refresh-blocker-freeze/011-011-enabled-provider.json",
+      "bytes": 771,
+      "sha256": "332eb9cd98aa0d6cd37f3e49c50e5f52494a42c824010f7358d6b0238a45e9c2"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix2-refresh-blocker-freeze/012-011b-enabled-provider-resume.json",
+      "bytes": 771,
+      "sha256": "332eb9cd98aa0d6cd37f3e49c50e5f52494a42c824010f7358d6b0238a45e9c2"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix2-refresh-blocker-freeze/013-012-public-task-selection-consent.json",
+      "bytes": 382,
+      "sha256": "804b240ebcde1edbd8b87ccdda98f484e12b91711a212d87980a9eeb4910c154"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix2-refresh-blocker-freeze/014-013-first-action-generation.json",
+      "bytes": 498,
+      "sha256": "be8f1e4cbeac1a58a51f413bd28ae28852593dfcd3bcd46287b3cba38745a580"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix2-refresh-blocker-freeze/015-014-preview-lifetime-observation.json",
+      "bytes": 753,
+      "sha256": "dffe48003779d06926cde4bdd0bd690e0b3190a5cf1ad4fb386496b18d1b5ac0"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix2-refresh-blocker-freeze/016-015-preview-observer-tool.json",
+      "bytes": 620,
+      "sha256": "f372273a98a40b57b2817f4df2bbc5d00bcf7408ddaf3e7170e1ffeb79b748ce"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix2-refresh-blocker-freeze/017-016-native-preview-observed.json",
+      "bytes": 1113,
+      "sha256": "97c360c9f5d9f68089a880847c41daf0b0bded6f31cf835a7531d51aebe3b448"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix2-refresh-blocker-freeze/018-017-preview-blocker-boundary.json",
+      "bytes": 649,
+      "sha256": "f2bb25ad767127ca2f1be6183482c828af1ae7fbdc6dd566eec6bf36500f9f2a"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix2-refresh-blocker-freeze/019-018-boundary-privacy-scan.json",
+      "bytes": 484,
+      "sha256": "38946aae6a67d34cef9fa1d6459bd4ef5ab7fbecbba46485e775907dde801136"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix2-refresh-blocker-freeze/020-019-fix2-source-manifest.json",
+      "bytes": 77943,
+      "sha256": "fb20d085bd5b898b0077e917f5ec84e164258e2f732e6b25232c13370a206a9e"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix2-refresh-blocker-freeze/021-020-fix2-runtime-bundle.json",
+      "bytes": 553,
+      "sha256": "dc65a7a8b9679637bc941a766e1c273b1630c2775621b5e7bd3d93d78a0e21cf"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix2-refresh-blocker-freeze/022-024-fix2-preview-scope-diagnosis.json",
+      "bytes": 4424,
+      "sha256": "14e91b6e99771ca28c4678fcfccaeb3a9f38cb37886b958469f64f5b23418cd4"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix2-refresh-blocker-freeze/023-025-fix2-blocker-boundary.json",
+      "bytes": 1670,
+      "sha256": "b9c2bf4b465e1d24273767428be086869065a194c1c6f4492e3c831d15296592"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix2-refresh-blocker-freeze/024-026-fix2-boundary-privacy.json",
+      "bytes": 200,
+      "sha256": "b320fb2332a0f6d533c282f82dd3337feacf37f9974151b53e835e14a1b0102b"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix2-refresh-blocker-freeze/232-task-10-native-acceptance-report.md",
+      "bytes": 7454,
+      "sha256": "ea78dc47fa908be541e606bc06a0ae3a7f47ee195415ff518bf2aa1eeb0416a0"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix2-refresh-blocker-freeze/233-task-10-native-fix2-refresh-blocker.md",
+      "bytes": 6430,
+      "sha256": "ba6ceec7e4ca91bfe145213dbc7988179405de917d87cd60e23478384be37305"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix2-refresh-blocker-freeze/index.json",
+      "bytes": 68991,
+      "sha256": "1103af6f783bd844825dcceba56a42798a4ac31a64bb4388108372cd36daddcf"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix2-refresh-blocker-manifest.json",
+      "bytes": 53546,
+      "sha256": "8d7ef297bd81114fa9cd6646b66fc12665db2758b3cb6d35f6c590c18f2dec9f"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix3-controller-final-hash-proof.json",
+      "bytes": 408,
+      "sha256": "ab9465dd037b79a377cafe469dcef40a4ffb347b5f678230aaeaf741dd805774"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix3-controller-partial-source-proof.json",
+      "bytes": 617,
+      "sha256": "3d405238260b1b3c88cb90368b21b5ecbc35d3d1f0409c6f210309c4e2554ad5"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix3-qualified-boundary-freeze/001-preservation-baseline.json",
+      "bytes": 3805,
+      "sha256": "ab1aecc29a31fe7ef24d80b6e716573779aa8413608450d4c508cfda70e1c528"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix3-qualified-boundary-freeze/002-source-manifest.json",
+      "bytes": 77754,
+      "sha256": "2875cb9148c1dbb465eb33aedc50000e015e25181896a782fca9f46653904a87"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix3-qualified-boundary-freeze/003-refresh-stops.json",
+      "bytes": 383,
+      "sha256": "686b7fee388fc43e8a97106b4ace97134e467aefdd334ad355f6525a6822fefc"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix3-qualified-boundary-freeze/004-proxy-synthetic-privacy.json",
+      "bytes": 448,
+      "sha256": "6bdc6f43ec8d8d08b6a6ae5d6bed8f0ca2df15fcd2f04b6bafb7d1f5233c3dc1"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix3-qualified-boundary-freeze/005-disabled-and-migration.json",
+      "bytes": 448,
+      "sha256": "544cc19478fd8ab80b45bd8629753ad7505001eb60271da0ef440d77ed129ebe"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix3-qualified-boundary-freeze/006-manual-fixture-created-disabled.json",
+      "bytes": 495,
+      "sha256": "72f5ca9888bc8de82bcdfb1c64382d1918d5f3115bca0c382d13e4ee31dd3724"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix3-qualified-boundary-freeze/007-native-missing-provider.json",
+      "bytes": 701,
+      "sha256": "c0151aaa040dfe3c3657e863f48e034e0618b1c355fc1cd762afd421c11732f9"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix3-qualified-boundary-freeze/008-loaded-composite.json",
+      "bytes": 892,
+      "sha256": "f8c4874df45c27885b6bc7f990ea2780d6d9fda7d8fa29259a9410014043e687"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix3-qualified-boundary-freeze/009-ui-sanitizer-synthetic.json",
+      "bytes": 401,
+      "sha256": "3685a4ec3c56da8957029a3df0526d09eea0f3bef2bd01117fa1977b77ba0b06"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix3-qualified-boundary-freeze/010-disabled-stop.json",
+      "bytes": 120,
+      "sha256": "d174a540f35b913c6bbeb1092353b08b6b7e4acb75c553ad7961a79b8d6960e1"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix3-qualified-boundary-freeze/011-enabled-provider.json",
+      "bytes": 771,
+      "sha256": "332eb9cd98aa0d6cd37f3e49c50e5f52494a42c824010f7358d6b0238a45e9c2"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix3-qualified-boundary-freeze/011b-enabled-provider-resume.json",
+      "bytes": 771,
+      "sha256": "332eb9cd98aa0d6cd37f3e49c50e5f52494a42c824010f7358d6b0238a45e9c2"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix3-qualified-boundary-freeze/012-public-task-selection-consent.json",
+      "bytes": 382,
+      "sha256": "804b240ebcde1edbd8b87ccdda98f484e12b91711a212d87980a9eeb4910c154"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix3-qualified-boundary-freeze/013-first-action-generation.json",
+      "bytes": 498,
+      "sha256": "be8f1e4cbeac1a58a51f413bd28ae28852593dfcd3bcd46287b3cba38745a580"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix3-qualified-boundary-freeze/014-preview-lifetime-observation.json",
+      "bytes": 753,
+      "sha256": "dffe48003779d06926cde4bdd0bd690e0b3190a5cf1ad4fb386496b18d1b5ac0"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix3-qualified-boundary-freeze/015-preview-observer-tool.json",
+      "bytes": 620,
+      "sha256": "f372273a98a40b57b2817f4df2bbc5d00bcf7408ddaf3e7170e1ffeb79b748ce"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix3-qualified-boundary-freeze/016-native-preview-observed.json",
+      "bytes": 1113,
+      "sha256": "97c360c9f5d9f68089a880847c41daf0b0bded6f31cf835a7531d51aebe3b448"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix3-qualified-boundary-freeze/017-preview-blocker-boundary.json",
+      "bytes": 649,
+      "sha256": "f2bb25ad767127ca2f1be6183482c828af1ae7fbdc6dd566eec6bf36500f9f2a"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix3-qualified-boundary-freeze/018-boundary-privacy-scan.json",
+      "bytes": 484,
+      "sha256": "38946aae6a67d34cef9fa1d6459bd4ef5ab7fbecbba46485e775907dde801136"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix3-qualified-boundary-freeze/019-fix2-source-manifest.json",
+      "bytes": 77943,
+      "sha256": "fb20d085bd5b898b0077e917f5ec84e164258e2f732e6b25232c13370a206a9e"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix3-qualified-boundary-freeze/020-fix2-runtime-bundle.json",
+      "bytes": 553,
+      "sha256": "dc65a7a8b9679637bc941a766e1c273b1630c2775621b5e7bd3d93d78a0e21cf"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix3-qualified-boundary-freeze/024-fix2-preview-scope-diagnosis.json",
+      "bytes": 4424,
+      "sha256": "14e91b6e99771ca28c4678fcfccaeb3a9f38cb37886b958469f64f5b23418cd4"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix3-qualified-boundary-freeze/025-fix2-blocker-boundary.json",
+      "bytes": 1670,
+      "sha256": "b9c2bf4b465e1d24273767428be086869065a194c1c6f4492e3c831d15296592"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix3-qualified-boundary-freeze/026-fix2-boundary-privacy.json",
+      "bytes": 200,
+      "sha256": "b320fb2332a0f6d533c282f82dd3337feacf37f9974151b53e835e14a1b0102b"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix3-qualified-boundary-freeze/027-fix3-source-manifest.json",
+      "bytes": 78060,
+      "sha256": "bae3aa75085b1afd6f3272194304772b52eb7644957cbaff2d096bcdf3a4bfe6"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix3-qualified-boundary-freeze/028-fix3-runtime-bundle.json",
+      "bytes": 690,
+      "sha256": "94de9e5ff29f107b2fe64e235a2f80fcb1d3fb9f554b73e50cec0d35ef4571ed"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix3-qualified-boundary-freeze/029-fix3-native-preview-polls.json",
+      "bytes": 823,
+      "sha256": "cd43f2a71ec46af64af287ebb76ee5a6ac2adf87779312464beb92bac0b3636e"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix3-qualified-boundary-freeze/030-fix3-ack-across-polls.json",
+      "bytes": 1368,
+      "sha256": "1a747d028565f8073ec711980be78243d5010facdd85d89552c462c4d4a40881"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix3-qualified-boundary-freeze/031-fix3-pending-preview.json",
+      "bytes": 1205,
+      "sha256": "66d143b61969242dd5e25a4610625ce95a5db7357efcd540ba045fd852627c7a"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix3-qualified-boundary-freeze/032-first-native-created-task.json",
+      "bytes": 584,
+      "sha256": "55ed65172136803b452fee9d630002562057ab55e9d6b182d0f8708fed7647e8"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix3-qualified-boundary-freeze/033-actual-candidate-switch.json",
+      "bytes": 406,
+      "sha256": "8d57cee30d6defb84818d59def91eec362d271fe4de64139489d03433269b3d1"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix3-qualified-boundary-freeze/034-existing-intent-ready.json",
+      "bytes": 508,
+      "sha256": "e30baa4de91ae4757f158e2f0724e9d60f66181236359701d4bf0b6b88b645a9"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix3-qualified-boundary-freeze/035-existing-canonical-ack-drop.json",
+      "bytes": 545,
+      "sha256": "4bd9b465e2abebe3d0e32e49f1c98fdc7b12762634d8e81d099088ec1d5ec962"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix3-qualified-boundary-freeze/036-edited-unknown-baseline.json",
+      "bytes": 443,
+      "sha256": "151f09dc44bc9505b0db0f6069770c7d0bd0836ed6ad1804ef22bb5d18de13fe"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix3-qualified-boundary-freeze/037-controlled-expiry-partial.json",
+      "bytes": 10379,
+      "sha256": "d4b8eb181b89ffc4c46af37cd6617cc2333d674f8e9e1001a4a6bac2099bccb0"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix3-qualified-boundary-freeze/038-canonical-transport-recapture.json",
+      "bytes": 504,
+      "sha256": "f5622f8b8fa4075091693e4f1e3272c117431e6e6f79c8e51d10348ac6703712"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix3-qualified-boundary-freeze/039-unknown-resampled-geometry.json",
+      "bytes": 2582,
+      "sha256": "8a9ffe444626c93f6d6b8c1dac367533752a1cbe4d170eebacfda319c42082a0"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix3-qualified-boundary-freeze/040-exact-existing-replay.json",
+      "bytes": 15522,
+      "sha256": "906386b5a492a6366e169115b0516ebdb0908c1dd59bd6699558b5c4d299bf4f"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix3-qualified-boundary-freeze/041-open-existing-detail.json",
+      "bytes": 401,
+      "sha256": "6650d7001600fd21ac69deb18e190b3cc1b80eed09a63d5330cc7237d8da68cc"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix3-qualified-boundary-freeze/042-public-audio-manual-fixture.json",
+      "bytes": 438,
+      "sha256": "0d6ee637431089c386ffaab84e97b9f88d60f8aa5b769dcef6d5c7e41a637767"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix3-qualified-boundary-freeze/043-native-public-transcript.json",
+      "bytes": 515,
+      "sha256": "364d7909a5a103cbcb3143b3a1298ea7bef0f0325162cd7b1f99e0a070b08f07"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix3-qualified-boundary-freeze/044-derived-transcript-native-selection.json",
+      "bytes": 365,
+      "sha256": "57cc5ae817193000d7e48fcca9597f8632e06a3d954125adc71866627be33132"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix3-qualified-boundary-freeze/045-native-derived-transcript-summary.json",
+      "bytes": 557,
+      "sha256": "996df5856e3e97daae428178f2123fa4f98cf39e3bb05a598fa0f4cf6da85189"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix3-qualified-boundary-freeze/046-current-report-native-preview.json",
+      "bytes": 954,
+      "sha256": "bdbec5f8e402ea72287549fbd460b9a5d179f6b1231ed0d5a40447c19fe68205"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix3-qualified-boundary-freeze/047-native-current-report-explanation.json",
+      "bytes": 1192,
+      "sha256": "5b8f03a017659276fbd8ea57089dc424677d5341522e7510447cd9d831ed8697"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix3-qualified-boundary-freeze/048-private-native-generation.json",
+      "bytes": 523,
+      "sha256": "c8b29a6ad3eb8ebc2d245fe3f95a5e172fc42c232d7d212b09fb1ed02562b667"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix3-qualified-boundary-freeze/049-report-modal-unmounted-observation.json",
+      "bytes": 634,
+      "sha256": "e2e5af62e8ce73e5efbf416a98b2b36cc3716f631e947fdbd3dd139244c20cb7"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix3-qualified-boundary-freeze/050-report-native-history-recovery.json",
+      "bytes": 1020,
+      "sha256": "cd36c6d35cc65b068cc64346dbb03b38956021192727d5c87e668c829cd09365"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix3-qualified-boundary-freeze/051-expense-pending-focused-geometry.json",
+      "bytes": 2947,
+      "sha256": "f8bf4e8fc4fcacc8541c9e4308045667d5950e9b9001e21feeb3355d617b42c6"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix3-qualified-boundary-freeze/054-source-anchor-pending-lifetime.json",
+      "bytes": 2738,
+      "sha256": "d8884c607810c6b734fd2020eee4ded85273bfdbad9165fef410893eea1c4c4c"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix3-qualified-boundary-freeze/055-large-text-intelligence-controls.json",
+      "bytes": 1471,
+      "sha256": "a38a43c17b4b76d4fd8743be301c420fdb0644ffe5219220f0e0a0b7b675d984"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix3-qualified-boundary-freeze/056-native-optional-cancel.json",
+      "bytes": 1007,
+      "sha256": "1ad5aeb51c808c366f6a95d75113a0e175549d76e2a75f1a89e0ba854d5bfdad"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix3-qualified-boundary-freeze/057-preservation-before-worker-stop.json",
+      "bytes": 1014,
+      "sha256": "bcb1feb4cfb0c492c894acc47a3f905a53738d2a35d9213d995347d51f82ba23"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix3-qualified-boundary-freeze/058-owned-worker-graceful-stop.json",
+      "bytes": 763,
+      "sha256": "7019c26cd6b74e208ddfaa10fc882de4bc8e514a9abdba72ffaa13305d33ff8d"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix3-qualified-boundary-freeze/059-disabled-capacity-handoff-runtime.json",
+      "bytes": 1082,
+      "sha256": "790d3bbc40b4c9626f5cfd4fbf7c60b8248caf22a72848457beadb159f628305"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix3-qualified-boundary-freeze/060-final-current-source-privacy-hygiene.json",
+      "bytes": 2051,
+      "sha256": "dbf01b2fd8dc82834ccc07540cf3884632f79fa1d0a0b7cf44804540437bfa63"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix3-qualified-boundary-freeze/index.json",
+      "bytes": 214344,
+      "sha256": "598df67ac3cf7b35cd8a749387e5e867f20e94a43374f2142bc4f7fdb040c586"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix3-qualified-boundary-freeze/task-10-native-acceptance-report.md",
+      "bytes": 20746,
+      "sha256": "cc7034effb3f68b407ffea1dec948dbebc15872826b34cef0c61ddca4203614b"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix3-qualified-boundary-freeze/task-10-native-current-report-observation.md",
+      "bytes": 3489,
+      "sha256": "dea2153ca621799f4fd6ad953b2f64b2b50414f8c9da2dceb2859742a7e80fa9"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix4-affected-manifest.json",
+      "bytes": 149309,
+      "sha256": "defa45ebdddf5e3c34c94200e006a6e347e8b20cd8c2280133bdfae5441e8c8d"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix4-affected-report.md",
+      "bytes": 8882,
+      "sha256": "95070260d5e2798bd60f47fa32cbc9f5b5a73859dde2e9c6eec2ab5d75633eb1"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix4-controller-final-hash-proof.json",
+      "bytes": 1349,
+      "sha256": "5270ddbae9d72d3f8863267e3f913164c83bb020b85c8c3c6c04a0fb009fac09"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix4-controller-initial-report-read-boundary-failed.json",
+      "bytes": 816,
+      "sha256": "298c71116755e6f6189de858d7a9f397522e22003757ecb3fc9adec6bfd02e88"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix4-controller-partial-source-proof.json",
+      "bytes": 540,
+      "sha256": "5a80be22d3823c2f7079e697c5355b7e47e509a96f2afca06402719be364e124"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix4-qualified-boundary-freeze/061-fix4-source-preservation.json",
+      "bytes": 78795,
+      "sha256": "da109798d300d6c29b84d591c7e1298612d827479ec6ebd34f8af291fd6af5fe"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix4-qualified-boundary-freeze/062-fix4-selection-observer-tool.json",
+      "bytes": 744,
+      "sha256": "c105ba8f85239d4b8df89468556fbc6813adf77eb8cb07c6d1870737453c8080"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix4-qualified-boundary-freeze/063-fix4-runtime-bundle.json",
+      "bytes": 773,
+      "sha256": "12128ee8f0bbac607cd9986afe4b54d9c63042f2633c8083561d8e67d7ff1d59"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix4-qualified-boundary-freeze/064-fix4-exact-report-get-tool.json",
+      "bytes": 710,
+      "sha256": "07b1f5096997436d0abfb5251c758ffccf8e872e6bd8ae87f158c815cfaf68cb"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix4-qualified-boundary-freeze/065-fix4-report-container-in-progress.json",
+      "bytes": 2621,
+      "sha256": "5c5908a2720f05ac017047db321419aa6f478db554bb6c6ebf3b446e021e6100"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix4-qualified-boundary-freeze/066-fix4-report-original-selection.json",
+      "bytes": 5216,
+      "sha256": "c29a4f048ffd4347ab5c3097cbe290fac2e2c99bbc0f906258c61054b1851385"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix4-qualified-boundary-freeze/067-fix4-report-explicit-latest.json",
+      "bytes": 390,
+      "sha256": "7c6aa65174d68ae03d39de91a9fcb51a9266d3b6878f1f737621a166a0e118a1"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix4-qualified-boundary-freeze/068-fix4-first-anchor-pending.json",
+      "bytes": 2424,
+      "sha256": "d68ce8aa5bd411c8046a6217572733ced7d1322f249d23c703c09ad2a8ef0cd6"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix4-qualified-boundary-freeze/069-fix4-expense-human-reentry.json",
+      "bytes": 614,
+      "sha256": "f20a16c4ee3035dfafa259e91c860c3bf9b6bae187ee7b90250029c282d39335"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix4-qualified-boundary-freeze/069a-fix4-exact-replay-tool.json",
+      "bytes": 765,
+      "sha256": "eff0cea60d1d53d5cc27147ce0a8db72d4a6b3207d583ee1887f0b6093ea9b36"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix4-qualified-boundary-freeze/070-fix4-private-expense-canonical-unknown.json",
+      "bytes": 635,
+      "sha256": "7973252a1077dccaaa2356c1dabfc7100c508294709357ece537974564b4c7ae"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix4-qualified-boundary-freeze/071-fix4-private-source-loss-current.json",
+      "bytes": 4662,
+      "sha256": "2b67136390860003fe27e7eecb0fb0cfcf25d9c353d67a7c090c33da125376aa"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix4-qualified-boundary-freeze/071a-fix4-original-denied-transport-retry.json",
+      "bytes": 518,
+      "sha256": "5b2e19c8bc06bd7b4e52af33f39911dc17607883690bafba8ae9139da688d098"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix4-qualified-boundary-freeze/073-fix4-preservation-before-worker-stop.json",
+      "bytes": 1086,
+      "sha256": "0969a04ddb616c616783799cb120ec09bb00f3c24954a46dd7c60fa53e1f5452"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix4-qualified-boundary-freeze/074-fix4-owned-worker-graceful-stop.json",
+      "bytes": 764,
+      "sha256": "865fec10bf5d3f8e634657d994bbf1bb4fb732e2824f6d88829e46d25a75a0bd"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix4-qualified-boundary-freeze/075-fix4-final-source-disabled-privacy.json",
+      "bytes": 1899,
+      "sha256": "b4ce8608c76d6769e9f72d30c9ffba191a302e204a4be2eaaebb01f20f0ce47a"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix4-qualified-boundary-freeze/index.json",
+      "bytes": 254461,
+      "sha256": "fcdcbfaf26bd991a0dee690778796d07513539403b68fc43e5f379d9b422246c"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix4-qualified-boundary-freeze/task-10-native-acceptance-report.md",
+      "bytes": 29663,
+      "sha256": "ab6d2d9711598e30fc159d6fa97ed38f8e2d9cd635b1fd3c99957394a8ce2117"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix4-qualified-boundary-freeze/task-10-native-current-report-observation.md",
+      "bytes": 4105,
+      "sha256": "1faf9eb0c5e5844a9bb7120d21be98cfa2ba573a2a4c01eb9e7026857f913589"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-fix4-qualified-boundary-freeze/task-10-native-fix4-affected-report.md",
+      "bytes": 8882,
+      "sha256": "95070260d5e2798bd60f47fa32cbc9f5b5a73859dde2e9c6eec2ab5d75633eb1"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-preview-blocker-freeze/001-001-preservation-baseline.json",
+      "bytes": 3805,
+      "sha256": "ab1aecc29a31fe7ef24d80b6e716573779aa8413608450d4c508cfda70e1c528"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-preview-blocker-freeze/002-002-source-manifest.json",
+      "bytes": 77754,
+      "sha256": "2875cb9148c1dbb465eb33aedc50000e015e25181896a782fca9f46653904a87"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-preview-blocker-freeze/003-003-refresh-stops.json",
+      "bytes": 383,
+      "sha256": "686b7fee388fc43e8a97106b4ace97134e467aefdd334ad355f6525a6822fefc"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-preview-blocker-freeze/004-004-proxy-synthetic-privacy.json",
+      "bytes": 448,
+      "sha256": "6bdc6f43ec8d8d08b6a6ae5d6bed8f0ca2df15fcd2f04b6bafb7d1f5233c3dc1"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-preview-blocker-freeze/005-005-disabled-and-migration.json",
+      "bytes": 448,
+      "sha256": "544cc19478fd8ab80b45bd8629753ad7505001eb60271da0ef440d77ed129ebe"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-preview-blocker-freeze/006-006-manual-fixture-created-disabled.json",
+      "bytes": 495,
+      "sha256": "72f5ca9888bc8de82bcdfb1c64382d1918d5f3115bca0c382d13e4ee31dd3724"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-preview-blocker-freeze/007-007-native-missing-provider.json",
+      "bytes": 701,
+      "sha256": "c0151aaa040dfe3c3657e863f48e034e0618b1c355fc1cd762afd421c11732f9"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-preview-blocker-freeze/008-008-loaded-composite.json",
+      "bytes": 892,
+      "sha256": "f8c4874df45c27885b6bc7f990ea2780d6d9fda7d8fa29259a9410014043e687"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-preview-blocker-freeze/009-009-ui-sanitizer-synthetic.json",
+      "bytes": 401,
+      "sha256": "3685a4ec3c56da8957029a3df0526d09eea0f3bef2bd01117fa1977b77ba0b06"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-preview-blocker-freeze/010-010-disabled-stop.json",
+      "bytes": 120,
+      "sha256": "d174a540f35b913c6bbeb1092353b08b6b7e4acb75c553ad7961a79b8d6960e1"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-preview-blocker-freeze/011-011-enabled-provider.json",
+      "bytes": 771,
+      "sha256": "332eb9cd98aa0d6cd37f3e49c50e5f52494a42c824010f7358d6b0238a45e9c2"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-preview-blocker-freeze/012-011b-enabled-provider-resume.json",
+      "bytes": 771,
+      "sha256": "332eb9cd98aa0d6cd37f3e49c50e5f52494a42c824010f7358d6b0238a45e9c2"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-preview-blocker-freeze/013-012-public-task-selection-consent.json",
+      "bytes": 382,
+      "sha256": "804b240ebcde1edbd8b87ccdda98f484e12b91711a212d87980a9eeb4910c154"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-preview-blocker-freeze/014-013-first-action-generation.json",
+      "bytes": 498,
+      "sha256": "be8f1e4cbeac1a58a51f413bd28ae28852593dfcd3bcd46287b3cba38745a580"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-preview-blocker-freeze/015-014-preview-lifetime-observation.json",
+      "bytes": 753,
+      "sha256": "dffe48003779d06926cde4bdd0bd690e0b3190a5cf1ad4fb386496b18d1b5ac0"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-preview-blocker-freeze/016-015-preview-observer-tool.json",
+      "bytes": 620,
+      "sha256": "f372273a98a40b57b2817f4df2bbc5d00bcf7408ddaf3e7170e1ffeb79b748ce"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-preview-blocker-freeze/017-016-native-preview-observed.json",
+      "bytes": 1113,
+      "sha256": "97c360c9f5d9f68089a880847c41daf0b0bded6f31cf835a7531d51aebe3b448"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-preview-blocker-freeze/018-017-preview-blocker-boundary.json",
+      "bytes": 649,
+      "sha256": "f2bb25ad767127ca2f1be6183482c828af1ae7fbdc6dd566eec6bf36500f9f2a"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-preview-blocker-freeze/019-018-boundary-privacy-scan.json",
+      "bytes": 484,
+      "sha256": "38946aae6a67d34cef9fa1d6459bd4ef5ab7fbecbba46485e775907dde801136"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-preview-blocker-freeze/137-task-10-native-acceptance-report.md",
+      "bytes": 6411,
+      "sha256": "882dc6d1ea57cbaebf6751bdd451f7ea102c6096b630ebeb6b0af357fdb54c31"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-preview-blocker-freeze/138-task-10-native-preview-blocker.md",
+      "bytes": 4924,
+      "sha256": "f8cdefba7eeea4b3eb4794084c43f0cb052039c067c010cc749668f01f14ebee"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-preview-blocker-freeze/index.json",
+      "bytes": 41121,
+      "sha256": "bfaca71c170948797cf5828a8ee11659ccdad649ac6323eb93b45859a59fc25e"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-native-preview-blocker-manifest.json",
+      "bytes": 31685,
+      "sha256": "0c2c13fc3be2fe432f249a6ef39e0d4251a89905a09f81e7d7346ed0f7bd4e94"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-review-dispatch-index.json",
+      "bytes": 515,
+      "sha256": "f7a956a287d9a8b856adb81918daf59828118f1d825a1b9f10803691599468c7"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-review.md",
+      "bytes": 21566,
+      "sha256": "1601b29a3c29ae41c0ce3bfa63ed6c195847c1ae28f1caa2887fb6c918f0e2ab"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/evidence/task-10-reviewed-dependency-contracts.md",
+      "bytes": 10391,
+      "sha256": "8b87fb09c636f14f5004ef24d6b85da03f3ddd00b895a0ba4ea59c020772fec0"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/prepublication-rulings.md",
+      "bytes": 28562,
+      "sha256": "8f62d8c57b6ddf433885338dff2f71f4c91417cfb0f5a44b9778cc559d41c307"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/privacy-decisions.md",
+      "bytes": 6494,
+      "sha256": "4b920902a127edd98f558272523d9022cd03cbe80c8d800fac457902a6e434a7"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/publication-report.md",
+      "bytes": 5527,
+      "sha256": "272e2f5d510945d7011b78b594fe7a3200ba6fa77aaa4d817e2b15b0498f8e91"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/reference-closure.json",
+      "bytes": 628253,
+      "sha256": "bcb23f08c884976c20ff16106e6afd4b7936c854aabbcfe2b18460ae1e5273a2"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/rulings-proof.json",
+      "bytes": 1317,
+      "sha256": "40df0fa4829b556280105318e25b47457d83d10909d5bf7ed97cecbaa23d539c"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/source-equivalence.json",
+      "bytes": 209035,
+      "sha256": "8147544158def320854c17aa156a401b67c7abefa13ac9e98485f02e49205888"
+    },
+    {
+      "path": "verification/workspace-improvements-roadmap/milestone-10/sql-equivalence.json",
+      "bytes": 45758,
+      "sha256": "af04bb37d2210a436b283dec8f2c88dff7fafe42652d02585396f70c481cbee0"
+    }
+  ]
+}

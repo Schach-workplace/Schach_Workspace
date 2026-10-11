@@ -1,0 +1,10 @@
+{"status":"failed","checks":1,"heldMilliseconds":0}
+file:///home/brahma/Projects/Schach_Workspace/.worktrees/workspace-improvements/verification/runtime/intelligence_fix1_smoke.mjs:12
+const delay=ms=>new Promise(r=>setTimeout(r,ms));async function wait(fn,ms=20000){const end=Date.now()+ms;while(Date.now()<end){if(await fn())return;await delay(100)}throw Error('Current rendered intelligence workflow timed out')}
+                                                                                                                                                                            ^
+
+Error: Current rendered intelligence workflow timed out
+    at wait (file:///home/brahma/Projects/Schach_Workspace/.worktrees/workspace-improvements/verification/runtime/intelligence_fix1_smoke.mjs:12:173)
+    at async file:///home/brahma/Projects/Schach_Workspace/.worktrees/workspace-improvements/verification/runtime/intelligence_fix1_smoke.mjs:46:2
+
+Node.js v24.14.0

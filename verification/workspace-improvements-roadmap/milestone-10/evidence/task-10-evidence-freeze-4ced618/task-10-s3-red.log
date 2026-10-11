@@ -1,0 +1,12 @@
+# schach.local/workspace/backend/platform [schach.local/workspace/backend/platform.test]
+platform/intelligence_runtime_test.go:7:120: s.claimIntelligence undefined (type *Server has no field or method claimIntelligence)
+platform/intelligence_runtime_test.go:7:228: s.runIntelligenceLease undefined (type *Server has no field or method runIntelligenceLease)
+platform/intelligence_runtime_test.go:13:81: s.claimIntelligence undefined (type *Server has no field or method claimIntelligence)
+platform/intelligence_runtime_test.go:14:9: s.runIntelligenceLease undefined (type *Server has no field or method runIntelligenceLease)
+platform/intelligence_runtime_test.go:15:9: s.runIntelligenceLease undefined (type *Server has no field or method runIntelligenceLease)
+platform/intelligence_runtime_test.go:18: s.RunIntelligenceWorker undefined (type *Server has no field or method RunIntelligenceWorker)
+platform/intelligence_schema_test.go:6:10: undefined: validateIntelligenceOutput
+platform/intelligence_schema_test.go:7: undefined: validateIntelligenceOutput
+platform/intelligence_schema_test.go:8: undefined: validateIntelligenceOutput
+FAIL	schach.local/workspace/backend/platform [build failed]
+FAIL

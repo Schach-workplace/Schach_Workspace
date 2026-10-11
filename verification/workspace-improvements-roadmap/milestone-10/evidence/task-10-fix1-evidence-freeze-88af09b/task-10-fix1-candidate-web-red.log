@@ -1,0 +1,41 @@
+
+> schach-workspace-frontend@1.1.0 test
+> vitest run src/components/IntelligencePanel.test.tsx
+
+
+ RUN  v5.0.3 /home/brahma/Projects/Schach_Workspace/.worktrees/workspace-improvements/frontend
+
+ ❯ src/components/IntelligencePanel.test.tsx (19 tests | 1 failed) 415ms
+   × selects supported private actions for multiple candidates and recovers actual existing work after lostACK 33ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/IntelligencePanel.test.tsx > selects supported private actions for multiple candidates and recovers actual existing work after lostACK
+AssertionError: expected <p role="status"></p> to be null
+
+- Expected:
+null
+
++ Received:
+<p
+  role="status"
+>
+  This action already has work. Reviewed fields were not applied.
+</p>
+
+ ❯ src/components/IntelligencePanel.test.tsx:483:97
+    481|   window.removeEventListener('schach-open-task', opened);
+    482|   fireEvent.click(screen.getAllByText('Review task draft')[0]);
+    483|   expect(screen.queryByText('This action already has work. Reviewed fi…
+       |                                                                                                 ^
+    484|   expect(screen.getByLabelText('Source anchor')).toHaveProperty('value…
+    485| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 18 passed (19)
+   Start at  21:03:04
+   Duration  830ms (tests 54%, transform 20%, environment 14%, import 11%)
+

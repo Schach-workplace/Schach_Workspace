@@ -1,0 +1,34 @@
+
+> mobile@1.0.0 test
+> vitest run src/IntelligenceScreen.test.tsx
+
+
+ RUN  v5.0.3 /home/brahma/Projects/Schach_Workspace/.worktrees/workspace-improvements/mobile
+
+ ❯ src/IntelligenceScreen.test.tsx (15 tests | 1 failed) 882ms
+   × requires human supported anchor/action for second candidate and opens canonical existing work after lostACK 117ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/IntelligenceScreen.test.tsx > requires human supported anchor/action for second candidate and opens canonical existing work after lostACK
+AssertionError: expected 'Local assistanceSelect sources explic…' not to contain 'This action already has work. Reviewe…'
+
+Expected: "This action already has work. Reviewed fields were not applied."
+Received: "Local assistanceSelect sources explicitly. Continue normal work while local assistance is unavailable.Operation: Summarize selected sourcesExplicit selected sources (0/50)Choose sources from a readable conversation, task or report.Review selected sourcesreadyRecheck current resultCancel and clear this resultReview selected sourcesGenerated seedSelected source suggestionResolve: owner, dueDate, reviewerOpen Authorized sourceReview task draftSecond candidateSelected source suggestionResolve: owner, dueDate, reviewerOpen Authorized sourceReview task draftReview selected draftThis action already has work. Reviewed fields were not applied.Open existing workLost responseYour local request historyContinue manually using the existing conversation, task, finance or report tools."
+
+ ❯ src/IntelligenceScreen.test.tsx:595:29
+    593|     [...c.querySelectorAll("button")].filter((b) => b.textContent === …
+    594|   });
+    595|   expect(c.textContent).not.toContain("This action already has work. R…
+       |                             ^
+    596|   expect(c.textContent).toContain("Source anchor: Choose");
+    597| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 14 passed (15)
+   Start at  21:03:05
+   Duration  1.18s (tests 79%, environment 10%, transform 8%, import 3%)
+

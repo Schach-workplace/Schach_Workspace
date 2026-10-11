@@ -1,0 +1,14 @@
+{
+  "acceptedScopedHead": "88af09b91dcdf0da0e02739b080713e8088b8f74",
+  "reviewSHA256": "94f57d118b2a5387fc36c066dd96b1fe6925000ccdfb9e9a913ebd2394afe120",
+  "spec": "PASS",
+  "quality": "Approved",
+  "criticalImportantOpen": 0,
+  "minorFollowups": [
+    "R1 raw read-hook retirement can reject validinflightACK; samekey recovery remains",
+    "Finalbundle/colorenv warnings"
+  ],
+  "nativeRefreshAuthorized": true,
+  "nativeAcceptancePending": true,
+  "milestone10Accepted": false
+}

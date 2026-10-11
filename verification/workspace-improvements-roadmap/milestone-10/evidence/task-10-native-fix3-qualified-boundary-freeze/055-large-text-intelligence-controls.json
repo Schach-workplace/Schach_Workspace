@@ -1,0 +1,57 @@
+{
+  "sourceCommit": "b6ba0e2260de7c1219387006b6b5b8ab5ca55aab",
+  "backendProductCommit": "98b7fb6",
+  "clientProductCommit": "ca13ef3",
+  "nativeShell": "1d74c31132b8246603dbc853556ca29b1a134e4f",
+  "status": "passed",
+  "actualFontScale": 1.3,
+  "actualNativeOperationSourcePreviewConsentGenerateReachable": true,
+  "logicalTargets": [
+    {
+      "label": "Local assistance",
+      "widthDp": 356.72727272727275,
+      "heightDp": 44.0,
+      "minimumDp": 44
+    },
+    {
+      "label": "Operation",
+      "widthDp": 356.72727272727275,
+      "heightDp": 44.0,
+      "minimumDp": 44
+    },
+    {
+      "label": "Known human-authored message source",
+      "widthDp": 356.72727272727275,
+      "heightDp": 57.45454545454545,
+      "minimumDp": 44
+    },
+    {
+      "label": "Review selected sources",
+      "widthDp": 356.72727272727275,
+      "heightDp": 44.0,
+      "minimumDp": 44
+    },
+    {
+      "label": "Generate gated without consent",
+      "widthDp": 356.72727272727275,
+      "heightDp": 44.0,
+      "minimumDp": 44
+    },
+    {
+      "label": "Explicit consent",
+      "widthDp": 356.72727272727275,
+      "heightDp": 44.0,
+      "minimumDp": 44
+    },
+    {
+      "label": "Generate after consent",
+      "widthDp": 356.72727272727275,
+      "heightDp": 44.0,
+      "minimumDp": 44
+    }
+  ],
+  "minimumDp": 44.0,
+  "fontChangeRecreatedRouteNoOriginalEditorContinuityClaim": true,
+  "noNewInferenceYet": true,
+  "privateJobAndReportJobPreserved": true
+}

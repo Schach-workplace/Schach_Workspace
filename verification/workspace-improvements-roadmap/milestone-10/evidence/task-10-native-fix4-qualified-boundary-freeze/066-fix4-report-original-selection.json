@@ -1,0 +1,170 @@
+{
+  "sourceCommit": "4420ed540dc253ad024ecb61b343be97b57b5b68",
+  "backendProductCommit": "98b7fb6",
+  "clientProductCommit": "4420ed5",
+  "nativeShell": "1d74c31132b8246603dbc853556ca29b1a134e4f",
+  "status": "passed",
+  "samples": [
+    {
+      "phase": "reviewed",
+      "seconds": 1.96,
+      "sheetOpen": true,
+      "selectedReportChoicePresent": true,
+      "selectedReportChoiceSelected": true,
+      "consentPresent": true,
+      "consentSelected": true,
+      "generatePresent": true,
+      "generateEnabled": true
+    },
+    {
+      "phase": "ordinary-poll",
+      "seconds": 9.962,
+      "sheetOpen": true,
+      "selectedReportChoicePresent": true,
+      "selectedReportChoiceSelected": true,
+      "consentPresent": true,
+      "consentSelected": true,
+      "generatePresent": true,
+      "generateEnabled": true
+    },
+    {
+      "phase": "ordinary-poll",
+      "seconds": 17.959,
+      "sheetOpen": true,
+      "selectedReportChoicePresent": true,
+      "selectedReportChoiceSelected": true,
+      "consentPresent": true,
+      "consentSelected": true,
+      "generatePresent": true,
+      "generateEnabled": true
+    },
+    {
+      "phase": "pending",
+      "seconds": 24.569,
+      "sheetOpen": true,
+      "selectedReportChoicePresent": false,
+      "selectedReportChoiceSelected": false,
+      "consentPresent": false,
+      "consentSelected": false,
+      "generatePresent": false,
+      "generateEnabled": false
+    },
+    {
+      "phase": "restored",
+      "seconds": 26.941,
+      "sheetOpen": true,
+      "selectedReportChoicePresent": true,
+      "selectedReportChoiceSelected": true,
+      "consentPresent": true,
+      "consentSelected": true,
+      "generatePresent": true,
+      "generateEnabled": true
+    },
+    {
+      "phase": "later-ordinary-poll",
+      "seconds": 36.903,
+      "sheetOpen": true,
+      "selectedReportChoicePresent": true,
+      "selectedReportChoiceSelected": true,
+      "consentPresent": true,
+      "consentSelected": true,
+      "generatePresent": true,
+      "generateEnabled": true
+    },
+    {
+      "phase": "later-ordinary-poll",
+      "seconds": 46.856,
+      "sheetOpen": true,
+      "selectedReportChoicePresent": true,
+      "selectedReportChoiceSelected": true,
+      "consentPresent": true,
+      "consentSelected": true,
+      "generatePresent": true,
+      "generateEnabled": true
+    }
+  ],
+  "openSheetObservationSpanSeconds": 44.896,
+  "sameOriginalSelectionObservedRealPOSTs": [
+    {
+      "method": "POST",
+      "path": "/api/companies/c-schach/intelligence/selection-preview",
+      "observerLabel": "H",
+      "upstreamStatus": 200,
+      "elapsedSeconds": 0.006,
+      "phase": "observed_only",
+      "sameOriginalSelection": true
+    },
+    {
+      "method": "POST",
+      "path": "/api/companies/c-schach/intelligence/selection-preview",
+      "observerLabel": "H",
+      "upstreamStatus": 200,
+      "elapsedSeconds": 0.005,
+      "phase": "observed_only",
+      "sameOriginalSelection": true
+    },
+    {
+      "method": "POST",
+      "path": "/api/companies/c-schach/intelligence/selection-preview",
+      "observerLabel": "H",
+      "upstreamStatus": 200,
+      "elapsedSeconds": 0.004,
+      "phase": "observed_only",
+      "sameOriginalSelection": true
+    },
+    {
+      "method": "POST",
+      "path": "/api/companies/c-schach/intelligence/selection-preview",
+      "observerLabel": "H",
+      "upstreamStatus": 200,
+      "elapsedSeconds": 0.004,
+      "phase": "observed_only",
+      "sameOriginalSelection": true
+    },
+    {
+      "method": "POST",
+      "path": "/api/companies/c-schach/intelligence/selection-preview",
+      "observerLabel": "H",
+      "upstreamStatus": 200,
+      "elapsedSeconds": 0.006,
+      "phase": "observed_only",
+      "sameOriginalSelection": true
+    },
+    {
+      "method": "POST",
+      "path": "/api/companies/c-schach/intelligence/selection-preview",
+      "observerLabel": "H",
+      "upstreamStatus": 200,
+      "elapsedSeconds": 0.004,
+      "phase": "observed_only",
+      "sameOriginalSelection": true
+    }
+  ],
+  "reportGETHoldEvents": [
+    {
+      "method": "GET",
+      "path": "/api/companies/c-schach/reports/tasks/summary",
+      "bindingLabel": "F",
+      "phase": "binding_released_before_forward",
+      "elapsedSeconds": 2.137,
+      "upstreamStatus": 200,
+      "structuredRawExpired": false
+    },
+    {
+      "method": "GET",
+      "path": "/api/companies/c-schach/reports/tasks/summary",
+      "bindingLabel": "F",
+      "phase": "binding_released_before_forward",
+      "elapsedSeconds": 1.999,
+      "upstreamStatus": 200,
+      "structuredRawExpired": false
+    }
+  ],
+  "actualPendingWithheldChoicesConsentAndGenerate": true,
+  "currentPositiveProofRestoredPriorConsentWithoutUserRecheck": true,
+  "latestSummaryTokenNotSilentlySubstitutedWithinObserverWindow": true,
+  "sixJobsNoGenerateTapped": true,
+  "expiredReport4NotRevived": true,
+  "observerQualification": "Equality evidence comprises six actual H events before explicit bounded observer cleanup. Elapsed-since-arm includes later UI-only samples and is not the observer-active duration; enforced observer timer limit is 55 seconds.",
+  "elapsedSinceObserverArmIncludingLaterUIOnlySeconds": 53.848
+}

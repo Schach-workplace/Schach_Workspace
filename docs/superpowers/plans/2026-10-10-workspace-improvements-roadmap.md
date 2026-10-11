@@ -79,9 +79,11 @@ Controller accepted reviewed backend `8f24b55` plus client overlay `f2d39bf`, wi
 - Acceptance: reassignment is explicit; role changes revoke relevant sessions/caches/queued delivery; depart/rejoin private history boundaries remain correct; existing task/finance histories persist.
 
 ### Milestone 10: Grounded intelligence
-- [ ] Select and configure transcription/model processing suitable for India hosting and approved data handling; add narrowly scoped provider interfaces.
-- [ ] Implement opt-in transcript, thread summary, action draft and report explanation jobs using authorized sources and deterministic tools.
+- [x] Select and configure transcription/model processing suitable for India hosting and approved data handling; add narrowly scoped provider interfaces.
+- [x] Implement opt-in transcript, thread summary, action draft and report explanation jobs using authorized sources and deterministic tools.
 - Acceptance: every answer has source references; inaccessible/revised sources invalidate outputs; missing owners/dates stay unresolved; quoted malicious instructions do not authorize tools; model failure retains manual workflow; reviewed retry creates one business record.
+
+Controller accepted implementation and bounded local acceptance at reviewed `4420ed5`, with all48 action rows reconciled and [safe M10 reports, reviews, source proofs and qualifications published](../../../verification/workspace-improvements-roadmap/milestone-10/README.md). Native acceptance is a source-bound development-shell composite; final matched APK/protected TLS, physical Android/iOS/signing, India production/provider capacity and Hindi/grounding evaluation remain explicit gates. M3 physical-device gates remain separate. Final integration and whole-branch review precede the authorized main cutover.
 
 ## Delivery discipline
 

@@ -1,0 +1,21 @@
+{
+  "updatedUtc": "2026-10-11T20:08:26.897944+00:00",
+  "ledgerSHA256": "5cad24de87dd33e37bc4b157663749be99816138690c1168c068d3d3f8c0386a",
+  "rulingCount": 97,
+  "observationCount": 382,
+  "actualUnresolvedFindingCount": null,
+  "entries": [
+    {
+      "path": "controller-rulings-current-extract.md",
+      "sha256": "7680d10e56f0eebf96a5ed91df31eb1c703e8b368d263f65b3cea1c830e29edc",
+      "bytes": 74684
+    },
+    {
+      "path": "controller-deferred-findings-current-extract.md",
+      "sha256": "eaf9c22b824c4c60e4abf51fddae9e79698f2f15c1bea14e2ae32148c3c2ce63",
+      "bytes": 237985
+    }
+  ],
+  "observationSelectionExpanded": true,
+  "observationSelectionPattern": "minor|defer|park|out.of.scope|cannot.verify|final.?integration|chunk|packag|bundle|copy.?conflict|unverified|qualifi|csv|409|keyboard|target|structured|flag|warning|geometry|checkbox|release|apk|fail|pending|follow.?up|limit|gate|clipp|scope|debt"
+}

@@ -1,0 +1,97 @@
+{
+  "status": "finalized_intermediate_samples",
+  "samples": [
+    {
+      "phase": "reviewed",
+      "seconds": 1.96,
+      "sheetOpen": true,
+      "selectedReportChoicePresent": true,
+      "selectedReportChoiceSelected": true,
+      "consentPresent": true,
+      "consentSelected": true,
+      "generatePresent": true,
+      "generateEnabled": true
+    },
+    {
+      "phase": "ordinary-poll",
+      "seconds": 9.962,
+      "sheetOpen": true,
+      "selectedReportChoicePresent": true,
+      "selectedReportChoiceSelected": true,
+      "consentPresent": true,
+      "consentSelected": true,
+      "generatePresent": true,
+      "generateEnabled": true
+    },
+    {
+      "phase": "ordinary-poll",
+      "seconds": 17.959,
+      "sheetOpen": true,
+      "selectedReportChoicePresent": true,
+      "selectedReportChoiceSelected": true,
+      "consentPresent": true,
+      "consentSelected": true,
+      "generatePresent": true,
+      "generateEnabled": true
+    },
+    {
+      "phase": "pending",
+      "seconds": 24.569,
+      "sheetOpen": true,
+      "selectedReportChoicePresent": false,
+      "selectedReportChoiceSelected": false,
+      "consentPresent": false,
+      "consentSelected": false,
+      "generatePresent": false,
+      "generateEnabled": false
+    },
+    {
+      "phase": "restored",
+      "seconds": 26.941,
+      "sheetOpen": true,
+      "selectedReportChoicePresent": true,
+      "selectedReportChoiceSelected": true,
+      "consentPresent": true,
+      "consentSelected": true,
+      "generatePresent": true,
+      "generateEnabled": true
+    },
+    {
+      "phase": "later-ordinary-poll",
+      "seconds": 36.903,
+      "sheetOpen": true,
+      "selectedReportChoicePresent": true,
+      "selectedReportChoiceSelected": true,
+      "consentPresent": true,
+      "consentSelected": true,
+      "generatePresent": true,
+      "generateEnabled": true
+    },
+    {
+      "phase": "later-ordinary-poll",
+      "seconds": 46.856,
+      "sheetOpen": true,
+      "selectedReportChoicePresent": true,
+      "selectedReportChoiceSelected": true,
+      "consentPresent": true,
+      "consentSelected": true,
+      "generatePresent": true,
+      "generateEnabled": true
+    },
+    {
+      "phase": "explicit-latest",
+      "seconds": 51.567,
+      "sheetOpen": true,
+      "selectedReportChoicePresent": true,
+      "selectedReportChoiceSelected": true,
+      "consentPresent": false,
+      "consentSelected": false,
+      "generatePresent": false,
+      "generateEnabled": false
+    }
+  ],
+  "decisiveProofs": [
+    "066-fix4-report-original-selection.json",
+    "067-fix4-report-explicit-latest.json"
+  ]
+}

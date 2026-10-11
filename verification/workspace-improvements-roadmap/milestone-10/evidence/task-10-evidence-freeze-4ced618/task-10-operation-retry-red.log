@@ -1,0 +1,5 @@
+--- FAIL: TestIntelligenceEnqueueRetry (0.17s)
+    intelligence_jobs_test.go:52: changed operation reused retry key 202
+FAIL
+FAIL	schach.local/workspace/backend/platform	0.171s
+FAIL

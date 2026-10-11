@@ -1,0 +1,21 @@
+{
+  "updatedUtc": "2026-10-11T20:04:45.014289+00:00",
+  "status": "PASS_HASH_PRESERVATION_ONLY",
+  "sourceHead": "4420ed540dc253ad024ecb61b343be97b57b5b68",
+  "manifestSHA256": "defa45ebdddf5e3c34c94200e006a6e347e8b20cd8c2280133bdfae5441e8c8d",
+  "safeArtifacts": 636,
+  "reports": 3,
+  "safeAndReportHashComparisons": 639,
+  "mismatches": [],
+  "sourceComparisons": 660,
+  "sourceMismatches": [],
+  "predecessorSafeComparisons": 537,
+  "predecessorSafeChanges": [],
+  "predecessorFrozenComparisons": 539,
+  "predecessorFrozenMismatches": [],
+  "originalReportAppendOnly": false,
+  "newAppendEntirelyReadViaFullAffectedReport": false,
+  "nativeOwnerYielded": true,
+  "providerConsumingNativeWorkerDisabled": true,
+  "acceptance": "pending root coverage disposition; hash preservation is not behavioral acceptance"
+}

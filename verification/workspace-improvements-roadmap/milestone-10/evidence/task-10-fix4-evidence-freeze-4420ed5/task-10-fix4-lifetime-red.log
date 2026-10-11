@@ -1,0 +1,194 @@
+
+> mobile@1.0.0 test
+> vitest run src/IntelligenceLifetime.test.tsx
+
+
+ RUN  v5.0.3 /home/brahma/Projects/Schach_Workspace/.worktrees/workspace-improvements/mobile
+
+ ❯ src/IntelligenceLifetime.test.tsx (3 tests | 3 failed) 84ms
+   × N2: real report Sheet and original running job survive ordinary Workspace refresh 45ms
+   × N2: inspected report consent is withheld during pending and restored only for the same current selection 13ms
+   × N2b: first private Source anchor Sheet survives real polling with options withheld 25ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/IntelligenceLifetime.test.tsx > N2: real report Sheet and original running job survive ordinary Workspace refresh
+AssertionError: expected 'Schach · Test userTest company ✓Other…' to contain 'running'
+
+Expected: "running"
+Received: "Schach · Test userTest company ✓Other company‹ BackCurrent stateHistorical reportsSaved reportsLocal assistanceCurrent-state report · Asia/Kolkata · later task changes can change these values. 0 currently authorized tasks."
+
+ ❯ src/IntelligenceLifetime.test.tsx:219:33
+    217|   const sheet = container.querySelector('[role="dialog"]');
+    218|   const recheck = button("Recheck current result");
+    219|   expect(container.textContent).toContain("running");
+       |                                 ^
+    220|   expect(enqueues).toHaveLength(1);
+    221|   const submitted = copy(enqueues[0]);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  src/IntelligenceLifetime.test.tsx > N2: inspected report consent is withheld during pending and restored only for the same current selection
+AssertionError: expected null to be <section role="dialog">…(1)</section> // Object.is equality
+
+- Expected:
+<section
+  role="dialog"
+>
+  <div>
+    <div>
+      <div>
+        <div>
+          <span>
+            Local assistance
+          </span>
+          <button
+            aria-label="Close"
+            aria-pressed="false"
+          >
+            <span>
+              Close
+            </span>
+          </button>
+        </div>
+        <div>
+          <div>
+            <span>
+              Local assistance
+            </span>
+            <span>
+              Select sources explicitly. Continue normal work while local assistance is unavailable.
+            </span>
+            <div>
+              <button
+                aria-label="Operation: Explain selected facts"
+                aria-pressed="false"
+              >
+                <span … />
+              </button>
+            </div>
+            <div>
+              <span>
+                Explicit selected sources (
+                1
+                /50)
+              </span>
+              <button
+                aria-label="Current month report facts"
+                aria-pressed="true"
+              >
+                <span … />
+              </button>
+            </div>
+            <button
+              aria-label="Review selected sources"
+              aria-pressed="false"
+            >
+              <span>
+                Review selected sources
+              </span>
+            </button>
+            <span>
+              Inspected original report facts
+            </span>
+            <button
+              aria-label="I agree to local processing of these selected sources"
+              aria-pressed="true"
+            >
+              <span>
+                I agree to local processing of these selected sources
+              </span>
+            </button>
+            <button
+              aria-label="Generate local result"
+              aria-pressed="false"
+            >
+              <span>
+                Generate local result
+              </span>
+            </button>
+            <span>
+              Your local request history
+            </span>
+            <span>
+              Continue manually using the existing conversation, task, finance or report tools.
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
++ Received:
+null
+
+ ❯ src/IntelligenceLifetime.test.tsx:251:54
+    249|   reportHold = true;
+    250|   await act(async () => vi.advanceTimersByTimeAsync(15000));
+    251|   expect(container.querySelector('[role="dialog"]')).toBe(sheet);
+       |                                                      ^
+    252|   expect(container.textContent).not.toContain("Inspected original repo…
+    253|   expect(button("Generate local result")?.disabled ?? true).toBe(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  src/IntelligenceLifetime.test.tsx > N2b: first private Source anchor Sheet survives real polling with options withheld
+AssertionError: expected null to be <section role="dialog">…(1)</section> // Object.is equality
+
+- Expected:
+<section
+  role="dialog"
+>
+  <div>
+    <div>
+      <div>
+        <div>
+          <span>
+            Source anchor
+          </span>
+          <button
+            aria-label="Close"
+            aria-pressed="false"
+          >
+            <span>
+              Close
+            </span>
+          </button>
+        </div>
+        <div>
+          <div>
+            <div>
+              <button
+                aria-label="Selected message 1 (revision 1)"
+                aria-pressed="false"
+              >
+                <span … />
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
++ Received:
+null
+
+ ❯ src/IntelligenceLifetime.test.tsx:276:54
+    274|   await act(async () => vi.advanceTimersByTimeAsync(15000));
+    275|   expect(rawWaiters.length).toBeGreaterThan(0);
+    276|   expect(container.querySelector('[role="dialog"]')).toBe(picker);
+       |                                                      ^
+    277|   expect(picker?.textContent).toContain("Checking current choices");
+    278|   expect(button("Selected message 1 (revision 1)")).toBeUndefined();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed (3)
+   Start at  00:27:23
+   Duration  407ms (transform 33%, environment 30%, tests 24%, import 12%, worker 1%)
+

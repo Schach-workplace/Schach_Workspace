@@ -1,0 +1,697 @@
+{
+  "status": "incomplete_important_native_preview_blocker",
+  "sourceCommit": "88af09b91dcdf0da0e02739b080713e8088b8f74",
+  "evidenceRecords": [
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/001-preservation-baseline.json",
+      "bytes": 3819,
+      "sha256": "cbc2a19e0f50e548bbbea2f3ff2f69ad2bb293522aafb54fadea855313555c7d"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/002-source-manifest.json",
+      "bytes": 77754,
+      "sha256": "2875cb9148c1dbb465eb33aedc50000e015e25181896a782fca9f46653904a87"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/003-refresh-stops.json",
+      "bytes": 383,
+      "sha256": "686b7fee388fc43e8a97106b4ace97134e467aefdd334ad355f6525a6822fefc"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/004-proxy-synthetic-privacy.json",
+      "bytes": 448,
+      "sha256": "6bdc6f43ec8d8d08b6a6ae5d6bed8f0ca2df15fcd2f04b6bafb7d1f5233c3dc1"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/005-disabled-and-migration.json",
+      "bytes": 448,
+      "sha256": "544cc19478fd8ab80b45bd8629753ad7505001eb60271da0ef440d77ed129ebe"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/006-manual-fixture-created-disabled.json",
+      "bytes": 495,
+      "sha256": "72f5ca9888bc8de82bcdfb1c64382d1918d5f3115bca0c382d13e4ee31dd3724"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/007-native-missing-provider.json",
+      "bytes": 701,
+      "sha256": "c0151aaa040dfe3c3657e863f48e034e0618b1c355fc1cd762afd421c11732f9"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/008-loaded-composite.json",
+      "bytes": 892,
+      "sha256": "f8c4874df45c27885b6bc7f990ea2780d6d9fda7d8fa29259a9410014043e687"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/009-ui-sanitizer-synthetic.json",
+      "bytes": 401,
+      "sha256": "3685a4ec3c56da8957029a3df0526d09eea0f3bef2bd01117fa1977b77ba0b06"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/010-disabled-stop.json",
+      "bytes": 120,
+      "sha256": "d174a540f35b913c6bbeb1092353b08b6b7e4acb75c553ad7961a79b8d6960e1"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/011-enabled-provider.json",
+      "bytes": 771,
+      "sha256": "332eb9cd98aa0d6cd37f3e49c50e5f52494a42c824010f7358d6b0238a45e9c2"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/011b-enabled-provider-resume.json",
+      "bytes": 771,
+      "sha256": "332eb9cd98aa0d6cd37f3e49c50e5f52494a42c824010f7358d6b0238a45e9c2"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/012-public-task-selection-consent.json",
+      "bytes": 382,
+      "sha256": "804b240ebcde1edbd8b87ccdda98f484e12b91711a212d87980a9eeb4910c154"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/013-first-action-generation.json",
+      "bytes": 498,
+      "sha256": "be8f1e4cbeac1a58a51f413bd28ae28852593dfcd3bcd46287b3cba38745a580"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/014-preview-lifetime-observation.json",
+      "bytes": 753,
+      "sha256": "dffe48003779d06926cde4bdd0bd690e0b3190a5cf1ad4fb386496b18d1b5ac0"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/015-preview-observer-tool.json",
+      "bytes": 620,
+      "sha256": "f372273a98a40b57b2817f4df2bbc5d00bcf7408ddaf3e7170e1ffeb79b748ce"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/016-native-preview-observed.json",
+      "bytes": 1113,
+      "sha256": "97c360c9f5d9f68089a880847c41daf0b0bded6f31cf835a7531d51aebe3b448"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/017-preview-blocker-boundary.json",
+      "bytes": 649,
+      "sha256": "f2bb25ad767127ca2f1be6183482c828af1ae7fbdc6dd566eec6bf36500f9f2a"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/018-boundary-privacy-scan.json",
+      "bytes": 484,
+      "sha256": "38946aae6a67d34cef9fa1d6459bd4ef5ab7fbecbba46485e775907dde801136"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/authored-1791736899339117321.xml",
+      "bytes": 30707,
+      "sha256": "431662af85188d3a754db6a2115385dba581b6e0adf3cdbd3728409a9ce69153"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/authored-1791737346370121489.xml",
+      "bytes": 32469,
+      "sha256": "6dcb64889ec0524e79825647f2585251c28415078803f145ccf1f9d5182488c1"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/authored-1791737460073333775.xml",
+      "bytes": 16608,
+      "sha256": "8f9be36691ede5f85928c4dd7b7fa8d963c26d64068d19b5b7575e957438bf6e"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/authored-1791737470655186610.xml",
+      "bytes": 16593,
+      "sha256": "32505661a34930fbd957ee6fbde18fcafa457e67c04e0b3ca50cb548e74e771a"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/authored-1791737512540796385.xml",
+      "bytes": 16707,
+      "sha256": "d98a7685e9d834de99aea8e3e303603cadc6a1b8c9ea443989eae5a3254dcabd"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/authored-1791737524721862607.xml",
+      "bytes": 16707,
+      "sha256": "a732ab191090dd546dac079f133666039d3443b3a15ca53c62a425d1db25ea58"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/authored-1791737534140678085.xml",
+      "bytes": 16642,
+      "sha256": "e7d46177189e283460bd01a87aa745894eb40de0d34d3042b4924854dad5b585"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/close-public-preview-1791737313547846585.xml",
+      "bytes": 11504,
+      "sha256": "56d9df2e0e946db7fbcbd33f7a13211912e70e95046761e393880a88da583c5c"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/created-preview-current-1791737567306397185.xml",
+      "bytes": 15853,
+      "sha256": "b0e9f945e1cc5807d53bdaee4cf6029e8fd211e782c9cf562d3e6786b1c5695f"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/disabled-inspect-1791736952364200783.xml",
+      "bytes": 9557,
+      "sha256": "a42517c51bd290882f934f73b950267dcfe7890852dff26e6f8f6e68f98fdf32"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/disabled-local-assistance-1791736913658474125.xml",
+      "bytes": 9557,
+      "sha256": "a42517c51bd290882f934f73b950267dcfe7890852dff26e6f8f6e68f98fdf32"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/disabled-local-assistance-final-1791736986255739553.xml",
+      "bytes": 9557,
+      "sha256": "a42517c51bd290882f934f73b950267dcfe7890852dff26e6f8f6e68f98fdf32"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/disabled-start-1791736836950854867.xml",
+      "bytes": 32499,
+      "sha256": "e73992453d88ae1beebc60bd3ba36e983fcbddd27d7095f99c6dbc4fdd592c30"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/inspect-1791736753533243638.xml",
+      "bytes": 6176,
+      "sha256": "5cf115fcf45fe8671bdd4119ee36070a882e67c4045ba86529dc215f88148811"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/inspect-1791736795789064153.xml",
+      "bytes": 32499,
+      "sha256": "e73992453d88ae1beebc60bd3ba36e983fcbddd27d7095f99c6dbc4fdd592c30"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/inspect-1791736954326848931.xml",
+      "bytes": 9557,
+      "sha256": "a42517c51bd290882f934f73b950267dcfe7890852dff26e6f8f6e68f98fdf32"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/inspect-1791737271876002264.xml",
+      "bytes": 22104,
+      "sha256": "1720816d37c8f2e61f7ebf8371aa91675218dec73e8a13df69c8aaaa4288e695"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/inspect-1791737280270518088.xml",
+      "bytes": 9551,
+      "sha256": "a74d07564812b90ba830c389a9a26ec59bc50363966f8143ca36c896f5c15f66"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/inspect-1791737326503289699.xml",
+      "bytes": 22104,
+      "sha256": "1720816d37c8f2e61f7ebf8371aa91675218dec73e8a13df69c8aaaa4288e695"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/inspect-1791737381825863007.xml",
+      "bytes": 12990,
+      "sha256": "9a52303be97184a7a3eb0d1a57b797e4ddccaea574a95d1a85a6108b6b52d8ff"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/inspect-1791737432246863678.xml",
+      "bytes": 16059,
+      "sha256": "b81b5f0b439d04e803677939732c8ee03e26a1306a03503cb8f61290bfcb4eb3"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/inspect-1791737497426269637.xml",
+      "bytes": 16640,
+      "sha256": "d209fe79c5595dd6c465b603071e43d83f2583393b2a28fd0f9433315196588b"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/inspect-1791737542366352840.xml",
+      "bytes": 15847,
+      "sha256": "7925600d49ae3dbc3e56dd7fe1b93fd55e24db1af632745a6df0258fcd18f2ec"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/inspect-1791737569291421184.xml",
+      "bytes": 15853,
+      "sha256": "b0e9f945e1cc5807d53bdaee4cf6029e8fd211e782c9cf562d3e6786b1c5695f"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/inspect-1791737628010846812.xml",
+      "bytes": 15139,
+      "sha256": "6a4c307cd8ab3df36a10dc3f3e6fd47d2eddbf1bc02143f07b64de173ad67a04"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/person-current-choice-1791737517647600668.xml",
+      "bytes": 6584,
+      "sha256": "cb336c8d26243a53a1a4002ab58f837b0915c2976687bc63a4815d36285a9386"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/person-current-choice-1791737529225228860.xml",
+      "bytes": 6582,
+      "sha256": "036636e8c832471bbd11ed71fb22dcc55f1f7b7efb9f4a7bf2b59297ef817a76"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/preview-before-observed-1791737727292416741.xml",
+      "bytes": 15853,
+      "sha256": "b0e9f945e1cc5807d53bdaee4cf6029e8fd211e782c9cf562d3e6786b1c5695f"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/preview-field-audit-1791737625747531473.xml",
+      "bytes": 15853,
+      "sha256": "b0e9f945e1cc5807d53bdaee4cf6029e8fd211e782c9cf562d3e6786b1c5695f"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/preview-lifetime-1791737607174796067.xml",
+      "bytes": 15853,
+      "sha256": "b0e9f945e1cc5807d53bdaee4cf6029e8fd211e782c9cf562d3e6786b1c5695f"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/preview-lifetime-1791737609160105452.xml",
+      "bytes": 15853,
+      "sha256": "b0e9f945e1cc5807d53bdaee4cf6029e8fd211e782c9cf562d3e6786b1c5695f"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/preview-lifetime-1791737611140982757.xml",
+      "bytes": 15853,
+      "sha256": "b0e9f945e1cc5807d53bdaee4cf6029e8fd211e782c9cf562d3e6786b1c5695f"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/preview-lifetime-1791737613111328110.xml",
+      "bytes": 15853,
+      "sha256": "b0e9f945e1cc5807d53bdaee4cf6029e8fd211e782c9cf562d3e6786b1c5695f"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/preview-observer-sample-1791737729419327355.xml",
+      "bytes": 15109,
+      "sha256": "fdc1cb8ed565281e96810da08931a634ae7ee3038f86573cc194c943fb7209b5"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/preview-observer-sample-1791737732348493899.xml",
+      "bytes": 15853,
+      "sha256": "b0e9f945e1cc5807d53bdaee4cf6029e8fd211e782c9cf562d3e6786b1c5695f"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/preview-observer-sample-1791737734320046896.xml",
+      "bytes": 15853,
+      "sha256": "b0e9f945e1cc5807d53bdaee4cf6029e8fd211e782c9cf562d3e6786b1c5695f"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/preview-observer-sample-1791737736289882445.xml",
+      "bytes": 15853,
+      "sha256": "b0e9f945e1cc5807d53bdaee4cf6029e8fd211e782c9cf562d3e6786b1c5695f"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/preview-observer-sample-1791737738260344503.xml",
+      "bytes": 15853,
+      "sha256": "b0e9f945e1cc5807d53bdaee4cf6029e8fd211e782c9cf562d3e6786b1c5695f"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/record-action-consent-1791737371536141798.xml",
+      "bytes": 12278,
+      "sha256": "a929c7b793dd5a8a40d7d5d22ce9f6f96cf66807e0559b273440f57bc298b2d7"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/seek-1791736839521904270.xml",
+      "bytes": 30707,
+      "sha256": "6e585e5c87d2606c83f0e099ac75240443ac280856aeb13c33dcc25d992a406a"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/seek-1791736842424066476.xml",
+      "bytes": 31060,
+      "sha256": "52223ff6c1aa4e894b5ffde6cd05e29e94f5a445e3adb684e3edfd118fe83e8e"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/seek-1791736845406205825.xml",
+      "bytes": 31060,
+      "sha256": "8e4ddff30f07ea208e94b77b7e443ac085b61d4bc58fc27824f74334b8d46c42"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/seek-1791736848359535249.xml",
+      "bytes": 31838,
+      "sha256": "e08400d071483e98a4fc7cd78e98d09f5fd92884e9ac6717a7dca9c528a8c26b"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/seek-1791736851304609361.xml",
+      "bytes": 31839,
+      "sha256": "a973b0cb352635acef0520c37908e46f22409a140cd5397f1d6b3d8fd8414e17"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/seek-1791736854273651806.xml",
+      "bytes": 31839,
+      "sha256": "d4e6df57a4136d9bca1b01dae463900d87ded7287a385f743cb8959b2cf82dea"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/seek-1791736857256804397.xml",
+      "bytes": 31060,
+      "sha256": "1f7e12ed80f5e6c513ca3ded6986a27c810b8c470189e99980fae2f4aed8893b"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/seek-1791736860209876350.xml",
+      "bytes": 31060,
+      "sha256": "be1ebcc6d47c14080add4f1c5d60f441b02e0ea4dd7637c1d7a71326e7446013"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/seek-1791736862719789262.xml",
+      "bytes": 30707,
+      "sha256": "431662af85188d3a754db6a2115385dba581b6e0adf3cdbd3728409a9ce69153"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/seek-1791736865219130969.xml",
+      "bytes": 30707,
+      "sha256": "431662af85188d3a754db6a2115385dba581b6e0adf3cdbd3728409a9ce69153"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/seek-1791736867665326621.xml",
+      "bytes": 30707,
+      "sha256": "431662af85188d3a754db6a2115385dba581b6e0adf3cdbd3728409a9ce69153"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/seek-1791736870146954279.xml",
+      "bytes": 30707,
+      "sha256": "431662af85188d3a754db6a2115385dba581b6e0adf3cdbd3728409a9ce69153"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/seek-1791736872596319812.xml",
+      "bytes": 30707,
+      "sha256": "431662af85188d3a754db6a2115385dba581b6e0adf3cdbd3728409a9ce69153"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/seek-1791736875083695957.xml",
+      "bytes": 30707,
+      "sha256": "431662af85188d3a754db6a2115385dba581b6e0adf3cdbd3728409a9ce69153"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/seek-1791736877529515677.xml",
+      "bytes": 30707,
+      "sha256": "431662af85188d3a754db6a2115385dba581b6e0adf3cdbd3728409a9ce69153"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/seek-1791736879975840069.xml",
+      "bytes": 30707,
+      "sha256": "431662af85188d3a754db6a2115385dba581b6e0adf3cdbd3728409a9ce69153"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/seek-1791736897330338562.xml",
+      "bytes": 30707,
+      "sha256": "431662af85188d3a754db6a2115385dba581b6e0adf3cdbd3728409a9ce69153"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/seek-1791736908763445696.xml",
+      "bytes": 26869,
+      "sha256": "2edc0a696da2497c0dd6e018aabe8895a4514f5f7bb9c495c99bd65200f44552"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/seek-1791736911252629286.xml",
+      "bytes": 22092,
+      "sha256": "a21a50cd91c0a9dc3a131f9441d0aa8b8be6bbf480ac0e219165049092e256c8"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/seek-1791737066948443035.xml",
+      "bytes": 22104,
+      "sha256": "1720816d37c8f2e61f7ebf8371aa91675218dec73e8a13df69c8aaaa4288e695"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/seek-1791737069413861551.xml",
+      "bytes": 22104,
+      "sha256": "1720816d37c8f2e61f7ebf8371aa91675218dec73e8a13df69c8aaaa4288e695"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/seek-1791737071861644324.xml",
+      "bytes": 22104,
+      "sha256": "1720816d37c8f2e61f7ebf8371aa91675218dec73e8a13df69c8aaaa4288e695"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/seek-1791737074267884278.xml",
+      "bytes": 22104,
+      "sha256": "1720816d37c8f2e61f7ebf8371aa91675218dec73e8a13df69c8aaaa4288e695"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/seek-1791737076655770788.xml",
+      "bytes": 22104,
+      "sha256": "1720816d37c8f2e61f7ebf8371aa91675218dec73e8a13df69c8aaaa4288e695"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/seek-1791737079045225718.xml",
+      "bytes": 22104,
+      "sha256": "1720816d37c8f2e61f7ebf8371aa91675218dec73e8a13df69c8aaaa4288e695"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/seek-1791737081644482476.xml",
+      "bytes": 22104,
+      "sha256": "1720816d37c8f2e61f7ebf8371aa91675218dec73e8a13df69c8aaaa4288e695"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/seek-1791737084026625528.xml",
+      "bytes": 22104,
+      "sha256": "1720816d37c8f2e61f7ebf8371aa91675218dec73e8a13df69c8aaaa4288e695"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/seek-1791737086419247694.xml",
+      "bytes": 22104,
+      "sha256": "1720816d37c8f2e61f7ebf8371aa91675218dec73e8a13df69c8aaaa4288e695"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/seek-1791737088810198337.xml",
+      "bytes": 22104,
+      "sha256": "1720816d37c8f2e61f7ebf8371aa91675218dec73e8a13df69c8aaaa4288e695"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/seek-1791737091181627195.xml",
+      "bytes": 22104,
+      "sha256": "1720816d37c8f2e61f7ebf8371aa91675218dec73e8a13df69c8aaaa4288e695"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/seek-1791737093570448661.xml",
+      "bytes": 22104,
+      "sha256": "1720816d37c8f2e61f7ebf8371aa91675218dec73e8a13df69c8aaaa4288e695"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/seek-1791737096674205320.xml",
+      "bytes": 22104,
+      "sha256": "1720816d37c8f2e61f7ebf8371aa91675218dec73e8a13df69c8aaaa4288e695"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/seek-1791737099054148752.xml",
+      "bytes": 22104,
+      "sha256": "1720816d37c8f2e61f7ebf8371aa91675218dec73e8a13df69c8aaaa4288e695"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/seek-1791737101441956144.xml",
+      "bytes": 22104,
+      "sha256": "1720816d37c8f2e61f7ebf8371aa91675218dec73e8a13df69c8aaaa4288e695"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/seek-1791737103829161030.xml",
+      "bytes": 22104,
+      "sha256": "1720816d37c8f2e61f7ebf8371aa91675218dec73e8a13df69c8aaaa4288e695"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/seek-1791737106230407767.xml",
+      "bytes": 22104,
+      "sha256": "1720816d37c8f2e61f7ebf8371aa91675218dec73e8a13df69c8aaaa4288e695"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/seek-1791737108635608148.xml",
+      "bytes": 22104,
+      "sha256": "1720816d37c8f2e61f7ebf8371aa91675218dec73e8a13df69c8aaaa4288e695"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/seek-1791737111662517730.xml",
+      "bytes": 22104,
+      "sha256": "1720816d37c8f2e61f7ebf8371aa91675218dec73e8a13df69c8aaaa4288e695"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/seek-1791737114062425114.xml",
+      "bytes": 22104,
+      "sha256": "1720816d37c8f2e61f7ebf8371aa91675218dec73e8a13df69c8aaaa4288e695"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/seek-1791737116459755675.xml",
+      "bytes": 22104,
+      "sha256": "1720816d37c8f2e61f7ebf8371aa91675218dec73e8a13df69c8aaaa4288e695"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/seek-1791737118844984740.xml",
+      "bytes": 22104,
+      "sha256": "1720816d37c8f2e61f7ebf8371aa91675218dec73e8a13df69c8aaaa4288e695"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/seek-1791737121241887892.xml",
+      "bytes": 22104,
+      "sha256": "1720816d37c8f2e61f7ebf8371aa91675218dec73e8a13df69c8aaaa4288e695"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/seek-1791737123633022569.xml",
+      "bytes": 22104,
+      "sha256": "1720816d37c8f2e61f7ebf8371aa91675218dec73e8a13df69c8aaaa4288e695"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/seek-1791737277937454522.xml",
+      "bytes": 22104,
+      "sha256": "1720816d37c8f2e61f7ebf8371aa91675218dec73e8a13df69c8aaaa4288e695"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/seek-1791737306865075320.xml",
+      "bytes": 9557,
+      "sha256": "a42517c51bd290882f934f73b950267dcfe7890852dff26e6f8f6e68f98fdf32"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/seek-1791737309211400403.xml",
+      "bytes": 9554,
+      "sha256": "29f533a4f5d2a0e4d637bd912d38ce2807f0dc21ef14ebbe7804ab7d106db2b1"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/seek-1791737333342456937.xml",
+      "bytes": 22104,
+      "sha256": "1720816d37c8f2e61f7ebf8371aa91675218dec73e8a13df69c8aaaa4288e695"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/seek-1791737344372756879.xml",
+      "bytes": 32469,
+      "sha256": "6dcb64889ec0524e79825647f2585251c28415078803f145ccf1f9d5182488c1"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/seek-1791737354866367403.xml",
+      "bytes": 27872,
+      "sha256": "0e32a477b843cbc0fe9dc2f0c26cd55a463b47b8d84b14be6a24294373c19130"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/seek-1791737357324053804.xml",
+      "bytes": 26090,
+      "sha256": "1ba390e6d25d4c0ec73fd78b91714ab0596f84c10ceaae45bcfb3681aad82594"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/seek-1791737359674971950.xml",
+      "bytes": 11465,
+      "sha256": "048af528382479ed6d6c1e1e06c928025afa30df8cb20e0c2572100f1b3e22c2"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/seek-1791737362023002085.xml",
+      "bytes": 10333,
+      "sha256": "362f1d5692b7f80bd28ba8b6b6e7f370c4277614f795d418d558917a5b0f8508"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/seek-1791737364369296769.xml",
+      "bytes": 8352,
+      "sha256": "233416eae33549c0c04f4035db9afcee086493615f23c16df3e7276ba57286df"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/seek-1791737366882717334.xml",
+      "bytes": 10329,
+      "sha256": "cc8e4b6d86c369b19139712c0d5e09bc66149b9778547a0644a026daa5d5c788"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/seek-1791737369206655389.xml",
+      "bytes": 10326,
+      "sha256": "f0cdb5183f3c80326d375f26fba8efe1d18de557d84af42a0e335b6267f737a0"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/seek-1791737373501998019.xml",
+      "bytes": 12278,
+      "sha256": "a929c7b793dd5a8a40d7d5d22ce9f6f96cf66807e0559b273440f57bc298b2d7"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/seek-1791737375832454933.xml",
+      "bytes": 12275,
+      "sha256": "805f2b0190acd80ca15686c543e31470ebd59eb933b56715e0bee29c19eb50be"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/seek-1791737430286351095.xml",
+      "bytes": 16059,
+      "sha256": "b81b5f0b439d04e803677939732c8ee03e26a1306a03503cb8f61290bfcb4eb3"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/seek-1791737452794702510.xml",
+      "bytes": 16059,
+      "sha256": "b81b5f0b439d04e803677939732c8ee03e26a1306a03503cb8f61290bfcb4eb3"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/seek-1791737455163789420.xml",
+      "bytes": 16059,
+      "sha256": "b81b5f0b439d04e803677939732c8ee03e26a1306a03503cb8f61290bfcb4eb3"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/seek-1791737458099121019.xml",
+      "bytes": 16608,
+      "sha256": "8f9be36691ede5f85928c4dd7b7fa8d963c26d64068d19b5b7575e957438bf6e"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/seek-1791737468638779987.xml",
+      "bytes": 16593,
+      "sha256": "32505661a34930fbd957ee6fbde18fcafa457e67c04e0b3ca50cb548e74e771a"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/seek-1791737487035573979.xml",
+      "bytes": 16605,
+      "sha256": "dcf8086ecd86b0b25580ed34acba99fc3843d7355c7fbe2787bb3c4aa26476cb"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/seek-1791737489374435499.xml",
+      "bytes": 6122,
+      "sha256": "05f7940c4bc58362b4e69e80b2b34f4d04dc334c9fb382c49f4d9a653bdabd1c"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/seek-1791737492202735777.xml",
+      "bytes": 16614,
+      "sha256": "cce8f6b0e014f250dfd355f011a489a19b3b6780d8f2edf8f36798e3cc34628f"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/seek-1791737494820757169.xml",
+      "bytes": 6103,
+      "sha256": "2622ea36792c4972c5b06ada191571017ec414d435bbb5fd0a91a0a211a8ddeb"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/seek-1791737508004547173.xml",
+      "bytes": 16642,
+      "sha256": "cf173299689a3d6ceaff1ab43879eabdd122421b2f2a0feb3f50797b54d39010"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/seek-1791737510399806563.xml",
+      "bytes": 16707,
+      "sha256": "d98a7685e9d834de99aea8e3e303603cadc6a1b8c9ea443989eae5a3254dcabd"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/seek-1791737520132918318.xml",
+      "bytes": 16642,
+      "sha256": "193bf1db9f4604630e514d1dad5a54adaab673bc5b4cf37f165696f4cdd37602"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/seek-1791737522734175654.xml",
+      "bytes": 16707,
+      "sha256": "a732ab191090dd546dac079f133666039d3443b3a15ca53c62a425d1db25ea58"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/seek-1791737532156666267.xml",
+      "bytes": 16642,
+      "sha256": "e7d46177189e283460bd01a87aa745894eb40de0d34d3042b4924854dad5b585"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/seek-1791737539255266190.xml",
+      "bytes": 15847,
+      "sha256": "7925600d49ae3dbc3e56dd7fe1b93fd55e24db1af632745a6df0258fcd18f2ec"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/seek-1791737563880697641.xml",
+      "bytes": 15853,
+      "sha256": "b0e9f945e1cc5807d53bdaee4cf6029e8fd211e782c9cf562d3e6786b1c5695f"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/seek-1791737604476675804.xml",
+      "bytes": 15853,
+      "sha256": "b0e9f945e1cc5807d53bdaee4cf6029e8fd211e782c9cf562d3e6786b1c5695f"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/task-consent-1791737311559823317.xml",
+      "bytes": 11504,
+      "sha256": "56d9df2e0e946db7fbcbd33f7a13211912e70e95046761e393880a88da583c5c"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/work-navigation-1791737335769917142.xml",
+      "bytes": 26894,
+      "sha256": "3fb73433820a36a1d657c37f6e0ba3be1bf48230adba36d4835b5125e5b75623"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/work-return-1791737315870728817.xml",
+      "bytes": 22104,
+      "sha256": "1720816d37c8f2e61f7ebf8371aa91675218dec73e8a13df69c8aaaa4288e695"
+    },
+    {
+      "path": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/work-return-1791737341869628082.xml",
+      "bytes": 26894,
+      "sha256": "3fb73433820a36a1d657c37f6e0ba3be1bf48230adba36d4835b5125e5b75623"
+    }
+  ],
+  "report": {
+    "path": "/home/brahma/Projects/Schach_Workspace/.worktrees/workspace-improvements/.superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-native-acceptance-report.md",
+    "sha256": "882dc6d1ea57cbaebf6751bdd451f7ea102c6096b630ebeb6b0af357fdb54c31"
+  },
+  "blocker": {
+    "path": "/home/brahma/Projects/Schach_Workspace/.worktrees/workspace-improvements/.superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-native-preview-blocker.md",
+    "sha256": "f8cdefba7eeea4b3eb4794084c43f0cb052039c067c010cc749668f01f14ebee"
+  },
+  "runtimePreserved": true,
+  "generationCount": 1,
+  "jobPublications": 0
+}

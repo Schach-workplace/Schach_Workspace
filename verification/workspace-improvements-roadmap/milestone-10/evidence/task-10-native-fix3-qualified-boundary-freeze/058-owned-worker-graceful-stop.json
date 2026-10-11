@@ -1,0 +1,17 @@
+{
+  "sourceCommit": "b6ba0e2260de7c1219387006b6b5b8ab5ca55aab",
+  "backendProductCommit": "98b7fb6",
+  "clientProductCommit": "ca13ef3",
+  "nativeShell": "1d74c31132b8246603dbc853556ca29b1a134e4f",
+  "status": "passed",
+  "verifiedOwnedPIDSignalled": 898921,
+  "signal": "SIGTERM",
+  "elapsedSeconds": 0.1,
+  "processExited": true,
+  "ownedChildrenBeforeStop": 0,
+  "scratchEmptyBeforeAndAfter": true,
+  "terminalJobsBeforeStop": true,
+  "qualification": "Quiescent actual server Stop/join path; no active Whisper child at this shutdown. Native running cancellation separately safe056, active-child joining source-owned tests. Launcher exit code verified separately.",
+  "sharedProviderProcessesNotSignalled": true,
+  "nextRestartSameBinaryManualDisabled": true
+}

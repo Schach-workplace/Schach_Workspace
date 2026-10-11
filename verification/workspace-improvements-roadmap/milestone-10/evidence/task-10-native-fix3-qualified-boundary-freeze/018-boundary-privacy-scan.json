@@ -1,0 +1,8 @@
+{
+  "status": "passed_with_human_label_overlap_qualification",
+  "knownCredentialMatches": 0,
+  "unapprovedActualModelProseMatches": 0,
+  "knownHumanAuthoredRecordControlAttributeCollisions": 2,
+  "qualification": "A provider description happens to equal the already human-authored fixture record title; its two known selection-control attributes were explicitly whitelisted before inference. No novel generated prose is present.",
+  "allXMLPersistedAfterDefaultDenyRedaction": true
+}

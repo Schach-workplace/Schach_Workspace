@@ -1,0 +1,5 @@
+--- FAIL: TestIntelligenceDeterministicFacts (0.00s)
+    intelligence_facts_test.go:25: unknown empty text field accepted
+FAIL
+FAIL	schach.local/workspace/backend/platform	0.003s
+FAIL

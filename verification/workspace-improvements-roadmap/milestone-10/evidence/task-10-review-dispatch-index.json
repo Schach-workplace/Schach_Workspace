@@ -1,0 +1,10 @@
+{
+  "base": "8f24b55ab168fb227cb4efe5915432937f968356",
+  "head": "4ced618d0a8454bbc1dc339519d9f9f539c73a70",
+  "reviewPackage": "review-8f24b55..4ced618.diff",
+  "bytes": 1453334,
+  "sha256": "27156caf4bfce37eb07eff063915f6f33c92c2e6bb44ab0bcdb35ec7c1233070",
+  "report": "task-10-report.md",
+  "hashProof": "task-10-controller-handoff-hash-proof.json",
+  "review_scope": "Whole M10 multi-commit source plus affected consumed interfaces; accepted M9 f2/903 dependency/proofs provenance not re-reviewed broadly."
+}

@@ -1,0 +1,20 @@
+{
+  "head": "4ced618d0a8454bbc1dc339519d9f9f539c73a70",
+  "checks": [
+    {
+      "name": "backend/Encore bytes",
+      "invocationSource": "1396eefd514d03885ffa37d246374c14fe7cd4bf",
+      "finalSource": "4ced618d0a8454bbc1dc339519d9f9f539c73a70",
+      "changedPaths": [],
+      "sourceEquivalent": true
+    },
+    {
+      "name": "frontend/mobile/shared bytes",
+      "invocationSource": "8beed856313386efbbcfdd16755d29dcd03ef45b",
+      "finalSource": "4ced618d0a8454bbc1dc339519d9f9f539c73a70",
+      "changedPaths": [],
+      "sourceEquivalent": true
+    }
+  ],
+  "qualification": "Exact tracked subtree bytes match invocation commits; reported executions remain at their actual invocation sources, not retroactively rerun at final checkout."
+}

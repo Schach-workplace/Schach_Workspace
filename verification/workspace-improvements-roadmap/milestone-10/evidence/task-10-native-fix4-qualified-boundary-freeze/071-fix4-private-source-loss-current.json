@@ -1,0 +1,136 @@
+{
+  "sourceCommit": "4420ed540dc253ad024ecb61b343be97b57b5b68",
+  "status": "passed_qualified_status_chain",
+  "samples": [
+    {
+      "seconds": 1.997,
+      "retryPresent": true,
+      "retryEnabled": true,
+      "knownAuthoredPrivateTitlePresent": false,
+      "generatedPrivateProsePresent": false,
+      "editablePrivateFieldsPresent": false
+    },
+    {
+      "seconds": 5.977,
+      "retryPresent": false,
+      "retryEnabled": false,
+      "knownAuthoredPrivateTitlePresent": false,
+      "generatedPrivateProsePresent": false,
+      "editablePrivateFieldsPresent": false
+    },
+    {
+      "seconds": 9.973,
+      "retryPresent": false,
+      "retryEnabled": false,
+      "knownAuthoredPrivateTitlePresent": false,
+      "generatedPrivateProsePresent": false,
+      "editablePrivateFieldsPresent": false
+    },
+    {
+      "seconds": 13.954,
+      "retryPresent": false,
+      "retryEnabled": false,
+      "knownAuthoredPrivateTitlePresent": false,
+      "generatedPrivateProsePresent": false,
+      "editablePrivateFieldsPresent": false
+    },
+    {
+      "seconds": 17.953,
+      "retryPresent": false,
+      "retryEnabled": false,
+      "knownAuthoredPrivateTitlePresent": false,
+      "generatedPrivateProsePresent": false,
+      "editablePrivateFieldsPresent": false
+    },
+    {
+      "seconds": 21.93,
+      "retryPresent": false,
+      "retryEnabled": false,
+      "knownAuthoredPrivateTitlePresent": false,
+      "generatedPrivateProsePresent": false,
+      "editablePrivateFieldsPresent": false
+    },
+    {
+      "seconds": 25.911,
+      "retryPresent": false,
+      "retryEnabled": false,
+      "knownAuthoredPrivateTitlePresent": false,
+      "generatedPrivateProsePresent": false,
+      "editablePrivateFieldsPresent": false
+    }
+  ],
+  "actualOwnerRemovedNativeActorPrivateInterval": true,
+  "nativeEventsAfterIntervalLoss": [
+    {
+      "method": "POST",
+      "path": "/api/companies/c-schach/conversations/{private}/expense-conversions",
+      "upstreamStatus": 200,
+      "acknowledgementDropped": true,
+      "credentialEvidenceRedacted": true,
+      "exactOriginalTransportCaptureReady": true
+    },
+    {
+      "method": "POST",
+      "path": "/api/companies/c-schach/intelligence/jobs/{owned-private-job}/publication-access",
+      "bindingLabel": "E",
+      "phase": "binding_released_before_forward",
+      "elapsedSeconds": 0.0,
+      "upstreamStatus": 403,
+      "structuredRawExpired": false
+    },
+    {
+      "method": "GET",
+      "path": "/api/companies/c-schach/intelligence/jobs/{owned-private-job}",
+      "bindingLabel": "D",
+      "phase": "binding_released_before_forward",
+      "elapsedSeconds": 0.0,
+      "upstreamStatus": 200,
+      "structuredRawExpired": false
+    },
+    {
+      "method": "POST",
+      "path": "/api/companies/c-schach/intelligence/jobs/{owned-private-job}/publication-access",
+      "bindingLabel": "E",
+      "phase": "binding_released_before_forward",
+      "elapsedSeconds": 0.0,
+      "upstreamStatus": 403,
+      "structuredRawExpired": false
+    },
+    {
+      "method": "GET",
+      "path": "/api/companies/c-schach/intelligence/jobs/{owned-private-job}",
+      "bindingLabel": "D",
+      "phase": "binding_released_before_forward",
+      "elapsedSeconds": 0.0,
+      "upstreamStatus": 200,
+      "structuredRawExpired": false
+    },
+    {
+      "method": "POST",
+      "path": "/api/companies/c-schach/conversations/{private}/expense-conversions",
+      "phase": "owned_exact_transport_retry",
+      "status": 404,
+      "currentDenial": true,
+      "exactOriginalCapturedRequest": true,
+      "sameOriginatingSessionCurrentBootstrap": true,
+      "singleUse": true,
+      "nativeUIRetry": false
+    }
+  ],
+  "nativePublicationAccess403Observed": true,
+  "nativeRawGET404NotCaptured": true,
+  "currentRawJobTerminal200InvalidatedSourceUnavailableNoResult": true,
+  "currentPrivateMessageAndConversationAPI404": true,
+  "settledPrivateAuthoringBindingsAndUnknownRetryAbsent": true,
+  "noStaleRetryTap": true,
+  "ordinaryTaskAndBootstrapActorRemainAuthorized": true,
+  "immediateBeforeAfterRemovalBootstrapMeEqualityAsserted": true,
+  "canonicalExpenseFullDTOAndVersionUnchanged": true,
+  "oneCanonicalPrivatePublication": true,
+  "exactOriginalTransportOnlyRetry404Proof": "071a-fix4-original-denied-transport-retry.json",
+  "noAdditionalNativePublicationPOST": true,
+  "positiveExpenseReplayNotExecuted": true,
+  "authorizedTaskExactReplaySeparateProof": "040",
+  "sixStoredJobsNoNewInference": true,
+  "harnessQualification": "Final harness expected job404, but current job is safe terminal200 invalidated; corrected metadata without repeating any commit/source loss/replay."
+}

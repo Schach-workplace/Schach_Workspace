@@ -1,0 +1,56 @@
+{
+  "backendSource": "98b7fb6e6df0b208715bf01f4191b950390750c7",
+  "clientSource": "0c64b5a0cf5ba0f55ed67d4e010257995a62a439",
+  "provider": {
+    "name": "local-whisper-tiny+qwen3:4b",
+    "version": "0.40.2",
+    "digest": "359d7dd4bcdab3d86b87d73ac27966f4dbb9f5efdfcc75d34a8764a09474fae7:dcb76c6586fc06cbdac6dd21f14cfd129cc4cdd9dce19bf4ffa62e59cbe6e6d1",
+    "configHash": "9106fbb26d948daca7d846dfb156d035873c70a31a60b50185544e3e947f6093"
+  },
+  "limits": {
+    "context": 8192,
+    "input": 6144,
+    "output": 1024,
+    "llmDeadlineSeconds": 120,
+    "voiceDeadlineSeconds": 180
+  },
+  "operations": [
+    {
+      "id": "[REDACTED_RUNTIME_ID]",
+      "operation": "action_draft",
+      "state": "expired",
+      "reason_code": "expired",
+      "attempts": 1,
+      "created_at": "2026-10-11T15:56:15.723973+00:00",
+      "updated_at": "2026-10-11T15:57:06.278891+00:00"
+    },
+    {
+      "id": "[REDACTED_RUNTIME_ID]",
+      "operation": "action_draft",
+      "state": "expired",
+      "reason_code": "expired",
+      "attempts": 1,
+      "created_at": "2026-10-11T16:04:38.876395+00:00",
+      "updated_at": "2026-10-11T16:05:29.378457+00:00"
+    },
+    {
+      "id": "[REDACTED_RUNTIME_ID]",
+      "operation": "report_explanation",
+      "state": "expired",
+      "reason_code": "expired",
+      "attempts": 1,
+      "created_at": "2026-10-11T16:07:35.974823+00:00",
+      "updated_at": "2026-10-11T16:13:26.564613+00:00"
+    },
+    {
+      "id": "[REDACTED_RUNTIME_ID]",
+      "operation": "action_draft",
+      "state": "expired",
+      "reason_code": "expired",
+      "attempts": 1,
+      "created_at": "2026-10-11T16:13:23.644418+00:00",
+      "updated_at": "2026-10-11T16:14:36.832388+00:00"
+    }
+  ],
+  "qualification": "Actual generated jobs only, excludes21 explicitly seeded cancelled metadata rows. created/updated timestamps include subsequent TTL retirement and are NOT inference durations. Raw expired rows are scrubbed; completed browser observations qualify successful results. Public WAV upload/Clam clean is not a fresh transcription claim."
+}

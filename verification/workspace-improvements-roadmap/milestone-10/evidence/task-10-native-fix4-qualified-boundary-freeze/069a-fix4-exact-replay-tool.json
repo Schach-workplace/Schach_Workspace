@@ -1,0 +1,18 @@
+{
+  "sourceCommit": "4420ed540dc253ad024ecb61b343be97b57b5b68",
+  "backendProductCommit": "98b7fb6",
+  "clientProductCommit": "4420ed5",
+  "nativeShell": "1d74c31132b8246603dbc853556ca29b1a134e4f",
+  "status": "passed",
+  "previousToolSHA256": "915556cff9122f5c648b49149cedad6355c2ba35142d15db6fc09bb6a36b6907",
+  "currentToolSHA256": "a61c2182335f765542e720ade09cc4500d21222beee9511232f3954119b1ca0b",
+  "quiescentVerifiedOwnedPIDStopped": 1797258,
+  "exactFixturePathPostOnly": true,
+  "differentSessionRefused": true,
+  "immutableCapturedBodyKeyPath": true,
+  "singleUseAndTimerClear": true,
+  "aggregateOverflowRejected": true,
+  "syntheticPrivacyNoBodyHeaderDigestLedger": true,
+  "noArbitraryReplayOverrideExport": true,
+  "noRealCaptureBeforeRestart": true
+}

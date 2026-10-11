@@ -1,0 +1,49 @@
+
+ RUN  v5.0.3 /home/brahma/Projects/Schach_Workspace/.worktrees/workspace-improvements/frontend
+
+ ❯ src/components/IntelligencePanel.test.tsx (25 tests | 3 failed | 21 skipped) 3128ms
+   × retains inspected web review across cloned pending refresh (preview overlaps=false) 1060ms
+   × retains inspected web review across cloned pending refresh (preview overlaps=true) 1020ms
+   × keeps web held canonical ACK only for exact raw expiry expired 1025ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/IntelligencePanel.test.tsx > retains inspected web review across cloned pending refresh (preview overlaps=false)
+ FAIL  src/components/IntelligencePanel.test.tsx > retains inspected web review across cloned pending refresh (preview overlaps=true)
+TestingLibraryElementError: Unable to find an element with the text: Publish to the reviewed audience.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+[SYNTHETIC_TEST_DOM_DUMP_OMITTED]
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/components/IntelligencePanel.test.tsx:687:16
+    685|   expect(screen.queryByText('Publish to the reviewed audience.')).toBe…
+    686|   await act(async () => release(response(JSON.parse(JSON.stringify(job…
+    687|   await screen.findByText('Publish to the reviewed audience.');
+       |                ^
+    688|   if (overlap) fireEvent.click(screen.getByLabelText('I reviewed these…
+    689|   fireEvent.click(screen.getByText('Confirm reviewed creation'));
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  src/components/IntelligencePanel.test.tsx > keeps web held canonical ACK only for exact raw expiry expired
+TestingLibraryElementError: Unable to find an element with the text: Created work successfully.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+[SYNTHETIC_TEST_DOM_DUMP_OMITTED]
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/components/IntelligencePanel.test.tsx:702:40
+    700|   await waitFor(() => expect(screen.queryByText('Authorized source')).…
+    701|   await act(async () => finish({id:'created'}));
+    702|   if (code === 'expired') await screen.findByText('Created work succes…
+       |                                        ^
+    703| });
+    704|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 1 passed | 21 skipped (25)
+   Start at  22:35:10
+   Duration  3.55s (tests 90%, transform 5%, environment 3%, import 2%)
+

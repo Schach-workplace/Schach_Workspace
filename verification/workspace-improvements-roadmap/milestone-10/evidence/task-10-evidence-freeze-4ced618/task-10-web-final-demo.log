@@ -1,0 +1,21 @@
+
+> schach-workspace-frontend@1.1.0 build:demo
+> tsc --noEmit && vite build --mode demo --outDir dist-demo
+
+vite v8.3.4 building client environment for demo...
+transforming...
+✓ 2127 modules transformed.
+rendering chunks...
+computing gzip size...
+dist-demo/index.html                   0.67 kB │ gzip:   0.39 kB
+dist-demo/assets/Calls-C7z1-d2S.css   19.29 kB │ gzip:   4.19 kB
+dist-demo/assets/index-DUehReo7.css  162.21 kB │ gzip:  31.41 kB
+dist-demo/assets/Calls-CTLWFupL.js   649.39 kB │ gzip: 175.33 kB
+dist-demo/assets/index-x8QPMXKZ.js   970.45 kB │ gzip: 252.83 kB
+
+[plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 900 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 270ms

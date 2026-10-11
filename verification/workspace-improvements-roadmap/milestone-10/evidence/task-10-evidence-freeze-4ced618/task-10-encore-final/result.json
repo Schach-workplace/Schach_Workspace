@@ -1,0 +1,8 @@
+{
+  "status": "passed",
+  "checks": [
+    "Actual current Encore exporter builds current platform",
+    "Actual exported gateway M10 selected-source TCP flows and optional-provider manual fallback on nativePG57"
+  ],
+  "imageID": "sha256:3e2f9fe6f5a7a67432a44cbcea7b2d907a7e4bf6af52337a875749ec2115dfe8"
+}

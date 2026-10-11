@@ -1,0 +1,48 @@
+{
+  "sourceCommit": "b6ba0e2260de7c1219387006b6b5b8ab5ca55aab",
+  "backendProductCommit": "98b7fb6",
+  "clientProductCommit": "ca13ef3",
+  "nativeShell": "1d74c31132b8246603dbc853556ca29b1a134e4f",
+  "status": "passed_qualified_state_continuity",
+  "samples": [
+    {
+      "secondsSinceFirstSample": 0.0,
+      "ackSelected": true,
+      "footerOffscreen": true
+    },
+    {
+      "secondsSinceFirstSample": 5.988,
+      "ackSelected": true,
+      "footerOffscreen": true
+    },
+    {
+      "secondsSinceFirstSample": 13.032,
+      "ackSelected": true,
+      "footerOffscreen": true
+    },
+    {
+      "secondsSinceFirstSample": 19.008,
+      "ackSelected": true,
+      "footerOffscreen": true
+    },
+    {
+      "secondsSinceFirstSample": 24.976,
+      "ackSelected": true,
+      "footerOffscreen": true
+    },
+    {
+      "secondsSinceFirstSample": 30.958,
+      "ackSelected": true,
+      "footerOffscreen": true
+    },
+    {
+      "secondsSinceFirstSample": 38.024,
+      "ackSelected": true,
+      "footerOffscreen": true
+    }
+  ],
+  "ackSelectedAndConfirmEnabledVisibleBeforeAndAfter": true,
+  "actual5sAnd15sProducerCycles": true,
+  "qualification": "ACK selection retained in actual hierarchy across38s. Footer clipped during sampled interval; no disabled/absent inference. Actual visible enabled Confirm verified separately.",
+  "noConfirmationRace": true
+}

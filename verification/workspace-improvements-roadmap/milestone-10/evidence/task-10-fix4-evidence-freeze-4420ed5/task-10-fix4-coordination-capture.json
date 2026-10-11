@@ -1,0 +1,21 @@
+{
+  "capturedUTC": "2026-10-11T19:26:44.957630+00:00",
+  "files": [
+    {
+      "path": "docs/AI_HANDOFF.md",
+      "bytes": 38468,
+      "sha256": "ece8b4d9e9656c85d8e440eaf7bff1d7c28d916d313298c80bfcff653c7f6cc8"
+    },
+    {
+      "path": "docs/AI_CHECKLIST.md",
+      "bytes": 16347,
+      "sha256": "ca3aac4bffe87be22377f8b7f9b50910f097a9084a09be5d43ca574c30f7d1df"
+    },
+    {
+      "path": "docs/AI_FILE_INDEX.json",
+      "bytes": 179576,
+      "sha256": "b84d5d84dc22f7b3e870af4a1ade1e5a7943836c2143a90143920f329f3fbeb4"
+    }
+  ],
+  "coordinationRuling": "Root explicit final capture/yield received; sole product/Git writer includes all three docs unchanged at this natural commit"
+}

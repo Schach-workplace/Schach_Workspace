@@ -1,0 +1,10 @@
+{
+  "status": "PASS_HASH_PRESERVATION_ONLY",
+  "safeArtifacts": 537,
+  "reports": 2,
+  "mismatches": 0,
+  "manifestSHA256": "ca2219c95679a031dc65a62de5bb9c25c72ffca3c00ab7f786d4b75bfd256453",
+  "freezeIndex": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-native-fix3-qualified-boundary-freeze/index.json",
+  "acceptance": "BLOCKED_IMPORTANT_N2_N2b",
+  "nativeOwnerClearedYield": true
+}

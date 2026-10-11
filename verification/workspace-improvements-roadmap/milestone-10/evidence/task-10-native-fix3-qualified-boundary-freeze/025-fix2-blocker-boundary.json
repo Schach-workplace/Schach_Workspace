@@ -1,0 +1,47 @@
+{
+  "sourceCommit": "5004b5bcbe777d8779287c4c618c344393105529",
+  "backendProductCommit": "98b7fb6",
+  "clientProductCommit": "5004b5b",
+  "nativeShell": "1d74c31132b8246603dbc853556ca29b1a134e4f",
+  "status": "blocked_residual_important_N1",
+  "earlySequence": [
+    {
+      "artifact": "fix2-preview-across-polls-1791740138830093469.xml",
+      "secondsSinceFirstArtifact": 0.0,
+      "ackPresent": true,
+      "confirmEnabledWithoutAck": false
+    },
+    {
+      "artifact": "fix2-preview-across-polls-1791740144818291368.xml",
+      "secondsSinceFirstArtifact": 5.988198,
+      "ackPresent": true,
+      "confirmEnabledWithoutAck": false
+    },
+    {
+      "artifact": "fix2-preview-across-polls-1791740151542023619.xml",
+      "secondsSinceFirstArtifact": 12.71193,
+      "ackPresent": false,
+      "confirmEnabledWithoutAck": false
+    },
+    {
+      "artifact": "fix2-preview-across-polls-1791740157516772763.xml",
+      "secondsSinceFirstArtifact": 18.686679,
+      "ackPresent": false,
+      "confirmEnabledWithoutAck": false
+    }
+  ],
+  "earlyTimingQualification": "Times derived from completed sanitized artifact timestamps relative to first sample, not exact preview-tap timing.",
+  "sameReadyJobFirstCandidateIndex": 0,
+  "actualGenerationCount": 1,
+  "jobPublicationCount": 0,
+  "currentPIDs": {
+    "server.pid": 571423,
+    "metro.pid": 571422,
+    "current-read-barrier-proxy.pid": 571401
+  },
+  "sameBackendBinarySHA256": "324b71ebb8aa8e5676f13b1bc22a53b8bbbe05ecc8ff20b8349a808b403d2ce7",
+  "allArmsAndSelectorsReleased": true,
+  "sameSourceAuthoredFormRetained": true,
+  "noProviderOrBackendStopPerformed": true,
+  "noFurtherInferenceForFix": true
+}

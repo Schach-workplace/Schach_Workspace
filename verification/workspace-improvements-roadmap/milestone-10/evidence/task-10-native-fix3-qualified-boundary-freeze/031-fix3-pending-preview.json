@@ -1,0 +1,38 @@
+{
+  "sourceCommit": "b6ba0e2260de7c1219387006b6b5b8ab5ca55aab",
+  "backendProductCommit": "98b7fb6",
+  "clientProductCommit": "ca13ef3",
+  "nativeShell": "1d74c31132b8246603dbc853556ca29b1a134e4f",
+  "status": "passed",
+  "pendingAckWithheldAndVisibleConfirmDisabled": true,
+  "equivalentCurrentReadRestoredSelectedAckAndVisibleEnabledConfirm": true,
+  "events": [
+    {
+      "method": "GET",
+      "path": "/api/companies/c-schach/intelligence/jobs/{owned-job}",
+      "bindingLabel": "A",
+      "phase": "binding_released_before_forward",
+      "elapsedSeconds": 2.512,
+      "upstreamStatus": 200,
+      "structuredRawExpired": false
+    },
+    {
+      "method": "GET",
+      "path": "/api/companies/c-schach/intelligence/jobs/{owned-job}",
+      "bindingLabel": "A",
+      "phase": "binding_released_before_forward",
+      "elapsedSeconds": 0.0,
+      "upstreamStatus": 200,
+      "structuredRawExpired": false
+    },
+    {
+      "method": "GET",
+      "path": "/api/companies/c-schach/intelligence/jobs/{owned-job}",
+      "bindingLabel": "A",
+      "phase": "binding_released_before_forward",
+      "elapsedSeconds": 0.0,
+      "upstreamStatus": 200,
+      "structuredRawExpired": false
+    }
+  ]
+}

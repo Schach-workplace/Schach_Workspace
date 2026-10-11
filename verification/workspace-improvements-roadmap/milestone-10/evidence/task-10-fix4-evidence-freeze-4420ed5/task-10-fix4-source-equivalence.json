@@ -1,0 +1,132 @@
+{
+  "head": "4420ed540dc253ad024ecb61b343be97b57b5b68",
+  "invocationHead": "b6ba0e2260de7c1219387006b6b5b8ab5ca55aab",
+  "finalClientHashCount": 392,
+  "finalClientHashMismatchCount": 0,
+  "finalInvocations": [
+    {
+      "label": "native-full-final",
+      "invocationHead": "b6ba0e2260de7c1219387006b6b5b8ab5ca55aab",
+      "startedUTC": "2026-10-11T19:22:38.664912+00:00",
+      "finishedUTC": "2026-10-11T19:23:45.646107+00:00",
+      "hashCount": 392,
+      "mismatchCount": 0,
+      "sourceRecord": "task-10-fix4-native-full-final-source.json"
+    },
+    {
+      "label": "web-full-final",
+      "invocationHead": "b6ba0e2260de7c1219387006b6b5b8ab5ca55aab",
+      "startedUTC": "2026-10-11T19:22:38.663806+00:00",
+      "finishedUTC": "2026-10-11T19:22:49.675982+00:00",
+      "hashCount": 392,
+      "mismatchCount": 0,
+      "sourceRecord": "task-10-fix4-web-full-final-source.json"
+    },
+    {
+      "label": "native-types-final",
+      "invocationHead": "b6ba0e2260de7c1219387006b6b5b8ab5ca55aab",
+      "startedUTC": "2026-10-11T19:22:38.665625+00:00",
+      "finishedUTC": "2026-10-11T19:22:46.947794+00:00",
+      "hashCount": 392,
+      "mismatchCount": 0,
+      "sourceRecord": "task-10-fix4-native-types-final-source.json"
+    },
+    {
+      "label": "web-types-complete",
+      "invocationHead": "b6ba0e2260de7c1219387006b6b5b8ab5ca55aab",
+      "startedUTC": "2026-10-11T19:22:38.665514+00:00",
+      "finishedUTC": "2026-10-11T19:22:39.745490+00:00",
+      "hashCount": 392,
+      "mismatchCount": 0,
+      "sourceRecord": "task-10-fix4-web-types-complete-source.json"
+    },
+    {
+      "label": "native-lint-complete",
+      "invocationHead": "b6ba0e2260de7c1219387006b6b5b8ab5ca55aab",
+      "startedUTC": "2026-10-11T19:22:38.663882+00:00",
+      "finishedUTC": "2026-10-11T19:22:44.582532+00:00",
+      "hashCount": 392,
+      "mismatchCount": 0,
+      "sourceRecord": "task-10-fix4-native-lint-complete-source.json"
+    },
+    {
+      "label": "native-export",
+      "invocationHead": "b6ba0e2260de7c1219387006b6b5b8ab5ca55aab",
+      "startedUTC": "2026-10-11T19:22:38.668956+00:00",
+      "finishedUTC": "2026-10-11T19:23:16.041320+00:00",
+      "hashCount": 392,
+      "mismatchCount": 0,
+      "sourceRecord": "task-10-fix4-native-export-source.json"
+    },
+    {
+      "label": "web-build",
+      "invocationHead": "b6ba0e2260de7c1219387006b6b5b8ab5ca55aab",
+      "startedUTC": "2026-10-11T19:22:38.667225+00:00",
+      "finishedUTC": "2026-10-11T19:22:41.021893+00:00",
+      "hashCount": 392,
+      "mismatchCount": 0,
+      "sourceRecord": "task-10-fix4-web-build-source.json"
+    },
+    {
+      "label": "web-demo",
+      "invocationHead": "b6ba0e2260de7c1219387006b6b5b8ab5ca55aab",
+      "startedUTC": "2026-10-11T19:22:38.671620+00:00",
+      "finishedUTC": "2026-10-11T19:22:40.968863+00:00",
+      "hashCount": 392,
+      "mismatchCount": 0,
+      "sourceRecord": "task-10-fix4-web-demo-source.json"
+    },
+    {
+      "label": "format",
+      "invocationHead": "b6ba0e2260de7c1219387006b6b5b8ab5ca55aab",
+      "startedUTC": "2026-10-11T19:22:38.671312+00:00",
+      "finishedUTC": "2026-10-11T19:22:39.935455+00:00",
+      "hashCount": 392,
+      "mismatchCount": 0,
+      "sourceRecord": "task-10-fix4-format-source.json"
+    },
+    {
+      "label": "diff-check",
+      "invocationHead": "b6ba0e2260de7c1219387006b6b5b8ab5ca55aab",
+      "startedUTC": "2026-10-11T19:22:38.671966+00:00",
+      "finishedUTC": "2026-10-11T19:22:38.676517+00:00",
+      "hashCount": 392,
+      "mismatchCount": 0,
+      "sourceRecord": "task-10-fix4-diff-check-source.json"
+    }
+  ],
+  "owningRedBaselineEquivalence": [
+    {
+      "label": "lifetime-red",
+      "baseline": "b6ba0e2260de7c1219387006b6b5b8ab5ca55aab",
+      "existingProductInputMismatches": 0,
+      "newOwningTestFiles": [
+        "mobile/src/IntelligenceLifetime.test.tsx"
+      ]
+    },
+    {
+      "label": "opposites-red",
+      "baseline": "b6ba0e2260de7c1219387006b6b5b8ab5ca55aab",
+      "existingProductInputMismatches": 0,
+      "newOwningTestFiles": [
+        "mobile/src/IntelligenceLifetime.test.tsx"
+      ]
+    },
+    {
+      "label": "web-owning-red",
+      "baseline": "b6ba0e2260de7c1219387006b6b5b8ab5ca55aab",
+      "existingProductInputMismatches": 0,
+      "newOwningTestFiles": [
+        "frontend/src/pages/Reports.intelligence.test.tsx"
+      ]
+    }
+  ],
+  "backendProductSource": "98b7fb6e6df0b208715bf01f4191b950390750c7",
+  "backendEncoreChangedPaths": [],
+  "sqlImmutableComparedBases": [
+    "b6ba0e2260de7c1219387006b6b5b8ab5ca55aab",
+    "98b7fb6e6df0b208715bf01f4191b950390750c7"
+  ],
+  "sqlPairedFiles": 116,
+  "qualification": "Each final invocation compared independently to final committed inputs; root docs captured separately. Prior Go/race/PG/Encore/provider/native evidence retains its original source/time and is not a new execution."
+}

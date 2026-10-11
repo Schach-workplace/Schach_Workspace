@@ -1,0 +1,13 @@
+
+> mobile@1.0.0 test
+> vitest run
+
+
+ RUN  v5.0.3 /home/brahma/Projects/Schach_Workspace/.worktrees/workspace-improvements/mobile
+
+
+ Test Files  51 passed (51)
+      Tests  287 passed (287)
+   Start at  23:23:43
+   Duration  64.11s (tests 75%, transform 12%, environment 9%, import 4%)
+

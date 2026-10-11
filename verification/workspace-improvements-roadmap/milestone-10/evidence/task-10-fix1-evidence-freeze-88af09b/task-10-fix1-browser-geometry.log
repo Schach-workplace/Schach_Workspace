@@ -1,0 +1,19 @@
+{"status":"failed","checks":2,"heldMilliseconds":0}
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+
+  assert(v.sameNode&&v.connected&&v.disabled&&v.rawWithheld&&v.generatedActionsWithheld&&v.retryDisabled)
+
+    at file:///home/brahma/Projects/Schach_Workspace/.worktrees/workspace-improvements/verification/runtime/intelligence_fix1_smoke.mjs:63:27 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+
+Node.js v24.14.0

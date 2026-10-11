@@ -1,0 +1,13 @@
+
+> schach-workspace-frontend@1.1.0 test
+> vitest run src/pages/Reports.intelligence.test.tsx src/pages/Reports.test.tsx src/components/IntelligencePanel.test.tsx
+
+
+ RUN  v5.0.3 /home/brahma/Projects/Schach_Workspace/.worktrees/workspace-improvements/frontend
+
+
+ Test Files  3 passed (3)
+      Tests  47 passed (47)
+   Start at  00:34:40
+   Duration  1.20s (tests 59%, transform 17%, import 13%, environment 10%)
+

@@ -1,0 +1,36 @@
+{
+  "status": "qualified completed owning observations validated; individual failures retained",
+  "clientSource": "0c64b5a0cf5ba0f55ed67d4e010257995a62a439",
+  "backendSource": "98b7fb6e6df0b208715bf01f4191b950390750c7",
+  "invocations": [
+    {
+      "file": "fix1-browser-publication-history.json",
+      "overall": "failed",
+      "completed": "4 checks: real record citation; existing-claim200 lost ACK/raw403\u2192200/32502ms independent proof/identical replay; existing work opened;23 history rows21seeded+2real",
+      "limitation": "failed subsequent same-document report navigation; no node/focus/scroll assertion in this earlier hold"
+    },
+    {
+      "file": "fix1-browser-report.json",
+      "overall": "passed",
+      "completed": "First current report-only inference/rendered frozen period, semantic facts and coverage",
+      "limitation": "one report-only check, not whole browser suite"
+    },
+    {
+      "file": "fix1-browser-geometry.json",
+      "overall": "failed",
+      "completed": "Actual current action generation/record citation and both sampled geometry spans",
+      "limitation": "Incorrect disabled-title expectation failed after all samples; original failure semantics string is an incorrect expectation, corrected by this disposition. No release/replay step executed in this invocation; prior invocation proves it."
+    }
+  ],
+  "sampleValidation": {
+    "status": "passed",
+    "method": "Independent assertions over complete retained actual samples; not a rerun or restamped browser invocation",
+    "prepublicationSpanMilliseconds": 32507,
+    "unknownSpanMilliseconds": 32506,
+    "prepublicationEffectiveSamplesMilliseconds": 32504,
+    "unknownEffectiveSamplesMilliseconds": 32503,
+    "semantics": "Title DOM input remains enabled/focused with selection6..12; preview and Retry are gated. No physical keyboard/IME or unknown-edit/new-intent acceptance claim. Reviewer must assess existing edit semantics separately. Pending bounds stable within each span; y changed32px upon each added status line outside the spans.",
+    "originalRequestKeyBodyTargetEqualAcrossUnknownSamples": true
+  },
+  "historyQualification": "21 seeded cancelled metadata rows +2 genuinely processed expired action jobs at the earlier23-row observation. Later report and geometry jobs are separate genuine operations, not part of that23-row proof."
+}

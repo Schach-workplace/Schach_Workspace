@@ -1,0 +1,38 @@
+
+> schach-workspace-frontend@1.1.0 test
+> vitest run src/pages/Reports.intelligence.test.tsx -t notification
+
+
+ RUN  v5.0.3 /home/brahma/Projects/Schach_Workspace/.worktrees/workspace-improvements/frontend
+
+ ❯ src/pages/Reports.intelligence.test.tsx (17 tests | 2 failed | 15 skipped) 2218ms
+   × N2 web: actual notification retires late report inspection (error=false) 1144ms
+   × N2 web: actual notification retires late report inspection (error=true) 1073ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/pages/Reports.intelligence.test.tsx > N2 web: actual notification retires late report inspection (error=false)
+ FAIL  src/pages/Reports.intelligence.test.tsx > N2 web: actual notification retires late report inspection (error=true)
+AssertionError: expected true to be false // Object.is equality
+
+[SYNTHETIC_TEST_DOM_DUMP_OMITTED]
+
+ ❯ src/pages/Reports.intelligence.test.tsx:180:131
+    178|     expect(enqueues).toHaveLength(0);
+    179|     if (change === 'notification')
+    180|       await waitFor(() => expect((screen.getByRole('button', { name: '…
+       |                                                                                                                                   ^
+    181|   },
+    182| );
+ ❯ runWithExpensiveErrorDiagnosticsDisabled node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 15 skipped (17)
+   Start at  00:38:08
+   Duration  2.84s (tests 80%, transform 9%, import 6%, environment 4%)
+

@@ -1,0 +1,152 @@
+{
+  "sourceCommit": "5004b5bcbe777d8779287c4c618c344393105529",
+  "backendProductCommit": "98b7fb6",
+  "clientProductCommit": "5004b5b",
+  "nativeShell": "1d74c31132b8246603dbc853556ca29b1a134e4f",
+  "status": "preview_lost_on_unchanged_positive_context",
+  "samples": [
+    {
+      "seconds": 3.218,
+      "ackPresent": false,
+      "confirmEnabledWithoutAck": false,
+      "pendingPlaceholder": false
+    },
+    {
+      "seconds": 9.199,
+      "ackPresent": false,
+      "confirmEnabledWithoutAck": false,
+      "pendingPlaceholder": false
+    },
+    {
+      "seconds": 15.181,
+      "ackPresent": false,
+      "confirmEnabledWithoutAck": false,
+      "pendingPlaceholder": false
+    },
+    {
+      "seconds": 21.163,
+      "ackPresent": false,
+      "confirmEnabledWithoutAck": false,
+      "pendingPlaceholder": false
+    },
+    {
+      "seconds": 27.144,
+      "ackPresent": false,
+      "confirmEnabledWithoutAck": false,
+      "pendingPlaceholder": false
+    },
+    {
+      "seconds": 33.284,
+      "ackPresent": false,
+      "confirmEnabledWithoutAck": false,
+      "pendingPlaceholder": false
+    }
+  ],
+  "events": [
+    {
+      "method": "POST",
+      "path": "/api/companies/c-schach/conversations/{private}/task-conversions/preview",
+      "observerLabel": "H",
+      "upstreamStatus": 200,
+      "elapsedSeconds": 0.003,
+      "phase": "observed_only"
+    },
+    {
+      "method": "GET",
+      "path": "/api/companies/c-schach/intelligence/jobs/{owned-job}",
+      "bindingLabel": "A",
+      "phase": "binding_released_before_forward",
+      "elapsedSeconds": 0.0,
+      "upstreamStatus": 200,
+      "structuredRawExpired": false
+    },
+    {
+      "method": "GET",
+      "path": "/api/companies/c-schach/intelligence/jobs/{owned-job}",
+      "bindingLabel": "A",
+      "phase": "binding_released_before_forward",
+      "elapsedSeconds": 0.0,
+      "upstreamStatus": 200,
+      "structuredRawExpired": false
+    },
+    {
+      "method": "GET",
+      "path": "/api/companies/c-schach/intelligence/jobs/{owned-job}",
+      "bindingLabel": "A",
+      "phase": "binding_released_before_forward",
+      "elapsedSeconds": 0.0,
+      "upstreamStatus": 200,
+      "structuredRawExpired": false
+    },
+    {
+      "method": "GET",
+      "path": "/api/companies/c-schach/intelligence/jobs/{owned-job}",
+      "bindingLabel": "A",
+      "phase": "binding_released_before_forward",
+      "elapsedSeconds": 0.0,
+      "upstreamStatus": 200,
+      "structuredRawExpired": false
+    },
+    {
+      "method": "GET",
+      "path": "/api/companies/c-schach/intelligence/jobs/{owned-job}",
+      "bindingLabel": "A",
+      "phase": "binding_released_before_forward",
+      "elapsedSeconds": 0.0,
+      "upstreamStatus": 200,
+      "structuredRawExpired": false
+    },
+    {
+      "method": "GET",
+      "path": "/api/companies/c-schach/intelligence/jobs/{owned-job}",
+      "bindingLabel": "A",
+      "phase": "binding_released_before_forward",
+      "elapsedSeconds": 0.0,
+      "upstreamStatus": 200,
+      "structuredRawExpired": false
+    },
+    {
+      "method": "GET",
+      "path": "/api/companies/c-schach/intelligence/jobs/{owned-job}",
+      "bindingLabel": "A",
+      "phase": "binding_released_before_forward",
+      "elapsedSeconds": 0.0,
+      "upstreamStatus": 200,
+      "structuredRawExpired": false
+    },
+    {
+      "method": "GET",
+      "path": "/api/companies/c-schach/intelligence/jobs/{owned-job}",
+      "bindingLabel": "A",
+      "phase": "binding_released_before_forward",
+      "elapsedSeconds": 0.0,
+      "upstreamStatus": 200,
+      "structuredRawExpired": false
+    },
+    {
+      "method": "GET",
+      "path": "/api/companies/c-schach/intelligence/jobs/{owned-job}",
+      "bindingLabel": "A",
+      "phase": "binding_released_before_forward",
+      "elapsedSeconds": 0.0,
+      "upstreamStatus": 200,
+      "structuredRawExpired": false
+    },
+    {
+      "method": "GET",
+      "path": "/api/companies/c-schach/intelligence/jobs/{owned-job}",
+      "bindingLabel": "A",
+      "phase": "binding_released_before_forward",
+      "elapsedSeconds": 0.0,
+      "upstreamStatus": 200,
+      "structuredRawExpired": false
+    }
+  ],
+  "sameJobResultSourcePublicationIdentity": true,
+  "sameBootstrapActor": true,
+  "sameBootstrapReadBasis": true,
+  "sameAuthorizedExactRecord": true,
+  "sourceRead200BeforeAfter": true,
+  "noPublicationOrInference": true,
+  "noPrivateJobHashesProsePersisted": true
+}

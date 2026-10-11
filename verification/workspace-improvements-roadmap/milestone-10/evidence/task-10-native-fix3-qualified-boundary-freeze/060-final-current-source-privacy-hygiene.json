@@ -1,0 +1,40 @@
+{
+  "sourceCommit": "b6ba0e2260de7c1219387006b6b5b8ab5ca55aab",
+  "backendProductCommit": "98b7fb6",
+  "clientProductCommit": "ca13ef3",
+  "nativeShell": "1d74c31132b8246603dbc853556ca29b1a134e4f",
+  "status": "passed",
+  "actualFrozenSourceFilesChecked": 659,
+  "mismatches": 0,
+  "nativeConfigurationHashes": {
+    "mobile/package.json": "f3e40d3888d3290ba96091b15dd8f5aa68224abcc2729f8f60f2fe2806d0aa4b",
+    "mobile/package-lock.json": "c5f6eb506c30dd3270af880f7fcc898413df22ecd0850a90c598c32777854818",
+    "mobile/app.json": "d916ac5b57ccef6ffe89f994a4524c0682e2ac6605ebad43d4a66c2556bfc29e"
+  },
+  "toolHashes": {
+    "m10_controls.py": "e7d5ed0433c15e9a3ddfe4c22be516f320319d1834517dd2273625ff98a98b99",
+    "m10_review_helpers.py": "fbd229857d185c051fe8e2dfb477ba613a54b14c66bfcb1c7b3b4a2f476345c7",
+    "current-read-barrier-proxy-m10-observer.py": "fb2eecfbc3a1bbe423afbeef1f1bd5fedb533c5f767499b1c1995926cf409829",
+    "run-owned-m10-server.py": "1ed69b95fbc7e8b2418f01a9aa849a677fa1cb56cf36fabbb581dca6da3e4e1b",
+    "run-metro.py": "a7312b9df7553e07f66650cafba2b9e47047ed09e389316871863d168bf8e1f8",
+    "observe_native_selection.py": "32172dfab7eb864399a3372fc7de8088b5623522544aceda1e21ee42b8a31fc7",
+    "people_native_controls.py": "a4600729f3a7c7c4c2e48220c352ff44dc84dd42006030e23ee9dfac5243d982"
+  },
+  "currentOwnedPIDs": {
+    "server.pid": 1316498,
+    "metro.pid": 898920,
+    "current-read-barrier-proxy.pid": 898901
+  },
+  "sameCurrentBundleBindingFrom028": "33fc3a56ed5b44acaf817038181d77ebb91753b8f2a6320174f77af1bf166af4",
+  "nativeAuthenticatedManualUIAfterDisabledRestart": true,
+  "knownCredentialMatches": 0,
+  "currentActualGeneratedProseMatches": 0,
+  "earlierPurgedActionAndReportRawPrivacyQualifiedByPriorPerPhaseChecks": true,
+  "defaultDenyXMLBeforePersistence": true,
+  "privateDirs0700Files0600": true,
+  "fontRestored1": true,
+  "transientDeviceXMLAbsent": true,
+  "proxyAllArmsSelectorsObserversAndRAMCaptureCleared": true,
+  "noProviderConsumingNativeWorkerEnabled": true,
+  "noSourceOrGitMutation": true
+}

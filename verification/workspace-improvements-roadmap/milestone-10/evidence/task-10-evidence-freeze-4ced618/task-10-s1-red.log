@@ -1,0 +1,7 @@
+--- FAIL: TestIntelligenceSelectionBinding (0.18s)
+    intelligence_sources_test.go:15: authorized selected task preview: 404 map[error:map[code:not_found message:This resource was not found in your accessible workspace.]]
+--- FAIL: TestIntelligenceNestedEvidenceBinding (0.17s)
+    intelligence_sources_test.go:24: 404 map[error:map[code:not_found message:This resource was not found in your accessible workspace.]]
+FAIL
+FAIL	schach.local/workspace/backend/platform	0.355s
+FAIL

@@ -1,0 +1,84 @@
+
+> mobile@1.0.0 test
+> vitest run src/IntelligenceLifetime.test.tsx
+
+
+ RUN  v5.0.3 /home/brahma/Projects/Schach_Workspace/.worktrees/workspace-improvements/mobile
+
+ ❯ src/IntelligenceLifetime.test.tsx (43 tests | 4 failed) 495ms
+   × N2: a replaced report requires new selection, inspection and consent without replacing the owned job 31ms
+   × N2: real report source retires late inspection (error=false) 14ms
+   × N2: overlapping inspection settles hidden until equivalent current report proof 6ms
+   × N2: unknown enqueue keeps the original period, body and key through pending and new report facts 8ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/IntelligenceLifetime.test.tsx > N2: a replaced report requires new selection, inspection and consent without replacing the owned job
+AssertionError: expected 'Schach · Test userTest company ✓Other…' not to contain 'Inspected original report facts'
+
+Expected: "Inspected original report facts"
+Received: "Schach · Test userTest company ✓Other company‹ BackCurrent stateHistorical reportsSaved reportsLocal assistanceLocal assistanceCloseLocal assistanceSelect sources explicitly. Continue normal work while local assistance is unavailable.Operation: Explain selected factsExplicit selected sources (1/50)Selected report factsYour selected report facts stay fixed until you choose the latest facts.Choose latest report factsReview selected sourcesInspected original report factsI agree to local processing of these selected sourcesGenerate local resultrunningRecheck current resultCancel and clear this resultYour local request historyContinue manually using the existing conversation, task, finance or report tools.Current-state report · Asia/Kolkata · later task changes can change these values. 0 currently authorized tasks."
+
+ ❯ src/IntelligenceLifetime.test.tsx:511:37
+    509|   await releaseReport();
+    510|   expect(container.querySelector('[role="dialog"]')).toBe(sheet);
+    511|   expect(container.textContent).not.toContain(
+       |                                     ^
+    512|     "Inspected original report facts",
+    513|   );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  src/IntelligenceLifetime.test.tsx > N2: real report source retires late inspection (error=false)
+AssertionError: expected 'Schach · Test userTest company ✓Other…' not to contain 'Inspected original report facts'
+
+Expected: "Inspected original report facts"
+Received: "Schach · Test userTest company ✓Other company‹ BackCurrent stateHistorical reportsSaved reportsLocal assistanceLocal assistanceCloseLocal assistanceSelect sources explicitly. Continue normal work while local assistance is unavailable.Operation: Explain selected factsExplicit selected sources (1/50)Selected report factsYour selected report facts stay fixed until you choose the latest facts.Choose latest report factsReview selected sourcesInspected original report factsI agree to local processing of these selected sourcesGenerate local resultYour local request historyContinue manually using the existing conversation, task, finance or report tools.Current-state report · Asia/Kolkata · later task changes can change these values. 0 currently authorized tasks."
+
+ ❯ src/IntelligenceLifetime.test.tsx:606:39
+    604|         ),
+    605|     );
+    606|     expect(container.textContent).not.toContain(
+       |                                       ^
+    607|       "Inspected original report facts",
+    608|     );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  src/IntelligenceLifetime.test.tsx > N2: overlapping inspection settles hidden until equivalent current report proof
+AssertionError: expected 'Schach · Test userTest company ✓Other…' to contain 'Inspected original report facts'
+
+Expected: "Inspected original report facts"
+Received: "Schach · Test userTest company ✓Other company‹ BackCurrent stateHistorical reportsSaved reportsLocal assistanceLocal assistanceCloseLocal assistanceSelect sources explicitly. Continue normal work while local assistance is unavailable.Operation: Explain selected factsExplicit selected sources (1/50)Choose sources from a readable conversation, task or report.Your selected report facts stay fixed until you choose the latest facts.Choose latest report factsReview selected sourcesYour local request historyContinue manually using the existing conversation, task, finance or report tools.Current-state report · Asia/Kolkata · later task changes can change these values. 0 currently authorized tasks."
+
+ ❯ src/IntelligenceLifetime.test.tsx:631:33
+    629|   expect(button("Generate local result")).toBeUndefined();
+    630|   await releaseReport();
+    631|   expect(container.textContent).toContain("Inspected original report f…
+       |                                 ^
+    632|   expect(button("Generate local result")!.disabled).toBe(true);
+    633|   expect(
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  src/IntelligenceLifetime.test.tsx > N2: unknown enqueue keeps the original period, body and key through pending and new report facts
+AssertionError: Current month report facts: expected undefined to be defined
+ ❯ src/IntelligenceLifetime.test.tsx:251:27
+    249|   await act(async () => {
+    250|     const control = button(text);
+    251|     expect(control, text).toBeDefined();
+       |                           ^
+    252|     expect(control!.disabled, text).toBe(false);
+    253|     control!.click();
+ ❯ process.env.NODE_ENV.exports.act node_modules/react/cjs/react.development.js:814:22
+ ❯ click src/IntelligenceLifetime.test.tsx:249:9
+ ❯ src/IntelligenceLifetime.test.tsx:653:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 39 passed (43)
+   Start at  00:43:43
+   Duration  900ms (tests 59%, transform 20%, environment 13%, import 7%)
+

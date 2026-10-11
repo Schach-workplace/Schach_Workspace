@@ -1,0 +1,478 @@
+{
+  "sourceCommit": "b6ba0e2260de7c1219387006b6b5b8ab5ca55aab",
+  "backendProductCommit": "98b7fb6",
+  "clientProductCommit": "ca13ef3",
+  "nativeShell": "1d74c31132b8246603dbc853556ca29b1a134e4f",
+  "status": "passed",
+  "originalFrozenBodyKeyTargetByteExact200": true,
+  "visibleEditedTitleNotSubmitted": true,
+  "sameTaskFullDTOAndVersionUnchanged": true,
+  "publicationCountStill2": true,
+  "outcomeExistingNativeSuccessAndOpenControl": true,
+  "transportOnlyCanonicalRecaptureCount": 1,
+  "events": [
+    {
+      "method": "GET",
+      "path": "/api/companies/c-schach/intelligence/jobs/{owned-job}",
+      "bindingLabel": "A",
+      "phase": "binding_released_before_forward",
+      "elapsedSeconds": 2.512,
+      "upstreamStatus": 200,
+      "structuredRawExpired": false
+    },
+    {
+      "method": "GET",
+      "path": "/api/companies/c-schach/intelligence/jobs/{owned-job}",
+      "bindingLabel": "A",
+      "phase": "binding_released_before_forward",
+      "elapsedSeconds": 0.0,
+      "upstreamStatus": 200,
+      "structuredRawExpired": false
+    },
+    {
+      "method": "GET",
+      "path": "/api/companies/c-schach/intelligence/jobs/{owned-job}",
+      "bindingLabel": "A",
+      "phase": "binding_released_before_forward",
+      "elapsedSeconds": 0.0,
+      "upstreamStatus": 200,
+      "structuredRawExpired": false
+    },
+    {
+      "method": "POST",
+      "path": "/api/companies/c-schach/conversations/{private}/task-conversions",
+      "upstreamStatus": 200,
+      "acknowledgementDropped": true,
+      "credentialEvidenceRedacted": true
+    },
+    {
+      "method": "POST",
+      "path": "/api/companies/c-schach/intelligence/jobs/{owned-job}/publication-access",
+      "bindingLabel": "B",
+      "phase": "binding_released_before_forward",
+      "elapsedSeconds": 42.89,
+      "upstreamStatus": 200,
+      "structuredRawExpired": false
+    },
+    {
+      "method": "POST",
+      "path": "/api/companies/c-schach/intelligence/jobs/{owned-job}/publication-access",
+      "bindingLabel": "B",
+      "phase": "binding_released_before_forward",
+      "elapsedSeconds": 42.756,
+      "upstreamStatus": 200,
+      "structuredRawExpired": false
+    },
+    {
+      "method": "GET",
+      "path": "/api/companies/c-schach/intelligence/jobs/{owned-job}",
+      "bindingLabel": "A",
+      "phase": "binding_released_before_forward",
+      "elapsedSeconds": 0.057,
+      "upstreamStatus": 403,
+      "structuredRawExpired": true
+    },
+    {
+      "method": "POST",
+      "path": "/api/companies/c-schach/intelligence/jobs/{owned-job}/publication-access",
+      "bindingLabel": "B",
+      "phase": "binding_released_before_forward",
+      "elapsedSeconds": 42.67,
+      "upstreamStatus": 200,
+      "structuredRawExpired": false
+    },
+    {
+      "method": "GET",
+      "path": "/api/companies/c-schach/intelligence/jobs/{owned-job}",
+      "bindingLabel": "A",
+      "phase": "binding_released_before_forward",
+      "elapsedSeconds": 0.0,
+      "upstreamStatus": 200,
+      "structuredRawExpired": false
+    },
+    {
+      "method": "POST",
+      "path": "/api/companies/c-schach/intelligence/jobs/{owned-job}/publication-access",
+      "bindingLabel": "B",
+      "phase": "binding_released_before_forward",
+      "elapsedSeconds": 37.882,
+      "upstreamStatus": 200,
+      "structuredRawExpired": false
+    },
+    {
+      "method": "GET",
+      "path": "/api/companies/c-schach/intelligence/jobs/{owned-job}",
+      "bindingLabel": "A",
+      "phase": "binding_released_before_forward",
+      "elapsedSeconds": 0.0,
+      "upstreamStatus": 200,
+      "structuredRawExpired": false
+    },
+    {
+      "method": "POST",
+      "path": "/api/companies/c-schach/intelligence/jobs/{owned-job}/publication-access",
+      "bindingLabel": "B",
+      "phase": "binding_released_before_forward",
+      "elapsedSeconds": 32.864,
+      "upstreamStatus": 200,
+      "structuredRawExpired": false
+    },
+    {
+      "method": "GET",
+      "path": "/api/companies/c-schach/intelligence/jobs/{owned-job}",
+      "bindingLabel": "A",
+      "phase": "binding_released_before_forward",
+      "elapsedSeconds": 0.0,
+      "upstreamStatus": 200,
+      "structuredRawExpired": false
+    },
+    {
+      "method": "GET",
+      "path": "/api/companies/c-schach/intelligence/jobs/{owned-job}",
+      "bindingLabel": "A",
+      "phase": "binding_released_before_forward",
+      "elapsedSeconds": 0.0,
+      "upstreamStatus": 200,
+      "structuredRawExpired": false
+    },
+    {
+      "method": "POST",
+      "path": "/api/companies/c-schach/intelligence/jobs/{owned-job}/publication-access",
+      "bindingLabel": "B",
+      "phase": "binding_released_before_forward",
+      "elapsedSeconds": 0.0,
+      "upstreamStatus": 200,
+      "structuredRawExpired": false
+    },
+    {
+      "method": "POST",
+      "path": "/api/companies/c-schach/intelligence/jobs/{owned-job}/publication-access",
+      "bindingLabel": "B",
+      "phase": "binding_released_before_forward",
+      "elapsedSeconds": 0.0,
+      "upstreamStatus": 200,
+      "structuredRawExpired": false
+    },
+    {
+      "method": "GET",
+      "path": "/api/companies/c-schach/intelligence/jobs/{owned-job}",
+      "bindingLabel": "A",
+      "phase": "binding_released_before_forward",
+      "elapsedSeconds": 0.0,
+      "upstreamStatus": 200,
+      "structuredRawExpired": false
+    },
+    {
+      "method": "POST",
+      "path": "/api/companies/c-schach/intelligence/jobs/{owned-job}/publication-access",
+      "bindingLabel": "B",
+      "phase": "binding_released_before_forward",
+      "elapsedSeconds": 0.0,
+      "upstreamStatus": 200,
+      "structuredRawExpired": false
+    },
+    {
+      "method": "GET",
+      "path": "/api/companies/c-schach/intelligence/jobs/{owned-job}",
+      "bindingLabel": "A",
+      "phase": "binding_released_before_forward",
+      "elapsedSeconds": 0.0,
+      "upstreamStatus": 200,
+      "structuredRawExpired": false
+    },
+    {
+      "method": "POST",
+      "path": "/api/companies/c-schach/intelligence/jobs/{owned-job}/publication-access",
+      "bindingLabel": "B",
+      "phase": "binding_released_before_forward",
+      "elapsedSeconds": 0.0,
+      "upstreamStatus": 200,
+      "structuredRawExpired": false
+    },
+    {
+      "method": "GET",
+      "path": "/api/companies/c-schach/intelligence/jobs/{owned-job}",
+      "bindingLabel": "A",
+      "phase": "binding_released_before_forward",
+      "elapsedSeconds": 0.0,
+      "upstreamStatus": 200,
+      "structuredRawExpired": false
+    },
+    {
+      "method": "POST",
+      "path": "/api/companies/c-schach/intelligence/jobs/{owned-job}/publication-access",
+      "bindingLabel": "B",
+      "phase": "binding_released_before_forward",
+      "elapsedSeconds": 0.0,
+      "upstreamStatus": 200,
+      "structuredRawExpired": false
+    },
+    {
+      "method": "GET",
+      "path": "/api/companies/c-schach/intelligence/jobs/{owned-job}",
+      "bindingLabel": "A",
+      "phase": "binding_released_before_forward",
+      "elapsedSeconds": 0.0,
+      "upstreamStatus": 200,
+      "structuredRawExpired": false
+    },
+    {
+      "method": "POST",
+      "path": "/api/companies/c-schach/intelligence/jobs/{owned-job}/publication-access",
+      "bindingLabel": "B",
+      "phase": "binding_released_before_forward",
+      "elapsedSeconds": 0.0,
+      "upstreamStatus": 200,
+      "structuredRawExpired": false
+    },
+    {
+      "method": "GET",
+      "path": "/api/companies/c-schach/intelligence/jobs/{owned-job}",
+      "bindingLabel": "A",
+      "phase": "binding_released_before_forward",
+      "elapsedSeconds": 0.0,
+      "upstreamStatus": 200,
+      "structuredRawExpired": false
+    },
+    {
+      "method": "POST",
+      "path": "/api/companies/c-schach/intelligence/jobs/{owned-job}/publication-access",
+      "bindingLabel": "B",
+      "phase": "binding_released_before_forward",
+      "elapsedSeconds": 0.0,
+      "upstreamStatus": 200,
+      "structuredRawExpired": false
+    },
+    {
+      "method": "GET",
+      "path": "/api/companies/c-schach/intelligence/jobs/{owned-job}",
+      "bindingLabel": "A",
+      "phase": "binding_released_before_forward",
+      "elapsedSeconds": 0.0,
+      "upstreamStatus": 200,
+      "structuredRawExpired": false
+    },
+    {
+      "method": "POST",
+      "path": "/api/companies/c-schach/intelligence/jobs/{owned-job}/publication-access",
+      "bindingLabel": "B",
+      "phase": "binding_released_before_forward",
+      "elapsedSeconds": 0.0,
+      "upstreamStatus": 200,
+      "structuredRawExpired": false
+    },
+    {
+      "method": "GET",
+      "path": "/api/companies/c-schach/intelligence/jobs/{owned-job}",
+      "bindingLabel": "A",
+      "phase": "binding_released_before_forward",
+      "elapsedSeconds": 0.0,
+      "upstreamStatus": 200,
+      "structuredRawExpired": false
+    },
+    {
+      "method": "POST",
+      "path": "/api/companies/c-schach/intelligence/jobs/{owned-job}/publication-access",
+      "bindingLabel": "B",
+      "phase": "binding_released_before_forward",
+      "elapsedSeconds": 0.0,
+      "upstreamStatus": 200,
+      "structuredRawExpired": false
+    },
+    {
+      "method": "GET",
+      "path": "/api/companies/c-schach/intelligence/jobs/{owned-job}",
+      "bindingLabel": "A",
+      "phase": "binding_released_before_forward",
+      "elapsedSeconds": 0.0,
+      "upstreamStatus": 200,
+      "structuredRawExpired": false
+    },
+    {
+      "method": "GET",
+      "path": "/api/companies/c-schach/intelligence/jobs/{owned-job}",
+      "bindingLabel": "A",
+      "phase": "binding_released_before_forward",
+      "elapsedSeconds": 0.0,
+      "upstreamStatus": 200,
+      "structuredRawExpired": false
+    },
+    {
+      "method": "POST",
+      "path": "/api/companies/c-schach/intelligence/jobs/{owned-job}/publication-access",
+      "bindingLabel": "B",
+      "phase": "binding_released_before_forward",
+      "elapsedSeconds": 0.0,
+      "upstreamStatus": 200,
+      "structuredRawExpired": false
+    },
+    {
+      "method": "POST",
+      "path": "/api/companies/c-schach/conversations/{private}/task-conversions",
+      "upstreamStatus": 200,
+      "acknowledgementDropped": true,
+      "credentialEvidenceRedacted": true
+    },
+    {
+      "method": "POST",
+      "path": "/api/companies/c-schach/intelligence/jobs/{owned-job}/publication-access",
+      "bindingLabel": "B",
+      "phase": "binding_released_before_forward",
+      "elapsedSeconds": 51.291,
+      "upstreamStatus": 200,
+      "structuredRawExpired": false
+    },
+    {
+      "method": "POST",
+      "path": "/api/companies/c-schach/intelligence/jobs/{owned-job}/publication-access",
+      "bindingLabel": "B",
+      "phase": "binding_released_before_forward",
+      "elapsedSeconds": 51.202,
+      "upstreamStatus": 200,
+      "structuredRawExpired": false
+    },
+    {
+      "method": "POST",
+      "path": "/api/companies/c-schach/intelligence/jobs/{owned-job}/publication-access",
+      "bindingLabel": "B",
+      "phase": "binding_released_before_forward",
+      "elapsedSeconds": 50.926,
+      "upstreamStatus": 200,
+      "structuredRawExpired": false
+    },
+    {
+      "method": "POST",
+      "path": "/api/companies/c-schach/intelligence/jobs/{owned-job}/publication-access",
+      "bindingLabel": "B",
+      "phase": "binding_released_before_forward",
+      "elapsedSeconds": 45.903,
+      "upstreamStatus": 200,
+      "structuredRawExpired": false
+    },
+    {
+      "method": "POST",
+      "path": "/api/companies/c-schach/intelligence/jobs/{owned-job}/publication-access",
+      "bindingLabel": "B",
+      "phase": "binding_released_before_forward",
+      "elapsedSeconds": 40.888,
+      "upstreamStatus": 200,
+      "structuredRawExpired": false
+    },
+    {
+      "method": "POST",
+      "path": "/api/companies/c-schach/intelligence/jobs/{owned-job}/publication-access",
+      "bindingLabel": "B",
+      "phase": "binding_released_before_forward",
+      "elapsedSeconds": 0.0,
+      "upstreamStatus": 200,
+      "structuredRawExpired": false
+    },
+    {
+      "method": "POST",
+      "path": "/api/companies/c-schach/intelligence/jobs/{owned-job}/publication-access",
+      "bindingLabel": "B",
+      "phase": "binding_released_before_forward",
+      "elapsedSeconds": 0.0,
+      "upstreamStatus": 200,
+      "structuredRawExpired": false
+    },
+    {
+      "method": "POST",
+      "path": "/api/companies/c-schach/intelligence/jobs/{owned-job}/publication-access",
+      "bindingLabel": "B",
+      "phase": "binding_released_before_forward",
+      "elapsedSeconds": 0.0,
+      "upstreamStatus": 200,
+      "structuredRawExpired": false
+    },
+    {
+      "method": "POST",
+      "path": "/api/companies/c-schach/intelligence/jobs/{owned-job}/publication-access",
+      "bindingLabel": "B",
+      "phase": "binding_released_before_forward",
+      "elapsedSeconds": 0.0,
+      "upstreamStatus": 200,
+      "structuredRawExpired": false
+    },
+    {
+      "method": "POST",
+      "path": "/api/companies/c-schach/intelligence/jobs/{owned-job}/publication-access",
+      "bindingLabel": "B",
+      "phase": "binding_released_before_forward",
+      "elapsedSeconds": 0.0,
+      "upstreamStatus": 200,
+      "structuredRawExpired": false
+    },
+    {
+      "method": "POST",
+      "path": "/api/companies/c-schach/intelligence/jobs/{owned-job}/publication-access",
+      "bindingLabel": "B",
+      "phase": "binding_released_before_forward",
+      "elapsedSeconds": 0.0,
+      "upstreamStatus": 200,
+      "structuredRawExpired": false
+    },
+    {
+      "method": "POST",
+      "path": "/api/companies/c-schach/intelligence/jobs/{owned-job}/publication-access",
+      "bindingLabel": "B",
+      "phase": "binding_released_before_forward",
+      "elapsedSeconds": 0.0,
+      "upstreamStatus": 200,
+      "structuredRawExpired": false
+    },
+    {
+      "method": "POST",
+      "path": "/api/companies/c-schach/intelligence/jobs/{owned-job}/publication-access",
+      "bindingLabel": "B",
+      "phase": "binding_released_before_forward",
+      "elapsedSeconds": 0.0,
+      "upstreamStatus": 200,
+      "structuredRawExpired": false
+    },
+    {
+      "method": "POST",
+      "path": "/api/companies/c-schach/intelligence/jobs/{owned-job}/publication-access",
+      "bindingLabel": "B",
+      "phase": "binding_released_before_forward",
+      "elapsedSeconds": 0.0,
+      "upstreamStatus": 200,
+      "structuredRawExpired": false
+    },
+    {
+      "method": "POST",
+      "path": "/api/companies/c-schach/intelligence/jobs/{owned-job}/publication-access",
+      "bindingLabel": "B",
+      "phase": "binding_released_before_forward",
+      "elapsedSeconds": 0.0,
+      "upstreamStatus": 200,
+      "structuredRawExpired": false
+    },
+    {
+      "method": "POST",
+      "path": "/api/companies/c-schach/intelligence/jobs/{owned-job}/publication-access",
+      "bindingLabel": "B",
+      "phase": "binding_released_before_forward",
+      "elapsedSeconds": 0.0,
+      "upstreamStatus": 200,
+      "structuredRawExpired": false
+    },
+    {
+      "method": "POST",
+      "path": "/api/companies/c-schach/intelligence/jobs/{owned-job}/publication-access",
+      "bindingLabel": "B",
+      "phase": "binding_released_before_forward",
+      "elapsedSeconds": 0.0,
+      "upstreamStatus": 200,
+      "structuredRawExpired": false
+    },
+    {
+      "method": "POST",
+      "path": "/api/companies/c-schach/conversations/{private}/task-conversions",
+      "upstreamStatus": 200,
+      "acknowledgementDropped": false,
+      "matchesDroppedRequest": true,
+      "credentialEvidenceRedacted": true
+    }
+  ]
+}

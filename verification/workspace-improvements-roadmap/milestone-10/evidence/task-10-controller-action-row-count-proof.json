@@ -1,0 +1,411 @@
+{
+  "correction": "48 actual action rows; the 49th literal unchecked token quotes checkbox syntax in the introduction. No named requirement or global control is removed.",
+  "records": [
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-adopted-implementation-plan.md",
+      "sha256": "fd591bae47840a87aed24a20da0ee174720103f0aef08341620928bd84c2da35",
+      "actual_action_checkbox_rows": 48,
+      "literal_unchecked_token_occurrences": 49,
+      "action_rows": [
+        {
+          "line": 124,
+          "text": "- [ ] Write RED `TestIntelligenceSelectionBinding`: same typed selection/order canonicalizes; duplicate/unknown/missing fields, cross-company/parent spoof, hidden reference and unselected expansion reject; expected hash/revision mismatch409; changed language/opt-in/options changes intent; ordered record options do not reorder."
+        },
+        {
+          "line": 125,
+          "text": "- [ ] Write RED `TestIntelligenceNestedEvidenceBinding`: same Task.Version with edited selected comment invalidates; a nonselected added comment does not change task-fields-only selection; record response/state changes detected independently; selected goal/report private evidence cannot inherit parent ACL. Historical readable task edit preserves exact frozen fact explanation while current-task explanation invalidates."
+        },
+        {
+          "line": 126,
+          "text": "- [ ] Run `cd backend && go test ./platform -run 'TestIntelligence(Selection|NestedEvidence)' -count=1`, record RED (undefined interface/assertion), implement manifest/canonicalizer/adapters and selection-preview, then same command GREEN. Reject unavailable dependency adapter instead of a silent source omission. Self-review and commit this internal source-contract slice; independent controller review occurs once at the clean whole-milestone handoff."
+        },
+        {
+          "line": 132,
+          "text": "- [ ] RED `TestIntelligenceEnqueueRetry` concurrent same key/payload\u2192one row, lost ACK replay same job/expiry, changed selection/operation intent conflict, unavailable provider/false opt-in/viewer write spoof denied, quota overflow429/no partial sources. Viewer read-derived operations follow actual readable source scope; they never gain business write permission."
+        },
+        {
+          "line": 133,
+          "text": "- [ ] RED `TestIntelligenceSourceAuthorization` actual current actor/suspension/session/company/private membership/history epoch and policy; founder outside DM denied; hidden task after reassignment with unchanged readBasis denied; removed/purged message without revision bump, media nonclean/expired/unattached/mismatched parent denied; report ALL contributing/ref/coverage sources beyond page1 denied; selected source unavailability denies whole composite without partial claims."
+        },
+        {
+          "line": 134,
+          "text": "- [ ] RED migration roundtrip, mirrored SQL equivalence, constraints/indexes, owner/source scoping and retention limit computation. Register test AutoMigrate and runtime SQL, implement API safe error/status contract and transactional canonical enqueue. Run `cd backend && go test ./platform -run 'TestIntelligence(Enqueue|SourceAuthorization|Migration)' -count=1` RED/GREEN and accepted migration runner checks; PostgreSQL duplicate enqueue proves uniqueness under actual locks. Commit."
+        },
+        {
+          "line": 140,
+          "text": "- [ ] RED `TestIntelligenceLeaseRaces`: SKIP LOCKED short claim, two workers one completion, expired-token worker cannot commit/renew; cancellation before claim yields0 provider invocations; cancel while provider blocked or waiting for the shared budget, revoke before read/during infer/before commit, original sessionRef expiry/revocation/UserEpoch change, different newer HTTP session, company departure and rejoin history reset all prevent ready or later raw disclosure. M9 exact helper reconciliation is required before these tests can be implemented against real producers. Failed final transaction persists no output/provenance."
+        },
+        {
+          "line": 141,
+          "text": "- [ ] RED `TestIntelligenceWorkerIsolation`: block fake provider, communication revocation/call work still progresses; shared OCR/inference budget max1; queued cancellation works without acquiring inference budget. Lease renewals never extend overall execution deadline or cancelled job."
+        },
+        {
+          "line": 142,
+          "text": "- [ ] Implement short claim \u226410s, one claimed job per available budget slot, separate worker ticker1s and maintenance ticker60s/batch100; invocation deadlines and retry limits from freeze. Renew/check every15s, current cancellation/revocation hints cancel local context promptly, final compare under locks is authoritative. Never hold authorization transaction during inference. Startup/shutdown releases goroutines/readers/budget; disabled config starts no provider calls. Missing installed model/executable or runtime down marks capabilities unavailable with a safe code and preserves normal application/manual startup; never make an optional provider outage take down the server. Use process-wide budget only under explicitly single-worker-process deployment; multiple runtime replicas require shared provider-capacity lease keyed by deployment/provider identity (or disable workers on all but one), not an asserted global semaphore."
+        },
+        {
+          "line": 143,
+          "text": "- [ ] Run RED/GREEN `cd backend && go test ./platform -run 'TestIntelligence(Lease|Worker)' -count=1`; actual PostgreSQL job/cancel/lease races and both runtime adapter startup/shutdown integration later in Task10. Commit."
+        },
+        {
+          "line": 149,
+          "text": "- [ ] RED Whisper fake-runner cases: fixed executable/argv, no shell interpolation, path traversal/symlink/provider-selected path denied, missing/wrong-digest model returns provider_unavailable, offline loading, bounded ffprobe rejects any video stream, unknown/no audio stream, unsupported WAV/M4A/WebM decode, corrupt/over600s/oversize input or output, byte mismatch abort before infer, iterator segments actually consumed under deadline. Reader closes on cancellation; subprocess group terminates and Wait completes; owner-only temp files deleted on success/failure/cancel/lease loss."
+        },
+        {
+          "line": 150,
+          "text": "- [ ] Implement configured realpaths and owner-only scratch directory0700/files0600 under operator-controlled root, internally generated names. Copy/hash authorized MediaStore bytes with limit+1 and close-on-context cancel; ffprobe bounded selected bytes and require audio-only WAV/M4A/WebM before bounded decode; do not infer eligibility from filename, client MIME, sniffed video-container MIME or a later voice-kind field; prefer worker pipe input where practical, otherwise unlink temp immediately after adapter completes. Sweep abandoned owned scratch directories by job/lease age without following symlinks or touching active leases. No persistent decoded audio/output archives."
+        },
+        {
+          "line": 151,
+          "text": "- [ ] Fixed Python `WhisperModel(localModelPath,device='cpu',compute_type='int8',local_files_only=True,cpu_threads=4,num_workers=1)`, explicit beam5/vad_filterFalse, bounded lazy decoding/segments, HF_HUB_OFFLINE=1 and other applicable local-only settings. Validate package versions and all four model hashes from reproducibility manifest at configured startup; never use model-name resolution/fallback downloads. Emit only bounded typed JSON on stdout; capture bounded stderr to discard/redact into safe codes."
+        },
+        {
+          "line": 152,
+          "text": "- [ ] RED Ollama transport: operator-only literal loopback URL/no credentials/query/fragment, disabled environment proxies and redirects, fixed `/api/version`, `/api/tags`, `/api/show` identity/local model capability verification and `/api/generate`; reject cloud/remote descriptor/response metadata, missing model/tag digest drift/version incompatibility before source send. No `/pull`, web fetch, tools, source URL or dynamic model override."
+        },
+        {
+          "line": 153,
+          "text": "- [ ] Implement pinned request `stream:false,think:false,truncate:false,shift:false`, schema `format` with exact citation enum, temperature0/seed1, num_ctx8192/num_predict1024 under freeze. Validate local installed model metadata and returned model identity every invocation/cached configuration epoch as appropriate; never silently substitute. Require done=true and acceptable stop completion; partial length-truncated JSON/output rejected. Enforce HTTP/read/output/deadline bounds and close on cancel. No automatic schema weakening, context reduction, truncation, source dropping or chunking fallback. Error `exceed_context_size_error` maps terminal `source_too_large` with manual/reselect path, not transient retry."
+        },
+        {
+          "line": 154,
+          "text": "- [ ] Run `cd backend && go test ./platform -run 'TestIntelligence(Whisper|Ollama|Temp|Context)' -count=1` RED/GREEN with fake process/HTTP (no real models for unit suite). Actual pinned-provider acceptance is Task10; valid JSON fake tests alone do not establish integration. Commit."
+        },
+        {
+          "line": 160,
+          "text": "- [ ] RED decoder: duplicate JSON keys (Go DisallowUnknownFields alone does not reject them), unknown fields/tools, trailing values, invalid UTF-8/NaN/infinity/fractional integer/overflow, out-of-set/duplicate citation IDs, missing citations, timestamps outside audio, invented owner/date, wrong currency/amount and oversized strings/arrays all fail safely. Quoted injection with valid selected IDs never expands source retrieval or makes any mutation. Human grounding fixture catches structurally valid unsupported claims; mark uncertain/do not claim schema proves truth."
+        },
+        {
+          "line": 161,
+          "text": "- [ ] RED lifecycle: exact recheck after provider response includes actor/current-and-original-sessionRef/UserEpoch/membership/current source row/policy/epoch/hash/removal/retention and lease/cancel token; any invalidates whole output. GET/list/status preview/publication/export adapter never reads raw stored output before ALL-source check; source revoked beyond loaded page cannot leak result title/snippet/citation. Rejoin does not resurrect old jobs. Independent published work still reads according to its own business scope."
+        },
+        {
+          "line": 162,
+          "text": "- [ ] Implement atomic result commit and metadata-only errors/audit. Include source mutation hooks for message/record/comment/task/expense/live-goal relevant changes, conversation/member/policy changes and M9 departure/session paths. Ordinary readable parent edits alone do not invalidate bound immutable_fact IDs/hashes; hooks must distinguish content freshness from current ACL loss. Hooks may mark reverse-indexed outputs unavailable cheaply; no inference or long artifact deletion inside business transaction. Enqueue/claim/final/read checks remain authoritative if hints drop."
+        },
+        {
+          "line": 163,
+          "text": "- [ ] At expiry/invalidation/cancel, scrub output JSON/temporary bytes and derived transcript text promptly; retain minimal retry/provenance identifiers/hashes only under documented metadata retention. Enforce result expiry=min(jobTTL, all effective source deadlines, parent transcript expiry); source policy shortening applies immediately. Source retention transaction marks dependent jobs invalid before later disclosure; cleanup removes bytes independently in bounded batches. No copying plaintext into retained retry/debug/notification tables."
+        },
+        {
+          "line": 164,
+          "text": "- [ ] Run `cd backend && go test ./platform -run 'TestIntelligence(Schema|Grounding|Read|Retention|Invalidation)' -count=1` RED/GREEN; existing retention/access/conversion tests and PostgreSQL mutation-vs-disclosure races. Commit."
+        },
+        {
+          "line": 170,
+          "text": "- [ ] RED `TestIntelligenceDeterministicFacts`: exact numerator/denominator/rate and null unavailable; original/current all-day company zone and timed exact boundary; acceptance episodes vs unique task counts, unknown-before/gap coverage; no denominator substitution or fabricated100%. Finance130050 minor INR renders1300.50 using deterministic parser/formatter; model-proposed fractional/overflow/extra amount rejected. Goal correction/legacy history and recorded capacity missing/zero/undated method labels preserved; no Goal.Current write."
+        },
+        {
+          "line": 171,
+          "text": "- [ ] RED fact-key relation/code compatibility: out-of-selection metric or unsupported causal/comparison claim rejects; server values stay byte-equivalent with malicious numeric model output; every sentence cites included fact keys/source roots. Current-state snapshot explanation clearly current state; historical explanation generation-time facts remain frozen but current ALL-source ACL failure denies all."
+        },
+        {
+          "line": 172,
+          "text": "- [ ] Implement allowlisted explanatory template registry keyed by producer schema/metric version and relation; include period/zone/coverage/limitations in rendering. Model selects permissible narrative ordering/codes only, never arithmetic or free numeric explanations. No fallback to querying all company/private records when requested fact unsupported."
+        },
+        {
+          "line": 173,
+          "text": "- [ ] Run `cd backend && go test ./platform -run 'TestIntelligence(DeterministicFacts|Explanation)' -count=1` RED/GREEN and accepted report/finance/goal semantics suites; commit."
+        },
+        {
+          "line": 179,
+          "text": "- [ ] RED `TestIntelligenceReviewedPublication`: generate/view/edit/cancel creates0 business records; human resolves required owner/reviewer/date/money with actual pickers/validators, previews current full destination audience and exact excerpt/attachments, acknowledges and confirms once; existing task review/evidence/deadline/finance guards hold. Changed reviewed fields invalidate audience preview. Private candidates from mixed conversations cannot enter publication; single-conversation all contributing messages/voice parent sources are retained. Hidden task parent/dependency references stay excluded."
+        },
+        {
+          "line": 180,
+          "text": "- [ ] RED `TestIntelligencePublishedRetry`: lost ACK/concurrent same key\u2192one business record/provenance/audit; key+changed reviewed payload conflict; source revision changes after successful write\u2192current original-source ACL plus result/destination ACL required, return same published result without requiring raw ready output or exact old revision; no new record. Source removed/revoked, changed policy disallowing replay under existing publication rules, or inaccessible canonical result deny replay. Before first write any stale job/result/hash/source/destination version denies, even if model text appears plausible."
+        },
+        {
+          "line": 181,
+          "text": "- [ ] Integrate first-write exact raw job/result/source/policy validation under SAME transaction as existing canonical apply, not a preflight-only endpoint. Successful canonical lookup uses current-ACL-only source binding check and preserved publication provenance, never unconditional ready-job validation first; do not resurrect scrubbed text. Retain existing CommunicationAction source-action claim behavior for repeated explicit conversions. User needs a deliberate separate action ID for another supported action; model cannot invent action claims to duplicate work."
+        },
+        {
+          "line": 182,
+          "text": "- [ ] Ordinary business-only candidates consume accepted M5 canonical create and destination audience preview. Expenses only draft, requests published intake only, no submission/approval/payment/goal adjustment. Candidate editable text copied into human form remains source-bound until confirmed; the user cannot remove provenance through a first-party \u201cmanual\u201d toggle to bypass stale checks. Original ordinary manual form stays available independently."
+        },
+        {
+          "line": 183,
+          "text": "- [ ] Run `cd backend && go test ./platform -run 'TestIntelligence(ReviewedPublication|PublishedRetry)' -count=1` RED/GREEN; existing canonical task/expense/intake retry tests plus PostgreSQL simultaneous source revoke/write prove atomicity. Commit."
+        },
+        {
+          "line": 189,
+          "text": "- [ ] RED component/provider tests for actual entry points: select explicit messages/records across loaded history without auto-select whole thread; counts/revisions/limit shown; one eligible selected audio\u2192Transcribe with explicit local opt-in; choose supported ready transcript as selected source for summary/action; task detail selected fields/comment and report metric/fact explanation entry. Owner/date unresolved visible, citation opens exact currently authorized source location/revision notice. Record responses included only when explicitly selected. No technical-ID textbox or technical-ID fallback when pickers fail; show recoverable unavailable/manual workflows."
+        },
+        {
+          "line": 190,
+          "text": "- [ ] Build selection\u2192authorized preview\u2192opt-in\u2192enqueue\u2192pending/status/cancel\u2192ready transcript/summary/report view. Show coherent unavailable/missing-model/too-large/failure/expiry/stale states with \u201cContinue manually\u201d and deliberate reselect/new generation. Capability unavailable leaves original message/task/finance/report forms fully usable. No automatic model request on opening a conversation or report."
+        },
+        {
+          "line": 191,
+          "text": "- [ ] Wire \u201cReview task/expense/request draft\u201d into existing human publication forms using typed candidate seed/intelligenceBasis, full selected sources and stable frozen attempt. Preview exact content/audience, resolve required fields, explicit confirmation, store success before any follow-up refresh; retry same unknown attempt after transport loss. Do not default unresolved owner to current user in an AI-seeded form (existing manual form defaults may remain). Never treat raw model output as an HTML/Markdown link capable of fetching arbitrary targets."
+        },
+        {
+          "line": 192,
+          "text": "- [ ] RED privacy/lifecycle: company/user switch, same-key reauthorization fetch, source event outside newest page, background/resume, changed task audience/readBasis unchanged, delayed old response, heartbeat failure, source denial all hide fetched output immediately and disable preview/copy/share/write. Keep independently authored scoped RAM/frozen attempts on transient network failure, preserving inspected versions; confirmed revocation clears source-derived candidates and attempts. No localStorage/persisted query cache or browser notification body copies. Actual same-key current fetch withholds result/citations/actions; scoped purely authored RAM/frozen attempts and neutral finite numeric geometry preserve editor focus/keyboard and scroll through \u226530s pending reauthorization. Clear source-derived output and attempts on confirmed denial/principal/company/true policy-epoch barriers; background hides disclosures, no fetched-text retention. Actual held-fetch runtime evidence covers this behavior, not only reducers. Test each actual flow component and query ownership hook, not only shared reducers."
+        },
+        {
+          "line": 193,
+          "text": "- [ ] Run `cd frontend && npm test -- src/components/IntelligencePanel.test.tsx src/components/IntelligenceSelection.test.tsx src/components/IntelligenceResult.test.tsx src/components/IntelligenceDraftReview.test.tsx src/data/useIntelligence.test.tsx`, RED/GREEN; existing Connect/publication/report tests, `npm run typecheck`, `npm run build`, and demo build. Demo explicitly unavailable unless backed by deterministic labelled fictional fixtures; never claim actual inference. Commit."
+        },
+        {
+          "line": 199,
+          "text": "- [ ] Before any Expo API code, follow `mobile/AGENTS.md`: read actual package major (currently57), matching official docs `https://docs.expo.dev/versions/v57.0.0/` for any changed API. Reuse existing supported media/document/audio/picker/sheet APIs where possible; no new dependency just to transcribe already uploaded media."
+        },
+        {
+          "line": 200,
+          "text": "- [ ] RED `IntelligenceScreen.test.tsx`/route integration: chat action and selected messages/record/clean voice entry; task detail/report/goal \u201cExplain selected facts\u201d entry; More explicit owner job history; routed company/id independently authorized after navigation, works outside bootstrap/current chat page. Android Back/focus/foreground barriers do not expose previous company result. Poll only active authorized route; actual provider/source events invalidate while offscreen."
+        },
+        {
+          "line": 201,
+          "text": "- [ ] Implement native selection sheet with visible count/exact revision, opt-in notice, loading/cancel/retry/transcript segments/citations/limitations/manual fallback; use accessible labelled controls44px, long transcript virtualized/bounded rendering, keyboard-safe review and large-text layout. Native Media's M4A remains reserve\u2192upload\u2192finalize\u2192message attach before transcription; recording permission itself never enqueues AI."
+        },
+        {
+          "line": 202,
+          "text": "- [ ] RED `IntelligenceDraftReview.test.tsx`: source-bound seed reaches actual Publication/accepted ordinary task form; empty owner/date/reviewer preserved, person/deadline/exact amount controls, current audience notice and explicit confirm; unknown network attempt survives remount/background in scoped RAM, committed result saved before failed refresh, edits require new preview, one business record. `IntelligenceResult.test.tsx`: selected citation navigation to current task/message/report route, revoke outside current message page clears whole output, pending reauthorization hides all fetched content, no native share/download/direct-copy bypass or raw RN text children/whitespace in View containers. Actual \u226530s pending current-fetch keyboard/focus/scroll geometry holds scoped purely authored RAM/inspected CAS/frozen attempt without retaining fetched text; confirm true denial/company/principal/epoch purges and background source withholding. Reuse actual Workspace/Page/useRamInput lifecycle, not an invented generic authored-shell export."
+        },
+        {
+          "line": 203,
+          "text": "- [ ] Run `cd mobile && npm test -- src/IntelligenceScreen.test.tsx src/IntelligenceSelection.test.tsx src/IntelligenceResult.test.tsx src/IntelligenceDraftReview.test.tsx src/IntelligenceRoute.test.tsx src/intelligenceClient.test.ts`; RED/GREEN, existing Publication/Workspace/Media/source lifecycle suites, `npm run typecheck`, `npm run lint`, `npm run export` for Android+iOS. Browser/emulator exercise is code evidence only; physical microphone/keyboard/accessibility/background and signing remain explicit gates. Commit."
+        },
+        {
+          "line": 228,
+          "text": "- [ ] Inventory configured pins without downloads: Python3.14.7; faster-whisper1.2.1/PyAV18.1.0/ctranslate2 4.8.2/huggingface_hub2.2.0; Whisper model revision `d90ca5fe260221311c53c58e660288d3deb8d356`, all four SHA256 from reproducibility file; model.bin `dcb76c6586fc06cbdac6dd21f14cfd129cc4cdd9dce19bf4ffa62e59cbe6e6d1`. Ollama0.40.2 image `ollama/ollama@sha256:b86366bb528bbf7f1424435d165028497a5b69bf6ddb4fa5a87102e2b79f44fb`, local11435; qwen3:4b API digest `359d7dd4bcdab3d86b87d73ac27966f4dbb9f5efdfcc75d34a8764a09474fae7`, GGUF SHA256 `3e4cb14174460404e7a233e531675303b2fbf7749c02f91864fe311ab6344e4f`. Missing/mismatched pins fail setup safely; no test auto-install/pull/cloud fallback. Preserve owned running configuration; do not replace container to make smoke pass."
+        },
+        {
+          "line": 229,
+          "text": "- [ ] Run actual fixed adapters on already provisioned public/fictional fixtures; save safe provider identity/config/output validation/timing evidence. Earlier saved public FLAC Whisper and fictional Qwen runs establish preflight only, not app integration. Public fixture SHA256 `63a4b1e4c1dc655ac70961ffbf518acd249df237e5a0152faae9a4a836949715`; do not re-download it. Complete wheel hashes/base image and language/grounding/capacity evaluation remain production gates."
+        },
+        {
+          "line": 230,
+          "text": "- [ ] For actual application voice pipeline, reuse prepared `/tmp/schach-roadmap-native-runtime-20261011/m10-fixtures/public-speech-fixture.wav` and `manifest.json`:352078bytes,11.000s, pcm_s16le/mono16000, SHA256 `40caa4d41e4f0458f9ccaaaa1a16dff9fe47c14f5bc5d40713bde536325f967a`, decoded from the pinned public JFK FLAC. It is public speech attached in a fictional owned company for the test, never fictional generated/private company speech or production accuracy proof. Revalidate fixture/hash and bounded ffprobe audio-only through actual adapter; no new download or fabricated consent. Never submit FLAC itself as accepted voice or patch database media state. Through actual authenticated owned app endpoints create allowed conversation \u2192 reserve hashed WAV \u2192 upload bytes \u2192 configured scanner finalize clean \u2192 send message with returned media ID \u2192 read canonical message revision \u2192 source preview \u2192 explicit opt-in enqueue \u2192 real worker/provider \u2192 authorized result. Verify nonempty coherent public English and valid timestamps/citations, source/hash/retention bound. For production-like scanner claim use actual configured clean scanner; if only a deterministic test scanner is available label that limitation, do not claim real scanning certification."
+        },
+        {
+          "line": 231,
+          "text": "- [ ] From that ready transcript explicitly select transcript+allowed fictional message \u2192 real summary/action generation \u2192 human review picks valid owner/date/reviewer and audience \u2192 canonical task create using stable retry key \u2192 repeat exact request after simulated lost response\u2192same ID/one task. Repeat expense/intake appropriate fictional reviewed flows via existing validators; no approve/pay. Actual report explanation uses accepted M6 fictional snapshot metric facts, exact rendered totals/coverage/citations and unchanged server arithmetic. Record no real private content in fixtures/screenshots."
+        },
+        {
+          "line": 232,
+          "text": "- [ ] Run actual context-overflow diagnostic under separate bounded test settings: Ollama0.40.2 qwen3:4b, streamfalse/thinkfalse/truncatefalse/shiftfalse, num_ctx512/num_predict1 and saved fictional repeated-word fixture. Earlier observed HTTP400 `exceed_context_size_error`,2531 prompt tokens versus512, in `context-overflow-preflight.json` is evidence, not a newly run result. Acceptance requires adapter mapping to source_too_large and0 ready outputs/business mutations, no automatic dropped-source retry. Also exercise configured full-context success boundary using actual runtime token counts, not guessed character equivalence across languages."
+        },
+        {
+          "line": 233,
+          "text": "- [ ] Runtime negative acceptance: config disabled/missing adapter/crash/timeouts/malformed output/digest drift/cloud metadata; cancel/revoke while provider blocked/real request pending; source edit/retention after ready; owner/history rejoin; actual same-membership business audience change; lease expiry/double worker; scratch cleanup. Use mock controlled provider for deterministic race scheduling plus at least real adapter cancellation/timeout/temp evidence. Manual task/report/finance workflow stays operable in every failure state. Never use an installed model as a substitute for current application-source authorization proof."
+        },
+        {
+          "line": 234,
+          "text": "- [ ] Backend full/race and PostgreSQL suites, both standalone and Encore isolated migrations/runtime requests; web and native targeted/full/build checks after changed code. Owned Chromium at desktop and320/390/430px: select\u2192transcribe\u2192summary\u2192review audience\u2192canonical retry; inaccessible result/citation, pending recheck and manual fallback screenshots. Native export plus actual route/provider tests and available emulator smoke of the same actions. Collect actual \u226530s held-current-fetch keyboard/focus/scroll geometry evidence in both browser and available native runtime; source-derived output stays hidden with actions disabled, scoped authored RAM/inspected versions/frozen unknown retry remains usable. No physical/language-quality/p95/capacity certification from one English fixture or DOM tests."
+        },
+        {
+          "line": 235,
+          "text": "- [ ] Write evidence with exact commands/exits, fixture hashes/runtime/model/config, actual source/API IDs only where fictional, observed latency separately from guarantees, tests tied to source/revocation/retry/mobile requirements, and remaining rollout gates. Controller independently reviews implementation and updates accepted plan/Rulings before marking M10 complete. Commit reviewed implementation/evidence; this candidate does not authorize merges/restarts/deployments beyond the controller's existing user scope."
+        }
+      ]
+    },
+    {
+      "path": "docs/superpowers/plans/2026-10-11-grounded-local-intelligence.md",
+      "sha256": "3bb28ef82592253f7e554374adf5ff82ffb4e87fc9e515e0656c9abf997a8c21",
+      "actual_action_checkbox_rows": 48,
+      "literal_unchecked_token_occurrences": 50,
+      "action_rows": [
+        {
+          "line": 124,
+          "text": "- [ ] Write RED `TestIntelligenceSelectionBinding`: same typed selection/order canonicalizes; duplicate/unknown/missing fields, cross-company/parent spoof, hidden reference and unselected expansion reject; expected hash/revision mismatch409; changed language/opt-in/options changes intent; ordered record options do not reorder."
+        },
+        {
+          "line": 125,
+          "text": "- [ ] Write RED `TestIntelligenceNestedEvidenceBinding`: same Task.Version with edited selected comment invalidates; a nonselected added comment does not change task-fields-only selection; record response/state changes detected independently; selected goal/report private evidence cannot inherit parent ACL. Historical readable task edit preserves exact frozen fact explanation while current-task explanation invalidates."
+        },
+        {
+          "line": 126,
+          "text": "- [ ] Run `cd backend && go test ./platform -run 'TestIntelligence(Selection|NestedEvidence)' -count=1`, record RED (undefined interface/assertion), implement manifest/canonicalizer/adapters and selection-preview, then same command GREEN. Reject unavailable dependency adapter instead of a silent source omission. Self-review and commit this internal source-contract slice; independent controller review occurs once at the clean whole-milestone handoff."
+        },
+        {
+          "line": 132,
+          "text": "- [ ] RED `TestIntelligenceEnqueueRetry` concurrent same key/payload\u2192one row, lost ACK replay same job/expiry, changed selection/operation intent conflict, unavailable provider/false opt-in/viewer write spoof denied, quota overflow429/no partial sources. Viewer read-derived operations follow actual readable source scope; they never gain business write permission."
+        },
+        {
+          "line": 133,
+          "text": "- [ ] RED `TestIntelligenceSourceAuthorization` actual current actor/suspension/session/company/private membership/history epoch and policy; founder outside DM denied; hidden task after reassignment with unchanged readBasis denied; removed/purged message without revision bump, media nonclean/expired/unattached/mismatched parent denied; report ALL contributing/ref/coverage sources beyond page1 denied; selected source unavailability denies whole composite without partial claims."
+        },
+        {
+          "line": 134,
+          "text": "- [ ] RED migration roundtrip, mirrored SQL equivalence, constraints/indexes, owner/source scoping and retention limit computation. Register test AutoMigrate and runtime SQL, implement API safe error/status contract and transactional canonical enqueue. Run `cd backend && go test ./platform -run 'TestIntelligence(Enqueue|SourceAuthorization|Migration)' -count=1` RED/GREEN and accepted migration runner checks; PostgreSQL duplicate enqueue proves uniqueness under actual locks. Commit."
+        },
+        {
+          "line": 140,
+          "text": "- [ ] RED `TestIntelligenceLeaseRaces`: SKIP LOCKED short claim, two workers one completion, expired-token worker cannot commit/renew; cancellation before claim yields0 provider invocations; cancel while provider blocked or waiting for the shared budget, revoke before read/during infer/before commit, original sessionRef expiry/revocation/UserEpoch change, different newer HTTP session, company departure and rejoin history reset all prevent ready or later raw disclosure. M9 exact helper reconciliation is required before these tests can be implemented against real producers. Failed final transaction persists no output/provenance."
+        },
+        {
+          "line": 141,
+          "text": "- [ ] RED `TestIntelligenceWorkerIsolation`: block fake provider, communication revocation/call work still progresses; shared OCR/inference budget max1; queued cancellation works without acquiring inference budget. Lease renewals never extend overall execution deadline or cancelled job."
+        },
+        {
+          "line": 142,
+          "text": "- [ ] Implement short claim \u226410s, one claimed job per available budget slot, separate worker ticker1s and maintenance ticker60s/batch100; invocation deadlines and retry limits from freeze. Renew/check every15s, current cancellation/revocation hints cancel local context promptly, final compare under locks is authoritative. Never hold authorization transaction during inference. Startup/shutdown releases goroutines/readers/budget; disabled config starts no provider calls. Missing installed model/executable or runtime down marks capabilities unavailable with a safe code and preserves normal application/manual startup; never make an optional provider outage take down the server. Use process-wide budget only under explicitly single-worker-process deployment; multiple runtime replicas require shared provider-capacity lease keyed by deployment/provider identity (or disable workers on all but one), not an asserted global semaphore."
+        },
+        {
+          "line": 143,
+          "text": "- [ ] Run RED/GREEN `cd backend && go test ./platform -run 'TestIntelligence(Lease|Worker)' -count=1`; actual PostgreSQL job/cancel/lease races and both runtime adapter startup/shutdown integration later in Task10. Commit."
+        },
+        {
+          "line": 149,
+          "text": "- [ ] RED Whisper fake-runner cases: fixed executable/argv, no shell interpolation, path traversal/symlink/provider-selected path denied, missing/wrong-digest model returns provider_unavailable, offline loading, bounded ffprobe rejects any video stream, unknown/no audio stream, unsupported WAV/M4A/WebM decode, corrupt/over600s/oversize input or output, byte mismatch abort before infer, iterator segments actually consumed under deadline. Reader closes on cancellation; subprocess group terminates and Wait completes; owner-only temp files deleted on success/failure/cancel/lease loss."
+        },
+        {
+          "line": 150,
+          "text": "- [ ] Implement configured realpaths and owner-only scratch directory0700/files0600 under operator-controlled root, internally generated names. Copy/hash authorized MediaStore bytes with limit+1 and close-on-context cancel; ffprobe bounded selected bytes and require audio-only WAV/M4A/WebM before bounded decode; do not infer eligibility from filename, client MIME, sniffed video-container MIME or a later voice-kind field; prefer worker pipe input where practical, otherwise unlink temp immediately after adapter completes. Sweep abandoned owned scratch directories by job/lease age without following symlinks or touching active leases. No persistent decoded audio/output archives."
+        },
+        {
+          "line": 151,
+          "text": "- [ ] Fixed Python `WhisperModel(localModelPath,device='cpu',compute_type='int8',local_files_only=True,cpu_threads=4,num_workers=1)`, explicit beam5/vad_filterFalse, bounded lazy decoding/segments, HF_HUB_OFFLINE=1 and other applicable local-only settings. Validate package versions and all four model hashes from reproducibility manifest at configured startup; never use model-name resolution/fallback downloads. Emit only bounded typed JSON on stdout; capture bounded stderr to discard/redact into safe codes."
+        },
+        {
+          "line": 152,
+          "text": "- [ ] RED Ollama transport: operator-only literal loopback URL/no credentials/query/fragment, disabled environment proxies and redirects, fixed `/api/version`, `/api/tags`, `/api/show` identity/local model capability verification and `/api/generate`; reject cloud/remote descriptor/response metadata, missing model/tag digest drift/version incompatibility before source send. No `/pull`, web fetch, tools, source URL or dynamic model override."
+        },
+        {
+          "line": 153,
+          "text": "- [ ] Implement pinned request `stream:false,think:false,truncate:false,shift:false`, schema `format` with exact citation enum, temperature0/seed1, num_ctx8192/num_predict1024 under freeze. Validate local installed model metadata and returned model identity every invocation/cached configuration epoch as appropriate; never silently substitute. Require done=true and acceptable stop completion; partial length-truncated JSON/output rejected. Enforce HTTP/read/output/deadline bounds and close on cancel. No automatic schema weakening, context reduction, truncation, source dropping or chunking fallback. Error `exceed_context_size_error` maps terminal `source_too_large` with manual/reselect path, not transient retry."
+        },
+        {
+          "line": 154,
+          "text": "- [ ] Run `cd backend && go test ./platform -run 'TestIntelligence(Whisper|Ollama|Temp|Context)' -count=1` RED/GREEN with fake process/HTTP (no real models for unit suite). Actual pinned-provider acceptance is Task10; valid JSON fake tests alone do not establish integration. Commit."
+        },
+        {
+          "line": 160,
+          "text": "- [ ] RED decoder: duplicate JSON keys (Go DisallowUnknownFields alone does not reject them), unknown fields/tools, trailing values, invalid UTF-8/NaN/infinity/fractional integer/overflow, out-of-set/duplicate citation IDs, missing citations, timestamps outside audio, invented owner/date, wrong currency/amount and oversized strings/arrays all fail safely. Quoted injection with valid selected IDs never expands source retrieval or makes any mutation. Human grounding fixture catches structurally valid unsupported claims; mark uncertain/do not claim schema proves truth."
+        },
+        {
+          "line": 161,
+          "text": "- [ ] RED lifecycle: exact recheck after provider response includes actor/current-and-original-sessionRef/UserEpoch/membership/current source row/policy/epoch/hash/removal/retention and lease/cancel token; any invalidates whole output. GET/list/status preview/publication/export adapter never reads raw stored output before ALL-source check; source revoked beyond loaded page cannot leak result title/snippet/citation. Rejoin does not resurrect old jobs. Independent published work still reads according to its own business scope."
+        },
+        {
+          "line": 162,
+          "text": "- [ ] Implement atomic result commit and metadata-only errors/audit. Include source mutation hooks for message/record/comment/task/expense/live-goal relevant changes, conversation/member/policy changes and M9 departure/session paths. Ordinary readable parent edits alone do not invalidate bound immutable_fact IDs/hashes; hooks must distinguish content freshness from current ACL loss. Hooks may mark reverse-indexed outputs unavailable cheaply; no inference or long artifact deletion inside business transaction. Enqueue/claim/final/read checks remain authoritative if hints drop."
+        },
+        {
+          "line": 163,
+          "text": "- [ ] At expiry/invalidation/cancel, scrub output JSON/temporary bytes and derived transcript text promptly; retain minimal retry/provenance identifiers/hashes only under documented metadata retention. Enforce result expiry=min(jobTTL, all effective source deadlines, parent transcript expiry); source policy shortening applies immediately. Source retention transaction marks dependent jobs invalid before later disclosure; cleanup removes bytes independently in bounded batches. No copying plaintext into retained retry/debug/notification tables."
+        },
+        {
+          "line": 164,
+          "text": "- [ ] Run `cd backend && go test ./platform -run 'TestIntelligence(Schema|Grounding|Read|Retention|Invalidation)' -count=1` RED/GREEN; existing retention/access/conversion tests and PostgreSQL mutation-vs-disclosure races. Commit."
+        },
+        {
+          "line": 170,
+          "text": "- [ ] RED `TestIntelligenceDeterministicFacts`: exact numerator/denominator/rate and null unavailable; original/current all-day company zone and timed exact boundary; acceptance episodes vs unique task counts, unknown-before/gap coverage; no denominator substitution or fabricated100%. Finance130050 minor INR renders1300.50 using deterministic parser/formatter; model-proposed fractional/overflow/extra amount rejected. Goal correction/legacy history and recorded capacity missing/zero/undated method labels preserved; no Goal.Current write."
+        },
+        {
+          "line": 171,
+          "text": "- [ ] RED fact-key relation/code compatibility: out-of-selection metric or unsupported causal/comparison claim rejects; server values stay byte-equivalent with malicious numeric model output; every sentence cites included fact keys/source roots. Current-state snapshot explanation clearly current state; historical explanation generation-time facts remain frozen but current ALL-source ACL failure denies all."
+        },
+        {
+          "line": 172,
+          "text": "- [ ] Implement allowlisted explanatory template registry keyed by producer schema/metric version and relation; include period/zone/coverage/limitations in rendering. Model selects permissible narrative ordering/codes only, never arithmetic or free numeric explanations. No fallback to querying all company/private records when requested fact unsupported."
+        },
+        {
+          "line": 173,
+          "text": "- [ ] Run `cd backend && go test ./platform -run 'TestIntelligence(DeterministicFacts|Explanation)' -count=1` RED/GREEN and accepted report/finance/goal semantics suites; commit."
+        },
+        {
+          "line": 179,
+          "text": "- [ ] RED `TestIntelligenceReviewedPublication`: generate/view/edit/cancel creates0 business records; human resolves required owner/reviewer/date/money with actual pickers/validators, previews current full destination audience and exact excerpt/attachments, acknowledges and confirms once; existing task review/evidence/deadline/finance guards hold. Changed reviewed fields invalidate audience preview. Private candidates from mixed conversations cannot enter publication; single-conversation all contributing messages/voice parent sources are retained. Hidden task parent/dependency references stay excluded."
+        },
+        {
+          "line": 180,
+          "text": "- [ ] RED `TestIntelligencePublishedRetry`: lost ACK/concurrent same key\u2192one business record/provenance/audit; key+changed reviewed payload conflict; source revision changes after successful write\u2192current original-source ACL plus result/destination ACL required, return same published result without requiring raw ready output or exact old revision; no new record. Source removed/revoked, changed policy disallowing replay under existing publication rules, or inaccessible canonical result deny replay. Before first write any stale job/result/hash/source/destination version denies, even if model text appears plausible."
+        },
+        {
+          "line": 181,
+          "text": "- [ ] Integrate first-write exact raw job/result/source/policy validation under SAME transaction as existing canonical apply, not a preflight-only endpoint. Successful canonical lookup uses current-ACL-only source binding check and preserved publication provenance, never unconditional ready-job validation first; do not resurrect scrubbed text. Retain existing CommunicationAction source-action claim behavior for repeated explicit conversions. User needs a deliberate separate action ID for another supported action; model cannot invent action claims to duplicate work."
+        },
+        {
+          "line": 182,
+          "text": "- [ ] Ordinary business-only candidates consume accepted M5 canonical create and destination audience preview. Expenses only draft, requests published intake only, no submission/approval/payment/goal adjustment. Candidate editable text copied into human form remains source-bound until confirmed; the user cannot remove provenance through a first-party \u201cmanual\u201d toggle to bypass stale checks. Original ordinary manual form stays available independently."
+        },
+        {
+          "line": 183,
+          "text": "- [ ] Run `cd backend && go test ./platform -run 'TestIntelligence(ReviewedPublication|PublishedRetry)' -count=1` RED/GREEN; existing canonical task/expense/intake retry tests plus PostgreSQL simultaneous source revoke/write prove atomicity. Commit."
+        },
+        {
+          "line": 189,
+          "text": "- [ ] RED component/provider tests for actual entry points: select explicit messages/records across loaded history without auto-select whole thread; counts/revisions/limit shown; one eligible selected audio\u2192Transcribe with explicit local opt-in; choose supported ready transcript as selected source for summary/action; task detail selected fields/comment and report metric/fact explanation entry. Owner/date unresolved visible, citation opens exact currently authorized source location/revision notice. Record responses included only when explicitly selected. No technical-ID textbox or technical-ID fallback when pickers fail; show recoverable unavailable/manual workflows."
+        },
+        {
+          "line": 190,
+          "text": "- [ ] Build selection\u2192authorized preview\u2192opt-in\u2192enqueue\u2192pending/status/cancel\u2192ready transcript/summary/report view. Show coherent unavailable/missing-model/too-large/failure/expiry/stale states with \u201cContinue manually\u201d and deliberate reselect/new generation. Capability unavailable leaves original message/task/finance/report forms fully usable. No automatic model request on opening a conversation or report."
+        },
+        {
+          "line": 191,
+          "text": "- [ ] Wire \u201cReview task/expense/request draft\u201d into existing human publication forms using typed candidate seed/intelligenceBasis, full selected sources and stable frozen attempt. Preview exact content/audience, resolve required fields, explicit confirmation, store success before any follow-up refresh; retry same unknown attempt after transport loss. Do not default unresolved owner to current user in an AI-seeded form (existing manual form defaults may remain). Never treat raw model output as an HTML/Markdown link capable of fetching arbitrary targets."
+        },
+        {
+          "line": 192,
+          "text": "- [ ] RED privacy/lifecycle: company/user switch, same-key reauthorization fetch, source event outside newest page, background/resume, changed task audience/readBasis unchanged, delayed old response, heartbeat failure, source denial all hide fetched output immediately and disable preview/copy/share/write. Keep independently authored scoped RAM/frozen attempts on transient network failure, preserving inspected versions; confirmed revocation clears source-derived candidates and attempts. No localStorage/persisted query cache or browser notification body copies. Actual same-key current fetch withholds result/citations/actions; scoped purely authored RAM/frozen attempts and neutral finite numeric geometry preserve editor focus/keyboard and scroll through \u226530s pending reauthorization. Clear source-derived output and attempts on confirmed denial/principal/company/true policy-epoch barriers; background hides disclosures, no fetched-text retention. Actual held-fetch runtime evidence covers this behavior, not only reducers. Test each actual flow component and query ownership hook, not only shared reducers."
+        },
+        {
+          "line": 193,
+          "text": "- [ ] Run `cd frontend && npm test -- src/components/IntelligencePanel.test.tsx src/components/IntelligenceSelection.test.tsx src/components/IntelligenceResult.test.tsx src/components/IntelligenceDraftReview.test.tsx src/data/useIntelligence.test.tsx`, RED/GREEN; existing Connect/publication/report tests, `npm run typecheck`, `npm run build`, and demo build. Demo explicitly unavailable unless backed by deterministic labelled fictional fixtures; never claim actual inference. Commit."
+        },
+        {
+          "line": 199,
+          "text": "- [ ] Before any Expo API code, follow `mobile/AGENTS.md`: read actual package major (currently57), matching official docs `https://docs.expo.dev/versions/v57.0.0/` for any changed API. Reuse existing supported media/document/audio/picker/sheet APIs where possible; no new dependency just to transcribe already uploaded media."
+        },
+        {
+          "line": 200,
+          "text": "- [ ] RED `IntelligenceScreen.test.tsx`/route integration: chat action and selected messages/record/clean voice entry; task detail/report/goal \u201cExplain selected facts\u201d entry; More explicit owner job history; routed company/id independently authorized after navigation, works outside bootstrap/current chat page. Android Back/focus/foreground barriers do not expose previous company result. Poll only active authorized route; actual provider/source events invalidate while offscreen."
+        },
+        {
+          "line": 201,
+          "text": "- [ ] Implement native selection sheet with visible count/exact revision, opt-in notice, loading/cancel/retry/transcript segments/citations/limitations/manual fallback; use accessible labelled controls44px, long transcript virtualized/bounded rendering, keyboard-safe review and large-text layout. Native Media's M4A remains reserve\u2192upload\u2192finalize\u2192message attach before transcription; recording permission itself never enqueues AI."
+        },
+        {
+          "line": 202,
+          "text": "- [ ] RED `IntelligenceDraftReview.test.tsx`: source-bound seed reaches actual Publication/accepted ordinary task form; empty owner/date/reviewer preserved, person/deadline/exact amount controls, current audience notice and explicit confirm; unknown network attempt survives remount/background in scoped RAM, committed result saved before failed refresh, edits require new preview, one business record. `IntelligenceResult.test.tsx`: selected citation navigation to current task/message/report route, revoke outside current message page clears whole output, pending reauthorization hides all fetched content, no native share/download/direct-copy bypass or raw RN text children/whitespace in View containers. Actual \u226530s pending current-fetch keyboard/focus/scroll geometry holds scoped purely authored RAM/inspected CAS/frozen attempt without retaining fetched text; confirm true denial/company/principal/epoch purges and background source withholding. Reuse actual Workspace/Page/useRamInput lifecycle, not an invented generic authored-shell export."
+        },
+        {
+          "line": 203,
+          "text": "- [ ] Run `cd mobile && npm test -- src/IntelligenceScreen.test.tsx src/IntelligenceSelection.test.tsx src/IntelligenceResult.test.tsx src/IntelligenceDraftReview.test.tsx src/IntelligenceRoute.test.tsx src/intelligenceClient.test.ts`; RED/GREEN, existing Publication/Workspace/Media/source lifecycle suites, `npm run typecheck`, `npm run lint`, `npm run export` for Android+iOS. Browser/emulator exercise is code evidence only; physical microphone/keyboard/accessibility/background and signing remain explicit gates. Commit."
+        },
+        {
+          "line": 228,
+          "text": "- [ ] Inventory configured pins without downloads: Python3.14.7; faster-whisper1.2.1/PyAV18.1.0/ctranslate2 4.8.2/huggingface_hub2.2.0; Whisper model revision `d90ca5fe260221311c53c58e660288d3deb8d356`, all four SHA256 from reproducibility file; model.bin `dcb76c6586fc06cbdac6dd21f14cfd129cc4cdd9dce19bf4ffa62e59cbe6e6d1`. Ollama0.40.2 image `ollama/ollama@sha256:b86366bb528bbf7f1424435d165028497a5b69bf6ddb4fa5a87102e2b79f44fb`, local11435; qwen3:4b API digest `359d7dd4bcdab3d86b87d73ac27966f4dbb9f5efdfcc75d34a8764a09474fae7`, GGUF SHA256 `3e4cb14174460404e7a233e531675303b2fbf7749c02f91864fe311ab6344e4f`. Missing/mismatched pins fail setup safely; no test auto-install/pull/cloud fallback. Preserve owned running configuration; do not replace container to make smoke pass."
+        },
+        {
+          "line": 229,
+          "text": "- [ ] Run actual fixed adapters on already provisioned public/fictional fixtures; save safe provider identity/config/output validation/timing evidence. Earlier saved public FLAC Whisper and fictional Qwen runs establish preflight only, not app integration. Public fixture SHA256 `63a4b1e4c1dc655ac70961ffbf518acd249df237e5a0152faae9a4a836949715`; do not re-download it. Complete wheel hashes/base image and language/grounding/capacity evaluation remain production gates."
+        },
+        {
+          "line": 230,
+          "text": "- [ ] For actual application voice pipeline, reuse prepared `/tmp/schach-roadmap-native-runtime-20261011/m10-fixtures/public-speech-fixture.wav` and `manifest.json`:352078bytes,11.000s, pcm_s16le/mono16000, SHA256 `40caa4d41e4f0458f9ccaaaa1a16dff9fe47c14f5bc5d40713bde536325f967a`, decoded from the pinned public JFK FLAC. It is public speech attached in a fictional owned company for the test, never fictional generated/private company speech or production accuracy proof. Revalidate fixture/hash and bounded ffprobe audio-only through actual adapter; no new download or fabricated consent. Never submit FLAC itself as accepted voice or patch database media state. Through actual authenticated owned app endpoints create allowed conversation \u2192 reserve hashed WAV \u2192 upload bytes \u2192 configured scanner finalize clean \u2192 send message with returned media ID \u2192 read canonical message revision \u2192 source preview \u2192 explicit opt-in enqueue \u2192 real worker/provider \u2192 authorized result. Verify nonempty coherent public English and valid timestamps/citations, source/hash/retention bound. For production-like scanner claim use actual configured clean scanner; if only a deterministic test scanner is available label that limitation, do not claim real scanning certification."
+        },
+        {
+          "line": 231,
+          "text": "- [ ] From that ready transcript explicitly select transcript+allowed fictional message \u2192 real summary/action generation \u2192 human review picks valid owner/date/reviewer and audience \u2192 canonical task create using stable retry key \u2192 repeat exact request after simulated lost response\u2192same ID/one task. Repeat expense/intake appropriate fictional reviewed flows via existing validators; no approve/pay. Actual report explanation uses accepted M6 fictional snapshot metric facts, exact rendered totals/coverage/citations and unchanged server arithmetic. Record no real private content in fixtures/screenshots."
+        },
+        {
+          "line": 232,
+          "text": "- [ ] Run actual context-overflow diagnostic under separate bounded test settings: Ollama0.40.2 qwen3:4b, streamfalse/thinkfalse/truncatefalse/shiftfalse, num_ctx512/num_predict1 and saved fictional repeated-word fixture. Earlier observed HTTP400 `exceed_context_size_error`,2531 prompt tokens versus512, in `context-overflow-preflight.json` is evidence, not a newly run result. Acceptance requires adapter mapping to source_too_large and0 ready outputs/business mutations, no automatic dropped-source retry. Also exercise configured full-context success boundary using actual runtime token counts, not guessed character equivalence across languages."
+        },
+        {
+          "line": 233,
+          "text": "- [ ] Runtime negative acceptance: config disabled/missing adapter/crash/timeouts/malformed output/digest drift/cloud metadata; cancel/revoke while provider blocked/real request pending; source edit/retention after ready; owner/history rejoin; actual same-membership business audience change; lease expiry/double worker; scratch cleanup. Use mock controlled provider for deterministic race scheduling plus at least real adapter cancellation/timeout/temp evidence. Manual task/report/finance workflow stays operable in every failure state. Never use an installed model as a substitute for current application-source authorization proof."
+        },
+        {
+          "line": 234,
+          "text": "- [ ] Backend full/race and PostgreSQL suites, both standalone and Encore isolated migrations/runtime requests; web and native targeted/full/build checks after changed code. Owned Chromium at desktop and320/390/430px: select\u2192transcribe\u2192summary\u2192review audience\u2192canonical retry; inaccessible result/citation, pending recheck and manual fallback screenshots. Native export plus actual route/provider tests and available emulator smoke of the same actions. Collect actual \u226530s held-current-fetch keyboard/focus/scroll geometry evidence in both browser and available native runtime; source-derived output stays hidden with actions disabled, scoped authored RAM/inspected versions/frozen unknown retry remains usable. No physical/language-quality/p95/capacity certification from one English fixture or DOM tests."
+        },
+        {
+          "line": 235,
+          "text": "- [ ] Write evidence with exact commands/exits, fixture hashes/runtime/model/config, actual source/API IDs only where fictional, observed latency separately from guarantees, tests tied to source/revocation/retry/mobile requirements, and remaining rollout gates. Controller independently reviews implementation and updates accepted plan/Rulings before marking M10 complete. Commit reviewed implementation/evidence; this candidate does not authorize merges/restarts/deployments beyond the controller's existing user scope."
+        }
+      ]
+    },
+    {
+      "source": "7ce725633933c1019a6c4c34bd37f3bf2e4e1765:docs/superpowers/plans/2026-10-11-grounded-local-intelligence.md",
+      "sha256": "b32dededbd231564f6bcc6393a70f094dcc4d89bac5ba036ce730c13c57f35e1",
+      "actual_action_checkbox_rows": 48,
+      "literal_unchecked_token_occurrences": 49
+    }
+  ]
+}

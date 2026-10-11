@@ -1,0 +1,7 @@
+{
+  "status": "PASS",
+  "qualification": "Preserved native residual Important N1 diagnostic only; acceptance incomplete. No new native/source/runtime actions.",
+  "safeArtifacts": 231,
+  "reports": 2,
+  "mismatches": 0
+}

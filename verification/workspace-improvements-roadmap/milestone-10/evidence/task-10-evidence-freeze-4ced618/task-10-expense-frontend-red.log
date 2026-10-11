@@ -1,0 +1,56 @@
+
+> schach-workspace-frontend@1.1.0 test
+> vitest run src/components/IntelligencePanel.test.tsx
+
+
+ RUN  v5.0.3 /home/brahma/Projects/Schach_Workspace/.worktrees/workspace-improvements/frontend
+
+ ❯ src/components/IntelligencePanel.test.tsx (7 tests | 2 failed) 144ms
+   × preserves expense fields and focused authored amount during current-source reauthorization 19ms
+   × builds company-currency expense input accepted by the existing field contract 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/IntelligencePanel.test.tsx > preserves expense fields and focused authored amount during current-source reauthorization
+TestingLibraryElementError: Unable to find a label with the text of: amount
+
+[SYNTHETIC_TEST_DOM_DUMP_OMITTED]
+ ❯ Object.getElementError node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ getAllByLabelText node_modules/@testing-library/dom/dist/queries/label-text.js:111:38
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/components/IntelligencePanel.test.tsx:213:17
+    211|   fireEvent.click(screen.getByText('Recheck current result'));
+    212|   await waitFor(() => expect(screen.queryByText('Selected source sugge…
+    213|   expect(screen.getByLabelText('amount')).toBe(amount);
+       |                 ^
+    214|   expect(amount).toHaveProperty('value', '1300.50');
+    215|   expect(document.activeElement).toBe(amount);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/components/IntelligencePanel.test.tsx > builds company-currency expense input accepted by the existing field contract
+AssertionError: expected { title: 'Human review', …(9) } to not have property "currency"
+
+- Expected:
+undefined
+
++ Received:
+"INR"
+
+ ❯ src/components/IntelligencePanel.test.tsx:225:36
+    223|   const plan = intelligenceReviewRequest(expenseJob, candidate, author…
+    224|   expect(plan.payload.expense).toMatchObject({ amountMinor: 130050 });
+    225|   expect(plan.payload.expense).not.toHaveProperty('currency');
+       |                                    ^
+    226|   expect(() => intelligenceReviewRequest(expenseJob, candidate, { ...a…
+    227| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 5 passed (7)
+   Start at  19:33:36
+   Duration  532ms (tests 31%, transform 29%, environment 23%, import 16%, worker 1%)
+

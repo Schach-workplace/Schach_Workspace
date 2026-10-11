@@ -1,0 +1,10 @@
+{
+  "utc": "2026-10-11T18:19:57.680358+00:00",
+  "head": "b6ba0e2260de7c1219387006b6b5b8ab5ca55aab",
+  "sourceManifestPath": "/tmp/schach-roadmap-native-runtime-20261011/m10-native/safe/027-fix3-source-manifest.json",
+  "sourceManifestSHA256": "bae3aa75085b1afd6f3272194304772b52eb7644957cbaff2d096bcdf3a4bfe6",
+  "gitSourceComparisons": 659,
+  "mismatchCount": 0,
+  "mismatchPaths": [],
+  "qualification": "Partial ongoing native source binding only, not final device acceptance. Actual runtime PIDs follow safe028; historical PID fields in safe027 are not current-runtime evidence. No private runtime data read."
+}

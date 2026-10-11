@@ -1,0 +1,7 @@
+--- FAIL: TestIntelligenceRecordCitationExactRead (0.31s)
+    intelligence_fix1_test.go:26: purged record disclosed 200
+--- FAIL: TestIntelligenceCurrentReportSemanticFacts (0.17s)
+    intelligence_fix1_test.go:36: current producer omitted frozen selected period
+FAIL
+FAIL	schach.local/workspace/backend/platform	0.483s
+FAIL

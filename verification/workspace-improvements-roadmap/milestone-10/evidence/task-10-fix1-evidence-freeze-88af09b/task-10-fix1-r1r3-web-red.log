@@ -1,0 +1,47 @@
+
+> schach-workspace-frontend@1.1.0 test
+> vitest run src/components/IntelligencePanel.test.tsx
+
+
+ RUN  v5.0.3 /home/brahma/Projects/Schach_Workspace/.worktrees/workspace-improvements/frontend
+
+ ❯ src/components/IntelligencePanel.test.tsx (9 tests | 2 failed) 2182ms
+   × keeps the actual frozen canonical attempt across first raw expiry403 then terminal200 while independent proof is pending 1030ms
+   × merges21plus jobs by jobId through the actual owner history consumer 1006ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/IntelligencePanel.test.tsx > keeps the actual frozen canonical attempt across first raw expiry403 then terminal200 while independent proof is pending
+TestingLibraryElementError: Unable to find an element with the text: Retry original submitted draft. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+[SYNTHETIC_TEST_DOM_DUMP_OMITTED]
+ ❯ Proxy.waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ src/components/IntelligencePanel.test.tsx:273:9
+    271|   fireEvent.click(screen.getByText('Recheck current result'));
+    272|   await waitFor(() => expect(screen.queryByText('Generated seed')).toB…
+    273|   await waitFor(() => expect(screen.getByText('Retry original submitte…
+       |         ^
+    274|   expect(retry).toHaveProperty('disabled',true);
+    275|   held = Promise.resolve(response({jobId:'job',state:'expired'}));
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/components/IntelligencePanel.test.tsx > merges21plus jobs by jobId through the actual owner history consumer
+AssertionError: expected [ …(20) ] to have a length of 23 but got 20
+
+[SYNTHETIC_TEST_DOM_DUMP_OMITTED]
+
+ ❯ src/components/IntelligencePanel.test.tsx:288:79
+
+ ❯ runWithExpensiveErrorDiagnosticsDisabled node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 7 passed (9)
+   Start at  20:14:30
+   Duration  2.63s (tests 85%, transform 7%, environment 4%, import 3%)
+

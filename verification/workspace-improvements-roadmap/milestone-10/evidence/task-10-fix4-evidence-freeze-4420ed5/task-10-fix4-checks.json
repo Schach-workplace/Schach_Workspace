@@ -1,0 +1,817 @@
+{
+  "finalHead": "4420ed540dc253ad024ecb61b343be97b57b5b68",
+  "base": "b6ba0e2260de7c1219387006b6b5b8ab5ca55aab",
+  "status": "clean fixround4 owning verification; scoped review and actual native/controller acceptance pending",
+  "checks": [
+    {
+      "name": "native-full-final",
+      "command": [
+        "npm",
+        "test"
+      ],
+      "cwd": "mobile",
+      "exitCode": 0,
+      "elapsedSeconds": 66.981,
+      "startedUTC": "2026-10-11T19:22:38.664912+00:00",
+      "finishedUTC": "2026-10-11T19:23:45.646107+00:00",
+      "evidence": "task-10-fix4-native-full-final.log",
+      "sourceRecord": "task-10-fix4-native-full-final-source.json",
+      "result": [
+        "Test Files  52 passed (52)",
+        "Tests  347 passed (347)",
+        "Duration  66.59s (tests 61%, transform 21%, environment 13%, import 5%)"
+      ],
+      "invocationQualification": "Final exact dirty client bytes verified equal to committed HEAD; invoked at BASE, not post-commit."
+    },
+    {
+      "name": "web-full-final",
+      "command": [
+        "npm",
+        "test"
+      ],
+      "cwd": "frontend",
+      "exitCode": 0,
+      "elapsedSeconds": 11.012,
+      "startedUTC": "2026-10-11T19:22:38.663806+00:00",
+      "finishedUTC": "2026-10-11T19:22:49.675982+00:00",
+      "evidence": "task-10-fix4-web-full-final.log",
+      "sourceRecord": "task-10-fix4-web-full-final-source.json",
+      "result": [
+        "Test Files  69 passed (69)",
+        "Tests  339 passed (339)",
+        "Duration  10.61s (tests 40%, transform 27%, environment 19%, import 14%, worker 1%)"
+      ],
+      "invocationQualification": "Final exact dirty client bytes verified equal to committed HEAD; invoked at BASE, not post-commit."
+    },
+    {
+      "name": "native-types-final",
+      "command": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "cwd": "mobile",
+      "exitCode": 0,
+      "elapsedSeconds": 8.282,
+      "startedUTC": "2026-10-11T19:22:38.665625+00:00",
+      "finishedUTC": "2026-10-11T19:22:46.947794+00:00",
+      "evidence": "task-10-fix4-native-types-final.log",
+      "sourceRecord": "task-10-fix4-native-types-final-source.json",
+      "result": [],
+      "invocationQualification": "Final exact dirty client bytes verified equal to committed HEAD; invoked at BASE, not post-commit."
+    },
+    {
+      "name": "web-types-complete",
+      "command": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "cwd": "frontend",
+      "exitCode": 0,
+      "elapsedSeconds": 1.08,
+      "startedUTC": "2026-10-11T19:22:38.665514+00:00",
+      "finishedUTC": "2026-10-11T19:22:39.745490+00:00",
+      "evidence": "task-10-fix4-web-types-complete.log",
+      "sourceRecord": "task-10-fix4-web-types-complete-source.json",
+      "result": [],
+      "invocationQualification": "Final exact dirty client bytes verified equal to committed HEAD; invoked at BASE, not post-commit."
+    },
+    {
+      "name": "native-lint-complete",
+      "command": [
+        "npm",
+        "run",
+        "lint"
+      ],
+      "cwd": "mobile",
+      "exitCode": 0,
+      "elapsedSeconds": 5.918,
+      "startedUTC": "2026-10-11T19:22:38.663882+00:00",
+      "finishedUTC": "2026-10-11T19:22:44.582532+00:00",
+      "evidence": "task-10-fix4-native-lint-complete.log",
+      "sourceRecord": "task-10-fix4-native-lint-complete-source.json",
+      "result": [],
+      "invocationQualification": "Final exact dirty client bytes verified equal to committed HEAD; invoked at BASE, not post-commit."
+    },
+    {
+      "name": "native-export",
+      "command": [
+        "npm",
+        "run",
+        "export",
+        "--",
+        "--output-dir",
+        "/home/brahma/Projects/Schach_Workspace/.worktrees/workspace-improvements/.superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix4-mobile-export"
+      ],
+      "cwd": "mobile",
+      "exitCode": 0,
+      "elapsedSeconds": 37.372,
+      "startedUTC": "2026-10-11T19:22:38.668956+00:00",
+      "finishedUTC": "2026-10-11T19:23:16.041320+00:00",
+      "evidence": "task-10-fix4-native-export.log",
+      "sourceRecord": "task-10-fix4-native-export-source.json",
+      "result": [],
+      "invocationQualification": "Final exact dirty client bytes verified equal to committed HEAD; invoked at BASE, not post-commit."
+    },
+    {
+      "name": "web-build",
+      "command": [
+        "npm",
+        "run",
+        "build",
+        "--",
+        "--outDir",
+        "/home/brahma/Projects/Schach_Workspace/.worktrees/workspace-improvements/.superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix4-web-dist"
+      ],
+      "cwd": "frontend",
+      "exitCode": 0,
+      "elapsedSeconds": 2.354,
+      "startedUTC": "2026-10-11T19:22:38.667225+00:00",
+      "finishedUTC": "2026-10-11T19:22:41.021893+00:00",
+      "evidence": "task-10-fix4-web-build.log",
+      "sourceRecord": "task-10-fix4-web-build-source.json",
+      "result": [],
+      "invocationQualification": "Final exact dirty client bytes verified equal to committed HEAD; invoked at BASE, not post-commit."
+    },
+    {
+      "name": "web-demo",
+      "command": [
+        "npm",
+        "run",
+        "build:demo",
+        "--",
+        "--outDir",
+        "/home/brahma/Projects/Schach_Workspace/.worktrees/workspace-improvements/.superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix4-web-demo-dist"
+      ],
+      "cwd": "frontend",
+      "exitCode": 0,
+      "elapsedSeconds": 2.297,
+      "startedUTC": "2026-10-11T19:22:38.671620+00:00",
+      "finishedUTC": "2026-10-11T19:22:40.968863+00:00",
+      "evidence": "task-10-fix4-web-demo.log",
+      "sourceRecord": "task-10-fix4-web-demo-source.json",
+      "result": [],
+      "invocationQualification": "Final exact dirty client bytes verified equal to committed HEAD; invoked at BASE, not post-commit."
+    },
+    {
+      "name": "format",
+      "command": [
+        "./node_modules/.bin/prettier",
+        "--check",
+        "src/components/IntelligenceDraftReview.tsx",
+        "src/components/IntelligenceLauncher.tsx",
+        "src/components/IntelligencePanel.tsx",
+        "src/pages/Reports.intelligence.test.tsx",
+        "src/pages/GoalsReports.tsx",
+        "src/data/useTaskReport.ts",
+        "../mobile/src/IntelligenceLifetime.test.tsx",
+        "../mobile/src/IntelligenceDraftReview.tsx",
+        "../mobile/src/IntelligenceLauncher.tsx",
+        "../mobile/src/IntelligenceScreen.tsx",
+        "../mobile/src/ReportScreen.tsx"
+      ],
+      "cwd": "frontend",
+      "exitCode": 0,
+      "elapsedSeconds": 1.264,
+      "startedUTC": "2026-10-11T19:22:38.671312+00:00",
+      "finishedUTC": "2026-10-11T19:22:39.935455+00:00",
+      "evidence": "task-10-fix4-format.log",
+      "sourceRecord": "task-10-fix4-format-source.json",
+      "result": [],
+      "invocationQualification": "Final exact dirty client bytes verified equal to committed HEAD; invoked at BASE, not post-commit."
+    },
+    {
+      "name": "diff-check",
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "cwd": ".",
+      "exitCode": 0,
+      "elapsedSeconds": 0.004,
+      "startedUTC": "2026-10-11T19:22:38.671966+00:00",
+      "finishedUTC": "2026-10-11T19:22:38.676517+00:00",
+      "evidence": "task-10-fix4-diff-check.log",
+      "sourceRecord": "task-10-fix4-diff-check-source.json",
+      "result": [],
+      "invocationQualification": "Final exact dirty client bytes verified equal to committed HEAD; invoked at BASE, not post-commit."
+    }
+  ],
+  "expectedFailures": [
+    {
+      "name": "hard-retirement-red",
+      "command": [
+        "npm",
+        "test",
+        "--",
+        "src/IntelligenceLifetime.test.tsx",
+        "-t",
+        "N2b: actual hard"
+      ],
+      "cwd": "mobile",
+      "exitCode": 1,
+      "elapsedSeconds": 0.614,
+      "startedUTC": "2026-10-11T19:02:18.807223+00:00",
+      "finishedUTC": "2026-10-11T19:02:19.421141+00:00",
+      "evidence": "task-10-fix4-hard-retirement-red.log",
+      "sourceRecord": "task-10-fix4-hard-retirement-red-source.json",
+      "result": [
+        "Test Files  1 failed (1)",
+        "Tests  1 failed | 41 skipped (42)",
+        "Duration  369ms (transform 40%, environment 32%, import 14%, tests 13%, worker 1%)"
+      ],
+      "invocationQualification": "Restored standalone real hard-generation change:1fail41skip; no manufactured rerender."
+    },
+    {
+      "name": "lifetime-first-green",
+      "command": [
+        "npm",
+        "test",
+        "--",
+        "src/IntelligenceLifetime.test.tsx"
+      ],
+      "cwd": "mobile",
+      "exitCode": 1,
+      "elapsedSeconds": 0.984,
+      "startedUTC": "2026-10-11T19:00:12.111862+00:00",
+      "finishedUTC": "2026-10-11T19:00:13.096086+00:00",
+      "evidence": "task-10-fix4-lifetime-first-green.log",
+      "sourceRecord": "task-10-fix4-lifetime-first-green-source.json",
+      "result": [
+        "Test Files  1 failed (1)",
+        "Tests  1 failed | 39 passed (40)",
+        "Duration  719ms (tests 54%, transform 21%, environment 17%, import 7%)"
+      ],
+      "invocationQualification": "Historical label; exit1/39pass1fail, standalone hard-clear still failed."
+    },
+    {
+      "name": "lifetime-red",
+      "command": [
+        "npm",
+        "test",
+        "--",
+        "src/IntelligenceLifetime.test.tsx"
+      ],
+      "cwd": "mobile",
+      "exitCode": 1,
+      "elapsedSeconds": 0.656,
+      "startedUTC": "2026-10-11T18:57:23.073652+00:00",
+      "finishedUTC": "2026-10-11T18:57:23.729734+00:00",
+      "evidence": "task-10-fix4-lifetime-red.log",
+      "sourceRecord": "task-10-fix4-lifetime-red-source.json",
+      "result": [
+        "Test Files  1 failed (1)",
+        "Tests  3 failed (3)",
+        "Duration  407ms (transform 33%, environment 30%, tests 24%, import 12%, worker 1%)"
+      ],
+      "invocationQualification": "3 meaningful original native owning lifetime failures, existing product inputs exact BASE."
+    },
+    {
+      "name": "native-lint",
+      "command": [
+        "npm",
+        "run",
+        "lint"
+      ],
+      "cwd": "mobile",
+      "exitCode": 1,
+      "elapsedSeconds": 4.761,
+      "startedUTC": "2026-10-11T19:19:25.158784+00:00",
+      "finishedUTC": "2026-10-11T19:19:29.919932+00:00",
+      "evidence": "task-10-fix4-native-lint.log",
+      "sourceRecord": "task-10-fix4-native-lint-source.json",
+      "result": [],
+      "invocationQualification": "Exit1 render-time Date.now purity error; corrected with scheduled expiry state and action-time guard."
+    },
+    {
+      "name": "native-rotating-red",
+      "command": [
+        "npm",
+        "test",
+        "--",
+        "src/IntelligenceLifetime.test.tsx",
+        "-t",
+        "rotating"
+      ],
+      "cwd": "mobile",
+      "exitCode": 1,
+      "elapsedSeconds": 0.645,
+      "startedUTC": "2026-10-11T19:12:11.642582+00:00",
+      "finishedUTC": "2026-10-11T19:12:12.288374+00:00",
+      "evidence": "task-10-fix4-native-rotating-red.log",
+      "sourceRecord": "task-10-fix4-native-rotating-red-source.json",
+      "result": [
+        "Test Files  1 failed (1)",
+        "Tests  1 failed | 42 skipped (43)",
+        "Duration  385ms (transform 38%, environment 31%, tests 15%, import 14%, worker 1%)"
+      ],
+      "invocationQualification": "Meaningful intermediate token-reset usability failure on actual rotating-summary nonce semantics:1fail42skip."
+    },
+    {
+      "name": "native-selected-first",
+      "command": [
+        "npm",
+        "test",
+        "--",
+        "src/IntelligenceLifetime.test.tsx"
+      ],
+      "cwd": "mobile",
+      "exitCode": 1,
+      "elapsedSeconds": 1.18,
+      "startedUTC": "2026-10-11T19:13:42.924067+00:00",
+      "finishedUTC": "2026-10-11T19:13:44.104223+00:00",
+      "evidence": "task-10-fix4-native-selected-first.log",
+      "sourceRecord": "task-10-fix4-native-selected-first-source.json",
+      "result": [
+        "Test Files  1 failed (1)",
+        "Tests  4 failed | 39 passed (43)",
+        "Duration  900ms (tests 59%, transform 20%, environment 13%, import 7%)"
+      ],
+      "invocationQualification": "4fail39pass: outdated latest-token-as-new-selection assertions and held current-proof mock; corrected to exact original proof semantics."
+    },
+    {
+      "name": "native-selected-opposites",
+      "command": [
+        "npm",
+        "test",
+        "--",
+        "src/IntelligenceLifetime.test.tsx"
+      ],
+      "cwd": "mobile",
+      "exitCode": 1,
+      "elapsedSeconds": 1.15,
+      "startedUTC": "2026-10-11T19:18:33.345744+00:00",
+      "finishedUTC": "2026-10-11T19:18:34.495991+00:00",
+      "evidence": "task-10-fix4-native-selected-opposites.log",
+      "sourceRecord": "task-10-fix4-native-selected-opposites-source.json",
+      "result": [
+        "Test Files  1 failed (1)",
+        "Tests  5 failed | 44 passed (49)",
+        "Duration  882ms (tests 63%, transform 17%, environment 13%, import 6%)"
+      ],
+      "invocationQualification": "5fail44pass: test compared chosen handle to another nonce issued by enqueue refresh; now captures deliberate selection before submit."
+    },
+    {
+      "name": "opposites-red",
+      "command": [
+        "npm",
+        "test",
+        "--",
+        "src/IntelligenceLifetime.test.tsx"
+      ],
+      "cwd": "mobile",
+      "exitCode": 1,
+      "elapsedSeconds": 0.897,
+      "startedUTC": "2026-10-11T18:59:11.048707+00:00",
+      "finishedUTC": "2026-10-11T18:59:11.946369+00:00",
+      "evidence": "task-10-fix4-opposites-red.log",
+      "sourceRecord": "task-10-fix4-opposites-red-source.json",
+      "result": [
+        "Test Files  1 failed (1)",
+        "Tests  8 failed | 32 passed (40)",
+        "Duration  652ms (tests 55%, transform 20%, environment 17%, import 7%)"
+      ],
+      "invocationQualification": "Expanded original owning RED: 8 failures/32 passes; product inputs exact BASE."
+    },
+    {
+      "name": "web-anchor-red",
+      "command": [
+        "npm",
+        "test",
+        "--",
+        "src/pages/Reports.intelligence.test.tsx"
+      ],
+      "cwd": "frontend",
+      "exitCode": 1,
+      "elapsedSeconds": 1.72,
+      "startedUTC": "2026-10-11T19:05:43.552186+00:00",
+      "finishedUTC": "2026-10-11T19:05:45.272920+00:00",
+      "evidence": "task-10-fix4-web-anchor-red.log",
+      "sourceRecord": "task-10-fix4-web-anchor-red-source.json",
+      "result": [
+        "Test Files  1 failed (1)",
+        "Tests  1 failed | 14 passed (15)",
+        "Duration  1.48s (tests 67%, transform 16%, import 11%, environment 7%)"
+      ],
+      "invocationQualification": "Actual first unchosen HTML select unmounted while raw proof pending:1fail14pass."
+    },
+    {
+      "name": "web-full",
+      "command": [
+        "npm",
+        "test"
+      ],
+      "cwd": "frontend",
+      "exitCode": 1,
+      "elapsedSeconds": 7.987,
+      "startedUTC": "2026-10-11T19:19:25.156474+00:00",
+      "finishedUTC": "2026-10-11T19:19:33.143450+00:00",
+      "evidence": "task-10-fix4-web-full.log",
+      "sourceRecord": "task-10-fix4-web-full-source.json",
+      "result": [
+        "Test Files  1 failed | 68 passed (69)",
+        "Tests  2 failed | 337 passed (339)",
+        "Duration  7.66s (tests 39%, transform 26%, environment 21%, import 14%, worker 1%)"
+      ],
+      "invocationQualification": "Initial full337pass2fail; hash/policy stale errors were settled before independent changed proof arrived. Test now waits for actual positive proof/retired busy state before late success/error; final full separate."
+    },
+    {
+      "name": "web-notification-red",
+      "command": [
+        "npm",
+        "test",
+        "--",
+        "src/pages/Reports.intelligence.test.tsx",
+        "-t",
+        "notification"
+      ],
+      "cwd": "frontend",
+      "exitCode": 1,
+      "elapsedSeconds": 3.092,
+      "startedUTC": "2026-10-11T19:08:08.214325+00:00",
+      "finishedUTC": "2026-10-11T19:08:11.306937+00:00",
+      "evidence": "task-10-fix4-web-notification-red.log",
+      "sourceRecord": "task-10-fix4-web-notification-red-source.json",
+      "result": [
+        "Test Files  1 failed (1)",
+        "Tests  2 failed | 15 skipped (17)",
+        "Duration  2.84s (tests 80%, transform 9%, import 6%, environment 4%)"
+      ],
+      "invocationQualification": "Fix-introduced busy flag after real event invalidation:2fail15skip, before existing hide callback reset."
+    },
+    {
+      "name": "web-owning-red",
+      "command": [
+        "npm",
+        "test",
+        "--",
+        "src/pages/Reports.intelligence.test.tsx"
+      ],
+      "cwd": "frontend",
+      "exitCode": 1,
+      "elapsedSeconds": 1.035,
+      "startedUTC": "2026-10-11T19:03:46.164878+00:00",
+      "finishedUTC": "2026-10-11T19:03:47.199853+00:00",
+      "evidence": "task-10-fix4-web-owning-red.log",
+      "sourceRecord": "task-10-fix4-web-owning-red-source.json",
+      "result": [
+        "Test Files  1 failed (1)",
+        "Tests  2 failed (2)",
+        "Duration  767ms (transform 32%, tests 29%, import 22%, environment 17%)"
+      ],
+      "invocationQualification": "2 meaningful actual Store/ReportsPage/Modal query pending failures; existing web/shared inputs exact BASE."
+    },
+    {
+      "name": "web-rotating-red",
+      "command": [
+        "npm",
+        "test",
+        "--",
+        "src/pages/Reports.intelligence.test.tsx",
+        "-t",
+        "rotating"
+      ],
+      "cwd": "frontend",
+      "exitCode": 1,
+      "elapsedSeconds": 2.406,
+      "startedUTC": "2026-10-11T19:12:11.642574+00:00",
+      "finishedUTC": "2026-10-11T19:12:14.049091+00:00",
+      "evidence": "task-10-fix4-web-rotating-red.log",
+      "sourceRecord": "task-10-fix4-web-rotating-red-source.json",
+      "result": [
+        "Test Files  1 failed (1)",
+        "Tests  1 failed | 17 skipped (18)",
+        "Duration  2.15s (tests 55%, transform 27%, import 13%, environment 5%)"
+      ],
+      "invocationQualification": "Meaningful intermediate token-reset usability failure:1fail17skip."
+    },
+    {
+      "name": "web-selected-first",
+      "command": [
+        "npm",
+        "test",
+        "--",
+        "src/pages/Reports.intelligence.test.tsx"
+      ],
+      "cwd": "frontend",
+      "exitCode": 1,
+      "elapsedSeconds": 4.464,
+      "startedUTC": "2026-10-11T19:13:42.925675+00:00",
+      "finishedUTC": "2026-10-11T19:13:47.390422+00:00",
+      "evidence": "task-10-fix4-web-selected-first.log",
+      "sourceRecord": "task-10-fix4-web-selected-first-source.json",
+      "result": [
+        "Test Files  1 failed (1)",
+        "Tests  2 failed | 16 passed (18)",
+        "Duration  4.18s (tests 86%, transform 7%, import 4%, environment 3%)"
+      ],
+      "invocationQualification": "2fail16pass: outdated latest-token expectation and current proof settlement qualification."
+    },
+    {
+      "name": "web-selected-opposites",
+      "command": [
+        "npm",
+        "test",
+        "--",
+        "src/pages/Reports.intelligence.test.tsx"
+      ],
+      "cwd": "frontend",
+      "exitCode": 1,
+      "elapsedSeconds": 3.644,
+      "startedUTC": "2026-10-11T19:18:33.347238+00:00",
+      "finishedUTC": "2026-10-11T19:18:36.991745+00:00",
+      "evidence": "task-10-fix4-web-selected-opposites.log",
+      "sourceRecord": "task-10-fix4-web-selected-opposites-source.json",
+      "result": [
+        "Test Files  1 failed (1)",
+        "Tests  6 failed | 17 passed (23)",
+        "Duration  3.36s (tests 84%, transform 8%, import 5%, environment 3%)"
+      ],
+      "invocationQualification": "6fail17pass: five later-nonce comparison assertions and notification releasing separate current proof as obsolete error; corrected fixture ordering."
+    }
+  ],
+  "intermediateChecks": [
+    {
+      "name": "native-focused",
+      "command": [
+        "npm",
+        "test",
+        "--",
+        "src/IntelligenceLifetime.test.tsx",
+        "src/IntelligenceWorkspace.test.tsx",
+        "src/IntelligenceScreen.test.tsx",
+        "src/ReportRoute.test.tsx",
+        "src/ReportControls.test.tsx",
+        "src/HistoricalReports.test.tsx"
+      ],
+      "cwd": "mobile",
+      "exitCode": 0,
+      "elapsedSeconds": 12.805,
+      "startedUTC": "2026-10-11T19:01:43.520895+00:00",
+      "finishedUTC": "2026-10-11T19:01:56.326605+00:00",
+      "evidence": "task-10-fix4-native-focused.log",
+      "sourceRecord": "task-10-fix4-native-focused-source.json",
+      "result": [
+        "Test Files  6 passed (6)",
+        "Tests  114 passed (114)",
+        "Duration  12.57s (tests 89%, environment 5%, transform 4%, import 2%)"
+      ],
+      "invocationQualification": "Intermediate114pass; hard-clear variant explicitly refreshed Workspace. Not standalone retirement proof."
+    },
+    {
+      "name": "native-full",
+      "command": [
+        "npm",
+        "test"
+      ],
+      "cwd": "mobile",
+      "exitCode": 0,
+      "elapsedSeconds": 66.008,
+      "startedUTC": "2026-10-11T19:19:25.156482+00:00",
+      "finishedUTC": "2026-10-11T19:20:31.164639+00:00",
+      "evidence": "task-10-fix4-native-full.log",
+      "sourceRecord": "task-10-fix4-native-full-source.json",
+      "result": [
+        "Test Files  52 passed (52)",
+        "Tests  346 passed (346)",
+        "Duration  65.73s (tests 63%, transform 20%, environment 12%, import 5%)"
+      ],
+      "invocationQualification": "Intermediate346pass before expiry timer/additional scheduled-expiry case. Not final-source verification."
+    },
+    {
+      "name": "native-lifetime-green",
+      "command": [
+        "npm",
+        "test",
+        "--",
+        "src/IntelligenceLifetime.test.tsx",
+        "src/IntelligenceWorkspace.test.tsx"
+      ],
+      "cwd": "mobile",
+      "exitCode": 0,
+      "elapsedSeconds": 1.104,
+      "startedUTC": "2026-10-11T19:02:19.468906+00:00",
+      "finishedUTC": "2026-10-11T19:02:20.573043+00:00",
+      "evidence": "task-10-fix4-native-lifetime-green.log",
+      "sourceRecord": "task-10-fix4-native-lifetime-green-source.json",
+      "result": [
+        "Test Files  2 passed (2)",
+        "Tests  72 passed (72)",
+        "Duration  845ms (tests 63%, transform 16%, environment 14%, import 7%)"
+      ],
+      "invocationQualification": "Intermediate72pass including42new+30retained N1; before exact-selected snapshot architecture."
+    },
+    {
+      "name": "native-lint-final",
+      "command": [
+        "npm",
+        "run",
+        "lint"
+      ],
+      "cwd": "mobile",
+      "exitCode": 0,
+      "elapsedSeconds": 1.758,
+      "startedUTC": "2026-10-11T19:21:11.667181+00:00",
+      "finishedUTC": "2026-10-11T19:21:13.837321+00:00",
+      "evidence": "task-10-fix4-native-lint-final.log",
+      "sourceRecord": "task-10-fix4-native-lint-final-source.json",
+      "result": [],
+      "invocationQualification": "Intermediate invocation retained at its exact original source/time; not substituted for final checks."
+    },
+    {
+      "name": "native-lint-initial",
+      "command": [
+        "npm",
+        "run",
+        "lint"
+      ],
+      "cwd": "mobile",
+      "exitCode": 0,
+      "elapsedSeconds": 2.07,
+      "startedUTC": "2026-10-11T19:06:35.050982+00:00",
+      "finishedUTC": "2026-10-11T19:06:37.121379+00:00",
+      "evidence": "task-10-fix4-native-lint-initial.log",
+      "sourceRecord": "task-10-fix4-native-lint-initial-source.json",
+      "result": [],
+      "invocationQualification": "Exit0 with3intermediate warnings; subsequently corrected."
+    },
+    {
+      "name": "native-types-initial",
+      "command": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "cwd": "mobile",
+      "exitCode": 0,
+      "elapsedSeconds": 2.844,
+      "startedUTC": "2026-10-11T19:02:50.389822+00:00",
+      "finishedUTC": "2026-10-11T19:02:53.234512+00:00",
+      "evidence": "task-10-fix4-native-types-initial.log",
+      "sourceRecord": "task-10-fix4-native-types-initial-source.json",
+      "result": [],
+      "invocationQualification": "Intermediate invocation retained at its exact original source/time; not substituted for final checks."
+    },
+    {
+      "name": "native-types",
+      "command": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "cwd": "mobile",
+      "exitCode": 0,
+      "elapsedSeconds": 6.002,
+      "startedUTC": "2026-10-11T19:19:25.156486+00:00",
+      "finishedUTC": "2026-10-11T19:19:31.158916+00:00",
+      "evidence": "task-10-fix4-native-types.log",
+      "sourceRecord": "task-10-fix4-native-types-source.json",
+      "result": [],
+      "invocationQualification": "Intermediate invocation retained at its exact original source/time; not substituted for final checks."
+    },
+    {
+      "name": "web-lifetime-green",
+      "command": [
+        "npm",
+        "test",
+        "--",
+        "src/pages/Reports.intelligence.test.tsx",
+        "src/pages/Reports.test.tsx",
+        "src/components/IntelligencePanel.test.tsx"
+      ],
+      "cwd": "frontend",
+      "exitCode": 0,
+      "elapsedSeconds": 1.904,
+      "startedUTC": "2026-10-11T19:06:33.886076+00:00",
+      "finishedUTC": "2026-10-11T19:06:35.790576+00:00",
+      "evidence": "task-10-fix4-web-lifetime-green.log",
+      "sourceRecord": "task-10-fix4-web-lifetime-green-source.json",
+      "result": [
+        "Test Files  3 passed (3)",
+        "Tests  60 passed (60)",
+        "Duration  1.66s (tests 70%, transform 12%, import 10%, environment 8%)"
+      ],
+      "invocationQualification": "Intermediate invocation retained at its exact original source/time; not substituted for final checks."
+    },
+    {
+      "name": "web-notification-green",
+      "command": [
+        "npm",
+        "test",
+        "--",
+        "src/pages/Reports.intelligence.test.tsx",
+        "-t",
+        "notification"
+      ],
+      "cwd": "frontend",
+      "exitCode": 0,
+      "elapsedSeconds": 0.977,
+      "startedUTC": "2026-10-11T19:09:44.517760+00:00",
+      "finishedUTC": "2026-10-11T19:09:45.494930+00:00",
+      "evidence": "task-10-fix4-web-notification-green.log",
+      "sourceRecord": "task-10-fix4-web-notification-green-source.json",
+      "result": [
+        "Test Files  1 passed (1)",
+        "Tests  2 passed | 15 skipped (17)",
+        "Duration  737ms (transform 35%, tests 28%, import 22%, environment 15%)"
+      ],
+      "invocationQualification": "Intermediate two notification success/error recovery tests pass."
+    },
+    {
+      "name": "web-owning-green",
+      "command": [
+        "npm",
+        "test",
+        "--",
+        "src/pages/Reports.intelligence.test.tsx",
+        "src/pages/Reports.test.tsx",
+        "src/components/IntelligencePanel.test.tsx"
+      ],
+      "cwd": "frontend",
+      "exitCode": 0,
+      "elapsedSeconds": 1.442,
+      "startedUTC": "2026-10-11T19:04:40.469763+00:00",
+      "finishedUTC": "2026-10-11T19:04:41.912401+00:00",
+      "evidence": "task-10-fix4-web-owning-green.log",
+      "sourceRecord": "task-10-fix4-web-owning-green-source.json",
+      "result": [
+        "Test Files  3 passed (3)",
+        "Tests  47 passed (47)",
+        "Duration  1.20s (tests 59%, transform 17%, import 13%, environment 10%)"
+      ],
+      "invocationQualification": "Intermediate invocation retained at its exact original source/time; not substituted for final checks."
+    },
+    {
+      "name": "web-selected-final",
+      "command": [
+        "npm",
+        "test",
+        "--",
+        "src/pages/Reports.intelligence.test.tsx"
+      ],
+      "cwd": "frontend",
+      "exitCode": 0,
+      "elapsedSeconds": 5.698,
+      "startedUTC": "2026-10-11T19:21:09.364879+00:00",
+      "finishedUTC": "2026-10-11T19:21:15.497712+00:00",
+      "evidence": "task-10-fix4-web-selected-final.log",
+      "sourceRecord": "task-10-fix4-web-selected-final-source.json",
+      "result": [
+        "Test Files  1 passed (1)",
+        "Tests  33 passed (33)",
+        "Duration  2.74s (tests 82%, transform 8%, import 6%, environment 4%)"
+      ],
+      "invocationQualification": "Intermediate invocation retained at its exact original source/time; not substituted for final checks."
+    },
+    {
+      "name": "web-types-final",
+      "command": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "cwd": "frontend",
+      "exitCode": 0,
+      "elapsedSeconds": 1.035,
+      "startedUTC": "2026-10-11T19:19:25.157499+00:00",
+      "finishedUTC": "2026-10-11T19:19:26.193023+00:00",
+      "evidence": "task-10-fix4-web-types-final.log",
+      "sourceRecord": "task-10-fix4-web-types-final-source.json",
+      "result": [],
+      "invocationQualification": "Intermediate invocation retained at its exact original source/time; not substituted for final checks."
+    },
+    {
+      "name": "web-types",
+      "command": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "cwd": "frontend",
+      "exitCode": 0,
+      "elapsedSeconds": 0.377,
+      "startedUTC": "2026-10-11T19:07:12.209400+00:00",
+      "finishedUTC": "2026-10-11T19:07:12.586268+00:00",
+      "evidence": "task-10-fix4-web-types.log",
+      "sourceRecord": "task-10-fix4-web-types-source.json",
+      "result": [],
+      "invocationQualification": "Intermediate invocation retained at its exact original source/time; not substituted for final checks."
+    }
+  ],
+  "notRerun": [
+    "backend",
+    "race",
+    "PostgreSQL",
+    "Encore",
+    "providers",
+    "actual native"
+  ],
+  "priorEquivalentBackendEvidence": "task-10-fix1-report.md",
+  "warnings": [
+    "Normal926.08kB/demo975.60kB >900kB existing chunk warning",
+    "Dedicated external outDir not emptied notice",
+    "Expo NO_COLOR/FORCE_COLOR notice"
+  ]
+}

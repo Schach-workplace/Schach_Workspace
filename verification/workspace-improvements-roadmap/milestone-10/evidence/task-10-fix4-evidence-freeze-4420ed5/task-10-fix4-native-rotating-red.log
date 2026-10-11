@@ -1,0 +1,37 @@
+
+> mobile@1.0.0 test
+> vitest run src/IntelligenceLifetime.test.tsx -t rotating
+
+
+ RUN  v5.0.3 /home/brahma/Projects/Schach_Workspace/.worktrees/workspace-improvements/mobile
+
+ ❯ src/IntelligenceLifetime.test.tsx (43 tests | 1 failed | 42 skipped) 49ms
+   × N2: ordinary rotating report handles preserve the exact selected snapshot only after independent current proof 49ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/IntelligenceLifetime.test.tsx > N2: ordinary rotating report handles preserve the exact selected snapshot only after independent current proof
+AssertionError: expected undefined to be false // Object.is equality
+
+- Expected:
+false
+
++ Received:
+undefined
+
+ ❯ src/IntelligenceLifetime.test.tsx:454:55
+    452|     await releaseReport();
+    453|     expect(container.querySelector('[role="dialog"]')).toBe(sheet);
+    454|     expect(button("Generate local result")?.disabled).toBe(false);
+       |                                                       ^
+    455|     expect(button("I agree to local processing of these selected sourc…
+    456|     expect(inspections.at(-1).sources).toEqual([{ kind: "report_curren…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 42 skipped (43)
+   Start at  00:42:11
+   Duration  385ms (transform 38%, environment 31%, tests 15%, import 14%, worker 1%)
+

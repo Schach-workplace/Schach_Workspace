@@ -1,0 +1,7 @@
+{
+  "head": "88af09b91dcdf0da0e02739b080713e8088b8f74",
+  "browserEvidenceFilesChecked": 7,
+  "forbiddenCapturedFieldCount": 0,
+  "fields": [],
+  "qualification": "Structural safe-browser capture check; not a universal secret scanner or privacy proof."
+}

@@ -1,0 +1,30 @@
+
+ RUN  v5.0.3 /home/brahma/Projects/Schach_Workspace/.worktrees/workspace-improvements/mobile
+
+ ❯ src/IntelligenceScreen.test.tsx (32 tests | 1 failed | 31 skipped) 96ms
+   × rejects late native inspected preview across retirement change 95ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/IntelligenceScreen.test.tsx > rejects late native inspected preview across retirement change
+AssertionError: expected 'Local assistanceSelect sources explic…' not to contain 'Obsolete private audience'
+
+Expected: "Obsolete private audience"
+Received: "Local assistanceSelect sources explicitly. Continue normal work while local assistance is unavailable.Operation: Summarize selected sourcesExplicit selected sources (0/50)Choose sources from a readable conversation, task or report.Review selected sourcesreadyRecheck current resultCancel and clear this resultReview selected sourcesGenerated seedSelected source suggestionResolve: owner, dueDate, reviewerOpen Authorized sourceReview task draftSecond candidateSelected source suggestionResolve: owner, dueDate, reviewerOpen Authorized sourceReview task draftReview selected draftReviewed intelligence titleReviewed intelligence descriptionIntelligence owner: Human ownerIntelligence reviewer: Independent reviewerIntelligence deadline · Asia/KolkataChoose Intelligence deadlineDepartment: ChoosePreview content and audienceObsolete private audienceHuman ownerI reviewed these fields and this audienceConfirm reviewed creationYour local request historyContinue manually using the existing conversation, task, finance or report tools."
+
+ ❯ src/IntelligenceScreen.test.tsx:1014:29
+    1012|     }),
+    1013|   );
+    1014|   expect(c.textContent).not.toContain("Obsolete private audience");
+       |                             ^
+    1015|   expect(
+    1016|     [...c.querySelectorAll("button")].find(
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 31 skipped (32)
+   Start at  22:41:31
+   Duration  460ms (transform 32%, environment 30%, tests 24%, import 12%, worker 1%)
+

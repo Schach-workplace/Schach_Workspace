@@ -1,0 +1,16 @@
+{
+  "head": "4ced618d0a8454bbc1dc339519d9f9f539c73a70",
+  "clean": true,
+  "sourceRecordsVerified": 1213,
+  "sqlRecordsVerified": 114,
+  "migrationPairs": 57,
+  "sql1Through56BaselineImmutable": true,
+  "buildArtifactsVerified": 65,
+  "safeEvidenceRecordsVerified": 114,
+  "caseRecords": 48,
+  "adoptedActionRows": 48,
+  "mismatches": [],
+  "manifestSha256": "da8396efa34019386c59ce0cfd522d5a22c1597d553fcb5a81a1fecebd5442a9",
+  "reportSha256": "2d0913c082d51cadfc155f078048882d6c71d7a6018c4899af04934a3ba66d43",
+  "qualification": "Independent byte/hash/source provenance verification, not review approval or actual installed-native acceptance."
+}

@@ -1,0 +1,15 @@
+{
+  "sourceCommit": "b6ba0e2260de7c1219387006b6b5b8ab5ca55aab",
+  "backendProductCommit": "98b7fb6",
+  "clientProductCommit": "ca13ef3",
+  "nativeShell": "1d74c31132b8246603dbc853556ca29b1a134e4f",
+  "status": "observed_issue",
+  "actualJobState": "running",
+  "reportCurrentControlVisible": true,
+  "localAssistanceModalCloseAbsent": true,
+  "jobRecheckCancelControlsAbsent": true,
+  "noUserDismissalAfterEnqueue": true,
+  "noNewInferenceOrDuplicateRequest": true,
+  "suspectedCauseQualified": "CurrentReportAssistance gates whole Launcher on q.ready; current-read refresh can unmount modal",
+  "noExactClosureTimestampClaim": true
+}

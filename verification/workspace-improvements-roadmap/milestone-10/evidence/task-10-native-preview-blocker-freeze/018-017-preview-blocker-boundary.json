@@ -1,0 +1,17 @@
+{
+  "status": "blocked_native_preview_acknowledgement",
+  "sourceCommit": "88af09b91dcdf0da0e02739b080713e8088b8f74",
+  "samePreservedReadyJob": true,
+  "selectedCandidateZeroBasedIndex": 0,
+  "selectedCandidateKind": "task",
+  "actualCandidateCount": 2,
+  "totalActualGenerationJobs": 1,
+  "jobPublicationCount": 0,
+  "currentFixtureState": "retained_same_authored_review",
+  "backendPID": 230537,
+  "proxyPID": 321885,
+  "backendBinarySHA256": "324b71ebb8aa8e5676f13b1bc22a53b8bbbe05ecc8ff20b8349a808b403d2ce7",
+  "allArmsAndSelectorsReleased": true,
+  "privateJobIdentifiersResultHashesAndProseExcluded": true,
+  "noProviderStopOrRestart": true
+}

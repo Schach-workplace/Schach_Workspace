@@ -1,0 +1,10 @@
+{
+  "status": "passed",
+  "schema": "schach_m10_4d5f5a33c9ae",
+  "sourceHead": "1396eefd514d03885ffa37d246374c14fe7cd4bf",
+  "checks": [
+    "Compiled versioned runner fresh57 and populated56\u219257 preserve seeded business rows/checksums"
+  ],
+  "binarySHA256": "2db927eafe29cc2b2ecb6516759709ed0284520acc18694a867823cc9d4e924c",
+  "scratchEmpty": true
+}

@@ -1,0 +1,35 @@
+
+ RUN  v5.0.3 /home/brahma/Projects/Schach_Workspace/.worktrees/workspace-improvements/frontend
+
+ ❯ src/components/IntelligencePanel.test.tsx (36 tests | 1 failed | 35 skipped) 56ms
+   × rejects late web inspected preview across retirement change 55ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/IntelligencePanel.test.tsx > rejects late web inspected preview across retirement change
+AssertionError: expected <p></p> to be null
+
+- Expected:
+null
+
++ Received:
+<p>
+  Obsolete private audience
+</p>
+
+ ❯ src/components/IntelligencePanel.test.tsx:824:61
+    822|       ),
+    823|     );
+    824|     expect(screen.queryByText('Obsolete private audience')).toBeNull();
+       |                                                             ^
+    825|     expect(
+    826|       screen.queryByText('Confirm reviewed creation')?.getAttribute('d…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 35 skipped (36)
+   Start at  22:41:32
+   Duration  482ms (transform 40%, environment 26%, import 20%, tests 14%, worker 1%)
+

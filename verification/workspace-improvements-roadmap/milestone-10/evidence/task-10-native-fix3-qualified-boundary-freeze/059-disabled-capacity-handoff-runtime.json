@@ -1,0 +1,27 @@
+{
+  "sourceCommit": "b6ba0e2260de7c1219387006b6b5b8ab5ca55aab",
+  "backendProductCommit": "98b7fb6",
+  "clientProductCommit": "ca13ef3",
+  "nativeShell": "1d74c31132b8246603dbc853556ca29b1a134e4f",
+  "status": "passed",
+  "backendPID": 1316498,
+  "sameReviewedBinarySHA256": "324b71ebb8aa8e5676f13b1bc22a53b8bbbe05ecc8ff20b8349a808b403d2ce7",
+  "previousOwnedLauncherExitCode": 0,
+  "operations": {
+    "action_draft": false,
+    "report_explanation": false,
+    "summary": false,
+    "transcript": false
+  },
+  "sameSixJobsPreserved": true,
+  "private5ReadySourceStillAuthorized": true,
+  "report4ExpiredNoRestore": true,
+  "sqliteIntegrity": "ok",
+  "ownedChildren": 0,
+  "intelligenceScratchEmpty": true,
+  "providerConsumingNativeWorkerDisabled": true,
+  "sharedWhisperOllamaScannerServicesUntouched": true,
+  "ocrMediaKeyringConfigurationPreserved": true,
+  "sessionAuthenticationPreservedNoOriginalSessionLogout": true,
+  "configQualification": "Same reviewed binary/DB/keyring/OCR/media/provider paths; only authorized IntelligenceEnabled false for final capacity handoff."
+}

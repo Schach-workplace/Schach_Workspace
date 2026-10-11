@@ -1,0 +1,219 @@
+{
+  "head": "b6ba0e2260de7c1219387006b6b5b8ab5ca55aab",
+  "kind": "evidence",
+  "records": 35,
+  "totalBytes": 625300,
+  "qualification": "Source-bound preservation only; ignored compiled binaries remain local and are not publication evidence.",
+  "files": [
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-producer-red.log",
+      "bytes": 4065,
+      "sha256": "4acfcf0d722ea5aee26fea0f04f9197c14d7e72db32eb40a6962dbd1b280eba7",
+      "frozenPath": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-evidence-freeze-b6ba0e2/files/.superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-producer-red.log"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-producer-green.log",
+      "bytes": 257,
+      "sha256": "e91787cc180a79851034811a5b80e8f9d7b67667d1e52155d5f502599baffdbe",
+      "frozenPath": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-evidence-freeze-b6ba0e2/files/.superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-producer-green.log"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-focused.log",
+      "bytes": 246,
+      "sha256": "157c500cb96f5dc3e4225b1b282745088558dd47c5b190bc53f65162db726ef5",
+      "frozenPath": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-evidence-freeze-b6ba0e2/files/.superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-focused.log"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-actions-red.log",
+      "bytes": 2391,
+      "sha256": "786f7131efe0f273ec694100a73b6cc51f7520b33c9f9eb6b1a9e896a85b38cc",
+      "frozenPath": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-evidence-freeze-b6ba0e2/files/.superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-actions-red.log"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-actions-green.log",
+      "bytes": 246,
+      "sha256": "eeb66a653a83c6cea3b2f840a0121cd647b865e4308ea68d4486b8c4e229afcb",
+      "frozenPath": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-evidence-freeze-b6ba0e2/files/.superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-actions-green.log"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-web-actions-red.log",
+      "bytes": 905,
+      "sha256": "4e65a63ef888142eb8b239805da32a28feb876206990b42e28fc208eee8ed20c",
+      "frozenPath": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-evidence-freeze-b6ba0e2/files/.superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-web-actions-red.log"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-web-actions-green.log",
+      "bytes": 249,
+      "sha256": "05afac437d6e0df1ed5c2e73541a397b3777078f11379e2c70af58ecd71373da",
+      "frozenPath": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-evidence-freeze-b6ba0e2/files/.superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-web-actions-green.log"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-final-producer.log",
+      "bytes": 247,
+      "sha256": "639c305eae616a9eef650dea6b042d9eba8820e3eb6e054efff3ac984cfe97ac",
+      "frozenPath": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-evidence-freeze-b6ba0e2/files/.superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-final-producer.log"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-test-types-failure.log",
+      "bytes": 474,
+      "sha256": "0aee97b6a1915175465d7bff664f7425b83c43c2fe47acbc9b5d3014b170867f",
+      "frozenPath": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-evidence-freeze-b6ba0e2/files/.superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-test-types-failure.log"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-before-actions-native-full.log",
+      "bytes": 286,
+      "sha256": "17928a99664684c9409936b8480663dbd5a479deaf555531c03ce5189786d6e5",
+      "frozenPath": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-evidence-freeze-b6ba0e2/files/.superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-before-actions-native-full.log"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-before-actions-native-types.log",
+      "bytes": 42,
+      "sha256": "6a5365a7bb40c3ca387f36db78409447c32d44f69ec1737ce498eae83f040589",
+      "frozenPath": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-evidence-freeze-b6ba0e2/files/.superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-before-actions-native-types.log"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-before-actions-native-lint.log",
+      "bytes": 34,
+      "sha256": "d3f78a60c2585717d1813a084d3a7b86d56cf287b70dcab02fb5917698dc6d0c",
+      "frozenPath": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-evidence-freeze-b6ba0e2/files/.superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-before-actions-native-lint.log"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-before-actions-native-export.log",
+      "bytes": 4456,
+      "sha256": "2ffbfa7a3e4829f58e8810901d13ccdd7ed5d6a58a1910038befa4ced1df7d17",
+      "frozenPath": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-evidence-freeze-b6ba0e2/files/.superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-before-actions-native-export.log"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-web-full.log",
+      "bytes": 519,
+      "sha256": "8e5423b9b009b2464f46eea8f617a220a953063cd8828dca43f34a8c2a29c77e",
+      "frozenPath": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-evidence-freeze-b6ba0e2/files/.superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-web-full.log"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-web-build.log",
+      "bytes": 908,
+      "sha256": "0e1837ef5a85bcbb83b123809913b8c3971916149f1ebcc111223471ba51a922",
+      "frozenPath": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-evidence-freeze-b6ba0e2/files/.superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-web-build.log"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-web-demo.log",
+      "bytes": 963,
+      "sha256": "1f1dffe8453ff24628fc76374257a8fd05905989b3a3c203cd70a7ed937dd393",
+      "frozenPath": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-evidence-freeze-b6ba0e2/files/.superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-web-demo.log"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-native-full.log",
+      "bytes": 286,
+      "sha256": "d179d5cbf82d79877ac21b856ca4c051fd286c66aceedb87af98e29663775bea",
+      "frozenPath": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-evidence-freeze-b6ba0e2/files/.superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-native-full.log"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-native-types.log",
+      "bytes": 42,
+      "sha256": "6a5365a7bb40c3ca387f36db78409447c32d44f69ec1737ce498eae83f040589",
+      "frozenPath": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-evidence-freeze-b6ba0e2/files/.superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-native-types.log"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-native-lint.log",
+      "bytes": 34,
+      "sha256": "d3f78a60c2585717d1813a084d3a7b86d56cf287b70dcab02fb5917698dc6d0c",
+      "frozenPath": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-evidence-freeze-b6ba0e2/files/.superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-native-lint.log"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-native-export.log",
+      "bytes": 1752,
+      "sha256": "f405281fb5d9d0d9cc107dc270516558ba9496c72446ba21526619d73ce3467d",
+      "frozenPath": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-evidence-freeze-b6ba0e2/files/.superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-native-export.log"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-format.log",
+      "bytes": 66,
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "frozenPath": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-evidence-freeze-b6ba0e2/files/.superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-format.log"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-report.md",
+      "bytes": 8949,
+      "sha256": "4e8241446317713141cae841d29105d2377ffde40b13ca8613db5c4862eec3b9",
+      "frozenPath": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-evidence-freeze-b6ba0e2/files/.superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-report.md"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-before-types-source.json",
+      "bytes": 43487,
+      "sha256": "320c1060ed69ad1e19c14bb0e3848a69b37220c18ea5a5bb76cb10ae5c5271e6",
+      "frozenPath": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-evidence-freeze-b6ba0e2/files/.superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-before-types-source.json"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-before-actions-invocation-source.json",
+      "bytes": 43516,
+      "sha256": "d37eb71717a6ebc12367be0d2480f5f633decc1b669a1032ad34f24980ae885d",
+      "frozenPath": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-evidence-freeze-b6ba0e2/files/.superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-before-actions-invocation-source.json"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-invocation-source.json",
+      "bytes": 43491,
+      "sha256": "a004f9f68e3d46b1d5b2746a7335eb9846cd14939f49a7d4792d58f869af3eab",
+      "frozenPath": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-evidence-freeze-b6ba0e2/files/.superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-invocation-source.json"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-source-manifest.json",
+      "bytes": 302658,
+      "sha256": "f03428fe544ca40684c1417d4504b6a6ee2a433dd5db49a6087101b4fe33762a",
+      "frozenPath": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-evidence-freeze-b6ba0e2/files/.superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-source-manifest.json"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-sql-manifest.json",
+      "bytes": 45696,
+      "sha256": "2054c60068cf1218e3fae22576ea6cb1ff4bc9fd52401ee58ba5eb5f76e9aa51",
+      "frozenPath": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-evidence-freeze-b6ba0e2/files/.superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-sql-manifest.json"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-build-manifest.json",
+      "bytes": 11547,
+      "sha256": "ca4073fd5e3187bb7e1412891b6a63078c23da1917009f7763bd3abcfbe64f90",
+      "frozenPath": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-evidence-freeze-b6ba0e2/files/.superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-build-manifest.json"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-source-equivalence.json",
+      "bytes": 668,
+      "sha256": "675c5fac9fb57663350e1d5f22ff7977d6cb11028ff22d03b349614bb06df58a",
+      "frozenPath": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-evidence-freeze-b6ba0e2/files/.superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-source-equivalence.json"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-checks.json",
+      "bytes": 4054,
+      "sha256": "776a2e54c11c3287971a10a317be51caae5b687c87ff7451a22e9598deeeffce",
+      "frozenPath": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-evidence-freeze-b6ba0e2/files/.superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-checks.json"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-case-mapping.json",
+      "bytes": 65792,
+      "sha256": "af3ff420325212003beaa28c690c0ef67fb169b4409cc9005e3cd628c1d12642",
+      "frozenPath": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-evidence-freeze-b6ba0e2/files/.superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-case-mapping.json"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-report.md",
+      "bytes": 21666,
+      "sha256": "c7209da119da79404c971495de925f7d6f0b4eb3560e655f97c4e613b9e20142",
+      "frozenPath": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-evidence-freeze-b6ba0e2/files/.superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-report.md"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-native-fix2-refresh-blocker.md",
+      "bytes": 6430,
+      "sha256": "ba6ceec7e4ca91bfe145213dbc7988179405de917d87cd60e23478384be37305",
+      "frozenPath": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-evidence-freeze-b6ba0e2/files/.superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-native-fix2-refresh-blocker.md"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-manifest.json",
+      "bytes": 8361,
+      "sha256": "a6938eeeabeb71d24b89f94350d67c1c5dacc80b3d0457f40c60b3c7d760ac9a",
+      "frozenPath": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-evidence-freeze-b6ba0e2/files/.superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-manifest.json"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-controller-handoff-hash-proof.json",
+      "bytes": 517,
+      "sha256": "e3b040801991b4a42fb1c6a2b1951650a597278816bd0e2e55a8e03f59c5a49c",
+      "frozenPath": ".superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-evidence-freeze-b6ba0e2/files/.superpowers/sdd/2026-10-10-workspace-improvements-roadmap/task-10-fix3-controller-handoff-hash-proof.json"
+    }
+  ]
+}

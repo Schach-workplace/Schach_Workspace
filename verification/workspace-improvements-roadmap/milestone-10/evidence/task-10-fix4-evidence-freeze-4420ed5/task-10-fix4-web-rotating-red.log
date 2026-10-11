@@ -1,0 +1,42 @@
+
+> schach-workspace-frontend@1.1.0 test
+> vitest run src/pages/Reports.intelligence.test.tsx -t rotating
+
+
+ RUN  v5.0.3 /home/brahma/Projects/Schach_Workspace/.worktrees/workspace-improvements/frontend
+
+ ❯ src/pages/Reports.intelligence.test.tsx (18 tests | 1 failed | 17 skipped) 1144ms
+   × N2 web: rotating latest report handles reauthorize the same human-selected snapshot 1143ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/pages/Reports.intelligence.test.tsx > N2 web: rotating latest report handles reauthorize the same human-selected snapshot
+AssertionError: expected undefined to be false // Object.is equality
+
+[SYNTHETIC_TEST_DOM_DUMP_OMITTED]
+
+- Expected:
+false
+
++ Received:
+undefined
+
+ ❯ src/pages/Reports.intelligence.test.tsx:315:128
+    313|   snapshot = 'new-unselected-handle';
+    314|   await releaseReport();
+    315|   await waitFor(() => expect((screen.queryByRole('button', { name: 'Ge…
+       |                                                                                                                                ^
+    316|   expect(screen.getByRole('dialog')).toBe(modal);
+    317|   fireEvent.click(screen.getByRole('button', { name: 'Generate local r…
+ ❯ runWithExpensiveErrorDiagnosticsDisabled node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 17 skipped (18)
+   Start at  00:42:11
+   Duration  2.15s (tests 55%, transform 27%, import 13%, environment 5%)
+

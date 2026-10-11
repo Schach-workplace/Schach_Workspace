@@ -1,0 +1,52 @@
+
+ RUN  v5.0.3 /home/brahma/Projects/Schach_Workspace/.worktrees/workspace-improvements/mobile
+
+ ❯ src/IntelligenceScreen.test.tsx (21 tests | 3 failed | 17 skipped) 10487ms
+   × retains inspected native review across real cloned polling (preview overlaps=false) 5192ms
+   × retains inspected native review across real cloned polling (preview overlaps=true) 5157ms
+   × keeps native held canonical ACK only for exact raw expiry expired 71ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/IntelligenceScreen.test.tsx > retains inspected native review across real cloned polling (preview overlaps=false)
+ FAIL  src/IntelligenceScreen.test.tsx > retains inspected native review across real cloned polling (preview overlaps=true)
+AssertionError: expected 'Local assistanceSelect sources explic…' to contain 'Inspected current audience'
+
+Expected: "Inspected current audience"
+Received: "Local assistanceSelect sources explicitly. Continue normal work while local assistance is unavailable.Operation: Summarize selected sourcesExplicit selected sources (0/50)Choose sources from a readable conversation, task or report.Review selected sourcesreadyRecheck current resultCancel and clear this resultReview selected sourcesGenerated seedSelected source suggestionResolve: owner, dueDate, reviewerOpen Authorized sourceReview task draftReview selected draftReviewed intelligence titleReviewed intelligence descriptionIntelligence owner: Human ownerIntelligence reviewer: Independent reviewerIntelligence deadline · Asia/KolkataChoose Intelligence deadlineDepartment: ChoosePreview content and audienceConfirm reviewed creationYour local request historyContinue manually using the existing conversation, task, finance or report tools."
+
+ ❯ src/IntelligenceScreen.test.tsx:826:25
+    824|   expect(c.textContent).not.toContain("Inspected current audience");
+    825|   await act(async () => rawDone(JSON.parse(JSON.stringify(job))));
+    826|   expect(c.textContent).toContain("Inspected current audience");
+       |                         ^
+    827|   if (overlap) await click("I reviewed these fields and this audience"…
+    828|   await click("Confirm reviewed creation");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  src/IntelligenceScreen.test.tsx > keeps native held canonical ACK only for exact raw expiry expired
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/IntelligenceScreen.test.tsx:844:65
+    842|   await nativeSubmitCurrent(); expired=true; await click("Recheck curr…
+    843|   await act(async () => finish({id:"created"}));
+    844|   expect(c.textContent?.includes("Created work successfully.")).toBe(c…
+       |                                                                 ^
+    845|   expect(c.textContent).not.toContain("Authorized source");
+    846| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 1 passed | 17 skipped (21)
+   Start at  22:35:09
+   Duration  10.81s (tests 98%, environment 1%, transform 1%)
+
