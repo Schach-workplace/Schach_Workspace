@@ -159,8 +159,9 @@ function useController() {
       companyId: company,
       userId: session?.user.id ?? "",
       ready: foreground && authorized,
+      policyEpoch,
     });
-  }, [company, session?.user.id, foreground, authorized]);
+  }, [company, session?.user.id, foreground, authorized, policyEpoch]);
   function clearPrivate() {
     clearAllDrafts();
     clearAllBusinessAttempts();

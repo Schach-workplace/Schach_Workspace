@@ -11,7 +11,13 @@ import {
 export type { CaptureScope, PreviewFile } from "./captureOwner";
 const owners = new Map<string, CaptureOwner>();
 let epoch = 0;
-let context = { serverOrigin: "", companyId: "", userId: "", ready: false };
+let context: {
+  serverOrigin: string;
+  companyId: string;
+  userId: string;
+  ready: boolean;
+  policyEpoch?: number;
+} = { serverOrigin: "", companyId: "", userId: "", ready: false };
 let pendingCamera: CaptureScope | null = null;
 let pendingChooser = false;
 let recoverableCamera: { scope: CaptureScope; generation: number } | null =
@@ -38,7 +44,7 @@ export function captureOwner(scope: CaptureScope) {
   }
   return owner;
 }
-const same = (s: CaptureScope) =>
+const same = (s: Pick<CaptureScope, "serverOrigin" | "companyId" | "userId">) =>
   context.serverOrigin === s.serverOrigin &&
   context.companyId === s.companyId &&
   context.userId === s.userId;
@@ -211,6 +217,55 @@ export async function appendCapture(scope: CaptureScope, file: PreviewFile) {
   );
 }
 
+// This content-free intent survives ordinary picker background, but never a
+// principal/policy reset. Request generations still fence each fresh API read.
+export function financeFileIntent(
+  origin: string,
+  companyId: string,
+  userId: string,
+  policyEpoch = context.policyEpoch ?? 0,
+) {
+  return {
+    serverOrigin: origin,
+    companyId,
+    userId,
+    policyEpoch,
+    captureEpoch: epoch,
+  };
+}
+export async function authorizeFinanceFile(
+  intent: ReturnType<typeof financeFileIntent>,
+  purpose: "receipt" | "statement",
+) {
+  const sameIntent = () =>
+    same(intent) &&
+    intent.captureEpoch === epoch &&
+    intent.policyEpoch === (context.policyEpoch ?? 0) &&
+    client.endpoint === intent.serverOrigin;
+  if (!sameIntent())
+    throw Error("Company access changed while choosing the file.");
+  if (!context.ready)
+    await new Promise<void>((resolve, reject) => {
+      const check = () => {
+        if (!sameIntent()) {
+          waits.delete(check);
+          reject(Error("Company access changed while choosing the file."));
+        } else if (context.ready) {
+          waits.delete(check);
+          resolve();
+        }
+      };
+      waits.add(check);
+      check();
+    });
+  const generation = client.generation;
+  await client.request(
+    `/companies/${intent.companyId}/${purpose === "statement" ? "statement-imports" : "finance/intakes"}`,
+  );
+  if (!sameIntent() || !context.ready || generation !== client.generation)
+    throw Error("Company access changed while choosing the file.");
+}
+
 // File import is picked before exact reserve. It stays owned, ephemeral and
 // undisclosed until the server creates the real authorized content-bound ID.
 export async function chooseFinanceFile(
@@ -221,15 +276,13 @@ export async function chooseFinanceFile(
 ) {
   if (pendingCamera || pendingChooser)
     throw Error("Finish the current camera capture first.");
-  const generation = epoch,
-    clientGeneration = client.generation;
+  const intent = financeFileIntent(origin, companyId, userId);
   const current = () =>
     context.serverOrigin === origin &&
     context.companyId === companyId &&
     context.userId === userId &&
     context.ready &&
-    generation === epoch &&
-    clientGeneration === client.generation;
+    intent.captureEpoch === epoch;
   if (!current()) throw Error("Check current company access first.");
   pendingChooser = true;
   try {
@@ -250,8 +303,7 @@ export async function chooseFinanceFile(
     );
     try {
       new File(asset.uri).copy(file);
-      if (!current())
-        throw Error("Company access changed while choosing the file.");
+      await authorizeFinanceFile(intent, purpose);
       if (
         file.size < 1 ||
         file.size > (purpose === "statement" ? 8 : 10) * 1048576

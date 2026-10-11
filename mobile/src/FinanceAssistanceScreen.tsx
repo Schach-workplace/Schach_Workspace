@@ -1,11 +1,13 @@
 import { useEffect, useRef, useState, useLayoutEffect } from "react";
 import { FlatList, Text, View } from "react-native";
 import { router } from "expo-router";
-import { client } from "./client";
+import { client, NativeApiError } from "./client";
 import {
   captureOwner,
   authorizeCapture,
   chooseFinanceFile,
+  financeFileIntent,
+  authorizeFinanceFile,
   type CaptureScope,
   type PreviewFile,
 } from "./capture";
@@ -69,12 +71,15 @@ export default function FinanceAssistanceScreen({
   const ready = w.foreground && !!w.work;
   const captured = [
     client.endpoint,
-    client.generation,
     w.company,
     w.session?.user.id,
     w.policyEpoch,
   ].join(":");
   const current = useRef(captured);
+  const mutation = useRef(m);
+  useLayoutEffect(() => {
+    mutation.current = m;
+  });
   useLayoutEffect(() => {
     current.current = captured;
   }, [captured]);
@@ -85,6 +90,7 @@ export default function FinanceAssistanceScreen({
     };
     const stop = client.registerCancellation(clear);
     return () => {
+      current.current = "";
       stop();
       clear();
     };
@@ -98,7 +104,14 @@ export default function FinanceAssistanceScreen({
   async function reserve(capture: boolean, purpose: "receipt" | "statement") {
     if (!ready || busy) return;
     const origin = captured;
+    const intent = financeFileIntent(
+      client.endpoint,
+      w.company,
+      w.session!.user.id,
+      w.policyEpoch,
+    );
     setBusy(true);
+    let submitted = false;
     try {
       let selectedFile = pendingFile.current;
       let canonicalId = "";
@@ -122,7 +135,8 @@ export default function FinanceAssistanceScreen({
           pendingFile.current = selected;
 
           const sha256 = await financePreviewHash(selected.uri);
-          if (current.current !== origin)
+          await authorizeFinanceFile(intent, purpose);
+          if (current.current !== origin || pendingFile.current !== selected)
             throw Error("Company access changed.");
           payload = {
             purpose,
@@ -135,7 +149,9 @@ export default function FinanceAssistanceScreen({
           };
         }
       }
-      await m.execute<FinanceIntake>(
+      if (current.current !== origin) throw Error("Company access changed.");
+      submitted = true;
+      await mutation.current.execute<FinanceIntake>(
         "/finance/intakes",
         payload,
         "POST",
@@ -144,6 +160,7 @@ export default function FinanceAssistanceScreen({
           setIntake(r.id);
         },
       );
+      if (current.current !== origin) throw Error("Company access changed.");
       if (selectedFile) {
         const scope: CaptureScope = {
           serverOrigin: client.endpoint,
@@ -157,6 +174,14 @@ export default function FinanceAssistanceScreen({
         pendingFile.current = undefined;
       }
     } catch (e) {
+      if (
+        current.current !== origin ||
+        !submitted ||
+        (e instanceof NativeApiError && [401, 403, 404].includes(e.status))
+      ) {
+        pendingFile.current?.delete();
+        pendingFile.current = undefined;
+      }
       setError((e as Error).message);
     } finally {
       setBusy(false);
