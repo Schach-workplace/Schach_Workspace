@@ -312,7 +312,7 @@ func TestHistoricalInteriorGapsRemainVisibleWithKnownCutoffState(t *testing.T) {
 }
 
 func TestHistoricalFilteredEventsBeyondCandidatePage(t *testing.T) {
-	for _, kind := range []string{"acceptance", "time", "overflow"} {
+	for _, kind := range []string{"acceptance", "time", "overflow", "scan_limit"} {
 		t.Run(kind, func(t *testing.T) {
 			s, db := testServer(t)
 			c := login(t, s, "founder@example.com")
@@ -333,6 +333,9 @@ func TestHistoricalFilteredEventsBeyondCandidatePage(t *testing.T) {
 				t.Fatal(e)
 			}
 			count := reportRowLimit + 2
+			if kind == "scan_limit" {
+				count = reportCandidateScanLimit
+			}
 			if kind == "time" {
 				facts := make([]TaskTimeFact, count)
 				for i := range facts {
@@ -361,9 +364,14 @@ func TestHistoricalFilteredEventsBeyondCandidatePage(t *testing.T) {
 			input := historyRequest()
 			input["filters"] = map[string]any{"ownerId": owner}
 			st, b, w := req(t, s, "POST", "/api/companies/"+cid+"/reports/history/snapshots", map[string]any{"retryKey": "filtered-page", "request": input}, c)
-			if kind == "overflow" {
+			if kind == "overflow" || kind == "scan_limit" {
 				if st != 422 || !strings.Contains(w.Body.String(), "range_too_large") {
 					t.Fatal("incomplete report did not fail closed", st, w.Body.String())
+				}
+				var persisted int64
+				db.Model(&HistoricalReportSnapshot{}).Count(&persisted)
+				if persisted != 0 {
+					t.Fatal("failed capture persisted a partial snapshot", persisted)
 				}
 				return
 			}
