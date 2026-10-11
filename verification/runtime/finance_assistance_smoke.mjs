@@ -78,7 +78,7 @@ try{
  await run(`document.querySelector('button[aria-label="Refresh workspace"]').click()`);
 
  await wait(()=>run('document.body.innerText.includes("Statement reconciliation")&&document.body.innerText.includes("Record 2")'));
- const statementProof=await run(`(async()=>{const r=await fetch('/api/companies/'+${JSON.stringify(fixture.company)}+'/statement-imports',{credentials:'include'});return {items:(await r.json()).items,posts:window.statementPosts}})()`);assert.equal(statementProof.items.length,1);assert.equal(statementProof.items[0].rowCount,4);result.statementRetry={importId:statementProof.items[0].id,rows:4,requests:statementProof.posts,sameKeySamePayload:true};
+ const statementProof=await run(`(async()=>{const r=await fetch('/api/companies/'+${JSON.stringify(fixture.company)}+'/finance/statement-imports',{credentials:'include'});return {items:(await r.json()).items,posts:window.statementPosts}})()`);assert.equal(statementProof.items.length,1);assert.equal(statementProof.items[0].rowCount,4);result.statementRetry={importId:statementProof.items[0].id,rows:4,requests:statementProof.posts,sameKeySamePayload:true};
  assert.equal(await run('window.statementPosts.length'),2);assert(await run('JSON.stringify(window.statementPosts[0])===JSON.stringify(window.statementPosts[1])'));result.checks.push('Rendered CSV lost postcommit import ACK freezes mapping/re-preview; identical key/body retry yields one canonical four-occurrence import, then actual refresh-loss recovers it');
  if(fixture.paidExpense){
   const paidBefore=await run(`(async()=>{const r=await fetch('/api/companies/'+${JSON.stringify(fixture.company)}+'/expenses/'+${JSON.stringify(fixture.paidExpense)},{credentials:'include'});return (await r.json()).expense})()`);

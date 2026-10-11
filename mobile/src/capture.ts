@@ -260,7 +260,7 @@ export async function authorizeFinanceFile(
     });
   const generation = client.generation;
   await client.request(
-    `/companies/${intent.companyId}/${purpose === "statement" ? "statement-imports" : "finance/intakes"}`,
+    `/companies/${intent.companyId}/${purpose === "statement" ? "finance/statement-imports" : "finance/intakes"}`,
   );
   if (!sameIntent() || !context.ready || generation !== client.generation)
     throw Error("Company access changed while choosing the file.");

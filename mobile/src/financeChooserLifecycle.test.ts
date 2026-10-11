@@ -1,4 +1,5 @@
 import { afterEach, expect, it, vi } from "vitest";
+import { readFileSync } from "node:fs";
 import { chooseFinanceFile, clearCaptures, setCaptureContext } from "./capture";
 const h = vi.hoisted(() => ({
   endpoint: "https://owned.test",
@@ -71,7 +72,19 @@ it("waits for fresh foreground authorization after DocumentsUI clears request ge
   setCaptureContext(scope);
   const file = await pending;
   expect(file?.name).toBe("fictional.csv");
-  expect(h.request).toHaveBeenCalledWith("/companies/c/statement-imports");
+  const routes = readFileSync(
+    new URL("../../backend/platform/finance_statements.go", import.meta.url),
+    "utf8",
+  );
+  const base = routes.match(
+    /func \(s \*Server\) financeStatementRoutes\(\) \{\s*base := "([^"]+)"/,
+  )![1];
+  const suffix = routes.match(
+    /s.route\("GET "\+base\+"([^"]+)", s.listFinanceStatementImports\)/,
+  )![1];
+  expect(h.request).toHaveBeenCalledWith(
+    base.replace("/api", "").replace("{cid}", "c") + suffix,
+  );
   file?.delete();
 });
 it.each(["company", "user", "origin", "policy", "logout", "denied"])(
