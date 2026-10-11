@@ -1,6 +1,6 @@
 # Schach Workspace live implementation checklist
 
-Updated UTC 2026-10-11T23:10:55.575350+00:00. Read [AI_HANDOFF.md](AI_HANDOFF.md), [AI_FILE_INDEX.json](AI_FILE_INDEX.json) and [durable ledger](../verification/workspace-improvements-roadmap/release-cutover/release-ledger.md). Check marks represent the named gate, not production/device certification.
+Updated UTC 2026-10-11T23:16:19.171675+00:00. Read [AI_HANDOFF.md](AI_HANDOFF.md), [AI_FILE_INDEX.json](AI_FILE_INDEX.json) and [durable ledger](../verification/workspace-improvements-roadmap/release-cutover/release-ledger.md). Check marks represent the named gate, not production/device certification.
 
 ## Ten implementation milestones
 
@@ -25,13 +25,13 @@ Updated UTC 2026-10-11T23:10:55.575350+00:00. Read [AI_HANDOFF.md](AI_HANDOFF.md
 - [x] All110ordered rulings safely published with rationale/cost; prior97+11 immutable.
 - [x] Complete private own-plan archive8357files/871373847bytes/every-file compare; predecessor dirty AI docs retained; adapted inventory updater prepared.
 - [x] Fresh current-source Go/MigrateONLY/reconcile/NORMAL web private builds;569inputs unchanged/20artifacts.
-- [ ] Commit durable recovery metadata and remove ONLY verified archived own SDD tree; leave sibling plans/worktrees/caches/stashes.
-- [ ] Fresh remote privacy/access/ancestry and exact old process identity/env recheck.
-- [ ] Gracefully stop verified old app; fresh private consistent DB/media/key/MFA/device backups and ALL typed old-row/column capture.
-- [ ] Current MigrateONLY on backup first, then actual; integrity and complete old-row/column preservation BEFORE normal workers.
-- [ ] Fast-forward main; current normal frontend/runtime provenance; preserve original settings and independent People key only if absent; scheduler enabled, no seed/reset.
-- [ ] Pin/verify optional local providers with other known consumers quiescent; no new inference during checks.
-- [ ] Actual API health/auth/browser13modules/mobilewidths and retained business/finance/deadline/media/auth data checks; classify legitimate new rows.
+- [x] Commit durable recovery metadata and remove ONLY verified archived own SDD tree; leave sibling plans/worktrees/caches/stashes.
+- [x] Fresh remote privacy/access/ancestry and exact old process identity/env recheck.
+- [x] Gracefully stop verified old app; fresh private consistent DB/media/key/MFA/device backups and ALL typed old-row/column capture.
+- [x] Current MigrateONLY backupfirst/actual:52oldtables/522oldrows/allcolumns unchanged;57newtables; post-start old data unchanged,2new legitimate sessions.
+- [x] Fast-forward main; current normal frontend/runtime provenance; preserve original settings and independent People key only if absent; scheduler enabled, no seed/reset.
+- [x] Pin/verify optional local providers with other known consumers quiescent; no new inference during checks.
+- [x] Actual APIhealth JSON/currentbinary/auth/browser13modules/8APIreads/320375430widths PASS; fulltyped old business/finance/deadline/media/auth preserved. Local operations4available/noinference; legacyInbox12batches/66items.
 - [ ] Unique safe source ZIP/privacy/integrity/manifest/inclusions; genericlogs excluded, full proof remains Git.
 - [ ] Non-force private feature+main push and exact remote commit verification; keep app running.
 - [ ] Update this checklist, handoff, index and durable ledger with final source/process/artifact and remaining limits.

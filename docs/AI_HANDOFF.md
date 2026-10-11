@@ -1,14 +1,16 @@
 # Schach Workspace AI handoff
 
-Updated UTC 2026-10-11T23:10:55.575350+00:00. Read this document, [AI_CHECKLIST.md](AI_CHECKLIST.md), [AI_FILE_INDEX.json](AI_FILE_INDEX.json), then the [durable release ledger](../verification/workspace-improvements-roadmap/release-cutover/release-ledger.md). Update all four at each material boundary and before a context limit. Verify live Git/process state before acting; historical PIDs are not permission to signal a process.
+Updated UTC 2026-10-11T23:16:19.171675+00:00. Read this document, [AI_CHECKLIST.md](AI_CHECKLIST.md), [AI_FILE_INDEX.json](AI_FILE_INDEX.json), then the [durable release ledger](../verification/workspace-improvements-roadmap/release-cutover/release-ledger.md). Update all four at each material boundary and before a context limit. Verify live Git/process state before acting; historical PIDs are not permission to signal a process.
 
 ## Current state and next action
 
 All ten implementation milestones are accepted with documented limitations. The single whole-branch review found three Important reporting defects; the single consolidated fix and scoped review are complete. I1 public Inbox delivery, I2 current CSV revocation, and I3 unrelated-recipient departure isolation are addressed. Spec/Quality PASS; no new findings; merge recommended. All source and reviewer agents yielded. Root owns final integration; do not redispatch completed features or another broad review.
 
-Reviewed fix HEAD `dff8ddc045b7bec32b41ac3e4f8847938c4f3de3`; product `ebc994dc6c2be442db595e468a716139b56ed721`. Later commits contain explicit recovery/release metadata outside that frozen review. Main still `d20063b8063ee1dfd9bec6b4cd7807f4e31bcfa6` and original app on127.0.0.1:8080 at this boundary; cutover and push are pending.
+Reviewed fix HEAD `dff8ddc045b7bec32b41ac3e4f8847938c4f3de3`; product `ebc994dc6c2be442db595e468a716139b56ed721`. Main was fast-forwarded to recovery metadata `0b20b31`; original old app was gracefully stopped after exact identity/env verification, fresh stopped-user consistent backup and full typed capture. MigrateONLY passed on the backup first, then actual database: all52old tables/522old rows and columns unchanged;57new tables. Post-start typed comparison also preserves all old rows/columns; two legitimate sign-in sessions were added. See cutover-prestart-proof.json and poststart-preservation-proof.json in the durable proof directory.
 
-Next: commit the durable recovery metadata, remove only the verified archived own SDD directory, run backup-first cutover, validate actual runtime/auth/browser and retained data, create safe source ZIP, push feature/main without force and verify remote commits. Prepared private `tools/execute-cutover.py` requires accepted scoped disposition and exact old process identity/env; it has NOT run yet. Stop dependent work on concrete preservation/application failure; never reseed/reset or restore blindly.
+Current app PID3048810 runs the exact current-source Go binary and NORMAL frontend on127.0.0.1:8080; `/api/health` JSON200/ok. Browser preserved-account sign-in,13module views,8scoped API reads and320/375/430width container smoke pass, zero renderer exceptions. All4local intelligence operations are available after pinned loader verification; no inference submitted. Bounded ordinary-ACL legacy reconciliation completed12batches across2companies, creating66Inbox items without canonical task/finance changes. These are bounded local checks, not physical/production acceptance.
+
+Complete private ownSDD recovery/every-file comparison succeeded, all110orderedrulings committed, only the exact ownSDD directory removed. All later work uses the durable release ledger. Next: final source ZIP/privacy/integrity/manifest checks, release metadata/source-equivalence checks, non-force feature/main push and exact remote verification; then record final health/process/data/checklist state. Cutover is complete; push and ZIP remain pending. Private start-current-runtime.py can restart the configured app only on a free8080 port; never rerun execute-cutover.py against the already cut-over database.
 
 ## Authorization and binding controls
 
@@ -46,6 +48,12 @@ The helper only inventories paths; it never grants acceptance. `AI_FILE_INDEX.js
 ## Runtime and data precautions
 
 Original user app PID1848774 is historical until UID/exe/cwd/args and saved private environment are freshly rechecked immediately before graceful stop. Preserve exact existing environment, MFA/device/auth/key settings and media. New independent People retry32-byte key only if truly absent; never rotate/reuse MFA/LiveKit keys. Fresh consistent SQLite backup and full typed old-row/column comparison are required before migrations, using exact current MigrateONLY on a backup first, then actual DB before workers. Preliminary470-row proof and nonquiescent522-row inventory are not final preservation.
+
+Private restart command (preserves configured keys/env; refuses occupied port):
+
+```bash
+python3 /home/brahma/.local/state/schach-workspace-cutover-20261012-uoxlpfcw/tools/start-current-runtime.py
+```
 
 Current private current-source build: `/home/brahma/.local/state/schach-workspace-cutover-20261012-uoxlpfcw/current-dff8ddc-build`. Normal startup uses existing DB, no demo/seed/bootstrap/testDSNs, scheduler enabled. Local Whisper/Ollama/English OCR can be configured only with pinned verification and known other consumers quiescent. Read-only provisioning passed without inference; same-UID scan found no configured application consumers; systemd/sd-pam unreadable environments were identified as session managers. Reverify before activation. Later worker/history/session additions must be classified, not falsely called total DB equality.
 

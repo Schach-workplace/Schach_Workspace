@@ -1,0 +1,18 @@
+{
+  "browserAttempt1": {
+    "status": "failed",
+    "qualification": "Controller-only harness constructed invalid JavaScript quoting in nav selector; no app renderer exception. Fixed selector after source tracing."
+  },
+  "browserAttempt2": {
+    "status": "failed",
+    "qualification": "Sign-in succeeded; controller API expression failed after omitting required report/planning date filters. Source traced required query contract; final same routes with explicit dates return200. Original partial outcome retained privately; initial attempts have no full before-command input manifests and are not promoted to source-bound acceptance."
+  },
+  "finalBrowser": "passed with current preserved-account sign-in/13views/8APIreads/3widths/zeroexceptions; no business writes or inference",
+  "buildWarnings": [
+    "Separate new NORMAL outDir is outside project and intentionally not emptied; newly owned empty directory verified."
+  ],
+  "rootObservationWarnings": [
+    "First sameUID /proc scan encountered exited process; corrected observation race, not app crash.",
+    "Earlier retained native processes absent with cause unproven; no restart or retroactive evidence."
+  ]
+}

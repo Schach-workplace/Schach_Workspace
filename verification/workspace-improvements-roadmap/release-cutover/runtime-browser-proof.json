@@ -1,0 +1,77 @@
+{
+  "status": "passed",
+  "checks": [
+    "Current normal web sign-in against preserved existing account; no password reset or seed",
+    "All13 module headings render; mobile widths320/375/430 retain main container; no renderer exceptions"
+  ],
+  "moduleViews": [
+    "overview",
+    "my-work",
+    "tasks",
+    "projects",
+    "calendar",
+    "workload",
+    "goals",
+    "finance",
+    "reports",
+    "people",
+    "inbox",
+    "settings",
+    "connect"
+  ],
+  "viewportWidths": [
+    320,
+    375,
+    430
+  ],
+  "exceptionCount": 0,
+  "apiReads": [
+    {
+      "path": "/bootstrap",
+      "status": 200,
+      "json": true
+    },
+    {
+      "path": "/tasks",
+      "status": 200,
+      "json": true
+    },
+    {
+      "path": "/expenses",
+      "status": 200,
+      "json": true
+    },
+    {
+      "path": "/reports/tasks/summary?from=2026-10-01&to=2026-10-31",
+      "status": 200,
+      "json": true
+    },
+    {
+      "path": "/attention",
+      "status": 200,
+      "json": true
+    },
+    {
+      "path": "/planning/summary?from=2026-10-01&to=2026-10-31",
+      "status": 200,
+      "json": true
+    },
+    {
+      "path": "/goals",
+      "status": 200,
+      "json": true
+    },
+    {
+      "path": "/intelligence/capabilities",
+      "status": 200,
+      "json": true
+    }
+  ],
+  "intelligenceOperations": {
+    "action_draft": true,
+    "report_explanation": true,
+    "summary": true,
+    "transcript": true
+  },
+  "browserStopped": true
+}

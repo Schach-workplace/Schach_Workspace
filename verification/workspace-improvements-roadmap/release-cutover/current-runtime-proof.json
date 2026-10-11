@@ -1,0 +1,18 @@
+{
+  "updatedUtc": "2026-10-11T23:17:32.751377+00:00",
+  "pid": 3048810,
+  "binarySHA256": "36b35b81c934dc47f35bdae75e5d9056a3f4df4e11e9d13949ed62cfb541f3b0",
+  "sourceAtStartup": "0b20b314d60da45bc9835d973d0b96cd898f2389",
+  "qualifiedProductSource": "ebc994dc6c2be442db595e468a716139b56ed721",
+  "unchangedCapturedCompiledInputs": 569,
+  "normalFrontendManifest": "packaged-web-artifact-proof.json",
+  "actualUidExeCwdMatched": true,
+  "apiHealthStatus": 200,
+  "apiHealthJSON": {
+    "ok": true
+  },
+  "startupFailureAbsent": true,
+  "intelligenceOperationsAvailable": 4,
+  "inferenceSubmittedByChecks": 0,
+  "qualification": "Fresh current-process/binary/API observation. Later release/recovery metadata does not change compiled inputs. Not physical/production/provider-quality certification."
+}

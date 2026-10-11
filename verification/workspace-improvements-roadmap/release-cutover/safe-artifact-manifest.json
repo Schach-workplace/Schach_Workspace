@@ -1,0 +1,78 @@
+{
+  "policy": "Only approved source/check hashes, review/ruling prose and aggregate local cutover outcomes. Private env/DB/key/session/cookies/body values/digests/provider output/rawUI/binaries excluded.",
+  "files": {
+    "README.md": {
+      "bytes": 788,
+      "sha256": "3cdb454e176c5afb1be6e05750fe98e7afed5c630e8b85683653f5e63a1179a1"
+    },
+    "attention-reconcile-proof.json": {
+      "bytes": 437,
+      "sha256": "57a2a22f050f1d568010c0190db7754ba47c43a02d4bcc944f49a862288c0d4f"
+    },
+    "consuming-worker-preflight.json": {
+      "bytes": 910,
+      "sha256": "278eee9427e5f29c3097970bfee2fcdffb0ec06e19a77dbe2a13fca507639d96"
+    },
+    "current-build-inputs.json": {
+      "bytes": 100390,
+      "sha256": "d36d8ea0e8deb27239d80d6eab71172823a05e2ec100f257127913e01e3c2b1c"
+    },
+    "current-build-proof.json": {
+      "bytes": 4583,
+      "sha256": "20b83deda08d50b88232c005fa7fd4a61196775598819cfacc336f8cf0229084"
+    },
+    "current-runtime-proof.json": {
+      "bytes": 799,
+      "sha256": "dd48bea6f2f04d76d54ed13062ec1bda2c6661b32a6594b6f4ca9d19ad0caa99"
+    },
+    "cutover-failure-qualifications.json": {
+      "bytes": 1177,
+      "sha256": "a333ae712d582f4f89740b0ba505079e62bb7100c3ecd2a69f209fd2d8853d25"
+    },
+    "cutover-prestart-proof.json": {
+      "bytes": 1327,
+      "sha256": "058a10a4b757200a785d5cf598de812a4ee17f1fb79c15daacf64df0dd159eec"
+    },
+    "fix-controller-proof.json": {
+      "bytes": 723,
+      "sha256": "7b2749a3f3f14175108b576f558a3ccfe17243199ccf9d4f269d35b408bb6593"
+    },
+    "ordered-rulings-index.json": {
+      "bytes": 788,
+      "sha256": "6760e79d0b63147ef8eb3c7473fc009918997d8b784bcb7f1b2e6f282c662e68"
+    },
+    "packaged-web-artifact-proof.json": {
+      "bytes": 593,
+      "sha256": "c01cb665cd7837da0f2218fb39369a8133d6f06fc8269384cf911e7db6dbe29e"
+    },
+    "poststart-preservation-proof.json": {
+      "bytes": 560,
+      "sha256": "8d2a38fc2a2e1d290476c83ea971404b8cb7da85ca57bc750f6cbc2db55fcebb"
+    },
+    "recovery-archive-proof.json": {
+      "bytes": 788,
+      "sha256": "6f6d155422cacd36ef1f139babfaa73973399b6c3f35b88ee4598ec9ac996944"
+    },
+    "release-ledger.md": {
+      "bytes": 2410,
+      "sha256": "60bcf4508aa401f8dff5de9a0dac3e331424e608f5772532cd4ef36ed3e6b2a1"
+    },
+    "ruling-110-local-runtime-configuration.md": {
+      "bytes": 840,
+      "sha256": "4bfd7b778661346f7e1f4a9eca8720717343c49a7141b7692977f32b59630d8b"
+    },
+    "runtime-browser-proof.json": {
+      "bytes": 1456,
+      "sha256": "34d9b9edde2d82c7f8eb3e446bc3d344701a4487de6056c059c97aaeea595b79"
+    },
+    "scoped-review-disposition.json": {
+      "bytes": 839,
+      "sha256": "fbe9aa4ee1d465efd02fae5ff7930bdd24a805ab2c82000d36d8af7bc9914c3b"
+    },
+    "scoped-review.md": {
+      "bytes": 14747,
+      "sha256": "225c3581fb0cbc659a420b2948f183debc716c133e4268fd73505fe23f38a3f9"
+    }
+  },
+  "qualification": "Pre-package release metadata manifest; refresh after subsequent ledger/proof additions. Self hash excluded; source acceptance remains separately qualified."
+}

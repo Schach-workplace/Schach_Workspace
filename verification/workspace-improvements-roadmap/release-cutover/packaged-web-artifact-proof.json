@@ -1,0 +1,10 @@
+{
+  "updatedUtc": "2026-10-11T23:15:20.232404+00:00",
+  "originalCompiledSource": "800457b5ceeb5cd593c2511e5a0cd07b29ca1ed7",
+  "normalArtifactCount": 17,
+  "demoArtifactCount": 10,
+  "normalFreshBuildExactToAcceptedArtifacts": true,
+  "demoCopiedFromIndependentlyVerifiedAcceptedArtifacts": true,
+  "originalRootDemoPreservedPrivately": true,
+  "qualification": "Both packaged compiled web trees match current source-equivalent accepted800 artifacts; fresh current NORMAL build already verified. No unchanged demo/client test rerun; original intentional inline-demo size warning retained."
+}

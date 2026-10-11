@@ -1,0 +1,37 @@
+{
+  "updatedUtc": "2026-10-11T23:11:32.377247+00:00",
+  "sourceHead": "0b20b314d60da45bc9835d973d0b96cd898f2389",
+  "oldOwnedProcessStopped": true,
+  "backupBeforeMigration": true,
+  "typedPreservation": [
+    {
+      "target": "backup-copy",
+      "integrity": "ok",
+      "preservedOldTables": 52,
+      "preservedOldRows": 522,
+      "changedOldRows": 0,
+      "deletedOldRows": 0,
+      "addedTables": 57
+    },
+    {
+      "target": "actual-existing",
+      "integrity": "ok",
+      "preservedOldTables": 52,
+      "preservedOldRows": 522,
+      "changedOldRows": 0,
+      "deletedOldRows": 0,
+      "addedTables": 57
+    }
+  ],
+  "mediaBackupFiles": 0,
+  "mediaBackupBytes": 0,
+  "existingRuntimeSettingsPreserved": true,
+  "mfaKeyUnchanged": true,
+  "independentPeopleRetryKeyConfigured": true,
+  "schedulerEnabled": true,
+  "normalWebCurrentSource": true,
+  "seedBootstrapOmitted": true,
+  "newRuntimePid": 3048810,
+  "privateBackupRoot": "/home/brahma/.local/state/schach-workspace-cutover-20261012-uoxlpfcw/quiescent-cutover",
+  "qualification": "Fresh stopped-user consistent backup and full typed pre-start preservation; existing key/MFA/device/session state retained. Local optional provider verification/health/auth/browser and post-start data classification are next; no inference or production/device claim."
+}

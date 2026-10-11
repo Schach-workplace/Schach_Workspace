@@ -1,5 +1,5 @@
 {
-  "updatedUtc": "2026-10-11T23:10:55.610435+00:00",
+  "updatedUtc": "2026-10-11T23:16:19.211029+00:00",
   "qualification": "Durable recovery metadata; reviewed source/evidence separately qualified. No pending runtime/push claim.",
   "handoff": "docs/AI_HANDOFF.md",
   "checklist": "docs/AI_CHECKLIST.md",
@@ -10,7 +10,7 @@
     "sourceWriters": "all yielded",
     "reviewer": "yielded"
   },
-  "currentPhase": "Scoped review passed; archival recovery complete; backup-first cutover/main/rerun/ZIP/privatepush pending.",
+  "currentPhase": "Local main cutover and runtime/browser/preservation complete; finalZIP and non-force privatepush pending.",
   "verifiedProductHead": "ebc994dc6c2be442db595e468a716139b56ed721",
   "verifiedFixHead": "dff8ddc045b7bec32b41ac3e4f8847938c4f3de3",
   "reviewDisposition": "verification/workspace-improvements-roadmap/release-cutover/scoped-review-disposition.json",
@@ -25,7 +25,8 @@
   "privateTools": {
     "cutover": "/home/brahma/.local/state/schach-workspace-cutover-20261012-uoxlpfcw/tools/execute-cutover.py",
     "browser": "/home/brahma/.local/state/schach-workspace-cutover-20261012-uoxlpfcw/tools/current-runtime-browser.mjs",
-    "inventoryUpdater": "/home/brahma/.local/state/schach-workspace-cutover-20261012-uoxlpfcw/tools/refresh-handoff-index.py"
+    "inventoryUpdater": "/home/brahma/.local/state/schach-workspace-cutover-20261012-uoxlpfcw/tools/refresh-handoff-index.py",
+    "restart": "/home/brahma/.local/state/schach-workspace-cutover-20261012-uoxlpfcw/tools/start-current-runtime.py"
   },
   "publicOrderedRulings": "verification/workspace-improvements-roadmap/release-cutover/ordered-rulings-index.json",
   "proofEntryPoints": [
@@ -35,7 +36,12 @@
     "verification/workspace-improvements-roadmap/release-cutover/scoped-review.md",
     "verification/workspace-improvements-roadmap/release-cutover/recovery-archive-proof.json",
     "verification/workspace-improvements-roadmap/final-review/publication-report.md",
-    "verification/workspace-improvements-roadmap/final-integration/publication-report.md"
+    "verification/workspace-improvements-roadmap/final-integration/publication-report.md",
+    "verification/workspace-improvements-roadmap/release-cutover/cutover-prestart-proof.json",
+    "verification/workspace-improvements-roadmap/release-cutover/runtime-browser-proof.json",
+    "verification/workspace-improvements-roadmap/release-cutover/poststart-preservation-proof.json",
+    "verification/workspace-improvements-roadmap/release-cutover/attention-reconcile-proof.json",
+    "verification/workspace-improvements-roadmap/release-cutover/cutover-failure-qualifications.json"
   ],
   "historicalBoundaries": {
     "mainBeforeCutover": "d20063b8063ee1dfd9bec6b4cd7807f4e31bcfa6",
@@ -2175,6 +2181,7 @@
       "verification/workspace-improvements-roadmap/release-cutover/current-build-proof.json",
       "verification/workspace-improvements-roadmap/release-cutover/fix-controller-proof.json",
       "verification/workspace-improvements-roadmap/release-cutover/ordered-rulings-index.json",
+      "verification/workspace-improvements-roadmap/release-cutover/recovery-archive-proof.json",
       "verification/workspace-improvements-roadmap/release-cutover/release-ledger.md",
       "verification/workspace-improvements-roadmap/release-cutover/ruling-110-local-runtime-configuration.md",
       "verification/workspace-improvements-roadmap/release-cutover/scoped-review-disposition.json",
@@ -2182,12 +2189,25 @@
       "verification/workspace-improvements-roadmap/rulings.md"
     ]
   },
-  "inventoryGitHead": "d477000e8a562dc3543b2d2548952db8ea463a73",
+  "inventoryGitHead": "0b20b314d60da45bc9835d973d0b96cd898f2389",
   "liveChangedOrUntrackedPaths": [
     "docs/AI_CHECKLIST.md",
     "docs/AI_FILE_INDEX.json",
     "docs/AI_HANDOFF.md",
-    "verification/workspace-improvements-roadmap/release-cutover/recovery-archive-proof.json"
+    "verification/workspace-improvements-roadmap/release-cutover/attention-reconcile-proof.json",
+    "verification/workspace-improvements-roadmap/release-cutover/cutover-failure-qualifications.json",
+    "verification/workspace-improvements-roadmap/release-cutover/cutover-prestart-proof.json",
+    "verification/workspace-improvements-roadmap/release-cutover/packaged-web-artifact-proof.json",
+    "verification/workspace-improvements-roadmap/release-cutover/poststart-preservation-proof.json",
+    "verification/workspace-improvements-roadmap/release-cutover/release-ledger.md",
+    "verification/workspace-improvements-roadmap/release-cutover/runtime-browser-proof.json"
   ],
-  "inventoryQualification": "Durable tracked/current path existence only. Acceptance and artifact provenance remain separately recorded; private archive references are historical recovery, not current source paths."
+  "inventoryQualification": "Durable tracked/current path existence only. Acceptance and artifact provenance remain separately recorded; private archive references are historical recovery, not current source paths.",
+  "currentRuntime": {
+    "pid": 3048810,
+    "url": "http://127.0.0.1:8080",
+    "mainAtStartup": "0b20b314d60da45bc9835d973d0b96cd898f2389",
+    "qualifiedProductSource": "ebc994dc6c2be442db595e468a716139b56ed721",
+    "qualification": "Historical at next resume: verify /proc UID/exe/cwd/argv before signals, current /api/health JSON. Normal current build; local operations available, no inference."
+  }
 }

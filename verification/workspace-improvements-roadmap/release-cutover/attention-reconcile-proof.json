@@ -1,0 +1,10 @@
+{
+  "updatedUtc": "2026-10-11T23:14:12.045901+00:00",
+  "companies": 2,
+  "boundedBatches": 12,
+  "batchLimit": 100,
+  "allCompleted": true,
+  "attentionItemsBefore": 0,
+  "attentionItemsAfter": 66,
+  "qualification": "Current-source explicit bounded ordinary-recipient/source-ACL reconciliation of preserved legacy work. IDs/cursors/stdout remain in RAM only; no canonical task/finance writes, worker/provider or inference launched."
+}
