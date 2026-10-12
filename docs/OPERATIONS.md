@@ -54,6 +54,8 @@ Environment variables must be supplied to the process by your shell, service man
 
 ### First production setup
 
+For the Docker Compose deployment, combine `compose.yaml` with `compose.production.yaml`, which adds the People onboarding keyring and private finance-intake/report storage volumes that `compose.yaml` omits: `docker compose -f compose.yaml -f compose.production.yaml up -d --build`.
+
 1. Create a dedicated PostgreSQL database and a restricted application role. Keep the database private. Use a migration role for schema changes and a runtime role with only the necessary application permissions where your deployment supports that separation.
 2. Apply the versioned migration for the release once, using a migration identity and a recorded migration history. Run `backend/cmd/migrate` with the schema-owner credential to apply all numbered migrations and verify their checksums. A pre-ledger version-1/2 database requires an explicit `--adopt-through 1` or `--adopt-through 2` after backup and schema verification; follow [the migration instructions](../backend/migrations/README.md). Do not run competing schema changes from every replica. Confirm that the schema and code revision match before starting the app. The down migration deletes application data and is for disposable databases.
 3. Set `ENVIRONMENT=production` and supply `DATABASE_URL`, the public `ALLOWED_ORIGINS`, `SECURE_COOKIES=true`, and unique bootstrap credentials through a protected secret mechanism. Do not commit the environment file, print it to logs, or place credentials in a browser build.

@@ -16,7 +16,7 @@ RUN CGO_ENABLED=1 go build -trimpath -ldflags="-s -w" -o /out/workspace ./cmd/se
 
 FROM alpine:3
 RUN apk add --no-cache ca-certificates tzdata && addgroup -S workspace && adduser -S -G workspace workspace
-RUN mkdir -p /app/media && chown -R workspace:workspace /app && chmod 700 /app/media
+RUN mkdir -p /app/media /app/intakes /app/reports && chown -R workspace:workspace /app && chmod 700 /app/media /app/intakes /app/reports
 WORKDIR /app
 COPY --from=api /out/workspace /app/workspace
 COPY --from=api /out/migrate /app/migrate

@@ -1,0 +1,16 @@
+# Production additions. Use with: docker compose -f compose.yaml -f compose.production.yaml up -d --build
+# Supplies settings compose.yaml omits: People onboarding keyring and private finance-intake/report storage.
+services:
+  app:
+    environment:
+      PEOPLE_CREDENTIAL_RETRY_ACTIVE_KEY_ID: ${PEOPLE_CREDENTIAL_RETRY_ACTIVE_KEY_ID:?Set the People onboarding key ID}
+      PEOPLE_CREDENTIAL_RETRY_KEYS_JSON: ${PEOPLE_CREDENTIAL_RETRY_KEYS_JSON:?Set the People onboarding keyring JSON}
+      FINANCE_INTAKE_ROOT: /app/intakes
+      FINANCE_SCANNER_ADDRESS: clamav:3310
+      REPORT_ARTIFACT_ROOT: /app/reports
+    volumes:
+      - finance_intakes:/app/intakes
+      - report_artifacts:/app/reports
+volumes:
+  finance_intakes:
+  report_artifacts:
