@@ -3,6 +3,8 @@ import { useWorkspace } from '../store';
 import { request } from '../data/api';
 import { demoAttentionPreferences } from '../data/demo';
 import { ErrorMessage, Field } from './UI';
+import { BellRing, LoaderCircle } from 'lucide-react';
+import '../styles/shell.css';
 import type { AttentionPreference } from '../types';
 export default function AttentionPreferences() {
   const store = useWorkspace();
@@ -50,144 +52,199 @@ export default function AttentionPreferences() {
     }
   }
   return (
-    <section className="panel attention-inbox">
-      <h2>Attention delivery preferences</h2>
-      <p>All clocks use {store.data?.company.timezone}. Snooze changes Inbox timing only.</p>
-      <ErrorMessage error={error} />
-      {!pref && !error && <p role="status">Loading preferences…</p>}
-      {pref && (
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            void save();
-          }}
-        >
-          <label className="field">
-            <input
-              type="checkbox"
-              checked={pref.workingHoursEnabled}
-              disabled={busy}
-              onChange={(e) => update({ workingHoursEnabled: e.target.checked })}
-            />
-            Enable working hours
-          </label>
-          {pref.workingHoursEnabled && (
-            <>
-              <fieldset>
-                <legend>Working weekdays</legend>
-                {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'].map(
-                  (day, i) => (
-                    <label key={day}>
-                      <input
-                        type="checkbox"
-                        checked={pref.workingDays.includes(i + 1)}
-                        disabled={busy}
-                        onChange={(e) =>
-                          update({
-                            workingDays: e.target.checked
-                              ? [...pref.workingDays, i + 1]
-                              : pref.workingDays.filter((d) => d !== i + 1),
-                          })
-                        }
-                      />
-                      {day}
-                    </label>
-                  ),
-                )}
-              </fieldset>
-              <Field label="Working hours start">
-                <input
-                  aria-label="Working hours start"
-                  type="time"
-                  value={pref.workingStart}
-                  disabled={busy}
-                  onChange={(e) => update({ workingStart: e.target.value })}
-                />
-              </Field>
-              <Field label="Working hours end">
-                <input
-                  aria-label="Working hours end"
-                  type="time"
-                  value={pref.workingEnd}
-                  disabled={busy}
-                  onChange={(e) => update({ workingEnd: e.target.value })}
-                />
-              </Field>
-            </>
-          )}
-          <Field label="Quiet hours start">
-            <input
-              aria-label="Quiet hours start"
-              type="time"
-              value={pref.quietStart}
-              disabled={busy}
-              onChange={(e) => update({ quietStart: e.target.value })}
-            />
-          </Field>
-          <Field label="Quiet hours end">
-            <input
-              aria-label="Quiet hours end"
-              type="time"
-              value={pref.quietEnd}
-              disabled={busy}
-              onChange={(e) => update({ quietEnd: e.target.value })}
-            />
-          </Field>
-          <button
-            type="button"
-            className="button button-secondary"
-            disabled={busy}
-            onClick={() => update({ quietStart: '', quietEnd: '' })}
+    <section className="panel settings-section pref-panel">
+      <div className="section-header">
+        <div>
+          <h2>Attention delivery preferences</h2>
+          <p>All clocks use {store.data?.company.timezone}. Snooze changes Inbox timing only.</p>
+        </div>
+        <BellRing size={19} />
+      </div>
+      <div className="pref-body">
+        <ErrorMessage error={error} />
+        {!pref && !error && (
+          <p className="decision-status" role="status">
+            <LoaderCircle size={15} className="spin" />
+            Loading preferences…
+          </p>
+        )}
+        {pref && (
+          <form
+            className="pref-form"
+            onSubmit={(e) => {
+              e.preventDefault();
+              void save();
+            }}
           >
-            Disable quiet hours
-          </button>
-          <label className="field">
-            <input
-              type="checkbox"
-              checked={pref.escalationEnabled}
-              disabled={busy}
-              onChange={(e) => update({ escalationEnabled: e.target.checked })}
-            />
-            Enable escalation
-          </label>
-          {pref.escalationEnabled && (
-            <>
-              <Field label="Escalation after minutes">
-                <input
-                  aria-label="Escalation after minutes"
-                  type="number"
-                  min={1}
-                  max={129600}
-                  value={pref.escalationAfterMinutes}
-                  disabled={busy}
-                  onChange={(e) => update({ escalationAfterMinutes: Number(e.target.value) })}
-                />
-              </Field>
-              <Field label="Escalation recipient">
-                <select
-                  aria-label="Escalation recipient"
-                  value={pref.escalationUserId}
-                  disabled={busy}
-                  onChange={(e) => update({ escalationUserId: e.target.value })}
+            <div className="pref-group">
+              <div className="pref-group-text">
+                <h3>Working hours</h3>
+                <p>Reminders are delivered only on these days and hours.</p>
+              </div>
+              <div className="pref-group-controls">
+                <label className="pref-toggle">
+                  <input
+                    type="checkbox"
+                    checked={pref.workingHoursEnabled}
+                    disabled={busy}
+                    onChange={(e) => update({ workingHoursEnabled: e.target.checked })}
+                  />
+                  Enable working hours
+                </label>
+                {pref.workingHoursEnabled && (
+                  <>
+                    <fieldset className="pref-days">
+                      <legend>Working weekdays</legend>
+                      {[
+                        'Monday',
+                        'Tuesday',
+                        'Wednesday',
+                        'Thursday',
+                        'Friday',
+                        'Saturday',
+                        'Sunday',
+                      ].map((day, i) => (
+                        <label key={day}>
+                          <input
+                            type="checkbox"
+                            checked={pref.workingDays.includes(i + 1)}
+                            disabled={busy}
+                            onChange={(e) =>
+                              update({
+                                workingDays: e.target.checked
+                                  ? [...pref.workingDays, i + 1]
+                                  : pref.workingDays.filter((d) => d !== i + 1),
+                              })
+                            }
+                          />
+                          {day}
+                        </label>
+                      ))}
+                    </fieldset>
+                    <div className="pref-pair">
+                      <Field label="Working hours start">
+                        <input
+                          aria-label="Working hours start"
+                          type="time"
+                          value={pref.workingStart}
+                          disabled={busy}
+                          onChange={(e) => update({ workingStart: e.target.value })}
+                        />
+                      </Field>
+                      <Field label="Working hours end">
+                        <input
+                          aria-label="Working hours end"
+                          type="time"
+                          value={pref.workingEnd}
+                          disabled={busy}
+                          onChange={(e) => update({ workingEnd: e.target.value })}
+                        />
+                      </Field>
+                    </div>
+                  </>
+                )}
+              </div>
+            </div>
+            <div className="pref-group">
+              <div className="pref-group-text">
+                <h3>Quiet hours</h3>
+                <p>No reminders are delivered between these times. Set both or neither.</p>
+              </div>
+              <div className="pref-group-controls">
+                <div className="pref-pair">
+                  <Field label="Quiet hours start">
+                    <input
+                      aria-label="Quiet hours start"
+                      type="time"
+                      value={pref.quietStart}
+                      disabled={busy}
+                      onChange={(e) => update({ quietStart: e.target.value })}
+                    />
+                  </Field>
+                  <Field label="Quiet hours end">
+                    <input
+                      aria-label="Quiet hours end"
+                      type="time"
+                      value={pref.quietEnd}
+                      disabled={busy}
+                      onChange={(e) => update({ quietEnd: e.target.value })}
+                    />
+                  </Field>
+                </div>
+                <button
+                  type="button"
+                  className="button button-secondary button-small pref-clear"
+                  disabled={busy || (!pref.quietStart && !pref.quietEnd)}
+                  onClick={() => update({ quietStart: '', quietEnd: '' })}
                 >
-                  <option value="">Choose a person</option>
-                  {store.data?.people
-                    .filter((p) => p.active && p.id !== user)
-                    .map((p) => (
-                      <option key={p.id} value={p.id}>
-                        {p.name}
-                      </option>
-                    ))}
-                </select>
-              </Field>
-              <p>The recipient must also have current authority for each source.</p>
-            </>
-          )}
-          <button className="button button-primary" disabled={busy} type="submit">
-            {busy ? 'Saving…' : 'Save attention preferences'}
-          </button>
-        </form>
-      )}
+                  Disable quiet hours
+                </button>
+              </div>
+            </div>
+            <div className="pref-group">
+              <div className="pref-group-text">
+                <h3>Escalation</h3>
+                <p>Send items still open after a delay to a colleague.</p>
+              </div>
+              <div className="pref-group-controls">
+                <label className="pref-toggle">
+                  <input
+                    type="checkbox"
+                    checked={pref.escalationEnabled}
+                    disabled={busy}
+                    onChange={(e) => update({ escalationEnabled: e.target.checked })}
+                  />
+                  Enable escalation
+                </label>
+                {pref.escalationEnabled && (
+                  <>
+                    <div className="pref-pair">
+                      <Field label="Escalation after minutes">
+                        <input
+                          aria-label="Escalation after minutes"
+                          type="number"
+                          min={1}
+                          max={129600}
+                          value={pref.escalationAfterMinutes}
+                          disabled={busy}
+                          onChange={(e) =>
+                            update({ escalationAfterMinutes: Number(e.target.value) })
+                          }
+                        />
+                      </Field>
+                      <Field label="Escalation recipient">
+                        <select
+                          aria-label="Escalation recipient"
+                          value={pref.escalationUserId}
+                          disabled={busy}
+                          onChange={(e) => update({ escalationUserId: e.target.value })}
+                        >
+                          <option value="">Choose a person</option>
+                          {store.data?.people
+                            .filter((p) => p.active && p.id !== user)
+                            .map((p) => (
+                              <option key={p.id} value={p.id}>
+                                {p.name}
+                              </option>
+                            ))}
+                        </select>
+                      </Field>
+                    </div>
+                    <p className="pref-note">
+                      The recipient must also have current authority for each source.
+                    </p>
+                  </>
+                )}
+              </div>
+            </div>
+            <div className="form-actions">
+              <button className="button button-primary" disabled={busy} type="submit">
+                {busy ? 'Saving…' : 'Save attention preferences'}
+              </button>
+            </div>
+          </form>
+        )}
+      </div>
     </section>
   );
 }

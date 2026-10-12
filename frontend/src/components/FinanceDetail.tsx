@@ -89,11 +89,13 @@ export default function FinanceDetail(props: {
         }
       />
       {!detail.expense ? (
-        <div role="dialog" aria-label="Expense details">
-          <button onClick={props.onClose}>Close</button>
+        <div role="dialog" aria-label="Expense details" className="finance-detail-loading">
           <p role={detail.error ? 'alert' : 'status'}>
             {detail.error || 'Loading expense details…'}
           </p>
+          <button className="button button-secondary button-small" onClick={props.onClose}>
+            Close
+          </button>
         </div>
       ) : (
         <FinanceDetailBody
@@ -279,16 +281,21 @@ function FinanceDetailBody({
       description={`${expense.code} · Created by ${personName(data, expense.createdBy)} · Version ${expense.version}`}
     >
       <div className="finance-detail">
-        <button className="button" onClick={onAssist}>
-          Local assistance
-        </button>
         <ErrorMessage error={error} />
         <div className="finance-detail-total">
           <div>
             <span>EXPENSE AMOUNT · {expense.currency}</span>
             <strong>{formatMoney(expense.amountMinor, expense.currency)}</strong>
           </div>
-          <ExpenseStatus status={expense.status} />
+          <div className="finance-detail-total-side">
+            <ExpenseStatus status={expense.status} />
+            <button
+              className="button button-secondary button-small finance-detail-assist"
+              onClick={onAssist}
+            >
+              Local assistance
+            </button>
+          </div>
         </div>
         <dl className="finance-facts">
           <div>

@@ -27,12 +27,16 @@ export function DirectCompanyRevocation({ userId }: { userId: string }) {
   const [done, setDone] = usePeopleResult<boolean>();
   const person = context.data?.people.find((p) => p.id === userId);
   return (
-    <section>
+    <section className="people-danger-zone" aria-label="Revoke company access">
       <h3>Revoke company access</h3>
       <p>{directRevocationCopy}</p>
-      {done && <p role="status">Company access revoked. Handover was not performed.</p>}
+      {done && (
+        <p role="status" className="people-success">
+          Company access revoked. Handover was not performed.
+        </p>
+      )}
       <ErrorMessage error={error} />
-      <label>
+      <label className="check-field people-check">
         <input type="checkbox" checked={confirm} onChange={(e) => setConfirm(e.target.checked)} />I
         confirm revocation with responsibilities retained.
       </label>
@@ -144,9 +148,14 @@ export default function DepartureHandover({
     }
   }
   return (
-    <Modal open title="Review company departure" onClose={onClose}>
+    <Modal
+      open
+      title="Review company departure"
+      description="Inspect live responsibilities, choose replacements, then confirm the departure."
+      onClose={onClose}
+    >
       <div className="entity-form people-form">
-        <ol aria-label="Departure stages">
+        <ol className="people-stepper" aria-label="Departure stages">
           {departureStages.map((s, i) => (
             <li key={s} aria-current={i === stage ? 'step' : undefined}>
               {s}
@@ -154,41 +163,49 @@ export default function DepartureHandover({
           ))}
         </ol>
         <ErrorMessage error={error || action.error || previewAction.error} />
-        <div aria-hidden={ready} style={{ visibility: ready ? 'hidden' : 'visible' }}>
+        <div
+          className="people-checking"
+          aria-hidden={ready}
+          style={{ visibility: ready ? 'hidden' : 'visible' }}
+        >
           <p role="status">Checking current company access…</p>
         </div>
         {unknown ? (
-          <>
+          <section className="people-card people-card-warning">
             <p>
               The original departure may already have completed. Retry its original reviewed
               request.
             </p>
-            <button
-              className="button button-primary"
-              disabled={!ready || action.busy}
-              onClick={() => void apply()}
-            >
-              Retry the same submission
-            </button>
-            <button
-              className="button"
-              onClick={() => {
-                if (
-                  window.confirm(
-                    'Inspect current departure outcomes before discarding this unknown request.',
+            <div className="people-actions">
+              <button
+                className="button button-primary"
+                disabled={!ready || action.busy}
+                onClick={() => void apply()}
+              >
+                Retry the same submission
+              </button>
+              <button
+                className="button button-secondary"
+                onClick={() => {
+                  if (
+                    window.confirm(
+                      'Inspect current departure outcomes before discarding this unknown request.',
+                    )
                   )
-                )
-                  action.abandon();
-              }}
-            >
-              Discard after inspection
-            </button>
-          </>
+                    action.abandon();
+                }}
+              >
+                Discard after inspection
+              </button>
+            </div>
+          </section>
         ) : done ? (
           <>
             {ready && (
               <>
-                <p role="status">Reviewed company departure completed.</p>
+                <p role="status" className="people-success">
+                  Reviewed company departure completed.
+                </p>
                 <SessionEffect effect={done.sessionEffect} />
               </>
             )}
@@ -204,25 +221,30 @@ export default function DepartureHandover({
                 }}
               />
             </Field>
-            <button
-              className="button"
-              disabled={!ready || !draft.reason.trim() || previewAction.busy}
-              onClick={() => void preview(true)}
-            >
-              Inspect current obligations
-            </button>
+            <div className="people-actions people-actions-start">
+              <button
+                className={presented ? 'button button-secondary' : 'button button-primary'}
+                disabled={!ready || !draft.reason.trim() || previewAction.busy}
+                onClick={() => void preview(true)}
+              >
+                Inspect current obligations
+              </button>
+            </div>
             {presented && (
               <>
-                <h3>Live responsibilities</h3>
+                <h3 className="people-section-title">Live responsibilities</h3>
+                {!presented.liveItems.length && (
+                  <p className="people-muted">No live responsibilities need a replacement.</p>
+                )}
                 {presented.liveItems.map((item) => (
-                  <fieldset key={item.kind + item.sourceId}>
+                  <fieldset key={item.kind + item.sourceId} className="people-item-card">
                     <legend>
                       <PeopleProjection current={ready}>
                         {item.title} · {replacementLabel(item.kind)}
                       </PeopleProjection>
                     </legend>
                     <PeopleProjection current={ready}>
-                      <p>
+                      <p className="people-muted">
                         {item.state} · captured version {item.version}
                       </p>
                     </PeopleProjection>
@@ -317,42 +339,53 @@ export default function DepartureHandover({
                   </fieldset>
                 ))}
                 <PeopleProjection current={ready}>
-                  <h3>Retained accepted history</h3>
-                  <p>
-                    {presented.retainedHistory.tasks ?? 0} accepted or cancelled tasks keep their
-                    historical ownership and reviewers.
-                  </p>
-                  <p>
-                    {presented.retainedHistory.milestones ?? 0} accepted milestones and{' '}
-                    {presented.retainedHistory.projects ?? 0} completed or archived projects remain
-                    unchanged.
-                  </p>
-                  {presented.unresolved.map((u, i) => (
-                    <p key={i} role="note">
-                      {u.message}
-                      {u.projectId && onProject && (
-                        <button className="button" onClick={() => onProject(u.projectId!)}>
-                          Open project for authorized request changes
-                        </button>
-                      )}
+                  <div className="people-card">
+                    <h3 className="people-section-title">Retained accepted history</h3>
+                    <p>
+                      {presented.retainedHistory.tasks ?? 0} accepted or cancelled tasks keep their
+                      historical ownership and reviewers.
                     </p>
-                  ))}
-                  <SessionEffect effect={presented.sessionEffect} />
+                    <p>
+                      {presented.retainedHistory.milestones ?? 0} accepted milestones and{' '}
+                      {presented.retainedHistory.projects ?? 0} completed or archived projects
+                      remain unchanged.
+                    </p>
+                    {presented.unresolved.map((u, i) => (
+                      <p key={i} role="note" className="people-alert">
+                        {u.message}
+                        {u.projectId && onProject && (
+                          <button
+                            className="button button-secondary button-small"
+                            onClick={() => onProject(u.projectId!)}
+                          >
+                            Open project for authorized request changes
+                          </button>
+                        )}
+                      </p>
+                    ))}
+                    <SessionEffect effect={presented.sessionEffect} />
+                  </div>
                 </PeopleProjection>
-                <button
-                  className="button"
-                  disabled={!ready || previewAction.busy}
-                  onClick={() => void preview()}
-                >
-                  Review selected replacements
-                </button>
+                <div className="people-actions">
+                  <button
+                    className={
+                      presented.readyToApply && stage >= 2
+                        ? 'button button-secondary'
+                        : 'button button-primary'
+                    }
+                    disabled={!ready || previewAction.busy}
+                    onClick={() => void preview()}
+                  >
+                    Review selected replacements
+                  </button>
+                </div>
                 {presented.readyToApply && stage >= 2 && (
-                  <>
+                  <section className="people-card people-card-confirm">
                     <p>
                       Leave this company after transferring the reviewed responsibilities. Existing
                       account sessions will end; other company memberships remain.
                     </p>
-                    <label>
+                    <label className="check-field people-check">
                       <input
                         type="checkbox"
                         checked={confirmed}
@@ -363,14 +396,16 @@ export default function DepartureHandover({
                       />
                       I confirm the reviewed company departure.
                     </label>
-                    <button
-                      className="button button-primary"
-                      disabled={!ready || !confirmed || action.busy}
-                      onClick={() => void apply()}
-                    >
-                      Complete company departure
-                    </button>
-                  </>
+                    <div className="people-actions">
+                      <button
+                        className="button button-primary"
+                        disabled={!ready || !confirmed || action.busy}
+                        onClick={() => void apply()}
+                      >
+                        Complete company departure
+                      </button>
+                    </div>
+                  </section>
                 )}
               </>
             )}

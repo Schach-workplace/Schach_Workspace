@@ -5,8 +5,10 @@ import {
   RoomAudioRenderer,
   ControlBar,
 } from '@livekit/components-react';
+import { Phone, Video, CircleDot } from 'lucide-react';
 import { registerWebDevice, useSignedInUserId } from './webDevice';
 import '@livekit/components-styles';
+import '../styles/connect-dialogs.css';
 interface Call {
   id: string;
   kind: string;
@@ -75,7 +77,7 @@ export default function Calls({
     }
   }
   return (
-    <section aria-label="Conversation calls">
+    <section aria-label="Conversation calls" className="connect-calls">
       {connection ? (
         <LiveKitRoom
           token={connection.token}
@@ -98,8 +100,11 @@ export default function Calls({
               <ControlBar variation="minimal" />
             </>
           )}
-          <p>Recording is off. Recordings require a separate declared consent flow.</p>
+          <p className="connect-call-recording">
+            Recording is off. Recordings require a separate declared consent flow.
+          </p>
           <button
+            className="button button-secondary connect-danger"
             onClick={() =>
               void command(`/calls/${connection.call.id}/end`, {
                 expectedVersion: connection.call.version,
@@ -112,17 +117,31 @@ export default function Calls({
           </button>
         </LiveKitRoom>
       ) : (
-        <div>
+        <div className="connect-call-actions">
           {attempt.current ? (
-            <button disabled={busy} onClick={() => void start(attempt.current!.kind)}>
+            <button
+              className="button button-secondary button-small"
+              disabled={busy}
+              onClick={() => void start(attempt.current!.kind)}
+            >
               Retry same call
             </button>
           ) : (
             <>
-              <button disabled={busy} onClick={() => void start('audio')}>
+              <button
+                className="button button-secondary button-small"
+                disabled={busy}
+                onClick={() => void start('audio')}
+              >
+                <Phone size={14} aria-hidden="true" />
                 Start audio call
               </button>
-              <button disabled={busy} onClick={() => void start('video')}>
+              <button
+                className="button button-secondary button-small"
+                disabled={busy}
+                onClick={() => void start('video')}
+              >
+                <Video size={14} aria-hidden="true" />
                 Start video call
               </button>
             </>
@@ -131,16 +150,22 @@ export default function Calls({
             .filter((c) => c.state === 'active')
             .map((c) => (
               <button
+                className="button button-primary button-small"
                 disabled={busy}
                 key={c.id}
                 onClick={() => void join(c.id).catch((e) => setError(e.message))}
               >
+                <CircleDot size={14} aria-hidden="true" />
                 Join {c.kind} call
               </button>
             ))}
         </div>
       )}
-      {error && <p role="alert">{error}</p>}
+      {error && (
+        <p role="alert" className="connect-error">
+          {error}
+        </p>
+      )}
     </section>
   );
 }

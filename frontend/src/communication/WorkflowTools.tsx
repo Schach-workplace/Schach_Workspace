@@ -1,6 +1,7 @@
 import { useEffect, useState, useEffectEvent, useRef } from 'react';
 import type { Conversation, Message } from './types';
 import type { WorkspaceData, Task } from '../types';
+import '../styles/connect-dialogs.css';
 interface Intake {
   id: string;
   title: string;
@@ -268,37 +269,44 @@ export default function WorkflowTools({
     }
   }
   return (
-    <section aria-label="Published work and finance">
+    <section aria-label="Published work and finance" className="connect-workflow">
       <h3>Published work and finance</h3>
-      <p>
+      <p className="connect-hint">
         {conversation
           ? 'Links are shown only when you can read both the source and the destination record.'
           : 'This intake contains independently published content. Triage does not grant private conversation access.'}
       </p>
       {links.map((t) => (
-        <article key={t.id}>
+        <article key={t.id} className="connect-workflow-item">
           <p>
             {t.code} · {t.title} · {t.status} · {t.dueDate || 'No deadline'}
           </p>
-          <button onClick={() => onTask?.(t.id)}>Open task: {t.title}</button>
+          <button className="button button-secondary button-small" onClick={() => onTask?.(t.id)}>
+            Open task: {t.title}
+          </button>
           {sources[t.id]?.map((source) => (
             <p key={source.messageId}>
               {source.outOfDate
                 ? 'Source changed; published excerpt remains its reviewed revision.'
                 : 'Published source is current.'}{' '}
               Revision {source.revision} · current {source.currentRevision}
-              <button onClick={() => onSource?.(source.messageId)}>Open current source</button>
+              <button
+                className="button button-secondary button-small"
+                onClick={() => onSource?.(source.messageId)}
+              >
+                Open current source
+              </button>
             </p>
           ))}
         </article>
       ))}
       {expenseLinks.map((e) => (
-        <p key={e.id}>
+        <p key={e.id} className="connect-workflow-item">
           {e.title} · {e.status} · {e.currency} {e.amountMinor / 100}
         </p>
       ))}
       {source && conversation?.forwarding === 'selected' && (
-        <div>
+        <div className="connect-workflow-form">
           <label>
             Publish as
             <select
@@ -415,15 +423,16 @@ export default function WorkflowTools({
             </>
           )}
           {preview && (
-            <div>
-              <p>{preview.notice}</p>
-              <p>
+            <div className="connect-disclosure" role="group" aria-label="Publication review">
+              <h3>Review before publishing</h3>
+              <p className="connect-disclosure-notice">{preview.notice}</p>
+              <p className="connect-disclosure-title">
                 Current audience:{' '}
                 {preview.audienceUserIds
                   .map((uid) => data.people.find((p) => p.id === uid)?.name ?? 'Company member')
                   .join(', ')}
               </p>
-              <label>
+              <label className="connect-disclosure-ack">
                 <input
                   type="checkbox"
                   checked={confirmed}
@@ -433,39 +442,52 @@ export default function WorkflowTools({
               </label>
             </div>
           )}
-          <button
-            disabled={busy || !title.trim() || !department}
-            onClick={() => void publish(false)}
-          >
-            Preview publication
-          </button>
-          <button disabled={busy || !preview || !confirmed} onClick={() => void publish(true)}>
-            Publish selected record
-          </button>
-          <button onClick={onClose}>Cancel</button>
-          <label>
-            Explicit split action titles, one per line
-            <textarea value={split} onChange={(e) => setSplit(e.target.value)} />
-          </label>
-          <button
-            disabled={busy || split.split('\n').filter(Boolean).length < 2}
-            onClick={() =>
-              void command<{ actionIds: string[] }>(
-                `/conversations/${conversation?.id}/work-actions`,
-                {
-                  retryKey: key,
-                  anchorMessageId: source.id,
-                  sourceRevision: source.revision,
-                  expectedPolicyVersion: conversation?.version,
-                  titles: split.split('\n').filter(Boolean),
-                },
-              )
-                .then((v) => setActions(v.actionIds))
-                .catch((e) => setError(e.message))
-            }
-          >
-            Declare separate work actions
-          </button>
+          <div className="connect-dialog-footer">
+            <button className="button button-secondary" onClick={onClose}>
+              Cancel
+            </button>
+            <button
+              className={'button ' + (preview ? 'button-secondary' : 'button-primary')}
+              disabled={busy || !title.trim() || !department}
+              onClick={() => void publish(false)}
+            >
+              Preview publication
+            </button>
+            <button
+              className="button button-primary"
+              disabled={busy || !preview || !confirmed}
+              onClick={() => void publish(true)}
+            >
+              Publish selected record
+            </button>
+          </div>
+          <details className="connect-workflow-split">
+            <summary>Split into separate work actions</summary>
+            <label>
+              Explicit split action titles, one per line
+              <textarea value={split} onChange={(e) => setSplit(e.target.value)} />
+            </label>
+            <button
+              className="button button-secondary button-small"
+              disabled={busy || split.split('\n').filter(Boolean).length < 2}
+              onClick={() =>
+                void command<{ actionIds: string[] }>(
+                  `/conversations/${conversation?.id}/work-actions`,
+                  {
+                    retryKey: key,
+                    anchorMessageId: source.id,
+                    sourceRevision: source.revision,
+                    expectedPolicyVersion: conversation?.version,
+                    titles: split.split('\n').filter(Boolean),
+                  },
+                )
+                  .then((v) => setActions(v.actionIds))
+                  .catch((e) => setError(e.message))
+              }
+            >
+              Declare separate work actions
+            </button>
+          </details>
           {actions.length > 0 && (
             <p>
               Declared {actions.length} separate actions. Their identifiers are retained by the
@@ -475,8 +497,9 @@ export default function WorkflowTools({
         </div>
       )}
       <h4>Authorized intake queue</h4>
+      {requests.length === 0 && <p className="connect-hint">No intake requests you can see yet.</p>}
       {requests.map((item) => (
-        <article key={item.id}>
+        <article key={item.id} className="connect-workflow-item">
           <strong>
             {item.title} · {item.state}
           </strong>
@@ -485,7 +508,7 @@ export default function WorkflowTools({
           {item.state === 'open' &&
             (['founder', 'ceo', 'admin'].includes(data.me.role) ||
               (data.me.role === 'head' && item.departmentId === data.me.departmentId)) && (
-              <div>
+              <div className="connect-workflow-assign">
                 <label>
                   Task owner
                   <select value={owner} onChange={(e) => setOwner(e.target.value)}>
@@ -515,7 +538,11 @@ export default function WorkflowTools({
                   Task due date
                   <input type="date" value={due} onChange={(e) => setDue(e.target.value)} />
                 </label>
-                <button disabled={!due} onClick={() => void assign(item)}>
+                <button
+                  className="button button-primary button-small"
+                  disabled={!due}
+                  onClick={() => void assign(item)}
+                >
                   Assign through task workflow
                 </button>
               </div>
@@ -523,6 +550,7 @@ export default function WorkflowTools({
           {!['resolved', 'cancelled'].includes(item.state) && data.me.role !== 'viewer' && (
             <>
               <button
+                className="button button-secondary button-small"
                 onClick={() => {
                   setClosing({ item, state: 'resolved' });
                   setOutcomeReason('');
@@ -531,6 +559,7 @@ export default function WorkflowTools({
                 Resolve after task acceptance
               </button>
               <button
+                className="button button-secondary button-small"
                 onClick={() => {
                   setClosing({ item, state: 'cancelled' });
                   setOutcomeReason('');
@@ -543,7 +572,7 @@ export default function WorkflowTools({
         </article>
       ))}
       {closing && (
-        <div>
+        <div className="connect-workflow-form">
           <label>
             Intake outcome reason
             <textarea
@@ -555,6 +584,7 @@ export default function WorkflowTools({
             />
           </label>
           <button
+            className="button button-primary"
             disabled={busy || !outcomeReason.trim()}
             onClick={() => void close(closing.item, closing.state, outcomeReason)}
           >
@@ -562,7 +592,11 @@ export default function WorkflowTools({
           </button>
         </div>
       )}
-      {error && <p role="alert">{error}</p>}
+      {error && (
+        <p role="alert" className="connect-error">
+          {error}
+        </p>
+      )}
     </section>
   );
 }

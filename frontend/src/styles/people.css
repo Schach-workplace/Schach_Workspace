@@ -1,0 +1,529 @@
+/* People & organisation: page toolbar, profile and the People tool dialogs
+   (onboarding, presets, access review, departure). Reuses the house tokens
+   from styles.css; no new colours beyond the existing neutral/orange/red set. */
+
+/* ---------- Page toolbar ---------- */
+.people-toolbar-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+  min-width: 0;
+}
+
+/* ---------- Person profile dialog ---------- */
+.person-profile .person-profile-top > div {
+  align-items: flex-start;
+}
+.person-profile .person-profile-top p {
+  color: #667085;
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+.person-profile .profile-facts dt {
+  color: #667085;
+  font-size: 12px;
+}
+.person-profile .profile-facts dd {
+  color: #343a44;
+  font-size: 12px;
+  font-weight: 500;
+}
+.people-profile-access {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 18px 0 4px;
+}
+.people-profile-departure {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: var(--subtle);
+}
+.people-profile-departure > div {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+.people-profile-departure strong {
+  font-size: 13px;
+  font-weight: 600;
+  color: #343a44;
+}
+.people-profile-departure span {
+  font-size: 12px;
+  line-height: 1.5;
+  color: #667085;
+}
+.people-profile-departure .button {
+  flex: none;
+}
+
+/* ---------- Danger zones (direct revocation, global offboarding) ---------- */
+.people-danger-zone {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 4px;
+  padding: 14px 16px;
+  border: 1px solid #f0d3cc;
+  border-radius: 9px;
+  background: #fffaf8;
+  min-width: 0;
+}
+.people-form .people-danger-zone {
+  margin-top: 20px;
+}
+.people-danger-zone h3,
+.people-form .people-danger-zone h3 {
+  font-size: 13px;
+  font-weight: 600;
+  color: #9a3f2c;
+  margin: 0;
+}
+.people-danger-zone > p {
+  font-size: 12px;
+  line-height: 1.65;
+  color: #5b4a46;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.people-danger-zone .field {
+  width: 100%;
+  margin-bottom: 0;
+}
+.people-danger-zone .check-field,
+.people-form .people-check {
+  align-items: flex-start;
+  font-size: 12px;
+  color: #475467;
+}
+.people-danger-zone .check-field > input,
+.people-form .people-check > input {
+  flex: none;
+  margin-top: 2px;
+  width: 15px;
+  height: 15px;
+  accent-color: var(--orange);
+}
+.button.button-danger {
+  background: #a85341;
+  border-color: #a85341;
+  color: #fff;
+}
+.button.button-danger:hover:not(:disabled) {
+  background: #8f4535;
+  border-color: #8f4535;
+}
+.button.button-danger:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ---------- Shared People tool dialog layout ---------- */
+.people-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.people-form .field {
+  margin-bottom: 0;
+}
+.people-form fieldset.plain-fieldset:not(.form-grid) {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.people-form > div:not([class]) {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+}
+.people-form > div:not([class])[hidden] {
+  display: none;
+}
+.people-form p {
+  font-size: 12px;
+  line-height: 1.65;
+  color: #475467;
+  margin: 0;
+}
+.people-form h3 {
+  font-size: 14px;
+  font-weight: 600;
+  color: #343a44;
+  margin: 0;
+}
+.people-form h4 {
+  font-size: 13px;
+  font-weight: 600;
+  color: #343a44;
+  margin: 0 0 4px;
+}
+.people-form .people-section-title {
+  font-size: 13px;
+}
+.people-form .people-muted {
+  color: #667085;
+}
+.people-form .people-note {
+  padding: 11px 13px;
+  border: 1px solid #e5e8ef;
+  border-radius: 8px;
+  background: var(--subtle);
+  color: #58677b;
+}
+.people-form .people-note-danger {
+  border-color: #f0d3cc;
+  background: #fffaf8;
+  color: #5b4a46;
+}
+.people-form .people-alert {
+  padding: 10px 12px;
+  border-left: 3px solid #d9822b;
+  border-radius: 6px;
+  background: #fff8ef;
+  color: #6e4a1d;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.people-form .people-success,
+.people-danger-zone .people-success {
+  padding: 10px 12px;
+  border-radius: 7px;
+  background: #f0f7f2;
+  color: #2f6b45;
+}
+.people-form [role='note'] {
+  font-size: 11px;
+  color: #667085;
+}
+.people-form .people-alert[role='note'] {
+  font-size: 12px;
+  color: #6e4a1d;
+}
+
+/* Hidden "Checking…" live region: keep it in the DOM without leaving a gap. */
+.people-checking[aria-hidden='true'] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  margin: -1px;
+}
+.people-checking p {
+  font-size: 12px;
+  color: #667085;
+}
+
+/* Stepper: the existing ordered list, numbered with CSS counters. */
+.people-stepper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: people-step;
+}
+.people-stepper li {
+  counter-increment: people-step;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 11px 5px 6px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #fff;
+  font-size: 12px;
+  color: #667085;
+  white-space: nowrap;
+}
+.people-stepper li::before {
+  content: counter(people-step);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 19px;
+  height: 19px;
+  border-radius: 50%;
+  background: #f0f2f5;
+  color: #667085;
+  font-size: 10px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.people-stepper li[aria-current='step'] {
+  border-color: #f8c49c;
+  background: #fff7f0;
+  color: #9a4a10;
+  font-weight: 600;
+}
+.people-stepper li[aria-current='step']::before {
+  background: var(--orange);
+  color: #fff;
+}
+
+/* Cards */
+.people-form .people-card,
+.people-form .people-item-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+  margin: 0;
+  padding: 14px 16px;
+  border: 1px solid #e6e9ee;
+  border-radius: 9px;
+  background: #fcfcfd;
+}
+.people-form .people-card-warning {
+  border-color: #f2d7b4;
+  background: #fffaf3;
+}
+.people-form .people-card-confirm {
+  border-color: #f8c49c;
+  background: #fff9f4;
+}
+.people-form fieldset.people-item-card > legend {
+  float: left;
+  width: 100%;
+  padding: 0;
+  margin: 0 0 2px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #343a44;
+}
+.people-form fieldset.people-item-card > legend + * {
+  clear: both;
+}
+.people-form .people-item-card .button-small {
+  align-self: flex-start;
+}
+.people-form .people-membership {
+  gap: 14px 16px;
+}
+.people-form .people-item-card .form-grid {
+  gap: 12px 16px;
+}
+
+/* Lists */
+.people-check-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr));
+  gap: 8px;
+}
+.people-check-list:empty {
+  display: none;
+}
+.people-check-list .people-check {
+  padding: 9px 11px;
+  border: 1px solid #e1e4e9;
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
+}
+.people-check-list .people-check:has(input:checked) {
+  border-color: #f2a36b;
+  background: #fff7f0;
+}
+.people-grant-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #e6e9ee;
+  border-radius: 8px;
+  background: #fff;
+}
+.people-grant-list li {
+  padding: 9px 12px;
+  font-size: 12px;
+  line-height: 1.6;
+  color: #475467;
+  border-top: 1px solid #edf0f4;
+  overflow-wrap: anywhere;
+}
+.people-grant-list li:first-child {
+  border-top: 0;
+}
+.people-preset-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.people-preset-list .button[aria-pressed='true'] {
+  border-color: #f2a36b;
+  background: #fff7f0;
+  color: #9a4a10;
+}
+.people-capture-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 12px 14px;
+  border: 1px dashed #d5dae2;
+  border-radius: 9px;
+  background: var(--subtle);
+}
+.people-history {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 16px;
+  margin-top: 4px;
+  border-top: 1px solid #edf0f4;
+}
+
+/* Action rows: secondary actions left of the primary, wrap on small screens. */
+.people-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-top: 4px;
+}
+.people-actions-start {
+  justify-content: flex-start;
+}
+.people-actions > [role='status'] {
+  flex-basis: 100%;
+}
+
+@media (max-width: 700px) {
+  .people-toolbar-actions {
+    width: 100%;
+    justify-content: stretch;
+  }
+  .people-toolbar-actions .button {
+    flex: 1 1 auto;
+    min-height: 40px;
+  }
+  .people-toolbar-actions .button-primary {
+    flex-basis: 100%;
+    order: -1;
+  }
+  .people-profile-departure {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .people-actions .button {
+    flex: 1 1 auto;
+    min-height: 44px;
+  }
+  .people-stepper li {
+    font-size: 11px;
+  }
+  .people-form .people-card,
+  .people-form .people-item-card {
+    padding: 12px;
+  }
+}
+
+/* ---------- Department cards: readable stats (were ~2:1 contrast) ---------- */
+.page-content .department-card > p {
+  min-height: 0;
+  color: #667085;
+}
+.page-content .department-card-stats b {
+  color: #343a44;
+  font-variant-numeric: tabular-nums;
+}
+.page-content .department-card-stats span {
+  color: #667085;
+  font-size: 11px;
+}
+.page-content .department-card-stats button {
+  border-radius: 6px;
+}
+.page-content .department-card-stats button:hover span {
+  color: var(--orange-dark);
+}
+.page-content .department-card-stats button:focus-visible {
+  outline: 2px solid var(--orange);
+  outline-offset: 3px;
+}
+
+/* ---------- People table ---------- */
+.page-content .people-table td {
+  font-size: 12px;
+  color: #475467;
+}
+.page-content .people-table .pill {
+  font-size: 10px;
+}
+@media (max-width: 700px) {
+  /* Stack each person into a compact card instead of a sideways-scrolling table. */
+  .page-content .people-table,
+  .page-content .people-table tbody {
+    display: block;
+    width: 100%;
+    min-width: 0;
+  }
+  .page-content .people-table thead {
+    display: none;
+  }
+  .page-content .people-table tr {
+    display: grid;
+    grid-template-columns: 40px minmax(0, 1fr) minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 6px 10px;
+    padding: 12px 14px;
+    border-bottom: 1px solid #edf0f4;
+  }
+  .page-content .people-table tr:last-child {
+    border-bottom: 0;
+  }
+  .page-content .people-table td {
+    display: block;
+    padding: 0;
+    border: 0;
+    font-size: 11px;
+    color: #667085;
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+  .page-content .people-table td:first-child {
+    grid-column: 1 / 4;
+    grid-row: 1;
+  }
+  .page-content .people-table td:last-child {
+    grid-column: 4;
+    grid-row: 1;
+  }
+  .page-content .people-table td:nth-child(2) {
+    grid-column: 2;
+    grid-row: 2;
+  }
+  .page-content .people-table td:nth-child(3) {
+    grid-column: 3;
+    grid-row: 2;
+  }
+  .page-content .people-table td:nth-child(4) {
+    grid-column: 2;
+    grid-row: 3;
+  }
+  .page-content .people-table td:nth-child(5) {
+    grid-column: 3;
+    grid-row: 3;
+  }
+  .page-content .people-table td:nth-child(4)::before {
+    content: 'Reports to ';
+  }
+}

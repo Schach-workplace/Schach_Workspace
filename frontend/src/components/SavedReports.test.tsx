@@ -143,7 +143,7 @@ it.each(['creation', 'definition', 'schedule'])(
       </QueryClientProvider>,
     );
     if (kind !== 'creation') {
-      fireEvent.click(await screen.findByText('Initial · active'));
+      fireEvent.click(await screen.findByRole('button', { name: 'Initial active' }));
       await waitFor(() =>
         expect((screen.getByLabelText('Report name') as HTMLInputElement).value).toBe('Initial'),
       );

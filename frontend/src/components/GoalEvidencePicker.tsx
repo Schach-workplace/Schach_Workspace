@@ -67,9 +67,9 @@ export default function GoalEvidencePicker({
     );
   }
   return (
-    <section aria-label="Goal evidence">
+    <section aria-label="Goal evidence" className="goal-evidence">
       <h4>Selected evidence ({value.length}/50)</h4>
-      <p>
+      <p className="field-help">
         Evidence keeps its own current access. Your authored reason is shared with the goal
         audience.
       </p>
@@ -118,9 +118,11 @@ export default function GoalEvidencePicker({
         </Field>
       )}
       {!editable || !options.ready ? (
-        <p role="status">Checking current evidence access…</p>
+        <p role="status" className="field-help">
+          Checking current evidence access…
+        </p>
       ) : (
-        <div>
+        <div className="goal-evidence-options" role="group" aria-label="Readable evidence sources">
           {options.data?.options.map((o) => (
             <button
               type="button"
@@ -131,11 +133,13 @@ export default function GoalEvidencePicker({
               {o.label}
             </button>
           ))}
-          {!options.data?.options.length && <p>No currently readable options.</p>}
+          {!options.data?.options.length && (
+            <p className="field-help">No currently readable options.</p>
+          )}
         </div>
       )}
       {selected && (
-        <div>
+        <div className="goal-evidence-preview">
           {preview.ready && preview.data ? (
             <>
               <p>{preview.data.label}</p>
@@ -143,7 +147,7 @@ export default function GoalEvidencePicker({
               <small>Exact binding: {preview.data.contentHash}</small>
               <button
                 type="button"
-                className="button"
+                className="button button-secondary"
                 disabled={!editable || value.length >= 50}
                 onClick={() => {
                   const p = preview.data!;

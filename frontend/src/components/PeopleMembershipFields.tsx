@@ -1,5 +1,15 @@
 import type { MembershipDefaults, PeopleContext } from '../data/people';
 import { Field } from './UI';
+const roleLabels: Record<string, string> = {
+  founder: 'Founder',
+  ceo: 'CEO',
+  admin: 'Company admin',
+  finance: 'Finance',
+  head: 'Department head',
+  manager: 'Manager',
+  member: 'Member',
+  viewer: 'Viewer',
+};
 export default function PeopleMembershipFields({
   value,
   onChange,
@@ -14,7 +24,7 @@ export default function PeopleMembershipFields({
   const set = (key: keyof MembershipDefaults, v: string | number) =>
     onChange({ ...value, [key]: v });
   return (
-    <fieldset className="form-grid">
+    <fieldset className="form-grid plain-fieldset people-membership">
       <Field label="Company role">
         <select
           disabled={disabled}
@@ -26,7 +36,7 @@ export default function PeopleMembershipFields({
           ) : (
             context.roles.map((r) => (
               <option key={r} value={r}>
-                {r}
+                {roleLabels[r] ?? r}
               </option>
             ))
           )}

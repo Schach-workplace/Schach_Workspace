@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react';
 import OrphanReports from './OrphanReports';
+import { Bookmark, Plus } from 'lucide-react';
+import { EmptyState } from './UI';
+import '../styles/goals-reports.css';
 import { useWorkspace } from '../store';
 import { useExecutionRead, useExecutionMutation } from '../data/execution';
 import { useExecutionInput, clearExecutionForm } from '../data/executionInput';
@@ -19,45 +22,75 @@ export default function SavedReports({ onOpen }: { onOpen: (id: string) => void 
   );
   if (w.mode === 'demo')
     return (
-      <p className="panel">
-        Saved reports require a connected company server. Scheduled delivery uses each recipient’s
-        current authorized scope.
-      </p>
+      <div className="panel">
+        <EmptyState
+          icon={<Bookmark size={22} />}
+          title="Connect a company server"
+          description="Saved reports require a connected company server. Scheduled delivery uses each recipient’s current authorized scope."
+        />
+      </div>
     );
   return (
-    <div>
-      <section className="panel">
-        <h2>Saved report definitions</h2>
-        <p>
-          Fixed periods preserve dates. Previous week or month resolves the completed period at
-          generation. Recipients receive independently authorized reports.
-        </p>
-        <button
-          className="button button-primary"
-          onClick={() => {
-            setCreated(null);
-            setSelected('');
-          }}
-        >
-          New saved report
-        </button>
-        {list.loading && <p role="status">Checking definitions…</p>}
-        {list.error && <p role="alert">{list.error.message}</p>}
-        {list.ready &&
-          list.data?.definitions.map((d) => (
-            <button
-              className="button button-secondary"
-              key={d.id}
-              onClick={() => {
-                setCreated(null);
-                setSelected(d.id);
-              }}
-            >
-              {d.configuration.name} · {d.state}
-            </button>
-          ))}
-      </section>
-      <OrphanReports />
+    <div className="saved-reports">
+      <div className="saved-reports-side">
+        <section className="panel">
+          <div className="section-header">
+            <div>
+              <h2>Saved report definitions</h2>
+              <p>
+                Fixed periods preserve dates. Previous week or month resolves the completed period
+                at generation. Recipients receive independently authorized reports.
+              </p>
+            </div>
+          </div>
+          <button
+            className="button button-primary saved-new"
+            onClick={() => {
+              setCreated(null);
+              setSelected('');
+            }}
+          >
+            <Plus size={15} aria-hidden="true" />
+            New saved report
+          </button>
+          {list.loading && (
+            <p role="status" className="saved-empty">
+              Checking definitions…
+            </p>
+          )}
+          {list.error && (
+            <div className="inline-error saved-alert" role="alert">
+              {list.error.message}
+            </div>
+          )}
+          {list.ready && !list.data?.definitions.length && (
+            <p className="saved-empty">No saved definitions yet.</p>
+          )}
+          {list.ready && !!list.data?.definitions.length && (
+            <ul className="saved-definition-list">
+              {list.data.definitions.map((d) => (
+                <li key={d.id}>
+                  <button
+                    aria-current={selected === d.id}
+                    onClick={() => {
+                      setCreated(null);
+                      setSelected(d.id);
+                    }}
+                  >
+                    <span>{d.configuration.name}</span>
+                    <span
+                      className={`pill pill-${d.state === 'active' ? 'green' : d.state === 'paused' ? 'orange' : 'slate'}`}
+                    >
+                      {d.state}
+                    </span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
+        <OrphanReports />
+      </div>
       <DefinitionForm
         key={selected || 'new'}
         id={selected}
@@ -228,35 +261,85 @@ function DefinitionForm({
     }
   }
   if (source.denied)
-    return <p>Definition access changed. Start a new definition with current choices.</p>;
+    return (
+      <p className="notice notice-warning">
+        Definition access changed. Start a new definition with current choices.
+      </p>
+    );
   return (
     <section className="panel">
-      <h2>{id ? 'Manage saved report' : 'Create saved report'}</h2>
-      {!ready && <p role="status">Checking current definition and eligible people…</p>}
+      <div className="section-header">
+        <div>
+          <h2>{id ? 'Manage saved report' : 'Create saved report'}</h2>
+          <p>
+            {id
+              ? 'Changes are versioned. Review before confirming.'
+              : 'Name the report, choose its period and filters, then pick recipients.'}
+          </p>
+        </div>
+        {id && source.ready && source.data && (
+          <span
+            className={`pill pill-${source.data.definition.state === 'active' ? 'green' : source.data.definition.state === 'paused' ? 'orange' : 'slate'}`}
+          >
+            {source.data.definition.state}
+          </span>
+        )}
+      </div>
+      {!ready && (
+        <p role="status" className="field-help">
+          Checking current definition and eligible people…
+        </p>
+      )}
       <fieldset disabled={disabled}>
         <label>
           Report name
           <input value={config.name} onChange={(e) => edit({ name: e.target.value })} />
         </label>
-        <label>
-          Saved period
-          <select
-            value={config.periodRule}
-            onChange={(e) =>
-              edit({
-                periodRule: e.target.value as SavedConfiguration['periodRule'],
-                from: '',
-                to: '',
-              })
-            }
-          >
-            <option value="fixed">Fixed dates</option>
-            <option value="previous_week">Previous completed week</option>
-            <option value="previous_month">Previous completed month</option>
-          </select>
-        </label>
+        <div className="form-grid">
+          <label>
+            Saved period
+            <select
+              value={config.periodRule}
+              onChange={(e) =>
+                edit({
+                  periodRule: e.target.value as SavedConfiguration['periodRule'],
+                  from: '',
+                  to: '',
+                })
+              }
+            >
+              <option value="fixed">Fixed dates</option>
+              <option value="previous_week">Previous completed week</option>
+              <option value="previous_month">Previous completed month</option>
+            </select>
+          </label>
+          <label>
+            Saved timezone policy
+            <select
+              value={config.timezonePolicy}
+              onChange={(e) =>
+                edit({
+                  timezonePolicy: e.target.value as SavedConfiguration['timezonePolicy'],
+                  reportZone: e.target.value === 'explicit' ? data.company.timezone : '',
+                })
+              }
+            >
+              <option value="company_at_resolution">Company zone at resolution</option>
+              <option value="explicit">Explicit IANA zone</option>
+            </select>
+          </label>
+          {config.timezonePolicy === 'explicit' && (
+            <label>
+              Saved report timezone
+              <input
+                value={config.reportZone}
+                onChange={(e) => edit({ reportZone: e.target.value })}
+              />
+            </label>
+          )}
+        </div>
         {config.periodRule === 'fixed' && (
-          <>
+          <div className="form-grid">
             <label>
               Saved start date
               <input
@@ -269,106 +352,98 @@ function DefinitionForm({
               Saved end date
               <input type="date" value={config.to} onChange={(e) => edit({ to: e.target.value })} />
             </label>
-          </>
-        )}
-        <label>
-          Saved timezone policy
-          <select
-            value={config.timezonePolicy}
-            onChange={(e) =>
-              edit({
-                timezonePolicy: e.target.value as SavedConfiguration['timezonePolicy'],
-                reportZone: e.target.value === 'explicit' ? data.company.timezone : '',
-              })
-            }
-          >
-            <option value="company_at_resolution">Company zone at resolution</option>
-            <option value="explicit">Explicit IANA zone</option>
-          </select>
-        </label>
-        {config.timezonePolicy === 'explicit' && (
-          <label>
-            Saved report timezone
-            <input
-              value={config.reportZone}
-              onChange={(e) => edit({ reportZone: e.target.value })}
-            />
-          </label>
+          </div>
         )}
         {ready && (
           <>
-            {(['ownerId', 'departmentId', 'projectId'] as const).map((field, index) => (
-              <label key={field}>
-                Saved {['owner', 'department', 'project'][index]} filter
-                <select
-                  value={config.filters[field]}
-                  onChange={(e) =>
-                    edit({ filters: { ...config.filters, [field]: e.target.value } })
-                  }
-                >
-                  <option value="">
-                    All authorized {['owners', 'departments', 'projects'][index]}
-                  </option>
-                  {(index === 0
-                    ? data.people.filter((p) => p.active)
-                    : index === 1
-                      ? data.departments
-                      : data.projects
-                  ).map((p) => (
-                    <option key={p.id} value={p.id}>
-                      {p.name}
-                    </option>
-                  ))}
-                </select>
-              </label>
-            ))}
-            <div>
-              <p>Active recipients (1–100)</p>
-              {config.recipientIds.some(
-                (id) => !people.data?.recipients.some((p) => p.id === id),
-              ) && (
-                <button
-                  className="button button-secondary"
-                  type="button"
-                  onClick={() =>
-                    edit({
-                      recipientIds: config.recipientIds.filter((id) =>
-                        people.data?.recipients.some((p) => p.id === id),
-                      ),
-                    })
-                  }
-                >
-                  Remove unavailable recipients
-                </button>
-              )}
-              {people.data?.recipients.map((p) => (
-                <label key={p.id}>
-                  <input
-                    type="checkbox"
-                    checked={config.recipientIds.includes(p.id)}
+            <div className="form-grid">
+              {(['ownerId', 'departmentId', 'projectId'] as const).map((field, index) => (
+                <label key={field}>
+                  Saved {['owner', 'department', 'project'][index]} filter
+                  <select
+                    value={config.filters[field]}
                     onChange={(e) =>
-                      edit({
-                        recipientIds: e.target.checked
-                          ? [...config.recipientIds, p.id]
-                          : config.recipientIds.filter((x) => x !== p.id),
-                      })
+                      edit({ filters: { ...config.filters, [field]: e.target.value } })
                     }
-                  />
-                  {p.name}
+                  >
+                    <option value="">
+                      All authorized {['owners', 'departments', 'projects'][index]}
+                    </option>
+                    {(index === 0
+                      ? data.people.filter((p) => p.active)
+                      : index === 1
+                        ? data.departments
+                        : data.projects
+                    ).map((p) => (
+                      <option key={p.id} value={p.id}>
+                        {p.name}
+                      </option>
+                    ))}
+                  </select>
                 </label>
               ))}
             </div>
+            <div className="saved-recipients">
+              <div className="saved-recipients-head">
+                <p>
+                  Active recipients (1–100)
+                  <span className="count-badge">{config.recipientIds.length}</span>
+                </p>
+                {config.recipientIds.some(
+                  (id) => !people.data?.recipients.some((p) => p.id === id),
+                ) && (
+                  <button
+                    className="button button-secondary"
+                    type="button"
+                    onClick={() =>
+                      edit({
+                        recipientIds: config.recipientIds.filter((id) =>
+                          people.data?.recipients.some((p) => p.id === id),
+                        ),
+                      })
+                    }
+                  >
+                    Remove unavailable recipients
+                  </button>
+                )}
+              </div>
+              <div className="saved-recipient-grid">
+                {people.data?.recipients.map((p) => (
+                  <label key={p.id}>
+                    <input
+                      type="checkbox"
+                      checked={config.recipientIds.includes(p.id)}
+                      onChange={(e) =>
+                        edit({
+                          recipientIds: e.target.checked
+                            ? [...config.recipientIds, p.id]
+                            : config.recipientIds.filter((x) => x !== p.id),
+                        })
+                      }
+                    />
+                    {p.name}
+                  </label>
+                ))}
+              </div>
+            </div>
           </>
         )}
-        <button
-          className="button button-primary"
-          disabled={!config.name || !config.recipientIds.length}
-          onClick={() => setReview(true)}
-        >
-          Review definition
-        </button>
+        <div className="saved-actions">
+          <button
+            className="button button-primary"
+            disabled={!config.name || !config.recipientIds.length}
+            onClick={() => setReview(true)}
+          >
+            Review definition
+          </button>
+          {save.attempt && (
+            <button className="button button-primary" onClick={() => void submit()}>
+              Retry same definition save
+            </button>
+          )}
+        </div>
         {review && (
-          <div>
+          <div className="saved-review">
             <p>
               {config.name} · {config.periodRule.replaceAll('_', ' ')} ·{' '}
               {config.timezonePolicy.replaceAll('_', ' ')} · {config.recipientIds.length} recipients
@@ -379,83 +454,94 @@ function DefinitionForm({
             </button>
           </div>
         )}
-        {save.attempt && (
-          <button className="button button-primary" onClick={() => void submit()}>
-            Retry same definition save
-          </button>
-        )}
         {id && (
           <>
-            <button className="button button-secondary" onClick={() => void generateNow()}>
-              {generate.attempt ? 'Retry same saved generation' : 'Generate saved report now'}
-            </button>
-            <button
-              className="button button-secondary"
-              onClick={() =>
-                void submit(source.data?.definition.state === 'paused' ? 'active' : 'paused')
-              }
-            >
-              {source.data?.definition.state === 'paused'
-                ? 'Resume definition'
-                : 'Pause definition'}
-            </button>
-            <button className="button button-danger" onClick={() => void submit('deleted')}>
-              Delete definition
-            </button>
-            <h3>In-app delivery schedule</h3>
-            <p>
+            <div className="form-section-heading">
+              <h3>Run and status</h3>
+            </div>
+            <div className="saved-actions">
+              <button className="button button-secondary" onClick={() => void generateNow()}>
+                {generate.attempt ? 'Retry same saved generation' : 'Generate saved report now'}
+              </button>
+              <button
+                className="button button-secondary"
+                onClick={() =>
+                  void submit(source.data?.definition.state === 'paused' ? 'active' : 'paused')
+                }
+              >
+                {source.data?.definition.state === 'paused'
+                  ? 'Resume definition'
+                  : 'Pause definition'}
+              </button>
+              <button className="button button-danger" onClick={() => void submit('deleted')}>
+                Delete definition
+              </button>
+            </div>
+            <div className="form-section-heading">
+              <h3>In-app delivery schedule</h3>
+            </div>
+            <p className="field-help">
               Only the latest missed occurrence is delivered. Schedule changes cancel outputs from
               earlier versions.
             </p>
-            {['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'].map(
-              (day, index) => (
-                <label key={day}>
-                  <input
-                    type="checkbox"
-                    checked={schedule.weekdays.includes(index)}
-                    onChange={(e) => {
-                      setBasis(basis);
-                      setSchedule({
-                        ...schedule,
-                        weekdays: e.target.checked
-                          ? [...schedule.weekdays, index].sort()
-                          : schedule.weekdays.filter((x) => x !== index),
-                      });
-                    }}
-                  />
-                  {day}
-                </label>
-              ),
-            )}
-            <label>
-              Schedule local time
-              <input
-                type="time"
-                value={schedule.localMinute}
-                onChange={(e) => {
-                  setBasis(basis);
-                  setSchedule({ ...schedule, localMinute: e.target.value });
-                }}
-              />
-            </label>
-            <label>
-              Schedule timezone
-              <input
-                value={schedule.scheduleZone}
-                onChange={(e) => {
-                  setBasis(basis);
-                  setSchedule({ ...schedule, scheduleZone: e.target.value });
-                }}
-              />
-            </label>
-            <button className="button button-primary" onClick={() => void scheduleSave()}>
-              {scheduling.attempt ? 'Retry same schedule save' : 'Confirm delivery schedule'}
-            </button>
-            <button className="button button-secondary" onClick={() => void scheduleSave('paused')}>
-              Pause schedule
-            </button>
+            <div className="saved-weekdays" role="group" aria-label="Delivery weekdays">
+              {['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'].map(
+                (day, index) => (
+                  <label key={day}>
+                    <input
+                      type="checkbox"
+                      checked={schedule.weekdays.includes(index)}
+                      onChange={(e) => {
+                        setBasis(basis);
+                        setSchedule({
+                          ...schedule,
+                          weekdays: e.target.checked
+                            ? [...schedule.weekdays, index].sort()
+                            : schedule.weekdays.filter((x) => x !== index),
+                        });
+                      }}
+                    />
+                    {day}
+                  </label>
+                ),
+              )}
+            </div>
+            <div className="form-grid">
+              <label>
+                Schedule local time
+                <input
+                  type="time"
+                  value={schedule.localMinute}
+                  onChange={(e) => {
+                    setBasis(basis);
+                    setSchedule({ ...schedule, localMinute: e.target.value });
+                  }}
+                />
+              </label>
+              <label>
+                Schedule timezone
+                <input
+                  value={schedule.scheduleZone}
+                  onChange={(e) => {
+                    setBasis(basis);
+                    setSchedule({ ...schedule, scheduleZone: e.target.value });
+                  }}
+                />
+              </label>
+            </div>
+            <div className="saved-actions">
+              <button className="button button-primary" onClick={() => void scheduleSave()}>
+                {scheduling.attempt ? 'Retry same schedule save' : 'Confirm delivery schedule'}
+              </button>
+              <button
+                className="button button-secondary"
+                onClick={() => void scheduleSave('paused')}
+              >
+                Pause schedule
+              </button>
+            </div>
             {source.ready && source.data?.schedule?.id && (
-              <p>
+              <p className="field-help">
                 Next occurrence {new Date(source.data.schedule.nextOccurrenceUTC).toLocaleString()}
               </p>
             )}
@@ -486,7 +572,7 @@ function DefinitionForm({
         generate.error ||
         source.error ||
         people.error) && (
-        <p role="alert">
+        <p role="alert" className="inline-error saved-alert">
           {error ||
             save.error ||
             scheduling.error ||
@@ -496,7 +582,7 @@ function DefinitionForm({
         </p>
       )}
       {source.ready && source.data?.schedule?.failureCode && (
-        <p role="status">
+        <p role="status" className="notice notice-warning saved-alert">
           Delivery needs attention: {source.data.schedule.failureCode.replaceAll('_', ' ')} ·{' '}
           {source.data.schedule.failureCount ?? 0} affected recipients · retry attempt{' '}
           {source.data.schedule.attemptCount ?? 0}.
@@ -506,7 +592,7 @@ function DefinitionForm({
         source.ready &&
         source.data &&
         source.data.definition.version !== basis.definitionVersion && (
-          <>
+          <div className="notice notice-warning saved-alert">
             <p>
               Definition changed. Your authored input remains. Review the current version before
               reconciling.
@@ -544,7 +630,7 @@ function DefinitionForm({
             >
               Reconcile current definition
             </button>
-          </>
+          </div>
         )}
     </section>
   );

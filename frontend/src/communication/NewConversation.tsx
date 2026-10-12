@@ -138,7 +138,7 @@ export default function NewConversation({
               }
             >
               <Avatar name={p.name} />
-              <span>
+              <span className="connect-people-copy">
                 <strong>{p.name}</strong>
                 <small>
                   {kind === 'dm'
@@ -148,20 +148,28 @@ export default function NewConversation({
                       : 'Add to conversation'}
                 </small>
               </span>
-              {ids.includes(p.id) && <Check size={18} />}
+              {ids.includes(p.id) && <Check size={18} aria-hidden="true" />}
             </button>
           ))}
-          {people.length === 0 && <p>No active people match your search.</p>}
+          {people.length === 0 && (
+            <p className="connect-hint">No active people match your search.</p>
+          )}
         </div>
         {error && (
           <p role="alert" className="connect-error">
             {error}
           </p>
         )}
-        {busy && <p role="status">Opening conversation…</p>}
+        {busy && (
+          <p role="status" className="connect-hint">
+            Opening conversation…
+          </p>
+        )}
         {kind !== 'dm' && (
           <div className="connect-dialog-footer">
-            <span>{ids.length} people selected</span>
+            <span>
+              {ids.length} {ids.length === 1 ? 'person' : 'people'} selected
+            </span>
             <button
               className="button button-primary"
               disabled={busy || !title.trim() || (!publicChannel && ids.length === 0)}

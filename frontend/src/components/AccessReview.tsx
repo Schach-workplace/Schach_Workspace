@@ -82,75 +82,100 @@ export default function AccessReview({ onClose }: { onClose: () => void }) {
     }
   }
   return (
-    <Modal open title="Review company access" onClose={onClose}>
+    <Modal
+      open
+      title="Review company access"
+      description="Capture every current membership, decide each person's access, then attest the review."
+      onClose={onClose}
+    >
       <div className="entity-form people-form">
         <ErrorMessage error={error || action.error || previewAction.error} />
-        <div aria-hidden={ready} style={{ visibility: ready ? 'hidden' : 'visible' }}>
+        <div
+          className="people-checking"
+          aria-hidden={ready}
+          style={{ visibility: ready ? 'hidden' : 'visible' }}
+        >
           <p role="status">Checking current company authority…</p>
         </div>
         {unknown ? (
-          <>
+          <section className="people-card people-card-warning">
             <p>Completion may already have succeeded. Retry the original captured review.</p>
-            <button
-              className="button button-primary"
-              disabled={!ready || action.busy}
-              onClick={() => void complete()}
-            >
-              Retry the same submission
-            </button>
-            <button
-              className="button"
-              onClick={() => {
-                if (
-                  window.confirm(
-                    'Inspect current access-review history before discarding this unknown request.',
+            <div className="people-actions">
+              <button
+                className="button button-primary"
+                disabled={!ready || action.busy}
+                onClick={() => void complete()}
+              >
+                Retry the same submission
+              </button>
+              <button
+                className="button button-secondary"
+                onClick={() => {
+                  if (
+                    window.confirm(
+                      'Inspect current access-review history before discarding this unknown request.',
+                    )
                   )
-                )
-                  action.abandon();
-              }}
-            >
-              Discard after inspecting history
-            </button>
-          </>
+                    action.abandon();
+                }}
+              >
+                Discard after inspecting history
+              </button>
+            </div>
+          </section>
         ) : done ? (
           <>
             {ready && (
               <>
-                <p role="status">Access attestation completed. Handover is recorded separately.</p>
-                {done.decisions.map((d) => (
-                  <p key={d.userId}>
-                    {context.data?.people.find((p) => p.id === d.userId)?.name ?? 'Company member'}:{' '}
-                    {d.accessOutcome}; handover {d.handoverStatus}
-                  </p>
-                ))}
+                <p role="status" className="people-success">
+                  Access attestation completed. Handover is recorded separately.
+                </p>
+                <ul className="people-grant-list">
+                  {done.decisions.map((d) => (
+                    <li key={d.userId}>
+                      {context.data?.people.find((p) => p.id === d.userId)?.name ??
+                        'Company member'}
+                      : {d.accessOutcome}; handover {d.handoverStatus}
+                    </li>
+                  ))}
+                </ul>
                 <SessionEffect effect={done.sessionEffect} />
-                <button
-                  className="button"
-                  onClick={() => {
-                    setDone(undefined);
-                    setReview(undefined);
-                  }}
-                >
-                  Start another review
-                </button>
+                <div className="people-actions">
+                  <button
+                    className="button button-secondary"
+                    onClick={() => {
+                      setDone(undefined);
+                      setReview(undefined);
+                    }}
+                  >
+                    Start another review
+                  </button>
+                </div>
               </>
             )}
           </>
         ) : (
           <>
-            <button
-              className="button"
-              disabled={!ready}
-              onClick={() => {
-                setReview(undefined);
-                setDraft({
-                  reason: draft.reason,
-                  decisions: initialDecisions(context.data!.people),
-                });
-              }}
-            >
-              Capture current company memberships
-            </button>
+            <div className="people-capture-row">
+              <p className="people-muted">
+                {draft.decisions.length
+                  ? `${draft.decisions.length} memberships captured for this review.`
+                  : 'Start by capturing the current company memberships.'}
+              </p>
+              <button
+                className="button button-secondary button-small"
+                disabled={!ready}
+                onClick={() => {
+                  setReview(undefined);
+                  setDraft({
+                    reason: draft.reason,
+                    decisions: initialDecisions(context.data!.people),
+                  });
+                }}
+              >
+                Capture current company memberships
+              </button>
+            </div>
             <Field label="Review reason">
               <textarea
                 value={draft.reason}
@@ -167,7 +192,7 @@ export default function AccessReview({ onClose }: { onClose: () => void }) {
               const p = context.data?.people.find((p) => p.id === d.userId);
               if (!visibleIDs.includes(d.userId)) return null;
               return (
-                <fieldset key={d.userId}>
+                <fieldset key={d.userId} className="people-item-card">
                   <legend>
                     <PeopleProjection current={ready}>
                       {p?.name} · {p?.role}
@@ -218,11 +243,11 @@ export default function AccessReview({ onClose }: { onClose: () => void }) {
                 </fieldset>
               );
             })}
-            <p>Filtered members remain in the complete captured review.</p>
+            <p className="people-muted">Filtered members remain in the complete captured review.</p>
             {draft.decisions.some((d) => d.action === 'revoke_access') && (
               <>
-                <p>{directRevocationCopy}</p>
-                <label>
+                <p className="people-note people-note-danger">{directRevocationCopy}</p>
+                <label className="check-field people-check">
                   <input
                     type="checkbox"
                     checked={confirmed}
@@ -232,45 +257,58 @@ export default function AccessReview({ onClose }: { onClose: () => void }) {
                 </label>
               </>
             )}
-            <button
-              className="button"
-              disabled={
-                !ready || previewAction.busy || !draft.reason.trim() || draft.decisions.length === 0
-              }
-              onClick={() => void preview()}
-            >
-              Preview access decisions
-            </button>
+            <div className="people-actions">
+              <button
+                className={current ? 'button button-secondary' : 'button button-primary'}
+                disabled={
+                  !ready ||
+                  previewAction.busy ||
+                  !draft.reason.trim() ||
+                  draft.decisions.length === 0
+                }
+                onClick={() => void preview()}
+              >
+                Preview access decisions
+              </button>
+            </div>
             {current && (
               <>
-                <p>
+                <p className="people-note">
                   Review captured at version {current.version}. Pending departures do not certify a
                   completed handover.
                 </p>
                 <SessionEffect effect={current.sessionEffect} />
-                <button
-                  className="button button-primary"
-                  disabled={
-                    !ready ||
-                    action.busy ||
-                    (draft.decisions.some((d) => d.action === 'revoke_access') && !confirmed)
-                  }
-                  onClick={() => void complete()}
-                >
-                  Complete access attestation
-                </button>
+                <div className="people-actions">
+                  <button
+                    className="button button-primary"
+                    disabled={
+                      !ready ||
+                      action.busy ||
+                      (draft.decisions.some((d) => d.action === 'revoke_access') && !confirmed)
+                    }
+                    onClick={() => void complete()}
+                  >
+                    Complete access attestation
+                  </button>
+                </div>
               </>
             )}
           </>
         )}
         {history.ready && (
-          <section>
-            <h3>Review history</h3>
-            {history.data?.items.map((r) => (
-              <p key={r.id}>
-                {r.reason} · {r.state} · {r.completedAt || r.createdAt}
-              </p>
-            ))}
+          <section className="people-history">
+            <h3 className="people-section-title">Review history</h3>
+            {history.data?.items.length ? (
+              <ul className="people-grant-list">
+                {history.data.items.map((r) => (
+                  <li key={r.id}>
+                    {r.reason} · {r.state} · {r.completedAt || r.createdAt}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="people-muted">No access reviews recorded yet.</p>
+            )}
           </section>
         )}
       </div>

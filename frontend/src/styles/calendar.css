@@ -1,0 +1,126 @@
+/* Calendar page polish. Scoped under .calendar-page so global calendar rules stay intact. */
+
+.calendar-page .calendar-month h2 {
+  color: #344054;
+}
+.calendar-page .calendar-filters select {
+  font-size: 12px;
+}
+.calendar-page .calendar-filters .check-field {
+  font-size: 12px;
+  color: #475467;
+}
+.calendar-page .timezone-note {
+  font-size: 11px;
+  color: #667085;
+}
+.calendar-page .calendar-note {
+  margin: 0;
+}
+.calendar-page .calendar-weekdays > span {
+  font-size: 11px;
+  font-weight: 500;
+}
+.calendar-page .calendar-day {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+.calendar-page .calendar-day.is-today:not(.selected) {
+  background: #fffcf9;
+}
+.calendar-page .calendar-day-number {
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+.calendar-page .calendar-task {
+  display: block;
+  flex-shrink: 0;
+  font-size: 11px;
+  padding: 4px 6px;
+  color: #3f5a7d;
+  background: #eef4fb;
+  border-left-color: #8eaed6;
+  line-height: 1.35;
+  transition: background 0.15s;
+}
+.calendar-page .calendar-task:hover {
+  filter: none;
+  background: #e2ecf8;
+}
+.calendar-page .calendar-task.late {
+  color: #8f3f2a;
+  background: #fff1ea;
+  border-left-color: #d98b6b;
+}
+.calendar-page .calendar-task.late:hover {
+  background: #ffe6da;
+}
+.calendar-page .calendar-task.accepted {
+  color: #3f6b4c;
+  background: #eef7f0;
+  border-left-color: #93c0a0;
+}
+.calendar-page .calendar-task:focus-visible,
+.calendar-page .calendar-more:focus-visible {
+  outline-offset: 1px;
+}
+.calendar-page .calendar-more {
+  font-size: 11px;
+  font-weight: 500;
+  color: #667085;
+  padding: 2px 4px;
+  border-radius: 4px;
+}
+.calendar-page .calendar-more:hover {
+  color: #c65009;
+  background: #fff4ec;
+}
+.calendar-page .calendar-day-tasks {
+  min-height: 0;
+  overflow: hidden;
+}
+.calendar-page .calendar-week .calendar-day-tasks {
+  overflow-y: auto;
+}
+.calendar-page .calendar-agenda-heading {
+  padding: 4px 0 0;
+}
+.calendar-page .calendar-agenda-heading h2 {
+  font-size: 15px;
+  color: #344054;
+}
+.calendar-page .calendar-agenda-heading > svg {
+  color: #98a2b3;
+}
+.calendar-page .calendar-retry {
+  margin: 16px 20px;
+}
+.calendar-page > .planning-view {
+  margin-top: 10px;
+  padding-top: 24px;
+  border-top: 1px solid #e6e9ee;
+}
+
+@media (max-width: 700px) {
+  .calendar-page .calendar-agenda-heading {
+    padding: 0;
+  }
+  .calendar-page .timezone-note {
+    font-size: 10px;
+  }
+  .calendar-page .calendar-filters select,
+  .calendar-page .calendar-filters .check-field {
+    font-size: 12px;
+  }
+  .calendar-page .mobile-task-count {
+    font-size: 10px;
+    color: #3f5a7d;
+    background: #e6eef8;
+    font-variant-numeric: tabular-nums;
+  }
+  .calendar-page .calendar-day.selected .mobile-task-count {
+    color: #8f4c16;
+    background: #fbe6d3;
+  }
+}

@@ -1,4 +1,5 @@
 import { lazy, useState } from 'react';
+import { Lightbulb } from 'lucide-react';
 import { Modal } from './UI';
 import { useWorkspace } from '../store';
 import AsyncView from './AsyncView';
@@ -25,8 +26,14 @@ export default function IntelligenceLauncher({
   return (
     <>
       {controlledOpen === undefined && (
-        <button className="button" style={{ minHeight: 44 }} onClick={() => setOpen(true)}>
-          {label}
+        <button
+          type="button"
+          className="button button-secondary intelligence-launcher"
+          aria-haspopup="dialog"
+          onClick={() => setOpen(true)}
+        >
+          <Lightbulb size={14} aria-hidden />
+          <span>{label}</span>
         </button>
       )}
       {(controlledOpen ?? open) && (
@@ -34,6 +41,7 @@ export default function IntelligenceLauncher({
           open
           layer={110}
           title="Local assistance"
+          description="Work only with sources you select, then review the result before acting."
           onClose={() => {
             setOpen(false);
             onClose?.();

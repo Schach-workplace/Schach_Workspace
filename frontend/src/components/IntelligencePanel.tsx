@@ -19,6 +19,7 @@ import type {
 import IntelligenceSelection, { type IntelligenceChoice } from './IntelligenceSelection';
 import IntelligenceResult from './IntelligenceResult';
 import IntelligenceDraftReview from './IntelligenceDraftReview';
+import '../styles/shell.css';
 import { canonicalSelection } from '../../../shared/intelligence/selection';
 export default function IntelligencePanel({
   choices = [],
@@ -255,18 +256,7 @@ export default function IntelligencePanel({
   }
   const result = job.ready ? job.data : undefined;
   return (
-    <section
-      className="intelligence-panel"
-      style={{
-        display: 'grid',
-        gap: 12,
-        padding: 20,
-        maxWidth: '100%',
-        minWidth: 0,
-        boxSizing: 'border-box',
-        overflowWrap: 'anywhere',
-      }}
-    >
+    <section className="intelligence-panel">
       <h2>Local assistance</h2>
       <p>
         {capabilities.data?.notice ??

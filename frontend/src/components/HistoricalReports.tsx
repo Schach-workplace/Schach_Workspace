@@ -13,7 +13,9 @@ import {
   validHistoricalRequest,
 } from '../data/historicalReports';
 import { useExecutionInput } from '../data/executionInput';
-import { today, addDays } from './UI';
+import { today, addDays, EmptyState } from './UI';
+import { ArrowDownToLine, History } from 'lucide-react';
+import '../styles/goals-reports.css';
 
 export default function HistoricalReports({
   onTask,
@@ -123,10 +125,13 @@ export default function HistoricalReports({
   }, [result.denied, job.denied, queryClient, data.company.id, data.me.id, store.mode]);
   if (store.mode === 'demo')
     return (
-      <p className="panel">
-        Historical reports require a connected company server. Demo current tasks do not establish
-        historical acceptance or effort.
-      </p>
+      <div className="panel">
+        <EmptyState
+          icon={<History size={22} />}
+          title="Connect a company server"
+          description="Historical reports require a connected company server. Demo current tasks do not establish historical acceptance or effort."
+        />
+      </div>
     );
   const update = (key: 'from' | 'to' | 'reportZone', value: string) =>
     setInput((x) => ({ ...x, [key]: value }));
@@ -217,32 +222,40 @@ export default function HistoricalReports({
       if (currentScope.current === captured.scope) setDownloading(false);
     }
   }
+  const busyMessage = result.loading ? 'Checking all current report sources…' : '';
+  const anyError = error || capture.error || result.error?.message || job.error?.message;
   return (
     <div className="historical-reports">
       <section className="panel report-controls">
-        <h2>Generate an immutable report</h2>
-        <IntelligenceLauncher
-          label="Explain selected report facts"
-          operation="report_explanation"
-          choices={
-            result.ready && snapshotId
-              ? [
-                  {
-                    label: 'Selected historical report',
-                    source: {
-                      kind: 'report_snapshot',
-                      id: snapshotId,
-                      selectedFieldSet: 'metrics',
-                    },
-                  },
-                ]
-              : []
-          }
-        />
-        <p>
-          State at period end, genuine acceptance episodes and dated effort are separate. Choose a
-          completed period.
-        </p>
+        <div className="section-header">
+          <div>
+            <h2>Generate an immutable report</h2>
+            <p>
+              State at period end, genuine acceptance episodes and dated effort are separate. Choose
+              a completed period.
+            </p>
+          </div>
+          <span className="report-assist">
+            <IntelligenceLauncher
+              label="Explain selected report facts"
+              operation="report_explanation"
+              choices={
+                result.ready && snapshotId
+                  ? [
+                      {
+                        label: 'Selected historical report',
+                        source: {
+                          kind: 'report_snapshot',
+                          id: snapshotId,
+                          selectedFieldSet: 'metrics',
+                        },
+                      },
+                    ]
+                  : []
+              }
+            />
+          </span>
+        </div>
         <div className="report-dates">
           <label>
             Historical start date
@@ -316,46 +329,63 @@ export default function HistoricalReports({
             </select>
           </label>
         </div>
-        <button
-          className="button button-primary"
-          disabled={capture.busy || !validHistoricalRequest(input)}
-          onClick={() => void generate()}
-        >
-          {capture.attempt ? 'Retry same report generation' : 'Generate historical report'}
-        </button>
-        {capture.attempt && (
-          <button
-            className="button button-secondary"
-            onClick={() => {
-              if (
-                window.confirm(
-                  'Abandon this unresolved request? It may already have created a report. A new generation uses a new identity.',
+        <div className="report-actions">
+          <p className="field-help">
+            Each generation is a new immutable snapshot with labels captured at generation.
+          </p>
+          {capture.attempt && (
+            <button
+              className="button button-secondary"
+              onClick={() => {
+                if (
+                  window.confirm(
+                    'Abandon this unresolved request? It may already have created a report. A new generation uses a new identity.',
+                  )
                 )
-              )
-                capture.abandon();
-            }}
+                  capture.abandon();
+              }}
+            >
+              Abandon report retry
+            </button>
+          )}
+          <button
+            className="button button-primary"
+            disabled={capture.busy || !validHistoricalRequest(input)}
+            onClick={() => void generate()}
           >
-            Abandon report retry
+            {capture.attempt ? 'Retry same report generation' : 'Generate historical report'}
           </button>
-        )}
+        </div>
       </section>
-      {(error || capture.error || result.error || job.error) && (
-        <p role="alert">{error || capture.error || result.error?.message || job.error?.message}</p>
+      {anyError && (
+        <div className="inline-error" role="alert">
+          {anyError}
+        </div>
       )}
-      {result.loading && <p role="status">Checking all current report sources…</p>}
+      {busyMessage && (
+        <p role="status" className="report-status">
+          {busyMessage}
+        </p>
+      )}
       {result.denied && (
-        <p>Report access changed. Generate a new report with your current authorized sources.</p>
+        <p className="notice notice-warning">
+          Report access changed. Generate a new report with your current authorized sources.
+        </p>
       )}
       {result.ready && result.snapshot && (
         <>
-          <p>
-            Immutable snapshot · {result.snapshot.request.reportZone} · labels captured at
-            generation · {result.snapshot.rowCount} drilldown rows
+          <p className="report-snapshot-meta">
+            <span className="pill pill-slate">Immutable snapshot</span>
+            <span>
+              {result.snapshot.request.reportZone} · labels captured at generation ·{' '}
+              {result.snapshot.rowCount} drilldown rows
+            </span>
           </p>
           <div className="report-metrics">
             {Object.values(result.snapshot.summary.metrics).map((m) => (
               <button
-                className="panel metric-card"
+                className={`panel metric-card${metric === m.code ? ' active' : ''}`}
+                aria-pressed={metric === m.code}
                 key={m.code}
                 onClick={() => {
                   setMetric(m.code);
@@ -369,40 +399,52 @@ export default function HistoricalReports({
             ))}
           </div>
           {result.snapshot.summary.coverage.length > 0 && (
-            <p>
+            <p className="notice notice-warning">
               Earlier history is unknown for some sources. Unavailable values are never treated as
               perfect performance.
             </p>
           )}
-          <label>
-            Metric membership
-            <select value={membership} onChange={(e) => setMembership(e.target.value)}>
-              <option value="contributing">Contributing facts</option>
-              <option value="numerator">Numerator facts</option>
-              <option value="denominator">Denominator facts</option>
-            </select>
-          </label>
-          <h3>{metricLabels[metric]}</h3>
-          {result.rowsReady && result.rows && (
-            <>
-              <ul>
-                {result.rows.rows.map((r) => (
-                  <li key={r.rowId}>
-                    <button className="button button-ghost" onClick={() => onTask(r.taskId)}>
-                      {r.state.code || 'Task'} · {r.state.title || 'Historical coverage'}
-                    </button>
-                    <span>
-                      {r.kind} · version {r.taskVersion} · {r.acceptanceKind?.replaceAll('_', ' ')}{' '}
-                      {r.reason?.replaceAll('_', ' ')} {r.entryDate}{' '}
-                      {r.hours ? `${r.hours} hours` : ''}{' '}
-                      {r.episodeIds?.length
-                        ? `Matching acceptance episodes: ${r.episodeIds.join(', ')}`
-                        : ''}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-              {result.rows.cursor && (
+          <section className="panel report-drilldown">
+            <div className="section-header">
+              <div>
+                <h3>{metricLabels[metric]}</h3>
+                <p>Select a metric card above to inspect the facts behind it.</p>
+              </div>
+              <label>
+                Metric membership
+                <select value={membership} onChange={(e) => setMembership(e.target.value)}>
+                  <option value="contributing">Contributing facts</option>
+                  <option value="numerator">Numerator facts</option>
+                  <option value="denominator">Denominator facts</option>
+                </select>
+              </label>
+            </div>
+            {result.rowsReady && result.rows && (
+              <>
+                <ul className="report-fact-list">
+                  {result.rows.rows.map((r) => (
+                    <li key={r.rowId}>
+                      <button className="button button-ghost" onClick={() => onTask(r.taskId)}>
+                        {r.state.code || 'Task'} · {r.state.title || 'Historical coverage'}
+                      </button>
+                      <span>
+                        {r.kind} · version {r.taskVersion} ·{' '}
+                        {r.acceptanceKind?.replaceAll('_', ' ')} {r.reason?.replaceAll('_', ' ')}{' '}
+                        {r.entryDate} {r.hours ? `${r.hours} hours` : ''}{' '}
+                        {r.episodeIds?.length
+                          ? `Matching acceptance episodes: ${r.episodeIds.join(', ')}`
+                          : ''}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+                {!result.rows.rows.length && (
+                  <p className="report-fact-empty">No facts for this metric membership.</p>
+                )}
+              </>
+            )}
+            <div className="report-actions">
+              {result.rowsReady && result.rows?.cursor && (
                 <button
                   className="button button-secondary"
                   onClick={() => setCursor(result.rows!.cursor)}
@@ -410,91 +452,150 @@ export default function HistoricalReports({
                   Load next 100 facts
                 </button>
               )}
-            </>
-          )}
-          <button
-            className="button button-secondary"
-            disabled={exportAction.busy}
-            onClick={() => void queue()}
-          >
-            {exportAction.attempt ? 'Retry same export request' : 'Queue private CSV export'}
-          </button>
-          {previous && (
-            <button className="button button-secondary" onClick={() => setCompare(true)}>
-              Compare with previous snapshot
-            </button>
-          )}
+              {previous && (
+                <button className="button button-secondary" onClick={() => setCompare(true)}>
+                  Compare with previous snapshot
+                </button>
+              )}
+              <button
+                className="button button-dark"
+                disabled={exportAction.busy}
+                onClick={() => void queue()}
+              >
+                <ArrowDownToLine size={15} aria-hidden="true" />
+                {exportAction.attempt ? 'Retry same export request' : 'Queue private CSV export'}
+              </button>
+            </div>
+          </section>
           {compare && comparison.isFetching && (
-            <p role="status">Checking both comparison source sets…</p>
+            <p role="status" className="report-status">
+              Checking both comparison source sets…
+            </p>
           )}
           {compare &&
             comparison.isFetchedAfterMount &&
             !comparison.isFetching &&
             !comparison.error &&
             comparison.data && (
-              <section className="panel">
-                <h3>Period comparison</h3>
-                {Object.entries(comparison.data.comparisons).map(([code, c]) => (
-                  <p key={code}>
-                    {metricLabels[code]}: {metricValue(c.left)} → {metricValue(c.right)} ·{' '}
-                    {c.percentagePoints === null
-                      ? 'Rate difference unavailable'
-                      : `${c.percentagePoints.toFixed(1)} percentage points`}
-                  </p>
-                ))}
+              <section className="panel report-compare">
+                <div className="section-header">
+                  <div>
+                    <h3>Period comparison</h3>
+                    <p>Previous snapshot → this snapshot. Rate changes are in percentage points.</p>
+                  </div>
+                </div>
+                <div className="table-scroll">
+                  <table className="data-table">
+                    <thead>
+                      <tr>
+                        <th>Metric</th>
+                        <th>Previous</th>
+                        <th>This snapshot</th>
+                        <th>Change</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {Object.entries(comparison.data.comparisons).map(([code, c]) => (
+                        <tr key={code}>
+                          <td>
+                            <strong>{metricLabels[code]}</strong>
+                          </td>
+                          <td>{metricValue(c.left)}</td>
+                          <td>{metricValue(c.right)}</td>
+                          <td>
+                            {c.percentagePoints === null
+                              ? 'Rate difference unavailable'
+                              : `${c.percentagePoints.toFixed(1)} percentage points`}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </section>
             )}
-          {comparison.error && <p role="alert">{comparison.error.message}</p>}
+          {comparison.error && (
+            <div className="inline-error" role="alert">
+              {comparison.error.message}
+            </div>
+          )}
         </>
       )}
       {jobId && (
-        <section className="panel">
-          <h3>Private export</h3>
-          {job.loading && <p role="status">Checking export access…</p>}
+        <section className="panel report-export">
+          <div className="section-header">
+            <div>
+              <h3>Private export</h3>
+              <p>Delivered only to you, after a fresh access check of every source.</p>
+            </div>
+          </div>
+          {job.loading && (
+            <p role="status" className="report-export-state">
+              Checking export access…
+            </p>
+          )}
           {job.ready && job.data && (
             <>
-              <p>
-                {job.data.job.state} {job.data.job.failureCode.replaceAll('_', ' ')}
-              </p>
-              <button className="button button-secondary" onClick={() => void job.retry()}>
-                Recheck export
-              </button>
-              {['queued', 'running', 'ready'].includes(job.data.job.state) && (
-                <button
-                  className="button button-secondary"
-                  disabled={cancel.busy}
-                  onClick={() => {
-                    void cancel
-                      .execute(
-                        `/reports/exports/${encodeURIComponent(jobId)}/cancel`,
-                        cancel.attempt?.payload ?? {},
-                        'POST',
-                        () => {
-                          download.current?.abort();
-                          void job.retry();
-                        },
-                      )
-                      .catch((e) => setError(e.message));
-                  }}
+              <p className="report-export-state">
+                <span
+                  className={`pill pill-${
+                    job.data.job.state === 'ready'
+                      ? 'green'
+                      : job.data.job.state === 'failed'
+                        ? 'red'
+                        : job.data.job.state === 'cancelled'
+                          ? 'slate'
+                          : 'orange'
+                  }`}
                 >
-                  Cancel export and delivery
-                </button>
-              )}
+                  {job.data.job.state}
+                </span>
+                {job.data.job.failureCode && (
+                  <span>{job.data.job.failureCode.replaceAll('_', ' ')}</span>
+                )}
+              </p>
               {job.data.artifact && result.ready && (
-                <>
-                  <p>
-                    Expires {new Date(job.data.artifact.expiresAt).toLocaleString()}. Exported
-                    copies cannot be recalled.
-                  </p>
+                <p className="notice">
+                  Expires {new Date(job.data.artifact.expiresAt).toLocaleString()}. Exported copies
+                  cannot be recalled.
+                </p>
+              )}
+              <div className="report-actions">
+                <button className="button button-secondary" onClick={() => void job.retry()}>
+                  Recheck export
+                </button>
+                {['queued', 'running', 'ready'].includes(job.data.job.state) && (
+                  <button
+                    className="button button-secondary"
+                    disabled={cancel.busy}
+                    onClick={() => {
+                      void cancel
+                        .execute(
+                          `/reports/exports/${encodeURIComponent(jobId)}/cancel`,
+                          cancel.attempt?.payload ?? {},
+                          'POST',
+                          () => {
+                            download.current?.abort();
+                            void job.retry();
+                          },
+                        )
+                        .catch((e) => setError(e.message));
+                    }}
+                  >
+                    Cancel export and delivery
+                  </button>
+                )}
+                {job.data.artifact && result.ready && (
                   <button
                     className="button button-primary"
                     disabled={downloading}
                     onClick={() => void downloadCSV()}
                   >
+                    <ArrowDownToLine size={15} aria-hidden="true" />
                     Download authorized CSV
                   </button>
-                </>
-              )}
+                )}
+              </div>
             </>
           )}
         </section>

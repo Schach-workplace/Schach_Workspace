@@ -69,34 +69,51 @@ export default function PeoplePresetEditor({ onClose }: { onClose: () => void })
     }
   }
   return (
-    <Modal open title="Onboarding presets" onClose={onClose}>
+    <Modal
+      open
+      title="Onboarding presets"
+      description="Reusable access defaults and starting task templates for new people."
+      onClose={onClose}
+    >
       <div className="entity-form people-form">
         <ErrorMessage error={error || action.error} />
-        <div aria-hidden={ready} style={{ visibility: ready ? 'hidden' : 'visible' }}>
+        <div
+          className="people-checking"
+          aria-hidden={ready}
+          style={{ visibility: ready ? 'hidden' : 'visible' }}
+        >
           <p role="status">Checking current preset access…</p>
         </div>
         {
           <PeopleProjection current={ready}>
-            <button className="button" disabled={!!action.attempt} onClick={() => load()}>
-              New preset
-            </button>
-            {list.data?.items.map((p) => (
+            <div className="people-preset-list" role="group" aria-label="Presets">
               <button
-                className="button"
+                className="button button-secondary button-small"
+                aria-pressed={!draft.id}
                 disabled={!!action.attempt}
-                key={p.id}
-                onClick={() => load(p)}
+                onClick={() => load()}
               >
-                {p.name}
-                {p.archived ? ' · Archived' : ''}
+                New preset
               </button>
-            ))}
+              {list.data?.items.map((p) => (
+                <button
+                  className="button button-secondary button-small"
+                  aria-pressed={draft.id === p.id}
+                  disabled={!!action.attempt}
+                  key={p.id}
+                  onClick={() => load(p)}
+                >
+                  {p.name}
+                  {p.archived ? ' · Archived' : ''}
+                </button>
+              ))}
+            </div>
           </PeopleProjection>
         }
         {saved && ready && (
           <p role="status">Preset saved. Select it to inspect its current version.</p>
         )}
-        <fieldset disabled={!!action.attempt || action.busy}>
+        <fieldset className="plain-fieldset" disabled={!!action.attempt || action.busy}>
           <Field label="Preset name">
             <input
               value={draft.name}
@@ -117,32 +134,39 @@ export default function PeoplePresetEditor({ onClose }: { onClose: () => void })
               onChange={(membership) => setDraft({ ...draft, membership })}
             />
           }
-          <p>Choose up to 20 optional starting task templates.</p>
-          {templates.ready &&
-            templates.data?.templates
-              .filter((t) => t.kind === 'task' && !t.archived)
-              .map((t) => (
-                <label key={t.id}>
-                  <input
-                    type="checkbox"
-                    checked={draft.templateIds.includes(t.id)}
-                    onChange={(e) =>
-                      setDraft({
-                        ...draft,
-                        templateIds: e.target.checked
-                          ? [...draft.templateIds, t.id]
-                          : draft.templateIds.filter((id) => id !== t.id),
-                      })
-                    }
-                  />
-                  {t.name}
-                </label>
-              ))}
+          <h3 className="people-section-title">Starting task templates</h3>
+          <p className="people-muted">Choose up to 20 optional starting task templates.</p>
+          <div className="people-check-list">
+            {templates.ready &&
+              templates.data?.templates
+                .filter((t) => t.kind === 'task' && !t.archived)
+                .map((t) => (
+                  <label key={t.id} className="check-field people-check">
+                    <input
+                      type="checkbox"
+                      checked={draft.templateIds.includes(t.id)}
+                      onChange={(e) =>
+                        setDraft({
+                          ...draft,
+                          templateIds: e.target.checked
+                            ? [...draft.templateIds, t.id]
+                            : draft.templateIds.filter((id) => id !== t.id),
+                        })
+                      }
+                    />
+                    {t.name}
+                  </label>
+                ))}
+          </div>
           {draft.templateIds.some(
             (id) => !templates.data?.templates.some((t) => t.id === id && !t.archived),
-          ) && <p>Choose a current replacement for an unavailable template.</p>}
+          ) && (
+            <p className="people-alert">
+              Choose a current replacement for an unavailable template.
+            </p>
+          )}
           {draft.id && (
-            <label>
+            <label className="check-field people-check">
               <input
                 type="checkbox"
                 checked={draft.archived}
@@ -152,24 +176,28 @@ export default function PeoplePresetEditor({ onClose }: { onClose: () => void })
             </label>
           )}
         </fieldset>
-        <button
-          className="button button-primary"
-          disabled={!ready || action.busy || (!action.attempt && !draft.name.trim())}
-          onClick={() => void save()}
-        >
-          {action.attempt ? 'Retry the same submission' : 'Save reviewed preset'}
-        </button>
-        {action.attempt && (
+        <div className="people-actions">
+          {action.attempt && (
+            <button
+              className="button button-secondary"
+              onClick={() => {
+                if (
+                  window.confirm('Inspect the current preset before discarding an unknown result.')
+                )
+                  action.abandon();
+              }}
+            >
+              Discard after inspection
+            </button>
+          )}
           <button
-            className="button"
-            onClick={() => {
-              if (window.confirm('Inspect the current preset before discarding an unknown result.'))
-                action.abandon();
-            }}
+            className="button button-primary"
+            disabled={!ready || action.busy || (!action.attempt && !draft.name.trim())}
+            onClick={() => void save()}
           >
-            Discard after inspection
+            {action.attempt ? 'Retry the same submission' : 'Save reviewed preset'}
           </button>
-        )}
+        </div>
       </div>
     </Modal>
   );

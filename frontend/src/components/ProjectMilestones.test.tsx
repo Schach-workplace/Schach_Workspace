@@ -50,3 +50,33 @@ it('shows immutable history and independently reviews the captured task basis', 
     action: 'approve',
   });
 });
+it('shows the reviewer every submitted statement, including ones for criteria no longer current', async () => {
+  const milestone = {
+    id: 'milestone',
+    projectId: 'project',
+    title: 'Release ready',
+    version: 2,
+    criteriaVersion: 2,
+    state: 'in_review',
+    criteria: [{ id: 'c', text: 'Accepted delivery' }],
+    submittedTasks: [{ taskId: 'task', version: 7 }],
+    assertions: [
+      { criterionId: 'c', statement: 'Inspected' },
+      { criterionId: 'retired', statement: 'Signed off the retired check' },
+    ],
+    taskIds: ['task'],
+    acceptances: [],
+    basisCurrent: true,
+    canReview: true,
+  };
+  state.query.mockImplementation((p) => ({
+    ready: true,
+    data: p.includes('project-milestones') ? { milestone } : { milestones: [milestone] },
+  }));
+  render(<ProjectMilestones project={{ id: 'project', version: 3 } as never} canEdit={false} />);
+  fireEvent.click(screen.getByRole('button', { name: 'Open milestone: Release ready' }));
+  await screen.findByText('Inspected');
+  const other = screen.getByText('Other submitted statements');
+  expect(other.parentElement!.textContent).toContain('Signed off the retired check');
+  expect(other.parentElement!.textContent).not.toContain('Inspected');
+});

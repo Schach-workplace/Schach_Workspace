@@ -98,16 +98,20 @@ export default function GoalMeasurementForm({
     }
   }
   return (
-    <form onSubmit={submit} className="execution-panel" aria-label="Measured goal update">
-      <h3>{correction ? 'Correct recorded observation' : 'Record an independent measurement'}</h3>
-      <p>
+    <form onSubmit={submit} className="execution-panel goal-form" aria-label="Measured goal update">
+      <h3 className="goal-subhead">
+        {correction ? 'Correct recorded observation' : 'Record an independent measurement'}
+      </h3>
+      <p className="goal-form-note">
         {correction
           ? correction.id === goal.currentMeasurementId
             ? 'This correction changes the current result.'
             : 'This correction preserves the current result and appends to older history.'
           : 'Task completion and reminders do not measure this outcome.'}
       </p>
-      <p>Reason is shared with the goal audience. Evidence retains separate current access.</p>
+      <p className="field-help">
+        Reason is shared with the goal audience. Evidence retains separate current access.
+      </p>
       <Field label="Measured value">
         <input
           type="number"
@@ -119,7 +123,9 @@ export default function GoalMeasurementForm({
         />
       </Field>
       {correction ? (
-        <p>Inherited observation: {ready ? correction.effectiveAt : 'Checking current history…'}</p>
+        <p className="field-help">
+          Inherited observation: {ready ? correction.effectiveAt : 'Checking current history…'}
+        </p>
       ) : (
         <>
           <Field label={'Observation time in ' + zone}>
@@ -135,7 +141,9 @@ export default function GoalMeasurementForm({
             />
           </Field>
           {candidates.length === 0 && (
-            <p role="alert">This local time does not exist. Choose another observation time.</p>
+            <p role="alert" className="inline-error">
+              This local time does not exist. Choose another observation time.
+            </p>
           )}
           {candidates.length > 1 && (
             <Field label="Repeated-time instant">
@@ -149,7 +157,9 @@ export default function GoalMeasurementForm({
               </select>
             </Field>
           )}
-          <p>{at ? 'Observation instant: ' + at : 'Choose a valid observation instant.'}</p>
+          <p className="field-help">
+            {at ? 'Observation instant: ' + at : 'Choose a valid observation instant.'}
+          </p>
         </>
       )}
       <Field label="Reason shared with goal audience">
@@ -165,7 +175,11 @@ export default function GoalMeasurementForm({
         <p role="status">Checking current goal authority. Your authored input stays here.</p>
       )}
       <ErrorMessage error={error} />
-      {saved && <p role="status">{saved}</p>}
+      {saved && (
+        <p role="status" className="goal-form-saved">
+          {saved}
+        </p>
+      )}
       <GoalEvidencePicker
         goalId={goal.id}
         ready={ready}
@@ -208,7 +222,7 @@ export default function GoalMeasurementForm({
       {!action.busy && ready && (
         <button
           type="button"
-          className="button"
+          className="button button-secondary"
           onClick={() => {
             action.abandon?.();
             setDraft({
@@ -224,7 +238,11 @@ export default function GoalMeasurementForm({
         </button>
       )}
       {!!action.attempt && (
-        <button type="button" className="button" onClick={() => action.abandon?.()}>
+        <button
+          type="button"
+          className="button button-secondary"
+          onClick={() => action.abandon?.()}
+        >
           Abandon submitted intent
         </button>
       )}

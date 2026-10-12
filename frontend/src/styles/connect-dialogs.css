@@ -1,0 +1,764 @@
+/* Connect pop-ups: task conversion, publication, records, search, settings and calls.
+   Dialogs render in a portal outside .main-content, so sizes and colours are set here
+   explicitly with the same tokens the rest of the app uses. */
+
+/* ---------- Shared form rhythm inside Connect dialogs ---------- */
+.connect-conversion,
+.connect-workflow,
+.connect-structured,
+.connect-settings,
+.connect-daily {
+  font-size: 12px;
+  color: #475467;
+  line-height: 1.55;
+}
+.connect-conversion label,
+.connect-workflow label,
+.connect-structured label,
+.connect-settings label,
+.connect-daily label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 500;
+  color: #667085;
+  min-width: 0;
+}
+.connect-conversion input:not([type='checkbox']),
+.connect-conversion select,
+.connect-workflow input:not([type='checkbox']),
+.connect-workflow select,
+.connect-workflow textarea,
+.connect-structured input:not([type='checkbox']),
+.connect-structured select,
+.connect-structured textarea,
+.connect-settings select {
+  font-size: 12px;
+  font-weight: 400;
+  color: #344054;
+  min-height: 38px;
+}
+.connect-workflow textarea,
+.connect-structured textarea {
+  min-height: 76px;
+  resize: vertical;
+}
+.connect-conversion input[type='checkbox'],
+.connect-workflow input[type='checkbox'],
+.connect-structured input[type='checkbox'] {
+  width: 16px;
+  min-width: 16px;
+  height: 16px;
+  margin: 1px 0 0;
+  accent-color: var(--orange);
+}
+.connect-conversion :is(input, select, textarea):focus-visible,
+.connect-workflow :is(input, select, textarea):focus-visible,
+.connect-structured :is(input, select, textarea):focus-visible,
+.connect-settings :is(select):focus-visible,
+.connect-daily :is(input):focus-visible {
+  border-color: #f1a36e;
+  box-shadow: 0 0 0 3px #f9731620;
+}
+.connect-conversion h3,
+.connect-workflow h3,
+.connect-workflow h4,
+.connect-structured h3,
+.connect-structured h4,
+.connect-settings h3,
+.connect-daily h3 {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: -0.2px;
+  color: #344054;
+}
+.connect-workflow > h4,
+.connect-structured > h4 {
+  margin-top: 6px;
+}
+.connect-workflow p,
+.connect-structured p {
+  margin: 0;
+}
+.connect-hint {
+  margin: 0;
+}
+.connect-danger.button,
+.connect-danger.button:hover {
+  color: #b42318;
+}
+.connect-danger.button:hover {
+  border-color: #f2c4bd;
+  background: #fff5f3;
+}
+.connect-dialog-body .connect-dialog-footer .button,
+.connect-conversion .connect-dialog-footer .button {
+  font-size: 12px;
+  padding: 9px 14px;
+}
+
+/* ---------- Create task from message ---------- */
+.connect-conversion {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 20px 24px 22px;
+}
+.connect-conversion-source {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.connect-conversion-eyebrow {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: #667085;
+  font-variant-numeric: tabular-nums;
+}
+.connect-conversion-source blockquote {
+  margin: 0;
+  padding: 11px 14px;
+  border-left: 3px solid #ed9c67;
+  border-radius: 0 8px 8px 0;
+  background: #fff7f0;
+  color: #5b5148;
+  font-size: 12px;
+  line-height: 1.65;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  max-height: 120px;
+  overflow: auto;
+}
+.connect-conversion-source p {
+  margin: 0;
+  font-size: 11px;
+  color: #667085;
+}
+.connect-conversion-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px 16px;
+}
+.connect-conversion-wide {
+  grid-column: 1 / -1;
+}
+.connect-conversion-commitment fieldset {
+  margin: 0;
+  padding: 12px 14px 14px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px 16px;
+  min-width: 0;
+}
+.connect-conversion-commitment legend {
+  padding: 0 6px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #475467;
+}
+.connect-conversion-commitment [role='alert'] {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-size: 11px;
+  color: #b42318;
+}
+.connect-conversion label.connect-conversion-check,
+.connect-disclosure label.connect-disclosure-ack {
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 9px;
+  font-size: 12px;
+  color: #475467;
+  cursor: pointer;
+}
+.connect-conversion-step {
+  margin: 0;
+  padding: 11px 13px;
+  border: 1px dashed #d8dde5;
+  border-radius: 8px;
+  background: var(--subtle);
+  color: #667085;
+  font-size: 11px;
+}
+
+/* Audience disclosure: deliberately prominent; it gates the confirm button. */
+.connect-disclosure {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px 16px 15px;
+  border: 1px solid #f3d3b3;
+  border-left: 4px solid var(--orange);
+  border-radius: 9px;
+  background: #fff8f1;
+}
+.connect-disclosure h3 {
+  color: #93370d;
+}
+.connect-disclosure .connect-disclosure-notice {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.6;
+  color: #7a3e12;
+}
+.connect-disclosure .connect-disclosure-title {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: #344054;
+  overflow-wrap: anywhere;
+}
+.connect-disclosure-audience {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.connect-disclosure-audience > span {
+  font-size: 11px;
+  font-weight: 600;
+  color: #475467;
+  font-variant-numeric: tabular-nums;
+}
+.connect-disclosure-audience ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.connect-disclosure-audience li {
+  padding: 4px 9px;
+  border: 1px solid #ecd9c6;
+  border-radius: 999px;
+  background: #fff;
+  font-size: 11px;
+  color: #475467;
+}
+.connect-disclosure-existing {
+  border-color: #c9d6ea;
+  border-left-color: #3e6ea8;
+  background: #f3f7fc;
+}
+.connect-disclosure-existing h3 {
+  color: #1d4477;
+}
+.connect-disclosure-existing .connect-disclosure-notice {
+  color: #344054;
+}
+.connect-disclosure-existing-note {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 7px;
+  background: #fff;
+  border: 1px solid #c9d6ea;
+  color: #1d4477;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.55;
+}
+.connect-structured .connect-disclosure-existing-note {
+  border-color: #f3dfbc;
+  background: #fff8ec;
+  color: #8a5a17;
+}
+.connect-disclosure label.connect-disclosure-ack {
+  padding-top: 10px;
+  border-top: 1px solid #f1dcc6;
+  font-weight: 600;
+  color: #344054;
+}
+.connect-disclosure-existing label.connect-disclosure-ack {
+  border-top-color: #d6e0ee;
+}
+
+/* ---------- Published work, intake and records ---------- */
+.connect-workflow,
+.connect-structured {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.connect-workflow-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px 16px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fff;
+}
+.connect-workflow-form > :is(label:has(textarea), p, div, details, fieldset, h4, [role='status']) {
+  grid-column: 1 / -1;
+}
+.connect-workflow-form .connect-dialog-footer {
+  margin-top: 2px;
+}
+.connect-workflow-split summary {
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 600;
+  color: #475467;
+}
+.connect-workflow-split[open] {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+}
+.connect-workflow-split label {
+  width: 100%;
+}
+.connect-workflow-item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 10px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: #fcfcfd;
+  font-size: 12px;
+  color: #475467;
+  overflow-wrap: anywhere;
+}
+.connect-workflow-item > :is(p, h4, small, strong) {
+  flex-basis: 100%;
+  margin: 0;
+}
+.connect-workflow-item small {
+  font-size: 10px;
+  color: #667085;
+}
+.connect-workflow-item p:has(> button) {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+  font-size: 11px;
+  color: #667085;
+}
+.connect-workflow-assign {
+  flex-basis: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) auto;
+  align-items: end;
+  gap: 10px;
+}
+.connect-record-state {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: #667085;
+}
+.connect-recipients {
+  margin: 0;
+  padding: 10px 12px 12px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 8px 12px;
+  max-height: 200px;
+  overflow: auto;
+  min-width: 0;
+}
+.connect-recipients legend {
+  padding: 0 6px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #475467;
+}
+.connect-structured .connect-recipients label {
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  font-weight: 400;
+  color: #344054;
+}
+
+/* ---------- Search, saved and pins ---------- */
+.connect-dialog-body .connect-daily {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  gap: 14px;
+}
+.connect-daily-search {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+}
+.connect-daily-search label {
+  flex: 1;
+}
+.connect-daily .connect-search {
+  margin: 0;
+  background: #fff;
+}
+.connect-daily .connect-search input {
+  font-size: 13px;
+  font-weight: 400;
+  color: #344054;
+}
+.connect-daily .connect-daily-search .button {
+  min-height: 42px;
+  font-size: 12px;
+  padding: 9px 16px;
+}
+.connect-daily-modes {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.connect-dialog-body .connect-daily .button {
+  border-radius: 7px;
+}
+.connect-daily-modes .button[aria-pressed='true'] {
+  color: #b4490b;
+  border-color: #f2cbae;
+  background: #fff7f1;
+}
+.connect-daily-modes .pill {
+  margin-left: auto;
+  font-variant-numeric: tabular-nums;
+  text-transform: none;
+}
+.connect-briefing {
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: var(--subtle);
+}
+.connect-briefing dl {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin: 0 0 8px;
+}
+.connect-briefing dt {
+  font-size: 10px;
+  color: #667085;
+}
+.connect-briefing dd {
+  margin: 3px 0 0;
+  font-family: var(--font-heading);
+  font-size: 18px;
+  font-weight: 600;
+  color: #344054;
+  font-variant-numeric: tabular-nums;
+}
+.connect-briefing p {
+  margin: 0;
+  font-size: 11px;
+  color: #667085;
+}
+.connect-results {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.connect-results header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--line);
+  background: var(--subtle);
+}
+.connect-results h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.connect-results h3 span,
+.connect-settings h3 span {
+  font-family: inherit;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: #eaecf0;
+  color: #475467;
+  font-variant-numeric: tabular-nums;
+}
+.connect-dialog-body .connect-daily .connect-text-button {
+  border: 0;
+  padding: 6px 8px;
+  color: #667085;
+}
+.connect-dialog-body .connect-daily .connect-text-button:hover {
+  color: #c65009;
+  background: #fff3e9;
+}
+.connect-results ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  max-height: 360px;
+  overflow: auto;
+}
+.connect-results li {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--line);
+}
+.connect-results li:last-child {
+  border-bottom: 0;
+}
+.connect-results li p {
+  margin: 0 0 8px;
+  font-size: 12px;
+  color: #344054;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.connect-result-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+  font-size: 10px;
+  color: #667085;
+}
+.connect-result-meta .pill {
+  text-transform: none;
+}
+.connect-result-meta .button {
+  margin-left: auto;
+}
+.connect-results-empty {
+  margin: 0;
+  padding: 18px 14px;
+  text-align: center;
+  font-size: 12px;
+  color: #667085;
+}
+
+/* ---------- Conversation details ---------- */
+.connect-settings {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.connect-settings-privacy {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: var(--subtle);
+  border: 1px solid var(--line);
+  font-size: 12px;
+  color: #475467;
+}
+.connect-settings-privacy svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: #667085;
+}
+.connect-settings-block {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.connect-settings-block + .connect-settings-block,
+.connect-settings + .connect-settings-block {
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+.connect-settings h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.connect-member-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  max-height: 280px;
+  overflow: auto;
+}
+.connect-member-list li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  border-bottom: 1px solid var(--line);
+}
+.connect-member-list li:last-child {
+  border-bottom: 0;
+}
+.connect-member-name {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+  flex: 1;
+  min-width: 0;
+}
+.connect-member-name strong {
+  font-size: 12px;
+  font-weight: 500;
+  color: #344054;
+}
+.connect-member-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 6px;
+}
+.connect-add-member {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 10px;
+}
+.connect-add-member .button {
+  min-height: 38px;
+}
+.connect-settings-manage {
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+.connect-dialog-body .connect-policy {
+  gap: 7px;
+}
+.connect-settings-heading,
+.connect-dialog-body .connect-settings-links h3 {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: 13px;
+  font-weight: 600;
+  color: #344054;
+}
+.connect-dialog-body .connect-policy select {
+  font-size: 12px;
+  color: #344054;
+}
+.connect-dialog-body .connect-policy small {
+  font-size: 11px;
+  color: #667085;
+}
+.connect-settings-links {
+  gap: 4px;
+}
+.connect-settings-links h3 {
+  margin-bottom: 6px !important;
+}
+.connect-settings-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 11px 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  text-align: left;
+  font-size: 12px;
+  color: #344054;
+  transition:
+    background 0.15s,
+    border-color 0.15s;
+}
+.connect-settings-link span {
+  flex: 1;
+}
+.connect-settings-link svg {
+  color: #667085;
+}
+.connect-settings-link:hover:not(:disabled) {
+  background: #fff7f1;
+  border-color: #f2cbae;
+}
+.connect-settings-link:focus-visible {
+  outline: 2px solid var(--orange);
+  outline-offset: 2px;
+}
+
+/* ---------- Calls ---------- */
+.connect-calls {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.connect-call-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.connect-call-recording {
+  margin: 8px 0;
+  font-size: 11px;
+  color: #475467;
+}
+
+@media (max-width: 760px) {
+  .connect-conversion {
+    padding: 16px;
+  }
+  .connect-conversion-grid,
+  .connect-conversion-commitment fieldset,
+  .connect-workflow-form,
+  .connect-add-member,
+  .connect-workflow-assign {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .connect-daily-search {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .connect-daily-modes .pill {
+    margin-left: 0;
+  }
+  .connect-briefing dl {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .connect-member-list li {
+    flex-wrap: wrap;
+  }
+  .connect-member-actions {
+    flex-basis: 100%;
+    justify-content: flex-start;
+    padding-left: 42px;
+  }
+  .connect-conversion .connect-dialog-footer,
+  .connect-workflow .connect-dialog-footer,
+  .connect-structured .connect-dialog-footer {
+    flex-wrap: wrap;
+  }
+  .connect-conversion .connect-dialog-footer .button,
+  .connect-workflow .connect-dialog-footer .button,
+  .connect-structured .connect-dialog-footer .button {
+    flex: 1 1 auto;
+    min-height: 44px;
+  }
+  .connect-call-actions .button,
+  .connect-daily-modes .button,
+  .connect-member-actions .button {
+    min-height: 40px;
+  }
+}
+
+/* Local assistance launcher inside the records dialog. */
+.connect-structured > .button {
+  align-self: flex-start;
+}

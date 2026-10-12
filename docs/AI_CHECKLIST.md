@@ -65,3 +65,5 @@ Keep historical failure and qualification records. Update current owner/exact HE
 - [ ] Isolated manual QA execution (224 NOT_RUN); device/browser visual verification of new UI.
 - [x] Follow-up: Chats refresh, Workload filters, mobile task CSV, attention push deep links (migration 59) with SQLite+PG evidence and fixed review findings.
 - [ ] Backup-first MigrateONLY 59 + restart before the retained app can run this source.
+- [x] Web visual UI/UX pass across all views and pop-ups with screenshot evidence and behaviour-preservation review.
+- [ ] Mobile visual pass; browser/zoom/screen-reader checks of the redesigned web UI.

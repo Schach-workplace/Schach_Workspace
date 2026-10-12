@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { request } from '../data/api';
+import { MonitorSmartphone } from 'lucide-react';
 import { storedWebDevice, useSignedInUserId } from '../communication/webDevice';
 interface Device {
   id: string;
@@ -28,47 +29,72 @@ export default function DeviceSessions() {
   }
   useEffect(load, []);
   return (
-    <section className="panel">
-      <h3>Registered devices</h3>
-      <p>
-        Revoke a lost device to terminate its bound session in every company. Other sessions remain
-        active.
-      </p>
-      {loadError ? (
-        <div role="alert">
-          <p>Registered devices could not be loaded. {loadError}</p>
-          <button onClick={load}>Retry</button>
+    <section className="panel settings-section security-panel">
+      <div className="section-header">
+        <div>
+          <h2>Registered devices</h2>
+          <p>
+            Revoke a lost device to terminate its bound session in every company. Other sessions
+            remain active.
+          </p>
         </div>
-      ) : !devices ? (
-        <p role="status">Loading registered devices…</p>
-      ) : devices.length === 0 ? (
-        <p>
-          No devices are registered. Devices appear here after you join a call or sign in on mobile.
-        </p>
-      ) : (
-        <ul>
-          {devices.map((d) => (
-            <li key={d.id}>
-              {d.name} · {d.platform}
-              {d.id === thisBrowser && <strong> · This browser</strong>} ·{' '}
-              {d.active ? 'Active' : 'Revoked'}
-              {d.lastSeenAt && <> · Last seen {new Date(d.lastSeenAt).toLocaleString()}</>}{' '}
-              {d.active && (
-                <button
-                  onClick={() =>
-                    void request(`/devices/${d.id}/revoke`, { method: 'POST', body: {} })
-                      .then(refresh)
-                      .catch((e) => setError(e.message))
-                  }
-                >
-                  Revoke device session
-                </button>
-              )}
-            </li>
-          ))}
-        </ul>
-      )}
-      {error && <p role="alert">{error}</p>}
+        <MonitorSmartphone size={19} />
+      </div>
+      <div className="security-body">
+        {loadError ? (
+          <div className="security-alert" role="alert">
+            <p>Registered devices could not be loaded. {loadError}</p>
+            <button className="button button-secondary button-small" onClick={load}>
+              Retry
+            </button>
+          </div>
+        ) : !devices ? (
+          <p className="security-muted" role="status">
+            Loading registered devices…
+          </p>
+        ) : devices.length === 0 ? (
+          <p className="security-muted">
+            No devices are registered. Devices appear here after you join a call or sign in on
+            mobile.
+          </p>
+        ) : (
+          <ul className="device-list">
+            {devices.map((d) => (
+              <li key={d.id}>
+                <div className="device-main">
+                  <strong>
+                    {d.name} · {d.platform}
+                    {d.id === thisBrowser && <span className="pill pill-orange">This browser</span>}
+                  </strong>
+                  <span>
+                    <span className={d.active ? 'pill pill-green' : 'pill pill-slate'}>
+                      {d.active ? 'Active' : 'Revoked'}
+                    </span>
+                    {d.lastSeenAt && <>Last seen {new Date(d.lastSeenAt).toLocaleString()}</>}
+                  </span>
+                </div>
+                {d.active && (
+                  <button
+                    className="button button-secondary button-small"
+                    onClick={() =>
+                      void request(`/devices/${d.id}/revoke`, { method: 'POST', body: {} })
+                        .then(refresh)
+                        .catch((e) => setError(e.message))
+                    }
+                  >
+                    Revoke device session
+                  </button>
+                )}
+              </li>
+            ))}
+          </ul>
+        )}
+        {error && (
+          <p className="inline-error" role="alert">
+            {error}
+          </p>
+        )}
+      </div>
     </section>
   );
 }

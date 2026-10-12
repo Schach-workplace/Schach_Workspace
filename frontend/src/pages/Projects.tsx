@@ -6,8 +6,10 @@ import {
   ArrowLeft,
   ArrowRight,
   ArrowUpRight,
+  CalendarClock,
   CalendarDays,
   Layers3,
+  LoaderCircle,
   Pencil,
   Plus,
   Search,
@@ -29,6 +31,7 @@ import {
   today,
 } from '../components/UI';
 import { TaskTable } from './Tasks';
+import '../styles/work.css';
 
 export default function Projects({
   selectedId,
@@ -63,15 +66,27 @@ export default function Projects({
   if (selectedId && !project)
     return (
       <div className="page-content">
-        <button className="button" onClick={() => onSelect('')}>
+        <button className="back-button" onClick={() => onSelect('')}>
+          <ArrowLeft size={15} />
           All projects
         </button>
-        <p role={current.error ? 'alert' : 'status'}>
-          {current.error?.message || 'Checking current project access…'}
-        </p>
-        <button className="button" onClick={() => void current.retry()}>
-          Retry project
-        </button>
+        <section className="panel wk-access-panel">
+          <div className="section-header wk-access">
+            <p
+              role={current.error ? 'alert' : 'status'}
+              className={current.error ? 'inline-error' : 'wk-status'}
+            >
+              {!current.error && <LoaderCircle size={14} className="spin" />}
+              {current.error?.message || 'Checking current project access…'}
+            </p>
+            <button
+              className="button button-secondary button-small"
+              onClick={() => void current.retry()}
+            >
+              Retry project
+            </button>
+          </div>
+        </section>
       </div>
     );
   return (
@@ -143,22 +158,29 @@ export default function Projects({
             canEdit={current.data!.canEdit}
             onTask={onTask}
           />
-          <button className="button" onClick={() => setSchedule(true)}>
-            Review project task schedule
-          </button>
-          {schedule && <ScheduleReview tasks={tasks} onDone={() => setSchedule(false)} />}
-          <div className="section-header">
+          <div className="section-header wk-work-header">
             <div>
               <h2>Project work</h2>
               <p>Every commitment, owner and next step.</p>
             </div>
-            {data.me.role !== 'viewer' && (
-              <button className="button button-primary" onClick={() => onTask('new', project.id)}>
-                <Plus size={15} />
-                Add task
+            <div className="toolbar-actions">
+              <button
+                className="button button-secondary"
+                aria-expanded={schedule}
+                onClick={() => setSchedule(true)}
+              >
+                <CalendarClock size={15} />
+                Review project task schedule
               </button>
-            )}
+              {data.me.role !== 'viewer' && (
+                <button className="button button-primary" onClick={() => onTask('new', project.id)}>
+                  <Plus size={15} />
+                  Add task
+                </button>
+              )}
+            </div>
           </div>
+          {schedule && <ScheduleReview tasks={tasks} onDone={() => setSchedule(false)} />}
           <section className="panel">
             <TaskTable data={data} tasks={tasks} onTask={onTask} />
           </section>

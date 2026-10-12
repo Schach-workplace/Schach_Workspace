@@ -285,6 +285,24 @@ small,
   min-height: 31px;
   padding: 7px 10px;
 }
+/* Shared "Local assistance" / "Explain …" launcher (IntelligenceLauncher). */
+.intelligence-launcher {
+  max-width: 100%;
+}
+.intelligence-launcher > svg {
+  flex-shrink: 0;
+  color: #ea580c;
+}
+.intelligence-launcher > span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+@media (pointer: coarse) {
+  .intelligence-launcher {
+    min-height: 44px;
+  }
+}
 .icon-button {
   display: inline-flex;
   align-items: center;
@@ -2727,26 +2745,6 @@ small,
   margin-top: 24px;
   padding-top: 20px;
 }
-.review-box {
-  background: #f6f8fc;
-  border: 1px solid #e0e8f4;
-  border-radius: 8px;
-  padding: 19px;
-  margin-top: 24px;
-}
-.review-box .form-section-heading {
-  margin: 0 0 10px;
-  color: #a78fcb;
-}
-.review-box > p {
-  font-size: 11px;
-  line-height: 1.6;
-  color: #9aa9c0;
-  margin-bottom: 13px;
-}
-.review-box textarea {
-  font-size: 11px;
-}
 .review-actions {
   display: flex;
   gap: 9px;
@@ -3212,142 +3210,10 @@ small,
   margin-bottom: 10px;
   text-align: right;
 }
-.goals-intro {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  padding: 23px 27px;
-  background: linear-gradient(100deg, #f8f5ef, #f5f6f8);
-  border: 1px solid #eae5dd;
-  border-radius: 10px;
-}
-.goals-intro-icon {
-  width: 56px;
-  height: 56px;
-  border-radius: 14px;
-  background: #eee7dd;
-  color: #bfa385;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex: none;
-}
-.goals-intro .eyebrow {
-  font-size: 8px;
-  color: #b4a28c;
-}
-.goals-intro h2 {
-  font-size: 20px;
-  letter-spacing: -0.4px;
-  color: #8e8477;
-  margin-top: 8px;
-}
-.goals-intro p {
-  font-size: 11px;
-  color: #aca79d;
-  margin-top: 8px;
-  line-height: 1.7;
-}
 .goal-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 20px;
-}
-.goal-card {
-  padding: 22px 25px;
-}
-.goal-card-top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 16px;
-}
-.goal-card h2 {
-  font-size: 18px;
-  color: #697f9c;
-  line-height: 1.5;
-  letter-spacing: -0.4px;
-}
-.goal-card > p {
-  font-size: 11px;
-  color: #a1b1c7;
-  line-height: 1.7;
-  margin-top: 10px;
-  min-height: 37px;
-}
-.goal-outcome {
-  display: flex;
-  align-items: center;
-  gap: 35px;
-  margin: 27px 0 18px;
-}
-.goal-outcome > div {
-  display: flex;
-  flex-direction: column;
-  gap: 7px;
-}
-.goal-outcome strong {
-  font-family: Chivo;
-  font-size: 29px;
-  font-weight: 500;
-  letter-spacing: -0.8px;
-  color: #819bbd;
-  white-space: nowrap;
-}
-.goal-outcome strong > span {
-  font-size: 12px;
-  margin-left: 5px;
-  color: #a6b9d2;
-  font-weight: 400;
-  letter-spacing: 0;
-}
-.goal-outcome small {
-  font-size: 9px;
-  color: #b0bfd3;
-}
-.goal-outcome .pill {
-  margin-left: auto;
-  padding: 6px 9px;
-}
-.goal-baseline {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-size: 9px;
-  color: #abbcd3;
-  margin-top: 9px;
-  gap: 10px;
-}
-.goal-owner {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 23px;
-  padding: 15px 0;
-  border-top: 1px solid #edf2f8;
-  border-bottom: 1px solid #edf2f8;
-  gap: 15px;
-}
-.goal-owner > span {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  font-size: 10px;
-  color: #9cb0cb;
-  white-space: nowrap;
-}
-.goal-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: 15px;
-  gap: 10px;
-}
-.goal-footer .text-button {
-  font-size: 10px;
-}
-.goal-footer .button {
-  font-size: 10px;
 }
 
 /* Calendar and workload */
@@ -3515,127 +3381,6 @@ small,
 }
 .calendar-agenda-heading {
   margin-top: 3px;
-}
-.capacity-summary {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 17px;
-}
-.capacity-summary > div {
-  background: white;
-  border: 1px solid #e5ebf3;
-  border-radius: 9px;
-  padding: 22px;
-  display: grid;
-  grid-template-columns: 1fr 25px;
-  gap: 11px;
-  min-width: 0;
-  box-shadow: var(--shadow);
-}
-.capacity-summary svg {
-  grid-area: 1/2;
-  color: #a7b7ce;
-}
-.capacity-summary span {
-  grid-area: 1/1;
-  color: #a3b3ca;
-  font-size: 10px;
-  line-height: 1.5;
-}
-.capacity-summary strong {
-  font-family: Chivo;
-  font-size: 31px;
-  font-weight: 500;
-  letter-spacing: -1px;
-  color: #809bbc;
-  grid-column: 1/-1;
-}
-.capacity-summary small {
-  font-size: 14px;
-  letter-spacing: 0;
-  color: #a8bdd8;
-  margin-left: 5px;
-  font-weight: 400;
-}
-.workload-list {
-  padding: 0 23px 7px;
-}
-.workload-row {
-  display: flex;
-  align-items: center;
-  gap: 25px;
-  text-align: left;
-  width: 100%;
-  border-top: 1px solid #edf2f8;
-  padding: 19px 0;
-  min-width: 0;
-}
-.workload-row:hover .workload-person strong {
-  color: #ce9d78;
-}
-.workload-person {
-  display: flex;
-  align-items: center;
-  gap: 11px;
-  width: 226px;
-  flex-shrink: 0;
-  min-width: 0;
-}
-.workload-person > div {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  min-width: 0;
-}
-.workload-person strong {
-  font-size: 12px;
-  color: #819bbd;
-  font-weight: 500;
-}
-.workload-person > div > span {
-  font-size: 10px;
-  color: #b0bfd4;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-.workload-bar {
-  flex: 1;
-  min-width: 90px;
-  max-width: 400px;
-}
-.workload-bar > div:first-child {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-size: 10px;
-  color: #9cb1ce;
-  margin-bottom: 10px;
-  gap: 10px;
-}
-.workload-bar strong {
-  font-size: 10px;
-  font-weight: 500;
-}
-.workload-bar .muted {
-  color: #bdc9d9;
-}
-.workload-bar .progress-track {
-  height: 7px;
-}
-.workload-row > .pill {
-  min-width: 89px;
-  justify-content: center;
-  font-size: 9px;
-}
-.workload-task-count {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  font-size: 10px;
-  color: #acbfd8;
-  margin-left: auto;
-  white-space: nowrap;
 }
 
 /* Reports */
@@ -4853,29 +4598,18 @@ small,
   color: #8a9db7;
 }
 .project-card h2,
-.project-detail-heading h2,
-.goal-card h2 {
+.project-detail-heading h2 {
   color: #536e90;
 }
 .project-card > p,
-.project-detail-heading p,
-.goal-card > p {
+.project-detail-heading p {
   color: #829ab9;
 }
 .project-card-progress,
-.project-card-footer > span,
-.goal-owner > span,
-.goal-baseline {
+.project-card-footer > span {
   color: #8098b8;
 }
-.goal-outcome strong {
-  color: #637fa4;
-}
-.goal-outcome small {
-  color: #8da4c3;
-}
 .report-metrics > div > span,
-.capacity-summary span,
 .organization-summary > div > div > span {
   color: #829aba;
 }
@@ -4883,7 +4617,6 @@ small,
   color: #94a9c5;
 }
 .report-metrics strong,
-.capacity-summary strong,
 .organization-summary strong {
   color: #607da4;
 }
@@ -4896,17 +4629,6 @@ small,
 }
 .person-details-button > div > span {
   color: #8ca5c7;
-}
-.workload-person strong {
-  color: #6c88ad;
-}
-.workload-person > div > span,
-.workload-bar > div:first-child {
-  color: #89a1c3;
-}
-.workload-bar .muted,
-.workload-task-count {
-  color: #9cafcc;
 }
 .notifications-list .notification-title strong {
   color: #637fa6;
@@ -5127,19 +4849,6 @@ small,
   .project-card {
     padding: 23px;
   }
-  .workload-row {
-    gap: 18px;
-  }
-  .workload-person {
-    width: 185px;
-  }
-  .workload-bar .muted {
-    display: none;
-  }
-  .workload-task-count {
-    font-size: 9px;
-    gap: 6px;
-  }
   .department-grid,
   .hierarchy-departments {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -5192,12 +4901,6 @@ small,
   }
   .login-work-footer > span {
     font-size: 7px;
-  }
-  .goal-outcome {
-    gap: 25px;
-  }
-  .goal-outcome strong {
-    font-size: 26px;
   }
 }
 @media (max-width: 1080px) {
@@ -5282,13 +4985,6 @@ small,
   }
   .filters-main > .button {
     font-size: 11px;
-  }
-  .workload-person {
-    width: 175px;
-  }
-  .workload-row > .pill {
-    min-width: 80px;
-    font-size: 8px;
   }
   .project-stats {
     gap: 30px;
@@ -5400,34 +5096,6 @@ small,
   }
   .goal-grid {
     gap: 16px;
-  }
-  .goal-card {
-    padding: 20px;
-  }
-  .goal-outcome {
-    gap: 19px;
-  }
-  .goal-outcome strong {
-    font-size: 23px;
-  }
-  .goal-outcome strong > span {
-    font-size: 10px;
-  }
-  .goal-owner {
-    flex-wrap: wrap;
-    gap: 10px;
-  }
-  .workload-row {
-    gap: 14px;
-  }
-  .workload-person {
-    width: 175px;
-  }
-  .workload-row > .pill {
-    display: none;
-  }
-  .workload-task-count {
-    gap: 4px;
   }
   .report-chart-grid {
     grid-template-columns: 1fr;
@@ -6270,66 +5938,8 @@ small,
   .project-overall-progress > span {
     text-align: left;
   }
-  .goals-intro {
-    padding: 22px;
-    gap: 16px;
-  }
-  .goals-intro-icon {
-    width: 43px;
-    height: 43px;
-    border-radius: 11px;
-  }
-  .goals-intro-icon svg {
-    width: 24px;
-  }
-  .goals-intro h2 {
-    font-size: 19px;
-  }
-  .goals-intro p {
-    font-size: 10px;
-  }
-  .goals-intro .eyebrow {
-    font-size: 7px;
-  }
   .goal-grid {
     grid-template-columns: 1fr;
-  }
-  .goal-card {
-    padding: 22px;
-  }
-  .goal-card h2 {
-    font-size: 19px;
-  }
-  .goal-card > p {
-    font-size: 11px;
-    min-height: 0;
-  }
-  .goal-outcome {
-    gap: 38px;
-    margin-top: 24px;
-  }
-  .goal-outcome strong {
-    font-size: 30px;
-  }
-  .goal-outcome strong > span {
-    font-size: 12px;
-  }
-  .goal-outcome small {
-    font-size: 10px;
-  }
-  .goal-owner {
-    flex-wrap: nowrap;
-    margin-top: 20px;
-  }
-  .goal-owner > span {
-    font-size: 10px;
-  }
-  .goal-baseline {
-    font-size: 9px;
-  }
-  .goal-footer .text-button,
-  .goal-footer .button {
-    font-size: 11px;
   }
   .calendar-toolbar {
     flex-wrap: wrap;
@@ -6402,68 +6012,6 @@ small,
   }
   .calendar-week .calendar-day {
     height: 92px;
-  }
-  .capacity-summary {
-    gap: 11px;
-  }
-  .capacity-summary > div {
-    padding: 17px 15px;
-    gap: 11px;
-    grid-template-columns: 1fr;
-  }
-  .capacity-summary svg {
-    display: none;
-  }
-  .capacity-summary span {
-    font-size: 9px;
-    min-height: 27px;
-  }
-  .capacity-summary strong {
-    font-size: 25px;
-  }
-  .capacity-summary small {
-    font-size: 10px;
-    margin-left: 3px;
-  }
-  .workload-list {
-    padding: 0 18px 5px;
-  }
-  .workload-row {
-    display: grid;
-    grid-template-columns: 1fr 90px;
-    padding: 18px 0;
-    gap: 14px 10px;
-  }
-  .workload-person {
-    width: auto;
-  }
-  .workload-person strong {
-    font-size: 12px;
-  }
-  .workload-person > div > span {
-    font-size: 10px;
-  }
-  .workload-bar {
-    grid-column: 1/-1;
-    grid-row: 2;
-    width: 100%;
-    max-width: none;
-  }
-  .workload-task-count {
-    grid-column: 2;
-    grid-row: 1;
-    font-size: 10px;
-    justify-content: flex-end;
-  }
-  .workload-bar > div:first-child {
-    font-size: 10px;
-    margin-bottom: 8px;
-  }
-  .workload-bar .muted {
-    display: inline;
-  }
-  .workload-row > .pill {
-    display: none;
   }
   .method-note {
     padding: 16px;
@@ -6872,9 +6420,6 @@ small,
   .form-actions > span {
     font-size: 9px;
     max-width: 170px;
-  }
-  .review-box {
-    padding: 17px;
   }
   .review-actions .button {
     font-size: 10px;
@@ -7400,63 +6945,6 @@ small,
   .project-stats span {
     font-size: 8px;
   }
-  .goals-intro {
-    padding: 20px;
-    gap: 14px;
-  }
-  .goals-intro-icon {
-    width: 39px;
-    height: 39px;
-  }
-  .goals-intro-icon > svg {
-    width: 21px;
-  }
-  .goals-intro h2 {
-    font-size: 18px;
-    line-height: 1.5;
-  }
-  .goals-intro p {
-    font-size: 10px;
-    line-height: 1.8;
-  }
-  .goals-intro .eyebrow {
-    font-size: 6px;
-    letter-spacing: 1px;
-  }
-  .goal-card {
-    padding: 20px;
-  }
-  .goal-card h2 {
-    font-size: 18px;
-  }
-  .goal-outcome {
-    gap: 27px;
-  }
-  .goal-outcome strong {
-    font-size: 28px;
-  }
-  .goal-outcome strong > span {
-    font-size: 11px;
-  }
-  .goal-outcome > .pill {
-    font-size: 9px;
-    padding: 5px 7px;
-  }
-  .goal-owner > span {
-    font-size: 9px;
-  }
-  .goal-owner {
-    gap: 8px;
-  }
-  .goal-baseline {
-    font-size: 8px;
-  }
-  .goal-footer .button {
-    font-size: 10px;
-  }
-  .goal-footer .text-button {
-    font-size: 10px;
-  }
   .calendar-month {
     gap: 6px;
   }
@@ -7512,58 +7000,6 @@ small,
   .calendar-weekdays > span {
     font-size: 8px;
     padding: 10px 3px;
-  }
-  .capacity-summary {
-    gap: 9px;
-  }
-  .capacity-summary > div {
-    padding: 16px 12px;
-    gap: 8px;
-  }
-  .capacity-summary span {
-    font-size: 8px;
-    min-height: 29px;
-    line-height: 1.7;
-  }
-  .capacity-summary strong {
-    font-size: 25px;
-  }
-  .capacity-summary small {
-    font-size: 9px;
-  }
-  .workload-list {
-    padding: 0 16px 3px;
-  }
-  .workload-row {
-    gap: 12px 8px;
-    grid-template-columns: 1fr 65px;
-  }
-  .workload-person {
-    gap: 9px;
-  }
-  .workload-person .avatar {
-    width: 33px;
-    height: 33px;
-    font-size: 10px;
-  }
-  .workload-person strong {
-    font-size: 11px;
-  }
-  .workload-person > div > span {
-    font-size: 9px;
-  }
-  .workload-task-count {
-    font-size: 9px;
-    gap: 5px;
-  }
-  .workload-task-count > svg {
-    width: 13px;
-  }
-  .workload-bar > div:first-child {
-    font-size: 9px;
-  }
-  .workload-bar strong {
-    font-size: 9px;
   }
   .report-controls {
     padding: 15px;
@@ -7947,12 +7383,6 @@ small,
   .task-save .button {
     font-size: 11px;
   }
-  .review-box {
-    padding: 16px;
-  }
-  .review-box p {
-    font-size: 10px;
-  }
   .review-actions {
     gap: 7px;
   }
@@ -8140,35 +7570,24 @@ small,
 #root .main-content .project-card-progress,
 #root .main-content .project-card-footer > span,
 #root .main-content .project-detail-meta,
-#root .main-content .goal-owner > span,
-#root .main-content .goal-baseline,
 #root .main-content .project-stats span {
   color: #667085;
 }
-#root .main-content .goal-outcome strong,
-#root .main-content .goal-outcome strong > span,
 #root .main-content .project-stats b,
 #root .main-content .report-metrics strong,
-#root .main-content .capacity-summary strong,
 #root .main-content .organization-summary strong {
   color: #475467;
 }
 #root .main-content .report-metrics > div > span,
-#root .main-content .capacity-summary span,
-#root .main-content .capacity-summary small,
 #root .main-content .organization-summary > div > div > span {
   color: #667085;
 }
-#root .main-content .workload-person strong,
 #root .main-content .notification-title strong,
 #root .main-content .permissions-explainer strong,
 #root .main-content .settings-facts dd,
 #root .main-content .profile-facts dd {
   color: #475467;
 }
-#root .main-content .workload-person > div > span,
-#root .main-content .workload-bar > div:first-child,
-#root .main-content .workload-task-count,
 #root .main-content .settings-facts dt,
 #root .main-content .settings-companies > button > div > span,
 #root .main-content .person-details-button > div > span {
@@ -8309,7 +7728,6 @@ small,
 .task-sheet .time-entry strong {
   color: #475467;
 }
-.task-sheet .review-box > p,
 .task-sheet .nudge-box p,
 .task-sheet .attachment > div > span,
 .task-sheet .time-entry > div > span,
@@ -8354,10 +7772,10 @@ small,
     min-width: 40px;
     min-height: 40px;
   }
-  .task-sheet input:not([type='checkbox']),
+  .task-sheet input:not([type='checkbox']):not([type='radio']),
   .task-sheet select,
   .task-sheet textarea,
-  .dialog-content input:not([type='checkbox']),
+  .dialog-content input:not([type='checkbox']):not([type='radio']),
   .dialog-content select,
   .dialog-content textarea {
     font-size: 16px;
@@ -8560,25 +7978,6 @@ small,
   }
 }
 
-.attention-inbox {
-  padding: 20px;
-  margin-bottom: 20px;
-}
-.attention-card {
-  padding: 16px 0;
-  border-bottom: 1px solid var(--border);
-  overflow-wrap: anywhere;
-}
-.attention-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-.attention-inbox button,
-.attention-inbox select {
-  min-height: 44px;
-}
-
 .execution-panel {
   padding: 16px;
   display: grid;
@@ -8592,13 +7991,12 @@ small,
   border-radius: 8px;
   min-width: 0;
 }
-.execution-panel .button,
-.execution-choice {
+.execution-panel .button {
   min-height: 44px;
   height: auto;
   white-space: normal;
 }
-.execution-panel input,
+.execution-panel input:not([type='checkbox']):not([type='radio']),
 .execution-panel select,
 .execution-panel textarea {
   max-width: 100%;
@@ -8606,11 +8004,6 @@ small,
 }
 .execution-panel p {
   overflow-wrap: anywhere;
-}
-.execution-choice {
-  display: flex;
-  align-items: center;
-  gap: 8px;
 }
 
 .historical-reports .report-metrics {
@@ -8647,9 +8040,9 @@ small,
   padding: 0;
   min-width: 0;
 }
-.main-content fieldset input,
+.main-content fieldset input:not([type='checkbox']):not([type='radio']),
 .main-content fieldset select,
-.historical-reports input,
+.historical-reports input:not([type='checkbox']):not([type='radio']),
 .historical-reports select {
   max-width: 100%;
   min-height: 44px;
@@ -8659,14 +8052,15 @@ small,
   align-items: center;
   min-height: 44px;
 }
-.main-content fieldset input[type='checkbox'] {
+.main-content fieldset input:is([type='checkbox'], [type='radio']),
+.historical-reports input:is([type='checkbox'], [type='radio']) {
   min-height: auto;
   width: 20px;
   height: 20px;
 }
 /* Planning and measured outcomes preserve readable wrapping on narrow screens. */
 .execution-panel button,
-.execution-panel input:not([type='checkbox']),
+.execution-panel input:not([type='checkbox']):not([type='radio']),
 .execution-panel select,
 .execution-panel textarea {
   min-height: 44px;
@@ -8711,4 +8105,35 @@ small,
   min-height: 44px;
   white-space: normal;
   overflow-wrap: anywhere;
+}
+
+/* Overview: when Project health sits beside Across departments, fill the row height
+   with evenly sized project tiles instead of leaving an empty band under the list. */
+@media (min-width: 901px) {
+  .project-health-panel {
+    display: flex;
+    flex-direction: column;
+  }
+  .project-health-list {
+    flex: 1;
+    grid-auto-rows: minmax(0, 1fr);
+    align-content: stretch;
+    gap: 14px;
+    padding-bottom: 22px;
+  }
+  .health-project {
+    border: 1px solid #eef0f3;
+    border-radius: 8px;
+    padding: 14px;
+    transition:
+      background 0.15s,
+      border-color 0.15s;
+  }
+  .health-project:hover {
+    background: #fafbfc;
+    border-color: #dfe3e9;
+  }
+  .health-project .progress-track {
+    margin-top: auto;
+  }
 }

@@ -7,6 +7,7 @@ import {
 import { deadlineCandidates } from '../data/deadlines';
 import type { Message, Conversation } from './types';
 import type { WorkspaceData } from '../types';
+import '../styles/connect-dialogs.css';
 interface RecordItem {
   id: string;
   kind: 'ack' | 'poll' | 'event' | 'decision';
@@ -200,20 +201,21 @@ export default function Structured({
   }
 
   return (
-    <section aria-label="Structured communication">
+    <section aria-label="Structured communication" className="connect-structured">
       <h3>Structured communication</h3>
-      <p>
+      <p className="connect-hint">
         Acknowledgement confirms receipt of a revision. Polls, RSVPs and decisions have their own
         records; task and financial approvals remain separate.
       </p>
       {source && (
         <form
+          className="connect-workflow-form"
           onSubmit={(e) => {
             e.preventDefault();
             void create();
           }}
         >
-          <p>Source revision {source.revision}</p>
+          <p className="connect-conversion-eyebrow">Source revision {source.revision}</p>
           <label>
             Record type
             <select
@@ -297,7 +299,7 @@ export default function Structured({
               </select>
             </label>
           ) : (
-            <fieldset>
+            <fieldset className="connect-recipients">
               <legend>Fixed recipients with source access</legend>
               {matching.map((p) => (
                 <label key={p.id}>
@@ -316,18 +318,23 @@ export default function Structured({
               ))}
             </fieldset>
           )}
-          <button disabled={busy || !sourceReady || !title.trim() || (!pending && !selectionReady)}>
-            {pending ? 'Retry same structured record' : 'Create structured record'}
-          </button>
           {pending && (
-            <p>
+            <p className="connect-disclosure-existing-note">
               Submitted intent is frozen. Retry it unchanged. If you close, inspect existing records
               before creating another.
             </p>
           )}
-          <button type="button" onClick={onClose}>
-            Cancel
-          </button>
+          <div className="connect-dialog-footer">
+            <button type="button" className="button button-secondary" onClick={onClose}>
+              Cancel
+            </button>
+            <button
+              className="button button-primary"
+              disabled={busy || !sourceReady || !title.trim() || (!pending && !selectionReady)}
+            >
+              {pending ? 'Retry same structured record' : 'Create structured record'}
+            </button>
+          </div>
         </form>
       )}
       <IntelligenceLauncher
@@ -353,13 +360,15 @@ export default function Structured({
             p.recordId === record.id && p.revision === record.revision && p.userId === data.me.id,
         );
         return (
-          <article key={record.id}>
+          <article key={record.id} className="connect-workflow-item">
             <h4>
               {record.title} · revision {record.revision}
             </h4>
             <p>{record.body}</p>
-            <p>
-              {record.state}
+            <p className="connect-record-state">
+              <span className={'pill ' + (record.state === 'open' ? 'pill-orange' : 'pill-slate')}>
+                {record.state}
+              </span>
               {mine?.response ? ` · Your response: ${mine.response}` : ''}
             </p>
             {mine &&
@@ -373,12 +382,17 @@ export default function Structured({
                     ? ['attending', 'maybe', 'declined']
                     : ['confirmed', 'rejected']
               ).map((response) => (
-                <button key={response} onClick={() => void respond(record, response)}>
+                <button
+                  key={response}
+                  className="button button-secondary button-small"
+                  onClick={() => void respond(record, response)}
+                >
                   {response}
                 </button>
               ))}
             {record.createdBy === data.me.id && (
               <button
+                className="button button-secondary button-small"
                 onClick={() => {
                   setEditing(record);
                   setNextBody(record.body);
@@ -393,6 +407,7 @@ export default function Structured({
       })}
       {editing && (
         <form
+          className="connect-workflow-form"
           onSubmit={(e) => {
             e.preventDefault();
             void revise();
@@ -416,14 +431,26 @@ export default function Structured({
               onChange={(e) => setReason(e.target.value)}
             />
           </label>
-          <p>Recipients must respond to the new revision.</p>
-          <button disabled={busy || !reason.trim()}>Publish new revision</button>
-          <button type="button" onClick={() => setEditing(null)}>
-            Cancel revision
-          </button>
+          <p className="connect-hint">Recipients must respond to the new revision.</p>
+          <div className="connect-dialog-footer">
+            <button
+              type="button"
+              className="button button-secondary"
+              onClick={() => setEditing(null)}
+            >
+              Cancel revision
+            </button>
+            <button className="button button-primary" disabled={busy || !reason.trim()}>
+              Publish new revision
+            </button>
+          </div>
         </form>
       )}
-      {error && <p role="alert">{error}</p>}
+      {error && (
+        <p role="alert" className="connect-error">
+          {error}
+        </p>
+      )}
     </section>
   );
 }

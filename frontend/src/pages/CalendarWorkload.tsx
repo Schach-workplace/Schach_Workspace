@@ -33,6 +33,7 @@ import {
   today,
 } from '../components/UI';
 import { TaskTable } from './Tasks';
+import '../styles/calendar.css';
 
 function weekStart(date: string) {
   const day = new Date(`${date}T12:00:00Z`).getUTCDay();
@@ -105,7 +106,7 @@ export function CalendarPage({ onTask }: { onTask: (id: string) => void }) {
     }
   }
   return (
-    <div className="page-content">
+    <div className="page-content calendar-page">
       <div className="calendar-toolbar">
         <div className="calendar-month">
           <button
@@ -196,10 +197,12 @@ export function CalendarPage({ onTask }: { onTask: (id: string) => void }) {
         <span className="timezone-note">Deadlines in {calendarZone}</span>
       </div>
       {demo && (
-        <p>Demo calendar shows the finite local sample; it is not a complete server calendar.</p>
+        <p className="notice calendar-note">
+          Demo calendar shows the finite local sample; it is not a complete server calendar.
+        </p>
       )}
       {!complete && (
-        <p role="status">
+        <p className="notice calendar-note" role="status">
           {agenda.error?.message ?? 'Checking the complete currently authorized calendar range…'}
         </p>
       )}
@@ -271,12 +274,15 @@ export function CalendarPage({ onTask }: { onTask: (id: string) => void }) {
       <div className="panel">
         {complete && <TaskTable tasks={selectedTasks} data={data} onTask={onTask} compact />}
         {!complete && agenda.error && (
-          <button className="button" onClick={() => void agenda.retry()}>
+          <button
+            className="button button-secondary calendar-retry"
+            onClick={() => void agenda.retry()}
+          >
             Retry current calendar range
           </button>
         )}
       </div>
-      <PlanningView key={first} from={first} to={days[days.length - 1]} onTask={onTask} />
+      <PlanningView key={first} from={first} to={days[days.length - 1]} onTask={onTask} compact />
     </div>
   );
 }

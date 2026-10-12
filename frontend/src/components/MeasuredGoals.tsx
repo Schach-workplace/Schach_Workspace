@@ -11,7 +11,26 @@ import GoalMeasurementForm from './GoalMeasurementForm';
 import GoalHistory from './GoalHistory';
 import GoalReminderPreferences from './GoalReminderPreferences';
 import GoalMetadataForm from './GoalMetadataForm';
-import { Modal } from './UI';
+import {
+  dateLabel,
+  departmentName,
+  EmptyState,
+  goalPercent,
+  Modal,
+  personName,
+  ProgressBar,
+  today,
+} from './UI';
+import {
+  ArrowRight,
+  CalendarDays,
+  Info,
+  Plus,
+  Target,
+  TrendingDown,
+  TrendingUp,
+} from 'lucide-react';
+import '../styles/goals-reports.css';
 export default function MeasuredGoals({ onTask }: { onTask: (id: string) => void }) {
   const w = useWorkspace();
   const q = useGoalRead<{ goals: MeasuredGoal[] }>('/goals');
@@ -20,46 +39,90 @@ export default function MeasuredGoals({ onTask }: { onTask: (id: string) => void
   );
   const [newGoal, setNewGoal] = useState(false);
   const data = w.data!;
+  const canCreate =
+    w.mode !== 'demo' && ['founder', 'ceo', 'admin', 'head', 'manager'].includes(data.me.role);
+  const goals = q.ready ? (q.data?.goals ?? []) : [];
   return (
-    <div className="page-content">
-      <h2>Measured outcomes</h2>
-      <p>
-        Task completion never changes an independently measured result. Attainment is bounded
-        0–100%; raw values remain visible.
+    <div className="page-content measured-goals">
+      <div className="mg-header">
+        <div>
+          <h2>Measured outcomes</h2>
+          <p>Each goal tracks an independently recorded result against its baseline and target.</p>
+        </div>
+        {canCreate && (
+          <button className="button button-primary" onClick={() => setNewGoal(true)}>
+            <Plus size={15} aria-hidden="true" />
+            New measured goal
+          </button>
+        )}
+      </div>
+      <p className="mg-control-note">
+        <Info size={14} aria-hidden="true" />
+        <span>
+          Task completion never changes an independently measured result. Attainment is bounded
+          0–100%; raw values remain visible.
+        </span>
       </p>
       {w.mode === 'demo' ? (
-        <p>Measurement history, evidence and reminders require a connected company server.</p>
+        <div className="panel">
+          <EmptyState
+            icon={<Target size={22} />}
+            title="Connect a company server"
+            description="Measurement history, evidence and reminders require a connected company server."
+          />
+        </div>
       ) : (
         <>
-          {['founder', 'ceo', 'admin', 'head', 'manager'].includes(data.me.role) && (
-            <button className="button" onClick={() => setNewGoal(true)}>
-              New measured goal
-            </button>
-          )}
           {!q.ready ? (
-            <p role="status">{q.error?.message ?? 'Checking current goals…'}</p>
-          ) : (
-            <div className="goal-grid">
-              {q.data?.goals.map((g) => (
-                <section key={g.id} className="panel goal-card">
-                  <h3>{g.name}</h3>
-                  <p>
-                    Current: {g.current} {g.unit}
-                  </p>
-                  <p>
-                    Baseline: {g.baseline} · Target: {g.target} {g.unit}
-                    {g.target < g.baseline ? ' · Lower is better' : ''}
-                  </p>
-                  <button className="button" onClick={() => setId(g.id)}>
-                    Open {g.name}
-                  </button>
-                </section>
+            q.error ? (
+              <div className="inline-error" role="alert">
+                {q.error.message}
+              </div>
+            ) : (
+              <div className="goal-grid mg-grid" aria-busy="true">
+                <p role="status" className="sr-only">
+                  Checking current goals…
+                </p>
+                {[0, 1].map((i) => (
+                  <div key={i} className="panel mg-card mg-skeleton" aria-hidden="true">
+                    <span />
+                    <span />
+                    <span />
+                  </div>
+                ))}
+              </div>
+            )
+          ) : goals.length ? (
+            <div className="goal-grid mg-grid">
+              {goals.map((g) => (
+                <GoalCard key={g.id} goal={g} onOpen={() => setId(g.id)} />
               ))}
-              {!q.data?.goals.length && <p>No goals in your current scope.</p>}
+            </div>
+          ) : (
+            <div className="panel">
+              <EmptyState
+                icon={<Target size={22} />}
+                title="No goals in your current scope"
+                description="Measured goals you own, lead or can read appear here."
+                action={
+                  canCreate ? (
+                    <button className="button button-primary" onClick={() => setNewGoal(true)}>
+                      <Plus size={15} aria-hidden="true" />
+                      New measured goal
+                    </button>
+                  ) : undefined
+                }
+              />
             </div>
           )}
           {id && (
-            <Modal open title="Goal" onClose={() => setId('')}>
+            <Modal
+              open
+              wide
+              title="Measured goal"
+              description="Recorded results, evidence and history for this outcome."
+              onClose={() => setId('')}
+            >
               <GoalPanel goalId={id} onTask={onTask} />
             </Modal>
           )}
@@ -76,6 +139,93 @@ export default function MeasuredGoals({ onTask }: { onTask: (id: string) => void
     </div>
   );
 }
+
+type GoalStatus = { label: string; tone: 'green' | 'red' | 'orange' | 'slate' };
+function goalStatus(goal: MeasuredGoal, zone: string): GoalStatus {
+  const lower = goal.target < goal.baseline;
+  const met = lower ? goal.current <= goal.target : goal.current >= goal.target;
+  if (met) return { label: 'Target met', tone: 'green' };
+  if (goal.dueDate && goal.dueDate < today(zone)) return { label: 'Past due', tone: 'red' };
+  const worse = lower ? goal.current > goal.baseline : goal.current < goal.baseline;
+  if (worse) return { label: 'Below baseline', tone: 'orange' };
+  if (goal.current === goal.baseline) return { label: 'At baseline', tone: 'slate' };
+  return { label: 'In progress', tone: 'slate' };
+}
+function formatValue(value: number, unit: string) {
+  return unit === '%' ? `${value}%` : `${value} ${unit}`.trim();
+}
+function GoalMeter({ goal }: { goal: MeasuredGoal }) {
+  const lower = goal.target < goal.baseline;
+  const pct = goalPercent(goal.baseline, goal.current, goal.target);
+  const met = lower ? goal.current <= goal.target : goal.current >= goal.target;
+  return (
+    <div className="mg-meter">
+      <div className="mg-meter-head">
+        <span>
+          {lower ? (
+            <TrendingDown size={13} aria-hidden="true" />
+          ) : (
+            <TrendingUp size={13} aria-hidden="true" />
+          )}
+          {lower ? 'Lower is better' : 'Higher is better'}
+        </span>
+        <strong>{pct}% attained</strong>
+      </div>
+      <ProgressBar
+        value={pct}
+        color={met ? 'green' : 'orange'}
+        label={`${goal.name || 'Goal'} attainment from baseline to target`}
+      />
+      <div className="mg-meter-scale">
+        <span>Baseline {formatValue(goal.baseline, goal.unit)}</span>
+        <span>Target {formatValue(goal.target, goal.unit)}</span>
+      </div>
+    </div>
+  );
+}
+
+function GoalCard({ goal, onOpen }: { goal: MeasuredGoal; onOpen: () => void }) {
+  const w = useWorkspace();
+  const data = w.data!;
+  const zone = data.company.timezone;
+  const status = goalStatus(goal, zone);
+  return (
+    <article className="panel mg-card">
+      <header className="mg-card-head">
+        <div>
+          <h3>{goal.name}</h3>
+          <p>
+            {departmentName(data, goal.departmentId)} · {personName(data, goal.ownerId)}
+          </p>
+        </div>
+        <span className={`pill pill-${status.tone}`}>{status.label}</span>
+      </header>
+      <div className="mg-current">
+        <strong>{goal.current}</strong>
+        <span>{goal.unit}</span>
+        <small>current result</small>
+      </div>
+      <GoalMeter goal={goal} />
+      <footer className="mg-card-foot">
+        {goal.dueDate && (
+          <span>
+            <CalendarDays size={13} aria-hidden="true" />
+            Due {dateLabel(goal.dueDate, { day: 'numeric', month: 'short', year: 'numeric' })}
+          </span>
+        )}
+        <button
+          className="text-button mg-card-open"
+          aria-label={`Open ${goal.name}`}
+          onClick={onOpen}
+        >
+          Open goal
+          <ArrowRight size={13} aria-hidden="true" />
+        </button>
+      </footer>
+    </article>
+  );
+}
+
 function GoalPanel({ goalId, onTask }: { goalId: string; onTask: (id: string) => void }) {
   const w = useWorkspace();
   const q = useGoalRead<GoalDetail>('/goals/' + goalId);
@@ -104,74 +254,142 @@ function GoalPanel({ goalId, onTask }: { goalId: string; onTask: (id: string) =>
   };
   const goal = q.ready && q.data ? q.data.goal : neutral;
   const permitted = q.ready && !!q.data?.canMeasure;
+  const status = q.ready && q.data ? goalStatus(goal, w.data!.company.timezone) : undefined;
   return (
-    <section>
-      <h2>{q.ready ? goal.name : 'Checking current goal…'}</h2>
-      <IntelligenceLauncher
-        label="Explain selected goal facts"
-        operation="report_explanation"
-        choices={
-          q.ready
-            ? [
-                {
-                  label: 'Current selected goal',
-                  source: {
-                    kind: 'goal_fields',
-                    id: goal.id,
-                    expectedVersion: goal.version,
-                    selectedFieldSet: 'measurement',
-                  },
-                },
-                ...(goal.currentMeasurementId
-                  ? [
-                      {
-                        label: 'Recorded measurement',
-                        source: {
-                          kind: 'goal_measurement' as const,
-                          id: goal.currentMeasurementId,
-                          parentId: goal.id,
-                          selectedFieldSet: 'measurement_evidence',
-                        },
+    <section className="goal-detail">
+      <header className="goal-detail-head">
+        <div>
+          <h2>{q.ready ? goal.name : 'Checking current goal…'}</h2>
+          {q.ready && goal.description && <p>{goal.description}</p>}
+        </div>
+        {status && <span className={`pill pill-${status.tone}`}>{status.label}</span>}
+      </header>
+      <div className="goal-detail-actions">
+        {permitted && (
+          <button
+            className="button button-primary"
+            onClick={() => {
+              setCorrection(undefined);
+              setMeasure(true);
+            }}
+          >
+            Update measured result
+          </button>
+        )}
+        {q.ready && q.data?.canEdit && (
+          <button className="button button-secondary" onClick={() => setEditing(true)}>
+            Edit metadata
+          </button>
+        )}
+        {goal.ownerId === w.data?.me.id && permitted && (
+          <button className="button button-secondary" onClick={() => setReminders(true)}>
+            My reminder preference
+          </button>
+        )}
+        <span className="goal-detail-assist">
+          <IntelligenceLauncher
+            label="Explain selected goal facts"
+            operation="report_explanation"
+            choices={
+              q.ready
+                ? [
+                    {
+                      label: 'Current selected goal',
+                      source: {
+                        kind: 'goal_fields',
+                        id: goal.id,
+                        expectedVersion: goal.version,
+                        selectedFieldSet: 'measurement',
                       },
-                    ]
-                  : []),
-              ]
-            : []
-        }
-      />
+                    },
+                    ...(goal.currentMeasurementId
+                      ? [
+                          {
+                            label: 'Recorded measurement',
+                            source: {
+                              kind: 'goal_measurement' as const,
+                              id: goal.currentMeasurementId,
+                              parentId: goal.id,
+                              selectedFieldSet: 'measurement_evidence',
+                            },
+                          },
+                        ]
+                      : []),
+                  ]
+                : []
+            }
+          />
+        </span>
+      </div>
       {q.ready && q.data ? (
         <>
-          <p>
-            Current result: {goal.current} {goal.unit} · Target: {goal.target} · Attainment:{' '}
-            {q.data.attainment === null ? 'Unavailable' : q.data.attainment.toFixed(1) + '%'}
-          </p>
+          <dl className="goal-detail-stats">
+            <div>
+              <dt>Current result</dt>
+              <dd>
+                {goal.current} <span>{goal.unit}</span>
+              </dd>
+            </div>
+            <div>
+              <dt>Baseline</dt>
+              <dd>
+                {goal.baseline} <span>{goal.unit}</span>
+              </dd>
+            </div>
+            <div>
+              <dt>Target</dt>
+              <dd>
+                {goal.target} <span>{goal.unit}</span>
+              </dd>
+            </div>
+            <div>
+              <dt>Attainment</dt>
+              <dd>
+                {q.data.attainment === null ? 'Unavailable' : q.data.attainment.toFixed(1) + '%'}
+              </dd>
+            </div>
+          </dl>
+          <GoalMeter goal={goal} />
           {!goal.currentMeasurementId && (
-            <p>Current recorded before measurement history; earlier history unknown.</p>
+            <p className="notice">
+              Current recorded before measurement history; earlier history unknown.
+            </p>
           )}
-          {goal.taskIds.map((id) => (
-            <button className="button" key={id} onClick={() => onTask(id)}>
-              Open contributing task
-            </button>
-          ))}
-          {permitted && (
-            <button
-              className="button"
-              onClick={() => {
-                setCorrection(undefined);
-                setMeasure(true);
-              }}
-            >
-              Update measured result
-            </button>
-          )}
-          {q.data.canEdit && (
-            <button className="button" onClick={() => setEditing(true)}>
-              Edit metadata
-            </button>
+          {goal.taskIds.length > 0 && (
+            <section className="goal-detail-tasks" aria-label="Contributing tasks">
+              <h3 className="goal-subhead">
+                Contributing tasks <span className="count-badge">{goal.taskIds.length}</span>
+              </h3>
+              <p className="field-help">
+                Context only. Completing these tasks never changes the measured result.
+              </p>
+              <ul>
+                {goal.taskIds.map((id) => {
+                  const task = w.data?.tasks.find((t) => t.id === id);
+                  return (
+                    <li key={id}>
+                      <span>{task?.title ?? 'Task'}</span>
+                      <button
+                        className="button button-secondary button-small"
+                        onClick={() => onTask(id)}
+                      >
+                        Open contributing task
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
+            </section>
           )}
         </>
+      ) : q.error ? (
+        <div className="inline-error" role="status">
+          {q.error.message}
+        </div>
       ) : (
-        <p role="status">{q.error?.message ?? 'Authorizing current sources…'}</p>
+        <p role="status" className="goal-detail-loading">
+          Authorizing current sources…
+        </p>
       )}
       {(measure || correction) && (
         <GoalMeasurementForm
@@ -184,6 +402,7 @@ function GoalPanel({ goalId, onTask }: { goalId: string; onTask: (id: string) =>
           }}
         />
       )}
+      {reminders && <GoalReminderPreferences goalId={goalId} ready={permitted} />}
       <GoalHistory
         goalId={goalId}
         companyId={w.companyId}
@@ -194,12 +413,6 @@ function GoalPanel({ goalId, onTask }: { goalId: string; onTask: (id: string) =>
           setCorrection(m);
         }}
       />
-      {goal.ownerId === w.data?.me.id && permitted && (
-        <button className="button" onClick={() => setReminders(true)}>
-          My reminder preference
-        </button>
-      )}{' '}
-      {reminders && <GoalReminderPreferences goalId={goalId} ready={permitted} />}{' '}
       {editing && (
         <StableMetadata
           goal={q.ready ? goal : undefined}

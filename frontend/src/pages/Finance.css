@@ -2008,3 +2008,116 @@ h4.finance-assist-heading {
     transition: none;
   }
 }
+
+/* 2026-10 polish: contain the ledger's visually hidden header so it cannot
+   widen the mobile layout viewport (which shifted every dialog off-screen). */
+.finance-ledger-scroll {
+  position: relative;
+}
+
+/* Expense detail: assistance launcher sits with the status, not as stray text. */
+.finance-detail-total-side {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+  flex: none;
+}
+.finance-detail .button.finance-detail-assist {
+  min-height: 31px;
+  font-size: 11px;
+  padding: 6px 11px;
+  background: #fff;
+}
+.finance-detail-loading {
+  position: fixed;
+  z-index: 120;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: min(360px, calc(100vw - 32px));
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 20px 22px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  box-shadow: 0 18px 50px #18181b24;
+  font-size: 13px;
+  color: #475467;
+}
+
+/* Decision form: give each field and notice its own breathing room. */
+.finance-decision-form > .field,
+.finance-decision-form > .finance-notice,
+.finance-decision-form > .check-field,
+.finance-decision-form > .form-grid,
+.finance-decision-form > .finance-form-hint {
+  margin-top: 16px;
+}
+.finance-decision-form > .finance-decision-summary + .finance-form-hint {
+  margin-top: 0;
+}
+.finance-decision-form > .form-actions {
+  margin-top: 18px;
+}
+
+/* Receipt extraction on an existing receipt: compact, secondary block. */
+.finance-assist-receipt-head h4 {
+  font-size: 12px;
+  font-weight: 600;
+  color: #343a44;
+  margin: 0 0 2px;
+}
+.finance-assist-receipt-head p {
+  font-size: 11px;
+  line-height: 1.6;
+  color: #667085;
+}
+.finance-assist-receipt .finance-assist-form .field {
+  margin-bottom: 0;
+}
+.finance-assist-card-head p {
+  margin-top: 3px;
+}
+.finance-assist-stage .finance-assist-form .field {
+  margin-bottom: 0;
+}
+
+/* Native file pickers inherit the house secondary button look. */
+.finance-assist-form input[type='file'] {
+  width: 100%;
+  padding: 6px;
+  border: 1px dashed #cfd5de;
+  border-radius: 8px;
+  background: #fff;
+  color: #667085;
+  min-height: 42px;
+}
+.finance-assist-form input[type='file']::file-selector-button {
+  margin-right: 10px;
+  padding: 6px 12px;
+  border: 1px solid #dfe3e8;
+  border-radius: 7px;
+  background: #fff;
+  color: var(--ink);
+  font: inherit;
+  font-weight: 500;
+  cursor: pointer;
+}
+.finance-assist-form input[type='file']:hover::file-selector-button {
+  background: var(--subtle);
+}
+.finance-assist-form input[type='file']:focus-visible {
+  outline: 2px solid var(--orange);
+  outline-offset: 2px;
+}
+@media (max-width: 700px) {
+  .finance-detail-total-side {
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+}

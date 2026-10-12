@@ -1,6 +1,7 @@
 import { usePeopleTools } from '../components/PeopleTools';
 import { DirectCompanyRevocation } from '../components/DepartureHandover';
 import { useState } from 'react';
+import '../styles/people.css';
 import {
   ArrowRight,
   Building2,
@@ -8,6 +9,7 @@ import {
   Mail,
   Pencil,
   Plus,
+  ListChecks,
   Search,
   ShieldCheck,
   UsersRound,
@@ -61,7 +63,7 @@ export default function Organization({
   return (
     <div className="page-content">
       {mode === 'demo' && (
-        <p role="status">
+        <p role="status" className="notice">
           Fictional local People demonstration. No real accounts, credentials, private invitations
           or server changes. Starting task templates and private review obligations require a
           connected company.
@@ -126,27 +128,27 @@ export default function Organization({
           </button>
         </div>
         {admin && (
-          <button
-            className="button button-primary"
-            onClick={() =>
-              tab === 'departments' ? setEditing({ kind: 'department' }) : openPeople('onboard')
-            }
-          >
-            <Plus size={15} />
-            {tab === 'departments' ? 'Add department' : 'Add person'}
-          </button>
+          <div className="people-toolbar-actions">
+            <button className="button button-secondary" onClick={() => openPeople('presets')}>
+              <ListChecks size={15} />
+              Onboarding presets
+            </button>
+            <button className="button button-secondary" onClick={() => openPeople('reviews')}>
+              <ShieldCheck size={15} />
+              Review access
+            </button>
+            <button
+              className="button button-primary"
+              onClick={() =>
+                tab === 'departments' ? setEditing({ kind: 'department' }) : openPeople('onboard')
+              }
+            >
+              <Plus size={15} />
+              {tab === 'departments' ? 'Add department' : 'Add person'}
+            </button>
+          </div>
         )}
       </div>
-      {admin && (
-        <div className="form-actions">
-          <button className="button" onClick={() => openPeople('presets')}>
-            Onboarding presets
-          </button>
-          <button className="button" onClick={() => openPeople('reviews')}>
-            Review access
-          </button>
-        </div>
-      )}
       {tab === 'people' && (
         <>
           <div className="filters-panel">
@@ -440,20 +442,26 @@ export default function Organization({
               </div>
             </dl>
             {admin && (
-              <>
-                <button
-                  className="button"
-                  onClick={() => {
-                    openPeople('departure', selected.id, (id) =>
-                      onNavigate('projects', { projectId: id }),
-                    );
-                    setSelected(null);
-                  }}
-                >
-                  Review company departure
-                </button>
+              <div className="people-profile-access">
+                <div className="people-profile-departure">
+                  <div>
+                    <strong>Company departure</strong>
+                    <span>Transfer live responsibilities before this person leaves.</span>
+                  </div>
+                  <button
+                    className="button button-secondary button-small"
+                    onClick={() => {
+                      openPeople('departure', selected.id, (id) =>
+                        onNavigate('projects', { projectId: id }),
+                      );
+                      setSelected(null);
+                    }}
+                  >
+                    Review company departure
+                  </button>
+                </div>
                 <DirectCompanyRevocation userId={selected.id} />
-              </>
+              </div>
             )}
             <div className="form-actions">
               {admin && (

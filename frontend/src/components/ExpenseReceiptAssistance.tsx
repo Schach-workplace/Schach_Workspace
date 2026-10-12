@@ -37,6 +37,10 @@ export default function ExpenseReceiptAssistance({
     <section className="finance-assist-card finance-assist-receipt" aria-label="Receipt extraction">
       {exists && (
         <>
+          <div className="finance-assist-receipt-head">
+            <h4>Receipt extraction</h4>
+            <p>Optional. Candidates are never applied until you review them.</p>
+          </div>
           <div className="finance-assist-form">
             <Field label="Reviewed extraction destination">
               <select
@@ -55,26 +59,28 @@ export default function ExpenseReceiptAssistance({
               </select>
             </Field>
           </div>
-          <button
-            className="button button-secondary"
-            aria-busy={assess.busy}
-            disabled={assess.busy}
-            onClick={() =>
-              void assess
-                .execute(
-                  '/expense-receipts/' + receiptId + '/assessment',
-                  assess.attempt?.payload ?? { expectedExpenseVersion: current!.version },
-                )
-                .then(() =>
-                  setDone(
-                    'Clean assessment requested. Check extraction when the scanner completes.',
-                  ),
-                )
-                .catch(() => {})
-            }
-          >
-            Request clean assessment for extraction
-          </button>
+          <div className="finance-assist-actions">
+            <button
+              className="button button-secondary"
+              aria-busy={assess.busy}
+              disabled={assess.busy}
+              onClick={() =>
+                void assess
+                  .execute(
+                    '/expense-receipts/' + receiptId + '/assessment',
+                    assess.attempt?.payload ?? { expectedExpenseVersion: current!.version },
+                  )
+                  .then(() =>
+                    setDone(
+                      'Clean assessment requested. Check extraction when the scanner completes.',
+                    ),
+                  )
+                  .catch(() => {})
+              }
+            >
+              Request clean assessment for extraction
+            </button>
+          </div>
           {done && (
             <p className="finance-assist-status" role="status">
               {done}
@@ -89,36 +95,38 @@ export default function ExpenseReceiptAssistance({
             />
             Use local extraction and review all candidates
           </label>
-          <button
-            className="button button-primary"
-            aria-busy={extract.busy}
-            disabled={!optIn || !department || extract.busy}
-            onClick={() =>
-              void extract
-                .execute<{ id: string }>(
-                  '/finance/receipt-extractions',
-                  extract.attempt?.payload ?? {
-                    source: {
-                      kind: 'expense_receipt',
-                      id: receiptId,
-                      expectedVersion: current!.version,
+          <div className="finance-assist-actions">
+            <button
+              className="button button-primary"
+              aria-busy={extract.busy}
+              disabled={!optIn || !department || extract.busy}
+              onClick={() =>
+                void extract
+                  .execute<{ id: string }>(
+                    '/finance/receipt-extractions',
+                    extract.attempt?.payload ?? {
+                      source: {
+                        kind: 'expense_receipt',
+                        id: receiptId,
+                        expectedVersion: current!.version,
+                      },
+                      destinationDepartmentId: department,
+                      optIn: true,
+                      ...(current!.createdBy === w.data?.me.id &&
+                      current!.status === 'draft' &&
+                      current!.departmentId === department
+                        ? { targetExpenseId: expenseId, expectedTargetVersion: current!.version }
+                        : {}),
                     },
-                    destinationDepartmentId: department,
-                    optIn: true,
-                    ...(current!.createdBy === w.data?.me.id &&
-                    current!.status === 'draft' &&
-                    current!.departmentId === department
-                      ? { targetExpenseId: expenseId, expectedTargetVersion: current!.version }
-                      : {}),
-                  },
-                  'POST',
-                  (r) => setJob(r.id),
-                )
-                .catch(() => {})
-            }
-          >
-            {extract.attempt ? 'Retry same extraction' : 'Extract assessed receipt'}
-          </button>
+                    'POST',
+                    (r) => setJob(r.id),
+                  )
+                  .catch(() => {})
+              }
+            >
+              {extract.attempt ? 'Retry same extraction' : 'Extract assessed receipt'}
+            </button>
+          </div>
         </>
       )}
       {job && (

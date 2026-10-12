@@ -3,8 +3,12 @@ import MeasuredGoals from '../components/MeasuredGoals';
 import { useEffect, useState } from 'react';
 import HistoricalReports from '../components/HistoricalReports';
 import SavedReports from '../components/SavedReports';
+import '../styles/goals-reports.css';
 import {
   ArrowDownToLine,
+  Bookmark,
+  Gauge,
+  History,
   ArrowRight,
   CalendarDays,
   CheckCheck,
@@ -106,31 +110,35 @@ function CurrentReportsPage({ onTask }: { onTask: (id: string) => void }) {
   const attentionCount = input.summary?.needsAttention ?? needsAttention.length;
   return (
     <div className="page-content">
-      <IntelligenceLauncher
-        operation="report_explanation"
-        sourceRead={{
-          ready: input.available && !!input.snapshot && !input.checking,
-          denied: input.denied,
-        }}
-        choices={
-          input.available && input.snapshot && !input.checking
-            ? [
-                {
-                  label: 'Selected current report facts',
-                  source: {
-                    kind: 'report_current',
-                    id: input.snapshot,
-                    selectedFieldSet: 'metrics',
-                  },
-                },
-              ]
-            : []
-        }
-      />
-      <p className="field-help">
-        Current-state report · {data.company.timezone} · later task changes can change these
-        figures.
-      </p>
+      <div className="report-toolbar">
+        <p className="field-help">
+          Current-state report · {data.company.timezone} · later task changes can change these
+          figures.
+        </p>
+        <span className="report-assist">
+          <IntelligenceLauncher
+            operation="report_explanation"
+            sourceRead={{
+              ready: input.available && !!input.snapshot && !input.checking,
+              denied: input.denied,
+            }}
+            choices={
+              input.available && input.snapshot && !input.checking
+                ? [
+                    {
+                      label: 'Selected current report facts',
+                      source: {
+                        kind: 'report_current',
+                        id: input.snapshot,
+                        selectedFieldSet: 'metrics',
+                      },
+                    },
+                  ]
+                : []
+            }
+          />
+        </span>
+      </div>
       {input.loading && <p role="status">Loading authorized report…</p>}
       {input.error && (
         <div className="inline-error" role="alert">
@@ -488,19 +496,36 @@ export function ReportsPage({ onTask }: { onTask: (id: string) => void }) {
     if (hash.startsWith('#report?')) setBasis('history');
   }, [hash]);
   if (direct && params.get('company') !== store.companyId)
-    return <p className="panel">Switch to the report company before opening this report.</p>;
+    return (
+      <div className="panel">
+        <EmptyState
+          title="Different company"
+          description="Switch to the report company before opening this report."
+        />
+      </div>
+    );
   return (
-    <div>
-      <div className="tabs" role="group" aria-label="Report basis">
-        <button className="button button-secondary" onClick={() => setBasis('current')}>
-          Current state
-        </button>
-        <button className="button button-secondary" onClick={() => setBasis('history')}>
-          Historical reports
-        </button>
-        <button className="button button-secondary" onClick={() => setBasis('saved')}>
-          Saved reports
-        </button>
+    <div className="reports-page">
+      <div className="segmented report-basis" role="group" aria-label="Report basis">
+        {[
+          { id: 'current', name: 'Current state', icon: <Gauge size={14} aria-hidden="true" /> },
+          {
+            id: 'history',
+            name: 'Historical reports',
+            icon: <History size={14} aria-hidden="true" />,
+          },
+          { id: 'saved', name: 'Saved reports', icon: <Bookmark size={14} aria-hidden="true" /> },
+        ].map((t) => (
+          <button
+            key={t.id}
+            className={basis === t.id ? 'active' : ''}
+            aria-pressed={basis === t.id}
+            onClick={() => setBasis(t.id)}
+          >
+            {t.icon}
+            {t.name}
+          </button>
+        ))}
       </div>
       {basis === 'current' ? (
         <CurrentReportsPage onTask={onTask} />

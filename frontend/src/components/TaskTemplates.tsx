@@ -12,14 +12,21 @@ import {
 } from '../data/execution';
 import type { Task } from '../types';
 import { Field, ErrorMessage, today } from './UI';
+import { LoaderCircle, Pencil, Plus } from 'lucide-react';
+import '../styles/work.css';
 export default function TaskTemplates({
   task,
   initialProject = '',
   onCreated,
+  embedded = false,
+  onPendingChange,
 }: {
   task?: Task;
   initialProject?: string;
   onCreated?: (id: string) => void;
+  embedded?: boolean;
+  /** Reports whether a submission is in flight or a frozen attempt awaits recovery. */
+  onPendingChange?: (pending: boolean) => void;
 }) {
   const store = useWorkspace();
   const data = store.data!;
@@ -39,6 +46,12 @@ export default function TaskTemplates({
   );
   const managementForm = '$template-manage:' + (managementId || 'new-' + kind);
   const manage = useExecutionMutation('template-manage:' + (managementId || 'new-' + kind));
+  const pending = !!(action.attempt || manage.attempt || action.busy || manage.busy);
+  useEffect(() => {
+    if (!pending) return;
+    onPendingChange?.(true);
+    return () => onPendingChange?.(false);
+  }, [pending, onPendingChange]);
   const [preview, setPreview] = useState<TemplatePreview>();
   const [error, setError] = useState('');
   const [project, setProject] = useState(
@@ -218,112 +231,263 @@ export default function TaskTemplates({
   }, [managing, managementId, source?.id, detail.ready]);
   const managementReady = !managementId || (detail.ready && source?.id === managementId);
 
+  const saveTemplate = () =>
+    void run(async () => {
+      if (!managementReady) return;
+      if (manage.attempt) {
+        await manage.execute(
+          manage.attempt.target?.path ??
+            (managementId ? `/task-templates/${managementId}` : '/task-templates'),
+          manage.attempt.payload,
+          manage.attempt.target?.method ?? (managementId ? 'PATCH' : 'POST'),
+          () => {
+            clearExecutionForm(
+              store.companyId,
+              store.session?.user.id ?? data.me.id,
+              managementForm,
+            );
+            setManaging(false);
+          },
+        );
+        await list.retry();
+        return;
+      }
+      const defaults = {
+        checklist: checklist
+          .split('\n')
+          .map((s) => s.trim())
+          .filter(Boolean),
+        ...(!task
+          ? {
+              title: taskTitle,
+              description: taskDescription,
+              priority,
+              estimatedHours: Number(estimate),
+              tags: tags
+                .split(',')
+                .map((s) => s.trim())
+                .filter(Boolean),
+              ownerPolicy,
+              fixedOwnerId: fixedOwner,
+              reviewerId: reviewer,
+              requiresApproval: required,
+              status: initialStatus,
+              ...(relative !== '' ? { relativeDueDays: Number(relative) } : {}),
+            }
+          : {}),
+      };
+      const editing = !!managementId && editingTemplate;
+      await manage.execute(
+        editing ? `/task-templates/${managementId}` : '/task-templates',
+        {
+          name,
+          kind,
+          scopeOwnerId: scopeOwner,
+          scopeDepartmentId: scopeDepartment,
+          defaults,
+          ...(editing ? { version: managementVersion } : {}),
+        },
+        editing ? 'PATCH' : 'POST',
+        () => {
+          clearExecutionForm(store.companyId, store.session?.user.id ?? data.me.id, managementForm);
+          setManaging(false);
+        },
+      );
+      await list.retry();
+    });
+  const archiveTemplate = (target: TaskTemplateView) =>
+    void run(async () => {
+      await manage.execute(
+        `/task-templates/${target.id}`,
+        { version: target.version, archived: !target.archived },
+        'PATCH',
+        () => {
+          clearExecutionForm(store.companyId, store.session?.user.id ?? data.me.id, managementForm);
+          setManaging(false);
+        },
+      );
+      await list.retry();
+    });
+  const policyLabel: Record<string, string> = {
+    actor: 'Person applying the template',
+    fixed: 'A fixed person',
+    project_owner: 'Project owner',
+    project_default: 'Project default owner',
+  };
+  const saveBlocked = !manage.attempt && (!name || (!task && !taskTitle));
+  const templateButtons = data.me.role !== 'viewer' && (
+    <div className="wk-actions">
+      <button
+        className="button button-secondary button-small"
+        onClick={() => {
+          setEditingTemplate(false);
+          setManaging(true);
+          setName('');
+          setChecklist('');
+          setManagementId('');
+          setTaskTitle('');
+        }}
+      >
+        <Plus size={13} />
+        New {kind} template
+      </button>
+      {source && (
+        <button className="button button-secondary button-small" onClick={loadManagement}>
+          <Pencil size={13} />
+          Edit template
+        </button>
+      )}
+    </div>
+  );
+
   return (
     <section
-      className="panel execution-panel"
+      className={`wk-card${embedded ? ' wk-embedded' : ''}`}
       aria-label={task ? 'Reusable checklist' : 'Task templates'}
     >
-      <h3>{task ? 'Reusable checklist' : 'Task templates'}</h3>
-      {list.loading && <p role="status">Checking current template access…</p>}
+      <header className={embedded ? 'sr-only' : 'wk-head'}>
+        <div>
+          <h3>{task ? 'Reusable checklist' : 'Task templates'}</h3>
+          {!embedded && (
+            <p>
+              {task
+                ? 'Append a saved set of acceptance checks to this task.'
+                : 'Start from a reviewed template, then confirm every resolved field.'}
+            </p>
+          )}
+        </div>
+      </header>
+      {list.loading && (
+        <p role="status" className="wk-status">
+          <LoaderCircle size={14} className="spin" />
+          Checking current template access…
+        </p>
+      )}
       {list.error && (
-        <>
+        <div className="wk-error">
           <ErrorMessage error={list.error.message} />
-          <button className="button" onClick={() => void list.retry()}>
+          <button
+            className="button button-secondary button-small"
+            onClick={() => void list.retry()}
+          >
             Retry templates
           </button>
-        </>
+        </div>
       )}
-      <Field label="Template">
-        <select
-          value={selected}
-          disabled={managing || !!action.attempt || !!manage.attempt}
-          onChange={(e) => setSelected(e.target.value)}
-        >
-          <option value="">Choose an authorized template</option>
-          {list.data?.templates
-            .filter((t) => !t.archived)
-            .map((t) => (
-              <option key={t.id} value={t.id}>
-                {t.name}
-              </option>
-            ))}
-        </select>
-      </Field>
+      <div className="wk-toolbar">
+        <Field label="Template">
+          <select
+            value={selected}
+            disabled={managing || !!action.attempt || !!manage.attempt}
+            onChange={(e) => setSelected(e.target.value)}
+          >
+            <option value="">Choose an authorized template</option>
+            {list.data?.templates
+              .filter((t) => !t.archived)
+              .map((t) => (
+                <option key={t.id} value={t.id}>
+                  {t.name}
+                </option>
+              ))}
+          </select>
+        </Field>
+        {templateButtons}
+      </div>
       {source && (
         <>
-          <p>{source.description}</p>
+          {source.description && <p className="wk-caption">{source.description}</p>}
           {!task && (
             <>
-              <Field label="Template project">
-                <select
-                  value={project}
-                  onChange={(e) => {
-                    setProject(e.target.value);
-                    setPreview(undefined);
-                  }}
-                  disabled={!!action.attempt}
-                >
-                  <option value="">No project</option>
-                  {data.projects.map((p) => (
-                    <option key={p.id} value={p.id}>
-                      {p.name}
-                    </option>
-                  ))}
-                </select>
-              </Field>
-              <Field label="Company calendar anchor">
-                <input
-                  type="date"
-                  value={anchor}
-                  onChange={(e) => {
-                    setAnchor(e.target.value);
-                    setPreview(undefined);
-                  }}
-                  disabled={!!action.attempt}
-                />
-              </Field>
-              <button
-                className="button"
-                disabled={action.busy || !!action.attempt || (!!project && !projectVersion)}
-                onClick={() => void inspect()}
-              >
-                Preview template
-              </button>
-            </>
-          )}
-          {task && (
-            <>
-              <p>
-                Append {source.defaults.checklist.length} unchecked items. Existing checks and
-                required review stay intact.
-              </p>
-              {task.status === 'done' ? (
-                <p>Use the task’s reopen workflow before appending checks.</p>
-              ) : (
-                <button
-                  className="button button-primary"
-                  disabled={action.busy}
-                  onClick={() =>
-                    void run(async () => {
-                      await action.execute(
-                        `/tasks/${task.id}/checklists/apply`,
-                        action.attempt?.payload ?? {
-                          version: task.version,
-                          templateId: source.id,
-                          expectedTemplateVersion: source.version,
-                        },
-                      );
-                      setSelected('');
-                    })
-                  }
-                >
-                  {action.attempt ? 'Retry same checklist append' : 'Append checklist'}
-                </button>
+              <div className="form-grid">
+                <Field label="Template project">
+                  <select
+                    value={project}
+                    onChange={(e) => {
+                      setProject(e.target.value);
+                      setPreview(undefined);
+                    }}
+                    disabled={!!action.attempt}
+                  >
+                    <option value="">No project</option>
+                    {data.projects.map((p) => (
+                      <option key={p.id} value={p.id}>
+                        {p.name}
+                      </option>
+                    ))}
+                  </select>
+                </Field>
+                <Field label="Company calendar anchor">
+                  <input
+                    type="date"
+                    value={anchor}
+                    onChange={(e) => {
+                      setAnchor(e.target.value);
+                      setPreview(undefined);
+                    }}
+                    disabled={!!action.attempt}
+                  />
+                </Field>
+              </div>
+              {!fields && (
+                <div className="wk-actions">
+                  {!!project && !projectVersion && (
+                    <span className="wk-hint">Checking the selected project before preview…</span>
+                  )}
+                  <button
+                    className="button button-secondary"
+                    disabled={action.busy || !!action.attempt || (!!project && !projectVersion)}
+                    onClick={() => void inspect()}
+                  >
+                    Preview template
+                  </button>
+                </div>
               )}
             </>
           )}
+          {task && (
+            <div className="wk-sub">
+              <p className="wk-caption">
+                Append {source.defaults.checklist.length} unchecked items. Existing checks and
+                required review stay intact.
+              </p>
+              {source.defaults.checklist.length > 0 && (
+                <ul className="wk-chips" aria-label="Checklist items to append">
+                  {source.defaults.checklist.map((c, i) => (
+                    <li className="wk-chip" key={i}>
+                      {c}
+                    </li>
+                  ))}
+                </ul>
+              )}
+              {task.status === 'done' ? (
+                <p className="notice">Use the task’s reopen workflow before appending checks.</p>
+              ) : (
+                <div className="wk-actions">
+                  <button
+                    className="button button-primary"
+                    disabled={action.busy}
+                    onClick={() =>
+                      void run(async () => {
+                        await action.execute(
+                          `/tasks/${task.id}/checklists/apply`,
+                          action.attempt?.payload ?? {
+                            version: task.version,
+                            templateId: source.id,
+                            expectedTemplateVersion: source.version,
+                          },
+                        );
+                        setSelected('');
+                      })
+                    }
+                  >
+                    {action.attempt ? 'Retry same checklist append' : 'Append checklist'}
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
           {fields && !task && (
-            <fieldset disabled={!!action.attempt || action.busy}>
+            <fieldset className="wk-sub" disabled={!!action.attempt || action.busy}>
               <legend>Review resolved task</legend>
               <Field label="Reviewed task title">
                 <input
@@ -331,128 +495,134 @@ export default function TaskTemplates({
                   onChange={(e) => change('title', e.target.value)}
                 />
               </Field>
-              <Field label="Reviewed owner">
-                <select
-                  value={String(fields.ownerId ?? '')}
-                  onChange={(e) => change('ownerId', e.target.value)}
-                >
-                  <option value="">Choose an active owner</option>
-                  {persons.map((p) => (
-                    <option key={p.id} value={p.id}>
-                      {p.name}
-                    </option>
-                  ))}
-                </select>
-              </Field>
-              <Field label="Reviewed independent reviewer">
-                <select
-                  value={String(fields.reviewerId ?? '')}
-                  onChange={(e) => change('reviewerId', e.target.value)}
-                >
-                  <option value="">No reviewer</option>
-                  {persons
-                    .filter((p) => p.role !== 'viewer' && p.id !== fields.ownerId)
-                    .map((p) => (
+              <div className="form-grid">
+                <Field label="Reviewed owner">
+                  <select
+                    value={String(fields.ownerId ?? '')}
+                    onChange={(e) => change('ownerId', e.target.value)}
+                  >
+                    <option value="">Choose an active owner</option>
+                    {persons.map((p) => (
                       <option key={p.id} value={p.id}>
                         {p.name}
                       </option>
                     ))}
-                </select>
-              </Field>
-              <p>
+                  </select>
+                </Field>
+                <Field label="Reviewed independent reviewer">
+                  <select
+                    value={String(fields.reviewerId ?? '')}
+                    onChange={(e) => change('reviewerId', e.target.value)}
+                  >
+                    <option value="">No reviewer</option>
+                    {persons
+                      .filter((p) => p.role !== 'viewer' && p.id !== fields.ownerId)
+                      .map((p) => (
+                        <option key={p.id} value={p.id}>
+                          {p.name}
+                        </option>
+                      ))}
+                  </select>
+                </Field>
+                <Field label="Reviewed due date">
+                  <input
+                    type="date"
+                    value={String(fields.dueDate ?? '')}
+                    onChange={(e) => change('dueDate', e.target.value)}
+                  />
+                </Field>
+              </div>
+              <p
+                className={`pill ${fields.requiresApproval ? 'pill-purple' : 'pill-slate'} wk-pill`}
+              >
                 {fields.requiresApproval
                   ? 'Independent review is required.'
                   : 'Review is optional.'}
               </p>
-              <Field label="Reviewed due date">
-                <input
-                  type="date"
-                  value={String(fields.dueDate ?? '')}
-                  onChange={(e) => change('dueDate', e.target.value)}
-                />
-              </Field>
-              <p>{source.defaults.checklist.join(' · ')}</p>
+              {source.defaults.checklist.length > 0 && (
+                <ul className="wk-chips" aria-label="Template checklist">
+                  {source.defaults.checklist.map((c, i) => (
+                    <li className="wk-chip" key={i}>
+                      {c}
+                    </li>
+                  ))}
+                </ul>
+              )}
             </fieldset>
           )}
           {fields && !task && (
-            <button
-              className="button button-primary"
-              disabled={
-                action.busy || !fields.ownerId || (!!fields.requiresApproval && !fields.reviewerId)
-              }
-              onClick={() =>
-                void run(async () => {
-                  const result = await action.execute<{ id: string }>(
-                    `/task-templates/${source.id}/apply`,
-                    action.attempt?.payload ?? {
-                      expectedTemplateVersion: preview?.templateVersion ?? source.version,
-                      projectId: project,
-                      expectedProjectVersion: project
-                        ? (preview?.projectVersion ?? projectVersion)
-                        : 0,
-                      anchorDate: anchor,
-                      fields,
-                    },
-                  );
-                  setPreview(undefined);
-                  onCreated?.(result.id);
-                })
-              }
-            >
-              {action.attempt ? 'Retry same template application' : 'Create reviewed task'}
-            </button>
+            <div className="wk-actions">
+              {!fields.ownerId ? (
+                <span className="wk-hint">Choose an owner to create the task.</span>
+              ) : (
+                !!fields.requiresApproval &&
+                !fields.reviewerId && (
+                  <span className="wk-hint">
+                    This template requires an independent reviewer other than the owner.
+                  </span>
+                )
+              )}
+              <button
+                className="button button-primary"
+                disabled={
+                  action.busy ||
+                  !fields.ownerId ||
+                  (!!fields.requiresApproval && !fields.reviewerId)
+                }
+                onClick={() =>
+                  void run(async () => {
+                    const result = await action.execute<{ id: string }>(
+                      `/task-templates/${source.id}/apply`,
+                      action.attempt?.payload ?? {
+                        expectedTemplateVersion: preview?.templateVersion ?? source.version,
+                        projectId: project,
+                        expectedProjectVersion: project
+                          ? (preview?.projectVersion ?? projectVersion)
+                          : 0,
+                        anchorDate: anchor,
+                        fields,
+                      },
+                    );
+                    setPreview(undefined);
+                    onCreated?.(result.id);
+                  })
+                }
+              >
+                {action.attempt ? 'Retry same template application' : 'Create reviewed task'}
+              </button>
+            </div>
           )}
         </>
       )}
-      {data.me.role !== 'viewer' && (
-        <div className="form-actions">
-          <button
-            className="button"
-            onClick={() => {
-              setEditingTemplate(false);
-              setManaging(true);
-              setName('');
-              setChecklist('');
-              setManagementId('');
-              setTaskTitle('');
-            }}
-          >
-            New {kind} template
-          </button>
-          {source && (
-            <button className="button" onClick={loadManagement}>
-              Edit template
-            </button>
-          )}
-        </div>
-      )}
       {managing && managementReady && (
-        <fieldset disabled={manage.busy || !!manage.attempt}>
+        <fieldset className="wk-sub" disabled={manage.busy || !!manage.attempt}>
           <legend>Manage explicit template scope</legend>
           <Field label="Template name">
             <input value={name} onChange={(e) => setName(e.target.value)} />
           </Field>
-          <Field label="Scope owner">
-            <select value={scopeOwner} onChange={(e) => setScopeOwner(e.target.value)}>
-              {persons.map((p) => (
-                <option key={p.id} value={p.id}>
-                  {p.name}
-                </option>
-              ))}
-            </select>
-          </Field>
-          <Field label="Scope department">
-            <select value={scopeDepartment} onChange={(e) => setScopeDepartment(e.target.value)}>
-              <option value="">No department</option>
-              {data.departments.map((d) => (
-                <option key={d.id} value={d.id}>
-                  {d.name}
-                </option>
-              ))}
-            </select>
-          </Field>
+          <div className="form-grid">
+            <Field label="Scope owner">
+              <select value={scopeOwner} onChange={(e) => setScopeOwner(e.target.value)}>
+                {persons.map((p) => (
+                  <option key={p.id} value={p.id}>
+                    {p.name}
+                  </option>
+                ))}
+              </select>
+            </Field>
+            <Field label="Scope department">
+              <select value={scopeDepartment} onChange={(e) => setScopeDepartment(e.target.value)}>
+                <option value="">No department</option>
+                {data.departments.map((d) => (
+                  <option key={d.id} value={d.id}>
+                    {d.name}
+                  </option>
+                ))}
+              </select>
+            </Field>
+          </div>
           <Field label="Checklist entries, one per line">
-            <textarea value={checklist} onChange={(e) => setChecklist(e.target.value)} />
+            <textarea rows={3} value={checklist} onChange={(e) => setChecklist(e.target.value)} />
           </Field>
           {!task && (
             <>
@@ -461,70 +631,84 @@ export default function TaskTemplates({
               </Field>
               <Field label="Default task description">
                 <textarea
+                  rows={2}
                   value={taskDescription}
                   onChange={(e) => setTaskDescription(e.target.value)}
                 />
               </Field>
-              <Field label="Default task priority">
-                <select value={priority} onChange={(e) => setPriority(e.target.value)}>
-                  {['critical', 'high', 'medium', 'low'].map((v) => (
-                    <option key={v} value={v}>
-                      {v}
-                    </option>
-                  ))}
-                </select>
-              </Field>
-              <Field label="Default task estimated hours">
-                <input
-                  type="number"
-                  min="0"
-                  value={estimate}
-                  onChange={(e) => setEstimate(e.target.value)}
-                />
-              </Field>
-              <Field label="Default task tags, comma separated">
-                <input value={tags} onChange={(e) => setTags(e.target.value)} />
-              </Field>
-              <Field label="Default task initial status">
-                <select value={initialStatus} onChange={(e) => setInitialStatus(e.target.value)}>
-                  <option value="todo">To do</option>
-                  <option value="backlog">Backlog</option>
-                </select>
-              </Field>
-              <Field label="Template owner policy">
-                <select value={ownerPolicy} onChange={(e) => setOwnerPolicy(e.target.value)}>
-                  {['actor', 'fixed', 'project_owner', 'project_default'].map((p) => (
-                    <option key={p} value={p}>
-                      {p.replaceAll('_', ' ')}
-                    </option>
-                  ))}
-                </select>
-              </Field>
-              {ownerPolicy === 'fixed' && (
-                <Field label="Fixed task owner">
-                  <select value={fixedOwner} onChange={(e) => setFixedOwner(e.target.value)}>
-                    <option value="">Choose person</option>
-                    {persons.map((p) => (
-                      <option key={p.id} value={p.id}>
-                        {p.name}
+              <div className="form-grid">
+                <Field label="Default task priority">
+                  <select value={priority} onChange={(e) => setPriority(e.target.value)}>
+                    {['critical', 'high', 'medium', 'low'].map((v) => (
+                      <option key={v} value={v}>
+                        {v[0].toUpperCase() + v.slice(1)}
                       </option>
                     ))}
                   </select>
                 </Field>
-              )}
-              <Field label="Template reviewer">
-                <select value={reviewer} onChange={(e) => setReviewer(e.target.value)}>
-                  <option value="">No reviewer</option>
-                  {persons
-                    .filter((p) => p.role !== 'viewer')
-                    .map((p) => (
-                      <option key={p.id} value={p.id}>
-                        {p.name}
+                <Field label="Default task initial status">
+                  <select value={initialStatus} onChange={(e) => setInitialStatus(e.target.value)}>
+                    <option value="todo">To do</option>
+                    <option value="backlog">Backlog</option>
+                  </select>
+                </Field>
+                <Field label="Default task estimated hours">
+                  <input
+                    type="number"
+                    min="0"
+                    value={estimate}
+                    onChange={(e) => setEstimate(e.target.value)}
+                  />
+                </Field>
+                <Field label="Relative all-day deadline offset">
+                  <input
+                    type="number"
+                    min={-366}
+                    max={366}
+                    value={relative}
+                    onChange={(e) => setRelative(e.target.value)}
+                  />
+                </Field>
+              </div>
+              <Field label="Default task tags, comma separated">
+                <input value={tags} onChange={(e) => setTags(e.target.value)} />
+              </Field>
+              <div className="form-grid">
+                <Field label="Template owner policy">
+                  <select value={ownerPolicy} onChange={(e) => setOwnerPolicy(e.target.value)}>
+                    {['actor', 'fixed', 'project_owner', 'project_default'].map((p) => (
+                      <option key={p} value={p}>
+                        {policyLabel[p]}
                       </option>
                     ))}
-                </select>
-              </Field>
-              <label>
+                  </select>
+                </Field>
+                {ownerPolicy === 'fixed' && (
+                  <Field label="Fixed task owner">
+                    <select value={fixedOwner} onChange={(e) => setFixedOwner(e.target.value)}>
+                      <option value="">Choose person</option>
+                      {persons.map((p) => (
+                        <option key={p.id} value={p.id}>
+                          {p.name}
+                        </option>
+                      ))}
+                    </select>
+                  </Field>
+                )}
+                <Field label="Template reviewer">
+                  <select value={reviewer} onChange={(e) => setReviewer(e.target.value)}>
+                    <option value="">No reviewer</option>
+                    {persons
+                      .filter((p) => p.role !== 'viewer')
+                      .map((p) => (
+                        <option key={p.id} value={p.id}>
+                          {p.name}
+                        </option>
+                      ))}
+                  </select>
+                </Field>
+              </div>
+              <label className="wk-check wk-check-muted">
                 <input
                   type="checkbox"
                   checked={required}
@@ -532,131 +716,39 @@ export default function TaskTemplates({
                 />
                 Require independent review
               </label>
-              <Field label="Relative all-day deadline offset">
-                <input
-                  type="number"
-                  min={-366}
-                  max={366}
-                  value={relative}
-                  onChange={(e) => setRelative(e.target.value)}
-                />
-              </Field>
             </>
           )}
         </fieldset>
       )}
       {managing && !managementReady && (
-        <p role="status">Checking current template access. Editing resumes after authorization.</p>
+        <p role="status" className="wk-status">
+          Checking current template access. Editing resumes after authorization.
+        </p>
       )}
       {managing && (
-        <div className="form-actions">
-          <button className="button" onClick={() => setManaging(false)}>
+        <div className="wk-actions">
+          {saveBlocked && (
+            <span className="wk-hint">
+              {task
+                ? 'Name the template to save it.'
+                : 'Add a template name and default task title to save.'}
+            </span>
+          )}
+          {source && managementReady && !manage.attempt && (
+            <button className="button button-secondary" onClick={() => archiveTemplate(source)}>
+              {source.archived ? 'Restore template' : 'Archive template'}
+            </button>
+          )}
+          <button className="button button-secondary" onClick={() => setManaging(false)}>
             Cancel template editing
           </button>
           <button
             className="button button-primary"
-            disabled={
-              !managementReady ||
-              manage.busy ||
-              (!manage.attempt && (!name || (!task && !taskTitle)))
-            }
-            onClick={() =>
-              void run(async () => {
-                if (!managementReady) return;
-                if (manage.attempt) {
-                  await manage.execute(
-                    manage.attempt.target?.path ??
-                      (managementId ? `/task-templates/${managementId}` : '/task-templates'),
-                    manage.attempt.payload,
-                    manage.attempt.target?.method ?? (managementId ? 'PATCH' : 'POST'),
-                    () => {
-                      clearExecutionForm(
-                        store.companyId,
-                        store.session?.user.id ?? data.me.id,
-                        managementForm,
-                      );
-                      setManaging(false);
-                    },
-                  );
-                  await list.retry();
-                  return;
-                }
-                const defaults = {
-                  checklist: checklist
-                    .split('\n')
-                    .map((s) => s.trim())
-                    .filter(Boolean),
-                  ...(!task
-                    ? {
-                        title: taskTitle,
-                        description: taskDescription,
-                        priority,
-                        estimatedHours: Number(estimate),
-                        tags: tags
-                          .split(',')
-                          .map((s) => s.trim())
-                          .filter(Boolean),
-                        ownerPolicy,
-                        fixedOwnerId: fixedOwner,
-                        reviewerId: reviewer,
-                        requiresApproval: required,
-                        status: initialStatus,
-                        ...(relative !== '' ? { relativeDueDays: Number(relative) } : {}),
-                      }
-                    : {}),
-                };
-                const editing = !!managementId && editingTemplate;
-                await manage.execute(
-                  editing ? `/task-templates/${managementId}` : '/task-templates',
-                  {
-                    name,
-                    kind,
-                    scopeOwnerId: scopeOwner,
-                    scopeDepartmentId: scopeDepartment,
-                    defaults,
-                    ...(editing ? { version: managementVersion } : {}),
-                  },
-                  editing ? 'PATCH' : 'POST',
-                  () => {
-                    clearExecutionForm(
-                      store.companyId,
-                      store.session?.user.id ?? data.me.id,
-                      managementForm,
-                    );
-                    setManaging(false);
-                  },
-                );
-                await list.retry();
-              })
-            }
+            disabled={!managementReady || manage.busy || saveBlocked}
+            onClick={saveTemplate}
           >
             {manage.attempt ? 'Retry same scoped template submission' : 'Save scoped template'}
           </button>
-          {source && managementReady && !manage.attempt && (
-            <button
-              className="button"
-              onClick={() =>
-                void run(async () => {
-                  await manage.execute(
-                    `/task-templates/${source.id}`,
-                    { version: source.version, archived: !source.archived },
-                    'PATCH',
-                    () => {
-                      clearExecutionForm(
-                        store.companyId,
-                        store.session?.user.id ?? data.me.id,
-                        managementForm,
-                      );
-                      setManaging(false);
-                    },
-                  );
-                  await list.retry();
-                })
-              }
-            >
-              {source.archived ? 'Restore template' : 'Archive template'}
-            </button>
-          )}
         </div>
       )}
       <ExecutionRecovery action={action} onReconcile={() => setPreview(undefined)} />
@@ -671,9 +763,11 @@ export default function TaskTemplates({
       />
       {!!(error || action.error || manage.error) && (
         <ErrorMessage error={error || action.error || manage.error} />
-      )}{' '}
+      )}
       {action.attempt && (
-        <p role="alert">This request may already have succeeded. Retry its frozen details.</p>
+        <p role="alert" className="notice notice-warning">
+          This request may already have succeeded. Retry its frozen details.
+        </p>
       )}
     </section>
   );

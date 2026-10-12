@@ -122,7 +122,7 @@ export default function PeopleOnboarding({ onClose }: { onClose: () => void }) {
       description="Review company access and starting work before applying."
     >
       <div className="entity-form people-form">
-        <ol aria-label="Onboarding stages">
+        <ol className="people-stepper" aria-label="Onboarding stages">
           {onboardingStages.map((s, i) => (
             <li key={s} aria-current={stage === i ? 'step' : undefined}>
               {s}
@@ -130,6 +130,7 @@ export default function PeopleOnboarding({ onClose }: { onClose: () => void }) {
           ))}
         </ol>
         <div
+          className="people-checking"
           aria-hidden={context.ready}
           style={{ visibility: context.ready ? 'hidden' : 'visible' }}
         >
@@ -137,7 +138,7 @@ export default function PeopleOnboarding({ onClose }: { onClose: () => void }) {
         </div>
         <ErrorMessage error={error || action.error || previewAction.error} />
         {unknown ? (
-          <section>
+          <section className="people-card people-card-warning">
             <h3>Submitted request</h3>
             <p>
               The result is unknown. Your original preview, password and action key remain frozen in
@@ -149,41 +150,45 @@ export default function PeopleOnboarding({ onClose }: { onClose: () => void }) {
                 value={String(action.attempt?.payload.expectedPreviewVersion ?? '')}
               />
             </Field>
-            <button
-              className="button button-primary"
-              disabled={!ready}
-              onClick={() => void apply()}
-            >
-              Retry the same submission
-            </button>
-            <button
-              className="button button-secondary"
-              disabled={!ready}
-              onClick={() => {
-                if (
-                  window.confirm(
-                    'The original submission may already have succeeded. Inspect current People records before discarding this recovery request.',
-                  )
-                ) {
-                  action.abandon();
-                  setStage(0);
-                  setPreview(undefined);
-                }
-              }}
-            >
-              Discard after inspecting current records
-            </button>
+            <div className="people-actions">
+              <button
+                className="button button-primary"
+                disabled={!ready}
+                onClick={() => void apply()}
+              >
+                Retry the same submission
+              </button>
+              <button
+                className="button button-secondary"
+                disabled={!ready}
+                onClick={() => {
+                  if (
+                    window.confirm(
+                      'The original submission may already have succeeded. Inspect current People records before discarding this recovery request.',
+                    )
+                  ) {
+                    action.abandon();
+                    setStage(0);
+                    setPreview(undefined);
+                  }
+                }}
+              >
+                Discard after inspecting current records
+              </button>
+            </div>
           </section>
         ) : stage === 4 ? (
-          <section>
+          <section className="people-card">
             <h3>Done</h3>
             {result && (
               <>
                 <p>Company onboarding completed.</p>
                 <SessionEffect effect={result.sessionEffect} />
-                <button className="button" onClick={onClose}>
-                  Open current People
-                </button>
+                <div className="people-actions">
+                  <button className="button button-primary" onClick={onClose}>
+                    Open current People
+                  </button>
+                </div>
               </>
             )}
           </section>
@@ -211,13 +216,15 @@ export default function PeopleOnboarding({ onClose }: { onClose: () => void }) {
                   }}
                 />
               </Field>
-              <button
-                className="button button-primary"
-                disabled={!ready || !draft.name.trim() || !draft.email.includes('@')}
-                onClick={() => setStage(1)}
-              >
-                Continue to access
-              </button>
+              <div className="people-actions">
+                <button
+                  className="button button-primary"
+                  disabled={!ready || !draft.name.trim() || !draft.email.includes('@')}
+                  onClick={() => setStage(1)}
+                >
+                  Continue to access
+                </button>
+              </div>
             </div>
             <div hidden={stage !== 1}>
               {
@@ -266,55 +273,61 @@ export default function PeopleOnboarding({ onClose }: { onClose: () => void }) {
                   />
                 </>
               }
-              <p>{privateInviteCopy}</p>
-              <button className="button" onClick={() => setStage(0)}>
-                Back
-              </button>
-              <button
-                className="button button-primary"
-                disabled={
-                  !ready ||
-                  !Number.isFinite(draft.membership.capacityHours) ||
-                  draft.membership.capacityHours < 0 ||
-                  draft.membership.capacityHours > 168
-                }
-                onClick={() => setStage(2)}
-              >
-                Continue to starting work
-              </button>
+              <p className="people-note">{privateInviteCopy}</p>
+              <div className="people-actions">
+                <button className="button button-secondary" onClick={() => setStage(0)}>
+                  Back
+                </button>
+                <button
+                  className="button button-primary"
+                  disabled={
+                    !ready ||
+                    !Number.isFinite(draft.membership.capacityHours) ||
+                    draft.membership.capacityHours < 0 ||
+                    draft.membership.capacityHours > 168
+                  }
+                  onClick={() => setStage(2)}
+                >
+                  Continue to starting work
+                </button>
+              </div>
             </div>
             <div hidden={stage !== 2}>
-              <h3>Optional starting tasks</h3>
-              <p>Choose optional task templates and review every assignment and date.</p>
-              {templates.ready &&
-                templates.data?.templates
-                  .filter((t) => t.kind === 'task' && !t.archived)
-                  .map((t) => (
-                    <label key={t.id}>
-                      <input
-                        type="checkbox"
-                        checked={draft.tasks.some((x) => x.templateId === t.id)}
-                        onChange={(e) => {
-                          change();
-                          setDraft({
-                            ...draft,
-                            tasks: e.target.checked
-                              ? [
-                                  ...draft.tasks,
-                                  {
-                                    templateId: t.id,
-                                    expectedTemplateVersion: t.version,
-                                    anchorDate: '',
-                                    fields: {},
-                                  },
-                                ]
-                              : draft.tasks.filter((x) => x.templateId !== t.id),
-                          });
-                        }}
-                      />
-                      {t.name}
-                    </label>
-                  ))}
+              <h3 className="people-section-title">Optional starting tasks</h3>
+              <p className="people-muted">
+                Choose optional task templates and review every assignment and date.
+              </p>
+              <div className="people-check-list">
+                {templates.ready &&
+                  templates.data?.templates
+                    .filter((t) => t.kind === 'task' && !t.archived)
+                    .map((t) => (
+                      <label key={t.id} className="check-field people-check">
+                        <input
+                          type="checkbox"
+                          checked={draft.tasks.some((x) => x.templateId === t.id)}
+                          onChange={(e) => {
+                            change();
+                            setDraft({
+                              ...draft,
+                              tasks: e.target.checked
+                                ? [
+                                    ...draft.tasks,
+                                    {
+                                      templateId: t.id,
+                                      expectedTemplateVersion: t.version,
+                                      anchorDate: '',
+                                      fields: {},
+                                    },
+                                  ]
+                                : draft.tasks.filter((x) => x.templateId !== t.id),
+                            });
+                          }}
+                        />
+                        {t.name}
+                      </label>
+                    ))}
+              </div>
               {draft.tasks.map((task, index) => {
                 const template = templates.data?.templates.find((t) => t.id === task.templateId);
                 const update = (patch: Partial<typeof task>) => {
@@ -325,63 +338,65 @@ export default function PeopleOnboarding({ onClose }: { onClose: () => void }) {
                   });
                 };
                 return (
-                  <fieldset key={task.templateId}>
+                  <fieldset key={task.templateId} className="people-item-card">
                     <legend>
                       {templates.ready
                         ? (template?.name ?? 'Choose a current replacement')
                         : 'Checking template access…'}
                     </legend>
-                    <Field label={'Anchor date ' + (index + 1)}>
-                      <input
-                        type="date"
-                        value={task.anchorDate}
-                        onChange={(e) => update({ anchorDate: e.target.value })}
-                      />
-                    </Field>
-                    <Field label={'Project ' + (index + 1)}>
-                      <select
-                        value={task.projectId ?? ''}
-                        onChange={(e) => {
-                          const p = projects.data?.projects.find((p) => p.id === e.target.value);
-                          update({ projectId: p?.id, expectedProjectVersion: p?.version });
-                        }}
-                      >
-                        <option value="">No project</option>
-                        {projects.data?.projects.map((p) => (
-                          <option key={p.id} value={p.id}>
-                            {p.name}
-                          </option>
-                        ))}
-                      </select>
-                    </Field>
-                    {(['ownerId', 'reviewerId'] as const).map((field) => (
-                      <Field
-                        key={field}
-                        label={
-                          (field === 'ownerId' ? 'Owner ' : 'Independent reviewer ') + (index + 1)
-                        }
-                      >
+                    <div className="form-grid">
+                      <Field label={'Anchor date ' + (index + 1)}>
+                        <input
+                          type="date"
+                          value={task.anchorDate}
+                          onChange={(e) => update({ anchorDate: e.target.value })}
+                        />
+                      </Field>
+                      <Field label={'Project ' + (index + 1)}>
                         <select
-                          value={String(task.fields[field] ?? '')}
-                          onChange={(e) =>
-                            update({ fields: { ...task.fields, [field]: e.target.value } })
-                          }
+                          value={task.projectId ?? ''}
+                          onChange={(e) => {
+                            const p = projects.data?.projects.find((p) => p.id === e.target.value);
+                            update({ projectId: p?.id, expectedProjectVersion: p?.version });
+                          }}
                         >
-                          <option value="">Use reviewed template default</option>
-                          {context.data?.people
-                            .filter(
-                              (p) => p.active && (field !== 'reviewerId' || p.role !== 'viewer'),
-                            )
-                            .map((p) => (
-                              <option key={p.id} value={p.id}>
-                                {p.name}
-                              </option>
-                            ))}
+                          <option value="">No project</option>
+                          {projects.data?.projects.map((p) => (
+                            <option key={p.id} value={p.id}>
+                              {p.name}
+                            </option>
+                          ))}
                         </select>
                       </Field>
-                    ))}
+                      {(['ownerId', 'reviewerId'] as const).map((field) => (
+                        <Field
+                          key={field}
+                          label={
+                            (field === 'ownerId' ? 'Owner ' : 'Independent reviewer ') + (index + 1)
+                          }
+                        >
+                          <select
+                            value={String(task.fields[field] ?? '')}
+                            onChange={(e) =>
+                              update({ fields: { ...task.fields, [field]: e.target.value } })
+                            }
+                          >
+                            <option value="">Use reviewed template default</option>
+                            {context.data?.people
+                              .filter(
+                                (p) => p.active && (field !== 'reviewerId' || p.role !== 'viewer'),
+                              )
+                              .map((p) => (
+                                <option key={p.id} value={p.id}>
+                                  {p.name}
+                                </option>
+                              ))}
+                          </select>
+                        </Field>
+                      ))}
+                    </div>
                     <button
-                      className="button"
+                      className="button button-secondary button-small"
                       onClick={() =>
                         setDraft({ ...draft, tasks: draft.tasks.filter((_, i) => i !== index) })
                       }
@@ -391,34 +406,38 @@ export default function PeopleOnboarding({ onClose }: { onClose: () => void }) {
                   </fieldset>
                 );
               })}
-              <button className="button" onClick={() => setStage(1)}>
-                Back
-              </button>
-              <button
-                className="button button-primary"
-                disabled={
-                  !ready ||
-                  previewAction.busy ||
-                  draft.tasks.some((t) => !t.anchorDate || t.expectedTemplateVersion < 1)
-                }
-                onClick={() => void inspect()}
-              >
-                Review onboarding
-              </button>
+              <div className="people-actions">
+                <button className="button button-secondary" onClick={() => setStage(1)}>
+                  Back
+                </button>
+                <button
+                  className="button button-primary"
+                  disabled={
+                    !ready ||
+                    previewAction.busy ||
+                    draft.tasks.some((t) => !t.anchorDate || t.expectedTemplateVersion < 1)
+                  }
+                  onClick={() => void inspect()}
+                >
+                  Review onboarding
+                </button>
+              </div>
             </div>
             <div hidden={stage !== 3}>
               {presented ? (
                 <>
                   <PeopleProjection current={!!currentPreview}>
-                    <h3>Review exact access</h3>
-                    <p>
+                    <h3 className="people-section-title">Review exact access</h3>
+                    <p className="people-muted">
                       {presented.person.name} · {presented.person.email}
                     </p>
-                    {presented.grants.map((g) => (
-                      <p key={g.area}>{g.summary}</p>
-                    ))}
+                    <ul className="people-grant-list">
+                      {presented.grants.map((g) => (
+                        <li key={g.area}>{g.summary}</li>
+                      ))}
+                    </ul>
                     {presented.taskPreviews.map((t, i) => (
-                      <section key={i}>
+                      <section key={i} className="people-item-card">
                         <h4>{String(t.fields.title ?? 'Starting task')}</h4>
                         <p>
                           Template version {t.templateVersion} ·{' '}
@@ -432,7 +451,7 @@ export default function PeopleOnboarding({ onClose }: { onClose: () => void }) {
                       </section>
                     ))}
                     {presented.unresolved.map((u, i) => (
-                      <p role="alert" key={i}>
+                      <p role="alert" key={i} className="people-alert">
                         {u.message}
                       </p>
                     ))}
@@ -451,46 +470,55 @@ export default function PeopleOnboarding({ onClose }: { onClose: () => void }) {
                       />
                     </Field>
                   ) : (
-                    <p>The existing account name, password and account settings are preserved.</p>
+                    <p className="people-note">
+                      The existing account name, password and account settings are preserved.
+                    </p>
                   )}
-                  <button
-                    className="button button-primary"
-                    disabled={
-                      !ready ||
-                      presented.unresolved.length > 0 ||
-                      (presented.accountMode === 'new_account' && Array.from(password).length < 12)
-                    }
-                    onClick={() => void apply()}
-                  >
-                    Confirm onboarding
-                  </button>
+                  <div className="people-actions">
+                    <button
+                      className="button button-primary"
+                      disabled={
+                        !ready ||
+                        presented.unresolved.length > 0 ||
+                        (presented.accountMode === 'new_account' &&
+                          Array.from(password).length < 12)
+                      }
+                      onClick={() => void apply()}
+                    >
+                      Confirm onboarding
+                    </button>
+                  </div>
                 </>
               ) : (
-                <p>Review choices again to capture current access and source versions.</p>
-              )}
-              <button
-                className="button"
-                disabled={action.busy}
-                onClick={() => {
-                  setStage(identityReady ? 2 : 0);
-                  setPassword('');
-                  setPreview(undefined);
-                }}
-              >
-                Edit reviewed choices
-              </button>
-              {!identityReady && (
-                <p role="status">
-                  Re-enter name and email, then review current access and starting work.
+                <p className="people-note">
+                  Review choices again to capture current access and source versions.
                 </p>
               )}
-              <button
-                className="button"
-                disabled={!ready || !identityReady}
-                onClick={() => void inspect()}
-              >
-                Create fresh preview
-              </button>
+              <div className="people-actions people-actions-start">
+                <button
+                  className="button button-secondary"
+                  disabled={action.busy}
+                  onClick={() => {
+                    setStage(identityReady ? 2 : 0);
+                    setPassword('');
+                    setPreview(undefined);
+                  }}
+                >
+                  Edit reviewed choices
+                </button>
+                {!identityReady && (
+                  <p role="status">
+                    Re-enter name and email, then review current access and starting work.
+                  </p>
+                )}
+                <button
+                  className="button button-secondary"
+                  disabled={!ready || !identityReady}
+                  onClick={() => void inspect()}
+                >
+                  Create fresh preview
+                </button>
+              </div>
             </div>
           </>
         )}

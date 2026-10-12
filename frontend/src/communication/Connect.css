@@ -254,25 +254,89 @@
 .connect-back {
   display: none;
 }
-.connect-call-strip {
-  padding: 9px 24px;
+.connect-toolbar {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 7px 18px 7px 24px;
   background: #fbfcfd;
   border-bottom: 1px solid var(--line);
   font-size: 11px;
-  color: #748091;
+  color: #5d6676;
 }
-.connect-call-strip summary {
+.connect-toolbar {
+  position: relative;
+  min-height: 46px;
+}
+.connect-toolbar > :first-child {
+  flex: 1;
+  min-width: 0;
+}
+.connect-toolbar-end {
+  position: absolute;
+  top: 7px;
+  right: 18px;
+  display: flex;
+  align-items: center;
+}
+.connect-shell .connect-toolbar-end .button {
+  min-height: 32px !important;
+  padding: 6px 11px;
+  font-size: 11px;
+}
+.connect-call-strip summary,
+.connect-mention-list summary,
+.connect-mentions summary,
+.connect-media-tools summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 32px;
   cursor: pointer;
+  list-style: none;
+  border-radius: 6px;
+}
+.connect-call-strip summary::-webkit-details-marker,
+.connect-mention-list summary::-webkit-details-marker,
+.connect-mentions summary::-webkit-details-marker,
+.connect-media-tools summary::-webkit-details-marker {
+  display: none;
+}
+.connect-call-strip summary::after,
+.connect-mention-list summary::after,
+.connect-mentions summary::after,
+.connect-media-tools summary::after {
+  content: '';
+  width: 5px;
+  height: 5px;
+  margin-left: 2px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: rotate(-45deg);
+  transition: transform 0.15s;
+}
+.connect-call-strip[open] summary::after,
+.connect-mention-list[open] summary::after,
+.connect-mentions[open] summary::after,
+.connect-media-tools[open] summary::after {
+  transform: rotate(45deg);
+}
+.connect-call-strip summary:hover,
+.connect-mention-list summary:hover,
+.connect-mentions summary:hover,
+.connect-media-tools summary:hover {
+  color: #c65009;
+}
+.connect-call-strip summary:focus-visible,
+.connect-mention-list summary:focus-visible,
+.connect-mentions summary:focus-visible,
+.connect-media-tools summary:focus-visible {
+  outline: 2px solid #f97316;
+  outline-offset: 2px;
 }
 .connect-call-strip section {
-  padding: 12px 0 3px;
-}
-.connect-call-strip button {
-  padding: 9px 12px;
-  border-radius: 7px;
-  background: #edf0f5;
-  margin-right: 8px;
-  color: #414a5a;
+  padding: 6px 0 8px;
 }
 .connect-call-strip [data-lk-theme] {
   min-height: 100px;
@@ -477,12 +541,53 @@
   min-width: 14px;
 }
 .connect-media-tools {
-  font-size: 10px;
-  color: #858c99;
-  margin-top: 6px;
+  font-size: 11px;
+  color: #667085;
+  margin-top: 4px;
 }
-.connect-media-tools summary {
-  cursor: pointer;
+.connect-mention-list {
+  font-size: 11px;
+  color: #667085;
+  margin: -4px 0 6px;
+}
+.connect-mention-list[open] {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  max-height: 160px;
+  overflow: auto;
+  padding-bottom: 6px;
+}
+.connect-mention-list[open] > summary {
+  margin-bottom: 2px;
+}
+.connect-mention-list > button {
+  max-width: 100%;
+  padding: 6px 9px;
+  border-radius: 6px;
+  background: #f5f6f8;
+  color: #475467;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.connect-mention-list > button:hover {
+  background: #fff1e8;
+  color: #b4490b;
+}
+.connect-compose-area > button:first-child {
+  display: block;
+  margin: -32px auto 10px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: #f97316;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 500;
+  box-shadow: 0 4px 12px #f9731633;
+  position: relative;
 }
 .connect-media {
   padding: 10px 0;
@@ -672,11 +777,16 @@
 .connect-people button[aria-pressed='true'] {
   background: #fff3e9;
 }
-.connect-people button span {
+.connect-people-copy {
   display: flex;
   flex: 1;
+  min-width: 0;
   flex-direction: column;
-  gap: 5px;
+  gap: 4px;
+}
+.connect-people button > svg {
+  color: #f97316;
+  flex-shrink: 0;
 }
 .connect-people strong {
   font-size: 12px;
@@ -684,7 +794,7 @@
 }
 .connect-people small {
   font-size: 10px;
-  color: #939baa;
+  color: #667085;
 }
 .connect-dialog-footer {
   display: flex;
@@ -700,31 +810,89 @@
   margin-right: auto;
 }
 .connect-action-menu {
-  padding: 12px 20px 20px;
+  padding: 8px 16px 18px;
+  display: flex;
+  flex-direction: column;
+}
+.connect-action-group {
+  display: flex;
+  flex-direction: column;
+  padding: 8px 0;
+}
+.connect-action-group + .connect-action-group {
+  border-top: 1px solid var(--line);
+}
+.connect-action-group h3 {
+  margin: 4px 10px 6px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: #667085;
 }
 .connect-action-menu button {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 12px 10px;
+  gap: 11px;
+  padding: 10px;
   width: 100%;
-  border-radius: 6px;
+  min-height: 40px;
+  border-radius: 7px;
   text-align: left;
   font-size: 12px;
-  color: #606b7c;
+  color: #344054;
+  transition:
+    background 0.15s,
+    color 0.15s;
 }
-.connect-action-menu button:hover {
+.connect-action-menu button > span {
+  flex: 1;
+}
+.connect-action-menu button > svg {
+  color: #667085;
+  flex-shrink: 0;
+}
+.connect-action-menu button > svg:last-child {
+  color: #c0c6d0;
+}
+.connect-action-menu button:hover:not(:disabled) {
   background: #fff2e7;
-  color: #b7571c;
+  color: #b4490b;
+}
+.connect-action-menu button:hover:not(:disabled) > svg {
+  color: currentColor;
+}
+.connect-action-menu button.connect-action-danger,
+.connect-action-menu button.connect-action-danger > svg:first-child {
+  color: #b42318;
+}
+.connect-action-menu button.connect-action-danger:hover:not(:disabled) {
+  background: #fff3f1;
+  color: #b42318;
 }
 .connect-action-menu button:disabled {
-  opacity: 0.4;
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.connect-action-menu button:focus-visible {
+  outline: 2px solid #f97316;
+  outline-offset: -2px;
 }
 .connect-action-menu p {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  margin: 4px 10px 2px;
+  padding: 9px 11px;
+  border-radius: 7px;
+  background: var(--subtle);
   font-size: 11px;
-  color: #959ca8;
-  padding: 12px 10px;
-  line-height: 1.7;
+  color: #667085;
+  line-height: 1.55;
+}
+.connect-action-menu p svg {
+  flex-shrink: 0;
+  margin-top: 2px;
 }
 .connect-thread blockquote {
   margin: 0;
@@ -744,31 +912,6 @@
 .connect-thread article p {
   white-space: pre-wrap;
   margin-top: 8px;
-}
-.connect-daily {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-.connect-daily > label,
-.connect-daily > div {
-  flex-basis: 100%;
-}
-.connect-daily button,
-.connect-dialog-body details button,
-.connect-dialog-body .panel button {
-  border: 1px solid #e9ebef;
-  border-radius: 6px;
-  padding: 8px 11px;
-  font-size: 11px;
-}
-.connect-daily article {
-  padding: 14px 0;
-  border-bottom: 1px solid var(--line);
-}
-.connect-daily article p {
-  margin: 5px 0 12px;
-  white-space: pre-wrap;
 }
 .connect-dialog-body details[open] {
   display: flex;
@@ -881,8 +1024,18 @@
     font-size: 11px;
     margin-top: 10px;
   }
-  .connect-call-strip {
-    padding: 10px 14px;
+  .connect-toolbar {
+    padding: 4px 10px 4px 14px;
+    min-height: 48px;
+  }
+  .connect-toolbar-end {
+    top: 6px;
+    right: 10px;
+  }
+  .connect-call-strip summary,
+  .connect-mention-list summary,
+  .connect-media-tools summary {
+    min-height: 40px;
   }
   .connect-dialog-body {
     padding: 16px;
@@ -915,8 +1068,24 @@
     height: var(--connect-available-height, calc(var(--connect-viewport-height, 100dvh) - 155px));
     min-height: 0;
   }
-  .connect-shell[data-keyboard='true'] .connect-call-strip,
+  .connect-shell[data-keyboard='true'] .connect-toolbar,
   .connect-shell[data-keyboard='true'] .connect-send-row .connect-hint {
     display: none;
   }
+}
+
+/* Mention picker: keep the search field full width and the panel bounded. */
+.connect-mentions[open] {
+  max-height: 180px;
+  overflow: auto;
+}
+.connect-mentions p {
+  margin: 2px 0 6px;
+}
+.connect-mentions label:has(input:not([type='checkbox'])) {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 4px;
+  width: min(100%, 280px);
 }

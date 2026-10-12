@@ -168,12 +168,6 @@ export default function Overview({
   ];
   return (
     <div className="page-content overview-page">
-      <AttentionInbox
-        key={data.company.id + ':' + data.me.id}
-        decisionsOnly
-        onTask={onTask}
-        onExpense={onExpense ?? (() => onNavigate('finance'))}
-      />
       <div className="overview-context">
         <div className="live-label">
           <span />
@@ -255,6 +249,12 @@ export default function Overview({
           </button>
         </section>
       )}
+      <AttentionInbox
+        key={data.company.id + ':' + data.me.id}
+        decisionsOnly
+        onTask={onTask}
+        onExpense={onExpense ?? (() => onNavigate('finance'))}
+      />
       <div className="overview-main-grid">
         <section className="panel attention-panel">
           <SectionHeader

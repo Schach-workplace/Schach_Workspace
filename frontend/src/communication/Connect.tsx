@@ -14,14 +14,26 @@ import {
   Briefcase,
   ChevronRight,
   FileDown,
+  AtSign,
+  BellRing,
+  ClipboardCheck,
   Hash,
   Info,
+  Paperclip,
+  Phone,
+  ListChecks,
   LockKeyhole,
   MessageCircle,
+  MessageSquareText,
   MessagesSquare,
   MoreHorizontal,
+  Pencil,
+  Pin,
   Plus,
+  Reply,
   Search,
+  ThumbsUp,
+  Trash2,
   Users,
 } from 'lucide-react';
 import { Avatar, Modal } from '../components/UI';
@@ -38,6 +50,7 @@ import Structured from './Structured';
 import MediaComposer from './MediaComposer';
 import MessageTaskConversion from '../components/MessageTaskConversion';
 import './Connect.css';
+import '../styles/connect-dialogs.css';
 const Calls = lazy(() => import('./Calls'));
 type Panel = 'search' | 'saved' | 'details' | 'work' | 'records' | null;
 export default function Connect({ onTask }: { onTask?: (id: string) => void } = {}) {
@@ -598,14 +611,54 @@ function ConnectView({
                 {error || chat.error}
               </p>
             )}
-            {!disabled && (
-              <details className="connect-call-strip">
-                <summary>Audio & video calls</summary>
-                <Suspense fallback={<p>Loading call controls…</p>}>
-                  <Calls key={chat.selected} conversation={chat.selected} command={chat.command} />
-                </Suspense>
-              </details>
-            )}
+            <div className="connect-toolbar">
+              {!disabled ? (
+                <details className="connect-call-strip">
+                  <summary>
+                    <Phone size={14} aria-hidden="true" />
+                    Audio & video calls
+                  </summary>
+                  <Suspense fallback={<p className="connect-hint">Loading call controls…</p>}>
+                    <Calls
+                      key={chat.selected}
+                      conversation={chat.selected}
+                      command={chat.command}
+                    />
+                  </Suspense>
+                </details>
+              ) : (
+                <span />
+              )}
+              <div className="connect-toolbar-end">
+                <IntelligenceLauncher
+                  choices={chat.messages
+                    .filter((m) => !m.removed)
+                    .flatMap((m) => [
+                      {
+                        label: 'Message: ' + m.body.slice(0, 100),
+                        source: {
+                          kind: 'message' as const,
+                          id: m.id,
+                          conversationId: chat.selected,
+                          expectedRevision: m.revision,
+                          selectedFieldSet: 'body',
+                        },
+                      },
+                      ...(m.mediaIds ?? []).map((id) => ({
+                        label: 'Attached audio from selected message',
+                        source: {
+                          kind: 'voice_media' as const,
+                          id,
+                          parentId: m.id,
+                          conversationId: chat.selected,
+                          expectedRevision: m.revision,
+                          selectedFieldSet: 'audio',
+                        },
+                      })),
+                    ])}
+                />
+              </div>
+            </div>
             <div
               className="connect-history"
               ref={historyRef}
@@ -631,33 +684,6 @@ function ConnectView({
                   Load older messages
                 </button>
               )}
-              <IntelligenceLauncher
-                choices={chat.messages
-                  .filter((m) => !m.removed)
-                  .flatMap((m) => [
-                    {
-                      label: 'Message: ' + m.body.slice(0, 100),
-                      source: {
-                        kind: 'message' as const,
-                        id: m.id,
-                        conversationId: chat.selected,
-                        expectedRevision: m.revision,
-                        selectedFieldSet: 'body',
-                      },
-                    },
-                    ...(m.mediaIds ?? []).map((id) => ({
-                      label: 'Attached audio from selected message',
-                      source: {
-                        kind: 'voice_media' as const,
-                        id,
-                        parentId: m.id,
-                        conversationId: chat.selected,
-                        expectedRevision: m.revision,
-                        selectedFieldSet: 'audio',
-                      },
-                    })),
-                  ])}
-              />
               {chat.messages.length === 0 ? (
                 <div className="connect-empty-chat">
                   <MessagesSquare size={38} />
@@ -773,8 +799,11 @@ function ConnectView({
                   {newCount} new messages
                 </button>
               )}
-              <details>
-                <summary>Mentions in loaded history</summary>
+              <details className="connect-mention-list">
+                <summary>
+                  <AtSign size={13} aria-hidden="true" />
+                  Mentions in loaded history
+                </summary>
                 {chat.messages
                   .filter((m) => !m.removed && (m.mentionAll || m.mentionIds?.includes(data.me.id)))
                   .map((m) => (
@@ -814,7 +843,10 @@ function ConnectView({
                     }
                   />
                   <details className="connect-media-tools">
-                    <summary>Attachments & voice notes</summary>
+                    <summary>
+                      <Paperclip size={13} aria-hidden="true" />
+                      Attachments & voice notes
+                    </summary>
                     <MediaComposer
                       company={workspace.companyId}
                       conversation={chat.selected}
@@ -916,8 +948,8 @@ function ConnectView({
               command={chat.command}
             />
             {me?.role === 'owner' && data.me.role !== 'viewer' && (
-              <label>
-                Publication policy
+              <label className="connect-settings-block connect-policy">
+                <span className="connect-settings-heading">Publication policy</span>
                 <select
                   value={conversation.forwarding}
                   onChange={(e) =>
@@ -936,21 +968,28 @@ function ConnectView({
                 </small>
               </label>
             )}
-            <button className="button" onClick={() => setPanel('records')}>
-              Acknowledgements, polls, events and decisions
-            </button>
-            {me?.role === 'owner' && conversation.forwarding === 'selected' && (
-              <button
-                className="button"
-                disabled={disabled || !chat.messages.some((m) => !m.removed)}
-                onClick={() => {
-                  setPanel(null);
-                  setExporting(true);
-                }}
-              >
-                Export this authorized page with audit
+            <div className="connect-settings-block connect-settings-links">
+              <h3>Records and exports</h3>
+              <button className="connect-settings-link" onClick={() => setPanel('records')}>
+                <ClipboardCheck size={16} aria-hidden="true" />
+                <span>Acknowledgements, polls, events and decisions</span>
+                <ChevronRight size={16} aria-hidden="true" />
               </button>
-            )}
+              {me?.role === 'owner' && conversation.forwarding === 'selected' && (
+                <button
+                  className="connect-settings-link"
+                  disabled={disabled || !chat.messages.some((m) => !m.removed)}
+                  onClick={() => {
+                    setPanel(null);
+                    setExporting(true);
+                  }}
+                >
+                  <FileDown size={16} aria-hidden="true" />
+                  <span>Export this authorized page with audit</span>
+                  <ChevronRight size={16} aria-hidden="true" />
+                </button>
+              )}
+            </div>
           </div>
         </Modal>
       )}
@@ -1069,77 +1108,121 @@ function ConnectView({
           onClose={() => setActionSource(null)}
         >
           <div className="connect-action-menu">
-            {[
-              ['Reply', disabled, () => chooseReply(actionSource)],
-              ['Open thread', false, () => void openThread(actionSource)],
+            {(
               [
-                'Save privately',
-                false,
-                () =>
-                  run(`/conversations/${chat.selected}/messages/${actionSource.id}/save`, {
-                    saved: true,
-                  }),
-              ],
-              ['Remind me privately', false, () => setRemind(actionSource)],
-              [
-                'React 👍',
-                disabled,
-                () =>
-                  run(`/conversations/${chat.selected}/messages/${actionSource.id}/reactions`, {
-                    emoji: '👍',
-                    active: true,
-                  }),
-              ],
-              ...(['owner', 'moderator'].includes(me?.role ?? '')
-                ? [
+                [
+                  'Respond',
+                  [
+                    ['Reply', disabled, () => chooseReply(actionSource), Reply],
+                    ['Open thread', false, () => void openThread(actionSource), MessageSquareText],
                     [
-                      'Pin',
+                      'React 👍',
                       disabled,
                       () =>
-                        run(`/conversations/${chat.selected}/messages/${actionSource.id}/pin`, {
-                          pinned: true,
-                          expectedRevision: actionSource.revision,
-                        }),
+                        run(
+                          `/conversations/${chat.selected}/messages/${actionSource.id}/reactions`,
+                          {
+                            emoji: '👍',
+                            active: true,
+                          },
+                        ),
+                      ThumbsUp,
                     ],
-                  ]
-                : []),
-              [
-                'Create task',
-                disabled || conversation.forwarding !== 'selected',
-                () => setConversion(actionSource),
-              ],
-              [
-                'Publish request / expense draft',
-                disabled || conversation.forwarding !== 'selected',
-                () => setWorkSource(actionSource),
-              ],
-              [
-                'Request acknowledgement / poll / decision',
-                disabled,
-                () => setStructured(actionSource),
-              ],
-              ...(actionSource.senderId === data.me.id
-                ? [
-                    ['Edit', disabled, () => setEdit(actionSource)],
-                    ['Remove', disabled, () => setRemove(actionSource)],
-                  ]
-                : []),
-            ].map(([name, inactive, fn]) => (
-              <button
-                key={String(name)}
-                disabled={Boolean(inactive)}
-                onClick={() => {
-                  (fn as () => void)();
-                  setActionSource(null);
-                }}
-              >
-                {String(name)}
-                <ChevronRight size={16} />
-              </button>
+                    ...(['owner', 'moderator'].includes(me?.role ?? '')
+                      ? [
+                          [
+                            'Pin',
+                            disabled,
+                            () =>
+                              run(
+                                `/conversations/${chat.selected}/messages/${actionSource.id}/pin`,
+                                {
+                                  pinned: true,
+                                  expectedRevision: actionSource.revision,
+                                },
+                              ),
+                            Pin,
+                          ],
+                        ]
+                      : []),
+                  ],
+                ],
+                [
+                  'Only for you',
+                  [
+                    [
+                      'Save privately',
+                      false,
+                      () =>
+                        run(`/conversations/${chat.selected}/messages/${actionSource.id}/save`, {
+                          saved: true,
+                        }),
+                      Bookmark,
+                    ],
+                    ['Remind me privately', false, () => setRemind(actionSource), BellRing],
+                  ],
+                ],
+                [
+                  'Turn into work',
+                  [
+                    [
+                      'Create task',
+                      disabled || conversation.forwarding !== 'selected',
+                      () => setConversion(actionSource),
+                      ListChecks,
+                    ],
+                    [
+                      'Publish request / expense draft',
+                      disabled || conversation.forwarding !== 'selected',
+                      () => setWorkSource(actionSource),
+                      Briefcase,
+                    ],
+                    [
+                      'Request acknowledgement / poll / decision',
+                      disabled,
+                      () => setStructured(actionSource),
+                      ClipboardCheck,
+                    ],
+                  ],
+                ],
+                ...(actionSource.senderId === data.me.id
+                  ? [
+                      [
+                        'Your message',
+                        [
+                          ['Edit', disabled, () => setEdit(actionSource), Pencil],
+                          ['Remove', disabled, () => setRemove(actionSource), Trash2],
+                        ],
+                      ],
+                    ]
+                  : []),
+              ] as [string, [string, boolean, () => void, typeof Reply][]][]
+            ).map(([group, items]) => (
+              <div className="connect-action-group" key={group} role="group" aria-label={group}>
+                <h3>{group}</h3>
+                {items.map(([name, inactive, fn, Icon]) => (
+                  <button
+                    key={name}
+                    className={name === 'Remove' ? 'connect-action-danger' : undefined}
+                    disabled={Boolean(inactive)}
+                    onClick={() => {
+                      fn();
+                      setActionSource(null);
+                    }}
+                  >
+                    <Icon size={16} aria-hidden="true" />
+                    <span>{name}</span>
+                    <ChevronRight size={16} aria-hidden="true" />
+                  </button>
+                ))}
+                {group === 'Turn into work' && conversation.forwarding === 'deny' && (
+                  <p>
+                    <LockKeyhole size={13} aria-hidden="true" />
+                    Work publication is disabled by this conversation’s privacy policy.
+                  </p>
+                )}
+              </div>
             ))}
-            {conversation.forwarding === 'deny' && (
-              <p>Work publication is disabled by this conversation’s privacy policy.</p>
-            )}
           </div>
         </Modal>
       )}

@@ -377,43 +377,53 @@ export default function FinanceAssistance({
         )}
         {(tab === 'receipt' || tab === 'statement') && (
           <>
-            <fieldset
-              className="plain-fieldset finance-assist-form"
-              disabled={!!m.attempt || m.busy}
-            >
-              <Field
-                label={`Choose ${tab === 'receipt' ? 'JPEG, PNG or PDF receipt' : 'UTF-8 bank CSV'}`}
+            <div className="finance-assist-card finance-assist-stage">
+              <div className="finance-assist-card-head">
+                <h3>{tab === 'receipt' ? 'Stage a receipt' : 'Stage a bank statement'}</h3>
+                <p className="finance-assist-meta">
+                  {tab === 'receipt'
+                    ? 'The file stays private to you until you extract and review candidates.'
+                    : 'The file stays private to you until you preview and import its rows.'}
+                </p>
+              </div>
+              <fieldset
+                className="plain-fieldset finance-assist-form"
+                disabled={!!m.attempt || m.busy}
               >
-                <input
-                  type="file"
-                  accept={tab === 'receipt' ? '.jpg,.jpeg,.png,.pdf' : '.csv'}
-                  onChange={(e) => setFile(e.target.files?.[0])}
-                />
-              </Field>
-              {tab === 'receipt' && (
-                <Field label="Reviewed destination department">
-                  <select value={department} onChange={(e) => setDepartment(e.target.value)}>
-                    <option value="">Choose department</option>
-                    {w.data?.departments
-                      .filter((d) => authority || d.id === w.data?.me.departmentId)
-                      .map((d) => (
-                        <option key={d.id} value={d.id}>
-                          {d.name}
-                        </option>
-                      ))}
-                  </select>
+                <Field
+                  label={`Choose ${tab === 'receipt' ? 'JPEG, PNG or PDF receipt' : 'UTF-8 bank CSV'}`}
+                >
+                  <input
+                    type="file"
+                    accept={tab === 'receipt' ? '.jpg,.jpeg,.png,.pdf' : '.csv'}
+                    onChange={(e) => setFile(e.target.files?.[0])}
+                  />
                 </Field>
-              )}
-            </fieldset>
-            <div className="finance-assist-actions">
-              <button
-                className="button button-primary"
-                disabled={m.busy || (!m.attempt && (!file || (tab === 'receipt' && !department)))}
-                aria-busy={m.busy}
-                onClick={() => void reserve()}
-              >
-                {m.attempt ? 'Retry same file reservation' : 'Reserve private file'}
-              </button>
+                {tab === 'receipt' && (
+                  <Field label="Reviewed destination department">
+                    <select value={department} onChange={(e) => setDepartment(e.target.value)}>
+                      <option value="">Choose department</option>
+                      {w.data?.departments
+                        .filter((d) => authority || d.id === w.data?.me.departmentId)
+                        .map((d) => (
+                          <option key={d.id} value={d.id}>
+                            {d.name}
+                          </option>
+                        ))}
+                    </select>
+                  </Field>
+                )}
+              </fieldset>
+              <div className="finance-assist-actions">
+                <button
+                  className="button button-primary"
+                  disabled={m.busy || (!m.attempt && (!file || (tab === 'receipt' && !department)))}
+                  aria-busy={m.busy}
+                  onClick={() => void reserve()}
+                >
+                  {m.attempt ? 'Retry same file reservation' : 'Reserve private file'}
+                </button>
+              </div>
             </div>
             {m.attempt && (
               <p className="finance-notice finance-notice-warning">
@@ -463,32 +473,36 @@ export default function FinanceAssistance({
                 }}
               />
             )}
-            <h3 className="finance-assist-heading">Your extraction requests</h3>
-            <AssistListState
-              loading={jobs.loading}
-              error={jobs.error}
-              empty={jobs.ready && !jobs.data?.items.length}
-              loadingText="Checking your extraction requests…"
-              emptyText="No extraction requests yet. Extract a clean staged receipt to create one."
-              onRetry={() => void jobs.retry?.()}
-            />
-            {!!jobs.data?.items.length && (
-              <ul className="finance-assist-list" aria-label="Your extraction requests">
-                {jobs.data.items.map((j) => (
-                  <li key={j.id}>
-                    <button
-                      type="button"
-                      className={'finance-assist-item' + (job === j.id ? ' active' : '')}
-                      aria-pressed={job === j.id}
-                      onClick={() => setJob(j.id)}
-                    >
-                      {jobLabel(j)}
-                    </button>
-                  </li>
-                ))}
-              </ul>
+            {tab === 'receipt' && (
+              <>
+                <h3 className="finance-assist-heading">Your extraction requests</h3>
+                <AssistListState
+                  loading={jobs.loading}
+                  error={jobs.error}
+                  empty={jobs.ready && !jobs.data?.items.length}
+                  loadingText="Checking your extraction requests…"
+                  emptyText="No extraction requests yet. Extract a clean staged receipt to create one."
+                  onRetry={() => void jobs.retry?.()}
+                />
+                {!!jobs.data?.items.length && (
+                  <ul className="finance-assist-list" aria-label="Your extraction requests">
+                    {jobs.data.items.map((j) => (
+                      <li key={j.id}>
+                        <button
+                          type="button"
+                          className={'finance-assist-item' + (job === j.id ? ' active' : '')}
+                          aria-pressed={job === j.id}
+                          onClick={() => setJob(j.id)}
+                        >
+                          {jobLabel(j)}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                {job && <ReceiptExtractionReview key={job} jobId={job} onCreated={onCreated} />}
+              </>
             )}
-            {job && <ReceiptExtractionReview key={job} jobId={job} onCreated={onCreated} />}
           </>
         )}
         {tab === 'duplicates' && (

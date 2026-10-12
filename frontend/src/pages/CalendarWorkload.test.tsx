@@ -49,8 +49,13 @@ vi.mock('../data/planning', () => ({
 afterEach(cleanup);
 it('discloses unique effort, exposure, whole-capacity partial weeks and recorded zero', () => {
   render(<WorkloadPage onTask={() => {}} />);
-  expect(screen.getByText(/Unique selected effort: 8/)).toBeTruthy();
-  expect(screen.getByText(/Weekly exposure: 24/)).toBeTruthy();
+  const metric = (label: string) => screen.getByText(label).closest('.metric-card')?.textContent;
+  expect(metric('Unique selected effort')).toContain('8 h');
+  expect(metric('Weekly exposure')).toContain('24 h');
+  expect(
+    screen.getByText(/Partial selected weeks use the whole recorded weekly capacity/),
+  ).toBeTruthy();
+  expect(screen.getAllByText(/Capacity is not attendance or free time/).length).toBeGreaterThan(0);
   expect(screen.getByText(/Recorded zero/)).toBeTruthy();
   expect(screen.queryByText(/Room available/)).toBeNull();
 });

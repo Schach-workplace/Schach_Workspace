@@ -1,6 +1,8 @@
 import { useEffect, useState, useEffectEvent } from 'react';
+import { Bookmark, Pin, Search, BarChart3 } from 'lucide-react';
 import type { Message } from './types';
 import type { WorkspaceData } from '../types';
+import '../styles/connect-dialogs.css';
 export default function DailyTools({
   conversation,
   data,
@@ -71,74 +73,149 @@ export default function DailyTools({
       )
       .catch(() => {});
   }, [conversation]);
+  const unread = conversation ? (attention[conversation] ?? 0) : 0;
   return (
     <section className="connect-daily" aria-label="Find and save communication">
-      <button
-        onClick={() =>
-          void command<typeof briefing>('/communication/briefing', undefined, 'GET')
-            .then(setBriefing)
-            .catch((e) => setError(e.message))
-        }
+      <form
+        className="connect-daily-search"
+        onSubmit={(e) => {
+          e.preventDefault();
+          if (q.trim()) void load('search');
+        }}
       >
-        Published work briefing
-      </button>
+        <label>
+          Search authorized messages
+          <span className="connect-search">
+            <Search size={16} aria-hidden="true" />
+            <input
+              value={q}
+              placeholder="Words from a message…"
+              onChange={(e) => setQ(e.target.value)}
+            />
+          </span>
+        </label>
+        <button className="button button-primary" disabled={!q.trim()}>
+          Search
+        </button>
+      </form>
+      <div className="connect-daily-modes" role="group" aria-label="Message collections">
+        <button
+          type="button"
+          className="button button-secondary button-small"
+          aria-pressed={mode === 'saved'}
+          onClick={() => void load('saved')}
+        >
+          <Bookmark size={14} aria-hidden="true" />
+          Saved and reminders
+        </button>
+        <button
+          type="button"
+          className="button button-secondary button-small"
+          aria-pressed={mode === 'pins'}
+          disabled={!conversation}
+          onClick={() => void load('pins')}
+        >
+          <Pin size={14} aria-hidden="true" />
+          Pinned messages
+        </button>
+        <button
+          type="button"
+          className="button button-secondary button-small"
+          onClick={() =>
+            void command<typeof briefing>('/communication/briefing', undefined, 'GET')
+              .then(setBriefing)
+              .catch((e) => setError(e.message))
+          }
+        >
+          <BarChart3 size={14} aria-hidden="true" />
+          Published work briefing
+        </button>
+        {conversation && (
+          <span className={'pill ' + (unread ? 'pill-orange' : 'pill-slate')}>
+            {unread} unread here
+          </span>
+        )}
+      </div>
       {briefing && (
-        <p>
-          {briefing.visibleTaskCount} visible tasks · {briefing.visibleOpenRequestCount} open
-          requests · oldest open request{' '}
-          {Math.floor(briefing.oldestVisibleOpenRequestAgeSeconds / 3600)} hours. {briefing.notice}
-        </p>
-      )}
-      <label>
-        Search authorized messages
-        <input value={q} onChange={(e) => setQ(e.target.value)} />
-      </label>
-      <button disabled={!q.trim()} onClick={() => void load('search')}>
-        Search
-      </button>
-      <button onClick={() => void load('saved')}>Saved and reminders</button>
-      <button disabled={!conversation} onClick={() => void load('pins')}>
-        Pinned messages
-      </button>
-      {conversation && <span> {attention[conversation] ?? 0} unread</span>}
-      {mode && (
-        <div>
-          <h3>
-            {mode === 'saved'
-              ? 'Your saved messages and reminders'
-              : mode === 'pins'
-                ? 'Pins in this conversation'
-                : 'Search results'}
-          </h3>
-          {results.map((m) => (
-            <article key={m.id}>
-              <p>{m.body}</p>
-              {reminders[m.id] && (
-                <small>
-                  {Date.parse(reminders[m.id]) <= Date.now() ? 'Reminder due' : 'Remind at'}{' '}
-                  {new Date(reminders[m.id]).toLocaleString()}
-                </small>
-              )}
-              <button onClick={() => select(m.conversationId, m.id)}>Open conversation</button>
-              <span>
-                {' '}
-                · Revision {m.revision} ·{' '}
-                {data.people.find((p) => p.id === m.senderId)?.name ?? 'Company member'}
-              </span>
-            </article>
-          ))}
-          {results.length === 0 && <p>No accessible messages.</p>}
-          <button
-            onClick={() => {
-              setMode('');
-              setResults([]);
-            }}
-          >
-            Close results
-          </button>
+        <div className="connect-briefing">
+          <dl>
+            <div>
+              <dt>Visible tasks</dt>
+              <dd>{briefing.visibleTaskCount}</dd>
+            </div>
+            <div>
+              <dt>Open requests</dt>
+              <dd>{briefing.visibleOpenRequestCount}</dd>
+            </div>
+            <div>
+              <dt>Oldest open request</dt>
+              <dd>{Math.floor(briefing.oldestVisibleOpenRequestAgeSeconds / 3600)} h</dd>
+            </div>
+          </dl>
+          <p>{briefing.notice}</p>
         </div>
       )}
-      {error && <p role="alert">{error}</p>}
+      {mode && (
+        <div className="connect-results">
+          <header>
+            <h3>
+              {mode === 'saved'
+                ? 'Your saved messages and reminders'
+                : mode === 'pins'
+                  ? 'Pins in this conversation'
+                  : 'Search results'}
+              <span>{results.length}</span>
+            </h3>
+            <button
+              type="button"
+              className="button button-small connect-text-button"
+              onClick={() => {
+                setMode('');
+                setResults([]);
+              }}
+            >
+              Close results
+            </button>
+          </header>
+          <ul>
+            {results.map((m) => (
+              <li key={m.id}>
+                <p>{m.body}</p>
+                <div className="connect-result-meta">
+                  <span>
+                    {data.people.find((p) => p.id === m.senderId)?.name ?? 'Company member'} ·
+                    Revision {m.revision}
+                  </span>
+                  {reminders[m.id] && (
+                    <span
+                      className={
+                        'pill ' +
+                        (Date.parse(reminders[m.id]) <= Date.now() ? 'pill-red' : 'pill-orange')
+                      }
+                    >
+                      {Date.parse(reminders[m.id]) <= Date.now() ? 'Reminder due' : 'Remind at'}{' '}
+                      {new Date(reminders[m.id]).toLocaleString()}
+                    </span>
+                  )}
+                  <button
+                    type="button"
+                    className="button button-secondary button-small"
+                    onClick={() => select(m.conversationId, m.id)}
+                  >
+                    Open conversation
+                  </button>
+                </div>
+              </li>
+            ))}
+          </ul>
+          {results.length === 0 && <p className="connect-results-empty">No accessible messages.</p>}
+        </div>
+      )}
+      {error && (
+        <p role="alert" className="connect-error">
+          {error}
+        </p>
+      )}
     </section>
   );
 }

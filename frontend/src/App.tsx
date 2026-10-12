@@ -34,8 +34,10 @@ import {
   UsersRound,
   Wallet,
   X,
+  History,
 } from 'lucide-react';
 import { useWorkspace } from './store';
+import './styles/shell.css';
 import type { TaskFilters, View } from './types';
 import { Avatar, cx, ErrorMessage } from './components/UI';
 import TaskDrawer from './components/TaskDrawer';
@@ -353,6 +355,7 @@ function WorkspaceApp() {
   const [search, setSearch] = useState('');
   const [searchFocused, setSearchFocused] = useState(false);
   const [mobileSearch, setMobileSearch] = useState(false);
+  const [assistOpen, setAssistOpen] = useState(false);
   const [localError, setLocalError] = useState('');
   const searchRef = useRef<HTMLInputElement>(null);
   const previousCompany = useRef('');
@@ -609,7 +612,6 @@ function WorkspaceApp() {
       <aside className="sidebar">{sidebarContent}</aside>
       <div className="app-main">
         <header className="topbar">
-          <IntelligenceLauncher label="Local assistance history" />
           <div className="topbar-left">
             <button
               className="icon-button desktop-collapse"
@@ -705,9 +707,23 @@ function WorkspaceApp() {
             </div>
             {store.mode === 'demo' && <span className="topbar-demo">DEMO</span>}
             <button
+              type="button"
+              className="icon-button assist-button"
+              aria-label="Local assistance history"
+              aria-haspopup="dialog"
+              data-tooltip="Local assistance history"
+              onClick={() => setAssistOpen(true)}
+            >
+              <History size={17} />
+            </button>
+            {assistOpen && (
+              <IntelligenceLauncher controlledOpen onClose={() => setAssistOpen(false)} />
+            )}
+            <button
               className="icon-button refresh-button"
               disabled={store.loading}
               aria-label="Refresh workspace"
+              data-tooltip="Refresh workspace"
               onClick={refresh}
             >
               <RefreshCw size={17} className={store.loading ? 'spin' : ''} />
@@ -715,6 +731,7 @@ function WorkspaceApp() {
             <button
               className="icon-button notification-button"
               aria-label={`Inbox, ${unread} unread notifications`}
+              data-tooltip={unread ? `Inbox · ${unread} unread` : 'Inbox'}
               onClick={() => navigate('inbox')}
             >
               <Bell size={18} />

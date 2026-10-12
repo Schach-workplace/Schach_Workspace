@@ -16,9 +16,11 @@ export default function GoalReminderPreferences({
     ready,
   );
   return (
-    <section>
-      <h3>My goal update reminder</h3>
-      <p>Opt-in and owner only. Resolving a reminder does not record a measurement.</p>
+    <section className="goal-reminder">
+      <h3 className="goal-subhead">My goal update reminder</h3>
+      <p className="field-help">
+        Opt-in and owner only. Resolving a reminder does not record a measurement.
+      </p>
       {
         <ReminderEditor
           key={goalId}
@@ -92,85 +94,92 @@ function ReminderEditor({
     setError('Preference saved. Reopen to inspect its current version.');
   }
   return (
-    <form className="execution-panel" onSubmit={submit}>
-      <Field label="Enable my goal update reminder">
+    <form className="execution-panel goal-form" onSubmit={submit}>
+      <Field label="Enable my goal update reminder" className="goal-check">
         <input
           type="checkbox"
           checked={(ready || draft.authored) && draft.enabled}
           onChange={(e) => set('enabled', e.target.checked)}
         />
       </Field>
-      <Field label="Cadence">
-        <select
-          value={ready || draft.authored ? draft.cadence : ''}
-          onChange={(e) => set('cadence', e.target.value)}
-        >
-          <option value="weekly">Weekly</option>
-          <option value="monthly">Monthly</option>
-        </select>
-      </Field>
-      <Field label="Weekday (Monday 1 – Sunday 7)">
-        <input
-          type="number"
-          min={1}
-          max={7}
-          value={ready || draft.authored ? draft.weekday : ''}
-          onChange={(e) => set('weekday', Number(e.target.value))}
-        />
-      </Field>
-      <Field label="Month day (1–28)">
-        <input
-          type="number"
-          min={1}
-          max={28}
-          value={ready || draft.authored ? draft.monthDay : ''}
-          onChange={(e) => set('monthDay', Number(e.target.value))}
-        />
-      </Field>
-      <Field label="Company local reminder time">
-        <input
-          type="time"
-          value={ready || draft.authored ? draft.localTime : ''}
-          onChange={(e) => set('localTime', e.target.value)}
-        />
-      </Field>
+      <div className="form-grid">
+        <Field label="Cadence">
+          <select
+            value={ready || draft.authored ? draft.cadence : ''}
+            onChange={(e) => set('cadence', e.target.value)}
+          >
+            <option value="weekly">Weekly</option>
+            <option value="monthly">Monthly</option>
+          </select>
+        </Field>
+        <Field label="Weekday (Monday 1 – Sunday 7)">
+          <input
+            type="number"
+            min={1}
+            max={7}
+            value={ready || draft.authored ? draft.weekday : ''}
+            onChange={(e) => set('weekday', Number(e.target.value))}
+          />
+        </Field>
+        <Field label="Month day (1–28)">
+          <input
+            type="number"
+            min={1}
+            max={28}
+            value={ready || draft.authored ? draft.monthDay : ''}
+            onChange={(e) => set('monthDay', Number(e.target.value))}
+          />
+        </Field>
+        <Field label="Company local reminder time">
+          <input
+            type="time"
+            value={ready || draft.authored ? draft.localTime : ''}
+            onChange={(e) => set('localTime', e.target.value)}
+          />
+        </Field>
+      </div>
       <Field label="Preference reason">
         <textarea required value={draft.reason} onChange={(e) => set('reason', e.target.value)} />
       </Field>
       <ErrorMessage error={error} />
-      {action.attempt && (
+      <div className="goal-form-actions">
+        {action.attempt && (
+          <button
+            type="button"
+            className="button button-secondary"
+            disabled={action.busy}
+            onClick={() => {
+              action.abandon();
+              setError('');
+            }}
+          >
+            Discard submitted intent and edit
+          </button>
+        )}
         <button
           type="button"
-          className="button"
-          disabled={action.busy}
+          className="button button-secondary"
+          disabled={action.busy || !ready}
           onClick={() => {
             action.abandon();
+            setDraft({
+              ...preference,
+              expectedVersion: preference.version,
+              reason: '',
+              authored: true,
+            });
             setError('');
           }}
         >
-          Discard submitted intent and edit
+          Load latest preference and version
         </button>
-      )}
-      <button
-        type="button"
-        className="button"
-        disabled={action.busy || !ready}
-        onClick={() => {
-          action.abandon();
-          setDraft({
-            ...preference,
-            expectedVersion: preference.version,
-            reason: '',
-            authored: true,
-          });
-          setError('');
-        }}
-      >
-        Load latest preference and version
-      </button>
-      <button className="button" disabled={!ready || action.busy || !draft.reason.trim()}>
-        {action.attempt ? 'Retry same preference' : 'Save my reminder preference'}
-      </button>
+        <button
+          className="button button-primary"
+          disabled={!ready || action.busy || !draft.reason.trim()}
+        >
+          {action.attempt ? 'Retry same preference' : 'Save my reminder preference'}
+        </button>
+      </div>
     </form>
   );
 }

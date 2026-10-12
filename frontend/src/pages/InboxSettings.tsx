@@ -33,6 +33,7 @@ import {
   SaveButton,
 } from '../components/UI';
 import { roleNames } from './Organization';
+import '../styles/shell.css';
 
 export function InboxPage({
   onTask,
@@ -397,7 +398,6 @@ export function SettingsPage() {
               </div>
               <LockKeyhole size={19} />
             </div>
-            {store.mode === 'api' && <AuthenticatorSettings />}
             <form className="password-form" onSubmit={password}>
               <Field label="Current password">
                 <input
@@ -428,9 +428,12 @@ export function SettingsPage() {
                   onChange={(e) => setRepeatPassword(e.target.value)}
                 />
               </Field>
-              <SaveButton saving={store.saving}>Update password</SaveButton>
+              <div className="password-actions">
+                <SaveButton saving={store.saving}>Update password</SaveButton>
+              </div>
             </form>
           </section>
+          {store.mode === 'api' && <AuthenticatorSettings />}
         </>
       )}
       {tab === 'workflow' && (

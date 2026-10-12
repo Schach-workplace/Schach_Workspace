@@ -38,18 +38,22 @@ export default function GlobalOffboarding({ userId }: { userId: string }) {
     }
   }
   return (
-    <section>
+    <section className="people-danger-zone" aria-label="Global offboarding">
       <h3>Global offboarding (platform operator)</h3>
       <p>
         Suspends this account, signs out every session and revokes access in every company. Company
         ownership and owned conversations must be transferred first. Handover is not performed.
       </p>
-      {done && <p role="status">{done}</p>}
+      {done && (
+        <p role="status" className="people-success">
+          {done}
+        </p>
+      )}
       <ErrorMessage error={error} />
       {!done && (
         <>
-          <label>
-            Type {phrase} to confirm
+          <label className="field">
+            <span className="field-label">Type {phrase} to confirm</span>
             <input value={typed} onChange={(e) => setTyped(e.target.value)} autoComplete="off" />
           </label>
           <button

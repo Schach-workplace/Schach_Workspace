@@ -143,11 +143,22 @@ export default function GoalMetadataForm({
     }
   }
   return (
-    <Modal open title={item ? 'Edit goal metadata' : 'Create measured goal'} onClose={onClose}>
+    <Modal
+      open
+      title={item ? 'Edit goal metadata' : 'Create measured goal'}
+      description={
+        item
+          ? 'Changes are versioned. Task completion never changes the measured result.'
+          : 'Define an outcome measured independently of task completion.'
+      }
+      onClose={onClose}
+    >
       {w.mode === 'demo' ? (
-        <p>Measured goal editing is available on a connected company server.</p>
+        <p className="entity-form">
+          Measured goal editing is available on a connected company server.
+        </p>
       ) : (
-        <form className="execution-panel" onSubmit={submit}>
+        <form className="execution-panel goal-form goal-metadata-form" onSubmit={submit}>
           <Field label="Goal name">
             <input
               required
@@ -161,66 +172,72 @@ export default function GoalMetadataForm({
               onChange={(e) => set('description', e.target.value)}
             />
           </Field>
-          <Field label="Owner">
-            <select
-              value={ready || draft.authored ? draft.ownerId : ''}
-              onChange={(e) => set('ownerId', e.target.value)}
-            >
-              {(ready ? data.people : [])
-                .filter((p) => p.active)
-                .map((p) => (
-                  <option key={p.id} value={p.id}>
-                    {p.name}
+          <div className="form-grid">
+            <Field label="Owner">
+              <select
+                value={ready || draft.authored ? draft.ownerId : ''}
+                onChange={(e) => set('ownerId', e.target.value)}
+              >
+                {(ready ? data.people : [])
+                  .filter((p) => p.active)
+                  .map((p) => (
+                    <option key={p.id} value={p.id}>
+                      {p.name}
+                    </option>
+                  ))}
+              </select>
+            </Field>
+            <Field label="Department">
+              <select
+                value={ready || draft.authored ? draft.departmentId : ''}
+                onChange={(e) => set('departmentId', e.target.value)}
+              >
+                <option value="">Company</option>
+                {(ready ? data.departments : []).map((d) => (
+                  <option key={d.id} value={d.id}>
+                    {d.name}
                   </option>
                 ))}
-            </select>
-          </Field>
-          <Field label="Department">
-            <select
-              value={ready || draft.authored ? draft.departmentId : ''}
-              onChange={(e) => set('departmentId', e.target.value)}
-            >
-              <option value="">Company</option>
-              {(ready ? data.departments : []).map((d) => (
-                <option key={d.id} value={d.id}>
-                  {d.name}
-                </option>
-              ))}
-            </select>
-          </Field>
-          <Field label="Unit">
-            <input
-              required
-              value={ready || draft.authored ? draft.unit : ''}
-              onChange={(e) => set('unit', e.target.value)}
-            />
-          </Field>
-          <Field label="Baseline">
-            <input
-              type="number"
-              step="any"
-              required
-              value={ready || draft.authored ? draft.baseline : ''}
-              onChange={(e) => set('baseline', e.target.value)}
-            />
-          </Field>
-          <Field label="Target">
-            <input
-              type="number"
-              step="any"
-              required
-              value={ready || draft.authored ? draft.target : ''}
-              onChange={(e) => set('target', e.target.value)}
-            />
-          </Field>
-          <Field label="Due date">
-            <input
-              type="date"
-              value={ready || draft.authored ? draft.dueDate : ''}
-              onChange={(e) => set('dueDate', e.target.value)}
-            />
-          </Field>
-          <Field label="Contributing tasks">
+              </select>
+            </Field>
+          </div>
+          <div className="form-grid">
+            <Field label="Unit">
+              <input
+                required
+                value={ready || draft.authored ? draft.unit : ''}
+                onChange={(e) => set('unit', e.target.value)}
+              />
+            </Field>
+            <Field label="Due date">
+              <input
+                type="date"
+                value={ready || draft.authored ? draft.dueDate : ''}
+                onChange={(e) => set('dueDate', e.target.value)}
+              />
+            </Field>
+          </div>
+          <div className="form-grid">
+            <Field label="Baseline">
+              <input
+                type="number"
+                step="any"
+                required
+                value={ready || draft.authored ? draft.baseline : ''}
+                onChange={(e) => set('baseline', e.target.value)}
+              />
+            </Field>
+            <Field label="Target">
+              <input
+                type="number"
+                step="any"
+                required
+                value={ready || draft.authored ? draft.target : ''}
+                onChange={(e) => set('target', e.target.value)}
+              />
+            </Field>
+          </div>
+          <Field label="Contributing tasks" hint="Context only. Hold Ctrl or ⌘ to select several.">
             <select
               multiple
               value={ready || draft.authored ? draft.taskIds : []}
@@ -247,7 +264,7 @@ export default function GoalMetadataForm({
                   onChange={(e) => set('reason', e.target.value)}
                 />
               </Field>
-              <label>
+              <label className="check-field goal-check-row">
                 <input
                   type="checkbox"
                   checked={draft.withMeasurement}
@@ -259,7 +276,10 @@ export default function GoalMetadataForm({
           )}
           {needMeasurement && (
             <>
-              <p>
+              <div className="form-section-heading">
+                <h3>{item ? 'New measured value' : 'Initial measurement'}</h3>
+              </div>
+              <p className="notice">
                 A unit change requires a new explicit measurement. Reason is shared with the goal
                 audience.
               </p>
@@ -303,32 +323,34 @@ export default function GoalMetadataForm({
             </>
           )}
           <ErrorMessage error={error} />
-          {action.attempt && (
-            <button
-              type="button"
-              className="button"
-              disabled={action.busy}
-              onClick={() => {
-                action.abandon();
-                setError('');
-              }}
-            >
-              Discard submitted intent and edit
+          <div className="form-actions">
+            {action.attempt && (
+              <button
+                type="button"
+                className="button button-secondary"
+                disabled={action.busy}
+                onClick={() => {
+                  action.abandon();
+                  setError('');
+                }}
+              >
+                Discard submitted intent and edit
+              </button>
+            )}
+            {!!item && (
+              <button
+                type="button"
+                className="button button-secondary"
+                disabled={action.busy || !ready || !latest.ready || !latest.data?.canEdit}
+                onClick={loadLatest}
+              >
+                Load latest goal and version
+              </button>
+            )}
+            <button className="button button-primary" disabled={!ready || action.busy}>
+              {action.attempt ? 'Retry same goal intent' : 'Save reviewed goal'}
             </button>
-          )}
-          {!!item && (
-            <button
-              type="button"
-              className="button"
-              disabled={action.busy || !ready || !latest.ready || !latest.data?.canEdit}
-              onClick={loadLatest}
-            >
-              Load latest goal and version
-            </button>
-          )}
-          <button className="button button-primary" disabled={!ready || action.busy}>
-            {action.attempt ? 'Retry same goal intent' : 'Save reviewed goal'}
-          </button>
+          </div>
         </form>
       )}
     </Modal>

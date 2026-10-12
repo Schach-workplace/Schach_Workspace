@@ -70,101 +70,138 @@ export default function AuthenticatorSettings() {
   const validCode = /^\d{6}$/.test(code);
   return (
     <>
-      <DeviceSessions />
-      <section className="panel">
-        <h3>Authenticator protection</h3>
-        {loadError ? (
-          <div role="alert">
-            <p>Authenticator status could not be loaded. {loadError}</p>
-            <button onClick={loadStatus}>Retry</button>
-          </div>
-        ) : !status ? (
-          <p role="status">Loading authenticator status…</p>
-        ) : (
-          <p>
-            {status.enabled
-              ? 'Enabled — sign-in requires your authenticator or a single-use recovery code.'
-              : status.configured
-                ? 'Add an authenticator to protect sign-in.'
-                : 'The operator must configure the authenticator encryption key before enrollment.'}
-          </p>
-        )}
-        {status?.configured && (
-          <>
-            {(!secret || status.enabled) && (
-              <label>
-                Current password
-                <input
-                  type="password"
-                  autoComplete="current-password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              </label>
-            )}
-            {!status.enabled && !secret && (
-              <button disabled={busy || !password} onClick={() => void act('setup')}>
-                Set up authenticator
-              </button>
-            )}
-            {secret && (
-              <>
-                <p>
-                  Open this setup link on a device with your authenticator app, or enter the secret
-                  manually. Keep both private.
-                </p>
-                {uri && (
-                  <p>
-                    <code style={{ wordBreak: 'break-all' }}>{uri}</code>{' '}
-                    <button type="button" onClick={() => void copy()}>
-                      Copy setup link
-                    </button>
-                    {copied && <span role="status"> {copied}</span>}
-                  </p>
-                )}
-                <p>
-                  Secret: <code>{secret}</code>
-                </p>
-              </>
-            )}
-            {(secret || status.enabled) && (
-              <>
-                <label>
-                  Current authenticator code
-                  <input
-                    inputMode="numeric"
-                    autoComplete="one-time-code"
-                    maxLength={6}
-                    value={code}
-                    onChange={(e) => setCode(e.target.value.replace(/\D/g, ''))}
-                  />
-                </label>
-                <button
-                  disabled={busy || !validCode || (!secret && !password)}
-                  onClick={() => void act(secret ? 'confirm' : 'disable')}
-                >
-                  {secret ? 'Confirm authenticator' : 'Disable with password and authenticator'}
-                </button>
-              </>
-            )}
-          </>
-        )}
-        {recovery.length > 0 && (
+      <section className="panel settings-section security-panel">
+        <div className="section-header">
           <div>
-            <p>
-              Store these recovery codes privately. Each can be used once. Other sessions were
-              revoked.
-            </p>
-            {recovery.map((c) => (
-              <div key={c}>
-                <code>{c}</code>
-              </div>
-            ))}
-            <button onClick={() => setRecovery([])}>I stored my recovery codes</button>
+            <h2>Authenticator protection</h2>
+            {loadError ? (
+              <p>Two-step sign-in status is unavailable right now.</p>
+            ) : !status ? (
+              <p role="status">Loading authenticator status…</p>
+            ) : (
+              <p>
+                {status.enabled
+                  ? 'Enabled — sign-in requires your authenticator or a single-use recovery code.'
+                  : status.configured
+                    ? 'Add an authenticator to protect sign-in.'
+                    : 'The operator must configure the authenticator encryption key before enrollment.'}
+              </p>
+            )}
           </div>
-        )}
-        {error && <p role="alert">{error}</p>}
+          {status && (
+            <span className={status.enabled ? 'pill pill-green' : 'pill pill-slate'}>
+              {status.enabled ? 'On' : 'Off'}
+            </span>
+          )}
+        </div>
+        <div className="security-body">
+          {loadError && (
+            <div className="security-alert" role="alert">
+              <p>Authenticator status could not be loaded. {loadError}</p>
+              <button className="button button-secondary button-small" onClick={loadStatus}>
+                Retry
+              </button>
+            </div>
+          )}
+          {status?.configured && (
+            <>
+              {secret && (
+                <div className="security-setup">
+                  <p>
+                    Open this setup link on a device with your authenticator app, or enter the
+                    secret manually. Keep both private.
+                  </p>
+                  {uri && (
+                    <div className="security-code-row">
+                      <code>{uri}</code>
+                      <button
+                        type="button"
+                        className="button button-secondary button-small"
+                        onClick={() => void copy()}
+                      >
+                        Copy setup link
+                      </button>
+                      {copied && <span role="status"> {copied}</span>}
+                    </div>
+                  )}
+                  <p>
+                    Secret: <code>{secret}</code>
+                  </p>
+                </div>
+              )}
+              <div className="security-fields">
+                {(!secret || status.enabled) && (
+                  <label className="field">
+                    <span className="field-label">Current password</span>
+                    <input
+                      type="password"
+                      autoComplete="current-password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                    />
+                  </label>
+                )}
+                {(secret || status.enabled) && (
+                  <label className="field">
+                    <span className="field-label">Current authenticator code</span>
+                    <input
+                      inputMode="numeric"
+                      autoComplete="one-time-code"
+                      maxLength={6}
+                      value={code}
+                      onChange={(e) => setCode(e.target.value.replace(/\D/g, ''))}
+                    />
+                  </label>
+                )}
+              </div>
+              <div className="security-actions">
+                {!status.enabled && !secret && (
+                  <button
+                    className="button button-primary"
+                    disabled={busy || !password}
+                    onClick={() => void act('setup')}
+                  >
+                    Set up authenticator
+                  </button>
+                )}
+                {(secret || status.enabled) && (
+                  <button
+                    className={secret ? 'button button-primary' : 'button button-secondary'}
+                    disabled={busy || !validCode || (!secret && !password)}
+                    onClick={() => void act(secret ? 'confirm' : 'disable')}
+                  >
+                    {secret ? 'Confirm authenticator' : 'Disable with password and authenticator'}
+                  </button>
+                )}
+              </div>
+            </>
+          )}
+          {recovery.length > 0 && (
+            <div className="security-recovery">
+              <p>
+                Store these recovery codes privately. Each can be used once. Other sessions were
+                revoked.
+              </p>
+              <div className="security-recovery-codes">
+                {recovery.map((c) => (
+                  <div key={c}>
+                    <code>{c}</code>
+                  </div>
+                ))}
+              </div>
+              <button className="button button-secondary" onClick={() => setRecovery([])}>
+                I stored my recovery codes
+              </button>
+            </div>
+          )}
+          {error && (
+            <p className="inline-error" role="alert">
+              {error}
+            </p>
+          )}
+        </div>
       </section>
+      <DeviceSessions />
     </>
   );
 }

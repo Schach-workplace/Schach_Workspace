@@ -5,6 +5,7 @@ import PeopleOnboarding from './PeopleOnboarding';
 import PeoplePresetEditor from './PeoplePresetEditor';
 import AccessReview from './AccessReview';
 import DepartureHandover from './DepartureHandover';
+import '../styles/people.css';
 type Tool = 'onboard' | 'presets' | 'reviews' | 'departure';
 type Open = (tool: Tool, userId?: string, onProject?: (id: string) => void) => void;
 const Context = createContext<Open | undefined>(undefined);

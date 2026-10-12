@@ -15,10 +15,17 @@ import {
 import { deadlineCandidates, localDeadline, deadlineChanged } from '../data/deadlines';
 import { useEffect, useLayoutEffect, useMemo, useRef, useState, type FormEvent } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
+import '../styles/work.css';
 import {
   ArrowDownToLine,
   ArrowRight,
+  CalendarClock,
   CalendarDays,
+  ChevronDown,
+  CircleAlert,
+  GitBranch,
+  LayoutTemplate,
+  ListChecks,
   Check,
   CheckCheck,
   ClipboardList,
@@ -284,6 +291,23 @@ function TaskDrawerBody({
   );
   const [timeNote, setTimeNote] = useUserDraftState(memory, 'timeNote', '');
   const fileRef = useRef<HTMLInputElement>(null);
+  const [tool, setTool] = useState('');
+  const toggleTool = (id: string, open: boolean) =>
+    setTool((current) => (open ? id : current === id ? '' : current));
+  // Planning tools whose submission is in flight or whose frozen attempt still
+  // needs recovery open themselves so the recovery notice is never hidden.
+  const [pendingTools, setPendingTools] = useState<Record<string, boolean>>({});
+  const reportPending = useMemo(() => {
+    const report = (id: string) => (pending: boolean) => {
+      setPendingTools((current) =>
+        !!current[id] === pending ? current : { ...current, [id]: pending },
+      );
+      if (pending) setTool(id);
+    };
+    return { schedule: report('schedule'), checklist: report('checklist') };
+  }, []);
+  const pendingChip = (id: string) =>
+    pendingTools[id] ? <span className="pill pill-orange">Needs attention</span> : null;
   const writable = canEditTask(data, task);
   const structural = !task || canStructureTask(data, task);
   const canComment = data.me.role !== 'viewer';
@@ -417,6 +441,70 @@ function TaskDrawerBody({
       }
     });
   }
+  const reviewBox = canReview && task && (
+    <div className="wk-review">
+      <div className="wk-review-head">
+        <ShieldCheck size={16} />
+        <h3>Your review is needed</h3>
+      </div>
+      <p>
+        {task.reviewerId === data.me.id
+          ? 'You are the assigned independent reviewer.'
+          : `You can decide as a company leader. Assigned reviewer: ${task.reviewerId ? personName(data, task.reviewerId) : 'none'}.`}{' '}
+        Owner: {personName(data, task.ownerId)}.
+      </p>
+      <p>
+        {dirty
+          ? 'Save your task edits before making a review decision.'
+          : 'Check the outcome, evidence and acceptance criteria before approving.'}
+      </p>
+      <textarea
+        aria-label="Review feedback"
+        rows={2}
+        value={reviewComment}
+        onChange={(e) => setReviewComment(e.target.value)}
+        placeholder="Add review feedback…"
+      />
+      <div className="review-actions wk-actions">
+        {!dirty && !reviewComment.trim() && (
+          <span className="wk-hint">Feedback is required to request changes.</span>
+        )}
+        <button
+          className="button button-secondary"
+          disabled={store.saving || dirty || !reviewComment.trim()}
+          onClick={() =>
+            perform(async () => {
+              await store.mutate(`/tasks/${task.id}/review`, {
+                decision: 'request_changes',
+                comment: reviewComment,
+                version: task.version,
+              });
+              if (currentCompletion()) setReviewComment('');
+            })
+          }
+        >
+          Request changes
+        </button>
+        <button
+          className="button button-dark"
+          disabled={store.saving || dirty}
+          onClick={() =>
+            perform(async () => {
+              await store.mutate(`/tasks/${task.id}/review`, {
+                decision: 'approve',
+                comment: reviewComment,
+                version: task.version,
+              });
+              if (currentCompletion()) setReviewComment('');
+            })
+          }
+        >
+          <Check size={15} />
+          Accept work
+        </button>
+      </div>
+    </div>
+  );
   const activity = task
     ? data.activities
         .filter((a) => a.taskId === task.id)
@@ -452,12 +540,14 @@ function TaskDrawerBody({
             </Dialog.Close>
           </header>
           <div className="sheet-title">
-            <Dialog.Title>{task ? task.title : 'Make the next step clear.'}</Dialog.Title>
-            {task && (
-              <button className="button" onClick={onAssist}>
-                Local assistance
-              </button>
-            )}
+            <div className="wk-title-row">
+              <Dialog.Title>{task ? task.title : 'Make the next step clear.'}</Dialog.Title>
+              {task && (
+                <button className="button button-secondary button-small" onClick={onAssist}>
+                  Local assistance
+                </button>
+              )}
+            </div>
             <Dialog.Description>
               {task
                 ? `Created by ${personName(data, task.createdBy)} · ${dateLabel(task.createdAt)} · Version ${task.version}`
@@ -533,17 +623,54 @@ function TaskDrawerBody({
                 )}
               </div>
             )}
+            {tab === 'details' && task?.status === 'blocked' && task.blockerReason && (
+              <div className="wk-blocked" role="note">
+                <CircleAlert size={15} />
+                <span>
+                  <strong>Blocked:</strong> {task.blockerReason}
+                </span>
+              </div>
+            )}
+            {tab === 'details' && task && task.status === 'in_review' && !canReview && (
+              <div className="wk-review wk-review-waiting">
+                <div className="wk-review-head">
+                  <ShieldCheck size={16} />
+                  <h3>Waiting for independent review</h3>
+                </div>
+                <p>
+                  {task.ownerId === data.me.id
+                    ? 'You submitted this work, so you cannot accept it yourself. '
+                    : ''}
+                  {task.reviewerId
+                    ? `${personName(data, task.reviewerId)} (assigned reviewer) or a company leader can accept the result.`
+                    : 'A company leader can accept the result.'}{' '}
+                  The owner cannot approve their own work.
+                </p>
+              </div>
+            )}
+            {tab === 'details' && canReview && reviewBox}
             {tab === 'details' && (
               <>
-                {' '}
-                {task ? (
-                  <>
-                    <TaskTemplates task={task} />
-                    <TaskImpact taskId={task.id} />
-                    <ScheduleReview tasks={[task]} />
-                  </>
-                ) : (
-                  <TaskTemplates initialProject={initialProject} onCreated={() => onClose()} />
+                {!task && (
+                  <details className="wk-tool wk-tool-top">
+                    <summary>
+                      <span className="wk-tool-icon">
+                        <LayoutTemplate size={15} />
+                      </span>
+                      <span className="wk-tool-text">
+                        <strong>Start from a template</strong>
+                        <span>Prefill a reviewed task from an authorized template.</span>
+                      </span>
+                      <ChevronDown size={15} className="wk-tool-chevron" />
+                    </summary>
+                    <div className="wk-tool-body">
+                      <TaskTemplates
+                        embedded
+                        initialProject={initialProject}
+                        onCreated={() => onClose()}
+                      />
+                    </div>
+                  </details>
                 )}
                 <form onSubmit={save} id="task-edit-form">
                   {!task && business.attempt && (
@@ -1082,62 +1209,83 @@ function TaskDrawerBody({
                     </div>
                   )}
                 </form>
+                {task && (
+                  <section className="wk-tools" aria-label="Planning tools">
+                    <div className="wk-tools-title">
+                      <ListChecks size={16} />
+                      <h3>Planning tools</h3>
+                    </div>
+                    <details
+                      className="wk-tool"
+                      open={tool === 'schedule' || !!pendingTools.schedule}
+                      onToggle={(e) => toggleTool('schedule', e.currentTarget.open)}
+                    >
+                      <summary>
+                        <span className="wk-tool-icon">
+                          <CalendarClock size={15} />
+                        </span>
+                        <span className="wk-tool-text">
+                          <strong>Reviewed schedule</strong>
+                          <span>Propose new dates with a reason, preview, then confirm.</span>
+                        </span>
+                        {pendingChip('schedule')}
+                        <ChevronDown size={15} className="wk-tool-chevron" />
+                      </summary>
+                      <div className="wk-tool-body">
+                        <ScheduleReview
+                          embedded
+                          tasks={[task]}
+                          onDone={() => toggleTool('schedule', false)}
+                          onPendingChange={reportPending.schedule}
+                        />
+                      </div>
+                    </details>
+                    <details
+                      className="wk-tool"
+                      open={tool === 'impact'}
+                      onToggle={(e) => toggleTool('impact', e.currentTarget.open)}
+                    >
+                      <summary>
+                        <span className="wk-tool-icon">
+                          <GitBranch size={15} />
+                        </span>
+                        <span className="wk-tool-text">
+                          <strong>Dependency impact</strong>
+                          <span>Linked work and how its commitments have moved.</span>
+                        </span>
+                        <ChevronDown size={15} className="wk-tool-chevron" />
+                      </summary>
+                      <div className="wk-tool-body">
+                        <TaskImpact embedded taskId={task.id} />
+                      </div>
+                    </details>
+                    <details
+                      className="wk-tool"
+                      open={tool === 'checklist' || !!pendingTools.checklist}
+                      onToggle={(e) => toggleTool('checklist', e.currentTarget.open)}
+                    >
+                      <summary>
+                        <span className="wk-tool-icon">
+                          <LayoutTemplate size={15} />
+                        </span>
+                        <span className="wk-tool-text">
+                          <strong>Reusable checklist</strong>
+                          <span>Append a saved set of acceptance checks.</span>
+                        </span>
+                        {pendingChip('checklist')}
+                        <ChevronDown size={15} className="wk-tool-chevron" />
+                      </summary>
+                      <div className="wk-tool-body">
+                        <TaskTemplates
+                          embedded
+                          task={task}
+                          onPendingChange={reportPending.checklist}
+                        />
+                      </div>
+                    </details>
+                  </section>
+                )}
               </>
-            )}
-            {tab === 'details' && canReview && (
-              <div className="review-box">
-                <div className="form-section-heading">
-                  <ShieldCheck size={18} />
-                  <h3>Your review is needed</h3>
-                </div>
-                <p>
-                  {dirty
-                    ? 'Save your task edits before making a review decision.'
-                    : 'Check the outcome, evidence and acceptance criteria before approving.'}
-                </p>
-                <textarea
-                  aria-label="Review feedback"
-                  rows={2}
-                  value={reviewComment}
-                  onChange={(e) => setReviewComment(e.target.value)}
-                  placeholder="Add review feedback…"
-                />
-                <div className="review-actions">
-                  <button
-                    className="button button-secondary"
-                    disabled={store.saving || dirty || !reviewComment.trim()}
-                    onClick={() =>
-                      perform(async () => {
-                        await store.mutate(`/tasks/${task.id}/review`, {
-                          decision: 'request_changes',
-                          comment: reviewComment,
-                          version: task.version,
-                        });
-                        if (currentCompletion()) setReviewComment('');
-                      })
-                    }
-                  >
-                    Request changes
-                  </button>
-                  <button
-                    className="button button-dark"
-                    disabled={store.saving || dirty}
-                    onClick={() =>
-                      perform(async () => {
-                        await store.mutate(`/tasks/${task.id}/review`, {
-                          decision: 'approve',
-                          comment: reviewComment,
-                          version: task.version,
-                        });
-                        if (currentCompletion()) setReviewComment('');
-                      })
-                    }
-                  >
-                    <Check size={15} />
-                    Accept work
-                  </button>
-                </div>
-              </div>
             )}
             {tab === 'activity' && task && (
               <>

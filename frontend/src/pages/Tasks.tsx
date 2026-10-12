@@ -621,7 +621,7 @@ export default function TasksPage({
             </div>
           )}
           {business.attempt && (
-            <p role="alert">
+            <p role="alert" className="notice notice-warning import-attempt">
               The previous import may already exist. Retry its original frozen rows; choosing
               another CSV will not replace this attempt.
             </p>
