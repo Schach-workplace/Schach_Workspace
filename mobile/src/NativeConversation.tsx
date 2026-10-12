@@ -82,6 +82,7 @@ export default function NativeConversation() {
   const [settings, setSettings] = useState(false);
   const [search, setSearch] = useState(false);
   const [publication, setPublication] = useState<Message | null>(null);
+  const [conversion, setConversion] = useState<Message | null>(null);
   const [recordSource, setRecordSource] = useState<Message | null>(null);
   const [records, setRecords] = useState(false);
   const [sourceEpoch, setSourceEpoch] = useState(0);
@@ -241,6 +242,7 @@ export default function NativeConversation() {
         actions,
         controls,
         publication,
+        conversion,
         recordSource,
         thread?.root,
         ...(thread?.messages ?? []),
@@ -281,6 +283,7 @@ export default function NativeConversation() {
     if (affected(actions)) setActions(null);
     if (affected(controls)) setControls(null);
     if (affected(publication)) setPublication(null);
+    if (affected(conversion)) setConversion(null);
     if (affected(recordSource)) setRecordSource(null);
     if (
       affected(thread?.root ?? null) ||
@@ -984,6 +987,20 @@ export default function NativeConversation() {
           />
         </Sheet>
       )}
+      {conversion && conversation && (
+        <Sheet
+          keyboard
+          title="Create task from message"
+          onClose={() => setConversion(null)}
+        >
+          <Publication
+            only="task"
+            conversation={conversation}
+            source={conversion}
+            onClose={() => setConversion(null)}
+          />
+        </Sheet>
+      )}
       {controls && conversation && (
         <Sheet
           title="Edit, reaction & reminder"
@@ -1105,7 +1122,15 @@ export default function NativeConversation() {
             }}
           />
           <Action
-            title="Publish task / request / expense draft"
+            title="Create task"
+            disabled={disabled || conversation?.forwarding !== "selected"}
+            onPress={() => {
+              setConversion(actions);
+              setActions(null);
+            }}
+          />
+          <Action
+            title="Publish request / expense draft"
             disabled={disabled || conversation?.forwarding !== "selected"}
             onPress={() => {
               setPublication(actions);

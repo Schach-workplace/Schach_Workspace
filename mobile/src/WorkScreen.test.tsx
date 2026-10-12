@@ -55,11 +55,18 @@ vi.mock("./ConnectUI", () => ({
     ),
 }));
 vi.mock("react-native", () => ({
-  FlatList: ({ data, renderItem }: any) =>
+  FlatList: ({ data, renderItem, refreshControl }: any) =>
     createElement(
       "div",
       {},
+      refreshControl,
       ...data.map((item: any, index: number) => renderItem({ item, index })),
+    ),
+  RefreshControl: ({ onRefresh, refreshing }: any) =>
+    createElement(
+      "button",
+      { onClick: onRefresh, "data-refreshing": String(refreshing) },
+      "Pull to refresh",
     ),
   Platform: { OS: "android" },
   StyleSheet: { create: (x: unknown) => x },
@@ -487,4 +494,23 @@ it("clears only the current create-owned global recovery error", async () => {
     update("The result is unknown. Retry this same submission when connected."),
   ).toBe("");
   expect(update("Newer unrelated error")).toBe("Newer unrelated error");
+});
+
+it("pulls the task list to refresh through the workspace task reload", async () => {
+  await act(async () => root.render(<WorkScreen />));
+  await click("Pull to refresh");
+  expect(state.w.refresh).toHaveBeenCalledWith("tasks");
+  const pull = Array.from(container.querySelectorAll("button")).find(
+    (b) => b.textContent === "Pull to refresh",
+  )!;
+  expect(pull.dataset.refreshing).toBe("false");
+});
+it("opens the read-only deadline agenda for the current company", async () => {
+  const { router } = await import("expo-router");
+  await act(async () => root.render(<WorkScreen />));
+  await click("Deadline agenda");
+  expect(router.push).toHaveBeenCalledWith({
+    pathname: "/calendar",
+    params: { company: "company" },
+  });
 });

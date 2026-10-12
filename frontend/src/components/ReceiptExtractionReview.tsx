@@ -5,9 +5,71 @@ import { useExecutionInput } from '../data/executionInput';
 import {
   blankFinanceDraft,
   reviewedReceiptIntent,
+  type FinanceDuplicate,
   type ReceiptExtraction,
 } from '../data/financeAssistance';
 import { Field, ErrorMessage } from './UI';
+// Shared loading / error / empty line for the finance assistance lists.
+export function AssistListState({
+  loading,
+  error,
+  empty,
+  loadingText,
+  emptyText,
+  onRetry,
+}: {
+  loading?: boolean;
+  error?: Error | null;
+  empty?: boolean;
+  loadingText: string;
+  emptyText: string;
+  onRetry?: () => void;
+}) {
+  if (error)
+    return (
+      <p className="finance-assist-status finance-assist-status-error" role="alert">
+        {error.message}{' '}
+        {onRetry && (
+          <button type="button" className="text-button" onClick={onRetry}>
+            Check again
+          </button>
+        )}
+      </p>
+    );
+  if (loading)
+    return (
+      <p className="finance-assist-status" role="status">
+        {loadingText}
+      </p>
+    );
+  if (empty) return <p className="finance-assist-status">{emptyText}</p>;
+  return null;
+}
+// Accessible-name friendly timestamp; an unparseable value is shown as sent.
+export function assistTime(value?: string) {
+  if (!value) return '';
+  const date = new Date(value);
+  return Number.isNaN(date.getTime())
+    ? value
+    : date.toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' });
+}
+const fieldNames: Record<string, string> = {
+  title: 'title',
+  vendor: 'vendor',
+  invoiceNumber: 'invoice number',
+  expenseDate: 'expense date',
+  amountText: 'amount',
+  currencyText: 'currency',
+  description: 'description',
+  receiptExceptionReason: 'receipt exception reason',
+  currencyMismatch: 'currency mismatch',
+};
+const fieldName = (key: string) => fieldNames[key] ?? key;
+type DuplicatePreview = {
+  items: FinanceDuplicate[];
+  nextComparisonCursor: string;
+  hasMoreComparisons: boolean;
+};
 export default function ReceiptExtractionReview({
   jobId,
   onCreated,
@@ -42,6 +104,24 @@ export default function ReceiptExtractionReview({
     !!review || !!m.attempt,
     m.attempt?.payload ?? review,
   );
+  // Read-only duplicate preview of the exact reviewed draft. It never blocks,
+  // dismisses or creates anything; a changed draft discards it.
+  const [duplicateCheck, setDuplicateCheck] = useState<{ review: unknown; cursor: string }>();
+  const reviewed = review as
+    { expectedResultRevision: number; fields: Record<string, unknown> } | undefined;
+  const checking = !!reviewed && duplicateCheck?.review === review && !m.attempt;
+  const d = useExecutionRead<DuplicatePreview>(
+    '/finance/duplicates/preview',
+    checking,
+    checking
+      ? {
+          sourceExtractionId: jobId,
+          expectedResultRevision: reviewed!.expectedResultRevision,
+          fields: reviewed!.fields,
+          ...(duplicateCheck!.cursor ? { comparisonCursor: duplicateCheck!.cursor } : {}),
+        }
+      : undefined,
+  );
   const ready = q.ready && !!q.data?.result;
   const locked = !!m.attempt || m.busy;
   const change = (key: keyof typeof draft, value: string) => {
@@ -73,29 +153,42 @@ export default function ReceiptExtractionReview({
     }
   }
   return (
-    <section aria-label="Review extracted receipt">
+    <section className="finance-assist-card" aria-label="Review extracted receipt">
       <h3>Review receipt candidates</h3>
       <ErrorMessage error={error || m.error} />
-      {q.loading && <p>Checking current source access…</p>}
-      {q.error && <p role="alert">{q.error.message}</p>}
+      <AssistListState
+        loading={q.loading && !q.data}
+        error={q.error}
+        loadingText="Checking current source access…"
+        emptyText=""
+        onRetry={() => void q.retry?.()}
+      />
       {q.data && !q.data.result && (
         <>
-          <p>{q.data.job.status}. Manual entry remains available.</p>
-          <button onClick={() => void q.retry()}>Check extraction progress</button>
+          <p className="finance-assist-meta">
+            {q.data.job.status.replaceAll('_', ' ')}. Manual entry remains available.
+          </p>
+          <div className="finance-assist-actions">
+            <button className="button button-secondary" onClick={() => void q.retry()}>
+              Check extraction progress
+            </button>
+          </div>
         </>
       )}
       {ready && (
         <>
-          <p>
+          <p className="finance-assist-meta">
             {q.data!.result!.engine} · {q.data!.result!.engineVersion} · {q.data!.result!.language}.
             Candidates require human review.
           </p>
           {Object.entries(q.data!.result!.candidates.fields).map(([field, values]) => (
-            <div key={field}>
-              <strong>{field}</strong>
+            <div key={field} className="finance-assist-candidates">
+              <strong>{fieldName(field)}</strong>
               {values.map((value) => (
                 <button
                   key={value}
+                  type="button"
+                  className="button button-secondary button-small"
                   disabled={locked}
                   onClick={() => {
                     const key = field === 'amountText' ? 'amount' : field;
@@ -109,7 +202,7 @@ export default function ReceiptExtractionReview({
           ))}
         </>
       )}
-      <fieldset disabled={locked} style={{ border: 0, padding: 0, minWidth: 0 }}>
+      <fieldset disabled={locked} className="plain-fieldset finance-assist-form">
         {(
           [
             'title',
@@ -124,7 +217,9 @@ export default function ReceiptExtractionReview({
           <Field
             key={key}
             label={
-              key === 'amount' ? `Reviewed amount (${w.data?.company.currency})` : 'Reviewed ' + key
+              key === 'amount'
+                ? `Reviewed amount (${w.data?.company.currency})`
+                : 'Reviewed ' + fieldName(key)
             }
           >
             <input value={draft[key]} onChange={(e) => change(key, e.target.value)} />
@@ -191,7 +286,7 @@ export default function ReceiptExtractionReview({
               </select>
             </Field>
             {q.data!.result!.candidates.unresolved.map((token) => (
-              <label key={token}>
+              <label key={token} className="check-field finance-assist-check">
                 <input
                   type="checkbox"
                   checked={confirmed.includes(token)}
@@ -204,10 +299,10 @@ export default function ReceiptExtractionReview({
                     setReview(undefined);
                   }}
                 />
-                I resolved {token}
+                I resolved {fieldName(token)}
               </label>
             ))}
-            <label>
+            <label className="check-field finance-assist-check">
               <input
                 type="checkbox"
                 checked={copy}
@@ -221,13 +316,61 @@ export default function ReceiptExtractionReview({
           </>
         )}
       </fieldset>
-      <button disabled={!ready || locked} onClick={inspect}>
-        Review exact draft and evidence audience
-      </button>
+      <div className="finance-assist-actions">
+        <button className="button button-secondary" disabled={!ready || locked} onClick={inspect}>
+          Review exact draft and evidence audience
+        </button>
+        {!!review && !m.attempt && (
+          <button
+            className="button button-secondary"
+            aria-pressed={checking}
+            disabled={checking && d.loading}
+            onClick={() => setDuplicateCheck({ review, cursor: '' })}
+          >
+            Preview possible duplicates
+          </button>
+        )}
+      </div>
+      {checking && (
+        <div className="finance-assist-card" aria-label="Possible duplicates">
+          <AssistListState
+            loading={d.loading}
+            error={d.error}
+            empty={d.ready && !d.data?.items.length}
+            loadingText="Comparing this reviewed draft with expenses you can see…"
+            emptyText="No possible duplicates among the expenses you can see. This check is advisory only."
+            onRetry={() => void d.retry?.()}
+          />
+          {!!d.data?.items.length && (
+            <ul className="finance-assist-suggestions" aria-label="Possible duplicate expenses">
+              {d.data.items.map((c) => (
+                <li key={c.comparedExpenseId + c.reason}>
+                  Possible duplicate of{' '}
+                  {w.data?.expenses.find((e) => e.id === c.comparedExpenseId)?.title ??
+                    'an expense you can see'}{' '}
+                  · {c.reason.replaceAll('_', ' ')}
+                </li>
+              ))}
+            </ul>
+          )}
+          {d.data?.hasMoreComparisons && (
+            <button
+              className="button button-secondary"
+              onClick={() => setDuplicateCheck({ review, cursor: d.data!.nextComparisonCursor })}
+            >
+              Compare next expenses
+            </button>
+          )}
+          <p className="finance-assist-status">
+            Equal evidence alone does not prove duplicate spending. Nothing is merged, rejected or
+            paid.
+          </p>
+        </div>
+      )}
       {p.ready && (
         <>
-          <p>{p.data!.evidenceNotice}</p>
-          <p>
+          <p className="finance-assist-meta">{p.data!.evidenceNotice}</p>
+          <p className="finance-assist-meta">
             Current finance audience:{' '}
             {p
               .data!.audienceUserIds.map(
@@ -236,7 +379,7 @@ export default function ReceiptExtractionReview({
               )
               .join(', ')}
           </p>
-          <label>
+          <label className="check-field finance-assist-check">
             <input
               type="checkbox"
               checked={audienceConfirmed}
@@ -247,11 +390,13 @@ export default function ReceiptExtractionReview({
         </>
       )}
       {m.attempt && (
-        <p role="alert">
+        <p role="alert" className="finance-notice finance-notice-warning">
           Result unknown. Retry the same frozen review; prior work may already exist.
         </p>
       )}
       <button
+        className="button button-primary"
+        aria-busy={m.busy}
         disabled={!ready || (!m.attempt && (!p.ready || !audienceConfirmed)) || m.busy}
         onClick={() => void accept()}
       >

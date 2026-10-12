@@ -1,3 +1,7 @@
+# 2026-10-12 UI/UX gap closure
+
+Client-only UI/UX fixes on top of 7db2025 with fresh web (385) and mobile (407) test evidence; see ../../ui-ux-gap-closure-2026-10-12/record.md. Retained app on 8080 untouched and not serving these changes. Manual QA remains NOT_RUN.
+
 # Current final release state — 2026-10-11T23:20:30.872155+00:00
 
 All ten implementation milestones and the final source/integration review are accepted with explicit qualifications. Root backup-first main cutover, running normal app, actual sign-in/module/API browser smoke, old522typed-row preservation, bounded legacy Inbox reconciliation and safe source ZIP are complete. Private main/feature checkpoint748a5b6 was pushed without force and exact remote refs verified. App PID3048810 remains healthy at127.0.0.1:8080; productebc994d and unchanged569compiled inputs. No inference was submitted.

@@ -18,6 +18,7 @@ import {
 } from '../data/people';
 import { Modal, Field, ErrorMessage } from './UI';
 import SessionEffect from './SessionEffect';
+import GlobalOffboarding from './GlobalOffboarding';
 export function DirectCompanyRevocation({ userId }: { userId: string }) {
   const w = useWorkspace();
   const context = usePeopleRead<PeopleContext>('/people/context');
@@ -376,6 +377,7 @@ export default function DepartureHandover({
           </>
         )}
         <DirectCompanyRevocation userId={userId} />
+        <GlobalOffboarding userId={userId} />
       </div>
     </Modal>
   );

@@ -21,6 +21,48 @@ import {
   readAttempt,
 } from './businessAttempts';
 export * from '../../../shared/business/types';
+// Demo mode keeps fictional workspace data in the browser. Server-only tools
+// explain themselves in the words of the feature the person actually opened.
+export function demoUnavailableMessage(path: string) {
+  if (path.startsWith('/finance/') || path.startsWith('/expense-receipts/'))
+    return 'Receipt extraction, bank statement import, duplicate review and reconciliation require a connected company server. Manual expense entry works in this demo.';
+  if (/^\/(task-templates|project-milestones|projects\/|planning|schedule)/.test(path))
+    return 'Templates, milestones and reviewed schedules are available on a connected company server.';
+  if (path.startsWith('/goals'))
+    return 'Measured goal history, evidence and reminders require a connected company server.';
+  if (path.startsWith('/reports'))
+    return 'Saved and historical reports require a connected company server.';
+  return 'This tool requires a connected company server. The demo keeps only fictional workspace data in this browser.';
+}
+// Same-origin cookie download for a private finance file. The response is a
+// sandboxed attachment; only the bytes are kept and handed to the browser.
+export async function downloadFinanceFile(
+  company: string,
+  path: string,
+  fileName: string,
+  signal?: AbortSignal,
+) {
+  const base = (import.meta.env.VITE_API_URL ?? '').replace(/\/$/, '');
+  const response = await fetch(`${base}/api/companies/${encodeURIComponent(company)}${path}`, {
+    credentials: 'include',
+    signal,
+  });
+  if (!response.ok) {
+    let message = 'This file is no longer available to you. Refresh and check your access.';
+    try {
+      message = (await response.json()).error?.message || message;
+    } catch {
+      /* proxy response */
+    }
+    throw new ApiError(message, response.status, 'download_failed');
+  }
+  const url = URL.createObjectURL(await response.blob());
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = fileName;
+  link.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
 export async function executionRead<T>(
   mode: 'api' | 'demo',
   company: string,
@@ -50,11 +92,7 @@ export async function executionRead<T>(
         },
       } as T;
     }
-    throw new ApiError(
-      'Templates, milestones and reviewed schedules are available on a connected company server.',
-      503,
-      'demo_unavailable',
-    );
+    throw new ApiError(demoUnavailableMessage(path), 503, 'demo_unavailable');
   }
   const result = await request<T>(`/companies/${encodeURIComponent(company)}${path}`, {
     method: body === undefined ? 'GET' : 'POST',
@@ -225,11 +263,20 @@ export function useExecutionMutation(formId: string, sources: string[] = []) {
     method: 'POST' | 'PATCH' = 'POST',
     onCommitted?: (result: T) => void,
   ): Promise<T> {
+    // Pre-flight refusals are shown on the control's own error line. An
+    // in-flight submission is already visible through `busy`, so a second
+    // click is refused without replacing that submission's eventual outcome.
     if (pending.current) throw Error('This action is already being submitted.');
+    const refuse = (message: string) => {
+      setError(message);
+      return Error(message);
+    };
     if (store.authorizing || !store.data)
-      throw Error('Restore current company authority before submitting.');
+      throw refuse(
+        'Company access is still being confirmed. Wait a moment, then submit again; nothing was sent.',
+      );
     if (store.mode === 'demo' && path !== '/expenses' && !path.startsWith('/people/'))
-      throw Error('This execution tool is available on a connected company server.');
+      throw refuse(demoUnavailableMessage(path));
     pending.current = true;
     setBusy(true);
     setError('');

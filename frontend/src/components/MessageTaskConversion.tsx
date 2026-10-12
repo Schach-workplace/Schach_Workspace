@@ -2,6 +2,16 @@ import { useEffect, useState } from 'react';
 import CommitmentFields, { commitmentInstant, type CommitmentDraft } from './CommitmentFields';
 import type { Conversation, Message } from '../communication/types';
 import type { CreateTaskInput, WorkspaceData } from '../types';
+// Mirrors backend previewTaskConversion. "existing" means this instruction
+// action already has a task: nothing new is created and the listed audience
+// belongs to that existing task.
+interface ConversionPreview {
+  outcome?: 'created' | 'existing';
+  existingTaskId?: string;
+  existingTaskTitle?: string;
+  audienceUserIds: string[];
+  notice: string;
+}
 export default function MessageTaskConversion({
   message,
   conversation,
@@ -32,9 +42,7 @@ export default function MessageTaskConversion({
   const [owner, setOwner] = useState(data.me.id);
   const [reviewer, setReviewer] = useState('');
   const [excerpt, setExcerpt] = useState(false);
-  const [preview, setPreview] = useState<{ audienceUserIds: string[]; notice: string } | null>(
-    null,
-  );
+  const [preview, setPreview] = useState<ConversionPreview | null>(null);
   const [ack, setAck] = useState(false);
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
@@ -87,20 +95,26 @@ export default function MessageTaskConversion({
   async function perform(create: boolean) {
     setBusy(true);
     setError('');
+    // Any new preview (or a commit) needs the confirmation of the result it shows.
+    if (!create) setAck(false);
     try {
       if (commitment.deadlineMode === 'timed') commitmentInstant(commitment);
-      const result = await command<{ audienceUserIds: string[]; notice: string }>(
+      const result = await command<ConversionPreview>(
         `/conversations/${conversation.id}/task-conversions${create ? '' : '/preview'}`,
         input,
       );
       if (create) onClose();
-      else setPreview(result);
+      else {
+        setAck(false);
+        setPreview(result);
+      }
     } catch (e) {
       setError((e as Error).message);
     } finally {
       setBusy(false);
     }
   }
+  const existing = preview?.outcome === 'existing';
   const changed = () => {
     setPreview(null);
     setAck(false);
@@ -198,6 +212,14 @@ export default function MessageTaskConversion({
       {preview && (
         <div>
           <p>{preview.notice}</p>
+          <p>{'Task title: ' + (existing ? (preview.existingTaskTitle ?? '') : title)}</p>
+          {existing && (
+            <p>
+              No new task will be created. This message links to the existing task &ldquo;
+              {preview.existingTaskTitle}&rdquo; and confirming opens it; the fields above are not
+              applied.
+            </p>
+          )}
           <p>
             Currently visible to:{' '}
             {preview.audienceUserIds
@@ -205,8 +227,10 @@ export default function MessageTaskConversion({
               .join(', ')}
           </p>
           <label>
-            <input type="checkbox" checked={ack} onChange={(e) => setAck(e.target.checked)} />I
-            reviewed the task audience and selected publication
+            <input type="checkbox" checked={ack} onChange={(e) => setAck(e.target.checked)} />
+            {existing
+              ? 'I reviewed the existing task and its audience'
+              : 'I reviewed the task audience and selected publication'}
           </label>
         </div>
       )}
@@ -218,7 +242,7 @@ export default function MessageTaskConversion({
         Preview audience
       </button>
       <button disabled={busy || !preview || !ack} onClick={() => void perform(true)}>
-        Create task
+        {existing ? 'Link to existing task' : 'Create task'}
       </button>
       <button onClick={onClose}>Cancel</button>
     </section>

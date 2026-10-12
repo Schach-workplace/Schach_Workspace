@@ -26,7 +26,8 @@ vi.mock("./Workspace", () => ({
     setError: vi.fn(),
   }),
 }));
-vi.mock("expo-router", () => ({ router: { push: vi.fn() } }));
+const nav = vi.hoisted(() => ({ push: vi.fn() }));
+vi.mock("expo-router", () => ({ router: { push: nav.push } }));
 vi.mock("./ConnectUI", () => ({
   ui: {},
   Sheet: container,
@@ -61,6 +62,27 @@ it("renders direct, group and channel creation without raw native text children"
     );
     expect(button).toBeTruthy();
     await act(async () => button!.click());
+  }
+  await act(async () => root.unmount());
+});
+it("links the read-only Overview and Workload screens for the current company", async () => {
+  Object.assign(globalThis, { IS_REACT_ACT_ENVIRONMENT: true });
+  const host = document.createElement("div");
+  const root = createRoot(host);
+  await act(async () => root.render(<ConnectList />));
+  for (const [label, pathname] of [
+    ["Overview", "/overview"],
+    ["Workload", "/workload"],
+  ]) {
+    const b = [...host.querySelectorAll("button")].find(
+      (b) => b.textContent === label,
+    );
+    expect(b).toBeTruthy();
+    await act(async () => b!.click());
+    expect(nav.push).toHaveBeenLastCalledWith({
+      pathname,
+      params: { company: "c" },
+    });
   }
   await act(async () => root.unmount());
 });

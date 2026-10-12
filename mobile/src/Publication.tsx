@@ -14,82 +14,105 @@ import {
   type Conversation,
 } from "./Workspace";
 import { exactMinor } from "./publication";
+// Mirrors backend previewTaskConversion. "existing" means this instruction
+// action already has a task: no new task is created, the message links to
+// that task and the audience listed is the existing task's audience.
 interface Preview {
+  outcome?: "created" | "existing";
+  existingTaskId?: string;
+  existingTaskTitle?: string;
   audienceUserIds: string[];
   notice: string;
+}
+interface WorkAction {
+  id: string;
+  title: string;
+  sourceRevision: number;
 }
 export default function Publication({
   source,
   conversation,
   onClose,
+  only,
 }: {
   source: Message;
   conversation: Conversation;
   onClose: () => void;
+  // "task" mirrors the browser "Create task" flow: task-only, with the
+  // server-declared instruction actions and an explicit title/audience check.
+  only?: "task";
 }) {
   const w = useWorkspace();
-  const [mode, setMode, retireMode] = useRamInput(
-    conversation.id + ":publication:" + source.id,
+  // Task conversion keeps its own frozen key/attempt, separate from the
+  // request/expense publication of the same message.
+  const form =
+    conversation.id +
+    (only ? ":task-conversion:" : ":publication:") +
+    source.id;
+  const [storedMode, setMode, retireMode] = useRamInput(
+    form,
     "mode",
-    "task",
+    only ? "task" : "request",
   );
+  // Tasks are created only through the explicit task disclosure flow.
+  const mode = only ?? storedMode;
   const [title, setTitle, retireTitle] = useRamInput(
-    conversation.id + ":publication:" + source.id,
+    form,
     "title",
     source.body.slice(0, 200),
   );
   const [excerpt, setExcerpt, retireExcerpt] = useRamInput(
-    conversation.id + ":publication:" + source.id,
+    form,
     "excerpt",
     "",
   );
   const [owner, setOwner, retireOwner] = useRamInput(
-    conversation.id + ":publication:" + source.id,
+    form,
     "owner",
     w.session!.user.id,
   );
   const [reviewer, setReviewer, retireReviewer] = useRamInput(
-    conversation.id + ":publication:" + source.id,
+    form,
     "reviewer",
     "",
   );
   const [department, setDepartment, retireDepartment] = useRamInput(
-    conversation.id + ":publication:" + source.id,
+    form,
     "department",
     w.work?.me.departmentId ?? "",
   );
   const [dueDate, setDueDate, retireDueDate] = useRamInput(
-    conversation.id + ":publication:" + source.id,
+    form,
     "dueDate",
     "",
   );
   const [timed, setTimed, retireTimed] = useRamInput(
-    conversation.id + ":publication:" + source.id,
+    form,
     "timed",
     false,
   );
   const [instant, setInstant, retireInstant] = useRamInput(
-    conversation.id + ":publication:" + source.id,
+    form,
     "instant",
     "",
   );
   const [zone] = useRamInput(
-    conversation.id + ":publication:" + source.id,
+    form,
     "zone",
     w.work?.company.timezone ?? "Asia/Kolkata",
   );
   const [vendor, setVendor, retireVendor] = useRamInput(
-    conversation.id + ":publication:" + source.id,
+    form,
     "vendor",
     "",
   );
   const [amount, setAmount, retireAmount] = useRamInput(
-    conversation.id + ":publication:" + source.id,
+    form,
     "amount",
     "",
   );
   const [category, setCategory, retireCategory] = useRamInput(
-    conversation.id + ":publication:" + source.id,
+    form,
     "category",
     "",
   );
@@ -97,21 +120,27 @@ export default function Publication({
   const [ack, setAck] = useState(false);
   const [busy, setBusy] = useState(false);
   const [key, , retireKey] = useRamInput(
-    conversation.id + ":publication:" + source.id,
+    form,
     "key",
     () => Crypto.randomUUID(),
   );
   const [pending, setPending, retirePending] = useRamInput<{
     path: string;
     body: unknown;
-  } | null>(conversation.id + ":publication:" + source.id, "pending", null);
+  } | null>(form, "pending", null);
   const [error, setError] = useState("");
   const [localTime, setLocalTime, retireLocalTime] = useRamInput(
-    conversation.id + ":publication:" + source.id,
+    form,
     "localTime",
     "",
   );
   const [choices, setChoices] = useState<string[]>([]);
+  const [actionId, setActionId, retireActionId] = useRamInput(
+    form,
+    "actionId",
+    "primary",
+  );
+  const [workActions, setWorkActions] = useState<WorkAction[]>([]);
   const active = useRef(true);
   const attemptBusy = useRef(false);
   useEffect(() => {
@@ -121,6 +150,28 @@ export default function Publication({
     };
   }, []);
   const root = `/companies/${w.company}/conversations/${conversation.id}`;
+  useEffect(() => {
+    if (!only) return;
+    let alive = true;
+    const generation = client.generation;
+    // Only current server-issued split identifiers may be selected.
+    client
+      .request<{ actions: WorkAction[] }>(
+        `${root}/work-actions?anchorMessageId=${encodeURIComponent(source.id)}`,
+      )
+      .then((v) => {
+        if (alive && generation === client.generation)
+          setWorkActions(
+            v.actions.filter((a) => a.sourceRevision === source.revision),
+          );
+      })
+      .catch(() => {
+        if (alive) setWorkActions([]);
+      });
+    return () => {
+      alive = false;
+    };
+  }, [only, root, source.id, source.revision]);
   const ownerKey = JSON.stringify([
     root,
     source.id,
@@ -201,7 +252,7 @@ export default function Publication({
         ...common,
         sources,
         publication,
-        actionId: "primary",
+        actionId: only ? actionId : "primary",
         task: {
           title,
           description: "",
@@ -230,6 +281,7 @@ export default function Publication({
     if (attemptBusy.current) return;
     attemptBusy.current = true;
     setBusy(true);
+    setError("");
     const generation = client.generation;
     const target = ownership.current;
     const request = ++previewRequest.current;
@@ -257,6 +309,7 @@ export default function Publication({
           retireAmount();
           retireCategory();
           retireLocalTime();
+          retireActionId();
           retireKey();
           if (current()) {
             setPreview(null);
@@ -266,12 +319,17 @@ export default function Publication({
         }
         await w.refresh();
       } else {
+        // A new preview always needs a fresh confirmation.
+        setAck(false);
         const result = await client.request<Preview>(
           attempt.path + "/preview",
           "POST",
           attempt.body,
         );
-        if (current() && request === previewRequest.current) setPreview(result);
+        if (current() && request === previewRequest.current) {
+          setAck(false);
+          setPreview(result);
+        }
       }
     } catch (e) {
       if (current()) {
@@ -284,6 +342,11 @@ export default function Publication({
     }
   }
   const locked = !!pending || busy;
+  const existing = preview?.outcome === "existing";
+  const existingNotice =
+    "No new task will be created. This message links to the existing task \u201c" +
+    (preview?.existingTaskTitle ?? "") +
+    "\u201d and confirming opens it; the fields above are not applied.";
   const field = (label: string, value: string, set: (v: string) => void) => (
     <TextInput
       key={label}
@@ -298,16 +361,20 @@ export default function Publication({
       }}
     />
   );
+  const personName = (id: string) =>
+    w.work?.people.find((p) => p.id === id)?.name ?? "Company member";
+  const taskReady = mode !== "task" || !!dueDate;
   return (
     <View style={styles.message}>
       <Text style={styles.heading}>
-        Publish selected work · revision {source.revision}
+        {only ? "Create task from message" : "Publish selected work"} ·
+        revision {source.revision}
       </Text>
       <Text>
         This creates an independent work record. Review the current server
         audience before committing.
       </Text>
-      {["task", "request", "expense"].map((m) => (
+      {(only ? [] : ["request", "expense"]).map((m) => (
         <Button
           key={m}
           title={m + (mode === m ? " ✓" : "")}
@@ -318,7 +385,26 @@ export default function Publication({
           }}
         />
       ))}
-      {field("Published title", title, setTitle)}
+      {only && (
+        <>
+          <Text>Instruction action</Text>
+          {[{ id: "primary", title: "Primary instruction" }, ...workActions].map(
+            (a) => (
+              <Button
+                key={a.id}
+                title={a.title + (actionId === a.id ? " ✓" : "")}
+                disabled={locked}
+                onPress={() => {
+                  setActionId(a.id);
+                  if (a.id !== "primary") setTitle(a.title);
+                  change();
+                }}
+              />
+            ),
+          )}
+        </>
+      )}
+      {field(only ? "Task title" : "Published title", title, setTitle)}
       {field("Selected excerpt (optional)", excerpt, setExcerpt)}
       {mode === "task" ? (
         <>
@@ -420,18 +506,71 @@ export default function Publication({
             ))}
         </>
       )}
-      {preview && (
+      {preview && only && (
+        <View accessibilityLabel="Task disclosure">
+          <Text>{preview.notice}</Text>
+          {existing ? (
+            <>
+              <Text>{"Task title: " + (preview.existingTaskTitle ?? "")}</Text>
+              <Text>{existingNotice}</Text>
+            </>
+          ) : (
+            <>
+              <Text>{"Task title: " + title}</Text>
+              <Text>{"Owner: " + personName(owner)}</Text>
+              <Text>
+                {"Reviewer: " + (reviewer ? personName(reviewer) : "None")}
+              </Text>
+              <Text>
+                {"Due: " +
+                  dueDate +
+                  (timed && localTime ? " " + localTime : "")}
+              </Text>
+              <Text>
+                {excerpt
+                  ? "Published excerpt: " + excerpt
+                  : "No message excerpt is published."}
+              </Text>
+            </>
+          )}
+          <Text>
+            {"Visible to: " +
+              preview.audienceUserIds.map(personName).join(", ")}
+          </Text>
+          <Button
+            title={
+              existing
+                ? ack
+                  ? "Existing task and audience confirmed ✓"
+                  : "I confirm this existing task and its audience"
+                : ack
+                  ? "Task title and audience confirmed ✓"
+                  : "I confirm this task title and audience"
+            }
+            disabled={locked}
+            onPress={() => setAck(true)}
+          />
+        </View>
+      )}
+      {pending && !preview && only && (
+        <Text>
+          {"Retrying the already confirmed task: " +
+            ((pending.body as { task?: { title?: string } }).task?.title ??
+              "")}
+        </Text>
+      )}
+      {preview && !only && (
         <>
           <Text>{preview.notice}</Text>
+          {existing && (
+            <>
+              <Text>{"Existing task: " + (preview.existingTaskTitle ?? "")}</Text>
+              <Text>{existingNotice}</Text>
+            </>
+          )}
           <Text>
             Current audience:{" "}
-            {preview.audienceUserIds
-              .map(
-                (id) =>
-                  w.work?.people.find((p) => p.id === id)?.name ??
-                  "Company member",
-              )
-              .join(", ")}
+            {preview.audienceUserIds.map(personName).join(", ")}
           </Text>
           <Button
             title={
@@ -446,13 +585,19 @@ export default function Publication({
       )}
       {error && <Text accessibilityRole="alert">{error}</Text>}
       <Button
-        title="Preview server audience"
-        disabled={locked || !title.trim()}
+        title={only ? "Preview task audience" : "Preview server audience"}
+        disabled={locked || !title.trim() || (!!only && !taskReady)}
         onPress={() => void perform(false)}
       />
       <Button
         title={
-          pending ? "Retry the same publication" : "Publish selected record"
+          pending
+            ? "Retry the same publication"
+            : existing
+              ? "Link to existing task"
+              : only
+                ? "Create task"
+              : "Publish selected record"
         }
         disabled={busy || (!pending && (!preview || !ack))}
         onPress={() => void perform(true)}

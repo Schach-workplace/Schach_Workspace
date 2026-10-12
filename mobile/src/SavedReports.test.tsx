@@ -43,6 +43,9 @@ vi.mock("expo-notifications", () => ({
   getLastNotificationResponseAsync: async () => null,
   addNotificationReceivedListener: () => ({ remove() {} }),
   addNotificationResponseReceivedListener: () => ({ remove() {} }),
+  addPushTokenListener: () => ({ remove() {} }),
+  setNotificationHandler: () => {},
+  getPermissionsAsync: async () => ({ granted: false }),
 }));
 vi.mock("react-native-safe-area-context", () => ({
   SafeAreaView: ({ children }: any) => createElement("div", {}, children),

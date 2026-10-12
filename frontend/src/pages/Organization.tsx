@@ -99,12 +99,17 @@ export default function Organization({
         </div>
       </div>
       <div className="task-toolbar">
-        <div className="segmented organization-tabs">
-          <button className={tab === 'people' ? 'active' : ''} onClick={() => setTab('people')}>
+        <div className="segmented organization-tabs" role="group" aria-label="Organization views">
+          <button
+            aria-pressed={tab === 'people'}
+            className={tab === 'people' ? 'active' : ''}
+            onClick={() => setTab('people')}
+          >
             <UsersRound size={15} />
             People
           </button>
           <button
+            aria-pressed={tab === 'departments'}
             className={tab === 'departments' ? 'active' : ''}
             onClick={() => setTab('departments')}
           >
@@ -112,6 +117,7 @@ export default function Organization({
             Departments
           </button>
           <button
+            aria-pressed={tab === 'hierarchy'}
             className={tab === 'hierarchy' ? 'active' : ''}
             onClick={() => setTab('hierarchy')}
           >

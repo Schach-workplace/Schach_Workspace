@@ -182,6 +182,28 @@ function List() {
           title="Search & saved messages"
           onPress={() => setSearch(true)}
         />
+        {w.work && w.work.me.role !== "member" && (
+          <Action
+            title="Overview"
+            onPress={() =>
+              router.push({
+                pathname: "/overview",
+                params: { company: w.company },
+              })
+            }
+          />
+        )}
+        {w.work && (
+          <Action
+            title="Workload"
+            onPress={() =>
+              router.push({
+                pathname: "/workload",
+                params: { company: w.company },
+              })
+            }
+          />
+        )}
       </View>
       {creating && (
         <NewChat

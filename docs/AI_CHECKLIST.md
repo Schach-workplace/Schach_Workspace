@@ -53,3 +53,13 @@ Keep historical failure and qualification records. Update current owner/exact HE
 - [x] Isolated test setup, fictional fixtures, role/device matrices and team execution/defect/signoff templates.
 - [x] Spreadsheet-ready CSV/workbook, searchable offline HTML and shareable ZIP; validate schemas/references/coverage/rendering.
 - [x] Commit/push finished documentation and refresh successor index; new manual scenarios remain NOT_RUN.
+
+## 2026-10-12 UI/UX gap closure
+
+- [x] Read-only audit of web, mobile, backend contract and QA pack.
+- [x] Web fixes: call device reuse, MFA states/URI, device list states, platform offboarding UI, finance assistance UX + new rows/export/download/preview UI, a11y toggles, phone search, Overview routing, existing-task disclosure.
+- [x] Mobile fixes: call retry/permissions/state, Calls picker, dismissible errors, push opt-in/rotation/foreground, tab icons/badge, attachments, task comments/nudge/time, message-to-task disclosure, Overview/Workload/agenda, contrast.
+- [x] Smoke harness refuses default/8080 target; offboarding contract corrected.
+- [x] Fresh web/mobile tsc, lint, vitest; one control review with findings fixed.
+- [ ] Product decisions: self-profile endpoint, offboarding reason, revoked-device rebinding, icon dependency.
+- [ ] Isolated manual QA execution (224 NOT_RUN); device/browser visual verification of new UI.

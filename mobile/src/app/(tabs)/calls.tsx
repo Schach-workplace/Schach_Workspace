@@ -1,2 +1,19 @@
-import {Text} from 'react-native';import Calls from '../../Calls';import {Page,useWorkspace} from '../../Workspace';
-export default function CallScreen(){const w=useWorkspace();return <Page>{w.selected?<Calls/>:<Text>Choose an authorized conversation in Chats first.</Text>}</Page>}
+import { useFocusEffect } from "expo-router";
+import { useCallback, useState } from "react";
+import Calls from "../../Calls";
+import { Page } from "../../Workspace";
+export default function CallScreen() {
+  const [focused, setFocused] = useState(false);
+  // Active calls refresh on focus and periodically only while this tab is shown.
+  useFocusEffect(
+    useCallback(() => {
+      setFocused(true);
+      return () => setFocused(false);
+    }, []),
+  );
+  return (
+    <Page>
+      <Calls focused={focused} />
+    </Page>
+  );
+}

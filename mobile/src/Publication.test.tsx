@@ -75,7 +75,7 @@ it("retires only a confirmed publication and starts a new unlocked attempt after
     });
   try {
     await act(async () => mount());
-    await click("request");
+    await click("request ✓");
     await click("Preview server audience");
     await click("I reviewed the selected content and audience");
     await click("Publish selected record");
@@ -88,7 +88,7 @@ it("retires only a confirmed publication and starts a new unlocked attempt after
     await act(async () => root.render(null));
     await act(async () => mount());
     expect(container.textContent).not.toContain("Retry the same publication");
-    await click("request");
+    await click("request ✓");
     await click("Preview server audience");
     await click("I reviewed the selected content and audience");
     await click("Publish selected record");

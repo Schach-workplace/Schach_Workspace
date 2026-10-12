@@ -1753,3 +1753,258 @@
     transition: none;
   }
 }
+
+/* Finance assistance: receipt extraction, statement import, duplicate review
+   and reconciliation. Shares Finance panel, button and notice language. */
+.finance-assist .section-header {
+  padding-bottom: 6px;
+}
+.finance-assist-body {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 8px 22px 22px;
+  min-width: 0;
+}
+.finance-assist-tabs {
+  flex-wrap: wrap;
+  align-self: flex-start;
+  max-width: 100%;
+}
+.finance-assist-tabs button {
+  flex: 1 1 auto;
+  min-height: 36px;
+}
+.finance-assist-tabs button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+.finance-assist-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+  border: 1px solid #e6e9ee;
+  border-radius: 8px;
+  background: #fcfcfd;
+  padding: 16px;
+}
+.finance-assist-card .finance-assist-card {
+  background: #fff;
+}
+.finance-assist-card h3,
+.finance-assist-heading {
+  font-size: 13px;
+  font-weight: 600;
+  color: #343a44;
+  margin: 0;
+}
+h4.finance-assist-heading {
+  font-size: 12px;
+}
+.finance-assist-heading {
+  margin-top: 6px;
+}
+.finance-assist-meta,
+.finance-assist-row-title {
+  font-size: 12px;
+  line-height: 1.65;
+  color: #667085;
+  overflow-wrap: anywhere;
+}
+.finance-assist-row-title {
+  color: #343a44;
+  font-weight: 500;
+}
+.finance-assist-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+  gap: 0 16px;
+  min-width: 0;
+}
+.finance-assist-form .field {
+  margin-bottom: 12px;
+}
+.finance-assist-form input:not([type='checkbox']):not([type='file']),
+.finance-assist-form select {
+  width: 100%;
+  max-width: 100%;
+  min-height: 40px;
+}
+.finance-assist-form input[type='file'] {
+  max-width: 100%;
+  font-size: 12px;
+}
+.finance-assist-check {
+  font-size: 12px;
+  color: #4d5562;
+  align-items: flex-start;
+}
+.finance-assist-check > input {
+  margin-top: 3px;
+  flex: none;
+}
+.finance-assist-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-width: 0;
+}
+.finance-assist .button,
+.finance-assist-receipt .button {
+  white-space: normal;
+  text-align: center;
+}
+.finance-assist .button:disabled,
+.finance-assist-receipt .button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+.finance-assist-status {
+  font-size: 12px;
+  line-height: 1.6;
+  color: #7a8494;
+  overflow-wrap: anywhere;
+}
+.finance-assist-status-error,
+.finance-assist-error {
+  font-size: 12px;
+  line-height: 1.6;
+  color: #b34f45;
+  overflow-wrap: anywhere;
+}
+.finance-assist-error:empty {
+  display: none;
+}
+.finance-assist-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+.finance-assist-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #4d5562;
+  background: #fff;
+  border: 1px solid #e1e4e9;
+  border-radius: 7px;
+  padding: 10px 12px;
+  min-height: 40px;
+  overflow-wrap: anywhere;
+  transition:
+    background 0.15s,
+    border-color 0.15s;
+}
+.finance-assist-item:hover {
+  background: #f8f9fb;
+  border-color: #ced3dc;
+}
+.finance-assist-item.active {
+  border-color: #f2a36b;
+  background: #fff7f0;
+  color: #343a44;
+}
+.finance-assist-item:focus-visible,
+.finance-assist-tabs button:focus-visible {
+  outline: 2px solid #f97316;
+  outline-offset: 2px;
+}
+.finance-assist-suggestions {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 12px;
+  line-height: 1.6;
+  color: #4d5562;
+}
+.finance-assist-suggestions li {
+  border-left: 2px solid #e6e9ee;
+  padding-left: 9px;
+  overflow-wrap: anywhere;
+}
+.finance-assist-candidates {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+.finance-assist-candidates strong {
+  font-size: 11px;
+  font-weight: 500;
+  color: #768397;
+  min-width: 110px;
+}
+.finance-assist-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+.finance-assist-table th,
+.finance-assist-table td {
+  text-align: left;
+  padding: 8px 10px;
+  border-bottom: 1px solid #edf0f4;
+  white-space: nowrap;
+}
+.finance-assist-table th {
+  font-size: 11px;
+  font-weight: 500;
+  color: #768397;
+}
+.finance-assist-receipt {
+  margin-top: 10px;
+}
+@media (max-width: 700px) {
+  .finance-assist-body {
+    padding: 6px 14px 16px;
+  }
+  .finance-assist-card {
+    padding: 12px;
+  }
+  .finance-assist-actions .button {
+    flex: 1 1 100%;
+    min-height: 44px;
+  }
+  .finance-assist-tabs {
+    align-self: stretch;
+  }
+  .finance-assist-tabs button {
+    flex: 1 1 calc(50% - 2px);
+    min-height: 44px;
+    white-space: normal;
+  }
+  .finance-assist-item {
+    min-height: 44px;
+  }
+}
+@media (max-width: 380px) {
+  .finance-assist-body {
+    padding: 4px 10px 14px;
+  }
+  .finance-assist-card {
+    padding: 10px;
+  }
+  .finance-assist-tabs button {
+    flex-basis: 100%;
+  }
+  .finance-assist-candidates strong {
+    min-width: 0;
+    flex-basis: 100%;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .finance-assist-item {
+    transition: none;
+  }
+}

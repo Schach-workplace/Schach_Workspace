@@ -45,7 +45,7 @@ export function Action({
         style={[
           ui.actionText,
           primary && { color: "#fff" },
-          selected && { color: "#bd5516" },
+          selected && { color: "#a8480f" },
         ]}
       >
         {title}
@@ -126,7 +126,7 @@ export const ui = StyleSheet.create({
     borderBottomColor: "#e9ebef",
   },
   title: { fontSize: 19, fontWeight: "700", color: "#354052", flexShrink: 1 },
-  subtitle: { fontSize: 12, color: "#8590a2", lineHeight: 19 },
+  subtitle: { fontSize: 13, color: "#56637a", lineHeight: 19 },
   action: {
     minHeight: 44,
     minWidth: 44,
@@ -135,8 +135,8 @@ export const ui = StyleSheet.create({
     paddingHorizontal: 13,
     borderRadius: 8,
   },
-  actionText: { fontSize: 12, fontWeight: "600", color: "#68788f" },
-  primary: { backgroundColor: "#ed741f" },
+  actionText: { fontSize: 14, fontWeight: "600", color: "#4f5d72" },
+  primary: { backgroundColor: "#b9520c" },
   selected: { backgroundColor: "#fff1e5" },
   row: {
     flexDirection: "row",
@@ -152,7 +152,7 @@ export const ui = StyleSheet.create({
     justifyContent: "center",
     backgroundColor: "#f5e9df",
   },
-  avatarText: { fontSize: 12, fontWeight: "700", color: "#9d744f" },
+  avatarText: { fontSize: 13, fontWeight: "700", color: "#7a5434" },
   conversation: {
     paddingVertical: 16,
     paddingHorizontal: 12,
@@ -198,20 +198,20 @@ export const ui = StyleSheet.create({
   },
   ownBubble: { backgroundColor: "#fff2e8" },
   body: { fontSize: 14, lineHeight: 22, color: "#4b576b" },
-  metadata: { fontSize: 11, color: "#959ead" },
+  metadata: { fontSize: 13, color: "#5f6b7d" },
   error: {
-    color: "#ae5146",
+    color: "#9a3f35",
     backgroundColor: "#fff4f1",
     padding: 12,
-    fontSize: 12,
+    fontSize: 13,
   },
   badge: {
-    backgroundColor: "#ee781e",
+    backgroundColor: "#b9520c",
     borderRadius: 12,
     paddingHorizontal: 7,
     paddingVertical: 3,
     color: "#fff",
-    fontSize: 11,
+    fontSize: 13,
   },
   section: { gap: 10, paddingVertical: 12 },
   quote: {
@@ -222,8 +222,8 @@ export const ui = StyleSheet.create({
   },
   day: {
     textAlign: "center",
-    fontSize: 11,
-    color: "#9aA2b0",
+    fontSize: 13,
+    color: "#5f6b7d",
     paddingVertical: 8,
   },
 });

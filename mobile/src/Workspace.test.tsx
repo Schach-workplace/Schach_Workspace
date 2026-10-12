@@ -31,6 +31,9 @@ vi.mock("expo-notifications", () => ({
   getLastNotificationResponseAsync: async () => null,
   addNotificationReceivedListener: () => ({ remove() {} }),
   addNotificationResponseReceivedListener: () => ({ remove() {} }),
+  addPushTokenListener: () => ({ remove() {} }),
+  setNotificationHandler: () => {},
+  getPermissionsAsync: async () => ({ granted: false }),
 }));
 vi.mock("react-native", () => ({
   AppState: {

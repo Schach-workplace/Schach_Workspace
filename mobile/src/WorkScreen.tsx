@@ -12,7 +12,7 @@ import DeadlinePicker from "./DeadlinePicker";
 import PersonPicker from "./PersonPicker";
 import { useRamInput } from "./ramInput";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { FlatList, Text, TextInput, View } from "react-native";
+import { FlatList, RefreshControl, Text, TextInput, View } from "react-native";
 import { Page, useWorkspace, type WorkTask } from "./Workspace";
 import { Action, Sheet, ui } from "./ConnectUI";
 import { client } from "./client";
@@ -91,6 +91,7 @@ function WorkView({ w }: { w: ReturnType<typeof useWorkspace> }) {
   );
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+  const [refreshing, setRefreshing] = useState(false);
   const pending = useRef(false);
   const alive = useRef(true);
   useEffect(() => {
@@ -124,6 +125,16 @@ function WorkView({ w }: { w: ReturnType<typeof useWorkspace> }) {
       };
     }
   }, [dueDate, time, zone, instant]);
+  async function pullToRefresh() {
+    setRefreshing(true);
+    try {
+      await w.refresh("tasks");
+    } catch (e) {
+      w.setError((e as Error).message);
+    } finally {
+      if (alive.current) setRefreshing(false);
+    }
+  }
   async function run(action: () => Promise<void>) {
     if (pending.current || !editable) return;
     pending.current = true;
@@ -246,6 +257,15 @@ function WorkView({ w }: { w: ReturnType<typeof useWorkspace> }) {
             router.push({ pathname: "/goals", params: { company: w.company } })
           }
         />
+        <Action
+          title="Deadline agenda"
+          onPress={() =>
+            router.push({
+              pathname: "/calendar",
+              params: { company: w.company },
+            })
+          }
+        />
         {editable && <Action title="New task" primary onPress={openCreate} />}
       </View>
       <Text style={ui.subtitle}>
@@ -278,6 +298,9 @@ function WorkView({ w }: { w: ReturnType<typeof useWorkspace> }) {
       <FlatList
         data={rows}
         keyExtractor={(t) => t.id}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={pullToRefresh} />
+        }
         renderItem={({ item: t }) => (
           <View
             key={t.id}

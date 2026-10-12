@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useWorkspace } from '../store';
 import { useExecutionInput } from '../data/executionInput';
-import { useExecutionMutation } from '../data/execution';
+import { useExecutionMutation, demoUnavailableMessage } from '../data/execution';
+import { Field } from './UI';
 import type { Expense } from '../types';
 import ReceiptExtractionReview from './ReceiptExtractionReview';
 export default function ExpenseReceiptAssistance({
@@ -26,28 +27,37 @@ export default function ExpenseReceiptAssistance({
   const authority = ['founder', 'ceo', 'admin', 'finance'].includes(w.data?.me.role ?? '');
   const current = expense;
   const exists = current?.receipts.some((r) => r.id === receiptId);
+  if (w.mode === 'demo')
+    return (
+      <p className="finance-assist-status finance-assist-receipt">
+        {demoUnavailableMessage('/expense-receipts/')}
+      </p>
+    );
   return (
-    <section>
+    <section className="finance-assist-card finance-assist-receipt" aria-label="Receipt extraction">
       {exists && (
         <>
-          <label>
-            Reviewed extraction destination
-            <select
-              disabled={!!extract.attempt || extract.busy}
-              value={department}
-              onChange={(e) => setDepartment(e.target.value)}
-            >
-              <option value="">Choose department</option>
-              {w.data?.departments
-                .filter((d) => authority || d.id === w.data?.me.departmentId)
-                .map((d) => (
-                  <option key={d.id} value={d.id}>
-                    {d.name}
-                  </option>
-                ))}
-            </select>
-          </label>
+          <div className="finance-assist-form">
+            <Field label="Reviewed extraction destination">
+              <select
+                disabled={!!extract.attempt || extract.busy}
+                value={department}
+                onChange={(e) => setDepartment(e.target.value)}
+              >
+                <option value="">Choose department</option>
+                {w.data?.departments
+                  .filter((d) => authority || d.id === w.data?.me.departmentId)
+                  .map((d) => (
+                    <option key={d.id} value={d.id}>
+                      {d.name}
+                    </option>
+                  ))}
+              </select>
+            </Field>
+          </div>
           <button
+            className="button button-secondary"
+            aria-busy={assess.busy}
             disabled={assess.busy}
             onClick={() =>
               void assess
@@ -65,8 +75,12 @@ export default function ExpenseReceiptAssistance({
           >
             Request clean assessment for extraction
           </button>
-          <p>{done}</p>
-          <label>
+          {done && (
+            <p className="finance-assist-status" role="status">
+              {done}
+            </p>
+          )}
+          <label className="check-field finance-assist-check">
             <input
               type="checkbox"
               checked={optIn}
@@ -76,6 +90,8 @@ export default function ExpenseReceiptAssistance({
             Use local extraction and review all candidates
           </label>
           <button
+            className="button button-primary"
+            aria-busy={extract.busy}
             disabled={!optIn || !department || extract.busy}
             onClick={() =>
               void extract
@@ -113,7 +129,9 @@ export default function ExpenseReceiptAssistance({
           }}
         />
       )}
-      <p role="alert">{assess.error || extract.error}</p>
+      <p role="alert" className="finance-assist-error">
+        {assess.error || extract.error}
+      </p>
     </section>
   );
 }

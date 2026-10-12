@@ -15,6 +15,7 @@ import { router } from "expo-router";
 import { Page, useWorkspace, type WorkTask } from "./Workspace";
 import { Action, Sheet, ui } from "./ConnectUI";
 import NativeMedia from "./Media";
+import TaskCollaboration from "./TaskCollaboration";
 import { client } from "./client";
 import { useRamInput } from "./ramInput";
 export default function TaskDetailScreen({ id }: { id: string }) {
@@ -348,6 +349,13 @@ export default function TaskDetailScreen({ id }: { id: string }) {
                 )}
             </>
           )}
+          <TaskCollaboration
+            task={task}
+            onChanged={async () => {
+              await w.refresh("tasks");
+              await load();
+            }}
+          />
           {!!error && <Text accessibilityRole="alert">{error}</Text>}
         </View>
       )}

@@ -137,8 +137,9 @@ export function CalendarPage({ onTask }: { onTask: (id: string) => void }) {
             Today
           </button>
         </div>
-        <div className="segmented">
+        <div className="segmented" role="group" aria-label="Calendar view">
           <button
+            aria-pressed={view === 'month'}
             className={view === 'month' ? 'active' : ''}
             onClick={() => {
               setView('month');
@@ -148,6 +149,7 @@ export function CalendarPage({ onTask }: { onTask: (id: string) => void }) {
             Month
           </button>
           <button
+            aria-pressed={view === 'week'}
             className={view === 'week' ? 'active' : ''}
             onClick={() => {
               setView('week');

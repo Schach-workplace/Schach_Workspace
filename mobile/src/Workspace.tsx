@@ -157,6 +157,11 @@ function useController() {
   const [restoring, setRestoring] = useState(true);
   const [call, setCall] = useState<CallConnection | null>(null);
   const restoreSequence = useRef(0);
+  // User id that explicitly enabled push on this device during this session.
+  // The device registration response only returns the id, so this is the only
+  // trustworthy opt-in signal; rotated tokens are re-sent only for that user.
+  const pushOptIn = useRef<string | null>(null);
+  const pollFailure = useRef("");
   const sessionAuthorized = useRef(false);
   // Content-free authorization fingerprint survives fetched-history background clearing.
   const confirmedBasis = useRef<string | null>(null);
@@ -356,22 +361,44 @@ function useController() {
     setInbox(attention.events);
     if (otherScope) await refresh("all");
   }
-  async function registerDevice(push = false) {
+  /**
+   * Registers this device session. `push`:
+   * - `true`: the user explicitly asked for notification hints (Account action),
+   *   so permission may be requested and the token is attached;
+   * - `false`: register without touching the stored push token. Sign-in uses
+   *   this, so a shared phone never attaches push for a user who did not opt in.
+   * `rotated` carries a token delivered by the push token change listener; it
+   * is only passed for the user who opted in during this session.
+   */
+  async function registerDevice(
+    push = false,
+    rotated?: Notifications.DevicePushToken,
+  ) {
     let pushProvider = "",
-      pushToken = "";
-    if (push) {
-      if (Platform.OS === "android")
-        await Notifications.setNotificationChannelAsync("schach-updates", {
-          name: "Company updates",
-          importance: Notifications.AndroidImportance.DEFAULT,
-        });
+      pushToken = "",
+      withPush = false;
+    if (rotated) {
+      withPush = true;
+      pushToken = String(rotated.data);
+    } else if (push) {
       const p = await Notifications.requestPermissionsAsync();
-      if (!p.granted)
-        throw new Error("Notifications are disabled on this device.");
-      const token = await Notifications.getDevicePushTokenAsync();
-      pushProvider = Platform.OS === "ios" ? "apns" : "fcm";
-      pushToken = String(token.data);
+      if (p.granted) {
+        if (Platform.OS === "android")
+          await Notifications.setNotificationChannelAsync("schach-updates", {
+            name: "Company updates",
+            importance: Notifications.AndroidImportance.DEFAULT,
+          });
+        const token = await Notifications.getDevicePushTokenAsync();
+        pushToken = String(token.data);
+        withPush = true;
+      } else
+        throw new Error(
+          p.canAskAgain === false
+            ? "Notifications are disabled for Schach Workspace. Enable them in device Settings."
+            : "Notifications are disabled on this device.",
+        );
     }
+    if (withPush) pushProvider = Platform.OS === "ios" ? "apns" : "fcm";
     const userId = session?.user.id;
     if (!userId) return;
     const saved = await SecureStore.getItemAsync("schach.device." + userId);
@@ -379,9 +406,10 @@ function useController() {
       ...(device || saved ? { deviceId: device || saved } : {}),
       platform: Platform.OS === "ios" ? "ios" : "android",
       name: "Schach native client",
-      ...(push ? { pushProvider, pushToken } : {}),
+      ...(withPush ? { pushProvider, pushToken } : {}),
     });
     if (currentScope.current.sessionId !== userId) return;
+    if (push && withPush) pushOptIn.current = userId;
     await SecureStore.setItemAsync("schach.device." + userId, result.id);
     setDevice(result.id);
   }
@@ -393,6 +421,7 @@ function useController() {
   const refreshEvent = useEffectEvent(refresh);
   const registerEvent = useEffectEvent(registerDevice);
   const clearEvent = useEffectEvent(clearPrivate);
+  const enterCompanyEvent = useEffectEvent(enterCompany);
   const sessionId = session?.user.id;
   useEffect(() => {
     client.onPolicyChange = (status) => {
@@ -430,19 +459,39 @@ function useController() {
           .catch((e) => setError(e.message));
       }
     });
+    // Foreground hints are body-free ("A company update is available."), so
+    // they may be presented while the app is open.
+    Notifications.setNotificationHandler({
+      handleNotification: async () => ({
+        shouldShowBanner: true,
+        shouldShowList: true,
+        shouldPlaySound: false,
+        shouldSetBadge: false,
+      }),
+    });
     const received = Notifications.addNotificationReceivedListener(() => {
       if (client.token) void restoreEvent();
+    });
+    const tokenChange = Notifications.addPushTokenListener((token) => {
+      const user = currentScope.current.sessionId;
+      if (client.token && user && pushOptIn.current === user)
+        void registerEvent(false, token).catch((e) => setError(e.message));
     });
     const notificationTarget = new AuthorizedNotificationTarget(
       () => client.request<Session>("/auth/session"),
       (company, id) =>
         client.request(`/companies/${company}/conversations/${id}`),
       (target) => {
-        if (currentScope.current.company !== target.companyId) {
-          clearEvent();
-          sessionAuthorized.current = true;
-          currentScope.current.company = target.companyId;
-          setCompany(target.companyId);
+        if (
+          target.companyId &&
+          currentScope.current.company !== target.companyId
+        ) {
+          // Same path as a manual switch: ends any call from the old company.
+          enterCompanyEvent(target.companyId);
+        }
+        if ("inbox" in target) {
+          router.push("/(tabs)/inbox");
+          return;
         }
         setSelected(target.conversationId);
         router.push({
@@ -457,7 +506,10 @@ function useController() {
     ) => {
       if (response && client.token)
         void notificationTarget
-          .open(response.notification.request.content.data)
+          .open(
+            response.notification.request.content.data,
+            response.notification.request.identifier,
+          )
           .catch((e) => setError(e.message));
     };
     const response =
@@ -470,10 +522,13 @@ function useController() {
       client.onPolicyChange = undefined;
       subscription.remove();
       received.remove();
+      tokenChange.remove();
       response.remove();
+      Notifications.setNotificationHandler(null);
     };
   }, []);
   useEffect(() => {
+    if (pushOptIn.current !== sessionId) pushOptIn.current = null;
     if (sessionId)
       void Promise.resolve()
         .then(() => registerEvent())
@@ -481,18 +536,27 @@ function useController() {
   }, [sessionId]);
   useEffect(() => {
     if (!sessionId || !foreground || !company) return;
+    // Errors raised by the background poll are cleared by the next successful
+    // poll; errors from user actions stay until dismissed or the company changes.
+    const succeeded = () => {
+      const stale = pollFailure.current;
+      pollFailure.current = "";
+      if (stale) setError((current) => (current === stale ? "" : current));
+    };
+    const failed = (e: Error) => {
+      pollFailure.current = e.message;
+      setError(e.message);
+    };
     void Promise.resolve()
       .then(() => refreshEvent())
-      .catch((e) => setError(e.message));
+      .then(succeeded, failed);
     const timer = setInterval(
       () =>
         void (
           sessionAuthorized.current
             ? refreshEvent()
             : restoreEvent().then(() => refreshEvent())
-        ).catch((e) => {
-          setError(e.message);
-        }),
+        ).then(succeeded, failed),
       15000,
     );
     return () => clearInterval(timer);
@@ -517,6 +581,7 @@ function useController() {
     currentScope.current.sessionId = undefined;
     restoreSequence.current++;
     setCall(null);
+    pushOptIn.current = null;
     try {
       await client.logout();
     } finally {
@@ -535,11 +600,16 @@ function useController() {
       setError("Company unavailable.");
       return;
     }
+    enterCompany(id);
+  }
+  /** Leaves the current company (ending its call) and enters an authorized one. */
+  function enterCompany(id: string) {
     setListPages(1);
     setListMore(false);
     currentScope.current.company = id;
     setCall(null);
     clearPrivate();
+    setError("");
     sessionAuthorized.current = true;
     setCompany(id);
   }
@@ -609,11 +679,24 @@ export function Page({
           <Button
             key={c.id}
             title={c.name + (w.company === c.id ? " ✓" : "")}
+            accessibilityLabel={c.name}
+            accessibilityState={{ selected: w.company === c.id }}
             onPress={() => w.switchCompany(c.id)}
           />
         ))}
       </ScrollView>
-      {!!w.error && <Text accessibilityRole="alert">{w.error}</Text>}
+      {!!w.error && (
+        <View style={styles.error}>
+          <Text accessibilityRole="alert" style={{ flex: 1 }}>
+            {w.error}
+          </Text>
+          <Button
+            title="Dismiss"
+            accessibilityLabel="Dismiss error"
+            onPress={() => w.setError("")}
+          />
+        </View>
+      )}
       {w.foreground || preserveMounted ? (
         scroll ? (
           <ScrollView key={w.company + ":" + w.session?.user.id}>
@@ -652,6 +735,15 @@ export const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 12,
     marginVertical: 8,
+  },
+  error: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    backgroundColor: "#fdecea",
+    borderRadius: 8,
+    padding: 8,
+    marginBottom: 8,
   },
   message: {
     backgroundColor: "#fff",

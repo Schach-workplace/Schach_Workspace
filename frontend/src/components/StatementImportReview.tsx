@@ -10,6 +10,8 @@ import {
   type StatementPreview,
   type FinanceIntake,
 } from '../data/financeAssistance';
+import { AssistListState } from './ReceiptExtractionReview';
+import { Field } from './UI';
 export default function StatementImportReview({
   intakeId,
   onImported,
@@ -76,13 +78,13 @@ export default function StatementImportReview({
     }
   }
   return (
-    <section>
+    <section className="finance-assist-card" aria-label="Map and review bank CSV">
       <h3>Map and review bank CSV</h3>
-      <p>
+      <p className="finance-assist-meta">
         Choose every mapping explicitly. Debits/outflows are negative. This import records statement
         evidence and never initiates payment.
       </p>
-      <fieldset disabled={frozen} style={{ border: 0, padding: 0, minWidth: 0 }}>
+      <fieldset disabled={frozen} className="plain-fieldset finance-assist-form">
         {Object.entries({
           headerRow: ['yes', 'no'],
           delimiter: ['comma', 'semicolon', 'tab'],
@@ -91,8 +93,7 @@ export default function StatementImportReview({
           decimalSeparator: ['dot', 'comma'],
           groupingSeparator: ['none', 'comma', 'dot', 'space'],
         }).map(([key, values]) => (
-          <label key={key}>
-            {statementLabels[key]}
+          <Field key={key} label={statementLabels[key]}>
             <select
               value={choices[key as keyof typeof choices]}
               onChange={(e) => set(key as keyof typeof choices, e.target.value)}
@@ -102,7 +103,7 @@ export default function StatementImportReview({
                 <option key={v}>{v}</option>
               ))}
             </select>
-          </label>
+          </Field>
         ))}
         {(
           [
@@ -115,8 +116,10 @@ export default function StatementImportReview({
             'currencyColumn',
           ] as (keyof typeof choices)[]
         ).map((key) => (
-          <label key={key}>
-            {statementLabels[key]} (file column number, optional where noted)
+          <Field
+            key={key}
+            label={statementLabels[key] + ' (file column number, optional where noted)'}
+          >
             <input
               inputMode="numeric"
               min="1"
@@ -124,42 +127,69 @@ export default function StatementImportReview({
               value={choices[key]}
               onChange={(e) => set(key, e.target.value)}
             />
-          </label>
+          </Field>
         ))}
       </fieldset>
-      <button
-        disabled={
-          !q.ready || q.data?.state !== 'clean' || m.busy || !!imported.attempt || imported.busy
-        }
-        onClick={() => void prepare()}
-      >
-        {m.attempt ? 'Retry same mapping preview' : 'Preview exact statement rows'}
-      </button>
-      {p.loading && <p>Checking current preview access…</p>}
+      <div className="finance-assist-actions">
+        <button
+          className="button button-primary"
+          aria-busy={m.busy}
+          disabled={
+            !q.ready || q.data?.state !== 'clean' || m.busy || !!imported.attempt || imported.busy
+          }
+          onClick={() => void prepare()}
+        >
+          {m.attempt ? 'Retry same mapping preview' : 'Preview exact statement rows'}
+        </button>
+      </div>
+      {preview && (
+        <AssistListState
+          loading={p.loading}
+          error={null}
+          empty={p.ready && !p.data?.rows.length && !p.data?.preview.errors.length}
+          loadingText="Checking current preview access…"
+          emptyText="This mapping produced no statement records. Check the header row and column numbers."
+        />
+      )}
       {p.data && (
         <>
-          <p>
+          <p className="finance-assist-row-title">
             Debit {formatExactMoney(p.data.preview.totals.debit, w.data!.company.currency)} · credit{' '}
             {formatExactMoney(p.data.preview.totals.credit, w.data!.company.currency)} · net{' '}
             {formatExactMoney(p.data.preview.totals.net, w.data!.company.currency)}.{' '}
             {p.data.rowCount} distinct records.
           </p>
           {p.data.preview.errors.slice(0, 100).map((e) => (
-            <p key={e.row} role="alert">
+            <p key={e.row} role="alert" className="finance-assist-error">
               Record {e.row}: {e.message}
             </p>
           ))}
-          {p.data.rows.map((r) => (
-            <p key={r.recordOrdinal}>
-              Record {r.recordOrdinal} · {r.bookedDate} ·{' '}
-              {formatExactMoney(r.signedAmountMinor, r.currency)} · {r.reference}
-            </p>
-          ))}
-          {p.data.hasMore && (
-            <button onClick={() => setPageCursor(p.data!.nextPageCursor)}>Review next rows</button>
+          {p.data.rows.length > 0 && (
+            <ul className="finance-assist-suggestions" aria-label="Normalized statement rows">
+              {p.data.rows.map((r) => (
+                <li key={r.recordOrdinal}>
+                  Record {r.recordOrdinal} · {r.bookedDate} ·{' '}
+                  {formatExactMoney(r.signedAmountMinor, r.currency)} · {r.reference}
+                </li>
+              ))}
+            </ul>
           )}
-          {!!pageCursor && <button onClick={() => setPageCursor('')}>First rows</button>}
-          <label>
+          <div className="finance-assist-actions">
+            {p.data.hasMore && (
+              <button
+                className="button button-secondary"
+                onClick={() => setPageCursor(p.data!.nextPageCursor)}
+              >
+                Review next rows
+              </button>
+            )}
+            {!!pageCursor && (
+              <button className="button button-secondary" onClick={() => setPageCursor('')}>
+                First rows
+              </button>
+            )}
+          </div>
+          <label className="check-field finance-assist-check">
             <input
               type="checkbox"
               checked={confirmed}
@@ -168,15 +198,18 @@ export default function StatementImportReview({
             />
             I reviewed the complete mapping and all normalized rows
           </label>
-          <label>
-            Reason for a deliberate repeated file import (if applicable)
-            <input
-              value={reason}
-              disabled={!!imported.attempt || imported.busy}
-              onChange={(e) => setReason(e.target.value)}
-            />
-          </label>
+          <div className="finance-assist-form">
+            <Field label="Reason for a deliberate repeated file import (if applicable)">
+              <input
+                value={reason}
+                disabled={!!imported.attempt || imported.busy}
+                onChange={(e) => setReason(e.target.value)}
+              />
+            </Field>
+          </div>
           <button
+            className="button button-primary"
+            aria-busy={imported.busy}
             disabled={
               !p.ready ||
               !q.ready ||
@@ -202,7 +235,7 @@ export default function StatementImportReview({
           </button>
         </>
       )}
-      <p role="alert">
+      <p role="alert" className="finance-assist-error">
         {error || m.error || imported.error || p.error?.message || q.error?.message}
       </p>
     </section>

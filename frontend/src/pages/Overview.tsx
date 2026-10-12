@@ -36,6 +36,24 @@ import {
 import { TaskTable } from './Tasks';
 import { financeSummary, fiscalYearStart, fiscalYearRange, formatMoney } from '../data/finance';
 
+// Company-level activity (no task) is routed to the view that owns its record.
+// Actions without a meaningful destination render as plain, non-interactive rows.
+const activityTargets: Array<[RegExp, View]> = [
+  [/^project_/, 'projects'],
+  [/^goal_/, 'goals'],
+  [/^tasks_imported$/, 'tasks'],
+  [/^(expense|budget|finance)_/, 'finance'],
+  [/^notifications_/, 'inbox'],
+  [/^(company_updated|automations_run|password_changed)$/, 'settings'],
+  [
+    /^(person_|department_|people_|onboarding_|access_review_|company_departure_|membership_)/,
+    'people',
+  ],
+];
+export function activityTarget(action: string): View | null {
+  return activityTargets.find(([pattern]) => pattern.test(action))?.[1] ?? null;
+}
+
 export default function Overview({
   onTask,
   onExpense,
@@ -487,22 +505,37 @@ export default function Overview({
               .slice()
               .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
               .slice(0, 4)
-              .map((a) => (
-                <button
-                  key={a.id}
-                  className="activity-preview-row"
-                  onClick={() => (a.taskId ? onTask(a.taskId) : onNavigate('people'))}
-                >
-                  <Avatar person={data.people.find((p) => p.id === a.userId)} size="sm" />
-                  <div>
-                    <p>
-                      <strong>{personName(data, a.userId)}</strong> {a.action.replaceAll('_', ' ')}
-                    </p>
-                    <span>{a.detail}</span>
-                  </div>
-                  <time>{relativeTime(a.createdAt)}</time>
-                </button>
-              ))}
+              .map((a) => {
+                const content = (
+                  <>
+                    <Avatar person={data.people.find((p) => p.id === a.userId)} size="sm" />
+                    <div>
+                      <p>
+                        <strong>{personName(data, a.userId)}</strong>{' '}
+                        {a.action.replaceAll('_', ' ')}
+                      </p>
+                      <span>{a.detail}</span>
+                    </div>
+                    <time>{relativeTime(a.createdAt)}</time>
+                  </>
+                );
+                const target = a.taskId ? null : activityTarget(a.action);
+                if (!a.taskId && !target)
+                  return (
+                    <div key={a.id} className="activity-preview-row">
+                      {content}
+                    </div>
+                  );
+                return (
+                  <button
+                    key={a.id}
+                    className="activity-preview-row"
+                    onClick={() => (a.taskId ? onTask(a.taskId) : onNavigate(target!))}
+                  >
+                    {content}
+                  </button>
+                );
+              })}
             {data.activities.length === 0 && (
               <p className="panel-empty-note">Your team's updates will appear here.</p>
             )}

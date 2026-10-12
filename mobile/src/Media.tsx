@@ -1,8 +1,8 @@
-import CaptureControl from "./CaptureControl";
-import { captureOwner } from "./capture";
+import { captureImage, captureOwner } from "./capture";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { Button, Image, Text, View } from "react-native";
 import * as Picker from "expo-document-picker";
+import * as ImagePicker from "expo-image-picker";
 import { File, Paths } from "expo-file-system";
 import * as Crypto from "expo-crypto";
 import * as Sharing from "expo-sharing";
@@ -14,6 +14,10 @@ import {
   useAudioPlayer,
 } from "expo-audio";
 import { client } from "./client";
+/** Only audio and video selections have something to play back. */
+export function playablePreview(mime: string | undefined) {
+  return !!mime && (mime.startsWith("audio/") || mime.startsWith("video/"));
+}
 async function download(company: string, conversation: string, id: string) {
   return downloadPath(
     `/companies/${company}/conversations/${conversation}/media/${id}/download`,
@@ -93,6 +97,7 @@ function Media({
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   const [recording, setRecording] = useState(false);
+  const [picking, setPicking] = useState(false);
   const [retry, setRetry] = useState(!!owner.intent);
   const recorder = useAudioRecorder(RecordingPresets.HIGH_QUALITY);
   const player = useAudioPlayer(file?.uri ?? null);
@@ -118,6 +123,19 @@ function Media({
     if (!alive.current || startGeneration.current !== client.generation)
       throw new Error("Company or conversation changed.");
   }
+  function adoptPicked(selected: File, name: string, mime: string) {
+    owned.current.add(selected);
+    try {
+      current();
+      if (selected.size > 25 * 1024 * 1024)
+        throw new Error("Choose media up to 25 MiB.");
+      setFile(selected, name, mime);
+    } catch (e) {
+      if (selected.exists) selected.delete();
+      throw e;
+    }
+  }
+  /** Any supported document (PDF, text, audio, image) from the file system. */
   async function choose() {
     const result = await Picker.getDocumentAsync({
       copyToCacheDirectory: true,
@@ -126,18 +144,48 @@ function Media({
     if (!result.canceled) {
       const asset = result.assets[0];
       const selected = new File(asset.uri);
-      owned.current.add(selected);
-      try {
-        current();
-      } catch (e) {
-        if (selected.exists) selected.delete();
-        throw e;
-      }
-      if (selected.size > 25 * 1024 * 1024) {
-        if (selected.exists) selected.delete();
-        throw new Error("Choose media up to 25 MiB.");
-      }
-      setFile(selected, asset.name, asset.mimeType ?? selected.type);
+      adoptPicked(selected, asset.name, asset.mimeType ?? selected.type);
+    }
+  }
+  /** A photo from the device library, copied into an owned cache file. */
+  async function choosePhoto() {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ["images"],
+      quality: 0.9,
+      allowsMultipleSelection: false,
+    });
+    current();
+    if (result.canceled) return;
+    const asset = result.assets[0];
+    const name = asset.fileName || "Photo.jpg";
+    const ext = name.toLowerCase().split(".").at(-1) ?? "jpg";
+    const owned = new File(
+      Paths.cache,
+      "schach-media-" + Crypto.randomUUID() + "." + ext,
+    );
+    try {
+      new File(asset.uri).copy(owned);
+    } catch (e) {
+      if (owned.exists) owned.delete();
+      throw e;
+    }
+    adoptPicked(owned, name, asset.mimeType ?? owned.type);
+  }
+  async function takePhoto() {
+    // The capture module owns camera permission, authorization and Android
+    // camera-return recovery; it selects the preview into this chat owner.
+    await captureImage(scope);
+  }
+  async function pick(action: () => Promise<void>) {
+    if (picking) return;
+    setPicking(true);
+    setError("");
+    try {
+      await action();
+    } catch (e) {
+      if (alive.current) setError((e as Error).message);
+    } finally {
+      if (alive.current) setPicking(false);
     }
   }
   async function voice() {
@@ -243,11 +291,20 @@ function Media({
   }
   return (
     <View>
-      <CaptureControl scope={scope} label="Chat photo" onFile={() => {}} />
       <Button
-        title="Choose attachment"
-        disabled={disabled || busy || retry || recording}
-        onPress={() => void choose().catch((e) => setError(e.message))}
+        title="Take photo"
+        disabled={disabled || busy || retry || recording || picking || !!file}
+        onPress={() => void pick(takePhoto)}
+      />
+      <Button
+        title="Choose photo"
+        disabled={disabled || busy || retry || recording || picking || !!file}
+        onPress={() => void pick(choosePhoto)}
+      />
+      <Button
+        title="Choose file"
+        disabled={disabled || busy || retry || recording || picking || !!file}
+        onPress={() => void pick(choose)}
       />
       <Button
         title={recording ? "Stop voice note" : "Record voice note"}
@@ -266,8 +323,12 @@ function Media({
               style={{ width: 200, height: 200 }}
             />
           )}
-          <Button title="Play preview" onPress={() => player.play()} />
-          <Button title="Pause preview" onPress={() => player.pause()} />
+          {playablePreview(selected?.mime) && (
+            <>
+              <Button title="Play preview" onPress={() => player.play()} />
+              <Button title="Pause preview" onPress={() => player.pause()} />
+            </>
+          )}
           <Button
             title={retry ? "Retry same media message" : "Send selected media"}
             disabled={disabled || busy}

@@ -292,12 +292,20 @@ export default function TasksPage({
         </div>
       )}
       <div className="task-toolbar">
-        <div className="segmented" aria-label="Task view">
-          <button onClick={() => setLayout('list')} className={layout === 'list' ? 'active' : ''}>
+        <div className="segmented" role="group" aria-label="Task view">
+          <button
+            aria-pressed={layout === 'list'}
+            onClick={() => setLayout('list')}
+            className={layout === 'list' ? 'active' : ''}
+          >
             <List size={16} />
             List
           </button>
-          <button onClick={() => setLayout('board')} className={layout === 'board' ? 'active' : ''}>
+          <button
+            aria-pressed={layout === 'board'}
+            onClick={() => setLayout('board')}
+            className={layout === 'board' ? 'active' : ''}
+          >
             <LayoutGrid size={15} />
             Board
           </button>

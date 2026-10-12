@@ -66,11 +66,16 @@ export function InboxPage({
         onExpense={onExpense}
       />
       <div className="task-toolbar">
-        <div className="segmented">
-          <button className={filter === 'all' ? 'active' : ''} onClick={() => setFilter('all')}>
+        <div className="segmented" role="group" aria-label="Update filter">
+          <button
+            aria-pressed={filter === 'all'}
+            className={filter === 'all' ? 'active' : ''}
+            onClick={() => setFilter('all')}
+          >
             All updates<span className="count-badge">{data.notifications.length}</span>
           </button>
           <button
+            aria-pressed={filter === 'unread'}
             className={filter === 'unread' ? 'active' : ''}
             onClick={() => setFilter('unread')}
           >
@@ -197,17 +202,28 @@ export function SettingsPage() {
   }
   return (
     <div className="page-content settings-page">
-      <AttentionPreferences key={store.companyId + ':' + store.session?.user.id} />
-      <div className="settings-tabs">
-        <button className={tab === 'company' ? 'active' : ''} onClick={() => setTab('company')}>
+      <div className="settings-tabs" role="group" aria-label="Settings sections">
+        <button
+          aria-pressed={tab === 'company'}
+          className={tab === 'company' ? 'active' : ''}
+          onClick={() => setTab('company')}
+        >
           <Building2 size={16} />
           Company
         </button>
-        <button className={tab === 'account' ? 'active' : ''} onClick={() => setTab('account')}>
+        <button
+          aria-pressed={tab === 'account'}
+          className={tab === 'account' ? 'active' : ''}
+          onClick={() => setTab('account')}
+        >
           <KeyRound size={16} />
           My account
         </button>
-        <button className={tab === 'workflow' ? 'active' : ''} onClick={() => setTab('workflow')}>
+        <button
+          aria-pressed={tab === 'workflow'}
+          className={tab === 'workflow' ? 'active' : ''}
+          onClick={() => setTab('workflow')}
+        >
           <Zap size={16} />
           Workflow
         </button>
@@ -372,6 +388,7 @@ export function SettingsPage() {
               </div>
             </div>
           </section>
+          <AttentionPreferences key={store.companyId + ':' + store.session?.user.id} />
           <section className="panel settings-section">
             <div className="section-header">
               <div>

@@ -3,6 +3,7 @@ import PeopleTools from './components/PeopleTools';
 import AsyncView from './components/AsyncView';
 const Connect = lazy(() => import('./communication/Connect'));
 import { lazy, useEffect, useRef, useState, type FormEvent } from 'react';
+import { flushSync } from 'react-dom';
 import * as Dialog from '@radix-ui/react-dialog';
 import {
   ArrowRight,
@@ -17,6 +18,7 @@ import {
   ClipboardList,
   Command,
   FolderKanban,
+  Gauge,
   LayoutDashboard,
   LoaderCircle,
   LockKeyhole,
@@ -53,7 +55,7 @@ const navigation = [
   { id: 'tasks' as View, label: 'All tasks', icon: ClipboardList, group: 'workspace' },
   { id: 'projects' as View, label: 'Projects', icon: FolderKanban, group: 'workspace' },
   { id: 'calendar' as View, label: 'Calendar', icon: CalendarDays, group: 'workspace' },
-  { id: 'workload' as View, label: 'Workload', icon: UsersRound, group: 'management' },
+  { id: 'workload' as View, label: 'Workload', icon: Gauge, group: 'management' },
   { id: 'goals' as View, label: 'Goals', icon: Target, group: 'management' },
   { id: 'finance' as View, label: 'Finance', icon: Wallet, group: 'management' },
   { id: 'reports' as View, label: 'Reports', icon: ChartNoAxesCombined, group: 'management' },
@@ -350,6 +352,7 @@ function WorkspaceApp() {
   const [collapsed, setCollapsed] = useState(false);
   const [search, setSearch] = useState('');
   const [searchFocused, setSearchFocused] = useState(false);
+  const [mobileSearch, setMobileSearch] = useState(false);
   const [localError, setLocalError] = useState('');
   const searchRef = useRef<HTMLInputElement>(null);
   const previousCompany = useRef('');
@@ -370,6 +373,7 @@ function WorkspaceApp() {
       if (e.key === 'Escape') {
         setSearch('');
         setSearchFocused(false);
+        setMobileSearch(false);
       }
     };
     window.addEventListener('keydown', handler);
@@ -399,6 +403,7 @@ function WorkspaceApp() {
     window.location.hash = next;
     setMobileNav(false);
     setSearchFocused(false);
+    setMobileSearch(false);
     setSearch('');
     if (next === 'tasks' || next === 'my-work') setFilters({ ...emptyFilters, ...nextFilters });
     if (next === 'projects') setProjectId(nextFilters?.projectId ?? '');
@@ -413,6 +418,7 @@ function WorkspaceApp() {
     setInitialProject(project);
     setTaskId(id);
     setSearchFocused(false);
+    setMobileSearch(false);
   }
   function openExpense(id: string) {
     if (!data?.expenses.some((e) => e.id === id)) {
@@ -626,7 +632,29 @@ function WorkspaceApp() {
             </div>
           </div>
           <div className="topbar-actions">
-            <div className="global-search-wrap">
+            <button
+              type="button"
+              className="icon-button mobile-search-toggle"
+              aria-label={mobileSearch ? 'Close search' : 'Open search'}
+              aria-expanded={mobileSearch}
+              aria-controls="global-search-wrap"
+              onClick={() => {
+                if (mobileSearch) {
+                  setMobileSearch(false);
+                  return;
+                }
+                // Render the field synchronously so focus stays inside the tap gesture
+                // and touch keyboards open.
+                flushSync(() => setMobileSearch(true));
+                searchRef.current?.focus();
+              }}
+            >
+              {mobileSearch ? <X size={18} /> : <Search size={18} />}
+            </button>
+            <div
+              id="global-search-wrap"
+              className={cx('global-search-wrap', mobileSearch && 'search-open')}
+            >
               <form
                 className="global-search"
                 onSubmit={(e) => {
@@ -811,6 +839,7 @@ function WorkspaceApp() {
           <button
             key={n.id}
             className={view === n.id ? 'active' : ''}
+            aria-current={view === n.id ? 'page' : undefined}
             onClick={() => navigate(n.id as View)}
           >
             <n.icon size={20} />
