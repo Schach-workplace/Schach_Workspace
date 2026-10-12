@@ -1,0 +1,8 @@
+flowchart TD
+  step1["Create drafts with each QA Beta reference or mismatched QA Alpha work/department."]
+  step2["Patch createdBy/companyId or edit valid owner draft as another finance reader."]
+  step3["Switch to QA Beta and request QA Alpha detail/receipts/history."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> record

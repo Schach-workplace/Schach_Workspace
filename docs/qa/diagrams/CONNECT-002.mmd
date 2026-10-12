@@ -1,0 +1,10 @@
+flowchart TD
+  step1["Open New conversation → Private group, choose Member B, leave Conversation name blank and attempt creation."]
+  step2["Name the fixture group and create it; open the new Channel form separately."]
+  step3["Create a named channel with Company channel selected; sign in as an active QA Alpha reader outside its selected roster."]
+  step4["Sign in as Outsider O and request the QA Alpha channel detail."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> step4
+  step4 --> record

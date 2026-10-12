@@ -1,0 +1,12 @@
+flowchart TD
+  step1["Save the current definition with eligible owner, recipients A/B and an observed qualified period."]
+  step2["Run the due schedule/generation/delivery; A reads ordinary company-relative GET /attention and opens the IDs-only recipient-bound report_ready job link."]
+  step3["Replay the same occurrence/delivery after an owned worker restart."]
+  step4["Depart or suspend only unrelated recipient B; inspect A’s previous authorized artifact/link and the next occurrence."]
+  step5["In separate fixtures test owner departure/demotion, complete source loss, definition revision, schedule version, explicit A removal and expiry before a fresh read."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> step4
+  step4 --> step5
+  step5 --> record

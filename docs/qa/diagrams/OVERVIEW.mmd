@@ -1,0 +1,17 @@
+flowchart TD
+  open["Open Overview"]
+  scope["Load authorized workspace rows"]
+  select{"Choose metric or attention category"}
+  filter["Open corresponding task filters"]
+  other["Open project, report, finance or goal route"]
+  access{"Destination currently readable?"}
+  detail["Display current authorized detail"]
+  deny["Show unavailable or denial state"]
+  open --> scope
+  scope --> select
+  select -->|"Task metric"| filter
+  select -->|"Other summary"| other
+  filter --> access
+  other --> access
+  access -->|"Yes"| detail
+  access -->|"No"| deny

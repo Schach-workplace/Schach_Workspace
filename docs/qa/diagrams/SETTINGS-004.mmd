@@ -1,0 +1,8 @@
+flowchart TD
+  step1["As Platform operator, choose Your companies → Add company and save Cedar QA."]
+  step2["As Alpha leader and Owner A, inspect Add company and attempt POST /api/companies."]
+  step3["Switch between Cedar QA and QA Alpha using a currently eligible account."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> record

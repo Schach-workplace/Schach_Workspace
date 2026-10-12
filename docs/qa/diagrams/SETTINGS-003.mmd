@@ -1,0 +1,6 @@
+flowchart TD
+  step1["On each separately isolated variant, create its first budget or expense through an eligible finance actor, then reopen Edit details."]
+  step2["PATCH company currency to USD and financial-year start to 1."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> record

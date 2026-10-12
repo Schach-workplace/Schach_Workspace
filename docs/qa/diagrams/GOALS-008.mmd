@@ -1,0 +1,8 @@
+flowchart TD
+  step1["Suppress measurement ACK then choose Retry same measurement after a same-principal graph refresh."]
+  step2["Cause a genuine goal version conflict on a new observation and inspect recovery."]
+  step3["Confirm actor/session/company loss during pending recovery."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> record

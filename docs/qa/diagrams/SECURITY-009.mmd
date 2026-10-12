@@ -1,0 +1,10 @@
+flowchart TD
+  step1["Register two owned devices in separate fictional-account sessions and inspect Account’s device list."]
+  step2["From the retained session revoke the other lost device; attempt its API reads, delivery and call token/rejoin across both fixture companies."]
+  step3["Logout the retained session and attempt reuse; in an MFA-enabled configured fixture use one recovery code twice."]
+  step4["Inspect another actor’s device listing/revocation attempt."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> step4
+  step4 --> record

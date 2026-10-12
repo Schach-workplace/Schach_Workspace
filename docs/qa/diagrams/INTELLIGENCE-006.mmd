@@ -1,0 +1,8 @@
+flowchart TD
+  step1["Inspect expense_fields/economics and explicitly request report_explanation."]
+  step2["Use isolated allowlisted amount-fact output then arbitrary text/money/relations."]
+  step3["Compare business state before/after;revoke source/finance access and read result/citation."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> record

@@ -1,0 +1,6 @@
+flowchart TD
+  step1["Capture summary projectionBasis, change source in isolated fixture, then GET /planning/tasks using the old basis."]
+  step2["Refresh summary and use Inspect work for Owner A again."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> record

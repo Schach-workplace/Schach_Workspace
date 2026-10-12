@@ -1,0 +1,10 @@
+flowchart TD
+  step1["Create known task/expense; record originals/minor units/versions privately."]
+  step2["Gracefully stop the verified QA process."]
+  step3["Run its private restart.sh with the same database and keys."]
+  step4["Sign in and inspect retained records/canonical result."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> step4
+  step4 --> record

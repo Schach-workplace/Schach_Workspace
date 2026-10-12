@@ -1,0 +1,8 @@
+flowchart TD
+  step1["Submit required-receipt draft without evidence, then attempt short exception and valid explanation."]
+  step2["Reviewer approves without note, then explicitly enters independent acceptance note."]
+  step3["Submit second expense when receipt policy off, turn policy on before approval and attempt approval."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> record

@@ -1,0 +1,8 @@
+flowchart TD
+  step1["Obtain row cursor and use changed tab/filter/principal."]
+  step2["Use token after expiry or isolated restart/eviction."]
+  step3["Request over-row/byte-limit cohort then deliberately narrow filters."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> record

@@ -1,0 +1,10 @@
+flowchart TD
+  step1["Choose a small fictional file, start Send selected media and drop one response only in the isolated fixture transport."]
+  step2["Observe Retry same media message and attempt selecting a different attachment while the pending intent exists."]
+  step3["Restore transport and choose Retry same media message; fetch current authorized history."]
+  step4["Try changed bytes under the same API upload/send identity in a separate negative request."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> step4
+  step4 --> record

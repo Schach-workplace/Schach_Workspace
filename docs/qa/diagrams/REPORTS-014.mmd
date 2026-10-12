@@ -1,0 +1,8 @@
+flowchart TD
+  step1["Generate ready A/B outputs and GET ordinary /attention as each recipient."]
+  step2["Leadership removes/suspends B;A owner/sources remain eligible;read A output/Inbox and next occurrence."]
+  step3["As B read old output/Inbox;as A attempt route/escalate report_ready."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> record

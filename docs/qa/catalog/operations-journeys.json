@@ -1,0 +1,1357 @@
+{
+  "modules": [
+    {
+      "id": "OPERATIONS",
+      "title": "Runtime, migration, backup and deployment",
+      "purpose": "Prove supported runtime and private preservation separately from production acceptance.",
+      "entry_points": [
+        "Operator environment tools"
+      ],
+      "actors": [
+        "QA operator",
+        "Alpha leader",
+        "Owner A",
+        "Member B",
+        "Reviewer R",
+        "Finance F"
+      ],
+      "workflow": [
+        "Prepare owned fictional current actors and sources.",
+        "Inspect the named environment/fields/audience.",
+        "Commit deliberate canonical intent or supported setup.",
+        "Check genuine result and independently eligible decisions.",
+        "Retain scoped evidence, classify gates and clean only owned resources."
+      ],
+      "source_refs": [
+        "docs/OPERATIONS.md",
+        "backend/cmd/server/main.go",
+        "backend/migrations/runner.go"
+      ],
+      "automation_refs": [
+        "backend/platform/platform_test.go",
+        "backend/platform/reporting_final_test.go"
+      ],
+      "limitations": [
+        "No candidate/task/token proves financial approval, goal outcome, actual media or production acceptance.",
+        "Missing provider/device/region/restore prerequisites remain BLOCKED; no retained fixture replay."
+      ],
+      "cases": [
+        {
+          "id": "OPERATIONS-001",
+          "module": "OPERATIONS",
+          "title": "Build and start an isolated fictional instance",
+          "priority": "P0",
+          "gate": "LOCAL",
+          "modes": [
+            "Web",
+            "API",
+            "Operator"
+          ],
+          "status": "NOT_RUN",
+          "actors": [
+            "QA operator"
+          ],
+          "preconditions": [
+            "New disposable fictional QA fixture; never the retained workspace at port 8080 or historical native fixture.",
+            "Record source/build/environment and current roles; missing prerequisite is BLOCKED."
+          ],
+          "test_data": [
+            "Unique QA run prefix and current eligible QA Alpha/QA Beta actors."
+          ],
+          "steps": [
+            "Check toolchains and pinned frontend dependencies.",
+            "Run start-isolated-qa.sh on port 9080.",
+            "Read /api/health and sign in.",
+            "Check private run directory/config permissions without displaying secrets."
+          ],
+          "expected_results": [
+            "Missing tool is an environment blocker.",
+            "New private DB/storage/keys only; existing port 8080 untouched.",
+            "HTTP 200 JSON with ok:true and real API-mode sign-in.",
+            "Directory mode 0700, secret files mode 0600; no inherited production/provider secrets."
+          ],
+          "cleanup": [
+            "Clear injected faults/editors; retain audited canonical fixture data and private keys until signoff. Stop/reset only verified owned QA resources."
+          ],
+          "source_refs": [
+            "docs/qa/tools/start-isolated-qa.sh",
+            "backend/cmd/server/main.go",
+            "backend/platform/seed.go"
+          ],
+          "automation_refs": [
+            "backend/platform/platform_test.go"
+          ]
+        },
+        {
+          "id": "OPERATIONS-002",
+          "module": "OPERATIONS",
+          "title": "Restart retains business records and original recovery keys",
+          "priority": "P0",
+          "gate": "LOCAL_CONFIG",
+          "modes": [
+            "Web",
+            "API",
+            "Operator"
+          ],
+          "status": "NOT_RUN",
+          "actors": [
+            "QA operator"
+          ],
+          "preconditions": [
+            "New disposable fictional QA fixture; never the retained workspace at port 8080 or historical native fixture.",
+            "Record source/build/environment and current roles; missing prerequisite is BLOCKED."
+          ],
+          "test_data": [
+            "Unique QA run prefix and current eligible QA Alpha/QA Beta actors."
+          ],
+          "steps": [
+            "Create known task/expense; record originals/minor units/versions privately.",
+            "Gracefully stop the verified QA process.",
+            "Run its private restart.sh with the same database and keys.",
+            "Sign in and inspect retained records/canonical result."
+          ],
+          "expected_results": [
+            "Baseline reflects real committed records.",
+            "Only owned test process stops.",
+            "No reset/reseed/key rotation.",
+            "Original deadlines/money/history unchanged; no duplicate canonical result."
+          ],
+          "cleanup": [
+            "Clear injected faults/editors; retain audited canonical fixture data and private keys until signoff. Stop/reset only verified owned QA resources."
+          ],
+          "source_refs": [
+            "docs/PEOPLE_ADMINISTRATION.md",
+            "backend/platform/people_credentials.go",
+            "backend/cmd/server/main.go"
+          ],
+          "automation_refs": [
+            "backend/platform/platform_test.go"
+          ]
+        },
+        {
+          "id": "OPERATIONS-003",
+          "module": "OPERATIONS",
+          "title": "Full supported native PostgreSQL migration upgrade",
+          "priority": "P0",
+          "gate": "LOCAL_CONFIG",
+          "modes": [
+            "Web",
+            "API",
+            "Operator"
+          ],
+          "status": "NOT_RUN",
+          "actors": [
+            "QA operator"
+          ],
+          "preconditions": [
+            "New disposable fictional QA fixture; never the retained workspace at port 8080 or historical native fixture.",
+            "Record source/build/environment and current roles; missing prerequisite is BLOCKED."
+          ],
+          "test_data": [
+            "Unique QA run prefix and current eligible QA Alpha/QA Beta actors."
+          ],
+          "steps": [
+            "Provision owned disposable native PostgreSQL/database/schema.",
+            "Compare all 58 migration pairs in both trees.",
+            "Run current checksummed numbered migration owner.",
+            "Repeat owner and populated-upgrade regressions on owned fixtures."
+          ],
+          "expected_results": [
+            "No production/sibling data selected.",
+            "116 up/down filenames per tree match; old checksums immutable.",
+            "Reach version 58 with no GORM/numbered PostgreSQL mixing.",
+            "Idempotent inventory, typed original records preserved; only owned fixture resources cleaned."
+          ],
+          "cleanup": [
+            "Clear injected faults/editors; retain audited canonical fixture data and private keys until signoff. Stop/reset only verified owned QA resources."
+          ],
+          "source_refs": [
+            "backend/migrations/runner.go",
+            "backend/cmd/migrate/main.go",
+            "encore/README.md"
+          ],
+          "automation_refs": [
+            "backend/platform/migration_runner_test.go"
+          ]
+        },
+        {
+          "id": "OPERATIONS-004",
+          "module": "OPERATIONS",
+          "title": "Production startup refuses unsafe modes",
+          "priority": "P1",
+          "gate": "LOCAL_CONFIG",
+          "modes": [
+            "Web",
+            "API",
+            "Operator"
+          ],
+          "status": "NOT_RUN",
+          "actors": [
+            "QA operator"
+          ],
+          "preconditions": [
+            "New disposable fictional QA fixture; never the retained workspace at port 8080 or historical native fixture.",
+            "Record source/build/environment and current roles; missing prerequisite is BLOCKED."
+          ],
+          "test_data": [
+            "Unique QA run prefix and current eligible QA Alpha/QA Beta actors."
+          ],
+          "steps": [
+            "Try production with SQLite/missing DATABASE_URL in owned test path.",
+            "Using owned PostgreSQL, try insecure cookies or non-HTTPS allowed origins.",
+            "Try explicit demo seeding in production.",
+            "Restore documented staging configuration."
+          ],
+          "expected_results": [
+            "Startup refuses unsupported production database.",
+            "Startup fails closed.",
+            "Demo seed rejected; no fictional production users created.",
+            "Proceed only with actual PostgreSQL/TLS/origin prerequisites; separate network checks still required."
+          ],
+          "cleanup": [
+            "Clear injected faults/editors; retain audited canonical fixture data and private keys until signoff. Stop/reset only verified owned QA resources."
+          ],
+          "source_refs": [
+            "docs/OPERATIONS.md",
+            "backend/cmd/server/main.go"
+          ],
+          "automation_refs": [
+            "backend/platform/platform_test.go"
+          ]
+        },
+        {
+          "id": "OPERATIONS-005",
+          "module": "OPERATIONS",
+          "title": "Coordinated backup/restore preserves records and does not renew grants",
+          "priority": "P1",
+          "gate": "LOCAL_CONFIG",
+          "modes": [
+            "Web",
+            "API",
+            "Operator"
+          ],
+          "status": "NOT_RUN",
+          "actors": [
+            "QA operator"
+          ],
+          "preconditions": [
+            "New disposable fictional QA fixture; never the retained workspace at port 8080 or historical native fixture.",
+            "Record source/build/environment and current roles; missing prerequisite is BLOCKED."
+          ],
+          "test_data": [
+            "Unique QA run prefix and current eligible QA Alpha/QA Beta actors."
+          ],
+          "steps": [
+            "Create known fictional task/paid expense/media/report; capture current grants.",
+            "Stop QA writers and back up DB/stores/keys together.",
+            "Restore only to a separate owned test directory.",
+            "Check integrity/typed original rows and source/expiry authorization.",
+            "Measure backup age and elapsed restore."
+          ],
+          "expected_results": [
+            "Original commitments, money, accepted facts and expiry known.",
+            "Consistent private checkpoint includes storage/key dependencies.",
+            "No live overwrite or key replacement.",
+            "Values preserved; expired/revoked grants do not revive or duplicate work.",
+            "Actual RPO/RTO recorded; 15-minute RPO / four-hour RTO / 35-day retention remain proposed targets until measured."
+          ],
+          "cleanup": [
+            "Clear injected faults/editors; retain audited canonical fixture data and private keys until signoff. Stop/reset only verified owned QA resources."
+          ],
+          "source_refs": [
+            "docs/OPERATIONS.md",
+            "docs/COMMUNICATION_OPERATIONS.md",
+            "docs/reports-storage.md"
+          ],
+          "automation_refs": [
+            "verification/runtime/standalone_smoke.py"
+          ]
+        },
+        {
+          "id": "OPERATIONS-006",
+          "module": "OPERATIONS",
+          "title": "Worker lifecycle remains independent of five-minute automation scan",
+          "priority": "P0",
+          "gate": "LOCAL_CONFIG",
+          "modes": [
+            "Web",
+            "API",
+            "Operator"
+          ],
+          "status": "NOT_RUN",
+          "actors": [
+            "QA operator"
+          ],
+          "preconditions": [
+            "New disposable fictional QA fixture; never the retained workspace at port 8080 or historical native fixture.",
+            "Record source/build/environment and current roles; missing prerequisite is BLOCKED."
+          ],
+          "test_data": [
+            "Unique QA run prefix and current eligible QA Alpha/QA Beta actors."
+          ],
+          "steps": [
+            "Start owned app with DISABLE_SCHEDULER=true.",
+            "Exercise separately configured report/communication queues.",
+            "Restart with DISABLE_SCHEDULER=false and run recurring/reminder fixture.",
+            "Gracefully stop owned instance."
+          ],
+          "expected_results": [
+            "Work automation scan disabled, independent leased/maintenance workers retain documented lifecycle.",
+            "Queues progress with ordinary source/lease checks.",
+            "Work scheduler active; repeated triggers do not duplicate successors/reminders.",
+            "Workers join; unrelated processes untouched."
+          ],
+          "cleanup": [
+            "Clear injected faults/editors; retain audited canonical fixture data and private keys until signoff. Stop/reset only verified owned QA resources."
+          ],
+          "source_refs": [
+            "backend/cmd/server/main.go",
+            "backend/platform/communication_runtime.go",
+            "backend/platform/report_runtime.go"
+          ],
+          "automation_refs": [
+            "backend/platform/platform_test.go",
+            "backend/platform/report_schedules_test.go"
+          ]
+        },
+        {
+          "id": "OPERATIONS-007",
+          "module": "OPERATIONS",
+          "title": "Optional provider absence leaves manual workflows available",
+          "priority": "P0",
+          "gate": "LOCAL",
+          "modes": [
+            "Web",
+            "API",
+            "Operator"
+          ],
+          "status": "NOT_RUN",
+          "actors": [
+            "QA operator"
+          ],
+          "preconditions": [
+            "New disposable fictional QA fixture; never the retained workspace at port 8080 or historical native fixture.",
+            "Record source/build/environment and current roles; missing prerequisite is BLOCKED."
+          ],
+          "test_data": [
+            "Unique QA run prefix and current eligible QA Alpha/QA Beta actors."
+          ],
+          "steps": [
+            "Start QA without scanner/OCR/intelligence/LiveKit/push credentials.",
+            "Read ordinary task/chat/manual finance/report screens.",
+            "Attempt unavailable optional operation.",
+            "Explicitly configure verified isolated provider before positive cases."
+          ],
+          "expected_results": [
+            "Ordinary app starts; optional capability truthfully unavailable.",
+            "Authorized manual flows remain usable; no demo fallback.",
+            "No fake result/cloud/download fallback.",
+            "Availability follows real loader checks; quality/capacity/device acceptance remains separate."
+          ],
+          "cleanup": [
+            "Clear injected faults/editors; retain audited canonical fixture data and private keys until signoff. Stop/reset only verified owned QA resources."
+          ],
+          "source_refs": [
+            "backend/platform/intelligence_providers.go",
+            "backend/platform/finance_assistance_runtime.go",
+            "backend/platform/communication_runtime.go"
+          ],
+          "automation_refs": [
+            "backend/platform/intelligence_runtime_test.go",
+            "backend/platform/finance_assistance_runtime_test.go"
+          ]
+        },
+        {
+          "id": "OPERATIONS-008",
+          "module": "OPERATIONS",
+          "title": "Actual standalone and Encore adapters share the controls",
+          "priority": "P1",
+          "gate": "LOCAL_CONFIG",
+          "modes": [
+            "Web",
+            "API",
+            "Operator"
+          ],
+          "status": "NOT_RUN",
+          "actors": [
+            "QA operator"
+          ],
+          "preconditions": [
+            "New disposable fictional QA fixture; never the retained workspace at port 8080 or historical native fixture.",
+            "Record source/build/environment and current roles; missing prerequisite is BLOCKED."
+          ],
+          "test_data": [
+            "Unique QA run prefix and current eligible QA Alpha/QA Beta actors."
+          ],
+          "steps": [
+            "Prepare distinct owned adapter fixtures and complete numbered inventory.",
+            "Run actual analyzer/export/runtime owning gates.",
+            "Compare public login/scope/CSV/worker delivery/restart checks.",
+            "Dispose only recorded owned resources."
+          ],
+          "expected_results": [
+            "Ports/schemas/secrets belong only to this run.",
+            "Ordinary Go wrapper build is not Encore runtime acceptance.",
+            "Both use same source/session/recipient/version/idempotency controls.",
+            "Sibling DB/container/provider unchanged; raw logs stay private."
+          ],
+          "cleanup": [
+            "Clear injected faults/editors; retain audited canonical fixture data and private keys until signoff. Stop/reset only verified owned QA resources."
+          ],
+          "source_refs": [
+            "encore/README.md",
+            "verification/runtime/README.md"
+          ],
+          "automation_refs": [
+            "verification/runtime/encore_export_smoke.py",
+            "verification/runtime/final_reporting_runtime.py"
+          ]
+        },
+        {
+          "id": "OPERATIONS-009",
+          "module": "OPERATIONS",
+          "title": "Routine metrics omit private source and credentials",
+          "priority": "P1",
+          "gate": "LOCAL",
+          "modes": [
+            "Web",
+            "API",
+            "Operator"
+          ],
+          "status": "NOT_RUN",
+          "actors": [
+            "QA operator"
+          ],
+          "preconditions": [
+            "New disposable fictional QA fixture; never the retained workspace at port 8080 or historical native fixture.",
+            "Record source/build/environment and current roles; missing prerequisite is BLOCKED."
+          ],
+          "test_data": [
+            "Unique QA run prefix and current eligible QA Alpha/QA Beta actors."
+          ],
+          "steps": [
+            "Use an owned MetricSink/debug collector.",
+            "Perform authorized and denied QA reads.",
+            "Inspect routine route measurements, not raw private diagnostics.",
+            "Share sanitized aggregate then remove collector."
+          ],
+          "expected_results": [
+            "Collector is private and uses documented metrics contract.",
+            "Status/bytes/query count/duration observable.",
+            "Templates only; no raw URLs/IDs/private prose/session/provider data.",
+            "Reviewed team summary contains no secret-bearing logs."
+          ],
+          "cleanup": [
+            "Clear injected faults/editors; retain audited canonical fixture data and private keys until signoff. Stop/reset only verified owned QA resources."
+          ],
+          "source_refs": [
+            "backend/platform/server.go",
+            "docs/OPERATIONS.md",
+            "docs/SECURITY_AND_LIMITATIONS.md"
+          ],
+          "automation_refs": [
+            "backend/platform/platform_test.go"
+          ]
+        },
+        {
+          "id": "OPERATIONS-010",
+          "module": "OPERATIONS",
+          "title": "India network/capacity and recovery acceptance is measured",
+          "priority": "P1",
+          "gate": "PRODUCTION",
+          "modes": [
+            "Web",
+            "API",
+            "Operator"
+          ],
+          "status": "NOT_RUN",
+          "actors": [
+            "QA operator"
+          ],
+          "preconditions": [
+            "New disposable fictional QA fixture; never the retained workspace at port 8080 or historical native fixture.",
+            "Record source/build/environment and current roles; missing prerequisite is BLOCKED."
+          ],
+          "test_data": [
+            "Unique QA run prefix and current eligible QA Alpha/QA Beta actors."
+          ],
+          "steps": [
+            "Provision named India staging TLS / private ingress / least privilege settings.",
+            "Measure agreed users/devices/query/provider workload.",
+            "Exercise approved restore and call/TURN/push matrix.",
+            "Compare actual results to agreed limits and record blockers."
+          ],
+          "expected_results": [
+            "Evidence identifies region/endpoints/certificates, not local assumptions.",
+            "Real latency/queue/errors/resources recorded; process-local budget does not prove cross-replica admission.",
+            "Each gate has separate observed results.",
+            "No production signoff for blocked/unmeasured behavior."
+          ],
+          "cleanup": [
+            "Clear injected faults/editors; retain audited canonical fixture data and private keys until signoff. Stop/reset only verified owned QA resources."
+          ],
+          "source_refs": [
+            "docs/OPERATIONS.md",
+            "docs/COMMUNICATION_OPERATIONS.md",
+            "docs/intelligence-local.md"
+          ],
+          "automation_refs": [
+            "verification/runtime/data_read_load.sh",
+            "backend/platform/communication_load_test.go"
+          ]
+        }
+      ],
+      "diagram": {
+        "id": "operationsFlow",
+        "title": "Supported runtime and measured rollout",
+        "module": "OPERATIONS",
+        "nodes": [
+          {
+            "id": "entry",
+            "label": "Record source and current actor",
+            "kind": "start"
+          },
+          {
+            "id": "scope",
+            "label": "Check supported environment and source permissions",
+            "kind": "decision"
+          },
+          {
+            "id": "inspect",
+            "label": "Inspect exact fields and responsibilities",
+            "kind": "action"
+          },
+          {
+            "id": "commit",
+            "label": "Migrate supported fixture and start owned workers",
+            "kind": "action"
+          },
+          {
+            "id": "ack",
+            "label": "Current health and preservation verified?",
+            "kind": "decision"
+          },
+          {
+            "id": "retry",
+            "label": "Diagnose only owned environment failure",
+            "kind": "action"
+          },
+          {
+            "id": "review",
+            "label": "Independent decision or measured validation",
+            "kind": "action"
+          },
+          {
+            "id": "result",
+            "label": "Retain actual outcome and scoped evidence",
+            "kind": "result"
+          },
+          {
+            "id": "deny",
+            "label": "Block missing prerequisite or deny stale authority",
+            "kind": "error"
+          }
+        ],
+        "edges": [
+          {
+            "from": "entry",
+            "to": "scope",
+            "label": "begin"
+          },
+          {
+            "from": "scope",
+            "to": "inspect",
+            "label": "eligible"
+          },
+          {
+            "from": "scope",
+            "to": "deny",
+            "label": "missing or denied"
+          },
+          {
+            "from": "inspect",
+            "to": "commit",
+            "label": "reviewed"
+          },
+          {
+            "from": "commit",
+            "to": "ack",
+            "label": "result"
+          },
+          {
+            "from": "ack",
+            "to": "retry",
+            "label": "unknown or failed"
+          },
+          {
+            "from": "retry",
+            "to": "scope",
+            "label": "recheck original context"
+          },
+          {
+            "from": "ack",
+            "to": "review",
+            "label": "known or verified"
+          },
+          {
+            "from": "review",
+            "to": "result",
+            "label": "accepted or measured"
+          }
+        ]
+      }
+    },
+    {
+      "id": "JOURNEYS",
+      "title": "Cross-module end-to-end journeys",
+      "purpose": "Follow complete business outcomes across modules while retaining current source and independent controls.",
+      "entry_points": [
+        "People, Connect, Projects, Finance and current-source workflows"
+      ],
+      "actors": [
+        "QA operator",
+        "Alpha leader",
+        "Owner A",
+        "Member B",
+        "Reviewer R",
+        "Finance F"
+      ],
+      "workflow": [
+        "Prepare owned fictional current actors and sources.",
+        "Inspect the named environment/fields/audience.",
+        "Commit deliberate canonical intent or supported setup.",
+        "Check genuine result and independently eligible decisions.",
+        "Retain scoped evidence, classify gates and clean only owned resources."
+      ],
+      "source_refs": [
+        "docs/API_CONTRACT.md",
+        "docs/USER_GUIDE.md",
+        "docs/PEOPLE_ADMINISTRATION.md"
+      ],
+      "automation_refs": [
+        "backend/platform/platform_test.go",
+        "backend/platform/reporting_final_test.go"
+      ],
+      "limitations": [
+        "No candidate/task/token proves financial approval, goal outcome, actual media or production acceptance.",
+        "Missing provider/device/region/restore prerequisites remain BLOCKED; no retained fixture replay."
+      ],
+      "cases": [
+        {
+          "id": "JOURNEYS-001",
+          "module": "JOURNEYS",
+          "title": "People onboarding to accountable task and reports",
+          "priority": "P0",
+          "gate": "LOCAL",
+          "modes": [
+            "Web",
+            "API",
+            "Operator"
+          ],
+          "status": "NOT_RUN",
+          "actors": [
+            "Alpha leader",
+            "Owner A",
+            "Reviewer R"
+          ],
+          "preconditions": [
+            "New disposable fictional QA fixture; never the retained workspace at port 8080 or historical native fixture.",
+            "Record source/build/environment and current roles; missing prerequisite is BLOCKED.",
+            "People credential retry active key ID and matching keyring are configured by start-isolated-qa.sh or an equivalent isolated fixture; preserve those exact test keys across replay/restart. Otherwise onboarding is BLOCKED."
+          ],
+          "test_data": [
+            "Unique QA run prefix and current eligible QA Alpha/QA Beta actors."
+          ],
+          "steps": [
+            "Leader prepares valid department, manager and current template.",
+            "Review fresh onboarding preview and apply once.",
+            "New Owner A signs in and inspects My work/task originals.",
+            "Complete prerequisites and checklist and submit required-review work.",
+            "Independent Reviewer R accepts the current version; inspect Project/Inbox/current Reports, then select and read a task_history_v1 capture containing that acceptance."
+          ],
+          "expected_results": [
+            "Graph/current choices valid; no automatic private membership.",
+            "Onecanonical membership/template task; secret stays private, no email invitation claim.",
+            "Only current authorized work with original commitments.",
+            "Inreview is not acceptance; progress alone not approval.",
+            "Historical capture shows one acceptance episode with the exact original deadline metric. Current accepted-task counts and punctuality remain distinct from episode metrics; progress or a summary tile alone is not an episode."
+          ],
+          "cleanup": [
+            "Clear injected faults/editors; retain audited canonical fixture data and private keys until signoff. Stop/reset only verified owned QA resources."
+          ],
+          "source_refs": [
+            "docs/PEOPLE_ADMINISTRATION.md",
+            "docs/USER_GUIDE.md",
+            "backend/platform/tasks.go"
+          ],
+          "automation_refs": [
+            "backend/platform/people_onboarding_test.go",
+            "backend/platform/platform_test.go"
+          ]
+        },
+        {
+          "id": "JOURNEYS-002",
+          "module": "JOURNEYS",
+          "title": "Private message disclosure to separately retained reviewed task",
+          "priority": "P0",
+          "gate": "LOCAL",
+          "modes": [
+            "Web",
+            "API",
+            "Operator"
+          ],
+          "status": "NOT_RUN",
+          "actors": [
+            "Owner A",
+            "Member B",
+            "Alpha leader",
+            "Reviewer R"
+          ],
+          "preconditions": [
+            "New disposable fictional QA fixture; never the retained workspace at port 8080 or historical native fixture.",
+            "Record source/build/environment and current roles; missing prerequisite is BLOCKED."
+          ],
+          "test_data": [
+            "Unique QA run prefix and current eligible QA Alpha/QA Beta actors."
+          ],
+          "steps": [
+            "A/B reopen existing private DM; excluded leader checks denial.",
+            "Select current message and inspect Create task and disclosure preview.",
+            "Review/rewrite exact title and optional excerpt plus broader readers.",
+            "Publish current policy and source once and independently review task.",
+            "Remove source access and read task as ordinary retained-task reader."
+          ],
+          "expected_results": [
+            "No name/duplicate DM; rank gives no private chat access.",
+            "Message-derived title itself discloses text.",
+            "Unchecked excerpt does not make private title safe.",
+            "Canonical task created once; no automatic acceptance.",
+            "New private reads/actions denied; retained task keeps its own ACL with no replayed source prose."
+          ],
+          "cleanup": [
+            "Clear injected faults/editors; retain audited canonical fixture data and private keys until signoff. Stop/reset only verified owned QA resources."
+          ],
+          "source_refs": [
+            "docs/CONNECT_UX.md",
+            "docs/COMMUNICATION_IMPLEMENTATION.md",
+            "backend/platform/conversations.go"
+          ],
+          "automation_refs": [
+            "backend/platform/communication_review_test.go",
+            "backend/platform/communication_access_test.go",
+            "backend/platform/communication_conversion_test.go"
+          ]
+        },
+        {
+          "id": "JOURNEYS-003",
+          "module": "JOURNEYS",
+          "title": "Task dependency to separate milestone acceptance and observed goal",
+          "priority": "P0",
+          "gate": "LOCAL",
+          "modes": [
+            "Web",
+            "API",
+            "Operator"
+          ],
+          "status": "NOT_RUN",
+          "actors": [
+            "Alpha leader",
+            "Owner A",
+            "Reviewer R"
+          ],
+          "preconditions": [
+            "New disposable fictional QA fixture; never the retained workspace at port 8080 or historical native fixture.",
+            "Record source/build/environment and current roles; missing prerequisite is BLOCKED."
+          ],
+          "test_data": [
+            "Unique QA run prefix and current eligible QA Alpha/QA Beta actors."
+          ],
+          "steps": [
+            "Create Project P/prerequisite/successor/milestone with captured versions.",
+            "Attempt required submission with incomplete prerequisite.",
+            "Complete prerequisites and independently accept tasks.",
+            "Review milestone independently against current criteria and versions.",
+            "Reopen/change a captured task before stale milestone decision; inspect Goal G."
+          ],
+          "expected_results": [
+            "Graph/scope/independent actors valid.",
+            "Required guard blocks false completion.",
+            "Real task acceptance separate from 100% progress.",
+            "Separate human milestone acceptance, not automatic task-derived approval.",
+            "Stale milestone decision needs fresh review; Goal value never inferred from task completion."
+          ],
+          "cleanup": [
+            "Clear injected faults/editors; retain audited canonical fixture data and private keys until signoff. Stop/reset only verified owned QA resources."
+          ],
+          "source_refs": [
+            "docs/API_CONTRACT.md",
+            "docs/PLANNING_AND_GOALS.md",
+            "frontend/src/pages/Projects.tsx"
+          ],
+          "automation_refs": [
+            "backend/platform/platform_test.go"
+          ]
+        },
+        {
+          "id": "JOURNEYS-004",
+          "module": "JOURNEYS",
+          "title": "Same-date timed revision and five-minute-late original commitment",
+          "priority": "P0",
+          "gate": "LOCAL",
+          "modes": [
+            "Web",
+            "API",
+            "Operator"
+          ],
+          "status": "NOT_RUN",
+          "actors": [
+            "Owner A",
+            "Reviewer R"
+          ],
+          "preconditions": [
+            "New disposable fictional QA fixture; never the retained workspace at port 8080 or historical native fixture.",
+            "Record source/build/environment and current roles; missing prerequisite is BLOCKED."
+          ],
+          "test_data": [
+            "Use measured wait in disposable QA; original future deadline / revised future deadline both today."
+          ],
+          "steps": [
+            "Create Timed T due shortly ahead today in Asia/Kolkata.",
+            "Revise same-date instant with reason/current version.",
+            "Independent Reviewer R accepts at original deadline+5 minutes before revised instant.",
+            "Read current report including that civil day.",
+            "Export same original snapshot and compare deadlines/rates."
+          ],
+          "expected_results": [
+            "One original UTC instant/zone recorded.",
+            "Original unchanged; revision flagged on same date.",
+            "Actual acceptance late against original / on time against current; no clock/history forging.",
+            "Exact original/current rates and denominators reflect that record.",
+            "Frozen rows and formula protection agree; no latest-token substitution."
+          ],
+          "cleanup": [
+            "Clear injected faults/editors; retain audited canonical fixture data and private keys until signoff. Stop/reset only verified owned QA resources."
+          ],
+          "source_refs": [
+            "backend/platform/deadlines.go",
+            "backend/platform/report_reads.go",
+            "frontend/src/pages/GoalsReports.tsx"
+          ],
+          "automation_refs": [
+            "backend/platform/deadlines_test.go",
+            "verification/runtime/reports_smoke.mjs"
+          ]
+        },
+        {
+          "id": "JOURNEYS-005",
+          "module": "JOURNEYS",
+          "title": "Budgeted expense to independent payment and department totals",
+          "priority": "P0",
+          "gate": "LOCAL",
+          "modes": [
+            "Web",
+            "API",
+            "Operator"
+          ],
+          "status": "NOT_RUN",
+          "actors": [
+            "Owner A",
+            "Finance F",
+            "Alpha leader"
+          ],
+          "preconditions": [
+            "New disposable fictional QA fixture; never the retained workspace at port 8080 or historical native fixture.",
+            "Record source/build/environment and current roles; missing prerequisite is BLOCKED."
+          ],
+          "test_data": [
+            "Active Engineering envelope amountMinor 1000000 for a nonoverlapping period containing the expense date; no other spending in this fixture.",
+            "Expense amountMinor 123456 INR; fictional vendor/invoice, receipt or meaningful exception, current versions, independent Finance F, and valid fictional external-payment date/method/reference."
+          ],
+          "steps": [
+            "Financial authority prepares the active INR Engineering budget and eligible category.",
+            "Owner A saves a 1234.56 INR draft with receipt or a meaningful evidence exception.",
+            "Owner A submits and attempts self-approval or payment; inspect pending and envelope totals.",
+            "Independent Finance F reviews current budget, policy, evidence and version and approves.",
+            "After a fictional external payment, Finance F records the full payment; inspect totals and immutable paid economics."
+          ],
+          "expected_results": [
+            "Current nonoverlapping fiscal boundaries and amountMinor 1000000 validated.",
+            "Exactly 123456 minor units; draft is neither approved nor paid.",
+            "Submitted economics locked and creator approval/rejection/payment denied; pending 123456, used 0 and available 1000000 in the fresh fixture.",
+            "Approved-unpaid/used 123456, available 876544. Evidence exception requires independent acceptance note; override is relevant only to a separate deliberately insufficient-budget variant.",
+            "Paid 123456, approved-unpaid 0, used 123456 and available 876544 unchanged; no funds moved or double counting. Paid amount cannot be rewritten."
+          ],
+          "cleanup": [
+            "Clear injected faults/editors; retain audited canonical fixture data and private keys until signoff. Stop/reset only verified owned QA resources."
+          ],
+          "source_refs": [
+            "backend/platform/finance.go",
+            "docs/FINANCE_GUIDE.md"
+          ],
+          "automation_refs": [
+            "backend/platform/finance_test.go",
+            "verification/finance_flow.py"
+          ]
+        },
+        {
+          "id": "JOURNEYS-006",
+          "module": "JOURNEYS",
+          "title": "Receipt suggestion to human reviewed canonical draft with unknownACK",
+          "priority": "P0",
+          "gate": "LOCAL_CONFIG",
+          "modes": [
+            "Web",
+            "API",
+            "Operator"
+          ],
+          "status": "NOT_RUN",
+          "actors": [
+            "Owner A",
+            "Finance F",
+            "QA operator"
+          ],
+          "preconditions": [
+            "New disposable fictional QA fixture; never the retained workspace at port 8080 or historical native fixture.",
+            "Record source/build/environment and current roles; missing prerequisite is BLOCKED.",
+            "Private finance intake storage, clean configured scanner, separately configured verified OCR and original live session/source/destination binding; absence of a positive capability is BLOCKED."
+          ],
+          "test_data": [
+            "Unique QA run prefix and current eligible QA Alpha/QA Beta actors."
+          ],
+          "steps": [
+            "Stage a harmless private receipt and complete clean scanner assessment.",
+            "Owner A deliberately opts into extraction using the current live session/source/destination binding; inspect the current result revision and every uncertainty.",
+            "Review and deliberately enter exact amountMinor, category, date and destination; inspect the complete finance audience and explicitly choose copyEvidence=true.",
+            "Lose postcommit ACK thenretry original key, body and target.",
+            "Expire/revoke scratch and read retainedexpense throughfinanceACL."
+          ],
+          "expected_results": [
+            "Current original session/source/capture required; clean scanner result alone does not authorize OCR.",
+            "Extraction is opt-in and suggests fields; it neither submits, approves nor pays.",
+            "Human-reviewed fields, current result revision, exact minor units and complete audience are captured; no blind provider write.",
+            "Onecanonicaldraft/evidencecopy, no autoapproval/payment.",
+            "Scratchneverrenews; independentlyretained businessrecord has ordinarypermission/lifetime."
+          ],
+          "cleanup": [
+            "Clear injected faults/editors; retain audited canonical fixture data and private keys until signoff. Stop/reset only verified owned QA resources."
+          ],
+          "source_refs": [
+            "docs/API_CONTRACT.md",
+            "backend/platform/finance_assistance_runtime.go"
+          ],
+          "automation_refs": [
+            "verification/runtime/finance_assistance_fixture.py",
+            "verification/runtime/finance_assistance_smoke.mjs"
+          ]
+        },
+        {
+          "id": "JOURNEYS-007",
+          "module": "JOURNEYS",
+          "title": "CSV distinct occurrence import to full payment association and audited unmatch",
+          "priority": "P0",
+          "gate": "LOCAL_CONFIG",
+          "modes": [
+            "Web",
+            "API",
+            "Operator"
+          ],
+          "status": "NOT_RUN",
+          "actors": [
+            "Finance F",
+            "Independent payment recorder",
+            "QA operator"
+          ],
+          "preconditions": [
+            "New disposable fictional QA fixture; never the retained workspace at port 8080 or historical native fixture.",
+            "Record source/build/environment and current roles; missing prerequisite is BLOCKED."
+          ],
+          "test_data": [
+            "Fictional CSV containing two identical negative INR debits -1234.56; explicitly select delimiter/header/date/decimal/grouping/sign and column mapping.",
+            "One independently approved and externally paid expense amountMinor 123456 INR; current row/expense/allocation versions and meaningful review reasons."
+          ],
+          "steps": [
+            "Stage scanned fictional CSV with two identical negative debits; explicitly map delimiter/header/date/decimal/grouping/sign and all required columns.",
+            "Review both normalized occurrences and debit total; lose only the post-import acknowledgement using the supported owned harness.",
+            "Retry the original key/body/mapping then refresh the current imported rows.",
+            "With current finance pair access and captured row/expense versions, associate one full debit to the paid expense using a meaningful reason.",
+            "With captured allocation version and reason, perform audited unmatch; separately lose current pair access and attempt a new stale association."
+          ],
+          "expected_results": [
+            "Two distinct logical ordinals remain; no guessed bank interpretation.",
+            "Debit 246912 minor units; mapping/key/body frozen while acknowledgement is unknown.",
+            "One canonical import on exact retry, without duplicate occurrence import.",
+            "One full-debit association and second equal occurrence unmatched; no funds transfer. Matching does not invent creator exclusion: approve/reject/pay retain independent actor exclusions.",
+            "Only association reverses; paid amount unchanged and audit retained. New association after access loss denied."
+          ],
+          "cleanup": [
+            "Clear injected faults/editors; retain audited canonical fixture data and private keys until signoff. Stop/reset only verified owned QA resources."
+          ],
+          "source_refs": [
+            "backend/platform/finance_statements.go",
+            "backend/platform/finance_reconciliation.go"
+          ],
+          "automation_refs": [
+            "backend/platform/finance_reconciliation_test.go",
+            "verification/runtime/finance_assistance_smoke.mjs"
+          ]
+        },
+        {
+          "id": "JOURNEYS-008",
+          "module": "JOURNEYS",
+          "title": "Saved report to public Inbox and isolated departed recipient",
+          "priority": "P0",
+          "gate": "LOCAL_CONFIG",
+          "modes": [
+            "Web",
+            "API",
+            "Operator"
+          ],
+          "status": "NOT_RUN",
+          "actors": [
+            "Saved report owner",
+            "Owner A recipient",
+            "Member B recipient",
+            "QA operator"
+          ],
+          "preconditions": [
+            "New disposable fictional QA fixture; never the retained workspace at port 8080 or historical native fixture.",
+            "Record source/build/environment and current roles; missing prerequisite is BLOCKED.",
+            "Dedicated private REPORT_ARTIFACT_ROOT with active owned report worker/maintenance/delivery loops; eligible saved-definition owner and authorized A/B sources. B is unrelated to the owner and A sources. Missing storage blocks positive artifact/delivery checks."
+          ],
+          "test_data": [
+            "Unique QA run prefix and current eligible QA Alpha/QA Beta actors."
+          ],
+          "steps": [
+            "Save the current definition with eligible owner, recipients A/B and an observed qualified period.",
+            "Run the due schedule/generation/delivery; A reads ordinary company-relative GET /attention and opens the IDs-only recipient-bound report_ready job link.",
+            "Replay the same occurrence/delivery after an owned worker restart.",
+            "Depart or suspend only unrelated recipient B; inspect A’s previous authorized artifact/link and the next occurrence.",
+            "In separate fixtures test owner departure/demotion, complete source loss, definition revision, schedule version, explicit A removal and expiry before a fresh read."
+          ],
+          "expected_results": [
+            "Explicit save validates all recipients; no fabricated history.",
+            "One current ready, unexpired recipient-bound report link visible; A cannot route or escalate report_ready.",
+            "No duplicate canonical job, artifact or link.",
+            "B denied independently; still-eligible owner and A preserve A’s prior output/link and next occurrence.",
+            "Each affected output is invalidated under the corresponding owner/source/version/removal/expiry control. B-only loss is not complete source loss."
+          ],
+          "cleanup": [
+            "Clear injected faults/editors; retain audited canonical fixture data and private keys until signoff. Stop/reset only verified owned QA resources."
+          ],
+          "source_refs": [
+            "backend/platform/saved_reports.go",
+            "backend/platform/report_schedules.go",
+            "backend/platform/attention_scopes.go"
+          ],
+          "automation_refs": [
+            "backend/platform/reporting_final_test.go",
+            "verification/runtime/final_reporting_runtime.py"
+          ]
+        },
+        {
+          "id": "JOURNEYS-009",
+          "module": "JOURNEYS",
+          "title": "Grounded candidate to deliberately reviewed canonical work",
+          "priority": "P0",
+          "gate": "LOCAL_CONFIG",
+          "modes": [
+            "Web",
+            "API",
+            "Operator"
+          ],
+          "status": "NOT_RUN",
+          "actors": [
+            "Owner A",
+            "Reviewer R",
+            "QA operator"
+          ],
+          "preconditions": [
+            "New disposable fictional QA fixture; never the retained workspace at port 8080 or historical native fixture.",
+            "Record source/build/environment and current roles; missing prerequisite is BLOCKED.",
+            "Verified pinned local provider identity, fresh isolated provider capacity and accepted current local-processing policy; inspect exact source revision/version/hash and selection-preview hash."
+          ],
+          "test_data": [
+            "Unique QA run prefix and current eligible QA Alpha/QA Beta actors."
+          ],
+          "steps": [
+            "Inspect exact current source revision/version/hash and selection-preview hash; explicitly accept the current local-processing policy.",
+            "Run the verified pinned local provider with fresh isolated capacity; inspect citations and current source authorization.",
+            "For a private task candidate, select an anchor and current existing instruction action; review all contributing originals, complete audience and exact edited payload/hash.",
+            "Publish deliberate canonical intent. If acknowledgement is unknown, preserve original request/key/body and check current publication-access before canonical replay.",
+            "Test raw expiry separately from source/session revocation; read any separately retained task through its ordinary ACL."
+          ],
+          "expected_results": [
+            "Only explicit selected sources and policy consent; no whole-company inference or substitution of latest tokens.",
+            "Candidate grounded only in selected sources; invalid output fails closed.",
+            "Candidate is not assignment or approval; normal task guards and reviewed disclosure apply.",
+            "One canonical publication/task, with independent review. Raw expiry alone does not abandon an unknown committed publication; current provenance/ACL gates the frozen retry.",
+            "Expired raw job cannot support a new first write; still-readable originals may be deliberately selected for fresh generation. Source/session revocation denies raw disclosure and current-authorized replay. Retained task follows ordinary ACL; no raw TTL renewal."
+          ],
+          "cleanup": [
+            "Clear injected faults/editors; retain audited canonical fixture data and private keys until signoff. Stop/reset only verified owned QA resources."
+          ],
+          "source_refs": [
+            "docs/intelligence-local.md",
+            "backend/platform/intelligence_sources.go"
+          ],
+          "automation_refs": [
+            "backend/platform/intelligence_publication_test.go",
+            "verification/runtime/intelligence_smoke.mjs"
+          ]
+        },
+        {
+          "id": "JOURNEYS-010",
+          "module": "JOURNEYS",
+          "title": "Departure handover retires private outputs without changing money or other membership",
+          "priority": "P0",
+          "gate": "LOCAL",
+          "modes": [
+            "Web",
+            "API",
+            "Operator"
+          ],
+          "status": "NOT_RUN",
+          "actors": [
+            "Alpha leader",
+            "Member B",
+            "Replacement owners/reviewers",
+            "Private source participants"
+          ],
+          "preconditions": [
+            "New disposable fictional QA fixture; never the retained workspace at port 8080 or historical native fixture.",
+            "Record source/build/environment and current roles; missing prerequisite is BLOCKED."
+          ],
+          "test_data": [
+            "Unique QA run prefix and current eligible QA Alpha/QA Beta actors."
+          ],
+          "steps": [
+            "Create B’s complete handover and Alpha/Beta memberships and original facts.",
+            "Leader inspects departure preview, replacements and opaque private blockers.",
+            "Resolve in-review milestone separately and source obligations only through authorized participants.",
+            "Fresh preview and canonical handover and departure apply.",
+            "B tries stale Alpha grants, signs in for QA Beta, explicitly rejoins Alpha."
+          ],
+          "expected_results": [
+            "Current obligations/originals/paid facts recorded privately.",
+            "Rank gives no private prose / bypass operation.",
+            "No automatic milestone/private decision close.",
+            "Atomic metadata handover; money/acceptedfacts/original deadlines unchanged; route is not payment.",
+            "Alpha old grant retired; Beta membership preserved with fresh account authentication; rejoin never revives old private interval / raw output."
+          ],
+          "cleanup": [
+            "Clear injected faults/editors; retain audited canonical fixture data and private keys until signoff. Stop/reset only verified owned QA resources."
+          ],
+          "source_refs": [
+            "docs/PEOPLE_ADMINISTRATION.md",
+            "docs/SECURITY_AND_LIMITATIONS.md"
+          ],
+          "automation_refs": [
+            "backend/platform/people_departure_test.go",
+            "backend/platform/people_output_lifecycle_test.go"
+          ]
+        },
+        {
+          "id": "JOURNEYS-011",
+          "module": "JOURNEYS",
+          "title": "Native draft survives allowed checks and clears on genuine source loss",
+          "priority": "P0",
+          "gate": "DEVICE",
+          "modes": [
+            "Web",
+            "API",
+            "Operator"
+          ],
+          "status": "NOT_RUN",
+          "actors": [
+            "Owner A on qualified native build",
+            "Authorized revocation operator"
+          ],
+          "preconditions": [
+            "New disposable fictional QA fixture; never the retained workspace at port 8080 or historical native fixture.",
+            "Record source/build/environment and current roles; missing prerequisite is BLOCKED."
+          ],
+          "test_data": [
+            "Unique QA run prefix and current eligible QA Alpha/QA Beta actors."
+          ],
+          "steps": [
+            "Open exact-source native editor over trusted HTTPS and type a QA draft with keyboard.",
+            "Trigger foreground/current-source pending check across an ordinary refresh.",
+            "Complete positive original-source check and return through Back or the picker.",
+            "Authorized operator genuinely revokes the source and releases late held response.",
+            "Repeat at enlarged font with actual owning-target measurements."
+          ],
+          "expected_results": [
+            "Actual actor/source/focus/cursor/IME measurable.",
+            "Authored same-scope controls remain; fetched private content / options withheld / send disabled.",
+            "Original value / cursor / inspected version survive allowed navigation; no latest reselection.",
+            "Affected private content / recovery / capture clear; stale callbacks cannot restore.",
+            "No hidden action / keyboard trap; native 44dp owners measured, not inferred from CSS."
+          ],
+          "cleanup": [
+            "Clear injected faults/editors; retain audited canonical fixture data and private keys until signoff. Stop/reset only verified owned QA resources."
+          ],
+          "source_refs": [
+            "mobile/src/Workspace.tsx",
+            "mobile/src/ConnectUI.tsx",
+            "mobile/src/PeopleScreen.tsx"
+          ],
+          "automation_refs": [
+            "mobile/src/Workspace.test.tsx",
+            "mobile/src/PeopleFlows.test.tsx"
+          ]
+        },
+        {
+          "id": "JOURNEYS-012",
+          "module": "JOURNEYS",
+          "title": "Real calls/background notification follow source grants and actual media",
+          "priority": "P0",
+          "gate": "PRODUCTION",
+          "modes": [
+            "Web",
+            "API",
+            "Operator"
+          ],
+          "status": "NOT_RUN",
+          "actors": [
+            "Owner A",
+            "Member B",
+            "Source revocation operator",
+            "Device operator"
+          ],
+          "preconditions": [
+            "New disposable fictional QA fixture; never the retained workspace at port 8080 or historical native fixture.",
+            "Record source/build/environment and current roles; missing prerequisite is BLOCKED."
+          ],
+          "test_data": [
+            "Unique QA run prefix and current eligible QA Alpha/QA Beta actors."
+          ],
+          "steps": [
+            "Configure named staged LiveKit/TURN/push and signed physical clients and trusted HTTPS.",
+            "A calls and B answers; verify actual two-way audio/video.",
+            "Repeat background, lock and network handoff; genuinely remove participant source access.",
+            "Inspect unanswered missed-call outcome and actual background push separately.",
+            "Confirm disabled call recording and transcription; review selected clean voice attachment separately."
+          ],
+          "expected_results": [
+            "Real provider / device / network matrix recorded; token alone not media.",
+            "Provider join distinguishes answer; actual media observed.",
+            "Old source grants / push / rejoin revoked under current checks.",
+            "Deduplication / current recipient / source authority and actual delivery observed independently.",
+            "No disabled capture success invented; attachment assistance has its own consent / provider gate."
+          ],
+          "cleanup": [
+            "Clear injected faults/editors; retain audited canonical fixture data and private keys until signoff. Stop/reset only verified owned QA resources."
+          ],
+          "source_refs": [
+            "backend/platform/communication_calls.go",
+            "backend/platform/call_provider.go",
+            "docs/COMMUNICATION_OPERATIONS.md"
+          ],
+          "automation_refs": [
+            "backend/platform/communication_calls_test.go",
+            "verification/runtime/livekit-browser.mjs"
+          ]
+        }
+      ],
+      "diagram": {
+        "id": "journeysFlow",
+        "title": "Cross-module reviewed business outcome",
+        "module": "JOURNEYS",
+        "nodes": [
+          {
+            "id": "entry",
+            "label": "Record source and current actor",
+            "kind": "start"
+          },
+          {
+            "id": "scope",
+            "label": "Check supported environment and source permissions",
+            "kind": "decision"
+          },
+          {
+            "id": "inspect",
+            "label": "Inspect exact fields and responsibilities",
+            "kind": "action"
+          },
+          {
+            "id": "commit",
+            "label": "Apply deliberate original canonical intent",
+            "kind": "action"
+          },
+          {
+            "id": "ack",
+            "label": "Acknowledgement known?",
+            "kind": "decision"
+          },
+          {
+            "id": "retry",
+            "label": "Retry original key body and target",
+            "kind": "action"
+          },
+          {
+            "id": "review",
+            "label": "Independent decision or measured validation",
+            "kind": "action"
+          },
+          {
+            "id": "result",
+            "label": "Retain actual outcome and scoped evidence",
+            "kind": "result"
+          },
+          {
+            "id": "deny",
+            "label": "Block missing prerequisite or deny stale authority",
+            "kind": "error"
+          }
+        ],
+        "edges": [
+          {
+            "from": "entry",
+            "to": "scope",
+            "label": "begin"
+          },
+          {
+            "from": "scope",
+            "to": "inspect",
+            "label": "eligible"
+          },
+          {
+            "from": "scope",
+            "to": "deny",
+            "label": "missing or denied"
+          },
+          {
+            "from": "inspect",
+            "to": "commit",
+            "label": "reviewed"
+          },
+          {
+            "from": "commit",
+            "to": "ack",
+            "label": "result"
+          },
+          {
+            "from": "ack",
+            "to": "retry",
+            "label": "unknown or failed"
+          },
+          {
+            "from": "retry",
+            "to": "scope",
+            "label": "recheck original context"
+          },
+          {
+            "from": "ack",
+            "to": "review",
+            "label": "known or verified"
+          },
+          {
+            "from": "review",
+            "to": "result",
+            "label": "accepted or measured"
+          }
+        ]
+      }
+    }
+  ]
+}

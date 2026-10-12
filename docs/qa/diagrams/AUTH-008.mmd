@@ -1,0 +1,8 @@
+flowchart TD
+  step1["As Alpha leader, PATCH /api/companies/{Aster}/people/{Owner A} with captured expectedVersion and a consequential role/department change."]
+  step2["Use each old session to GET /api/auth/session and return to the protected browser."]
+  step3["Authenticate afresh and open QA Alpha."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> record

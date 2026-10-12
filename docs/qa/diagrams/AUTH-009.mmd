@@ -1,0 +1,6 @@
+flowchart TD
+  step1["Submit valid login and withhold its response after delivery; reload the server client and GET /api/auth/session."]
+  step2["Complete a deliberate fresh sign-in when no session exists, then sign out."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> record

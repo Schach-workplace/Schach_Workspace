@@ -1,0 +1,8 @@
+flowchart TD
+  step1["Save a title in session B and then Save changes from stale session A."]
+  step2["Suppress one POST /tasks creation ACK after delivery, then retry the identical body/key."]
+  step3["Change title while reusing the same create key; repeat exact retry after confirmed actor denial."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> record

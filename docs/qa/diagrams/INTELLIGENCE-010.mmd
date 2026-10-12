@@ -1,0 +1,8 @@
+flowchart TD
+  step1["Queue explicit job,hold isolated budget and revoke original authority before release."]
+  step2["Revoke running job before final commit or ready job beforeGET."]
+  step3["Leave/rejoin private interval or log in afresh and use old raw handle."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> record

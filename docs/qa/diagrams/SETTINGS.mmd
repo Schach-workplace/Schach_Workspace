@@ -1,0 +1,19 @@
+flowchart TD
+  settings["Open Settings"]
+  tab{"Choose company, account or workflow"}
+  authority["Check current authority and versions"]
+  edit["Enter reviewed change"]
+  valid{"Valid and permitted?"}
+  save["Save or process canonically"]
+  read["Show refreshed scoped result"]
+  error["Show validation, conflict or denial"]
+  settings --> tab
+  tab --> authority
+  authority -->|"Authorized"| edit
+  authority -->|"Denied"| error
+  edit --> valid
+  valid -->|"Yes"| save
+  valid -->|"No"| error
+  save -->|"ACK known"| read
+  save -->|"Conflict / unknown"| error
+  error -->|"Inspect current state"| authority

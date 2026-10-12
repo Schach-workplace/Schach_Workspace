@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1160" height="1269.1999999999998" viewBox="0 0 1160 1269.1999999999998" role="img" aria-labelledby="flowTitle flowDesc">
+<title id="flowTitle">Intelligence selected-source and reviewed publication flow</title>
+<desc id="flowDesc">Arrows show the documented workflow. Denial and missing-prerequisite branches are red.</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#64748b"/></marker></defs>
+<rect width="1160" height="100%" fill="#ffffff"/>
+<text x="38" y="32" font-family="Arial,sans-serif" font-size="21" font-weight="700" fill="#172033">Intelligence selected-source and reviewed publication flow</text>
+<text x="38" y="55" font-family="Arial,sans-serif" font-size="12" fill="#5e6b7d">Source-grounded flow | Current permission, version and original retry controls remain binding</text>
+<path d="M 350 154 V 212" fill="none" stroke="#64748b" stroke-width="1.8" marker-end="url(#arrow)"/>
+<path d="M 630.0 273.2 H 713 V 259.0 H 770.0" fill="none" stroke="#64748b" stroke-width="1.8" marker-end="url(#arrow)"/>
+<text x="490.0" y="202" font-family="Arial,sans-serif" font-size="11" fill="#475569"><title>scope/consent/provider unavailable</title>scope/consent/provider unavailable</text>
+<path d="M 350 334.4 V 392.4" fill="none" stroke="#64748b" stroke-width="1.8" marker-end="url(#arrow)"/>
+<text x="360" y="358.4" font-family="Arial,sans-serif" font-size="11" fill="#475569"><title>allowed</title>allowed</text>
+<path d="M 350 460.4 V 518.4" fill="none" stroke="#64748b" stroke-width="1.8" marker-end="url(#arrow)"/>
+<text x="360" y="484.4" font-family="Arial,sans-serif" font-size="11" fill="#475569"><title>provider completes</title>provider completes</text>
+<path d="M 630.0 579.6 H 700 V 259.0 H 770.0" fill="none" stroke="#64748b" stroke-width="1.8" marker-end="url(#arrow)"/>
+<text x="490.0" y="508.4" font-family="Arial,sans-serif" font-size="11" fill="#475569"><title>revoked/changed/cancelled/expired</title>revoked/changed/cancelled/expired</text>
+<path d="M 350 640.8 V 698.8" fill="none" stroke="#64748b" stroke-width="1.8" marker-end="url(#arrow)"/>
+<text x="360" y="664.8" font-family="Arial,sans-serif" font-size="11" fill="#475569"><title>ready</title>ready</text>
+<path d="M 630.0 760.0 H 726 V 259.0 H 770.0" fill="none" stroke="#64748b" stroke-width="1.8" marker-end="url(#arrow)"/>
+<text x="490.0" y="688.8" font-family="Arial,sans-serif" font-size="11" fill="#475569"><title>missing independent review/audience</title>missing independent review/audience</text>
+<path d="M 350 821.1999999999999 V 879.1999999999999" fill="none" stroke="#64748b" stroke-width="1.8" marker-end="url(#arrow)"/>
+<text x="360" y="845.1999999999999" font-family="Arial,sans-serif" font-size="11" fill="#475569"><title>explicit current review</title>explicit current review</text>
+<path d="M 70.0 760.0 H 20 V 1165.1999999999998 H 70.0" fill="none" stroke="#64748b" stroke-width="1.8" marker-end="url(#arrow)"/>
+<text x="90" y="688.8" font-family="Arial,sans-serif" font-size="11" fill="#475569"><title>explicit preclaimed action</title>explicit preclaimed action</text>
+<path d="M 350 947.1999999999999 V 1005.1999999999999" fill="none" stroke="#64748b" stroke-width="1.8" marker-end="url(#arrow)"/>
+<text x="360" y="971.1999999999999" font-family="Arial,sans-serif" font-size="11" fill="#475569"><title>lost acknowledgement</title>lost acknowledgement</text>
+<path d="M 70.0 1165.1999999999998 H 40 V 1039.1999999999998 H 70.0" fill="none" stroke="#64748b" stroke-width="1.8" marker-end="url(#arrow)"/>
+<text x="90" y="1121.1999999999998" font-family="Arial,sans-serif" font-size="11" fill="#475569"><title>lost acknowledgement</title>lost acknowledgement</text>
+<path d="M 70.0 1039.1999999999998 H 50 V 913.1999999999999 H 70.0" fill="none" stroke="#64748b" stroke-width="1.8" marker-end="url(#arrow)"/>
+<text x="90" y="995.1999999999999" font-family="Arial,sans-serif" font-size="11" fill="#475569"><title>same committed intent/current ACL</title>same committed intent/current ACL</text>
+<path d="M 630.0 1039.1999999999998 H 700 V 259.0 H 770.0" fill="none" stroke="#64748b" stroke-width="1.8" marker-end="url(#arrow)"/>
+<text x="490.0" y="995.1999999999999" font-family="Arial,sans-serif" font-size="11" fill="#475569"><title>source/destination denied</title>source/destination denied</text>
+<g><title>Inspect explicit current originals</title>
+<rect x="70.0" y="86" width="560" height="68" rx="10" fill="#ecfdf5" stroke="#0f766e" stroke-width="1.8"/>
+<text x="350" y="125.0" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#172033">Inspect explicit current originals</text>
+</g>
+<g><title>Full source ACL and local consent?</title>
+<polygon points="350,212 630.0,273.2 350,334.4 70.0,273.2" fill="#fff7ed" stroke="#c2410c" stroke-width="1.8"/>
+<text x="350" y="278.2" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#172033">Full source ACL and local consent?</text>
+</g>
+<g><title>Queue pinned local provider job</title>
+<rect x="70.0" y="392.4" width="560" height="68" rx="10" fill="#f8fafc" stroke="#64748b" stroke-width="1.8"/>
+<text x="350" y="431.4" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#172033">Queue pinned local provider job</text>
+</g>
+<g><title>Original session and roots current?</title>
+<polygon points="350,518.4 630.0,579.6 350,640.8 70.0,579.6" fill="#fff7ed" stroke="#c2410c" stroke-width="1.8"/>
+<text x="350" y="584.6" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#172033">Original session and roots current?</text>
+</g>
+<g><title>Human resolves independent reviewer and audience</title>
+<polygon points="350,698.8 630.0,760.0 350,821.1999999999999 70.0,760.0" fill="#fff7ed" stroke="#c2410c" stroke-width="1.8"/>
+<text x="350" y="765.0" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#172033">Human resolves independent reviewer and audience</text>
+</g>
+<g><title>Canonical reviewed business write</title>
+<rect x="70.0" y="879.1999999999999" width="560" height="68" rx="10" fill="#eff6ff" stroke="#2563eb" stroke-width="1.8"/>
+<text x="350" y="918.1999999999999" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#172033">Canonical reviewed business write</text>
+</g>
+<g><title>Deny/scrub; continue manually</title>
+<rect x="770.0" y="218" width="340" height="82" rx="10" fill="#fff1f2" stroke="#be123c" stroke-width="1.8"/>
+<text x="940" y="264.0" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#172033">Deny/scrub; continue manually</text>
+</g>
+<g><title>Frozen attempt current publication check</title>
+<rect x="70.0" y="1005.1999999999999" width="560" height="68" rx="10" fill="#f8fafc" stroke="#64748b" stroke-width="1.8"/>
+<text x="350" y="1044.1999999999998" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#172033">Frozen attempt current publication check</text>
+</g>
+<g><title>Open actual preclaimed task</title>
+<rect x="70.0" y="1131.1999999999998" width="560" height="68" rx="10" fill="#eff6ff" stroke="#2563eb" stroke-width="1.8"/>
+<text x="350" y="1170.1999999999998" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#172033">Open actual preclaimed task</text>
+</g>
+</svg>

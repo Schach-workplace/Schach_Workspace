@@ -1,0 +1,8 @@
+flowchart TD
+  step1["Finance stages/clean-scans CSV and selects every mapping; inspect all normalized review pages."]
+  step2["Try missing mapping,1e3/1.001/zero input,10001 rows and valid large-total control."]
+  step3["After deliberate full review import current revision and read retained rows/export as finance/member."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> record

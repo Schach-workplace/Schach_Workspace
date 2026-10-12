@@ -1,0 +1,10 @@
+flowchart TD
+  step1["Start and join a video call as two current participants with browser camera/mic permission."]
+  step2["Enable camera and share a fictional QA screen from desktop; stop the share afterward."]
+  step3["In an audio-call fixture inspect allowed publication sources and attempt camera/screenshare through provider controls."]
+  step4["Observe the Recording is off notice and absence of recording/transcription actions."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> step4
+  step4 --> record

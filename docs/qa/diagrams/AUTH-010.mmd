@@ -1,0 +1,8 @@
+flowchart TD
+  step1["Sign in through the native build; request GET /api/auth/session with its bearer credential over HTTPS."]
+  step2["Register a named QA device and revoke it through POST /api/devices/{device}/revoke using its owner session."]
+  step3["Attempt protected native refresh with the revoked token and revoke a foreign device identifier."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> record

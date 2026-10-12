@@ -1,0 +1,6 @@
+flowchart TD
+  step1["GET /tasks to confirm first-page omission, then GET /planning/calendar?from=2026-10-11&to=2026-10-11&openOnly=true."]
+  step2["Load the same day in Calendar and inspect + more / agenda; repeat API with openOnly=false."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> record

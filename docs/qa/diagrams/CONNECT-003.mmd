@@ -1,0 +1,10 @@
+flowchart TD
+  step1["Open a fictional conversation with more than 100 ordered QA messages; note the newest visible message and use Load older messages."]
+  step2["While Member B sends another QA message, reconnect Owner A’s isolated browser network/socket and reopen history."]
+  step3["Member B edits one loaded message and removes another; wait for synchronization or refresh current history."]
+  step4["Scroll through the merged range and open a target from search."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> step4
+  step4 --> record

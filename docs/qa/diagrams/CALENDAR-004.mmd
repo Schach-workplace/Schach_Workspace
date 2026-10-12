@@ -1,0 +1,6 @@
+flowchart TD
+  step1["Read 2026-10-11 Calendar in QA Alpha and inspect the timed row."]
+  step2["In the New York fixture read 2026-03-08 with instants immediately before/at/after civil-day bounds."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> record

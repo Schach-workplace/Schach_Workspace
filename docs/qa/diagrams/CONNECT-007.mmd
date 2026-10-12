@@ -1,0 +1,10 @@
+flowchart TD
+  step1["Open Message actions on a current root and choose Open thread; reply with a fictional participant mention."]
+  step2["Have Owner A as owner send an allowed all-participant mention, then immediately attempt a second through the fixture API; Member B attempts an all-participant mention."]
+  step3["Open actions on Owner A’s own QA message, edit it and retry a stale expectedRevision through the fixture API."]
+  step4["Keep a thread/action dialog open while its root is edited or removed by the author; then remove current membership."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> step4
+  step4 --> record

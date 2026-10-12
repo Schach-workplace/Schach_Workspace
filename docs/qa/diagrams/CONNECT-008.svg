@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1160" height="747" viewBox="0 0 1160 747" role="img" aria-labelledby="flowTitle flowDesc">
+<title id="flowTitle">CONNECT-008 · Fixed recipients and exact revision acknowledgements</title>
+<desc id="flowDesc">Arrows show the documented workflow. Denial and missing-prerequisite branches are red.</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#64748b"/></marker></defs>
+<rect width="1160" height="100%" fill="#ffffff"/>
+<text x="38" y="32" font-family="Arial,sans-serif" font-size="21" font-weight="700" fill="#172033">CONNECT-008 · Fixed recipients and exact revision acknowledgements</text>
+<text x="38" y="55" font-family="Arial,sans-serif" font-size="12" fill="#5e6b7d">Source-grounded flow | Current permission, version and original retry controls remain binding</text>
+<path d="M 350 173 V 231" fill="none" stroke="#64748b" stroke-width="1.8" marker-end="url(#arrow)"/>
+<path d="M 350 299 V 357" fill="none" stroke="#64748b" stroke-width="1.8" marker-end="url(#arrow)"/>
+<path d="M 350 425 V 483" fill="none" stroke="#64748b" stroke-width="1.8" marker-end="url(#arrow)"/>
+<path d="M 350 551 V 609" fill="none" stroke="#64748b" stroke-width="1.8" marker-end="url(#arrow)"/>
+<g><title>On a current QA root choose Request acknowledgement / poll / decision → Acknowledgement request; select Member B only and create it.</title>
+<rect x="70.0" y="86" width="560" height="87" rx="10" fill="#ecfdf5" stroke="#0f766e" stroke-width="1.8"/>
+<text x="350" y="115.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#172033">On a current QA root choose Request acknowledgement / poll /</text>
+<text x="350" y="134.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#172033">decision → Acknowledgement request; select Member B only and</text>
+<text x="350" y="153.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#172033">create it.</text>
+</g>
+<g><title>Open Conversation records as Member B and as unselected current reader Reviewer R.</title>
+<rect x="70.0" y="231" width="560" height="68" rx="10" fill="#f8fafc" stroke="#64748b" stroke-width="1.8"/>
+<text x="350" y="260.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#172033">Open Conversation records as Member B and as unselected current</text>
+<text x="350" y="279.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#172033">reader Reviewer R.</text>
+</g>
+<g><title>Member B acknowledges the record; Owner A publishes a new record revision with a reason.</title>
+<rect x="70.0" y="357" width="560" height="68" rx="10" fill="#f8fafc" stroke="#64748b" stroke-width="1.8"/>
+<text x="350" y="386.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#172033">Member B acknowledges the record; Owner A publishes a new record</text>
+<text x="350" y="405.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#172033">revision with a reason.</text>
+</g>
+<g><title>Attempt Member B’s old expectedRevision response through the fixture API, then review and acknowledge the new revision.</title>
+<rect x="70.0" y="483" width="560" height="68" rx="10" fill="#f8fafc" stroke="#64748b" stroke-width="1.8"/>
+<text x="350" y="512.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#172033">Attempt Member B’s old expectedRevision response through the</text>
+<text x="350" y="531.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#172033">fixture API, then review and acknowledge the new revision.</text>
+</g>
+<g><title>Compare every expected result; record PASS, FAIL or BLOCKED for this run</title>
+<rect x="70.0" y="609" width="560" height="68" rx="10" fill="#eff6ff" stroke="#2563eb" stroke-width="1.8"/>
+<text x="350" y="638.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#172033">Compare every expected result; record PASS, FAIL or BLOCKED for</text>
+<text x="350" y="657.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#172033">this run</text>
+</g>
+</svg>

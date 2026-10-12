@@ -1,0 +1,10 @@
+flowchart TD
+  step1["With selected publication enabled open Publish request / expense draft, enter two fictional explicit action titles and use Declare separate work actions."]
+  step2["Open Create task on that root and choose each returned action from Instruction action; preview each current audience and publish authorized work."]
+  step3["Repeat the exact work-actions request using its original key, then change a title under the same key."]
+  step4["Preview/commit the primary instruction once with source A and again with A plus eligible contextual source B via the fixture API."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> step4
+  step4 --> record

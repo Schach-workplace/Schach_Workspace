@@ -1,0 +1,6 @@
+flowchart TD
+  step1["Open Inbox → Unread and choose Mark {notification title} as read on one Owner A update."]
+  step2["Switch All updates and inspect newest-first order and counts."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> record

@@ -1,0 +1,10 @@
+flowchart TD
+  step1["Open a private thread/record/evidence and type a separate fictional authored draft; delay a current read response in the fixture."]
+  step2["Background the app, allow the delayed response to arrive and return foreground with identity/metadata responses still delayed."]
+  step3["Complete fresh session/company/membership/source authorization with unchanged rights."]
+  step4["Repeat with membership removed while background."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> step4
+  step4 --> record

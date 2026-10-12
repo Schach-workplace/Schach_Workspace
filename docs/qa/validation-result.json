@@ -1,0 +1,106 @@
+{
+  "status": "PASS_WITH_QUALIFICATIONS",
+  "scope": "Team QA documentation and tool/artifact checks only",
+  "applicationSourceBaseline": "191526bd2fda1970809529ab1d30b7cd54508512",
+  "scenarios": 224,
+  "modules": 21,
+  "diagrams": 245,
+  "manualStatuses": {
+    "NOT_RUN": 224
+  },
+  "checks": [
+    {
+      "status": "PASS",
+      "scope": "QA frontend build isolation only; no app/manual cases executed",
+      "beforeFix": "Inherited synthetic URL and demo mode reproduce the unsafe build configuration",
+      "afterFix": "Explicit overrides resolve empty same-origin URL and API mode; marker absent",
+      "results": {
+        "inherited": {
+          "resolved": {
+            "api": "https://qa-inherited.invalid",
+            "mode": "demo"
+          },
+          "bundlesWithInheritedURL": 3,
+          "buildExit": 0
+        },
+        "forced": {
+          "resolved": {
+            "api": "",
+            "mode": "api"
+          },
+          "bundlesWithInheritedURL": 0,
+          "buildExit": 0
+        }
+      }
+    },
+    {
+      "status": "PASS",
+      "scope": "Offline QA documentation only; no application cases executed",
+      "cases": 224,
+      "guides": 21,
+      "checks": [
+        "Search by case ID",
+        "Module REPORTS filter:18",
+        "DEVICE gate filter:16",
+        "P0 filter:147",
+        "Empty results and clear",
+        "Scenario SVG loads",
+        "Paired action/result table",
+        "No renderer exceptions",
+        "No external page requests"
+      ],
+      "phoneWidths": [
+        {
+          "width": 320,
+          "overflow": false
+        },
+        {
+          "width": 375,
+          "overflow": false
+        },
+        {
+          "width": 430,
+          "overflow": false
+        }
+      ],
+      "diagramScreenshots": [
+        "AUTH",
+        "FINANCE",
+        "JOURNEYS-009"
+      ]
+    },
+    {
+      "status": "PASS",
+      "scope": "LibreOffice opens private OOXML copy and evaluates six summary formulas after forced recalculation",
+      "applicationCasesExecuted": 0,
+      "summaryAfterSyntheticPrivateEdit": {
+        "Total": 224,
+        "NOT_RUN": 223,
+        "PASS": 1,
+        "FAIL": 0,
+        "BLOCKED": 0,
+        "SKIPPED": 0
+      },
+      "originalTemplate": "Unchanged, all 224 NOT_RUN",
+      "qualification": "Editing OOXML externally leaves cached totals stale in initial LibreOffice conversion; cleared formula caches on private copy to force recalculation. Normal spreadsheet user-edit behavior not exercised through GUI."
+    },
+    {
+      "status": "PASS",
+      "scope": "Final PDF content/render only",
+      "pages": 34,
+      "moduleIdentifiers": 21,
+      "crossModuleJourneyIdentifiers": 12
+    }
+  ],
+  "structureReport": "validation-structure.json",
+  "reviewDisposition": "REVIEW_DISPOSITION.md",
+  "applicationTestsRerun": false,
+  "fullQALauncherExecuted": false,
+  "externalMermaidParserRun": false,
+  "qualifications": [
+    "No manual team cases executed",
+    "No physical device/provider/production acceptance",
+    "No app/runtime/customer data mutations",
+    "Spreadsheet formula check used a forced-recalculation private copy; distributed template retains NOT_RUN"
+  ]
+}

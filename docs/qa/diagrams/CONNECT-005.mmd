@@ -1,0 +1,10 @@
+flowchart TD
+  step1["Owner A creates a private group, sends a pre-invite QA marker, then invites Member B and sends a post-invite marker."]
+  step2["Member B opens history and searches for both markers; save the visible post-invite message and have Owner A pin it."]
+  step3["Remove Member B, send another marker, then explicitly re-invite Member B and send a new marker."]
+  step4["Member B opens history, search, saved messages, pins and the old message thread using remembered fixture links."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> step4
+  step4 --> record

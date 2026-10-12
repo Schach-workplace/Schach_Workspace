@@ -1,0 +1,21 @@
+flowchart TD
+  select["Choose basis, period and filters"]
+  scope{"Complete current source scope?"}
+  acceptance["Independent task review supplies acceptance facts"]
+  capture["Freeze current or historical snapshot"]
+  export["Explicit recipient-scoped export"]
+  outputCheck{"Recipient/session/all sources current?"}
+  deny["Deny entire read or later bytes"]
+  retry["Frozen retry or deliberate new capture"]
+  ready["Ready artifact and public Inbox link"]
+  select --> scope
+  scope -->|"denied"| deny
+  scope -->|"allowed"| capture
+  acceptance -->|"historical native episodes only"| capture
+  capture -->|"human inspects metrics"| export
+  export --> outputCheck
+  outputCheck -->|"revoked/cancelled/expired"| deny
+  outputCheck -->|"authorized"| ready
+  export -->|"unknown/recoverable"| retry
+  retry -->|"same intent/current authority"| outputCheck
+  deny -->|"deliberate reselection"| select

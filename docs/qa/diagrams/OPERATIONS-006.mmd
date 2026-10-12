@@ -1,0 +1,10 @@
+flowchart TD
+  step1["Start owned app with DISABLE_SCHEDULER=true."]
+  step2["Exercise separately configured report/communication queues."]
+  step3["Restart with DISABLE_SCHEDULER=false and run recurring/reminder fixture."]
+  step4["Gracefully stop owned instance."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> step4
+  step4 --> record

@@ -1,0 +1,8 @@
+flowchart TD
+  step1["Choose Review project task schedule, review the proposed change and reasons without applying."]
+  step2["Advance one selected task version in another session, then attempt captured apply."]
+  step3["Obtain a fresh reviewed preview and apply, then retry its exact canonical body/key."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> record

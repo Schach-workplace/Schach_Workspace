@@ -1,0 +1,10 @@
+flowchart TD
+  step1["Set each supported device’s enlarged accessibility text size and open Auth, Connect list and a long conversation."]
+  step2["Inspect person names, message metadata, unread badge and multiline draft around narrow safe areas."]
+  step3["Measure native Action targets for Back/Close/Send and structured recipient/reviewer controls using qualified device geometry."]
+  step4["Use assistive navigation to inspect action labels, disabled/selected states and focus order."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> step4
+  step4 --> record

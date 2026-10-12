@@ -1,0 +1,10 @@
+flowchart TD
+  step1["Accept a fictional message/task conversion/intake with its original retry key and retain only sanitized original payload metadata."]
+  step2["Repeat the exact operation while currently authorized; for conversion include a separate A versus A+B primary-claim lookup."]
+  step3["Reuse the key with changed fields, then edit the source before replaying the exact previously accepted operation."]
+  step4["Revoke original session or private membership and attempt another exact replay."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> step4
+  step4 --> record

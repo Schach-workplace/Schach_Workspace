@@ -1,0 +1,10 @@
+flowchart TD
+  step1["Have Member B send two fixture messages while Owner A is in another conversation; Owner A opens the Unread list filter."]
+  step2["Owner A opens the chat and scrolls to the current bottom, then revisits the list."]
+  step3["Scroll above the bottom, have Member B send a further message, then select the new-messages control."]
+  step4["Replay an earlier valid read sequence via the fixture API, then attempt a sequence beyond the current last message."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> step4
+  step4 --> record

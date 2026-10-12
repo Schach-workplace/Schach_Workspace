@@ -1,0 +1,20 @@
+flowchart TD
+  load["Open personal Inbox and current attention"]
+  filter["Filter unread or current attention"]
+  source{"Current source readable?"}
+  deny["Hide unavailable source and stale detail"]
+  open["Open task, expense or other source route"]
+  action{"Read, resolve, snooze or route?"}
+  notification["Mark personal notification read"]
+  attention["Transition follow-up canonically"]
+  domain["Domain state remains independently controlled"]
+  load --> filter
+  filter --> source
+  source -->|"No"| deny
+  source -->|"Yes"| open
+  open --> action
+  action -->|"Read"| notification
+  action -->|"Resolve / snooze / eligible route"| attention
+  attention -->|"Known result"| domain
+  attention -->|"Exact unknown retry"| source
+  deny -->|"Current refresh"| load

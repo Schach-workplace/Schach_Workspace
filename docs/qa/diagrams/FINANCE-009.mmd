@@ -1,0 +1,8 @@
+flowchart TD
+  step1["Two QA reviewers concurrently approve against same inspected available capacity."]
+  step2["Department head attempts remaining expense with override reason."]
+  step3["Finance reviews current overrun and explicitly overrides remaining approval."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> record

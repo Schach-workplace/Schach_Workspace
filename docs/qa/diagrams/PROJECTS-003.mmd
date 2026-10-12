@@ -1,0 +1,6 @@
+flowchart TD
+  step1["Save project Edit in B then PATCH the project from A with the old version."]
+  step2["As Viewer V inspect New project/Edit and attempt equivalent API mutations."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> record

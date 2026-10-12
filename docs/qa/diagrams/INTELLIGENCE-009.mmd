@@ -1,0 +1,8 @@
+flowchart TD
+  step1["Enqueue then lose acknowledgement;retry exact selection/hash/consent/key."]
+  step2["Change source/operation under key or verified identity before replay."]
+  step3["Fill isolated active quota then request new job;retire eligible jobs and retry deliberately."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> record

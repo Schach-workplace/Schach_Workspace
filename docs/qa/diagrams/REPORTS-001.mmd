@@ -1,0 +1,8 @@
+flowchart TD
+  step1["GET /reports/tasks/summary before loading every report row page."]
+  step2["Deliberately load commitments/accepted/exceptions row pages up to100 and compare totals."]
+  step3["Drill into changed-deadline task and export selected full tab."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> record

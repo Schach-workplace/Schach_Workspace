@@ -1,0 +1,10 @@
+flowchart TD
+  step1["Prepare distinct owned adapter fixtures and complete numbered inventory."]
+  step2["Run actual analyzer/export/runtime owning gates."]
+  step3["Compare public login/scope/CSV/worker delivery/restart checks."]
+  step4["Dispose only recorded owned resources."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> step4
+  step4 --> record

@@ -1,0 +1,6 @@
+flowchart TD
+  step1["Change current deadline without a reason and Save changes, then submit a documented reason."]
+  step2["Compare originalDueDate and original timed mode/instant/zone before and after revision through detail/report API."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> record

@@ -1,0 +1,10 @@
+flowchart TD
+  step1["Publish an Operational intake request from a selected root after Preview audience and explicit audience acknowledgement."]
+  step2["As authorized department triage actor open Published work, choose an owner, an Independent reviewer and a due date, then Assign."]
+  step3["With two triage views of the same version, act in one view and attempt assignment/close/reject from the stale view; provide a reason where requested."]
+  step4["Inspect the resulting task and intake as an actor without private conversation access."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> step4
+  step4 --> record

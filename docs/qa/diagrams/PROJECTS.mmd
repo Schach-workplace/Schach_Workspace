@@ -1,0 +1,21 @@
+flowchart TD
+  project["Find or create authorized project"]
+  detail["Inspect current project detail"]
+  select["Define milestone criteria and tasks"]
+  basis{"Selected tasks accepted and basis current?"}
+  submit["Owner records assertions and submits"]
+  review{"Independent human reviews"}
+  accepted["Record milestone acceptance separately"]
+  reset["Human request changes; fresh submission"]
+  error["Reject stale, denied or incomplete basis"]
+  project --> detail
+  detail --> select
+  select --> basis
+  basis -->|"Yes"| submit
+  basis -->|"No"| error
+  submit --> review
+  review -->|"Accept current basis"| accepted
+  review -->|"Request changes"| reset
+  review -->|"Stale / unauthorized"| error
+  reset --> basis
+  error -->|"Eligible human reconciliation"| reset

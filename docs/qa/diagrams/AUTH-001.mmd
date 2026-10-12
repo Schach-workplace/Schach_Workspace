@@ -1,0 +1,8 @@
+flowchart TD
+  step1["Open the server sign-in screen, enter Owner A’s email and provisioned password, and choose Sign in."]
+  step2["Call GET /api/auth/session with the issued cookie; inspect cookie attributes without recording its value."]
+  step3["Repeat GET /api/auth/session without a cookie."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> record

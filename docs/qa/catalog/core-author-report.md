@@ -1,0 +1,18 @@
+# Core QA catalog author report
+
+Authored `core.json` for AUTH, SETTINGS, OVERVIEW, WORK, TASKS, PROJECTS, CALENDAR, WORKLOAD, GOALS, PEOPLE and INBOX: 92 proposed manual acceptance cases. Every case is NOT_RUN. No application, runtime, database, provider or Git mutation was performed, and no manual/backend success is claimed.
+
+Read `SCHEMA.md` first, then `USER_GUIDE.md`, `API_CONTRACT.md`, `PEOPLE_ADMINISTRATION.md`, `PLANNING_AND_GOALS.md`, relevant frontend components and owning backend/client tests. References identify existing repository paths; automated tests supply source expectations, not results for these new manual cases.
+
+Source decisions and qualifications:
+
+- Overview is an authorized workspace summary and navigation surface. Its supplied workspace rows are not assumed to equal complete historical/report totals. My work uses owner-or-reviewer source rows, with owner-only Open tasks / Due today chips and an owner-or-reviewer In review chip. Their standalone cases cover reading, filtering and drilldown.
+- Task acceptance belongs to a currently eligible independent reviewer. Required checklist/prerequisites, optimistic versions and current evidence constrain it; 100% progress and In review are not acceptance. Original all-day/timed commitment fields remain immutable. Milestone acceptance is separately human-reviewed and does not accept linked tasks.
+- Calendar uses complete bounded server calendar reads, company civil dates and exact stored UTC instants. Over-bound/invalid ranges become unavailable, rather than partial counts. Workload uses full remaining effort in every overlapping week and whole recorded weekly capacity in partial weeks, with zero/invalid coverage qualified explicitly.
+- Goals append observations/corrections from explicit values, instants and reviewed evidence. They never infer results from accepted tasks. Exact unknown body/key/hash/version retry is distinct from deliberate version-conflict reconciliation, and private evidence remains opaque to company leadership without current source access.
+- People cases preserve global account identity, opaque private blockers, explicit rejoin, exact frozen unknown credential-bearing attempts, known-ACK credential clearing, current epoch loss and late-callback sealing. Reviewed departure preserves task originals/acceptance, measured goal facts, finance amounts and recorded financial actors; routing is not approval/payment. In-review milestones require a separate authorized human request-changes action before fresh departure review. Ready/raw outputs and prior private intervals do not revive on rejoin.
+- Attention preferences have company-local clocks and versioned PATCH, with no per-user timezone or canonical retry/discard control. Stale or unknown saves require leaving/reopening the form and reading current preferences. Attention transitions have their own exact canonical retry; read/resolve/snooze/route never decides source work or finance.
+
+Qualification: LOCAL cases need separately provisioned server fixtures. Configured MFA/keyring or credential rotation/restart cases are LOCAL_CONFIG. Native bearer/device-revocation acceptance is DEVICE and requires its recorded qualified build/device. Browser demo cannot prove real authentication, authorization, complete server planning, credential binding or private-source access. Missing prerequisites are BLOCKED. No provider/production/device qualification was performed here.
+
+Validated JSON structure, 92 unique stable IDs, equal-length ordered step/result arrays, allowed priorities/gates, existing source/test paths and 11 diagrams with 5–9 uniquely named nodes and valid edge references. Validation checked documentation only and did not execute application tests.

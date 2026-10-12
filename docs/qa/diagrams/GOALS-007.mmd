@@ -1,0 +1,6 @@
+flowchart TD
+  step1["As Owner A append observation using authorized private evidence; as Alpha leader read goal measurement history."]
+  step2["Remove Owner A’s current source membership and replay the original measurement request."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> record

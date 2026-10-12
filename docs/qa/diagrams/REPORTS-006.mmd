@@ -1,0 +1,8 @@
+flowchart TD
+  step1["Start snapshot CSV in isolated controlled writer and hold after first chunk."]
+  step2["For each fresh variant commit authority loss before next check/write."]
+  step3["Compare received length/retry original export; run unchanged-authority control."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> record

@@ -1,0 +1,10 @@
+flowchart TD
+  step1["On the named staged India deployment inspect edge WebSocket/TLS and provider ingress from an external QA network."]
+  step2["Attempt direct public reachability of LiveKit signaling 7880; join normally through the Schach gateway."]
+  step3["Place two authorized participants on a restrictive TURN-only QA network and join media using authenticated TLS TURN."]
+  step4["Remove one participant and attempt cached/refreshed rejoin through every exposed signaling route."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> step4
+  step4 --> record

@@ -1,0 +1,6 @@
+flowchart TD
+  step1["Suppress one successful save/decision response and choose Retry same milestone save / Retry same milestone action."]
+  step2["After known success, inspect history and perform deliberate Reopen milestone for fresh review with a reason."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> record

@@ -1,0 +1,8 @@
+flowchart TD
+  step1["Reserve and upload a fictional allowed file without calling finalize through the isolated API."]
+  step2["Attempt uploader and Member B downloads and attempt binding its media ID to a message."]
+  step3["Finalize with the configured clean scanner, then bind the exact media ID and fetch as Member B."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> record

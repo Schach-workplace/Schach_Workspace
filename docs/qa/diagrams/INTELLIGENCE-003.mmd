@@ -1,0 +1,8 @@
+flowchart TD
+  step1["Inspect/select N then second actor edits before enqueue."]
+  step2["Enqueue old binding or read ready result after contributing original changes."]
+  step3["Explicitly inspect N+1,preview/reselect and consent;choose report original versus explicit latest."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> record

@@ -1,0 +1,6 @@
+flowchart TD
+  step1["Use history correction control for the older observation and record value 42 with captured versions."]
+  step2["Inspect current result and history after correction."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> record

@@ -1,0 +1,10 @@
+flowchart TD
+  step1["Create a Reviewed decision from a current root; inspect reviewer choices and attempt creator-as-reviewer via fixture API."]
+  step2["Select Reviewer R as independent reviewer and publish; Member B, an unselected reader, opens Conversation records."]
+  step3["Reviewer R confirms or rejects the reviewed decision; inspect the related task and expense state separately."]
+  step4["In a fresh decision, remove Reviewer R or change her source history before she responds or Owner A publishes a new revision."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> step4
+  step4 --> record

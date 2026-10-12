@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1160" height="1214.8" viewBox="0 0 1160 1214.8" role="img" aria-labelledby="flowTitle flowDesc">
+<title id="flowTitle">Inbox and attention principal workflow</title>
+<desc id="flowDesc">Arrows show the documented workflow. Denial and missing-prerequisite branches are red.</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#64748b"/></marker></defs>
+<rect width="1160" height="100%" fill="#ffffff"/>
+<text x="38" y="32" font-family="Arial,sans-serif" font-size="21" font-weight="700" fill="#172033">Inbox and attention principal workflow</text>
+<text x="38" y="55" font-family="Arial,sans-serif" font-size="12" fill="#5e6b7d">Source-grounded flow | Current permission, version and original retry controls remain binding</text>
+<path d="M 350 154 V 212" fill="none" stroke="#64748b" stroke-width="1.8" marker-end="url(#arrow)"/>
+<path d="M 350 280 V 338" fill="none" stroke="#64748b" stroke-width="1.8" marker-end="url(#arrow)"/>
+<path d="M 630.0 399.2 H 726 V 259.0 H 770.0" fill="none" stroke="#64748b" stroke-width="1.8" marker-end="url(#arrow)"/>
+<text x="490.0" y="328" font-family="Arial,sans-serif" font-size="11" fill="#475569"><title>No</title>No</text>
+<path d="M 350 460.4 V 518.4" fill="none" stroke="#64748b" stroke-width="1.8" marker-end="url(#arrow)"/>
+<text x="360" y="484.4" font-family="Arial,sans-serif" font-size="11" fill="#475569"><title>Yes</title>Yes</text>
+<path d="M 350 586.4 V 644.4" fill="none" stroke="#64748b" stroke-width="1.8" marker-end="url(#arrow)"/>
+<path d="M 350 766.8 V 824.8" fill="none" stroke="#64748b" stroke-width="1.8" marker-end="url(#arrow)"/>
+<text x="360" y="790.8" font-family="Arial,sans-serif" font-size="11" fill="#475569"><title>Read</title>Read</text>
+<path d="M 70.0 705.6 H 40 V 984.8 H 70.0" fill="none" stroke="#64748b" stroke-width="1.8" marker-end="url(#arrow)"/>
+<text x="90" y="634.4" font-family="Arial,sans-serif" font-size="11" fill="#475569"><title>Resolve / snooze / eligible route</title>Resolve / snooze / eligible route</text>
+<path d="M 350 1018.8 V 1076.8" fill="none" stroke="#64748b" stroke-width="1.8" marker-end="url(#arrow)"/>
+<text x="360" y="1042.8" font-family="Arial,sans-serif" font-size="11" fill="#475569"><title>Known result</title>Known result</text>
+<path d="M 70.0 984.8 H 20 V 399.2 H 70.0" fill="none" stroke="#64748b" stroke-width="1.8" marker-end="url(#arrow)"/>
+<text x="90" y="940.8" font-family="Arial,sans-serif" font-size="11" fill="#475569"><title>Exact unknown retry</title>Exact unknown retry</text>
+<path d="M 770.0 259.0 H 713 V 120.0 H 630.0" fill="none" stroke="#64748b" stroke-width="1.8" marker-end="url(#arrow)"/>
+<text x="630.0" y="208" font-family="Arial,sans-serif" font-size="11" fill="#475569"><title>Current refresh</title>Current refresh</text>
+<g><title>Open personal Inbox and current attention</title>
+<rect x="70.0" y="86" width="560" height="68" rx="10" fill="#ecfdf5" stroke="#0f766e" stroke-width="1.8"/>
+<text x="350" y="125.0" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#172033">Open personal Inbox and current attention</text>
+</g>
+<g><title>Filter unread or current attention</title>
+<rect x="70.0" y="212" width="560" height="68" rx="10" fill="#f8fafc" stroke="#64748b" stroke-width="1.8"/>
+<text x="350" y="251.0" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#172033">Filter unread or current attention</text>
+</g>
+<g><title>Current source readable?</title>
+<polygon points="350,338 630.0,399.2 350,460.4 70.0,399.2" fill="#fff7ed" stroke="#c2410c" stroke-width="1.8"/>
+<text x="350" y="404.2" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#172033">Current source readable?</text>
+</g>
+<g><title>Hide unavailable source and stale detail</title>
+<rect x="770.0" y="218" width="340" height="82" rx="10" fill="#fff1f2" stroke="#be123c" stroke-width="1.8"/>
+<text x="940" y="254.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#172033">Hide unavailable source and</text>
+<text x="940" y="273.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#172033">stale detail</text>
+</g>
+<g><title>Open task, expense or other source route</title>
+<rect x="70.0" y="518.4" width="560" height="68" rx="10" fill="#f8fafc" stroke="#64748b" stroke-width="1.8"/>
+<text x="350" y="557.4" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#172033">Open task, expense or other source route</text>
+</g>
+<g><title>Read, resolve, snooze or route?</title>
+<polygon points="350,644.4 630.0,705.6 350,766.8 70.0,705.6" fill="#fff7ed" stroke="#c2410c" stroke-width="1.8"/>
+<text x="350" y="710.6" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#172033">Read, resolve, snooze or route?</text>
+</g>
+<g><title>Mark personal notification read</title>
+<rect x="70.0" y="824.8" width="560" height="68" rx="10" fill="#eff6ff" stroke="#2563eb" stroke-width="1.8"/>
+<text x="350" y="863.8" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#172033">Mark personal notification read</text>
+</g>
+<g><title>Transition follow-up canonically</title>
+<rect x="70.0" y="950.8" width="560" height="68" rx="10" fill="#f8fafc" stroke="#64748b" stroke-width="1.8"/>
+<text x="350" y="989.8" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#172033">Transition follow-up canonically</text>
+</g>
+<g><title>Domain state remains independently controlled</title>
+<rect x="70.0" y="1076.8" width="560" height="68" rx="10" fill="#eff6ff" stroke="#2563eb" stroke-width="1.8"/>
+<text x="350" y="1115.8" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#172033">Domain state remains independently controlled</text>
+</g>
+</svg>

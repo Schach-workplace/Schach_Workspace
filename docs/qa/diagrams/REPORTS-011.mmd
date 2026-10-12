@@ -1,0 +1,8 @@
+flowchart TD
+  step1["Capture/read A/B and deliberately continue100-row metric drilldowns."]
+  step2["Reassign/delete off-page B source through isolated fixture control;read B/rows and compareA/B."]
+  step3["Try foreign snapshot/cursor and read unrelated fully authorized A."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> record

@@ -1,0 +1,12 @@
+flowchart TD
+  step1["Leader prepares valid department, manager and current template."]
+  step2["Review fresh onboarding preview and apply once."]
+  step3["New Owner A signs in and inspects My work/task originals."]
+  step4["Complete prerequisites and checklist and submit required-review work."]
+  step5["Independent Reviewer R accepts the current version; inspect Project/Inbox/current Reports, then select and read a task_history_v1 capture containing that acceptance."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> step4
+  step4 --> step5
+  step5 --> record

@@ -1,0 +1,8 @@
+flowchart TD
+  step1["Using staged isolated fixture dates Oct5 and Oct8, owner completes prerequisites/submits and independent reviewer accepts, with authorized reopening between."]
+  step2["Capture task_history_v1 period snapshot and inspect state/acceptance/effort metrics."]
+  step3["Drill acceptance rows and compare original/current deadline denominators."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> record

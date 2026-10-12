@@ -1,0 +1,8 @@
+flowchart TD
+  step1["Request export,drop ack,retry exact snapshot/schema/key;try different valid snapshot under key."]
+  step2["Use isolated lease-expiry/reclaim test controls then release stale/current workers."]
+  step3["Cancel separate queued/running/ready job with stable key;try stale publication/download."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> record

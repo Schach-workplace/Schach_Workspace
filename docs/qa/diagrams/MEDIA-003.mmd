@@ -1,0 +1,10 @@
+flowchart TD
+  step1["In a disposable scanner fixture select a standard harmless scanner-test artifact owned by QA and send it."]
+  step2["Inspect the visible scan error and attempt direct media download/publication."]
+  step3["Use a separately configured unavailable scanner fixture and attempt finalization of a harmless file."]
+  step4["Restore scanner availability and inspect the rejected reservation and UI retry outcome; begin a fresh permitted selection when needed."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> step4
+  step4 --> record

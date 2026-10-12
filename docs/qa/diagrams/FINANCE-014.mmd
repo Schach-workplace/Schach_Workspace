@@ -1,0 +1,8 @@
+flowchart TD
+  step1["Reserve capture, try prebind upload and cancel another unused reservation."]
+  step2["Bind one selected return, lose acknowledgement and repeat exact body/key."]
+  step3["Try changed hash/file under frozen key or second bind, then stage exact original bytes."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> record

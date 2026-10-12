@@ -1,0 +1,8 @@
+flowchart TD
+  step1["Capture summary/first rows; second actor edits readable task with current version."]
+  step2["Read remaining rows and export original token/filters."]
+  step3["Explicitly refresh summary and inspect new token before selecting latest."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> record

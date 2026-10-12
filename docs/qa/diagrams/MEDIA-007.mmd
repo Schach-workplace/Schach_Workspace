@@ -1,0 +1,10 @@
+flowchart TD
+  step1["Member B downloads an eligible clean bound attachment and keeps only a disposable QA copy."]
+  step2["Owner A removes the attachment’s source message; Member B follows its remembered download URL."]
+  step3["In a separate private group remove and re-invite Member B after sending a newer marker; request the old attachment URL again."]
+  step4["Compare the app’s denied future download with the previously downloaded copy."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> step4
+  step4 --> record

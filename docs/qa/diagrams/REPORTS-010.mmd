@@ -1,0 +1,8 @@
+flowchart TD
+  step1["Create historical snapshot and drop acknowledgement after commit."]
+  step2["Edit readable task then retry identical capture and read original snapshot."]
+  step3["Change period under same key then explicitly capture separate new reviewed request."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> record

@@ -1,0 +1,17 @@
+flowchart TD
+  memberEntry["Member selects person or named conversation"]
+  scopeCheck{"Server checks active company and private history scope"}
+  scopeDenied["Server withholds private conversation"]
+  dailyRead["Member reads/searches/saves current history"]
+  selectedAction{"Creator chooses a current source action"}
+  fixedRecord["Creator fixes record recipients; reviewer responds"]
+  audienceReview["Publisher reviews selected work audience"]
+  versionedWork["Triage/independent reviewer uses task versions"]
+  memberEntry -->|"open"| scopeCheck
+  scopeCheck -->|"not authorized"| scopeDenied
+  scopeCheck -->|"authorized"| dailyRead
+  dailyRead -->|"message actions"| selectedAction
+  selectedAction -->|"ack/poll/event/decision"| fixedRecord
+  selectedAction -->|"selected publication allowed"| audienceReview
+  audienceReview -->|"current source/policy/assignment"| versionedWork
+  fixedRecord -->|"current reader check"| scopeCheck

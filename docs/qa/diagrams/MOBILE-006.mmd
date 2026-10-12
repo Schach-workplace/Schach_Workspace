@@ -1,0 +1,10 @@
+flowchart TD
+  step1["Send a fictional reply with selected mention chips in A and drop only its response in the owned fixture transport."]
+  step2["Navigate normally A → B → A while the pending send is unknown."]
+  step3["Try editing/replacing the pending intent, then deliberately retry after fresh authority."]
+  step4["Observe a confirmed send followed by an unrelated thread/history fetch outage."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> step4
+  step4 --> record

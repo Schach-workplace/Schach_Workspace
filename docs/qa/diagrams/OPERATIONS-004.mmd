@@ -1,0 +1,10 @@
+flowchart TD
+  step1["Try production with SQLite/missing DATABASE_URL in owned test path."]
+  step2["Using owned PostgreSQL, try insecure cookies or non-HTTPS allowed origins."]
+  step3["Try explicit demo seeding in production."]
+  step4["Restore documented staging configuration."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> step4
+  step4 --> record

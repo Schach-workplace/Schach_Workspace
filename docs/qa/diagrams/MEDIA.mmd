@@ -1,0 +1,18 @@
+flowchart TD
+  selectBytes["Member selects/records exact owned bytes"]
+  reserveUpload["Server reserves hash/size and uploads privately"]
+  scanResult{"Scanner checks bytes; server rechecks authority"}
+  quarantine["Server rejects or keeps bytes inaccessible"]
+  cleanBind["Member binds clean eligible media to message"]
+  currentRead{"Server checks current source/history/expiry"}
+  downloadCopy["Authorized reader downloads; OS copy is independent"]
+  retention["Operator expires/purges live content"]
+  selectBytes -->|"explicit send"| reserveUpload
+  reserveUpload -->|"configured scan"| scanResult
+  scanResult -->|"rejected/unavailable/lost authority"| quarantine
+  scanResult -->|"clean and current"| cleanBind
+  cleanBind -->|"download"| currentRead
+  currentRead -->|"denied/expired"| quarantine
+  currentRead -->|"current eligible bytes"| downloadCopy
+  cleanBind -->|"policy expiry"| retention
+  retention -->|"future read denied"| quarantine

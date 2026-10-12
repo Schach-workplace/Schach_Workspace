@@ -45,3 +45,11 @@ Updated UTC 2026-10-11T23:22:05.037463+00:00. Read [AI_HANDOFF.md](AI_HANDOFF.md
 - [ ] Hindi/domain quality, supply-chain/license/security and production capacity/multi-instance worker coordination.
 
 Keep historical failure and qualification records. Update current owner/exact HEAD/pending step before a limit. Never reset/reseed/stashdrop/gitclean-fdx or redispatch completed work. Recovery archive and all related-file inventory paths are in AI_HANDOFF and AI_FILE_INDEX.
+
+## Team end-to-end QA documentation
+
+- [x] Complete source-grounded modules and scenarios, including negative/permission/retry/device/provider gates.
+- [x] Editable workflow diagrams and offline visual guide for every module; cross-module journeys.
+- [x] Isolated test setup, fictional fixtures, role/device matrices and team execution/defect/signoff templates.
+- [x] Spreadsheet-ready CSV/workbook, searchable offline HTML and shareable ZIP; validate schemas/references/coverage/rendering.
+- [ ] Commit/push finished documentation and refresh successor index; new manual scenarios remain NOT_RUN.

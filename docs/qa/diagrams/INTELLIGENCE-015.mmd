@@ -1,0 +1,8 @@
+flowchart TD
+  step1["Generate action_draft and open candidate review."]
+  step2["Try canonical create without valid audience review;then fill fields and exact task-preview."]
+  step3["Confirm exact basis/hash/key then change source/audience before separate first-write control."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> record

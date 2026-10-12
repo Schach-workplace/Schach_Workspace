@@ -1,0 +1,8 @@
+flowchart TD
+  step1["Choose selected anchor/primaryaction and preview current publication."]
+  step2["Confirm exact audience review;publish primary and inspect task;explicitly choose alternate for separate review."]
+  step3["Lose primaryack,expire raw,publication-access/replay then revoke root and repeat."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> record

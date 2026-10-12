@@ -1,0 +1,10 @@
+flowchart TD
+  step1["Owner A starts a call; Member B opens the foreground conversation Calls controls and refreshes/reopens its active call list."]
+  step2["Member B obtains a token in one fixture but never upgrades signaling; wait past the documented 60-second unanswered threshold and let the owned worker process it."]
+  step3["In a separate fixture Member B chooses Join and completes actual signaling before the threshold."]
+  step4["Refresh call state and let missed-call processing run again."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> step4
+  step4 --> record

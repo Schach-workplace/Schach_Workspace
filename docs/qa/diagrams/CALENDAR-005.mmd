@@ -1,0 +1,8 @@
+flowchart TD
+  step1["Call GET /planning/calendar with each invalid/range-bound variant."]
+  step2["Request the day whose authorized selected rows exceed the bound; then a day with no selected rows while oversized rows exist outside it."]
+  step3["Restore an ordinary fixture range and choose Retry current calendar range after a controlled read error."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> record

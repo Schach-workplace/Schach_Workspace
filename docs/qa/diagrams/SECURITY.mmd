@@ -1,0 +1,20 @@
+flowchart TD
+  actorEntry["Authenticated actor requests a company/source"]
+  activeScope{"Server checks session/company/private reader epoch"}
+  denyRead["Server withholds private metadata/content"]
+  exactProposal["Publisher freezes selected source and disclosure"]
+  destinationCheck{"Server checks policy/revision/destination authority"}
+  canonicalReplay["Server checks exact retry and current authority"]
+  independentWork["Reviewed publication creates independent business record"]
+  futureRevocation["Owner/operator revokes future source reads"]
+  copyLimit["Delivered/exported/in-flight copy remains disclosed"]
+  actorEntry -->|"read/action"| activeScope
+  activeScope -->|"no current authority"| denyRead
+  activeScope -->|"authorized"| exactProposal
+  exactProposal -->|"preview then commit"| destinationCheck
+  destinationCheck -->|"stale/denied/foreign"| denyRead
+  destinationCheck -->|"current allowed command"| canonicalReplay
+  canonicalReplay -->|"canonical accepted result"| independentWork
+  independentWork -->|"later access/source loss"| futureRevocation
+  futureRevocation -->|"new reads"| denyRead
+  futureRevocation -->|"already disclosed bytes/text"| copyLimit

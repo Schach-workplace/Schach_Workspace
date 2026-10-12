@@ -1,0 +1,10 @@
+flowchart TD
+  step1["Use an owned MetricSink/debug collector."]
+  step2["Perform authorized and denied QA reads."]
+  step3["Inspect routine route measurements, not raw private diagnostics."]
+  step4["Share sanitized aggregate then remove collector."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> step4
+  step4 --> record

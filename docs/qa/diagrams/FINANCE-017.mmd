@@ -1,0 +1,8 @@
+flowchart TD
+  step1["Import and drop acknowledgement; retry exact body/key; try changing accepted reason or remapping while attempt unknown."]
+  step2["Stage same file in fresh preview; try reimport without reason then explicit reason after inspecting every row."]
+  step3["Expire/cancel scratch or logout original session; read private preview and retained imports, then demote finance."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> record

@@ -1,0 +1,10 @@
+flowchart TD
+  step1["Write an unsent fictional draft with reply/mention choices in A; disconnect only the owned device from the fixture server."]
+  step2["Attempt send and let a history poll/search fail; inspect pending/error presentation."]
+  step3["Restore transport while current membership is unchanged; reopen A and explicitly resume the intended send."]
+  step4["Read current server history and verify no invented accepted/read state during the offline interval."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> step4
+  step4 --> record

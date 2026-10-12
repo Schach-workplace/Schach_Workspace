@@ -1,0 +1,6 @@
+flowchart TD
+  step1["Click Owner A’s old Open task update after current workspace refresh."]
+  step2["GET Reviewer R’s /attention/{item} as Owner A, then request an own item whose source access was revoked."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> record

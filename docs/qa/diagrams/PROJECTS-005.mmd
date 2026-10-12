@@ -1,0 +1,6 @@
+flowchart TD
+  step1["Attempt Inspect current submission basis when a selected task is not done."]
+  step2["As Owner A attempt approve transition; as Reviewer R inspect assertions/current evidence and Accept milestone independently."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> record

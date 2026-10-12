@@ -1,0 +1,10 @@
+flowchart TD
+  step1["As authorized reader download a clean fictional attachment and open the OS share sheet."]
+  step2["Cancel sharing and inspect owned download-cache metadata after the operation returns."]
+  step3["Repeat and deliberately share to a QA-owned destination app; remove the source or revoke conversation access afterward."]
+  step4["Attempt a fresh download, and exercise unsupported sharing or a generation change during download."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> step4
+  step4 --> record

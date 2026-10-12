@@ -1,0 +1,8 @@
+flowchart TD
+  step1["Reviewer retains intended approval; owner appends evidence."]
+  step2["Submit approval with N and refresh selected detail."]
+  step3["Reviewer reconciles evidence/budget deliberately and approves current version."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> record

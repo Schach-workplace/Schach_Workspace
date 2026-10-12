@@ -1,0 +1,10 @@
+flowchart TD
+  step1["Open conversation A, then return to Chats and open conversation B; leave the old route retained by navigation."]
+  step2["Use Back, reopen A and open/close a message-action sheet using native Back/Close."]
+  step3["While A is open, revoke A’s membership through the fixture owner and navigate Back then revisit its remembered route."]
+  step4["Observe B after the unfocused A route unmounts or updates."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> step4
+  step4 --> record

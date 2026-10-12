@@ -1,0 +1,6 @@
+flowchart TD
+  step1["Open Overview and click Overdue tasks."]
+  step2["Return and click Awaiting review, then Open commitments."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> record

@@ -1,0 +1,8 @@
+flowchart TD
+  step1["Download CSV template, Choose CSV and inspect validation for the mixed file; attempt Import."]
+  step2["Correct the file, preview and Import; withhold ACK and retry the original corrected ordered rows/key."]
+  step3["Alter a corrected row under the same import key."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> record

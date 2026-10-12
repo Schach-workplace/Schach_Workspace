@@ -1,0 +1,8 @@
+flowchart TD
+  step1["Choose timed deadline at the gap, then at the repeated time without selecting an offset."]
+  step2["Save a selected overlap instant and attempt timed weekly recurrence."]
+  step3["In isolated controlled-clock API fixture accept work exactly at dueAt and compare just-after variant."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> record

@@ -1,0 +1,10 @@
+flowchart TD
+  step1["At supported phone size open a long private chat and focus Message composer beneath the company header."]
+  step2["Type a multiline fictional draft and scroll history while the keyboard stays open."]
+  step3["Open a message-action or structured-creation sheet and focus its lower input; select its primary action."]
+  step4["Dismiss the keyboard and navigate back to the conversation list."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> step4
+  step4 --> record

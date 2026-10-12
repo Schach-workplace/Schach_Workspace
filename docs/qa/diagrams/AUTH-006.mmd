@@ -1,0 +1,6 @@
+flowchart TD
+  step1["Open My account on the unconfigured fixture and GET /api/auth/mfa."]
+  step2["On the configured fixture, attempt confirmation and enabled-MFA login with an invalid code."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> record

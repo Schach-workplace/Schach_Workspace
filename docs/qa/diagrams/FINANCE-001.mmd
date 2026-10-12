@@ -1,0 +1,8 @@
+flowchart TD
+  step1["Finance creates envelope; owner saves draft and attaches fictional permitted receipt."]
+  step2["Owner submits; independent reviewer inspects current version, receipt and budget then approves."]
+  step3["Finance records external full payment dated 2026-10-12 with bank_transfer/reference."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> record

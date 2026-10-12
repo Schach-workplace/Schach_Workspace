@@ -1,0 +1,6 @@
+flowchart TD
+  step1["Capture evidence preview and then change that source in another authorized fixture session; submit the original observation."]
+  step2["Discard submitted intent deliberately, load current goal/version and evidence preview, then author a fresh reviewed observation."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> record

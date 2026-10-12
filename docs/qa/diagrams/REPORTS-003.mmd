@@ -1,0 +1,8 @@
+flowchart TD
+  step1["Generate period summary with intersecting department/owner/project filters and inspect boundary task."]
+  step2["Try each invalid date/limit and change filters while reading snapshot-bound rows."]
+  step3["Inspect exact timed equality and1ns-later fixtures in punctuality metrics."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> record

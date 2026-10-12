@@ -1,0 +1,8 @@
+flowchart TD
+  step1["Open Attention delivery preferences, set Quiet hours start/end and Enable working hours with Working weekdays/start/end, then Save attention preferences."]
+  step2["Submit a single quiet boundary or invalid working-hours combination through PATCH /attention/preferences; attempt self-escalation."]
+  step3["Enable escalation, select Reviewer R as Escalation recipient and a valid interval, then save and inspect current preference."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> record

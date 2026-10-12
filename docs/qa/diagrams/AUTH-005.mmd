@@ -1,0 +1,6 @@
+flowchart TD
+  step1["POST /api/auth/login using a valid current TOTP, then immediately replay it."]
+  step2["Sign in using Recovery code (instead of authenticator), then submit the same recovery code again."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> record

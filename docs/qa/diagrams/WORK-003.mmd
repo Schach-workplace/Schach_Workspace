@@ -1,0 +1,6 @@
+flowchart TD
+  step1["Enter QA in Search tasks, open Filters, set project and priority, and choose Sort tasks → deadline."]
+  step2["Switch to Board, then Clear filters."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> record

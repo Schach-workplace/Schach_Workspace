@@ -1,0 +1,10 @@
+flowchart TD
+  step1["Fetch history/sync cursors and open the authorized communication WebSocket as Member B."]
+  step2["Owner A removes and explicitly re-invites Member B to create a new private epoch/history interval."]
+  step3["Use old cursors and old source links while signed into the current session; open a new socket/read."]
+  step4["Remove company membership or suspend the account in separate owned fixture variants and repeat reads/streams."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> step4
+  step4 --> record

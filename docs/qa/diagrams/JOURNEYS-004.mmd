@@ -1,0 +1,12 @@
+flowchart TD
+  step1["Create Timed T due shortly ahead today in Asia/Kolkata."]
+  step2["Revise same-date instant with reason/current version."]
+  step3["Independent Reviewer R accepts at original deadline+5 minutes before revised instant."]
+  step4["Read current report including that civil day."]
+  step5["Export same original snapshot and compare deadlines/rates."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> step4
+  step4 --> step5
+  step5 --> record

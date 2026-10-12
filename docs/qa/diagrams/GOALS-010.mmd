@@ -1,0 +1,6 @@
+flowchart TD
+  step1["As current owner open My reminder preference, select enable/cadence/time/reason and Save my reminder preference."]
+  step2["Save a concurrent preference change, then submit stale form; separately lose a valid save ACK and Retry same preference."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> record

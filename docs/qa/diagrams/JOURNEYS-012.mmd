@@ -1,0 +1,12 @@
+flowchart TD
+  step1["Configure named staged LiveKit/TURN/push and signed physical clients and trusted HTTPS."]
+  step2["A calls and B answers; verify actual two-way audio/video."]
+  step3["Repeat background, lock and network handoff; genuinely remove participant source access."]
+  step4["Inspect unanswered missed-call outcome and actual background push separately."]
+  step5["Confirm disabled call recording and transcription; review selected clean voice attachment separately."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> step4
+  step4 --> step5
+  step5 --> record

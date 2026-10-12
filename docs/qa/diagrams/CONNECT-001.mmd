@@ -1,0 +1,10 @@
+flowchart TD
+  step1["Owner A opens Connect → Message a person, searches Member B and selects his row without entering a title."]
+  step2["Leave the chat and repeat the same person selection; Member B independently selects Owner A."]
+  step3["Using the isolated API fixture, repeat the nameless DM request after placing that DM beyond the currently loaded list page."]
+  step4["Inspect the authorized conversation metadata from each participant and try the same private detail as Alpha leader."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> step4
+  step4 --> record

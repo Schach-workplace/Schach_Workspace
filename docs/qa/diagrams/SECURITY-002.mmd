@@ -1,0 +1,10 @@
+flowchart TD
+  step1["Owner A and Member B create a private DM/group excluding Alpha leader and Platform operator; send only a fictional QA marker."]
+  step2["As Alpha leader company administrator request private metadata/history/search/record/media access."]
+  step3["As Platform operator platform operator without private membership repeat those reads, including a company without Platform operator membership."]
+  step4["Explicitly invite Alpha leader to a newly authorized private interval and repeat eligible reads."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> step4
+  step4 --> record

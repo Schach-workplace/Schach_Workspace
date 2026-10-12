@@ -1,0 +1,10 @@
+flowchart TD
+  step1["Create a fictional draft and selected capture in QA Alpha; delay a read/send response in the fixture."]
+  step2["Switch company and deliver the old response; open the new company’s chats and publication forms."]
+  step3["Repeat with logout during network failure and with a new account/server sign-in."]
+  step4["Return to the original authorized company and inspect drafts/captures."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> step4
+  step4 --> record

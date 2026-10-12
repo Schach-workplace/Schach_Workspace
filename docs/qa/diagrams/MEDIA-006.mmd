@@ -1,0 +1,10 @@
+flowchart TD
+  step1["Allow microphone permission and choose Record voice note; speak only a fictional QA sentence, then stop."]
+  step2["Play the Voice note preview before sending and inspect current history."]
+  step3["Discard/cancel the preview, then create a fresh short voice note and choose Send selected media."]
+  step4["Open another conversation while a new recording is active."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> step4
+  step4 --> record

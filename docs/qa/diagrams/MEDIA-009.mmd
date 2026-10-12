@@ -1,0 +1,10 @@
+flowchart TD
+  step1["Attach a clean QA file to a selected-publication source and explicitly select it as evidence for a task or expense draft through the supported publication surface/API."]
+  step2["Preview the current business audience and acknowledge publication before committing."]
+  step3["Remove the original chat message and fetch its original attachment URL; inspect the authorized business evidence route separately."]
+  step4["Try the same publication with a separately expired or rejected source media ID."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> step4
+  step4 --> record

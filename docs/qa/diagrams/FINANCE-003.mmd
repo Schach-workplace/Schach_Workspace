@@ -1,0 +1,8 @@
+flowchart TD
+  step1["Read finance as finance, Engineering head, member and separately provisioned viewer."]
+  step2["As finance read linked expense, private task and membership-edit route."]
+  step3["Read as operator without QA Alpha membership/outsider; transfer head to Operations and refresh."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> record

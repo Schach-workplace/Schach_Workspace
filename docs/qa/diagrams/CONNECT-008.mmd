@@ -1,0 +1,10 @@
+flowchart TD
+  step1["On a current QA root choose Request acknowledgement / poll / decision → Acknowledgement request; select Member B only and create it."]
+  step2["Open Conversation records as Member B and as unselected current reader Reviewer R."]
+  step3["Member B acknowledges the record; Owner A publishes a new record revision with a reason."]
+  step4["Attempt Member B’s old expectedRevision response through the fixture API, then review and acknowledge the new revision."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> step4
+  step4 --> record

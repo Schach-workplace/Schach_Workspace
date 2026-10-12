@@ -1,0 +1,6 @@
+flowchart TD
+  step1["Choose Update measured result, enter value/observation time/reason and inspect current evidence preview before selecting it."]
+  step2["Save the measured result and inspect current goal/history."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> record

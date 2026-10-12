@@ -1,0 +1,8 @@
+flowchart TD
+  step1["Provision disposable fictional legacy fixture and let normal observation run."]
+  step2["Capture earlier-start period and inspect coverage drilldown."]
+  step3["Inspect gap/control rate and effort outputs."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> record

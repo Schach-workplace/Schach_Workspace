@@ -1,0 +1,8 @@
+flowchart TD
+  step1["Generate then preview conversion omitting one contributor or selecting wrong conversation."]
+  step2["Inspect complete sources/audience/purpose/action and confirm exact reviewed conversion."]
+  step3["Generate across two private conversations and try business publication."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> record

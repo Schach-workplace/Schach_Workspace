@@ -1,0 +1,8 @@
+flowchart TD
+  step1["As Owner A select In review with incomplete criteria/prerequisite and Save changes."]
+  step2["Complete criteria and have the prerequisite accepted, then submit In review."]
+  step3["As Reviewer R inspect current evidence and choose Accept work."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> record

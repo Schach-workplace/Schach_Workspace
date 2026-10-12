@@ -1,0 +1,10 @@
+flowchart TD
+  step1["As a company viewer open an eligible public channel and attempt send, manage, structured creation and call token issuance through fixture API."]
+  step2["Before a DM exists, Member B blocks Owner A using the supported company block API and Owner A selects Member B in person picker."]
+  step3["In a separate existing DM block the pair, then retry an ordinary send/call grant as company leadership."]
+  step4["Unblock through the authorized actor and explicitly retry a new valid command."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> step4
+  step4 --> record

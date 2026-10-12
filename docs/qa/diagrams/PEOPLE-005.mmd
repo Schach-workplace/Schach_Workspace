@@ -1,0 +1,8 @@
+flowchart TD
+  step1["Create onboarding preview for Nila with no tasks and inspect accountMode."]
+  step2["Apply on fixture without PEOPLE_CREDENTIAL_RETRY keyring; repeat configured fixture with invalid short secret."]
+  step3["Apply a fresh reviewed configured preview with a valid private secret and sign in as Nila."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> record

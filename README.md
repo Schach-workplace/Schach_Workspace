@@ -207,3 +207,7 @@ Connect now separates the conversation list from the chat history and composer o
 ## Workspace improvement roadmap
 
 The ten [dependency-ordered roadmap milestones](docs/superpowers/plans/2026-10-10-workspace-improvements-roadmap.md) are implemented: exact and historical reporting, bounded data reads, Connect/native usability, attention, execution, finance assistance, planning/outcome facts, People administration and grounded local intelligence. Final integration and deployment acceptance remain separately qualified in [VERIFICATION.md](docs/VERIFICATION.md). Read [People administration](docs/PEOPLE_ADMINISTRATION.md), [private report storage](docs/reports-storage.md), [local intelligence](docs/intelligence-local.md) and [planning and goals](docs/PLANNING_AND_GOALS.md) for operational boundaries. Optional intelligence works on explicit selected sources and opt-in; suggestions never approve work/payments or fabricate observations. The self-contained demo labels shared Connect and local inference unavailable and supports manual work offline.
+
+## Team end-to-end QA pack
+
+[Open the team QA guide](docs/qa/README.md): 224 proposed scenarios, guides for all modules, editable workflow diagrams, a searchable offline guide, Excel/CSV execution templates and a printable workflow PDF. Every manual case starts NOT_RUN; use the isolated fictional test environment and role matrix before testing. Historical automated evidence remains separate in docs/VERIFICATION.md.

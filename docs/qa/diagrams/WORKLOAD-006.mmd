@@ -1,0 +1,8 @@
+flowchart TD
+  step1["Choose Inspect work for Owner A, select two tasks and Review selected schedule."]
+  step2["Review without applying, then let authority/source check become pending."]
+  step3["Return to valid sources and deliberately apply fresh reviewed proposal."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> record

@@ -1,0 +1,23 @@
+flowchart TD
+  select["Inspect explicit current originals"]
+  authorize{"Full source ACL and local consent?"}
+  queue["Queue pinned local provider job"]
+  resultCheck{"Original session and roots current?"}
+  review{"Human resolves independent reviewer and audience"}
+  publish["Canonical reviewed business write"]
+  deny["Deny/scrub; continue manually"]
+  retry["Frozen attempt current publication check"]
+  existing["Open actual preclaimed task"]
+  select --> authorize
+  authorize -->|"scope/consent/provider unavailable"| deny
+  authorize -->|"allowed"| queue
+  queue -->|"provider completes"| resultCheck
+  resultCheck -->|"revoked/changed/cancelled/expired"| deny
+  resultCheck -->|"ready"| review
+  review -->|"missing independent review/audience"| deny
+  review -->|"explicit current review"| publish
+  review -->|"explicit preclaimed action"| existing
+  publish -->|"lost acknowledgement"| retry
+  existing -->|"lost acknowledgement"| retry
+  retry -->|"same committed intent/current ACL"| publish
+  retry -->|"source/destination denied"| deny

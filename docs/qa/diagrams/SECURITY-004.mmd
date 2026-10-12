@@ -1,0 +1,10 @@
+flowchart TD
+  step1["With selected publication enabled choose Create task from a fictional private root; inspect seeded Task title and keep Publish this exact excerpt unchecked."]
+  step2["Edit Task title to a new fictional approved phrase, choose owner/reviewer/deadline and Preview audience."]
+  step3["Check Publish this exact excerpt, preview again, acknowledge current audience and Create task."]
+  step4["As a broader authorized work reader without source access inspect the task and source links, then remove the private root."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> step4
+  step4 --> record

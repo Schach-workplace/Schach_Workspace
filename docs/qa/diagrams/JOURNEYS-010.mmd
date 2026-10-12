@@ -1,0 +1,12 @@
+flowchart TD
+  step1["Create B’s complete handover and Alpha/Beta memberships and original facts."]
+  step2["Leader inspects departure preview, replacements and opaque private blockers."]
+  step3["Resolve in-review milestone separately and source obligations only through authorized participants."]
+  step4["Fresh preview and canonical handover and departure apply."]
+  step5["B tries stale Alpha grants, signs in for QA Beta, explicitly rejoins Alpha."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> step4
+  step4 --> step5
+  step5 --> record

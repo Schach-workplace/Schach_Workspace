@@ -1,0 +1,8 @@
+flowchart TD
+  step1["In My account submit mismatched New password / Repeat new password; repeat with a value under 12 characters or incorrect Current password."]
+  step2["Submit a valid matching new secret through Update password."]
+  step3["Authenticate using the old and new provisioned credentials in separate fresh clients."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> record

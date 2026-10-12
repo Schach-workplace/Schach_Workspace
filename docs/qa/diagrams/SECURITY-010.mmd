@@ -1,0 +1,10 @@
+flowchart TD
+  step1["On the named staged deployment sign in to the fictional account over trusted HTTPS; inspect only sanitized cookie/header attributes."]
+  step2["Attempt unsafe API methods and socket upgrades from an unconfigured origin and Origin null, then from the exact authorized origin."]
+  step3["Inspect private API no-store/nosniff/referrer headers and staged provider gateway ingress without capturing token-bearing URLs."]
+  step4["Repeat cross-company/private/admin denial and revoked-session/call rejoin on the exact staged runtime."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> step4
+  step4 --> record

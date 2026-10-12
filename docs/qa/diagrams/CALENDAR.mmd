@@ -1,0 +1,17 @@
+flowchart TD
+  period["Choose Month or Week period"]
+  filters["Set owner, department and open-work filters"]
+  read["Request complete authorized calendar"]
+  complete{"Current complete range available?"}
+  unavailable["Withhold rows/counts; expose retry"]
+  day["Select company civil day"]
+  agenda["Show full authorized day agenda"]
+  task["Open currently authorized task detail"]
+  period --> filters
+  filters --> read
+  read --> complete
+  complete -->|"No / denied / bound"| unavailable
+  unavailable -->|"Retry current range"| read
+  complete -->|"Yes"| day
+  day --> agenda
+  agenda -->|"Open task"| task

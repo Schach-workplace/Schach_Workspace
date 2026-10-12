@@ -1,0 +1,20 @@
+flowchart TD
+  signIn["Enter provisioned credentials"]
+  verify["Verify password and current account"]
+  mfa{"MFA required?"}
+  challenge["Verify authenticator or recovery code"]
+  membership["Load current membership and session"]
+  workspace["Open authorized workspace"]
+  denied["Reject invalid or revoked session"]
+  logout["Logout and revoke session"]
+  signIn --> verify
+  verify -->|"Valid"| mfa
+  verify -->|"Invalid"| denied
+  mfa -->|"Yes"| challenge
+  mfa -->|"No"| membership
+  challenge -->|"Valid"| membership
+  challenge -->|"Invalid / consumed"| denied
+  membership -->|"Current"| workspace
+  membership -->|"Revoked"| denied
+  workspace -->|"Sign out"| logout
+  logout --> signIn

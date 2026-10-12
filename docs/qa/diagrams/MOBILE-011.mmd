@@ -1,0 +1,10 @@
+flowchart TD
+  step1["Select Chat photo or Choose attachment; record destination and deny camera/picker permission in one fixture variant."]
+  step2["Allow capture in another variant and return from normal camera background after fresh authorization."]
+  step3["Discard the unsent preview; repeat with a selected file while company/session or confirmed source access changes."]
+  step4["Simulate a delayed chooser result after its owning route/scope changed."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> step4
+  step4 --> record

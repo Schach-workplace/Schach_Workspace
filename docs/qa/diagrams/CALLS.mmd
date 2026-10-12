@@ -1,0 +1,20 @@
+flowchart TD
+  callEntry["Posting member starts or joins a call"]
+  grantCheck{"Server checks owned session/device/current epoch"}
+  grantDenied["Server refuses call grant or rejoin"]
+  gatewayJoin["Schach gateway authorizes actual signaling upgrade"]
+  calleeJoined{"Worker checks actual callee signaling join"}
+  liveMedia["Participants exchange narrow allowed media"]
+  missedCall["Worker marks unanswered call missed"]
+  revokeEnd["Owner/operator ends or revokes authority"]
+  providerCleanup["Worker retries immutable removal/room deletion"]
+  callEntry -->|"start/join"| grantCheck
+  grantCheck -->|"not authorized"| grantDenied
+  grantCheck -->|"current grant"| gatewayJoin
+  gatewayJoin -->|"actual joinedAt"| calleeJoined
+  calleeJoined -->|"answered"| liveMedia
+  calleeJoined -->|"unanswered after threshold"| missedCall
+  missedCall -->|"durable DeleteRoom"| providerCleanup
+  liveMedia -->|"end/removal/device loss"| revokeEnd
+  revokeEnd -->|"revoke plus queued cleanup"| providerCleanup
+  revokeEnd -->|"cached/refreshed rejoin"| grantDenied

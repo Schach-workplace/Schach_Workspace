@@ -1,0 +1,17 @@
+flowchart TD
+  period["Set company-local planning period"]
+  summary["Read current authorized projection"]
+  coverage["Inspect declared capacity and coverage"]
+  drill["Choose person, week or warning drill"]
+  basis{"Projection basis still current?"}
+  error["Withhold stale drill and refresh"]
+  tasks["Inspect authorized contributing tasks"]
+  schedule["Explicitly review selected schedule"]
+  period --> summary
+  summary --> coverage
+  coverage --> drill
+  drill --> basis
+  basis -->|"No"| error
+  error -->|"Refresh"| summary
+  basis -->|"Yes"| tasks
+  tasks -->|"Optional current seed"| schedule

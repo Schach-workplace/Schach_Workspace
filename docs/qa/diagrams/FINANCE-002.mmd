@@ -1,0 +1,8 @@
+flowchart TD
+  step1["Enter valid text in amount control and inspect request/readback."]
+  step2["Attempt invalid text and direct invalid API expense bodies."]
+  step3["Export valid expenses and compare maximum/one-cent values against readback."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> record

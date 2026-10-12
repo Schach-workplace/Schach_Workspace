@@ -1,0 +1,10 @@
+flowchart TD
+  step1["Join a local call as Member B; retain cached/provider-refreshed JWT only in the fixture’s volatile inspection session."]
+  step2["Owner A removes Member B from the private conversation; observe gateway disconnect and provider participant cleanup."]
+  step3["Attempt rejoin through Schach using both retained tokens and request a fresh token."]
+  step4["Explicitly re-invite Member B and join with a newly authorized grant; allow delayed old cleanup jobs to complete in the owned fixture."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> step4
+  step4 --> record

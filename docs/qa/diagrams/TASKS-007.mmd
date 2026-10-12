@@ -1,0 +1,8 @@
+flowchart TD
+  step1["Attempt unsafe and oversized Upload, then valid proof.txt."]
+  step2["As outsider request GET /api/attachments/{id}; on accepted task attempt new evidence/content edits."]
+  step3["Choose Reopen task, then edit and resubmit for independent review."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> record

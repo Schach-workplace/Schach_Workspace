@@ -1,0 +1,10 @@
+flowchart TD
+  step1["Attach a clean fictional audio note and open the local assistance source-selection surface; explicitly opt in and select that single attached audio source."]
+  step2["With the bounded configured local audio provider, submit only that selected audio for assistance and inspect source association without exporting raw output."]
+  step3["Try selecting a non-clean, expired, removed or unreadable attachment as an audio source."]
+  step4["Open an active call and inspect available controls and notices."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> step4
+  step4 --> record

@@ -1,0 +1,8 @@
+flowchart TD
+  step1["PATCH Owner A title/capacity with expectedVersion and inspect both sessions."]
+  step2["Save a consequential role/department/manager scope change with current captured version."]
+  step3["Reauthenticate in another still-active company."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> record

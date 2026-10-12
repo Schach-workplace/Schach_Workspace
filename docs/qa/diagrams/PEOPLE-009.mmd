@@ -1,0 +1,8 @@
+flowchart TD
+  step1["Choose Review company access, enter decisions/reason and Preview access decisions."]
+  step2["Choose Complete access attestation, then retry its exact captured request and read history."]
+  step3["Use stale fingerprint/version or an oversized incomplete directory fixture."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> record

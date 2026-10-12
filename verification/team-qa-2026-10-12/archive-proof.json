@@ -1,0 +1,12 @@
+{
+  "status": "PASS",
+  "applicationSourceBaseline": "191526bd2fda1970809529ab1d30b7cd54508512",
+  "archive": "/home/brahma/Projects/Schach_Workspace-team-QA-20261012-final.zip",
+  "files": 549,
+  "entries": 550,
+  "bytes": 1344023,
+  "sha256": "3e625879650a6f28b13fb6e754e850318c9ae67e937d1655fe7bfae65ae26e59",
+  "eachManifestHashVerified": true,
+  "manualScenariosExecuted": 0,
+  "scope": "QA documentation only; no app/runtime/database/provider mutation"
+}

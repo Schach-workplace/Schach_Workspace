@@ -1,0 +1,8 @@
+flowchart TD
+  step1["In Settings → My account, supply Current password, choose Set up authenticator, and Confirm authenticator with a fresh code."]
+  step2["Attempt login using only the password; query the second pre-enrollment session."]
+  step3["Sign in with a fresh Authenticator code (if enabled)."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> record

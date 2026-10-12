@@ -1,0 +1,8 @@
+flowchart TD
+  step1["Save a changed preference in session B, then Save attention preferences from the older form in session A."]
+  step2["Navigate away from Settings and reopen it; inspect GET /attention/preferences before entering the intentional new policy."]
+  step3["Save the deliberately re-entered policy with its freshly loaded version."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> record

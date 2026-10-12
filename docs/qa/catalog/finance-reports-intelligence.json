@@ -1,0 +1,3453 @@
+{
+  "status": "NOT_RUN",
+  "fixture_policy": "All actors, company names, invoice/payment labels, titles and prose are fictional proposed inputs. Actual paths are source references, not executed manual acceptance. No real IDs, credentials, sessions, prompts or user content belong here.",
+  "modules": [
+    {
+      "id": "FINANCE",
+      "title": "Finance and reviewed assistance",
+      "purpose": "Validate exact departmental budgets, independent expense decisions and optional private assistance without payment automation.",
+      "entry_points": [
+        "Web Finance and Settings → Company",
+        "Company-relative /budgets, /expense-categories, /expenses, /expense-receipts",
+        "Company-relative /finance/intakes, /receipt-extractions, /statement-previews, /statement-imports, /reconciliation"
+      ],
+      "actors": [
+        "platform admin: operator without company membership",
+        "company leadership: QA Alpha founder",
+        "owner: QA Alpha expense/task creator",
+        "independent reviewer: QA Alpha department head distinct from owner",
+        "department member: QA Alpha Engineering member",
+        "finance: QA Alpha finance role distinct from owner",
+        "outsider: QA Beta member only"
+      ],
+      "workflow": [
+        "Select company/department and exact money",
+        "Save owned draft and append evidence",
+        "Submit under current category policy",
+        "Independent reviewer inspects current version, receipt and budget",
+        "Record external full payment through eligible noncreator",
+        "Optional clean-source extraction/import needs explicit inspected publication"
+      ],
+      "source_refs": [
+        "docs/API_CONTRACT.md",
+        "docs/FINANCE_GUIDE.md",
+        "docs/SECURITY_AND_LIMITATIONS.md",
+        "backend/platform/finance_mutations.go",
+        "backend/platform/finance_extraction_acceptance.go",
+        "backend/platform/finance_statements.go",
+        "backend/platform/finance_reconciliation.go"
+      ],
+      "automation_refs": [
+        "backend/platform/finance_test.go",
+        "backend/platform/finance_money_test.go",
+        "backend/platform/finance_retries_test.go",
+        "frontend/src/finance.ui.test.tsx",
+        "frontend/src/components/StatementImportRecovery.test.tsx"
+      ],
+      "limitations": [
+        "Every scenario is proposed NOT_RUN; missing provider/scanner/storage prerequisites are BLOCKED, never PASS.",
+        "Current API/code supports reviewed statement imports and full-paid-debit associations/audited unmatch; older FINANCE_GUIDE excludes reconciliation in baseline wording.",
+        "Association unmatch reverses association only; no bank transfer, partial payment, refund, paid-economic reversal or general ledger.",
+        "Physical camera/keyboard/accessibility and native PostgreSQL concurrency require independent qualification."
+      ],
+      "cases": [
+        {
+          "id": "FINANCE-001",
+          "module": "FINANCE",
+          "title": "Exact budget, independent expense approval and recorded payment",
+          "priority": "P0",
+          "gate": "LOCAL",
+          "modes": [
+            "Web",
+            "API"
+          ],
+          "actors": [
+            "platform admin: operator without company membership",
+            "company leadership: QA Alpha founder",
+            "owner: QA Alpha expense/task creator",
+            "independent reviewer: QA Alpha department head distinct from owner",
+            "department member: QA Alpha Engineering member",
+            "finance: QA Alpha finance role distinct from owner",
+            "outsider: QA Beta member only"
+          ],
+          "status": "NOT_RUN",
+          "preconditions": [
+            "Provision a disposable isolated server/API fixture with fictional QA Alpha (INR, Asia/Kolkata, April financial year) and unrelated QA Beta; use separate actor sessions and a controlled 2026-10-12 clock.",
+            "Never mutate the running workspace, restore historical native fixtures or reuse consumed capabilities. Browser demo does not establish backend authorization acceptance."
+          ],
+          "test_data": [
+            "Active Engineering October envelope 2026-10-01–2026-10-31: amountMinor 1000000.",
+            "Expense QA parts: QA Alpha Supplies, invoice QA-F-101, incurred 2026-10-10, amountMinor 123456; payment reference QA-BANK-101."
+          ],
+          "steps": [
+            "Finance creates envelope; owner saves draft and attaches fictional permitted receipt.",
+            "Owner submits; independent reviewer inspects current version, receipt and budget then approves.",
+            "Finance records external full payment dated 2026-10-12 with bank_transfer/reference."
+          ],
+          "expected_results": [
+            "Allocation is INR 10000.00, draft INR 1234.56; draft consumes no budget.",
+            "Pending exposure becomes approved-unpaid 123456; used 123456, available 876544.",
+            "Paid 123456 replaces approved-unpaid; used and availability do not change. App initiates no transfer."
+          ],
+          "cleanup": [
+            "Record sanitized observations without real IDs, credentials, private prose or prompts. Close QA sessions and remove owned temporary downloads; reset/dispose only this isolated fixture through its approved lifecycle, retaining audit history until disposal."
+          ],
+          "source_refs": [
+            "docs/API_CONTRACT.md",
+            "docs/FINANCE_GUIDE.md",
+            "docs/SECURITY_AND_LIMITATIONS.md",
+            "backend/platform/finance_mutations.go"
+          ],
+          "automation_refs": [
+            "backend/platform/finance_test.go"
+          ]
+        },
+        {
+          "id": "FINANCE-002",
+          "module": "FINANCE",
+          "title": "Exact minor-unit parsing and invalid monetary inputs",
+          "priority": "P0",
+          "gate": "LOCAL",
+          "modes": [
+            "Web",
+            "API"
+          ],
+          "actors": [
+            "platform admin: operator without company membership",
+            "company leadership: QA Alpha founder",
+            "owner: QA Alpha expense/task creator",
+            "independent reviewer: QA Alpha department head distinct from owner",
+            "department member: QA Alpha Engineering member",
+            "finance: QA Alpha finance role distinct from owner",
+            "outsider: QA Beta member only"
+          ],
+          "status": "NOT_RUN",
+          "preconditions": [
+            "Provision a disposable isolated server/API fixture with fictional QA Alpha (INR, Asia/Kolkata, April financial year) and unrelated QA Beta; use separate actor sessions and a controlled 2026-10-12 clock.",
+            "Never mutate the running workspace, restore historical native fixtures or reuse consumed capabilities. Browser demo does not establish backend authorization acceptance."
+          ],
+          "test_data": [
+            "Valid text: 0.01→1, 1.2→120, 1234.56→123456, 10000000000.00→1000000000000.",
+            "Invalid text: 1.001,1e3,NaN,1,000,.5,10000000000.01; API invalid expense amountMinor:1234.56,0,-1."
+          ],
+          "steps": [
+            "Enter valid text in amount control and inspect request/readback.",
+            "Attempt invalid text and direct invalid API expense bodies.",
+            "Export valid expenses and compare maximum/one-cent values against readback."
+          ],
+          "expected_results": [
+            "Every value becomes the exact integer minor units; no binary floating rounding.",
+            "Overprecision/grouping/exponent/overflow are not silently coerced; API rejects noninteger/nonpositive economics.",
+            "Exact company currency values remain consistent; no inferred tax or exchange conversion."
+          ],
+          "cleanup": [
+            "Record sanitized observations without real IDs, credentials, private prose or prompts. Close QA sessions and remove owned temporary downloads; reset/dispose only this isolated fixture through its approved lifecycle, retaining audit history until disposal."
+          ],
+          "source_refs": [
+            "docs/API_CONTRACT.md",
+            "docs/FINANCE_GUIDE.md",
+            "docs/SECURITY_AND_LIMITATIONS.md",
+            "backend/platform/finance_money.go",
+            "frontend/src/data/finance.ts"
+          ],
+          "automation_refs": [
+            "backend/platform/finance_money_test.go",
+            "frontend/src/data/finance.test.ts"
+          ]
+        },
+        {
+          "id": "FINANCE-003",
+          "module": "FINANCE",
+          "title": "Financial visibility does not grant administration or private work",
+          "priority": "P0",
+          "gate": "LOCAL",
+          "modes": [
+            "Web",
+            "API"
+          ],
+          "actors": [
+            "platform admin: operator without company membership",
+            "company leadership: QA Alpha founder",
+            "owner: QA Alpha expense/task creator",
+            "independent reviewer: QA Alpha department head distinct from owner",
+            "department member: QA Alpha Engineering member",
+            "finance: QA Alpha finance role distinct from owner",
+            "outsider: QA Beta member only"
+          ],
+          "status": "NOT_RUN",
+          "preconditions": [
+            "Provision a disposable isolated server/API fixture with fictional QA Alpha (INR, Asia/Kolkata, April financial year) and unrelated QA Beta; use separate actor sessions and a controlled 2026-10-12 clock.",
+            "Never mutate the running workspace, restore historical native fixtures or reuse consumed capabilities. Browser demo does not establish backend authorization acceptance."
+          ],
+          "test_data": [
+            "Engineering owner/peer expenses, Operations peer expense and head's own former Operations expense.",
+            "One readable financial expense references a task private from finance."
+          ],
+          "steps": [
+            "Read finance as finance, Engineering head, member and separately provisioned viewer.",
+            "As finance read linked expense, private task and membership-edit route.",
+            "Read as operator without QA Alpha membership/outsider; transfer head to Operations and refresh."
+          ],
+          "expected_results": [
+            "Finance has company scope; head current department plus own historical expenses; member own expenses without balances; viewer no finance.",
+            "Hidden work IDs/prose are omitted and task access/membership administration remain denied.",
+            "No operator/company bypass; current Operations balance is complete, older own expenses remain personal without partial Engineering departmental totals."
+          ],
+          "cleanup": [
+            "Record sanitized observations without real IDs, credentials, private prose or prompts. Close QA sessions and remove owned temporary downloads; reset/dispose only this isolated fixture through its approved lifecycle, retaining audit history until disposal."
+          ],
+          "source_refs": [
+            "docs/API_CONTRACT.md",
+            "docs/FINANCE_GUIDE.md",
+            "docs/SECURITY_AND_LIMITATIONS.md",
+            "backend/platform/finance_workspace.go",
+            "backend/platform/finance.go"
+          ],
+          "automation_refs": [
+            "backend/platform/finance_test.go"
+          ]
+        },
+        {
+          "id": "FINANCE-004",
+          "module": "FINANCE",
+          "title": "Cross-company references and creator changes fail",
+          "priority": "P0",
+          "gate": "LOCAL",
+          "modes": [
+            "Web",
+            "API"
+          ],
+          "actors": [
+            "platform admin: operator without company membership",
+            "company leadership: QA Alpha founder",
+            "owner: QA Alpha expense/task creator",
+            "independent reviewer: QA Alpha department head distinct from owner",
+            "department member: QA Alpha Engineering member",
+            "finance: QA Alpha finance role distinct from owner",
+            "outsider: QA Beta member only"
+          ],
+          "status": "NOT_RUN",
+          "preconditions": [
+            "Provision a disposable isolated server/API fixture with fictional QA Alpha (INR, Asia/Kolkata, April financial year) and unrelated QA Beta; use separate actor sessions and a controlled 2026-10-12 clock.",
+            "Never mutate the running workspace, restore historical native fixtures or reuse consumed capabilities. Browser demo does not establish backend authorization acceptance."
+          ],
+          "test_data": [
+            "QA-F-104 valid QA Alpha draft; QA Beta category/department/task/project IDs exist only inside fictional fixture.",
+            "QA Alpha private task in another department provides inconsistent link control."
+          ],
+          "steps": [
+            "Create drafts with each QA Beta reference or mismatched QA Alpha work/department.",
+            "Patch createdBy/companyId or edit valid owner draft as another finance reader.",
+            "Switch to QA Beta and request QA Alpha detail/receipts/history."
+          ],
+          "expected_results": [
+            "Cross-company/inconsistent references are rejected without partial financial records.",
+            "Ownership is immutable; broad financial read authority does not grant another creator's economic edit.",
+            "No QA Alpha economics, identifiers or receipt bytes are disclosed."
+          ],
+          "cleanup": [
+            "Record sanitized observations without real IDs, credentials, private prose or prompts. Close QA sessions and remove owned temporary downloads; reset/dispose only this isolated fixture through its approved lifecycle, retaining audit history until disposal."
+          ],
+          "source_refs": [
+            "docs/API_CONTRACT.md",
+            "docs/FINANCE_GUIDE.md",
+            "docs/SECURITY_AND_LIMITATIONS.md",
+            "backend/platform/finance_mutations.go",
+            "backend/platform/finance_receipts.go"
+          ],
+          "automation_refs": [
+            "backend/platform/finance_test.go"
+          ]
+        },
+        {
+          "id": "FINANCE-005",
+          "module": "FINANCE",
+          "title": "Budget boundaries and fiscal settings stay controlled",
+          "priority": "P1",
+          "gate": "LOCAL",
+          "modes": [
+            "Web",
+            "API"
+          ],
+          "actors": [
+            "platform admin: operator without company membership",
+            "company leadership: QA Alpha founder",
+            "owner: QA Alpha expense/task creator",
+            "independent reviewer: QA Alpha department head distinct from owner",
+            "department member: QA Alpha Engineering member",
+            "finance: QA Alpha finance role distinct from owner",
+            "outsider: QA Beta member only"
+          ],
+          "status": "NOT_RUN",
+          "preconditions": [
+            "Provision a disposable isolated server/API fixture with fictional QA Alpha (INR, Asia/Kolkata, April financial year) and unrelated QA Beta; use separate actor sessions and a controlled 2026-10-12 clock.",
+            "Never mutate the running workspace, restore historical native fixtures or reuse consumed capabilities. Browser demo does not establish backend authorization acceptance."
+          ],
+          "test_data": [
+            "Engineering October envelope 2026-10-01–2026-10-31 amountMinor1000000.",
+            "Overlap 2026-10-31–2026-11-15; cross-year 2027-03-31–2027-04-01; reason: Reviewed allocation reduction despite retained commitments."
+          ],
+          "steps": [
+            "Create draft October and attempt overlapping/cross-fiscal-year envelopes.",
+            "Activate, attempt department/date edit, close and retry boundary edits.",
+            "Reduce below approved spend with meaningful reason; attempt currency/fiscal-month edits after finance record."
+          ],
+          "expected_results": [
+            "Inclusive overlaps fail for draft/active/closed envelopes; one envelope cannot cross fiscal year.",
+            "Activated boundaries remain frozen after closure; closing preserves prior obligations.",
+            "Permitted reasoned reduction retains negative availability/audit; company economics settings are locked."
+          ],
+          "cleanup": [
+            "Record sanitized observations without real IDs, credentials, private prose or prompts. Close QA sessions and remove owned temporary downloads; reset/dispose only this isolated fixture through its approved lifecycle, retaining audit history until disposal."
+          ],
+          "source_refs": [
+            "docs/API_CONTRACT.md",
+            "docs/FINANCE_GUIDE.md",
+            "docs/SECURITY_AND_LIMITATIONS.md",
+            "backend/platform/finance.go"
+          ],
+          "automation_refs": [
+            "backend/platform/finance_test.go"
+          ]
+        },
+        {
+          "id": "FINANCE-006",
+          "module": "FINANCE",
+          "title": "Missing receipt exception and changed category policy need independent review",
+          "priority": "P0",
+          "gate": "LOCAL",
+          "modes": [
+            "Web",
+            "API"
+          ],
+          "actors": [
+            "platform admin: operator without company membership",
+            "company leadership: QA Alpha founder",
+            "owner: QA Alpha expense/task creator",
+            "independent reviewer: QA Alpha department head distinct from owner",
+            "department member: QA Alpha Engineering member",
+            "finance: QA Alpha finance role distinct from owner",
+            "outsider: QA Beta member only"
+          ],
+          "status": "NOT_RUN",
+          "preconditions": [
+            "Provision a disposable isolated server/API fixture with fictional QA Alpha (INR, Asia/Kolkata, April financial year) and unrelated QA Beta; use separate actor sessions and a controlled 2026-10-12 clock.",
+            "Never mutate the running workspace, restore historical native fixtures or reuse consumed capabilities. Browser demo does not establish backend authorization acceptance."
+          ],
+          "test_data": [
+            "QA-F-106 amountMinor120000; exception: Original supplier invoice was lost in transit.",
+            "Approval note: I independently verified the replacement supplier statement; short Unicode control: 四五六七."
+          ],
+          "steps": [
+            "Submit required-receipt draft without evidence, then attempt short exception and valid explanation.",
+            "Reviewer approves without note, then explicitly enters independent acceptance note.",
+            "Submit second expense when receipt policy off, turn policy on before approval and attempt approval."
+          ],
+          "expected_results": [
+            "Missing evidence blocks submission; Unicode character length applies; meaningful explanation permits submission.",
+            "Exception approval requires note; recorded explanation and reviewer note remain distinct.",
+            "Approval rechecks current policy and rejects missing evidence/exception."
+          ],
+          "cleanup": [
+            "Record sanitized observations without real IDs, credentials, private prose or prompts. Close QA sessions and remove owned temporary downloads; reset/dispose only this isolated fixture through its approved lifecycle, retaining audit history until disposal."
+          ],
+          "source_refs": [
+            "docs/API_CONTRACT.md",
+            "docs/FINANCE_GUIDE.md",
+            "docs/SECURITY_AND_LIMITATIONS.md",
+            "backend/platform/finance_mutations.go"
+          ],
+          "automation_refs": [
+            "backend/platform/finance_test.go"
+          ]
+        },
+        {
+          "id": "FINANCE-007",
+          "module": "FINANCE",
+          "title": "Receipt append changes inspected version and blocks stale decision",
+          "priority": "P0",
+          "gate": "LOCAL",
+          "modes": [
+            "Web",
+            "API"
+          ],
+          "actors": [
+            "platform admin: operator without company membership",
+            "company leadership: QA Alpha founder",
+            "owner: QA Alpha expense/task creator",
+            "independent reviewer: QA Alpha department head distinct from owner",
+            "department member: QA Alpha Engineering member",
+            "finance: QA Alpha finance role distinct from owner",
+            "outsider: QA Beta member only"
+          ],
+          "status": "NOT_RUN",
+          "preconditions": [
+            "Provision a disposable isolated server/API fixture with fictional QA Alpha (INR, Asia/Kolkata, April financial year) and unrelated QA Beta; use separate actor sessions and a controlled 2026-10-12 clock.",
+            "Never mutate the running workspace, restore historical native fixtures or reuse consumed capabilities. Browser demo does not establish backend authorization acceptance."
+          ],
+          "test_data": [
+            "QA-F-107 submitted version N; reviewer already viewing it.",
+            "Owner appends fictional replacement supplier receipt after review opens."
+          ],
+          "steps": [
+            "Reviewer retains intended approval; owner appends evidence.",
+            "Submit approval with N and refresh selected detail.",
+            "Reviewer reconciles evidence/budget deliberately and approves current version."
+          ],
+          "expected_results": [
+            "Append-only receipt is retained and expense increments to N+1.",
+            "409 prevents stale acceptance; new evidence hides during current recheck and must be inspected.",
+            "Only new reviewed decision succeeds; no automatic latest-version replay."
+          ],
+          "cleanup": [
+            "Record sanitized observations without real IDs, credentials, private prose or prompts. Close QA sessions and remove owned temporary downloads; reset/dispose only this isolated fixture through its approved lifecycle, retaining audit history until disposal."
+          ],
+          "source_refs": [
+            "docs/API_CONTRACT.md",
+            "docs/FINANCE_GUIDE.md",
+            "docs/SECURITY_AND_LIMITATIONS.md",
+            "backend/platform/finance_receipts.go",
+            "frontend/src/pages/Finance.tsx"
+          ],
+          "automation_refs": [
+            "backend/platform/finance_test.go",
+            "frontend/src/finance.ui.test.tsx"
+          ]
+        },
+        {
+          "id": "FINANCE-008",
+          "module": "FINANCE",
+          "title": "Creator cannot approve, reject or pay; paid fields remain final",
+          "priority": "P0",
+          "gate": "LOCAL",
+          "modes": [
+            "Web",
+            "API"
+          ],
+          "actors": [
+            "platform admin: operator without company membership",
+            "company leadership: QA Alpha founder",
+            "owner: QA Alpha expense/task creator",
+            "independent reviewer: QA Alpha department head distinct from owner",
+            "department member: QA Alpha Engineering member",
+            "finance: QA Alpha finance role distinct from owner",
+            "outsider: QA Beta member only"
+          ],
+          "status": "NOT_RUN",
+          "preconditions": [
+            "Provision a disposable isolated server/API fixture with fictional QA Alpha (INR, Asia/Kolkata, April financial year) and unrelated QA Beta; use separate actor sessions and a controlled 2026-10-12 clock.",
+            "Never mutate the running workspace, restore historical native fixtures or reuse consumed capabilities. Browser demo does not establish backend authorization acceptance."
+          ],
+          "test_data": [
+            "Leadership creator QA-F-108 amountMinor250000 incurred2026-10-10.",
+            "Invalid paid dates2026-10-09/2026-10-13; valid2026-10-12, bank_transfer, QA-PAY-108."
+          ],
+          "steps": [
+            "Creator submits and tries approve/reject; separate finance approves.",
+            "Creator attempts pay; finance attempts invalid dates then valid full payment.",
+            "Try paid amount/vendor/status edits and void, then append receipt as creator."
+          ],
+          "expected_results": [
+            "Creator is denied even as founder; independent eligible finance may approve.",
+            "Self-payment denied; date/reference/method rules enforced; recorded acknowledgement performs no money transfer.",
+            "Paid economics/finality preserved; permitted evidence remains append-only and versioned, without refund/reversal."
+          ],
+          "cleanup": [
+            "Record sanitized observations without real IDs, credentials, private prose or prompts. Close QA sessions and remove owned temporary downloads; reset/dispose only this isolated fixture through its approved lifecycle, retaining audit history until disposal."
+          ],
+          "source_refs": [
+            "docs/API_CONTRACT.md",
+            "docs/FINANCE_GUIDE.md",
+            "docs/SECURITY_AND_LIMITATIONS.md",
+            "backend/platform/finance_mutations.go"
+          ],
+          "automation_refs": [
+            "backend/platform/finance_test.go"
+          ]
+        },
+        {
+          "id": "FINANCE-009",
+          "module": "FINANCE",
+          "title": "Concurrent approval and explicit budget override",
+          "priority": "P0",
+          "gate": "LOCAL",
+          "modes": [
+            "Web",
+            "API"
+          ],
+          "actors": [
+            "platform admin: operator without company membership",
+            "company leadership: QA Alpha founder",
+            "owner: QA Alpha expense/task creator",
+            "independent reviewer: QA Alpha department head distinct from owner",
+            "department member: QA Alpha Engineering member",
+            "finance: QA Alpha finance role distinct from owner",
+            "outsider: QA Beta member only"
+          ],
+          "status": "NOT_RUN",
+          "preconditions": [
+            "Provision a disposable isolated server/API fixture with fictional QA Alpha (INR, Asia/Kolkata, April financial year) and unrelated QA Beta; use separate actor sessions and a controlled 2026-10-12 clock.",
+            "Never mutate the running workspace, restore historical native fixtures or reuse consumed capabilities. Browser demo does not establish backend authorization acceptance.",
+            "Use isolated multi-session concurrency control; native PostgreSQL multi-connection acceptance remains separate deployment qualification."
+          ],
+          "test_data": [
+            "Active amountMinor100000; two submitted expenses70000 each.",
+            "Override reason: Approved essential replacement despite visible October allocation overrun."
+          ],
+          "steps": [
+            "Two QA reviewers concurrently approve against same inspected available capacity.",
+            "Department head attempts remaining expense with override reason.",
+            "Finance reviews current overrun and explicitly overrides remaining approval."
+          ],
+          "expected_results": [
+            "Company/current membership/version/capacity fence allows at most one ordinary approval.",
+            "Head cannot override missing/closed/insufficient budget.",
+            "Used140000, available-40000 and reason/actor audit remain; allocation is not invented."
+          ],
+          "cleanup": [
+            "Record sanitized observations without real IDs, credentials, private prose or prompts. Close QA sessions and remove owned temporary downloads; reset/dispose only this isolated fixture through its approved lifecycle, retaining audit history until disposal."
+          ],
+          "source_refs": [
+            "docs/API_CONTRACT.md",
+            "docs/FINANCE_GUIDE.md",
+            "docs/SECURITY_AND_LIMITATIONS.md",
+            "backend/platform/finance_mutations.go"
+          ],
+          "automation_refs": [
+            "backend/platform/finance_test.go"
+          ]
+        },
+        {
+          "id": "FINANCE-010",
+          "module": "FINANCE",
+          "title": "Lost acknowledgement retries only frozen canonical create intent",
+          "priority": "P0",
+          "gate": "LOCAL",
+          "modes": [
+            "Web",
+            "API"
+          ],
+          "actors": [
+            "platform admin: operator without company membership",
+            "company leadership: QA Alpha founder",
+            "owner: QA Alpha expense/task creator",
+            "independent reviewer: QA Alpha department head distinct from owner",
+            "department member: QA Alpha Engineering member",
+            "finance: QA Alpha finance role distinct from owner",
+            "outsider: QA Beta member only"
+          ],
+          "status": "NOT_RUN",
+          "preconditions": [
+            "Provision a disposable isolated server/API fixture with fictional QA Alpha (INR, Asia/Kolkata, April financial year) and unrelated QA Beta; use separate actor sessions and a controlled 2026-10-12 clock.",
+            "Never mutate the running workspace, restore historical native fixtures or reuse consumed capabilities. Browser demo does not establish backend authorization acceptance."
+          ],
+          "test_data": [
+            "QA-F-110 amountMinor130050; retryKey qa-finance-110-create.",
+            "Changed intent control uses same key with amountMinor130051."
+          ],
+          "steps": [
+            "Create draft and drop response after commit using isolated client fault control.",
+            "Retry identical body/key, then changed amount under key.",
+            "Revoke actor membership/destination rights and retry original body."
+          ],
+          "expected_results": [
+            "UI retains unknown outcome and exact key/body in RAM; no assumption of uncommitted write.",
+            "Canonical ID returns without duplication; changed intent conflicts.",
+            "Current authority denies canonical replay/disclosure and clears affected private state."
+          ],
+          "cleanup": [
+            "Record sanitized observations without real IDs, credentials, private prose or prompts. Close QA sessions and remove owned temporary downloads; reset/dispose only this isolated fixture through its approved lifecycle, retaining audit history until disposal."
+          ],
+          "source_refs": [
+            "docs/API_CONTRACT.md",
+            "docs/FINANCE_GUIDE.md",
+            "docs/SECURITY_AND_LIMITATIONS.md",
+            "backend/platform/finance_mutations.go"
+          ],
+          "automation_refs": [
+            "backend/platform/finance_retries_test.go"
+          ]
+        },
+        {
+          "id": "FINANCE-011",
+          "module": "FINANCE",
+          "title": "Missing scanner/OCR preserves manual entry and withholds scratch",
+          "priority": "P0",
+          "gate": "LOCAL_CONFIG",
+          "modes": [
+            "Web",
+            "API"
+          ],
+          "actors": [
+            "platform admin: operator without company membership",
+            "company leadership: QA Alpha founder",
+            "owner: QA Alpha expense/task creator",
+            "independent reviewer: QA Alpha department head distinct from owner",
+            "department member: QA Alpha Engineering member",
+            "finance: QA Alpha finance role distinct from owner",
+            "outsider: QA Beta member only"
+          ],
+          "status": "NOT_RUN",
+          "preconditions": [
+            "Provision a disposable isolated server/API fixture with fictional QA Alpha (INR, Asia/Kolkata, April financial year) and unrelated QA Beta; use separate actor sessions and a controlled 2026-10-12 clock.",
+            "Never mutate the running workspace, restore historical native fixtures or reuse consumed capabilities. Browser demo does not establish backend authorization acceptance.",
+            "No provider/scanner is started by this authoring task. Missing live-qualification prerequisite is BLOCKED."
+          ],
+          "test_data": [
+            "New qa-finance-111.txt containing fictional vendor/amount; exact fixture size/hash computed privately.",
+            "Operator-provisioned isolated scanner outage, separately OCR disabled/missing; unsupported PDF extraction."
+          ],
+          "steps": [
+            "Stage/finalize receipt in missing-scanner fixture and inspect current status.",
+            "Request extraction before clean assessment, with unavailable OCR or unsupported PDF.",
+            "Save manual exact draft with ordinary evidence/exception and cancel intake."
+          ],
+          "expected_results": [
+            "Safe recoverable scan failure occurs without clean/quarantined byte disclosure.",
+            "Fails closed; no fabricated extraction success, cloud fallback or automatic installation.",
+            "Manual entry remains available; cancellation denies scratch and never submits/approves/pays."
+          ],
+          "cleanup": [
+            "Record sanitized observations without real IDs, credentials, private prose or prompts. Close QA sessions and remove owned temporary downloads; reset/dispose only this isolated fixture through its approved lifecycle, retaining audit history until disposal."
+          ],
+          "source_refs": [
+            "docs/API_CONTRACT.md",
+            "docs/FINANCE_GUIDE.md",
+            "docs/SECURITY_AND_LIMITATIONS.md",
+            "backend/platform/finance_assistance_runtime.go",
+            "backend/platform/finance_receipt_intakes.go",
+            "backend/platform/finance_receipt_extractions.go"
+          ],
+          "automation_refs": [
+            "backend/platform/finance_scan_outcome_test.go",
+            "backend/platform/finance_assistance_provider_test.go"
+          ]
+        },
+        {
+          "id": "FINANCE-012",
+          "module": "FINANCE",
+          "title": "Reviewed extraction creates only one draft and explicit evidence copy",
+          "priority": "P0",
+          "gate": "LOCAL_CONFIG",
+          "modes": [
+            "Web",
+            "API"
+          ],
+          "actors": [
+            "platform admin: operator without company membership",
+            "company leadership: QA Alpha founder",
+            "owner: QA Alpha expense/task creator",
+            "independent reviewer: QA Alpha department head distinct from owner",
+            "department member: QA Alpha Engineering member",
+            "finance: QA Alpha finance role distinct from owner",
+            "outsider: QA Beta member only"
+          ],
+          "status": "NOT_RUN",
+          "preconditions": [
+            "Provision a disposable isolated server/API fixture with fictional QA Alpha (INR, Asia/Kolkata, April financial year) and unrelated QA Beta; use separate actor sessions and a controlled 2026-10-12 clock.",
+            "Never mutate the running workspace, restore historical native fixtures or reuse consumed capabilities. Browser demo does not establish backend authorization acceptance.",
+            "Operator separately provisions fresh private storage/clean scanner/OCR; never use a completed native consumed capability."
+          ],
+          "test_data": [
+            "qa-finance-112.png: QA Alpha Supplier QA invoice112,2026-10-10,INR1300.50.",
+            "Human fields: QA replacement parts,amountMinor130050,actual Engineering category; each listed uncertainty confirmed."
+          ],
+          "steps": [
+            "Reserve/stage exact bytes, obtain clean assessment, explicitly opt into local extraction.",
+            "Inspect original/uncertainties, enter exact fields and preview finance audience; try acceptance without copyEvidence.",
+            "Confirm copyEvidence=true/current result revision/stable key and repeat exact acceptance."
+          ],
+          "expected_results": [
+            "Candidates remain private suggestions; processing creates no expense.",
+            "Audience/destination are explicit and incomplete uncertainty/evidence-publication confirmation blocks write.",
+            "One draft plus independently retained receipt copy commit atomically; canonical replay same ID; submission/approval/payment remain separate."
+          ],
+          "cleanup": [
+            "Record sanitized observations without real IDs, credentials, private prose or prompts. Close QA sessions and remove owned temporary downloads; reset/dispose only this isolated fixture through its approved lifecycle, retaining audit history until disposal."
+          ],
+          "source_refs": [
+            "docs/API_CONTRACT.md",
+            "docs/FINANCE_GUIDE.md",
+            "docs/SECURITY_AND_LIMITATIONS.md",
+            "backend/platform/finance_extraction_acceptance.go"
+          ],
+          "automation_refs": [
+            "backend/platform/finance_extraction_acceptance_test.go"
+          ]
+        },
+        {
+          "id": "FINANCE-013",
+          "module": "FINANCE",
+          "title": "Queued/ready extraction rechecks source, target and original session",
+          "priority": "P0",
+          "gate": "LOCAL_CONFIG",
+          "modes": [
+            "Web",
+            "API"
+          ],
+          "actors": [
+            "platform admin: operator without company membership",
+            "company leadership: QA Alpha founder",
+            "owner: QA Alpha expense/task creator",
+            "independent reviewer: QA Alpha department head distinct from owner",
+            "department member: QA Alpha Engineering member",
+            "finance: QA Alpha finance role distinct from owner",
+            "outsider: QA Beta member only"
+          ],
+          "status": "NOT_RUN",
+          "preconditions": [
+            "Provision a disposable isolated server/API fixture with fictional QA Alpha (INR, Asia/Kolkata, April financial year) and unrelated QA Beta; use separate actor sessions and a controlled 2026-10-12 clock.",
+            "Never mutate the running workspace, restore historical native fixtures or reuse consumed capabilities. Browser demo does not establish backend authorization acceptance."
+          ],
+          "test_data": [
+            "New QA-F-113 clean intake targets owner draft versionN.",
+            "Fresh variants: owner destination loss, target no longer eligible, original session logout."
+          ],
+          "steps": [
+            "Queue while isolated provider budget held; revoke source/destination before releasing wait.",
+            "Allow separate job to process, then revoke original session/target before read or acceptance.",
+            "Log in again and request old job, then deliberately start fresh permitted selection."
+          ],
+          "expected_results": [
+            "Current authority is checked after wait and denied content is not sent to provider.",
+            "Candidate disclosure/acceptance denied; no stale receipt/economics copied.",
+            "New session cannot revive original-session handle; fresh reviewed source is distinct."
+          ],
+          "cleanup": [
+            "Record sanitized observations without real IDs, credentials, private prose or prompts. Close QA sessions and remove owned temporary downloads; reset/dispose only this isolated fixture through its approved lifecycle, retaining audit history until disposal."
+          ],
+          "source_refs": [
+            "docs/API_CONTRACT.md",
+            "docs/FINANCE_GUIDE.md",
+            "docs/SECURITY_AND_LIMITATIONS.md",
+            "backend/platform/finance_receipt_extractions.go"
+          ],
+          "automation_refs": [
+            "backend/platform/finance_provider_boundaries_test.go",
+            "backend/platform/finance_assistance_runtime_test.go"
+          ]
+        },
+        {
+          "id": "FINANCE-014",
+          "module": "FINANCE",
+          "title": "Capture binds selected bytes once and frozen retry never recaptures",
+          "priority": "P1",
+          "gate": "LOCAL_CONFIG",
+          "modes": [
+            "Web",
+            "API"
+          ],
+          "actors": [
+            "platform admin: operator without company membership",
+            "company leadership: QA Alpha founder",
+            "owner: QA Alpha expense/task creator",
+            "independent reviewer: QA Alpha department head distinct from owner",
+            "department member: QA Alpha Engineering member",
+            "finance: QA Alpha finance role distinct from owner",
+            "outsider: QA Beta member only"
+          ],
+          "status": "NOT_RUN",
+          "preconditions": [
+            "Provision a disposable isolated server/API fixture with fictional QA Alpha (INR, Asia/Kolkata, April financial year) and unrelated QA Beta; use separate actor sessions and a controlled 2026-10-12 clock.",
+            "Never mutate the running workspace, restore historical native fixtures or reuse consumed capabilities. Browser demo does not establish backend authorization acceptance.",
+            "Use new fixture bytes and private intake storage; physical camera acceptance needs a separately recorded DEVICE run."
+          ],
+          "test_data": [
+            "receipt capture:true for Engineering, qa-finance-114-reserve.",
+            "qa-camera-114.png fictional byte fixture; inspected version,exact size/hash,qa-finance-114-bind."
+          ],
+          "steps": [
+            "Reserve capture, try prebind upload and cancel another unused reservation.",
+            "Bind one selected return, lose acknowledgement and repeat exact body/key.",
+            "Try changed hash/file under frozen key or second bind, then stage exact original bytes."
+          ],
+          "expected_results": [
+            "Real zero-byte private identity charges10MiB; unbound upload409; cancelled identity cannot bind/stage.",
+            "Canonical bind reuses identity without expiry renewal or new camera capture.",
+            "Changed/rebound intent denied; only exact bound content stages. API control does not certify physical camera/chooser."
+          ],
+          "cleanup": [
+            "Record sanitized observations without real IDs, credentials, private prose or prompts. Close QA sessions and remove owned temporary downloads; reset/dispose only this isolated fixture through its approved lifecycle, retaining audit history until disposal."
+          ],
+          "source_refs": [
+            "docs/API_CONTRACT.md",
+            "docs/FINANCE_GUIDE.md",
+            "docs/SECURITY_AND_LIMITATIONS.md",
+            "backend/platform/finance_capture.go",
+            "backend/platform/finance_receipt_intakes.go"
+          ],
+          "automation_refs": [
+            "backend/platform/finance_capture_test.go"
+          ]
+        },
+        {
+          "id": "FINANCE-015",
+          "module": "FINANCE",
+          "title": "Current duplicate pair access and reasoned dismissal preserve invoice validator",
+          "priority": "P1",
+          "gate": "LOCAL",
+          "modes": [
+            "Web",
+            "API"
+          ],
+          "actors": [
+            "platform admin: operator without company membership",
+            "company leadership: QA Alpha founder",
+            "owner: QA Alpha expense/task creator",
+            "independent reviewer: QA Alpha department head distinct from owner",
+            "department member: QA Alpha Engineering member",
+            "finance: QA Alpha finance role distinct from owner",
+            "outsider: QA Beta member only"
+          ],
+          "status": "NOT_RUN",
+          "preconditions": [
+            "Provision a disposable isolated server/API fixture with fictional QA Alpha (INR, Asia/Kolkata, April financial year) and unrelated QA Beta; use separate actor sessions and a controlled 2026-10-12 clock.",
+            "Never mutate the running workspace, restore historical native fixtures or reuse consumed capabilities. Browser demo does not establish backend authorization acceptance."
+          ],
+          "test_data": [
+            "QA Alpha Supplier invoiceQA-DUP-115; normalized case/whitespace equivalent and near-match distinct invoice.",
+            "Dismissal: Supplier confirmed distinct services despite similar total; inaccessible peer control."
+          ],
+          "steps": [
+            "Review current pairs and deliberately page100-peer comparisons.",
+            "Inspect near-match and dismiss with short then meaningful reason.",
+            "Attempt exact normalized nonvoid vendor/invoice duplicate after dismissal; revoke one source and reopen candidate."
+          ],
+          "expected_results": [
+            "Only accessible sources compared; no hidden peer data/count/hash; cursor bound to source/review/basis.",
+            "Short reason rejected; inspected-version dismissal retains human judgment only.",
+            "Original duplicate validator still rejects; source loss withholds both cached pair details."
+          ],
+          "cleanup": [
+            "Record sanitized observations without real IDs, credentials, private prose or prompts. Close QA sessions and remove owned temporary downloads; reset/dispose only this isolated fixture through its approved lifecycle, retaining audit history until disposal."
+          ],
+          "source_refs": [
+            "docs/API_CONTRACT.md",
+            "docs/FINANCE_GUIDE.md",
+            "docs/SECURITY_AND_LIMITATIONS.md",
+            "backend/platform/finance_duplicates.go"
+          ],
+          "automation_refs": [
+            "backend/platform/finance_duplicates_test.go",
+            "backend/platform/finance_assistance_pagination_test.go"
+          ]
+        },
+        {
+          "id": "FINANCE-016",
+          "module": "FINANCE",
+          "title": "Statement explicit mapping, duplicate occurrences and exact aggregate",
+          "priority": "P0",
+          "gate": "LOCAL_CONFIG",
+          "modes": [
+            "Web",
+            "API"
+          ],
+          "actors": [
+            "platform admin: operator without company membership",
+            "company leadership: QA Alpha founder",
+            "owner: QA Alpha expense/task creator",
+            "independent reviewer: QA Alpha department head distinct from owner",
+            "department member: QA Alpha Engineering member",
+            "finance: QA Alpha finance role distinct from owner",
+            "outsider: QA Beta member only"
+          ],
+          "status": "NOT_RUN",
+          "preconditions": [
+            "Provision a disposable isolated server/API fixture with fictional QA Alpha (INR, Asia/Kolkata, April financial year) and unrelated QA Beta; use separate actor sessions and a controlled 2026-10-12 clock.",
+            "Never mutate the running workspace, restore historical native fixtures or reuse consumed capabilities. Browser demo does not establish backend authorization acceptance.",
+            "Fresh private intake storage and clean scanner must be separately configured; author does not invoke providers."
+          ],
+          "test_data": [
+            "CSV date;amount then10/10/2026;-1.300,50 twice and10/10/2026;+10,00.",
+            "Explicit header=true,semicolon,date col0 DD/MM/YYYY,signed col1,decimal comma,grouping dot,debit negative.",
+            "Large control10000 rows each-10000000000.00 totals debit10000000000000000 minor units."
+          ],
+          "steps": [
+            "Finance stages/clean-scans CSV and selects every mapping; inspect all normalized review pages.",
+            "Try missing mapping,1e3/1.001/zero input,10001 rows and valid large-total control.",
+            "After deliberate full review import current revision and read retained rows/export as finance/member."
+          ],
+          "expected_results": [
+            "Three distinct ordinals persist: -130050,-130050,+1000; debit260100,credit1000,net-259100.",
+            "Errors block import rather than infer locale/sign; record bound enforced and above-JavaScript-safe totals remain exact.",
+            "Independent normalized evidence retains equal occurrences; current finance-only read enforced and formula-safe export exact."
+          ],
+          "cleanup": [
+            "Record sanitized observations without real IDs, credentials, private prose or prompts. Close QA sessions and remove owned temporary downloads; reset/dispose only this isolated fixture through its approved lifecycle, retaining audit history until disposal."
+          ],
+          "source_refs": [
+            "docs/API_CONTRACT.md",
+            "docs/FINANCE_GUIDE.md",
+            "docs/SECURITY_AND_LIMITATIONS.md",
+            "backend/platform/finance_statements.go"
+          ],
+          "automation_refs": [
+            "backend/platform/finance_statements_test.go"
+          ]
+        },
+        {
+          "id": "FINANCE-017",
+          "module": "FINANCE",
+          "title": "Statement frozen acceptance, deliberate reimport and scratch/session loss",
+          "priority": "P0",
+          "gate": "LOCAL_CONFIG",
+          "modes": [
+            "Web",
+            "API"
+          ],
+          "actors": [
+            "platform admin: operator without company membership",
+            "company leadership: QA Alpha founder",
+            "owner: QA Alpha expense/task creator",
+            "independent reviewer: QA Alpha department head distinct from owner",
+            "department member: QA Alpha Engineering member",
+            "finance: QA Alpha finance role distinct from owner",
+            "outsider: QA Beta member only"
+          ],
+          "status": "NOT_RUN",
+          "preconditions": [
+            "Provision a disposable isolated server/API fixture with fictional QA Alpha (INR, Asia/Kolkata, April financial year) and unrelated QA Beta; use separate actor sessions and a controlled 2026-10-12 clock.",
+            "Never mutate the running workspace, restore historical native fixtures or reuse consumed capabilities. Browser demo does not establish backend authorization acceptance."
+          ],
+          "test_data": [
+            "QA-STMT-117 revision1 with equal debit rows;qa-finance-117-import.",
+            "Repeat-file reason: Deliberately retaining separately reviewed duplicate source for QA comparison."
+          ],
+          "steps": [
+            "Import and drop acknowledgement; retry exact body/key; try changing accepted reason or remapping while attempt unknown.",
+            "Stage same file in fresh preview; try reimport without reason then explicit reason after inspecting every row.",
+            "Expire/cancel scratch or logout original session; read private preview and retained imports, then demote finance."
+          ],
+          "expected_results": [
+            "Canonical import once; accepted intent immutable. UI freezes unknown attempt and disables re-preview/remapping until outcome/authority reconciled.",
+            "Repeated file requires deliberate meaningful explanation; same accepted preview cannot produce another import.",
+            "Private preview denied on expiry/session loss; retained rows/totals survive scratch expiry but current finance rights gate each retained read."
+          ],
+          "cleanup": [
+            "Record sanitized observations without real IDs, credentials, private prose or prompts. Close QA sessions and remove owned temporary downloads; reset/dispose only this isolated fixture through its approved lifecycle, retaining audit history until disposal."
+          ],
+          "source_refs": [
+            "docs/API_CONTRACT.md",
+            "docs/FINANCE_GUIDE.md",
+            "docs/SECURITY_AND_LIMITATIONS.md",
+            "backend/platform/finance_statements.go",
+            "backend/platform/finance_assistance_runtime.go",
+            "frontend/src/pages/Finance.tsx",
+            "frontend/src/components/StatementImportReview.tsx"
+          ],
+          "automation_refs": [
+            "backend/platform/finance_statements_test.go",
+            "frontend/src/finance.ui.test.tsx",
+            "frontend/src/components/StatementImportRecovery.test.tsx"
+          ]
+        },
+        {
+          "id": "FINANCE-018",
+          "module": "FINANCE",
+          "title": "Full paid-debit matching, finance creator scope and audited unmatch",
+          "priority": "P0",
+          "gate": "LOCAL",
+          "modes": [
+            "Web",
+            "API"
+          ],
+          "actors": [
+            "platform admin: operator without company membership",
+            "company leadership: QA Alpha founder",
+            "owner: QA Alpha expense/task creator",
+            "independent reviewer: QA Alpha department head distinct from owner",
+            "department member: QA Alpha Engineering member",
+            "finance: QA Alpha finance role distinct from owner",
+            "outsider: QA Beta member only"
+          ],
+          "status": "NOT_RUN",
+          "preconditions": [
+            "Provision a disposable isolated server/API fixture with fictional QA Alpha (INR, Asia/Kolkata, April financial year) and unrelated QA Beta; use separate actor sessions and a controlled 2026-10-12 clock.",
+            "Never mutate the running workspace, restore historical native fixtures or reuse consumed capabilities. Browser demo does not establish backend authorization acceptance."
+          ],
+          "test_data": [
+            "Statement row signedAmountMinor-130050 INR; independently paid expenseamountMinor130050,referenceQA-118.",
+            "Finance matcher is also expense creator but a separate eligible actor already approved/recorded payment.",
+            "Reason: Verified this full debit against recorded external payment."
+          ],
+          "steps": [
+            "Finance deliberately selects current row/paid expense; try credit,partial100000,unpaid/cross-currency controls.",
+            "Commit versions/reason/key and concurrently try another active allocation for same row/expense.",
+            "Unmatch current allocation with reason, repeat frozen unmatch and page over20 decisions."
+          ],
+          "expected_results": [
+            "Only full negative row/current paid expense/same currency passes. Match handler does not forbid finance creator of independently paid expense; approve/reject/pay creator restrictions remain.",
+            "Unique active row and expense association; canonical repeat same result, no changed payment economics/transfer.",
+            "Audited association becomes inactive without reversal of payment; replay never reactivates; deliberate100-item history pages complete."
+          ],
+          "cleanup": [
+            "Record sanitized observations without real IDs, credentials, private prose or prompts. Close QA sessions and remove owned temporary downloads; reset/dispose only this isolated fixture through its approved lifecycle, retaining audit history until disposal."
+          ],
+          "source_refs": [
+            "docs/API_CONTRACT.md",
+            "docs/FINANCE_GUIDE.md",
+            "docs/SECURITY_AND_LIMITATIONS.md",
+            "backend/platform/finance_reconciliation.go",
+            "backend/platform/finance_reconciliation_history.go"
+          ],
+          "automation_refs": [
+            "backend/platform/finance_reconciliation_test.go",
+            "backend/platform/finance_assistance_concurrency_test.go"
+          ]
+        }
+      ],
+      "diagram": {
+        "id": "financeFlow",
+        "module": "FINANCE",
+        "title": "Finance current authority and independent decision flow",
+        "nodes": [
+          {
+            "id": "enter",
+            "label": "Choose company and department",
+            "kind": "start"
+          },
+          {
+            "id": "scope",
+            "label": "Current finance authority?",
+            "kind": "decision"
+          },
+          {
+            "id": "draft",
+            "label": "Exact owned draft and evidence",
+            "kind": "action"
+          },
+          {
+            "id": "submit",
+            "label": "Submit current version",
+            "kind": "action"
+          },
+          {
+            "id": "review",
+            "label": "Independent reviewer; receipt and budget?",
+            "kind": "decision"
+          },
+          {
+            "id": "deny",
+            "label": "Deny or return for correction",
+            "kind": "error"
+          },
+          {
+            "id": "retry",
+            "label": "409/unknown: inspect or frozen retry",
+            "kind": "action"
+          },
+          {
+            "id": "approved",
+            "label": "Approved unpaid",
+            "kind": "result"
+          },
+          {
+            "id": "paid",
+            "label": "Record external full payment",
+            "kind": "result"
+          }
+        ],
+        "edges": [
+          {
+            "from": "enter",
+            "to": "scope"
+          },
+          {
+            "from": "scope",
+            "to": "draft",
+            "label": "allowed"
+          },
+          {
+            "from": "scope",
+            "to": "deny",
+            "label": "denied"
+          },
+          {
+            "from": "draft",
+            "to": "submit"
+          },
+          {
+            "from": "submit",
+            "to": "review"
+          },
+          {
+            "from": "review",
+            "to": "deny",
+            "label": "self/policy/budget denied"
+          },
+          {
+            "from": "review",
+            "to": "retry",
+            "label": "changed version/unknown"
+          },
+          {
+            "from": "retry",
+            "to": "review",
+            "label": "current explicit review"
+          },
+          {
+            "from": "review",
+            "to": "approved",
+            "label": "independent approval"
+          },
+          {
+            "from": "approved",
+            "to": "paid",
+            "label": "eligible noncreator"
+          }
+        ]
+      }
+    },
+    {
+      "id": "REPORTS",
+      "title": "Current and historical reports",
+      "purpose": "Validate scoped frozen metrics, durable historical provenance, private revocable output and isolated recipient delivery.",
+      "entry_points": [
+        "Web Reports; native More → Reports needs separate DEVICE qualification",
+        "Company-relative /reports/tasks/summary, /rows, /export",
+        "Company-relative /reports/history/snapshots, /compare, /definitions, /exports, /artifacts; ordinary /attention"
+      ],
+      "actors": [
+        "platform admin: operator without company membership",
+        "company leadership: QA Alpha founder",
+        "owner: QA Alpha expense/task creator",
+        "independent reviewer: QA Alpha department head distinct from owner",
+        "department member: QA Alpha Engineering member",
+        "finance: QA Alpha finance role distinct from owner",
+        "outsider: QA Beta member only"
+      ],
+      "workflow": [
+        "Select explicit period, filters and current/historical basis",
+        "Capture complete authorized snapshot, retaining coverage and metric version",
+        "Inspect denominators and deliberate row drilldowns; historical acceptance facts require independent task review",
+        "Save versioned definition/schedule with current eligible recipients",
+        "Queue private export; each recipient uses own current task scope",
+        "Recheck all sources and session before headers and every output chunk",
+        "Project only recipient-bound current report-ready IDs in ordinary Inbox"
+      ],
+      "source_refs": [
+        "docs/API_CONTRACT.md",
+        "docs/reports-storage.md",
+        "docs/SECURITY_AND_LIMITATIONS.md",
+        "backend/platform/report_reads.go",
+        "backend/platform/report_history_reads.go",
+        "backend/platform/report_schedules.go",
+        "backend/platform/report_export_jobs.go"
+      ],
+      "automation_refs": [
+        "backend/platform/reporting_final_test.go",
+        "backend/platform/report_history_test.go",
+        "backend/platform/report_schedules_test.go",
+        "backend/platform/report_export_jobs_test.go"
+      ],
+      "limitations": [
+        "All scenarios NOT_RUN; demo metrics do not establish server/source/session acceptance.",
+        "Current snapshots are process-local five-minute caches; durable task_history_v1 never invents pre-observation acceptance episodes.",
+        "Private storage/worker faults require LOCAL_CONFIG disposable qualification; no email/external delivery implied.",
+        "Already written/in-flight bytes and downloaded copies cannot be recalled. Physical native sharing/background handling needs DEVICE qualification."
+      ],
+      "cases": [
+        {
+          "id": "REPORTS-001",
+          "module": "REPORTS",
+          "title": "Full-cohort current summary preserves original/current deadline metrics",
+          "priority": "P0",
+          "gate": "LOCAL",
+          "modes": [
+            "Web",
+            "API"
+          ],
+          "actors": [
+            "platform admin: operator without company membership",
+            "company leadership: QA Alpha founder",
+            "owner: QA Alpha expense/task creator",
+            "independent reviewer: QA Alpha department head distinct from owner",
+            "department member: QA Alpha Engineering member",
+            "finance: QA Alpha finance role distinct from owner",
+            "outsider: QA Beta member only"
+          ],
+          "status": "NOT_RUN",
+          "preconditions": [
+            "Provision a disposable isolated server/API fixture with fictional QA Alpha (INR, Asia/Kolkata, April financial year) and unrelated QA Beta; use separate actor sessions and a controlled 2026-10-12 clock.",
+            "Never mutate the running workspace, restore historical native fixtures or reuse consumed capabilities. Browser demo does not establish backend authorization acceptance."
+          ],
+          "test_data": [
+            "Period2026-10-01–2026-10-12 inclusive;205 readable noncancelled tasks plus cancelled control.",
+            "One accepted task missed original deadline but met reasoned changed current deadline."
+          ],
+          "steps": [
+            "GET /reports/tasks/summary before loading every report row page.",
+            "Deliberately load commitments/accepted/exceptions row pages up to100 and compare totals.",
+            "Drill into changed-deadline task and export selected full tab."
+          ],
+          "expected_results": [
+            "Full authorized summary basis snapshot_current_state includes frozen period/timezone/metricVersion and separate original/current denominators/met counts.",
+            "Tab filtering precedes pagination; later rows remain in summary and cancelled input is excluded.",
+            "Original/current deadlines remain distinct; export covers full tab not loaded page and excludes financial/chat evidence."
+          ],
+          "cleanup": [
+            "Record sanitized observations without real IDs, credentials, private prose or prompts. Close QA sessions and remove owned temporary downloads; reset/dispose only this isolated fixture through its approved lifecycle, retaining audit history until disposal."
+          ],
+          "source_refs": [
+            "docs/API_CONTRACT.md",
+            "docs/reports-storage.md",
+            "docs/SECURITY_AND_LIMITATIONS.md",
+            "backend/platform/report_reads.go"
+          ],
+          "automation_refs": [
+            "backend/platform/reports_test.go",
+            "frontend/src/data/reports.test.ts"
+          ]
+        },
+        {
+          "id": "REPORTS-002",
+          "module": "REPORTS",
+          "title": "Role and company filters cannot grant task report access",
+          "priority": "P0",
+          "gate": "LOCAL",
+          "modes": [
+            "Web",
+            "API"
+          ],
+          "actors": [
+            "platform admin: operator without company membership",
+            "company leadership: QA Alpha founder",
+            "owner: QA Alpha expense/task creator",
+            "independent reviewer: QA Alpha department head distinct from owner",
+            "department member: QA Alpha Engineering member",
+            "finance: QA Alpha finance role distinct from owner",
+            "outsider: QA Beta member only"
+          ],
+          "status": "NOT_RUN",
+          "preconditions": [
+            "Provision a disposable isolated server/API fixture with fictional QA Alpha (INR, Asia/Kolkata, April financial year) and unrelated QA Beta; use separate actor sessions and a controlled 2026-10-12 clock.",
+            "Never mutate the running workspace, restore historical native fixtures or reuse consumed capabilities. Browser demo does not establish backend authorization acceptance."
+          ],
+          "test_data": [
+            "Engineering head, manager with one report, owner member and viewer in QA Alpha.",
+            "QA Alpha private project;QA Beta department/owner;QA Alpha snapshot handle used by other principal/company."
+          ],
+          "steps": [
+            "Read current reports as each QA Alpha role and compare task detail scope.",
+            "Try hidden/cross-company filters or another actor/company snapshot token.",
+            "Read endpoints as outsider and operator without QA Alpha membership."
+          ],
+          "expected_results": [
+            "Reports follow ordinary task read permissions; recipient/member never inherits leadership scope.",
+            "Filters only narrow existing visibility; wrong-user/company token404 and no hidden business fields.",
+            "Current authenticated company membership required; platform admin is distinct from company leadership."
+          ],
+          "cleanup": [
+            "Record sanitized observations without real IDs, credentials, private prose or prompts. Close QA sessions and remove owned temporary downloads; reset/dispose only this isolated fixture through its approved lifecycle, retaining audit history until disposal."
+          ],
+          "source_refs": [
+            "docs/API_CONTRACT.md",
+            "docs/reports-storage.md",
+            "docs/SECURITY_AND_LIMITATIONS.md",
+            "backend/platform/reports.go",
+            "backend/platform/report_reads.go"
+          ],
+          "automation_refs": [
+            "backend/platform/reports_test.go"
+          ]
+        },
+        {
+          "id": "REPORTS-003",
+          "module": "REPORTS",
+          "title": "Calendar, period and cursor/filter validation preserve exact boundaries",
+          "priority": "P1",
+          "gate": "LOCAL",
+          "modes": [
+            "Web",
+            "API"
+          ],
+          "actors": [
+            "platform admin: operator without company membership",
+            "company leadership: QA Alpha founder",
+            "owner: QA Alpha expense/task creator",
+            "independent reviewer: QA Alpha department head distinct from owner",
+            "department member: QA Alpha Engineering member",
+            "finance: QA Alpha finance role distinct from owner",
+            "outsider: QA Beta member only"
+          ],
+          "status": "NOT_RUN",
+          "preconditions": [
+            "Provision a disposable isolated server/API fixture with fictional QA Alpha (INR, Asia/Kolkata, April financial year) and unrelated QA Beta; use separate actor sessions and a controlled 2026-10-12 clock.",
+            "Never mutate the running workspace, restore historical native fixtures or reuse consumed capabilities. Browser demo does not establish backend authorization acceptance."
+          ],
+          "test_data": [
+            "Accepted instant2026-09-30T18:30:00Z equals company-local2026-10-01;periodOct1–12.",
+            "Invalid missing/reversed dates,2026-02-30,limit0/101;timed acceptance at deadline and+1ns."
+          ],
+          "steps": [
+            "Generate period summary with intersecting department/owner/project filters and inspect boundary task.",
+            "Try each invalid date/limit and change filters while reading snapshot-bound rows.",
+            "Inspect exact timed equality and1ns-later fixtures in punctuality metrics."
+          ],
+          "expected_results": [
+            "Inclusive company calendar and displayed timezone govern membership/accepted dates; filters intersect.",
+            "422 for invalid/mismatched input; token/cursor cannot broaden original selection.",
+            "Equality on time and1ns later late without rounded boundary; original/current definition retained."
+          ],
+          "cleanup": [
+            "Record sanitized observations without real IDs, credentials, private prose or prompts. Close QA sessions and remove owned temporary downloads; reset/dispose only this isolated fixture through its approved lifecycle, retaining audit history until disposal."
+          ],
+          "source_refs": [
+            "docs/API_CONTRACT.md",
+            "docs/reports-storage.md",
+            "docs/SECURITY_AND_LIMITATIONS.md",
+            "backend/platform/report_reads.go",
+            "backend/platform/report_history.go"
+          ],
+          "automation_refs": [
+            "backend/platform/reports_test.go",
+            "backend/platform/report_history_test.go"
+          ]
+        },
+        {
+          "id": "REPORTS-004",
+          "module": "REPORTS",
+          "title": "Readable live changes do not replace frozen current snapshot values",
+          "priority": "P0",
+          "gate": "LOCAL",
+          "modes": [
+            "Web",
+            "API"
+          ],
+          "actors": [
+            "platform admin: operator without company membership",
+            "company leadership: QA Alpha founder",
+            "owner: QA Alpha expense/task creator",
+            "independent reviewer: QA Alpha department head distinct from owner",
+            "department member: QA Alpha Engineering member",
+            "finance: QA Alpha finance role distinct from owner",
+            "outsider: QA Beta member only"
+          ],
+          "status": "NOT_RUN",
+          "preconditions": [
+            "Provision a disposable isolated server/API fixture with fictional QA Alpha (INR, Asia/Kolkata, April financial year) and unrelated QA Beta; use separate actor sessions and a controlled 2026-10-12 clock.",
+            "Never mutate the running workspace, restore historical native fixtures or reuse consumed capabilities. Browser demo does not establish backend authorization acceptance."
+          ],
+          "test_data": [
+            "Captured task title QA original/current dueOct10.",
+            "Authorized later edit title QA later/current dueOct12 with meaningful reason."
+          ],
+          "steps": [
+            "Capture summary/first rows; second actor edits readable task with current version.",
+            "Read remaining rows and export original token/filters.",
+            "Explicitly refresh summary and inspect new token before selecting latest."
+          ],
+          "expected_results": [
+            "Live version changes independently; captured values/metrics remain frozen.",
+            "Exact snapshot values used; no later title or recomputed latest metrics substitute silently.",
+            "New current capture reflects authorized latest values; original selection remains explicit and distinct."
+          ],
+          "cleanup": [
+            "Record sanitized observations without real IDs, credentials, private prose or prompts. Close QA sessions and remove owned temporary downloads; reset/dispose only this isolated fixture through its approved lifecycle, retaining audit history until disposal."
+          ],
+          "source_refs": [
+            "docs/API_CONTRACT.md",
+            "docs/reports-storage.md",
+            "docs/SECURITY_AND_LIMITATIONS.md",
+            "backend/platform/report_reads.go",
+            "frontend/src/pages/GoalsReports.tsx"
+          ],
+          "automation_refs": [
+            "backend/platform/reporting_final_test.go",
+            "frontend/src/pages/Reports.test.tsx"
+          ]
+        },
+        {
+          "id": "REPORTS-005",
+          "module": "REPORTS",
+          "title": "Any off-page source or outside-period exposed reference loss invalidates snapshot",
+          "priority": "P0",
+          "gate": "LOCAL",
+          "modes": [
+            "Web",
+            "API"
+          ],
+          "actors": [
+            "platform admin: operator without company membership",
+            "company leadership: QA Alpha founder",
+            "owner: QA Alpha expense/task creator",
+            "independent reviewer: QA Alpha department head distinct from owner",
+            "department member: QA Alpha Engineering member",
+            "finance: QA Alpha finance role distinct from owner",
+            "outsider: QA Beta member only"
+          ],
+          "status": "NOT_RUN",
+          "preconditions": [
+            "Provision a disposable isolated server/API fixture with fictional QA Alpha (INR, Asia/Kolkata, April financial year) and unrelated QA Beta; use separate actor sessions and a controlled 2026-10-12 clock.",
+            "Never mutate the running workspace, restore historical native fixtures or reuse consumed capabilities. Browser demo does not establish backend authorization acceptance."
+          ],
+          "test_data": [
+            "205 member-readable October tasks;last source references readable December dependency.",
+            "Fresh variants: last source reassigned away;December dependency becomes inaccessible."
+          ],
+          "steps": [
+            "Capture summary/first page while complete cohort/reference set readable.",
+            "Leadership commits specified reassignment through isolated authorized control; read original rows/export before headers.",
+            "Deliberately refresh under current scope."
+          ],
+          "expected_results": [
+            "Snapshot authority binds all source tasks and exposed reference, including outside-period dependency.",
+            "Entire frozen snapshot invalidates with409/access denial and no CSV/data output; server never drops only denied row.",
+            "New cohort reflects current visibility; old token/cache never grants stale access."
+          ],
+          "cleanup": [
+            "Record sanitized observations without real IDs, credentials, private prose or prompts. Close QA sessions and remove owned temporary downloads; reset/dispose only this isolated fixture through its approved lifecycle, retaining audit history until disposal."
+          ],
+          "source_refs": [
+            "docs/API_CONTRACT.md",
+            "docs/reports-storage.md",
+            "docs/SECURITY_AND_LIMITATIONS.md",
+            "backend/platform/report_reads.go"
+          ],
+          "automation_refs": [
+            "backend/platform/reporting_final_test.go"
+          ]
+        },
+        {
+          "id": "REPORTS-006",
+          "module": "REPORTS",
+          "title": "Current CSV checks complete sources and original session before every64KiB chunk",
+          "priority": "P0",
+          "gate": "LOCAL",
+          "modes": [
+            "Web",
+            "API"
+          ],
+          "actors": [
+            "platform admin: operator without company membership",
+            "company leadership: QA Alpha founder",
+            "owner: QA Alpha expense/task creator",
+            "independent reviewer: QA Alpha department head distinct from owner",
+            "department member: QA Alpha Engineering member",
+            "finance: QA Alpha finance role distinct from owner",
+            "outsider: QA Beta member only"
+          ],
+          "status": "NOT_RUN",
+          "preconditions": [
+            "Provision a disposable isolated server/API fixture with fictional QA Alpha (INR, Asia/Kolkata, April financial year) and unrelated QA Beta; use separate actor sessions and a controlled 2026-10-12 clock.",
+            "Never mutate the running workspace, restore historical native fixtures or reuse consumed capabilities. Browser demo does not establish backend authorization acceptance.",
+            "Use existing isolated chunk-writer regression technique or separately qualified fixture interception; never fault running workspace."
+          ],
+          "test_data": [
+            "201 tasks each1KiB fictional description;first title=QA_FORMULA;final titleQA-LAST.",
+            "Separate variants: membership removal,original session invalidation,last source reassignment,outside-period dependency loss."
+          ],
+          "steps": [
+            "Start snapshot CSV in isolated controlled writer and hold after first chunk.",
+            "For each fresh variant commit authority loss before next check/write.",
+            "Compare received length/retry original export; run unchanged-authority control."
+          ],
+          "expected_results": [
+            "Exact Content-Length and basis/row headers present; formula neutralized; chunk at most64KiB.",
+            "Later chunks stop after current complete-source/session denial; no QA-LAST prose or appended JSON error in started CSV.",
+            "Truncation detectable via length; denied retry cannot start CSV; unchanged control complete/frozen. Already written/in-flight bytes cannot be recalled."
+          ],
+          "cleanup": [
+            "Record sanitized observations without real IDs, credentials, private prose or prompts. Close QA sessions and remove owned temporary downloads; reset/dispose only this isolated fixture through its approved lifecycle, retaining audit history until disposal."
+          ],
+          "source_refs": [
+            "docs/API_CONTRACT.md",
+            "docs/reports-storage.md",
+            "docs/SECURITY_AND_LIMITATIONS.md",
+            "backend/platform/report_reads.go"
+          ],
+          "automation_refs": [
+            "backend/platform/reporting_final_test.go"
+          ]
+        },
+        {
+          "id": "REPORTS-007",
+          "module": "REPORTS",
+          "title": "Current snapshot expiry, bound cursors and oversized capture fail closed",
+          "priority": "P1",
+          "gate": "LOCAL",
+          "modes": [
+            "Web",
+            "API"
+          ],
+          "actors": [
+            "platform admin: operator without company membership",
+            "company leadership: QA Alpha founder",
+            "owner: QA Alpha expense/task creator",
+            "independent reviewer: QA Alpha department head distinct from owner",
+            "department member: QA Alpha Engineering member",
+            "finance: QA Alpha finance role distinct from owner",
+            "outsider: QA Beta member only"
+          ],
+          "status": "NOT_RUN",
+          "preconditions": [
+            "Provision a disposable isolated server/API fixture with fictional QA Alpha (INR, Asia/Kolkata, April financial year) and unrelated QA Beta; use separate actor sessions and a controlled 2026-10-12 clock.",
+            "Never mutate the running workspace, restore historical native fixtures or reuse consumed capabilities. Browser demo does not establish backend authorization acceptance."
+          ],
+          "test_data": [
+            "TTL5min;64 snapshots;10000 rows;8MiB each;32MiB aggregate.",
+            "Controls: expired/evicted/restarted token;commitments cursor used for accepted tab;oversized cohort."
+          ],
+          "steps": [
+            "Obtain row cursor and use changed tab/filter/principal.",
+            "Use token after expiry or isolated restart/eviction.",
+            "Request over-row/byte-limit cohort then deliberately narrow filters."
+          ],
+          "expected_results": [
+            "Cursor bound to authorized snapshot/filter/tab; cannot continue another selection.",
+            "409 requires explicit fresh summary; no automatic latest substitution.",
+            "422 instead of partial report totals; valid narrower bounded capture works."
+          ],
+          "cleanup": [
+            "Record sanitized observations without real IDs, credentials, private prose or prompts. Close QA sessions and remove owned temporary downloads; reset/dispose only this isolated fixture through its approved lifecycle, retaining audit history until disposal."
+          ],
+          "source_refs": [
+            "docs/API_CONTRACT.md",
+            "docs/reports-storage.md",
+            "docs/SECURITY_AND_LIMITATIONS.md",
+            "backend/platform/report_reads.go"
+          ],
+          "automation_refs": [
+            "backend/platform/reporting_final_test.go",
+            "frontend/src/data/reports.test.ts"
+          ]
+        },
+        {
+          "id": "REPORTS-008",
+          "module": "REPORTS",
+          "title": "Historical independent acceptance episodes differ from current state/progress",
+          "priority": "P0",
+          "gate": "LOCAL",
+          "modes": [
+            "Web",
+            "API"
+          ],
+          "actors": [
+            "platform admin: operator without company membership",
+            "company leadership: QA Alpha founder",
+            "owner: QA Alpha expense/task creator",
+            "independent reviewer: QA Alpha department head distinct from owner",
+            "department member: QA Alpha Engineering member",
+            "finance: QA Alpha finance role distinct from owner",
+            "outsider: QA Beta member only"
+          ],
+          "status": "NOT_RUN",
+          "preconditions": [
+            "Provision a disposable isolated server/API fixture with fictional QA Alpha (INR, Asia/Kolkata, April financial year) and unrelated QA Beta; use separate actor sessions and a controlled 2026-10-12 clock.",
+            "Never mutate the running workspace, restore historical native fixtures or reuse consumed capabilities. Browser demo does not establish backend authorization acceptance."
+          ],
+          "test_data": [
+            "QA task acceptedOct5 then reopened and independently acceptedOct8.",
+            "Another task100percent in_review;2h native time and4h separately observed historical effort."
+          ],
+          "steps": [
+            "Using staged isolated fixture dates Oct5 and Oct8, owner completes prerequisites/submits and independent reviewer accepts, with authorized reopening between.",
+            "Capture task_history_v1 period snapshot and inspect state/acceptance/effort metrics.",
+            "Drill acceptance rows and compare original/current deadline denominators."
+          ],
+          "expected_results": [
+            "Only valid independent acceptance creates episodes;100percent/in_review does not imply accepted completion.",
+            "Two episodes versus one unique accepted task;cutoff state distinct;native and observed hours separate provenance.",
+            "Denominators refer to episodes where defined, not silently collapsed task totals or employee-quality/payroll inference."
+          ],
+          "cleanup": [
+            "Record sanitized observations without real IDs, credentials, private prose or prompts. Close QA sessions and remove owned temporary downloads; reset/dispose only this isolated fixture through its approved lifecycle, retaining audit history until disposal."
+          ],
+          "source_refs": [
+            "docs/API_CONTRACT.md",
+            "docs/reports-storage.md",
+            "docs/SECURITY_AND_LIMITATIONS.md",
+            "backend/platform/report_history_reads.go",
+            "backend/platform/report_facts.go"
+          ],
+          "automation_refs": [
+            "backend/platform/report_history_test.go",
+            "backend/platform/report_facts_test.go"
+          ]
+        },
+        {
+          "id": "REPORTS-009",
+          "module": "REPORTS",
+          "title": "Observed legacy coverage never invents acceptance or period-start facts",
+          "priority": "P0",
+          "gate": "LOCAL",
+          "modes": [
+            "Web",
+            "API"
+          ],
+          "actors": [
+            "platform admin: operator without company membership",
+            "company leadership: QA Alpha founder",
+            "owner: QA Alpha expense/task creator",
+            "independent reviewer: QA Alpha department head distinct from owner",
+            "department member: QA Alpha Engineering member",
+            "finance: QA Alpha finance role distinct from owner",
+            "outsider: QA Beta member only"
+          ],
+          "status": "NOT_RUN",
+          "preconditions": [
+            "Provision a disposable isolated server/API fixture with fictional QA Alpha (INR, Asia/Kolkata, April financial year) and unrelated QA Beta; use separate actor sessions and a controlled 2026-10-12 clock.",
+            "Never mutate the running workspace, restore historical native fixtures or reuse consumed capabilities. Browser demo does not establish backend authorization acceptance.",
+            "Do not restore real/user databases or completed native acceptance artifacts; use a new fictional legacy fixture."
+          ],
+          "test_data": [
+            "Newly authored fictional pre-history task first observedOct6,done,actualHours9.",
+            "Separate interior-gap task;period startsOct1;empty accepted cohort."
+          ],
+          "steps": [
+            "Provision disposable fictional legacy fixture and let normal observation run.",
+            "Capture earlier-start period and inspect coverage drilldown.",
+            "Inspect gap/control rate and effort outputs."
+          ],
+          "expected_results": [
+            "Observed state retains provenance;legacy done never becomes acceptance episode.",
+            "Unknown-before coverage and unavailable start state explicit;current values cannot fabricate prior history.",
+            "Interior gap stays visible even with known cutoff;zero/missing denominator rate unavailable, not100percent;observed hours not native effort."
+          ],
+          "cleanup": [
+            "Record sanitized observations without real IDs, credentials, private prose or prompts. Close QA sessions and remove owned temporary downloads; reset/dispose only this isolated fixture through its approved lifecycle, retaining audit history until disposal."
+          ],
+          "source_refs": [
+            "docs/API_CONTRACT.md",
+            "docs/reports-storage.md",
+            "docs/SECURITY_AND_LIMITATIONS.md",
+            "backend/platform/report_facts.go",
+            "backend/platform/report_history.go"
+          ],
+          "automation_refs": [
+            "backend/platform/report_facts_test.go",
+            "backend/platform/report_history_test.go"
+          ]
+        },
+        {
+          "id": "REPORTS-010",
+          "module": "REPORTS",
+          "title": "Historical durable capture retries original immutable request",
+          "priority": "P0",
+          "gate": "LOCAL",
+          "modes": [
+            "Web",
+            "API"
+          ],
+          "actors": [
+            "platform admin: operator without company membership",
+            "company leadership: QA Alpha founder",
+            "owner: QA Alpha expense/task creator",
+            "independent reviewer: QA Alpha department head distinct from owner",
+            "department member: QA Alpha Engineering member",
+            "finance: QA Alpha finance role distinct from owner",
+            "outsider: QA Beta member only"
+          ],
+          "status": "NOT_RUN",
+          "preconditions": [
+            "Provision a disposable isolated server/API fixture with fictional QA Alpha (INR, Asia/Kolkata, April financial year) and unrelated QA Beta; use separate actor sessions and a controlled 2026-10-12 clock.",
+            "Never mutate the running workspace, restore historical native fixtures or reuse consumed capabilities. Browser demo does not establish backend authorization acceptance."
+          ],
+          "test_data": [
+            "basis task_history_v1;Oct1–12;reportZoneAsia/Kolkata;qa-reports-010.",
+            "Later readable title/deadline edit;changed key-bound period control."
+          ],
+          "steps": [
+            "Create historical snapshot and drop acknowledgement after commit.",
+            "Edit readable task then retry identical capture and read original snapshot.",
+            "Change period under same key then explicitly capture separate new reviewed request."
+          ],
+          "expected_results": [
+            "Snapshot durable;client keeps exact unknown intent/key.",
+            "Same snapshot ID/frozen values/period/metric version;no regeneration from latest business state.",
+            "Changed intent conflicts;deliberate new snapshot independent without altering original."
+          ],
+          "cleanup": [
+            "Record sanitized observations without real IDs, credentials, private prose or prompts. Close QA sessions and remove owned temporary downloads; reset/dispose only this isolated fixture through its approved lifecycle, retaining audit history until disposal."
+          ],
+          "source_refs": [
+            "docs/API_CONTRACT.md",
+            "docs/reports-storage.md",
+            "docs/SECURITY_AND_LIMITATIONS.md",
+            "backend/platform/report_history_reads.go"
+          ],
+          "automation_refs": [
+            "backend/platform/report_history_test.go"
+          ]
+        },
+        {
+          "id": "REPORTS-011",
+          "module": "REPORTS",
+          "title": "Historical comparison requires both complete immutable source manifests",
+          "priority": "P0",
+          "gate": "LOCAL",
+          "modes": [
+            "Web",
+            "API"
+          ],
+          "actors": [
+            "platform admin: operator without company membership",
+            "company leadership: QA Alpha founder",
+            "owner: QA Alpha expense/task creator",
+            "independent reviewer: QA Alpha department head distinct from owner",
+            "department member: QA Alpha Engineering member",
+            "finance: QA Alpha finance role distinct from owner",
+            "outsider: QA Beta member only"
+          ],
+          "status": "NOT_RUN",
+          "preconditions": [
+            "Provision a disposable isolated server/API fixture with fictional QA Alpha (INR, Asia/Kolkata, April financial year) and unrelated QA Beta; use separate actor sessions and a controlled 2026-10-12 clock.",
+            "Never mutate the running workspace, restore historical native fixtures or reuse consumed capabilities. Browser demo does not establish backend authorization acceptance."
+          ],
+          "test_data": [
+            "October snapshotsA/B each103 included readable tasks;last source off page.",
+            "Metriccoverage.unknown_before;foreign QA Beta snapshot handle control."
+          ],
+          "steps": [
+            "Capture/read A/B and deliberately continue100-row metric drilldowns.",
+            "Reassign/delete off-page B source through isolated fixture control;read B/rows and compareA/B.",
+            "Try foreign snapshot/cursor and read unrelated fully authorized A."
+          ],
+          "expected_results": [
+            "Filtering before paging reaches all matching rows, including beyond candidate pages.",
+            "B and comparison denied as whole;no partial counts/old cached rows after any included source loss.",
+            "Foreign handle cannot reveal company data;A remains available when own full manifest authorized."
+          ],
+          "cleanup": [
+            "Record sanitized observations without real IDs, credentials, private prose or prompts. Close QA sessions and remove owned temporary downloads; reset/dispose only this isolated fixture through its approved lifecycle, retaining audit history until disposal."
+          ],
+          "source_refs": [
+            "docs/API_CONTRACT.md",
+            "docs/reports-storage.md",
+            "docs/SECURITY_AND_LIMITATIONS.md",
+            "backend/platform/report_history_access.go",
+            "backend/platform/report_history_reads.go"
+          ],
+          "automation_refs": [
+            "backend/platform/report_history_test.go"
+          ]
+        },
+        {
+          "id": "REPORTS-012",
+          "module": "REPORTS",
+          "title": "Definition/schedule inspected versions and frozen save replay",
+          "priority": "P0",
+          "gate": "LOCAL",
+          "modes": [
+            "Web",
+            "API"
+          ],
+          "actors": [
+            "platform admin: operator without company membership",
+            "company leadership: QA Alpha founder",
+            "owner: QA Alpha expense/task creator",
+            "independent reviewer: QA Alpha department head distinct from owner",
+            "department member: QA Alpha Engineering member",
+            "finance: QA Alpha finance role distinct from owner",
+            "outsider: QA Beta member only"
+          ],
+          "status": "NOT_RUN",
+          "preconditions": [
+            "Provision a disposable isolated server/API fixture with fictional QA Alpha (INR, Asia/Kolkata, April financial year) and unrelated QA Beta; use separate actor sessions and a controlled 2026-10-12 clock.",
+            "Never mutate the running workspace, restore historical native fixtures or reuse consumed capabilities. Browser demo does not establish backend authorization acceptance."
+          ],
+          "test_data": [
+            "QA October Review,task_history_v1,fixedOct1–12,explicitAsia/Kolkata,owner/finance recipients.",
+            "Schedule all weekdays09:00Asia/Kolkata;captured expected definition/schedule versions."
+          ],
+          "steps": [
+            "Review active distinct recipients and save definition/schedule with stable keys.",
+            "Lose save ack,make intervening deliberate edit,then replay original key/body.",
+            "Try stale versions,changed keyed body,duplicate/suspended/noncompany recipient or invalid zone."
+          ],
+          "expected_results": [
+            "Every recipient validated on explicit save;definition revision and schedule version separate.",
+            "Original committed fields/versions returned;not latest edit or duplicate schedule.",
+            "Rejected without silent latest substitution;new save requires explicit current review."
+          ],
+          "cleanup": [
+            "Record sanitized observations without real IDs, credentials, private prose or prompts. Close QA sessions and remove owned temporary downloads; reset/dispose only this isolated fixture through its approved lifecycle, retaining audit history until disposal."
+          ],
+          "source_refs": [
+            "docs/API_CONTRACT.md",
+            "docs/reports-storage.md",
+            "docs/SECURITY_AND_LIMITATIONS.md",
+            "backend/platform/saved_reports.go",
+            "backend/platform/report_schedules.go"
+          ],
+          "automation_refs": [
+            "backend/platform/saved_reports_test.go",
+            "backend/platform/report_schedules_test.go"
+          ]
+        },
+        {
+          "id": "REPORTS-013",
+          "module": "REPORTS",
+          "title": "Scheduled outputs capture each recipient own scope and occurrence once",
+          "priority": "P1",
+          "gate": "LOCAL_CONFIG",
+          "modes": [
+            "Web",
+            "API"
+          ],
+          "actors": [
+            "platform admin: operator without company membership",
+            "company leadership: QA Alpha founder",
+            "owner: QA Alpha expense/task creator",
+            "independent reviewer: QA Alpha department head distinct from owner",
+            "department member: QA Alpha Engineering member",
+            "finance: QA Alpha finance role distinct from owner",
+            "outsider: QA Beta member only"
+          ],
+          "status": "NOT_RUN",
+          "preconditions": [
+            "Provision a disposable isolated server/API fixture with fictional QA Alpha (INR, Asia/Kolkata, April financial year) and unrelated QA Beta; use separate actor sessions and a controlled 2026-10-12 clock.",
+            "Never mutate the running workspace, restore historical native fixtures or reuse consumed capabilities. Browser demo does not establish backend authorization acceptance.",
+            "Operator separately provisions private report storage/isolated workers;author does not alter shared runtime."
+          ],
+          "test_data": [
+            "Leadership definition owner;A department member;B finance.",
+            "A own task and leadership-only task in fixedOctober period;missed multi-day occurrence control."
+          ],
+          "steps": [
+            "Save eligible schedule and permit one due isolated worker occurrence.",
+            "Repeat due tick and inspect per-recipient job/period/identity.",
+            "Inspect missed occurrence catch-up/skipped range and bounded processing."
+          ],
+          "expected_results": [
+            "A source capture follows own task ACL,never inherits leadership-only tasks.",
+            "Occurrence identity deduplicates;resolved period/timezone/revision retained;no duplicate delivery.",
+            "Actual schedule policy/diagnostics disclose skips;bounded worker is not evidence of email/external delivery."
+          ],
+          "cleanup": [
+            "Record sanitized observations without real IDs, credentials, private prose or prompts. Close QA sessions and remove owned temporary downloads; reset/dispose only this isolated fixture through its approved lifecycle, retaining audit history until disposal."
+          ],
+          "source_refs": [
+            "docs/API_CONTRACT.md",
+            "docs/reports-storage.md",
+            "docs/SECURITY_AND_LIMITATIONS.md",
+            "backend/platform/report_schedules.go"
+          ],
+          "automation_refs": [
+            "backend/platform/report_schedules_test.go"
+          ]
+        },
+        {
+          "id": "REPORTS-014",
+          "module": "REPORTS",
+          "title": "Recipient B departure leaves A healthy artifacts and public Inbox delivery intact",
+          "priority": "P0",
+          "gate": "LOCAL_CONFIG",
+          "modes": [
+            "Web",
+            "API"
+          ],
+          "actors": [
+            "platform admin: operator without company membership",
+            "company leadership: QA Alpha founder",
+            "owner: QA Alpha expense/task creator",
+            "independent reviewer: QA Alpha department head distinct from owner",
+            "department member: QA Alpha Engineering member",
+            "finance: QA Alpha finance role distinct from owner",
+            "outsider: QA Beta member only"
+          ],
+          "status": "NOT_RUN",
+          "preconditions": [
+            "Provision a disposable isolated server/API fixture with fictional QA Alpha (INR, Asia/Kolkata, April financial year) and unrelated QA Beta; use separate actor sessions and a controlled 2026-10-12 clock.",
+            "Never mutate the running workspace, restore historical native fixtures or reuse consumed capabilities. Browser demo does not establish backend authorization acceptance."
+          ],
+          "test_data": [
+            "Active schedule,leadership owner eligible;recipientsA owner/B finance.",
+            "Report-ready items from ordinary GET/attention;IDs-only company/job link."
+          ],
+          "steps": [
+            "Generate ready A/B outputs and GET ordinary /attention as each recipient.",
+            "Leadership removes/suspends B;A owner/sources remain eligible;read A output/Inbox and next occurrence.",
+            "As B read old output/Inbox;as A attempt route/escalate report_ready."
+          ],
+          "expected_results": [
+            "Each receives one recipient-bound eligible report_ready with own job IDs;no email/automatic device/private-authority grant.",
+            "A previous bytes/link and later output stay usable;unrelated B failure never rolls back A or pauses healthy delivery.",
+            "B receives no stale link/new output;current membership epoch and full sources checked;ready link cannot route/escalate."
+          ],
+          "cleanup": [
+            "Record sanitized observations without real IDs, credentials, private prose or prompts. Close QA sessions and remove owned temporary downloads; reset/dispose only this isolated fixture through its approved lifecycle, retaining audit history until disposal."
+          ],
+          "source_refs": [
+            "docs/API_CONTRACT.md",
+            "docs/reports-storage.md",
+            "docs/SECURITY_AND_LIMITATIONS.md",
+            "backend/platform/report_export_jobs.go",
+            "backend/platform/report_schedules.go"
+          ],
+          "automation_refs": [
+            "backend/platform/reporting_final_test.go"
+          ]
+        },
+        {
+          "id": "REPORTS-015",
+          "module": "REPORTS",
+          "title": "Owner/revision/explicit-removal/source changes retain wider invalidation",
+          "priority": "P0",
+          "gate": "LOCAL_CONFIG",
+          "modes": [
+            "Web",
+            "API"
+          ],
+          "actors": [
+            "platform admin: operator without company membership",
+            "company leadership: QA Alpha founder",
+            "owner: QA Alpha expense/task creator",
+            "independent reviewer: QA Alpha department head distinct from owner",
+            "department member: QA Alpha Engineering member",
+            "finance: QA Alpha finance role distinct from owner",
+            "outsider: QA Beta member only"
+          ],
+          "status": "NOT_RUN",
+          "preconditions": [
+            "Provision a disposable isolated server/API fixture with fictional QA Alpha (INR, Asia/Kolkata, April financial year) and unrelated QA Beta; use separate actor sessions and a controlled 2026-10-12 clock.",
+            "Never mutate the running workspace, restore historical native fixtures or reuse consumed capabilities. Browser demo does not establish backend authorization acceptance."
+          ],
+          "test_data": [
+            "Fresh readyA output for each variant:owner departs/demotes viewer,definition revision,explicitA removal,schedule version,A source loss."
+          ],
+          "steps": [
+            "Confirm ready artifact/public Inbox before each isolated variant.",
+            "Commit variant and read affected job/artifact/public Inbox.",
+            "Restore eligibility where valid,review current configuration and generate fresh occurrence."
+          ],
+          "expected_results": [
+            "Control establishes eligible owner,recipient,current versions and complete manifest.",
+            "Affected outputs denied/retired;recipient isolation does not bypass owner/version/removal/full-source boundaries.",
+            "Old invalidated handles never silently revive;new capture binds current basis/epoch."
+          ],
+          "cleanup": [
+            "Record sanitized observations without real IDs, credentials, private prose or prompts. Close QA sessions and remove owned temporary downloads; reset/dispose only this isolated fixture through its approved lifecycle, retaining audit history until disposal."
+          ],
+          "source_refs": [
+            "docs/API_CONTRACT.md",
+            "docs/reports-storage.md",
+            "docs/SECURITY_AND_LIMITATIONS.md",
+            "backend/platform/report_export_jobs.go",
+            "backend/platform/report_schedules.go"
+          ],
+          "automation_refs": [
+            "backend/platform/reporting_final_test.go",
+            "backend/platform/saved_reports_test.go"
+          ]
+        },
+        {
+          "id": "REPORTS-016",
+          "module": "REPORTS",
+          "title": "Canonical export queue, leased retry and cancellation publish once",
+          "priority": "P0",
+          "gate": "LOCAL_CONFIG",
+          "modes": [
+            "Web",
+            "API"
+          ],
+          "actors": [
+            "platform admin: operator without company membership",
+            "company leadership: QA Alpha founder",
+            "owner: QA Alpha expense/task creator",
+            "independent reviewer: QA Alpha department head distinct from owner",
+            "department member: QA Alpha Engineering member",
+            "finance: QA Alpha finance role distinct from owner",
+            "outsider: QA Beta member only"
+          ],
+          "status": "NOT_RUN",
+          "preconditions": [
+            "Provision a disposable isolated server/API fixture with fictional QA Alpha (INR, Asia/Kolkata, April financial year) and unrelated QA Beta; use separate actor sessions and a controlled 2026-10-12 clock.",
+            "Never mutate the running workspace, restore historical native fixtures or reuse consumed capabilities. Browser demo does not establish backend authorization acceptance."
+          ],
+          "test_data": [
+            "Historical snapshot;csvSchemaVersion1;qa-reports-016-export.",
+            "Generation120s;lease60s/renew15s;max5 attempts;retry5/10/20/40s."
+          ],
+          "steps": [
+            "Request export,drop ack,retry exact snapshot/schema/key;try different valid snapshot under key.",
+            "Use isolated lease-expiry/reclaim test controls then release stale/current workers.",
+            "Cancel separate queued/running/ready job with stable key;try stale publication/download."
+          ],
+          "expected_results": [
+            "One canonical queued job;changed keyed intent conflicts;unsupported schema rejected.",
+            "Old lease cannot renew/publish;current lease may create one ready artifact/delivery intent under bounded attempts.",
+            "Cancellation immediately denies bytes and late publish;history snapshot remains durable;cancelled output cannot restart."
+          ],
+          "cleanup": [
+            "Record sanitized observations without real IDs, credentials, private prose or prompts. Close QA sessions and remove owned temporary downloads; reset/dispose only this isolated fixture through its approved lifecycle, retaining audit history until disposal."
+          ],
+          "source_refs": [
+            "docs/API_CONTRACT.md",
+            "docs/reports-storage.md",
+            "docs/SECURITY_AND_LIMITATIONS.md",
+            "backend/platform/report_export_jobs.go",
+            "backend/platform/report_runtime.go"
+          ],
+          "automation_refs": [
+            "backend/platform/report_export_jobs_test.go"
+          ]
+        },
+        {
+          "id": "REPORTS-017",
+          "module": "REPORTS",
+          "title": "Private artifact authenticates live session and full sources before headers/chunks",
+          "priority": "P0",
+          "gate": "LOCAL_CONFIG",
+          "modes": [
+            "Web",
+            "API"
+          ],
+          "actors": [
+            "platform admin: operator without company membership",
+            "company leadership: QA Alpha founder",
+            "owner: QA Alpha expense/task creator",
+            "independent reviewer: QA Alpha department head distinct from owner",
+            "department member: QA Alpha Engineering member",
+            "finance: QA Alpha finance role distinct from owner",
+            "outsider: QA Beta member only"
+          ],
+          "status": "NOT_RUN",
+          "preconditions": [
+            "Provision a disposable isolated server/API fixture with fictional QA Alpha (INR, Asia/Kolkata, April financial year) and unrelated QA Beta; use separate actor sessions and a controlled 2026-10-12 clock.",
+            "Never mutate the running workspace, restore historical native fixtures or reuse consumed capabilities. Browser demo does not establish backend authorization acceptance."
+          ],
+          "test_data": [
+            "CSV>128KiB;103+ included sources;formula title=QA_REPORT.",
+            "Fresh off-page source loss,download-session invalidation,cancellation variants."
+          ],
+          "steps": [
+            "Download as authorized recipient through isolated controlled writer.",
+            "After first chunk commit variant before next current check.",
+            "Compare actual length;retry as revoked original session,another recipient and outsider."
+          ],
+          "expected_results": [
+            "ID is not public/bearerURL;full immutable manifest before headers;exact Content-Length/formula-safe CSV;chunks<=64KiB.",
+            "Later bytes stop;no denied-row dropping/recapture or appendedJSON;already delivered/in-flight bytes cannot be recalled.",
+            "Truncation detectable;each retry requires current recipient/company/session/full-source/expiry,no bytes leaked."
+          ],
+          "cleanup": [
+            "Record sanitized observations without real IDs, credentials, private prose or prompts. Close QA sessions and remove owned temporary downloads; reset/dispose only this isolated fixture through its approved lifecycle, retaining audit history until disposal."
+          ],
+          "source_refs": [
+            "docs/API_CONTRACT.md",
+            "docs/reports-storage.md",
+            "docs/SECURITY_AND_LIMITATIONS.md",
+            "backend/platform/report_artifacts.go",
+            "backend/platform/report_export_jobs.go"
+          ],
+          "automation_refs": [
+            "backend/platform/report_export_jobs_test.go"
+          ]
+        },
+        {
+          "id": "REPORTS-018",
+          "module": "REPORTS",
+          "title": "Private storage unavailable/expired artifacts preserve durable business history",
+          "priority": "P0",
+          "gate": "LOCAL_CONFIG",
+          "modes": [
+            "Web",
+            "API"
+          ],
+          "actors": [
+            "platform admin: operator without company membership",
+            "company leadership: QA Alpha founder",
+            "owner: QA Alpha expense/task creator",
+            "independent reviewer: QA Alpha department head distinct from owner",
+            "department member: QA Alpha Engineering member",
+            "finance: QA Alpha finance role distinct from owner",
+            "outsider: QA Beta member only"
+          ],
+          "status": "NOT_RUN",
+          "preconditions": [
+            "Provision a disposable isolated server/API fixture with fictional QA Alpha (INR, Asia/Kolkata, April financial year) and unrelated QA Beta; use separate actor sessions and a controlled 2026-10-12 clock.",
+            "Never mutate the running workspace, restore historical native fixtures or reuse consumed capabilities. Browser demo does not establish backend authorization acceptance."
+          ],
+          "test_data": [
+            "Unconfigured production private root;separate valid nonsymlink root0700/file0600.",
+            "Configured fixtureTTL1h;default168h,valid1–8760;storage blocked worker control."
+          ],
+          "steps": [
+            "Read historical snapshots with storage unavailable;request export;inspect configured privacy/path controls separately.",
+            "Generate valid artifact then controlled expiry and bounded cleanup.",
+            "During storage fault test independent communication/current revocation and later schedule candidates."
+          ],
+          "expected_results": [
+            "History supported;new export export_unavailable;no public/static/symlink/traversal fallback.",
+            "Bytes/link/public Inbox retire while facts/snapshot history persist.",
+            "Long storage work does not stop independent loops;bounded safe diagnostics/backoff isolate recipient failures without private prose."
+          ],
+          "cleanup": [
+            "Record sanitized observations without real IDs, credentials, private prose or prompts. Close QA sessions and remove owned temporary downloads; reset/dispose only this isolated fixture through its approved lifecycle, retaining audit history until disposal."
+          ],
+          "source_refs": [
+            "docs/API_CONTRACT.md",
+            "docs/reports-storage.md",
+            "docs/SECURITY_AND_LIMITATIONS.md",
+            "backend/platform/report_artifacts.go",
+            "backend/platform/report_runtime.go"
+          ],
+          "automation_refs": [
+            "backend/platform/report_schedules_test.go",
+            "backend/platform/report_export_jobs_test.go"
+          ]
+        }
+      ],
+      "diagram": {
+        "id": "reportsFlow",
+        "module": "REPORTS",
+        "title": "Reports capture and complete source output flow",
+        "nodes": [
+          {
+            "id": "select",
+            "label": "Choose basis, period and filters",
+            "kind": "start"
+          },
+          {
+            "id": "scope",
+            "label": "Complete current source scope?",
+            "kind": "decision"
+          },
+          {
+            "id": "acceptance",
+            "label": "Independent task review supplies acceptance facts",
+            "kind": "action"
+          },
+          {
+            "id": "capture",
+            "label": "Freeze current or historical snapshot",
+            "kind": "action"
+          },
+          {
+            "id": "export",
+            "label": "Explicit recipient-scoped export",
+            "kind": "action"
+          },
+          {
+            "id": "outputCheck",
+            "label": "Recipient/session/all sources current?",
+            "kind": "decision"
+          },
+          {
+            "id": "deny",
+            "label": "Deny entire read or later bytes",
+            "kind": "error"
+          },
+          {
+            "id": "retry",
+            "label": "Frozen retry or deliberate new capture",
+            "kind": "action"
+          },
+          {
+            "id": "ready",
+            "label": "Ready artifact and public Inbox link",
+            "kind": "result"
+          }
+        ],
+        "edges": [
+          {
+            "from": "select",
+            "to": "scope"
+          },
+          {
+            "from": "scope",
+            "to": "deny",
+            "label": "denied"
+          },
+          {
+            "from": "scope",
+            "to": "capture",
+            "label": "allowed"
+          },
+          {
+            "from": "acceptance",
+            "to": "capture",
+            "label": "historical native episodes only"
+          },
+          {
+            "from": "capture",
+            "to": "export",
+            "label": "human inspects metrics"
+          },
+          {
+            "from": "export",
+            "to": "outputCheck"
+          },
+          {
+            "from": "outputCheck",
+            "to": "deny",
+            "label": "revoked/cancelled/expired"
+          },
+          {
+            "from": "outputCheck",
+            "to": "ready",
+            "label": "authorized"
+          },
+          {
+            "from": "export",
+            "to": "retry",
+            "label": "unknown/recoverable"
+          },
+          {
+            "from": "retry",
+            "to": "outputCheck",
+            "label": "same intent/current authority"
+          },
+          {
+            "from": "deny",
+            "to": "select",
+            "label": "deliberate reselection"
+          }
+        ]
+      }
+    },
+    {
+      "id": "INTELLIGENCE",
+      "title": "Grounded selected-source intelligence",
+      "purpose": "Validate local consent, exact current selected provenance, private bounded jobs, deterministic facts and explicit reviewed canonical publication.",
+      "entry_points": [
+        "Company-relative /intelligence/capabilities and /selection-preview",
+        "Company-relative /intelligence/jobs, /jobs/{id}, /cancel, /task-preview, /publication-access",
+        "Web selected conversation/report source review and canonical task/expense/intake routes"
+      ],
+      "actors": [
+        "platform admin: operator without company membership",
+        "company leadership: QA Alpha founder",
+        "owner: QA Alpha expense/task creator",
+        "independent reviewer: QA Alpha department head distinct from owner",
+        "department member: QA Alpha Engineering member",
+        "finance: QA Alpha finance role distinct from owner",
+        "outsider: QA Beta member only"
+      ],
+      "workflow": [
+        "Select and inspect explicit readable originals",
+        "Preview exact source binding and accept current local-processing notice",
+        "Queue pinned provider job under original session and bounded capacity",
+        "Reauthorize every selected/expanded root before processing and disclosure",
+        "Inspect citations and deterministic facts; resolve human owner/reviewer/deadline/economics",
+        "Review complete current audience and confirm canonical business write",
+        "Keep unknown frozen attempts in scoped RAM; independent current publication check gates retry"
+      ],
+      "source_refs": [
+        "docs/API_CONTRACT.md",
+        "docs/intelligence-local.md",
+        "docs/SECURITY_AND_LIMITATIONS.md",
+        "backend/platform/intelligence_sources.go",
+        "backend/platform/intelligence_jobs.go",
+        "backend/platform/intelligence_runtime.go",
+        "backend/platform/intelligence_publication.go"
+      ],
+      "automation_refs": [
+        "backend/platform/intelligence_sources_test.go",
+        "backend/platform/intelligence_lifecycle_test.go",
+        "backend/platform/intelligence_facts_test.go",
+        "backend/platform/intelligence_publication_test.go",
+        "frontend/src/pages/Reports.intelligence.test.tsx"
+      ],
+      "limitations": [
+        "Every case is NOT_RUN and LOCAL_CONFIG; author has not started/invoked a provider. Fresh separately provisioned capacity is required.",
+        "Deterministic/test-provider regressions are references, never live-provider or manual PASS. Do not reuse completed native consumed capabilities.",
+        "Citations indicate provenance only; factual/language quality, physical devices, production latency/capacity and supply-chain completeness need separate qualification.",
+        "Raw result expiry/revocation differs from reviewed independently retained business records; current complete source/destination ACL still gates replay.",
+        "Authored review/unknown intent stays scoped RAM only, without persisted source/result cache."
+      ],
+      "cases": [
+        {
+          "id": "INTELLIGENCE-001",
+          "module": "INTELLIGENCE",
+          "title": "Inspected explicit selection and current consent precede inference",
+          "priority": "P0",
+          "gate": "LOCAL_CONFIG",
+          "modes": [
+            "Web",
+            "API"
+          ],
+          "actors": [
+            "platform admin: operator without company membership",
+            "company leadership: QA Alpha founder",
+            "owner: QA Alpha expense/task creator",
+            "independent reviewer: QA Alpha department head distinct from owner",
+            "department member: QA Alpha Engineering member",
+            "finance: QA Alpha finance role distinct from owner",
+            "outsider: QA Beta member only"
+          ],
+          "status": "NOT_RUN",
+          "preconditions": [
+            "Provision a disposable isolated server/API fixture with fictional QA Alpha (INR, Asia/Kolkata, April financial year) and unrelated QA Beta; use separate actor sessions and a controlled 2026-10-12 clock.",
+            "Never mutate the running workspace, restore historical native fixtures or reuse consumed capabilities. Browser demo does not establish backend authorization acceptance.",
+            "Operator must separately provision fresh isolated provider/scanner/private storage and capacity prerequisites; authoring does not start or invoke providers. Missing prerequisite is BLOCKED."
+          ],
+          "test_data": [
+            "Fictional QA task packing-check narrative;current inspected version/content binding.",
+            "optIn accepted:true,policyVersion local-selected-v1;fresh scoped retryKey."
+          ],
+          "steps": [
+            "Open conversation/Reports without generation;GET capabilities then selection-preview.",
+            "POST job without accepted opt-in,wrong policy or missing stable key.",
+            "Inspect original and notice,then explicitly enqueue exact preview hash/selection/consent."
+          ],
+          "expected_results": [
+            "Opening/preview performs no inference;exact originals/bindings and limitations visible.",
+            "Invalid input refused;navigation alone never sends selected prose to inference.",
+            "Only chosen sources queued under original session/provider identity;no business records created."
+          ],
+          "cleanup": [
+            "Record sanitized observations without real IDs, credentials, private prose or prompts. Close QA sessions and remove owned temporary downloads; reset/dispose only this isolated fixture through its approved lifecycle, retaining audit history until disposal."
+          ],
+          "source_refs": [
+            "docs/API_CONTRACT.md",
+            "docs/intelligence-local.md",
+            "docs/SECURITY_AND_LIMITATIONS.md",
+            "backend/platform/intelligence_sources.go",
+            "backend/platform/intelligence_jobs.go"
+          ],
+          "automation_refs": [
+            "backend/platform/intelligence_sources_test.go",
+            "backend/platform/intelligence_jobs_test.go"
+          ]
+        },
+        {
+          "id": "INTELLIGENCE-002",
+          "module": "INTELLIGENCE",
+          "title": "Missing or wrong pinned provider has no remote fallback",
+          "priority": "P0",
+          "gate": "LOCAL_CONFIG",
+          "modes": [
+            "Web",
+            "API"
+          ],
+          "actors": [
+            "platform admin: operator without company membership",
+            "company leadership: QA Alpha founder",
+            "owner: QA Alpha expense/task creator",
+            "independent reviewer: QA Alpha department head distinct from owner",
+            "department member: QA Alpha Engineering member",
+            "finance: QA Alpha finance role distinct from owner",
+            "outsider: QA Beta member only"
+          ],
+          "status": "NOT_RUN",
+          "preconditions": [
+            "Provision a disposable isolated server/API fixture with fictional QA Alpha (INR, Asia/Kolkata, April financial year) and unrelated QA Beta; use separate actor sessions and a controlled 2026-10-12 clock.",
+            "Never mutate the running workspace, restore historical native fixtures or reuse consumed capabilities. Browser demo does not establish backend authorization acceptance.",
+            "Operator must separately provision fresh isolated provider/scanner/private storage and capacity prerequisites; authoring does not start or invoke providers. Missing prerequisite is BLOCKED."
+          ],
+          "test_data": [
+            "Operator-provisioned variants:disabled,missing model/executable,wrong Ollama version/digest,remote descriptor/redirect/proxy.",
+            "Identity pins from intelligence-local.md;Ollama0.40.2/qwen3:4b;Whisper package/model checksums."
+          ],
+          "steps": [
+            "GET capabilities in each unavailable configuration and use normal task/finance/report.",
+            "Try explicitly consented job while unavailable.",
+            "With fresh valid provider inspect result identity and isolated routing controls before content send."
+          ],
+          "expected_results": [
+            "Affected operations unavailable/provider_unavailable;ordinary workflow remains available.",
+            "503 provider_unavailable;selected content not sent to unverified provider;no install/model pull/cloud fallback.",
+            "providerIdentity matches verified pin/config;proxies/redirects/remote descriptors refused before source disclosure;no private prompts/keys logged in QA docs."
+          ],
+          "cleanup": [
+            "Record sanitized observations without real IDs, credentials, private prose or prompts. Close QA sessions and remove owned temporary downloads; reset/dispose only this isolated fixture through its approved lifecycle, retaining audit history until disposal."
+          ],
+          "source_refs": [
+            "docs/API_CONTRACT.md",
+            "docs/intelligence-local.md",
+            "docs/SECURITY_AND_LIMITATIONS.md",
+            "backend/platform/intelligence_providers.go",
+            "backend/platform/intelligence_ollama.go",
+            "backend/platform/intelligence_whisper.go"
+          ],
+          "automation_refs": [
+            "backend/platform/intelligence_providers_test.go",
+            "backend/platform/intelligence_ollama_test.go",
+            "backend/platform/intelligence_real_provider_test.go"
+          ]
+        },
+        {
+          "id": "INTELLIGENCE-003",
+          "module": "INTELLIGENCE",
+          "title": "Source version change never silently substitutes latest originals",
+          "priority": "P0",
+          "gate": "LOCAL_CONFIG",
+          "modes": [
+            "Web",
+            "API"
+          ],
+          "actors": [
+            "platform admin: operator without company membership",
+            "company leadership: QA Alpha founder",
+            "owner: QA Alpha expense/task creator",
+            "independent reviewer: QA Alpha department head distinct from owner",
+            "department member: QA Alpha Engineering member",
+            "finance: QA Alpha finance role distinct from owner",
+            "outsider: QA Beta member only"
+          ],
+          "status": "NOT_RUN",
+          "preconditions": [
+            "Provision a disposable isolated server/API fixture with fictional QA Alpha (INR, Asia/Kolkata, April financial year) and unrelated QA Beta; use separate actor sessions and a controlled 2026-10-12 clock.",
+            "Never mutate the running workspace, restore historical native fixtures or reuse consumed capabilities. Browser demo does not establish backend authorization acceptance.",
+            "Operator must separately provision fresh isolated provider/scanner/private storage and capacity prerequisites; authoring does not start or invoke providers. Missing prerequisite is BLOCKED."
+          ],
+          "test_data": [
+            "Inspected task/message versionN;authorized later body/titleN+1.",
+            "Captured expectedVersion/revision/contentHash/selectionHash;separate ready-result change variant."
+          ],
+          "steps": [
+            "Inspect/select N then second actor edits before enqueue.",
+            "Enqueue old binding or read ready result after contributing original changes.",
+            "Explicitly inspect N+1,preview/reselect and consent;choose report original versus explicit latest."
+          ],
+          "expected_results": [
+            "Selection remains bound to inspected original;source now newer.",
+            "Exact-current conflict/invalidation instead of processing/disclosing silent latest replacement.",
+            "Fresh deliberate generation distinct;fetched private content hides during recheck and authored review never auto-replays against new version."
+          ],
+          "cleanup": [
+            "Record sanitized observations without real IDs, credentials, private prose or prompts. Close QA sessions and remove owned temporary downloads; reset/dispose only this isolated fixture through its approved lifecycle, retaining audit history until disposal."
+          ],
+          "source_refs": [
+            "docs/API_CONTRACT.md",
+            "docs/intelligence-local.md",
+            "docs/SECURITY_AND_LIMITATIONS.md",
+            "backend/platform/intelligence_sources.go",
+            "backend/platform/intelligence_reads.go",
+            "frontend/src/pages/GoalsReports.tsx"
+          ],
+          "automation_refs": [
+            "backend/platform/intelligence_sources_test.go",
+            "frontend/src/pages/Reports.intelligence.test.tsx"
+          ]
+        },
+        {
+          "id": "INTELLIGENCE-004",
+          "module": "INTELLIGENCE",
+          "title": "Leadership, finance and operator cannot bypass company/private source ACL",
+          "priority": "P0",
+          "gate": "LOCAL_CONFIG",
+          "modes": [
+            "Web",
+            "API"
+          ],
+          "actors": [
+            "platform admin: operator without company membership",
+            "company leadership: QA Alpha founder",
+            "owner: QA Alpha expense/task creator",
+            "independent reviewer: QA Alpha department head distinct from owner",
+            "department member: QA Alpha Engineering member",
+            "finance: QA Alpha finance role distinct from owner",
+            "outsider: QA Beta member only"
+          ],
+          "status": "NOT_RUN",
+          "preconditions": [
+            "Provision a disposable isolated server/API fixture with fictional QA Alpha (INR, Asia/Kolkata, April financial year) and unrelated QA Beta; use separate actor sessions and a controlled 2026-10-12 clock.",
+            "Never mutate the running workspace, restore historical native fixtures or reuse consumed capabilities. Browser demo does not establish backend authorization acceptance.",
+            "Operator must separately provision fresh isolated provider/scanner/private storage and capacity prerequisites; authoring does not start or invoke providers. Missing prerequisite is BLOCKED."
+          ],
+          "test_data": [
+            "Private QA Alpha owner/member conversation excludes leadership/finance.",
+            "QA Beta task/message;readable wrapper with inaccessible nested evidence/wrong parent."
+          ],
+          "steps": [
+            "Preview private/foreign roots as leadership,finance,outsider,operator without QA Alpha membership.",
+            "Select wrapper with hidden nested comment/media/goal-measurement root or altered parent.",
+            "Generate authorized owner job;read job/history/result as reviewer/finance/other company."
+          ],
+          "expected_results": [
+            "No private existence/content or cross-company bypass from role.",
+            "Every expanded root and actual parent checked;outer visibility does not grant private content.",
+            "Raw results requester-private;other readers receive no private labels/prose/derived IDs."
+          ],
+          "cleanup": [
+            "Record sanitized observations without real IDs, credentials, private prose or prompts. Close QA sessions and remove owned temporary downloads; reset/dispose only this isolated fixture through its approved lifecycle, retaining audit history until disposal."
+          ],
+          "source_refs": [
+            "docs/API_CONTRACT.md",
+            "docs/intelligence-local.md",
+            "docs/SECURITY_AND_LIMITATIONS.md",
+            "backend/platform/intelligence_sources.go",
+            "backend/platform/intelligence_reads.go"
+          ],
+          "automation_refs": [
+            "backend/platform/intelligence_sources_test.go",
+            "backend/platform/intelligence_fix1_test.go"
+          ]
+        },
+        {
+          "id": "INTELLIGENCE-005",
+          "module": "INTELLIGENCE",
+          "title": "Citations bind selected originals and model text stays inert",
+          "priority": "P0",
+          "gate": "LOCAL_CONFIG",
+          "modes": [
+            "Web",
+            "API"
+          ],
+          "actors": [
+            "platform admin: operator without company membership",
+            "company leadership: QA Alpha founder",
+            "owner: QA Alpha expense/task creator",
+            "independent reviewer: QA Alpha department head distinct from owner",
+            "department member: QA Alpha Engineering member",
+            "finance: QA Alpha finance role distinct from owner",
+            "outsider: QA Beta member only"
+          ],
+          "status": "NOT_RUN",
+          "preconditions": [
+            "Provision a disposable isolated server/API fixture with fictional QA Alpha (INR, Asia/Kolkata, April financial year) and unrelated QA Beta; use separate actor sessions and a controlled 2026-10-12 clock.",
+            "Never mutate the running workspace, restore historical native fixtures or reuse consumed capabilities. Browser demo does not establish backend authorization acceptance.",
+            "Operator must separately provision fresh isolated provider/scanner/private storage and capacity prerequisites; authoring does not start or invoke providers. Missing prerequisite is BLOCKED.",
+            "Scripted schema fault adapter is test-only;do not infer real-model correctness from deterministic fake outputs."
+          ],
+          "test_data": [
+            "Two fictional packing-check messages;benign fictional URL https://invalid.example/qa and command-looking text.",
+            "Isolated output variants:unknown/empty/duplicate source keys,duplicateJSONkey,unsupported field."
+          ],
+          "steps": [
+            "Generate summary and open each citation through current exact-source access.",
+            "Provide invalid schema/citation outputs through isolated test adapter.",
+            "Render URL/command-like text and revoke original before opening citation."
+          ],
+          "expected_results": [
+            "Claims cite selected keys with supported confidence;provenance is not proof of correctness or general thread access.",
+            "Strict independent schema returns invalid_output rather than success/uncited malformed result.",
+            "Plain text never executes tools/links/shares/downloads automatically;citation cannot expose stale denied original."
+          ],
+          "cleanup": [
+            "Record sanitized observations without real IDs, credentials, private prose or prompts. Close QA sessions and remove owned temporary downloads; reset/dispose only this isolated fixture through its approved lifecycle, retaining audit history until disposal."
+          ],
+          "source_refs": [
+            "docs/API_CONTRACT.md",
+            "docs/intelligence-local.md",
+            "docs/SECURITY_AND_LIMITATIONS.md",
+            "backend/platform/intelligence_schema.go",
+            "frontend/src/data/intelligence.ts"
+          ],
+          "automation_refs": [
+            "backend/platform/intelligence_schema_test.go",
+            "backend/platform/intelligence_sources_test.go"
+          ]
+        },
+        {
+          "id": "INTELLIGENCE-006",
+          "module": "INTELLIGENCE",
+          "title": "Financial explanations use exact server-rendered deterministic facts",
+          "priority": "P0",
+          "gate": "LOCAL_CONFIG",
+          "modes": [
+            "Web",
+            "API"
+          ],
+          "actors": [
+            "platform admin: operator without company membership",
+            "company leadership: QA Alpha founder",
+            "owner: QA Alpha expense/task creator",
+            "independent reviewer: QA Alpha department head distinct from owner",
+            "department member: QA Alpha Engineering member",
+            "finance: QA Alpha finance role distinct from owner",
+            "outsider: QA Beta member only"
+          ],
+          "status": "NOT_RUN",
+          "preconditions": [
+            "Provision a disposable isolated server/API fixture with fictional QA Alpha (INR, Asia/Kolkata, April financial year) and unrelated QA Beta; use separate actor sessions and a controlled 2026-10-12 clock.",
+            "Never mutate the running workspace, restore historical native fixtures or reuse consumed capabilities. Browser demo does not establish backend authorization acceptance.",
+            "Operator must separately provision fresh isolated provider/scanner/private storage and capacity prerequisites; authoring does not start or invoke providers. Missing prerequisite is BLOCKED."
+          ],
+          "test_data": [
+            "Expense amountMinor130050,INR,draft,2026-10-10.",
+            "Invalid model arbitrary money INR99999/unsupported comparison relation."
+          ],
+          "steps": [
+            "Inspect expense_fields/economics and explicitly request report_explanation.",
+            "Use isolated allowlisted amount-fact output then arbitrary text/money/relations.",
+            "Compare business state before/after;revoke source/finance access and read result/citation."
+          ],
+          "expected_results": [
+            "Recorded exact INR1300.50/status/date fact;no inferred conversion/tax/settlement.",
+            "Accepted value server-rendered exactly;unsupported model money prose/relations/fields rejected.",
+            "No economics/approval/goal observation mutation;current loss withholds result."
+          ],
+          "cleanup": [
+            "Record sanitized observations without real IDs, credentials, private prose or prompts. Close QA sessions and remove owned temporary downloads; reset/dispose only this isolated fixture through its approved lifecycle, retaining audit history until disposal."
+          ],
+          "source_refs": [
+            "docs/API_CONTRACT.md",
+            "docs/intelligence-local.md",
+            "docs/SECURITY_AND_LIMITATIONS.md",
+            "backend/platform/intelligence_facts.go",
+            "backend/platform/intelligence_schema.go"
+          ],
+          "automation_refs": [
+            "backend/platform/intelligence_facts_test.go"
+          ]
+        },
+        {
+          "id": "INTELLIGENCE-007",
+          "module": "INTELLIGENCE",
+          "title": "Current/historical report semantics and denominators are explicit",
+          "priority": "P0",
+          "gate": "LOCAL_CONFIG",
+          "modes": [
+            "Web",
+            "API"
+          ],
+          "actors": [
+            "platform admin: operator without company membership",
+            "company leadership: QA Alpha founder",
+            "owner: QA Alpha expense/task creator",
+            "independent reviewer: QA Alpha department head distinct from owner",
+            "department member: QA Alpha Engineering member",
+            "finance: QA Alpha finance role distinct from owner",
+            "outsider: QA Beta member only"
+          ],
+          "status": "NOT_RUN",
+          "preconditions": [
+            "Provision a disposable isolated server/API fixture with fictional QA Alpha (INR, Asia/Kolkata, April financial year) and unrelated QA Beta; use separate actor sessions and a controlled 2026-10-12 clock.",
+            "Never mutate the running workspace, restore historical native fixtures or reuse consumed capabilities. Browser demo does not establish backend authorization acceptance.",
+            "Operator must separately provision fresh isolated provider/scanner/private storage and capacity prerequisites; authoring does not start or invoke providers. Missing prerequisite is BLOCKED."
+          ],
+          "test_data": [
+            "Current snapshot frozenOct1–12,Asia/Kolkata,metricVersion;original2/3 met,current zero-denominator control.",
+            "Historical2acceptance episodes/1unique task,observed gap;legacy snapshot lacking period metadata."
+          ],
+          "steps": [
+            "Inspect/select report_current and separate report_snapshot originals.",
+            "Inspect original/current punctuality and zero-denominator/gap facts.",
+            "Explain legacy missing-period snapshot and attempt arbitrary causal comparison/latest substitution."
+          ],
+          "expected_results": [
+            "Explanations state producer basis/frozen period and distinguish current cohort from historical episodes/unique tasks.",
+            "Separate server numerator/denominator/rate/deadline definitions;zero/missing rate unavailable,coverage disclosed.",
+            "Legacy period explicitly unavailable;unsupported relation rejected and original never replaced by latest silently."
+          ],
+          "cleanup": [
+            "Record sanitized observations without real IDs, credentials, private prose or prompts. Close QA sessions and remove owned temporary downloads; reset/dispose only this isolated fixture through its approved lifecycle, retaining audit history until disposal."
+          ],
+          "source_refs": [
+            "docs/API_CONTRACT.md",
+            "docs/intelligence-local.md",
+            "docs/SECURITY_AND_LIMITATIONS.md",
+            "backend/platform/intelligence_facts.go",
+            "backend/platform/report_reads.go"
+          ],
+          "automation_refs": [
+            "backend/platform/intelligence_facts_test.go",
+            "backend/platform/intelligence_fix1_test.go",
+            "backend/platform/intelligence_real_provider_test.go"
+          ]
+        },
+        {
+          "id": "INTELLIGENCE-008",
+          "module": "INTELLIGENCE",
+          "title": "Exact record citations and indirect roots remain currently authorized",
+          "priority": "P0",
+          "gate": "LOCAL_CONFIG",
+          "modes": [
+            "Web",
+            "API"
+          ],
+          "actors": [
+            "platform admin: operator without company membership",
+            "company leadership: QA Alpha founder",
+            "owner: QA Alpha expense/task creator",
+            "independent reviewer: QA Alpha department head distinct from owner",
+            "department member: QA Alpha Engineering member",
+            "finance: QA Alpha finance role distinct from owner",
+            "outsider: QA Beta member only"
+          ],
+          "status": "NOT_RUN",
+          "preconditions": [
+            "Provision a disposable isolated server/API fixture with fictional QA Alpha (INR, Asia/Kolkata, April financial year) and unrelated QA Beta; use separate actor sessions and a controlled 2026-10-12 clock.",
+            "Never mutate the running workspace, restore historical native fixtures or reuse consumed capabilities. Browser demo does not establish backend authorization acceptance.",
+            "Operator must separately provision fresh isolated provider/scanner/private storage and capacity prerequisites; authoring does not start or invoke providers. Missing prerequisite is BLOCKED."
+          ],
+          "test_data": [
+            "Fictional record/content_responses with two responses.",
+            "Goal measurement private-message root;report off-page task and outside-period dependency."
+          ],
+          "steps": [
+            "Inspect exact record/evidence originals then select/generate.",
+            "Revoke contributing private interval or off-page report source/reference while container readable.",
+            "Alter citation parent/delete record and inspect history."
+          ],
+          "expected_results": [
+            "Bindings include actual record/responses/indirect roots;record citation opens exact record rather than wider conversation.",
+            "Derived output invalidates despite readable outer goal/report/record;complete roots required.",
+            "No fallback to unrelated/latest record;history only neutral metadata,never source/result prose."
+          ],
+          "cleanup": [
+            "Record sanitized observations without real IDs, credentials, private prose or prompts. Close QA sessions and remove owned temporary downloads; reset/dispose only this isolated fixture through its approved lifecycle, retaining audit history until disposal."
+          ],
+          "source_refs": [
+            "docs/API_CONTRACT.md",
+            "docs/intelligence-local.md",
+            "docs/SECURITY_AND_LIMITATIONS.md",
+            "backend/platform/intelligence_sources.go",
+            "backend/platform/intelligence_reads.go"
+          ],
+          "automation_refs": [
+            "backend/platform/intelligence_fix1_test.go",
+            "backend/platform/intelligence_sources_test.go"
+          ]
+        },
+        {
+          "id": "INTELLIGENCE-009",
+          "module": "INTELLIGENCE",
+          "title": "Frozen enqueue replay and quotas bind provider and consented intent",
+          "priority": "P0",
+          "gate": "LOCAL_CONFIG",
+          "modes": [
+            "Web",
+            "API"
+          ],
+          "actors": [
+            "platform admin: operator without company membership",
+            "company leadership: QA Alpha founder",
+            "owner: QA Alpha expense/task creator",
+            "independent reviewer: QA Alpha department head distinct from owner",
+            "department member: QA Alpha Engineering member",
+            "finance: QA Alpha finance role distinct from owner",
+            "outsider: QA Beta member only"
+          ],
+          "status": "NOT_RUN",
+          "preconditions": [
+            "Provision a disposable isolated server/API fixture with fictional QA Alpha (INR, Asia/Kolkata, April financial year) and unrelated QA Beta; use separate actor sessions and a controlled 2026-10-12 clock.",
+            "Never mutate the running workspace, restore historical native fixtures or reuse consumed capabilities. Browser demo does not establish backend authorization acceptance.",
+            "Operator must separately provision fresh isolated provider/scanner/private storage and capacity prerequisites; authoring does not start or invoke providers. Missing prerequisite is BLOCKED."
+          ],
+          "test_data": [
+            "Inspected summary selection,qa-intelligence-009.",
+            "10active jobs actor/100company;changed source/operation/key intent and provider identity controls."
+          ],
+          "steps": [
+            "Enqueue then lose acknowledgement;retry exact selection/hash/consent/key.",
+            "Change source/operation under key or verified identity before replay.",
+            "Fill isolated active quota then request new job;retire eligible jobs and retry deliberately."
+          ],
+          "expected_results": [
+            "202 same canonical job;no duplicate invocation or extended source/session lifetime.",
+            "Changed intent conflicts;identity mismatch provider unavailable instead of different-model replacement.",
+            "queue_full429 at actor10/company100;bounded queue and current actor authority preserved."
+          ],
+          "cleanup": [
+            "Record sanitized observations without real IDs, credentials, private prose or prompts. Close QA sessions and remove owned temporary downloads; reset/dispose only this isolated fixture through its approved lifecycle, retaining audit history until disposal."
+          ],
+          "source_refs": [
+            "docs/API_CONTRACT.md",
+            "docs/intelligence-local.md",
+            "docs/SECURITY_AND_LIMITATIONS.md",
+            "backend/platform/intelligence_jobs.go"
+          ],
+          "automation_refs": [
+            "backend/platform/intelligence_jobs_test.go",
+            "backend/platform/intelligence_lifecycle_test.go"
+          ]
+        },
+        {
+          "id": "INTELLIGENCE-010",
+          "module": "INTELLIGENCE",
+          "title": "Queue, final commit and ready reads reject source/session revocation",
+          "priority": "P0",
+          "gate": "LOCAL_CONFIG",
+          "modes": [
+            "Web",
+            "API"
+          ],
+          "actors": [
+            "platform admin: operator without company membership",
+            "company leadership: QA Alpha founder",
+            "owner: QA Alpha expense/task creator",
+            "independent reviewer: QA Alpha department head distinct from owner",
+            "department member: QA Alpha Engineering member",
+            "finance: QA Alpha finance role distinct from owner",
+            "outsider: QA Beta member only"
+          ],
+          "status": "NOT_RUN",
+          "preconditions": [
+            "Provision a disposable isolated server/API fixture with fictional QA Alpha (INR, Asia/Kolkata, April financial year) and unrelated QA Beta; use separate actor sessions and a controlled 2026-10-12 clock.",
+            "Never mutate the running workspace, restore historical native fixtures or reuse consumed capabilities. Browser demo does not establish backend authorization acceptance.",
+            "Operator must separately provision fresh isolated provider/scanner/private storage and capacity prerequisites; authoring does not start or invoke providers. Missing prerequisite is BLOCKED."
+          ],
+          "test_data": [
+            "Fresh phases:provider-budget wait,running precommit,ready before read.",
+            "Loss variants:source reassignment,original logout,company/private membership departure."
+          ],
+          "steps": [
+            "Queue explicit job,hold isolated budget and revoke original authority before release.",
+            "Revoke running job before final commit or ready job beforeGET.",
+            "Leave/rejoin private interval or log in afresh and use old raw handle."
+          ],
+          "expected_results": [
+            "Current all-source/session checks after wait prevent denied content reaching provider.",
+            "Final fence blocks stale result;reads authorize before loading resultJSON and retire/scrub unavailable output.",
+            "New interval/login never revives old raw results;fresh explicit current selection required."
+          ],
+          "cleanup": [
+            "Record sanitized observations without real IDs, credentials, private prose or prompts. Close QA sessions and remove owned temporary downloads; reset/dispose only this isolated fixture through its approved lifecycle, retaining audit history until disposal."
+          ],
+          "source_refs": [
+            "docs/API_CONTRACT.md",
+            "docs/intelligence-local.md",
+            "docs/SECURITY_AND_LIMITATIONS.md",
+            "backend/platform/intelligence_runtime.go",
+            "backend/platform/intelligence_reads.go",
+            "backend/platform/intelligence_invalidation.go"
+          ],
+          "automation_refs": [
+            "backend/platform/intelligence_lifecycle_test.go",
+            "backend/platform/intelligence_runtime_test.go"
+          ]
+        },
+        {
+          "id": "INTELLIGENCE-011",
+          "module": "INTELLIGENCE",
+          "title": "Cancellation and stale leases cannot resurrect disclosure",
+          "priority": "P0",
+          "gate": "LOCAL_CONFIG",
+          "modes": [
+            "Web",
+            "API"
+          ],
+          "actors": [
+            "platform admin: operator without company membership",
+            "company leadership: QA Alpha founder",
+            "owner: QA Alpha expense/task creator",
+            "independent reviewer: QA Alpha department head distinct from owner",
+            "department member: QA Alpha Engineering member",
+            "finance: QA Alpha finance role distinct from owner",
+            "outsider: QA Beta member only"
+          ],
+          "status": "NOT_RUN",
+          "preconditions": [
+            "Provision a disposable isolated server/API fixture with fictional QA Alpha (INR, Asia/Kolkata, April financial year) and unrelated QA Beta; use separate actor sessions and a controlled 2026-10-12 clock.",
+            "Never mutate the running workspace, restore historical native fixtures or reuse consumed capabilities. Browser demo does not establish backend authorization acceptance.",
+            "Operator must separately provision fresh isolated provider/scanner/private storage and capacity prerequisites; authoring does not start or invoke providers. Missing prerequisite is BLOCKED."
+          ],
+          "test_data": [
+            "Fresh queued/running summary and transcription scratch jobs.",
+            "Ollama120s,transcription180s;three transient attempts,5/30s delays."
+          ],
+          "steps": [
+            "POST cancel while isolated worker queued/running.",
+            "Release delayed old lease/worker and request result/stale completion.",
+            "Observe controlled invocation timeout/transient backoff and shutdown."
+          ],
+          "expected_results": [
+            "Immediate cancellation fence withholds output regardless provider completion.",
+            "Stale lease cannot renew/publish;readers close,subprocess group terminates/joins,owned scratch cleans.",
+            "Lease renewal never extends deadline;attempts bounded;worker/maintenance join without cancelled-result resurrection."
+          ],
+          "cleanup": [
+            "Record sanitized observations without real IDs, credentials, private prose or prompts. Close QA sessions and remove owned temporary downloads; reset/dispose only this isolated fixture through its approved lifecycle, retaining audit history until disposal."
+          ],
+          "source_refs": [
+            "docs/API_CONTRACT.md",
+            "docs/intelligence-local.md",
+            "docs/SECURITY_AND_LIMITATIONS.md",
+            "backend/platform/intelligence_runtime.go",
+            "backend/platform/intelligence_whisper.go"
+          ],
+          "automation_refs": [
+            "backend/platform/intelligence_runtime_test.go",
+            "backend/platform/intelligence_lifecycle_test.go"
+          ]
+        },
+        {
+          "id": "INTELLIGENCE-012",
+          "module": "INTELLIGENCE",
+          "title": "TTL/disabled maintenance scrub raw content but retain neutral provenance",
+          "priority": "P0",
+          "gate": "LOCAL_CONFIG",
+          "modes": [
+            "Web",
+            "API"
+          ],
+          "actors": [
+            "platform admin: operator without company membership",
+            "company leadership: QA Alpha founder",
+            "owner: QA Alpha expense/task creator",
+            "independent reviewer: QA Alpha department head distinct from owner",
+            "department member: QA Alpha Engineering member",
+            "finance: QA Alpha finance role distinct from owner",
+            "outsider: QA Beta member only"
+          ],
+          "status": "NOT_RUN",
+          "preconditions": [
+            "Provision a disposable isolated server/API fixture with fictional QA Alpha (INR, Asia/Kolkata, April financial year) and unrelated QA Beta; use separate actor sessions and a controlled 2026-10-12 clock.",
+            "Never mutate the running workspace, restore historical native fixtures or reuse consumed capabilities. Browser demo does not establish backend authorization acceptance.",
+            "Operator must separately provision fresh isolated provider/scanner/private storage and capacity prerequisites; authoring does not start or invoke providers. Missing prerequisite is BLOCKED."
+          ],
+          "test_data": [
+            "Raw expiry minimum24h/source/parent-transcript/original-session expiry;task due date control.",
+            "Validated nonsymlink0700 scratch root with owned job/lease marker;unrelated/live-lease/symlink controls."
+          ],
+          "steps": [
+            "Generate over short-retention source/transcript and compare effective expiry.",
+            "Controlled expiry then startup/periodic maintenance with nil/disabled/missing provider.",
+            "Inspect scratch controls/history/expired result and separately absent-root setup."
+          ],
+          "expected_results": [
+            "Earliest capability lifetime governs;due dates not expiry;retries do not renew lifetime.",
+            "Raw bytes retired/scrubbed even unavailable inference;neutral durable identifiers/status/provenance retained without prose.",
+            "Only aged owned marked scratch swept;live/unrelated/symlink targets untouched;history neutral and raw denied;old filesystem root never inferred."
+          ],
+          "cleanup": [
+            "Record sanitized observations without real IDs, credentials, private prose or prompts. Close QA sessions and remove owned temporary downloads; reset/dispose only this isolated fixture through its approved lifecycle, retaining audit history until disposal."
+          ],
+          "source_refs": [
+            "docs/API_CONTRACT.md",
+            "docs/intelligence-local.md",
+            "docs/SECURITY_AND_LIMITATIONS.md",
+            "backend/platform/intelligence_runtime.go",
+            "backend/platform/intelligence_jobs.go"
+          ],
+          "automation_refs": [
+            "backend/platform/intelligence_fix1_test.go",
+            "backend/platform/intelligence_lifecycle_test.go"
+          ]
+        },
+        {
+          "id": "INTELLIGENCE-013",
+          "module": "INTELLIGENCE",
+          "title": "Selected-content and actual token overflow never truncate sources",
+          "priority": "P0",
+          "gate": "LOCAL_CONFIG",
+          "modes": [
+            "Web",
+            "API"
+          ],
+          "actors": [
+            "platform admin: operator without company membership",
+            "company leadership: QA Alpha founder",
+            "owner: QA Alpha expense/task creator",
+            "independent reviewer: QA Alpha department head distinct from owner",
+            "department member: QA Alpha Engineering member",
+            "finance: QA Alpha finance role distinct from owner",
+            "outsider: QA Beta member only"
+          ],
+          "status": "NOT_RUN",
+          "preconditions": [
+            "Provision a disposable isolated server/API fixture with fictional QA Alpha (INR, Asia/Kolkata, April financial year) and unrelated QA Beta; use separate actor sessions and a controlled 2026-10-12 clock.",
+            "Never mutate the running workspace, restore historical native fixtures or reuse consumed capabilities. Browser demo does not establish backend authorization acceptance.",
+            "Operator must separately provision fresh isolated provider/scanner/private storage and capacity prerequisites; authoring does not start or invoke providers. Missing prerequisite is BLOCKED.",
+            "Real provider qualification requires fresh capacity independent from every retained provider consumer;not executed during documentation authoring."
+          ],
+          "test_data": [
+            "Limits50sources/1000expanded/65536bytes/20000scalars.",
+            "6144actual input tokens/1024output/8192context;51-source,multibyte and real-token boundary controls."
+          ],
+          "steps": [
+            "Attempt explicit source/expanded-root/byte/scalar over-limit selection.",
+            "Separately qualify real pinned provider actual-token boundary/overflow.",
+            "Inspect overflow UI and retry only deliberately narrower inspected selection."
+          ],
+          "expected_results": [
+            "source_too_large terminal;no dropped roots/partial visible-page processing.",
+            "Actual token counts enforce6144/1024;characters not falsely presented as tokens.",
+            "No auto-truncation/chunking/context shifting/cloud fallback/silent replacement;manual continuation available."
+          ],
+          "cleanup": [
+            "Record sanitized observations without real IDs, credentials, private prose or prompts. Close QA sessions and remove owned temporary downloads; reset/dispose only this isolated fixture through its approved lifecycle, retaining audit history until disposal."
+          ],
+          "source_refs": [
+            "docs/API_CONTRACT.md",
+            "docs/intelligence-local.md",
+            "docs/SECURITY_AND_LIMITATIONS.md",
+            "backend/platform/intelligence_sources.go",
+            "backend/platform/intelligence_ollama.go"
+          ],
+          "automation_refs": [
+            "backend/platform/intelligence_sources_test.go",
+            "backend/platform/intelligence_real_provider_test.go"
+          ]
+        },
+        {
+          "id": "INTELLIGENCE-014",
+          "module": "INTELLIGENCE",
+          "title": "Selected clean attached audio transcription never records live calls",
+          "priority": "P0",
+          "gate": "LOCAL_CONFIG",
+          "modes": [
+            "Web",
+            "API"
+          ],
+          "actors": [
+            "platform admin: operator without company membership",
+            "company leadership: QA Alpha founder",
+            "owner: QA Alpha expense/task creator",
+            "independent reviewer: QA Alpha department head distinct from owner",
+            "department member: QA Alpha Engineering member",
+            "finance: QA Alpha finance role distinct from owner",
+            "outsider: QA Beta member only"
+          ],
+          "status": "NOT_RUN",
+          "preconditions": [
+            "Provision a disposable isolated server/API fixture with fictional QA Alpha (INR, Asia/Kolkata, April financial year) and unrelated QA Beta; use separate actor sessions and a controlled 2026-10-12 clock.",
+            "Never mutate the running workspace, restore historical native fixtures or reuse consumed capabilities. Browser demo does not establish backend authorization acceptance.",
+            "Operator must separately provision fresh isolated provider/scanner/private storage and capacity prerequisites; authoring does not start or invoke providers. Missing prerequisite is BLOCKED."
+          ],
+          "test_data": [
+            "New fictionalQA.wav20sEnglish packing checklist,clean/readable.",
+            "Invalid:twoaudios,video,>25MiB,>600s,unscanned media."
+          ],
+          "steps": [
+            "Inspect one clean attached audio identity and explicitly consent transcript.",
+            "Try invalid fixtures then valid independently qualified pinned Whisper run.",
+            "Cancel/revoke media midprocess or expire parent before derived summary read."
+          ],
+          "expected_results": [
+            "Hash-bound/audio-only bounded probing of chosen original;live calls remain unrecorded/untranscribed.",
+            "Count/media/scan/size/duration fail closed;valid bounded timestamp segments cite source/providerIdentity without remote fallback.",
+            "Subprocess/scratch/result disclosure withheld;derived result cannot outlive parent/root. No device/language accuracy claim."
+          ],
+          "cleanup": [
+            "Record sanitized observations without real IDs, credentials, private prose or prompts. Close QA sessions and remove owned temporary downloads; reset/dispose only this isolated fixture through its approved lifecycle, retaining audit history until disposal."
+          ],
+          "source_refs": [
+            "docs/API_CONTRACT.md",
+            "docs/intelligence-local.md",
+            "docs/SECURITY_AND_LIMITATIONS.md",
+            "backend/platform/intelligence_whisper.go",
+            "backend/platform/intelligence_sources.go"
+          ],
+          "automation_refs": [
+            "backend/platform/intelligence_whisper_test.go",
+            "backend/platform/intelligence_real_provider_test.go"
+          ]
+        },
+        {
+          "id": "INTELLIGENCE-015",
+          "module": "INTELLIGENCE",
+          "title": "Human task review resolves fields and current audience before first write",
+          "priority": "P0",
+          "gate": "LOCAL_CONFIG",
+          "modes": [
+            "Web",
+            "API"
+          ],
+          "actors": [
+            "platform admin: operator without company membership",
+            "company leadership: QA Alpha founder",
+            "owner: QA Alpha expense/task creator",
+            "independent reviewer: QA Alpha department head distinct from owner",
+            "department member: QA Alpha Engineering member",
+            "finance: QA Alpha finance role distinct from owner",
+            "outsider: QA Beta member only"
+          ],
+          "status": "NOT_RUN",
+          "preconditions": [
+            "Provision a disposable isolated server/API fixture with fictional QA Alpha (INR, Asia/Kolkata, April financial year) and unrelated QA Beta; use separate actor sessions and a controlled 2026-10-12 clock.",
+            "Never mutate the running workspace, restore historical native fixtures or reuse consumed capabilities. Browser demo does not establish backend authorization acceptance.",
+            "Operator must separately provision fresh isolated provider/scanner/private storage and capacity prerequisites; authoring does not start or invoke providers. Missing prerequisite is BLOCKED."
+          ],
+          "test_data": [
+            "QA stock-check candidate with unresolved model identity/date fields.",
+            "Human owner departmentmember,distinct independent reviewer,due2026-10-20,Engineering,current project."
+          ],
+          "steps": [
+            "Generate action_draft and open candidate review.",
+            "Try canonical create without valid audience review;then fill fields and exact task-preview.",
+            "Confirm exact basis/hash/key then change source/audience before separate first-write control."
+          ],
+          "expected_results": [
+            "Inert suggestions create no task;human resolves owner/reviewer/deadline.",
+            "409 until complete current payload/audience reviewed;ordinary task owner/reviewer/reference validation remains.",
+            "One canonical task with provenance;changed current proof blocks new first write and requires reinspection."
+          ],
+          "cleanup": [
+            "Record sanitized observations without real IDs, credentials, private prose or prompts. Close QA sessions and remove owned temporary downloads; reset/dispose only this isolated fixture through its approved lifecycle, retaining audit history until disposal."
+          ],
+          "source_refs": [
+            "docs/API_CONTRACT.md",
+            "docs/intelligence-local.md",
+            "docs/SECURITY_AND_LIMITATIONS.md",
+            "backend/platform/intelligence_publication.go"
+          ],
+          "automation_refs": [
+            "backend/platform/intelligence_publication_test.go"
+          ]
+        },
+        {
+          "id": "INTELLIGENCE-016",
+          "module": "INTELLIGENCE",
+          "title": "Private publication requires every contributing original and one allowed scope",
+          "priority": "P0",
+          "gate": "LOCAL_CONFIG",
+          "modes": [
+            "Web",
+            "API"
+          ],
+          "actors": [
+            "platform admin: operator without company membership",
+            "company leadership: QA Alpha founder",
+            "owner: QA Alpha expense/task creator",
+            "independent reviewer: QA Alpha department head distinct from owner",
+            "department member: QA Alpha Engineering member",
+            "finance: QA Alpha finance role distinct from owner",
+            "outsider: QA Beta member only"
+          ],
+          "status": "NOT_RUN",
+          "preconditions": [
+            "Provision a disposable isolated server/API fixture with fictional QA Alpha (INR, Asia/Kolkata, April financial year) and unrelated QA Beta; use separate actor sessions and a controlled 2026-10-12 clock.",
+            "Never mutate the running workspace, restore historical native fixtures or reuse consumed capabilities. Browser demo does not establish backend authorization acceptance.",
+            "Operator must separately provision fresh isolated provider/scanner/private storage and capacity prerequisites; authoring does not start or invoke providers. Missing prerequisite is BLOCKED."
+          ],
+          "test_data": [
+            "Two fictional messages in one private conversation with publication permitted.",
+            "Second private conversation control;human-selected anchor and current existing instruction action."
+          ],
+          "steps": [
+            "Generate then preview conversion omitting one contributor or selecting wrong conversation.",
+            "Inspect complete sources/audience/purpose/action and confirm exact reviewed conversion.",
+            "Generate across two private conversations and try business publication."
+          ],
+          "expected_results": [
+            "Every private root must match complete authorized publication scope;omission/wrong destination refused.",
+            "Human chooses anchor/existing action;model supplies neither;ordinary canonical conversation conversion authority applies.",
+            "Combined-private selection read-only;no task/expense/intake disclosure even as company leadership."
+          ],
+          "cleanup": [
+            "Record sanitized observations without real IDs, credentials, private prose or prompts. Close QA sessions and remove owned temporary downloads; reset/dispose only this isolated fixture through its approved lifecycle, retaining audit history until disposal."
+          ],
+          "source_refs": [
+            "docs/API_CONTRACT.md",
+            "docs/intelligence-local.md",
+            "docs/SECURITY_AND_LIMITATIONS.md",
+            "backend/platform/intelligence_publication.go"
+          ],
+          "automation_refs": [
+            "backend/platform/intelligence_publication_test.go"
+          ]
+        },
+        {
+          "id": "INTELLIGENCE-017",
+          "module": "INTELLIGENCE",
+          "title": "Reviewed expense suggestion remains draft with ordinary independent finance controls",
+          "priority": "P0",
+          "gate": "LOCAL_CONFIG",
+          "modes": [
+            "Web",
+            "API"
+          ],
+          "actors": [
+            "platform admin: operator without company membership",
+            "company leadership: QA Alpha founder",
+            "owner: QA Alpha expense/task creator",
+            "independent reviewer: QA Alpha department head distinct from owner",
+            "department member: QA Alpha Engineering member",
+            "finance: QA Alpha finance role distinct from owner",
+            "outsider: QA Beta member only"
+          ],
+          "status": "NOT_RUN",
+          "preconditions": [
+            "Provision a disposable isolated server/API fixture with fictional QA Alpha (INR, Asia/Kolkata, April financial year) and unrelated QA Beta; use separate actor sessions and a controlled 2026-10-12 clock.",
+            "Never mutate the running workspace, restore historical native fixtures or reuse consumed capabilities. Browser demo does not establish backend authorization acceptance.",
+            "Operator must separately provision fresh isolated provider/scanner/private storage and capacity prerequisites; authoring does not start or invoke providers. Missing prerequisite is BLOCKED."
+          ],
+          "test_data": [
+            "QA travel narrative;human amountMinor130050 INR,actual Engineering/category,2026-10-10,permitted evidence.",
+            "Owner creator;separatefinance approver/payment-recorder."
+          ],
+          "steps": [
+            "Inspect originals and resolve exact money/destination/evidence/current audience.",
+            "Confirm draft publication;try evidence/submission bypass and creator approval/payment.",
+            "Independent reviewer checks current policy/version/budget;eligiblefinance records external full payment."
+          ],
+          "expected_results": [
+            "Model not financial authority;reviewed explicit economics feed canonical draft only.",
+            "Draft created only;receipt/submission/budget/version and no-self-approve/reject/pay enforced.",
+            "Ordinary controlled workflow unchanged;no transfer/settlement inference/paid-economic or goal-observation mutation."
+          ],
+          "cleanup": [
+            "Record sanitized observations without real IDs, credentials, private prose or prompts. Close QA sessions and remove owned temporary downloads; reset/dispose only this isolated fixture through its approved lifecycle, retaining audit history until disposal."
+          ],
+          "source_refs": [
+            "docs/API_CONTRACT.md",
+            "docs/intelligence-local.md",
+            "docs/SECURITY_AND_LIMITATIONS.md",
+            "docs/FINANCE_GUIDE.md",
+            "backend/platform/intelligence_publication.go",
+            "backend/platform/communication_finance.go"
+          ],
+          "automation_refs": [
+            "backend/platform/intelligence_publication_test.go",
+            "backend/platform/communication_finance_test.go",
+            "backend/platform/finance_test.go"
+          ]
+        },
+        {
+          "id": "INTELLIGENCE-018",
+          "module": "INTELLIGENCE",
+          "title": "Unknown canonical publication replays frozen intent after raw expiry under current ACL",
+          "priority": "P0",
+          "gate": "LOCAL_CONFIG",
+          "modes": [
+            "Web",
+            "API"
+          ],
+          "actors": [
+            "platform admin: operator without company membership",
+            "company leadership: QA Alpha founder",
+            "owner: QA Alpha expense/task creator",
+            "independent reviewer: QA Alpha department head distinct from owner",
+            "department member: QA Alpha Engineering member",
+            "finance: QA Alpha finance role distinct from owner",
+            "outsider: QA Beta member only"
+          ],
+          "status": "NOT_RUN",
+          "preconditions": [
+            "Provision a disposable isolated server/API fixture with fictional QA Alpha (INR, Asia/Kolkata, April financial year) and unrelated QA Beta; use separate actor sessions and a controlled 2026-10-12 clock.",
+            "Never mutate the running workspace, restore historical native fixtures or reuse consumed capabilities. Browser demo does not establish backend authorization acceptance.",
+            "Operator must separately provision fresh isolated provider/scanner/private storage and capacity prerequisites; authoring does not start or invoke providers. Missing prerequisite is BLOCKED."
+          ],
+          "test_data": [
+            "Reviewed task candidate;qa-intelligence-018-publish;exact request/basis in scopedRAM.",
+            "Raw expires/scrubs;selected source later readable version change;current-source loss control."
+          ],
+          "steps": [
+            "Commit reviewed write then drop acknowledgement;navigate candidate reviews and refresh authority.",
+            "After rawexpiry/source readable edit call publication-access then retry identical canonical write.",
+            "Try new first write after expiry and old frozen replay after source/destination loss."
+          ],
+          "expected_results": [
+            "Unknown exact body/key/basis retained per candidate inRAM;no disk result cache/latest-field replacement.",
+            "Current minimal publication provenance authorizes committed same-intent recovery without expired prose;sameID no duplicate.",
+            "Expired raw cannot create fresh business write;current loss denies replay/disclosure and clears affected scope. Rawexpiry alone never abandons unknown intent."
+          ],
+          "cleanup": [
+            "Record sanitized observations without real IDs, credentials, private prose or prompts. Close QA sessions and remove owned temporary downloads; reset/dispose only this isolated fixture through its approved lifecycle, retaining audit history until disposal."
+          ],
+          "source_refs": [
+            "docs/API_CONTRACT.md",
+            "docs/intelligence-local.md",
+            "docs/SECURITY_AND_LIMITATIONS.md",
+            "backend/platform/intelligence_publication.go",
+            "frontend/src/data/intelligence.ts"
+          ],
+          "automation_refs": [
+            "backend/platform/intelligence_publication_test.go",
+            "frontend/src/pages/Reports.intelligence.test.tsx"
+          ]
+        },
+        {
+          "id": "INTELLIGENCE-019",
+          "module": "INTELLIGENCE",
+          "title": "Explicit preclaimed instruction action opens actual existing task without overwrite",
+          "priority": "P0",
+          "gate": "LOCAL_CONFIG",
+          "modes": [
+            "Web",
+            "API"
+          ],
+          "actors": [
+            "platform admin: operator without company membership",
+            "company leadership: QA Alpha founder",
+            "owner: QA Alpha expense/task creator",
+            "independent reviewer: QA Alpha department head distinct from owner",
+            "department member: QA Alpha Engineering member",
+            "finance: QA Alpha finance role distinct from owner",
+            "outsider: QA Beta member only"
+          ],
+          "status": "NOT_RUN",
+          "preconditions": [
+            "Provision a disposable isolated server/API fixture with fictional QA Alpha (INR, Asia/Kolkata, April financial year) and unrelated QA Beta; use separate actor sessions and a controlled 2026-10-12 clock.",
+            "Never mutate the running workspace, restore historical native fixtures or reuse consumed capabilities. Browser demo does not establish backend authorization acceptance.",
+            "Operator must separately provision fresh isolated provider/scanner/private storage and capacity prerequisites; authoring does not start or invoke providers. Missing prerequisite is BLOCKED."
+          ],
+          "test_data": [
+            "Private QA instruction primary already claimed by QA existing task;human-created alternate action.",
+            "Reviewed candidate proposes QA new title that must not overwrite existingprimary."
+          ],
+          "steps": [
+            "Choose selected anchor/primaryaction and preview current publication.",
+            "Confirm exact audience review;publish primary and inspect task;explicitly choose alternate for separate review.",
+            "Lose primaryack,expire raw,publication-access/replay then revoke root and repeat."
+          ],
+          "expected_results": [
+            "Previewexisting/existingTaskId describes actual task;no generated action identity.",
+            "Primary returnsexisting without applying authored fields;alternate maycreate with separate review/outcome.",
+            "Minimalexisting outcome supports lostack replay after rawexpiry;currentroot loss denies;no duplicate task/action claims."
+          ],
+          "cleanup": [
+            "Record sanitized observations without real IDs, credentials, private prose or prompts. Close QA sessions and remove owned temporary downloads; reset/dispose only this isolated fixture through its approved lifecycle, retaining audit history until disposal."
+          ],
+          "source_refs": [
+            "docs/API_CONTRACT.md",
+            "docs/intelligence-local.md",
+            "docs/SECURITY_AND_LIMITATIONS.md",
+            "backend/platform/intelligence_publication.go",
+            "backend/platform/intelligence_models.go"
+          ],
+          "automation_refs": [
+            "backend/platform/intelligence_fix1_test.go"
+          ]
+        },
+        {
+          "id": "INTELLIGENCE-020",
+          "module": "INTELLIGENCE",
+          "title": "Generated text grants no ordinary business or private-disclosure authority",
+          "priority": "P0",
+          "gate": "LOCAL_CONFIG",
+          "modes": [
+            "Web",
+            "API"
+          ],
+          "actors": [
+            "platform admin: operator without company membership",
+            "company leadership: QA Alpha founder",
+            "owner: QA Alpha expense/task creator",
+            "independent reviewer: QA Alpha department head distinct from owner",
+            "department member: QA Alpha Engineering member",
+            "finance: QA Alpha finance role distinct from owner",
+            "outsider: QA Beta member only"
+          ],
+          "status": "NOT_RUN",
+          "preconditions": [
+            "Provision a disposable isolated server/API fixture with fictional QA Alpha (INR, Asia/Kolkata, April financial year) and unrelated QA Beta; use separate actor sessions and a controlled 2026-10-12 clock.",
+            "Never mutate the running workspace, restore historical native fixtures or reuse consumed capabilities. Browser demo does not establish backend authorization acceptance.",
+            "Operator must separately provision fresh isolated provider/scanner/private storage and capacity prerequisites; authoring does not start or invoke providers. Missing prerequisite is BLOCKED."
+          ],
+          "test_data": [
+            "Destinations task,expense draft,intake request;fictional selected suggestion.",
+            "Negative current audience:viewer destination,foreign company,finance lacking private-publication rights,changed policy."
+          ],
+          "steps": [
+            "Inspect originals and complete destination-specific review as current authorized owner.",
+            "Try negative audience/company/policy or stale reviewhash after membershipchange.",
+            "Confirm valid current payload/audience and inspect record/audit as permitted readers."
+          ],
+          "expected_results": [
+            "Suggestion grants no role/create/private-existence rights;canonical destination/source policy controls authority.",
+            "Complete current audience/business authorization rejects without partial business records.",
+            "Only reviewed independently retained record enters ordinaryACL;raw job owner-only;citations not factual guarantees."
+          ],
+          "cleanup": [
+            "Record sanitized observations without real IDs, credentials, private prose or prompts. Close QA sessions and remove owned temporary downloads; reset/dispose only this isolated fixture through its approved lifecycle, retaining audit history until disposal."
+          ],
+          "source_refs": [
+            "docs/API_CONTRACT.md",
+            "docs/intelligence-local.md",
+            "docs/SECURITY_AND_LIMITATIONS.md",
+            "backend/platform/intelligence_publication.go"
+          ],
+          "automation_refs": [
+            "backend/platform/intelligence_publication_test.go",
+            "backend/platform/intelligence_fix1_test.go"
+          ]
+        }
+      ],
+      "diagram": {
+        "id": "intelligenceFlow",
+        "module": "INTELLIGENCE",
+        "title": "Intelligence selected-source and reviewed publication flow",
+        "nodes": [
+          {
+            "id": "select",
+            "label": "Inspect explicit current originals",
+            "kind": "start"
+          },
+          {
+            "id": "authorize",
+            "label": "Full source ACL and local consent?",
+            "kind": "decision"
+          },
+          {
+            "id": "queue",
+            "label": "Queue pinned local provider job",
+            "kind": "action"
+          },
+          {
+            "id": "resultCheck",
+            "label": "Original session and roots current?",
+            "kind": "decision"
+          },
+          {
+            "id": "review",
+            "label": "Human resolves independent reviewer and audience",
+            "kind": "decision"
+          },
+          {
+            "id": "publish",
+            "label": "Canonical reviewed business write",
+            "kind": "result"
+          },
+          {
+            "id": "deny",
+            "label": "Deny/scrub; continue manually",
+            "kind": "error"
+          },
+          {
+            "id": "retry",
+            "label": "Frozen attempt current publication check",
+            "kind": "action"
+          },
+          {
+            "id": "existing",
+            "label": "Open actual preclaimed task",
+            "kind": "result"
+          }
+        ],
+        "edges": [
+          {
+            "from": "select",
+            "to": "authorize"
+          },
+          {
+            "from": "authorize",
+            "to": "deny",
+            "label": "scope/consent/provider unavailable"
+          },
+          {
+            "from": "authorize",
+            "to": "queue",
+            "label": "allowed"
+          },
+          {
+            "from": "queue",
+            "to": "resultCheck",
+            "label": "provider completes"
+          },
+          {
+            "from": "resultCheck",
+            "to": "deny",
+            "label": "revoked/changed/cancelled/expired"
+          },
+          {
+            "from": "resultCheck",
+            "to": "review",
+            "label": "ready"
+          },
+          {
+            "from": "review",
+            "to": "deny",
+            "label": "missing independent review/audience"
+          },
+          {
+            "from": "review",
+            "to": "publish",
+            "label": "explicit current review"
+          },
+          {
+            "from": "review",
+            "to": "existing",
+            "label": "explicit preclaimed action"
+          },
+          {
+            "from": "publish",
+            "to": "retry",
+            "label": "lost acknowledgement"
+          },
+          {
+            "from": "existing",
+            "to": "retry",
+            "label": "lost acknowledgement"
+          },
+          {
+            "from": "retry",
+            "to": "publish",
+            "label": "same committed intent/current ACL"
+          },
+          {
+            "from": "retry",
+            "to": "deny",
+            "label": "source/destination denied"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+flowchart TD
+  step1["Queue while isolated provider budget held; revoke source/destination before releasing wait."]
+  step2["Allow separate job to process, then revoke original session/target before read or acceptance."]
+  step3["Log in again and request old job, then deliberately start fresh permitted selection."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> record

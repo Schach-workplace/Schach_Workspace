@@ -1,0 +1,10 @@
+flowchart TD
+  step1["As ordinary participant Member B try End call for everyone; as creator Owner A end with the current call version."]
+  step2["In an owned provider-outage fixture observe the local ended state before provider cleanup can succeed."]
+  step3["Attempt fresh and cached-token joins and replay the stale end version."]
+  step4["Restore only that fixture provider and observe queued DeleteRoom retry completion."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> step4
+  step4 --> record

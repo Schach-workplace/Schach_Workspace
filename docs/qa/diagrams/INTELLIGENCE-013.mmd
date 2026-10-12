@@ -1,0 +1,8 @@
+flowchart TD
+  step1["Attempt explicit source/expanded-root/byte/scalar over-limit selection."]
+  step2["Separately qualify real pinned provider actual-token boundary/overflow."]
+  step3["Inspect overflow UI and retry only deliberately narrower inspected selection."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> record

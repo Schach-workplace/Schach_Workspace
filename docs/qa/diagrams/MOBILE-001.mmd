@@ -1,0 +1,10 @@
+flowchart TD
+  step1["On a release fixture install the exact qualified build and enter the actual isolated trusted HTTPS origin in Sign in."]
+  step2["Complete the fictional account’s sign-in/MFA if enabled and open QA Alpha Chats."]
+  step3["Attempt HTTP, URL credentials, a path/query or fragment as a release server origin."]
+  step4["On a separate fresh release device restore only a developer HTTP endpoint/session setting and launch."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> step4
+  step4 --> record

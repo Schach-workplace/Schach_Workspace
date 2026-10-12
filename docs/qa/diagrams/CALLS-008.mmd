@@ -1,0 +1,10 @@
+flowchart TD
+  step1["On each qualified Android/iOS build open Calls and deny microphone permission, then retry after permitting it."]
+  step2["Join audio with a real second participant; navigate Chats → Work → Calls."]
+  step3["Join video, move the app temporarily to background and return foreground after current authorization."]
+  step4["Leave the call and inspect mic/media indicators and the Android ongoing-service lifecycle."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> step4
+  step4 --> record

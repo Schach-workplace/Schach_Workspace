@@ -1,0 +1,6 @@
+flowchart TD
+  step1["As Owner A use Evidence & time → Upload; as Reviewer R attempt review using captured version N."]
+  step2["As Reviewer R choose Load latest version, download/inspect the current attachment and Accept work."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> record

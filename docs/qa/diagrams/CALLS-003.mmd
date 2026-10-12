@@ -1,0 +1,10 @@
+flowchart TD
+  step1["Owner A selects Start audio call and Member B opens the conversation call list and selects Join audio call."]
+  step2["Both allow browser microphone use and exchange distinct fictional QA phrases."]
+  step3["Use mute/unmute controls and observe the other participant’s audio, then disconnect one participant."]
+  step4["Inspect sanitized provider participant count and gateway connection observations."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> step4
+  step4 --> record

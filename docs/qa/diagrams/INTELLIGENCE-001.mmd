@@ -1,0 +1,8 @@
+flowchart TD
+  step1["Open conversation/Reports without generation;GET capabilities then selection-preview."]
+  step2["POST job without accepted opt-in,wrong policy or missing stable key."]
+  step3["Inspect original and notice,then explicitly enqueue exact preview hash/selection/consent."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> record

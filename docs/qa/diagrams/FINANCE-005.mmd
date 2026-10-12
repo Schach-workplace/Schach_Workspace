@@ -1,0 +1,8 @@
+flowchart TD
+  step1["Create draft October and attempt overlapping/cross-fiscal-year envelopes."]
+  step2["Activate, attempt department/date edit, close and retry boundary edits."]
+  step3["Reduce below approved spend with meaningful reason; attempt currency/fiscal-month edits after finance record."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> record

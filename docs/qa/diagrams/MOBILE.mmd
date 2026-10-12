@@ -1,0 +1,19 @@
+flowchart TD
+  phoneEntry["Member opens company-qualified native route"]
+  freshAuth{"Client verifies current foreground authority"}
+  withheld["Client withholds fetched private content"]
+  usableRoute["Member uses keyboard/44dp actions/Back"]
+  ramIntent["Client keeps authored draft/frozen send in scoped RAM"]
+  lifecycle{"OS/navigation changes lifecycle"}
+  freshReturn["Client refetches current authorized content"]
+  clearBoundary["Client clears affected input/captures on denial/boundary"]
+  phoneEntry -->|"route focus"| freshAuth
+  freshAuth -->|"pending/denied"| withheld
+  freshAuth -->|"authorized"| usableRoute
+  usableRoute -->|"author input"| ramIntent
+  ramIntent -->|"navigate/background/change scope"| lifecycle
+  lifecycle -->|"background hides fetched content"| withheld
+  lifecycle -->|"same principal foreground"| freshReturn
+  freshReturn -->|"fresh checks"| freshAuth
+  lifecycle -->|"logout/company/account/source withdrawal"| clearBoundary
+  withheld -->|"confirmed authority loss"| clearBoundary

@@ -1,0 +1,19 @@
+flowchart TD
+  goal["Open current authorized goal"]
+  metadata["Review metadata and contributing tasks"]
+  observe["Enter value, instant and reason"]
+  evidence["Inspect exact authorized evidence"]
+  current{"Versions and sources still current?"}
+  append["Append observation or correction"]
+  history["Show qualified current value and history"]
+  retry["Inspect conflict or retry frozen unknown intent"]
+  goal --> metadata
+  metadata -->|"Explicit update"| observe
+  observe --> evidence
+  evidence --> current
+  current -->|"Yes"| append
+  current -->|"Conflict / denial"| retry
+  append -->|"Known ACK"| history
+  append -->|"ACK unknown"| retry
+  retry -->|"Exact unknown retry"| current
+  retry -->|"Deliberate discard and latest load"| goal

@@ -1,0 +1,8 @@
+flowchart TD
+  step1["Submit reviewed new-account apply and suppress ACK; allow a same-principal graph refresh, then Retry the same submission."]
+  step2["On retained-key restart/rotation fixture retry the same original apply after the account password has changed; submit a changed credential under its original key."]
+  step3["Confirm actor/session/source loss and release a late ACK."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> record

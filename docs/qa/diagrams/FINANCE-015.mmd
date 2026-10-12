@@ -1,0 +1,8 @@
+flowchart TD
+  step1["Review current pairs and deliberately page100-peer comparisons."]
+  step2["Inspect near-match and dismiss with short then meaningful reason."]
+  step3["Attempt exact normalized nonvoid vendor/invoice duplicate after dismissal; revoke one source and reopen candidate."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> record

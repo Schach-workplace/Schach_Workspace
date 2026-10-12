@@ -1,0 +1,8 @@
+flowchart TD
+  step1["Generate over short-retention source/transcript and compare effective expiry."]
+  step2["Controlled expiry then startup/periodic maintenance with nil/disabled/missing provider."]
+  step3["Inspect scratch controls/history/expired result and separately absent-root setup."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> record

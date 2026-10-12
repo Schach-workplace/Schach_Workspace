@@ -1,0 +1,8 @@
+flowchart TD
+  step1["Read current reports as each QA Alpha role and compare task detail scope."]
+  step2["Try hidden/cross-company filters or another actor/company snapshot token."]
+  step3["Read endpoints as outsider and operator without QA Alpha membership."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> record

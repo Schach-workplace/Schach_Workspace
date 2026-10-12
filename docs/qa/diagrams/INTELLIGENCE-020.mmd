@@ -1,0 +1,8 @@
+flowchart TD
+  step1["Inspect originals and complete destination-specific review as current authorized owner."]
+  step2["Try negative audience/company/policy or stale reviewhash after membershipchange."]
+  step3["Confirm valid current payload/audience and inspect record/audit as permitted readers."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> record

@@ -1,0 +1,6 @@
+flowchart TD
+  step1["Choose the sign-out control beside Owner A’s name."]
+  step2["Attempt GET /api/auth/session with the previously issued session."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> record

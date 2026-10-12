@@ -1,0 +1,6 @@
+flowchart TD
+  step1["As Alpha leader, open Company → Edit details, change the name and timezone, and save the form."]
+  step2["Open Calendar and compare company civil-date labeling."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> record

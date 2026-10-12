@@ -1,0 +1,6 @@
+flowchart TD
+  step1["Set Calendar department to Engineering and Calendar owner to Owner A with Open work only checked."]
+  step2["Uncheck Open work only and select the accepted/cancelled task day."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> record

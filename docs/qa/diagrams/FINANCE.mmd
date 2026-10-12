@@ -1,0 +1,20 @@
+flowchart TD
+  enter["Choose company and department"]
+  scope{"Current finance authority?"}
+  draft["Exact owned draft and evidence"]
+  submit["Submit current version"]
+  review{"Independent reviewer; receipt and budget?"}
+  deny["Deny or return for correction"]
+  retry["409/unknown: inspect or frozen retry"]
+  approved["Approved unpaid"]
+  paid["Record external full payment"]
+  enter --> scope
+  scope -->|"allowed"| draft
+  scope -->|"denied"| deny
+  draft --> submit
+  submit --> review
+  review -->|"self/policy/budget denied"| deny
+  review -->|"changed version/unknown"| retry
+  retry -->|"current explicit review"| review
+  review -->|"independent approval"| approved
+  approved -->|"eligible noncreator"| paid

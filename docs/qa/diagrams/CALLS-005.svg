@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1160" height="747" viewBox="0 0 1160 747" role="img" aria-labelledby="flowTitle flowDesc">
+<title id="flowTitle">CALLS-005 · Cached and provider-refreshed tokens cannot bypass revocation</title>
+<desc id="flowDesc">Arrows show the documented workflow. Denial and missing-prerequisite branches are red.</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#64748b"/></marker></defs>
+<rect width="1160" height="100%" fill="#ffffff"/>
+<text x="38" y="32" font-family="Arial,sans-serif" font-size="21" font-weight="700" fill="#172033">CALLS-005 · Cached and provider-refreshed tokens cannot bypass revocation</text>
+<text x="38" y="55" font-family="Arial,sans-serif" font-size="12" fill="#5e6b7d">Source-grounded flow | Current permission, version and original retry controls remain binding</text>
+<path d="M 350 154 V 212" fill="none" stroke="#64748b" stroke-width="1.8" marker-end="url(#arrow)"/>
+<path d="M 350 280 V 338" fill="none" stroke="#64748b" stroke-width="1.8" marker-end="url(#arrow)"/>
+<path d="M 350 406 V 464" fill="none" stroke="#64748b" stroke-width="1.8" marker-end="url(#arrow)"/>
+<path d="M 350 551 V 609" fill="none" stroke="#64748b" stroke-width="1.8" marker-end="url(#arrow)"/>
+<g><title>Join a local call as Member B; retain cached/provider-refreshed JWT only in the fixture’s volatile inspection session.</title>
+<rect x="70.0" y="86" width="560" height="68" rx="10" fill="#ecfdf5" stroke="#0f766e" stroke-width="1.8"/>
+<text x="350" y="115.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#172033">Join a local call as Member B; retain cached/provider-refreshed</text>
+<text x="350" y="134.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#172033">JWT only in the fixture’s volatile inspection session.</text>
+</g>
+<g><title>Owner A removes Member B from the private conversation; observe gateway disconnect and provider participant cleanup.</title>
+<rect x="70.0" y="212" width="560" height="68" rx="10" fill="#f8fafc" stroke="#64748b" stroke-width="1.8"/>
+<text x="350" y="241.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#172033">Owner A removes Member B from the private conversation; observe</text>
+<text x="350" y="260.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#172033">gateway disconnect and provider participant cleanup.</text>
+</g>
+<g><title>Attempt rejoin through Schach using both retained tokens and request a fresh token.</title>
+<rect x="70.0" y="338" width="560" height="68" rx="10" fill="#f8fafc" stroke="#64748b" stroke-width="1.8"/>
+<text x="350" y="367.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#172033">Attempt rejoin through Schach using both retained tokens and</text>
+<text x="350" y="386.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#172033">request a fresh token.</text>
+</g>
+<g><title>Explicitly re-invite Member B and join with a newly authorized grant; allow delayed old cleanup jobs to complete in the owned fixture.</title>
+<rect x="70.0" y="464" width="560" height="87" rx="10" fill="#f8fafc" stroke="#64748b" stroke-width="1.8"/>
+<text x="350" y="493.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#172033">Explicitly re-invite Member B and join with a newly authorized</text>
+<text x="350" y="512.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#172033">grant; allow delayed old cleanup jobs to complete in the owned</text>
+<text x="350" y="531.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#172033">fixture.</text>
+</g>
+<g><title>Compare every expected result; record PASS, FAIL or BLOCKED for this run</title>
+<rect x="70.0" y="609" width="560" height="68" rx="10" fill="#eff6ff" stroke="#2563eb" stroke-width="1.8"/>
+<text x="350" y="638.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#172033">Compare every expected result; record PASS, FAIL or BLOCKED for</text>
+<text x="350" y="657.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#172033">this run</text>
+</g>
+</svg>

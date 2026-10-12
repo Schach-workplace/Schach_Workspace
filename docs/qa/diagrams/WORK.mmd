@@ -1,0 +1,18 @@
+flowchart TD
+  personal["Open My work"]
+  source["Select owned or review-assigned tasks"]
+  filter["Apply search, status and deadline filters"]
+  rows{"Any matching personal work?"}
+  empty["Show personal empty state"]
+  openTask["Open task title"]
+  current{"Current task access?"}
+  detail["Show task detail"]
+  denied["Clear stale detail"]
+  personal --> source
+  source --> filter
+  filter --> rows
+  rows -->|"No"| empty
+  rows -->|"Yes"| openTask
+  openTask --> current
+  current -->|"Yes"| detail
+  current -->|"No"| denied

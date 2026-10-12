@@ -1,0 +1,10 @@
+flowchart TD
+  step1["Record physical device/OS, exact signed organization build, push environment and staged network; request notification permission and test denied permission separately."]
+  step2["While foreground, background and locked, have another participant start an incoming call and observe any intended OS surface/push behavior."]
+  step3["During a joined call switch speaker/headset/Bluetooth, exercise an OS interruption and change Wi-Fi/mobile network."]
+  step4["Revoke the device/session while background or locked, then foreground and try to rejoin."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> step4
+  step4 --> record

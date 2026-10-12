@@ -1,0 +1,6 @@
+flowchart TD
+  step1["As Owner A choose Mark all read and inspect POST /notifications/read ids=[]."]
+  step2["Query/inspect Member B’s Inbox separately."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> record

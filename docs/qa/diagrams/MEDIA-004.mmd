@@ -1,0 +1,10 @@
+flowchart TD
+  step1["Select an empty or over-25-MiB fixture file in the browser, then try a mismatched extension/content file through the API."]
+  step2["Reserve an allowed exact size/hash and upload different bytes or a different size."]
+  step3["Repeat the exact reservation key/body, then reuse that key with changed hash/name/size."]
+  step4["In a separately provisioned low-quota fixture, retain quarantined/rejected reservations and attempt another reservation."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> step4
+  step4 --> record

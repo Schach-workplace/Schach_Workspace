@@ -1,0 +1,8 @@
+flowchart TD
+  step1["In a calls-unconfigured fixture select Start audio call."]
+  step2["In a configured fixture start an audio call while dropping only the start/join response in isolated transport."]
+  step3["Choose Retry same call, then fetch available calls and repeat the API retry key with video or another conversation."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> record

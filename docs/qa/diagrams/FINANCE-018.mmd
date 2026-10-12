@@ -1,0 +1,8 @@
+flowchart TD
+  step1["Finance deliberately selects current row/paid expense; try credit,partial100000,unpaid/cross-currency controls."]
+  step2["Commit versions/reason/key and concurrently try another active allocation for same row/expense."]
+  step3["Unmatch current allocation with reason, repeat frozen unmatch and page over20 decisions."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> record

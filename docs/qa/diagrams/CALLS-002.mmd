@@ -1,0 +1,10 @@
+flowchart TD
+  step1["Owner A starts an audio call; Member B registers an owned web device and requests a token."]
+  step2["As Alpha leader outside the private conversation request token/list; as Member B try a device belonging to Owner A or another session."]
+  step3["Change Member B to viewer or archive the conversation in separate fixture variants and request a fresh token."]
+  step4["Inspect only sanitized grant flags and gateway host/path; never persist the token."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> step4
+  step4 --> record

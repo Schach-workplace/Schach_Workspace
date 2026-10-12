@@ -1,0 +1,12 @@
+flowchart TD
+  step1["Stage scanned fictional CSV with two identical negative debits; explicitly map delimiter/header/date/decimal/grouping/sign and all required columns."]
+  step2["Review both normalized occurrences and debit total; lose only the post-import acknowledgement using the supported owned harness."]
+  step3["Retry the original key/body/mapping then refresh the current imported rows."]
+  step4["With current finance pair access and captured row/expense versions, associate one full debit to the paid expense using a meaningful reason."]
+  step5["With captured allocation version and reason, perform audited unmatch; separately lose current pair access and attempt a new stale association."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> step4
+  step4 --> step5
+  step5 --> record

@@ -1,0 +1,8 @@
+flowchart TD
+  step1["Suppress one transition ACK and use its retry control with original exact submitted fields."]
+  step2["Complete the source task independently, then replay the previously successful transition; try a new transition afterward."]
+  step3["Remove current source authority and replay again."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> record

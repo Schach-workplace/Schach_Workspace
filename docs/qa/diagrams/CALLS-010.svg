@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1160" height="766" viewBox="0 0 1160 766" role="img" aria-labelledby="flowTitle flowDesc">
+<title id="flowTitle">CALLS-010 · Physical background push, incoming-call, headset and handover gate</title>
+<desc id="flowDesc">Arrows show the documented workflow. Denial and missing-prerequisite branches are red.</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#64748b"/></marker></defs>
+<rect width="1160" height="100%" fill="#ffffff"/>
+<text x="38" y="32" font-family="Arial,sans-serif" font-size="21" font-weight="700" fill="#172033">CALLS-010 · Physical background push, incoming-call, headset and handover gate</text>
+<text x="38" y="55" font-family="Arial,sans-serif" font-size="12" fill="#5e6b7d">Source-grounded flow | Current permission, version and original retry controls remain binding</text>
+<path d="M 350 173 V 231" fill="none" stroke="#64748b" stroke-width="1.8" marker-end="url(#arrow)"/>
+<path d="M 350 318 V 376" fill="none" stroke="#64748b" stroke-width="1.8" marker-end="url(#arrow)"/>
+<path d="M 350 444 V 502" fill="none" stroke="#64748b" stroke-width="1.8" marker-end="url(#arrow)"/>
+<path d="M 350 570 V 628" fill="none" stroke="#64748b" stroke-width="1.8" marker-end="url(#arrow)"/>
+<g><title>Record physical device/OS, exact signed organization build, push environment and staged network; request notification permission and test denied permission separately.</title>
+<rect x="70.0" y="86" width="560" height="87" rx="10" fill="#ecfdf5" stroke="#0f766e" stroke-width="1.8"/>
+<text x="350" y="115.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#172033">Record physical device/OS, exact signed organization build, push</text>
+<text x="350" y="134.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#172033">environment and staged network; request notification permission</text>
+<text x="350" y="153.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#172033">and test denied permission separately.</text>
+</g>
+<g><title>While foreground, background and locked, have another participant start an incoming call and observe any intended OS surface/push behavior.</title>
+<rect x="70.0" y="231" width="560" height="87" rx="10" fill="#f8fafc" stroke="#64748b" stroke-width="1.8"/>
+<text x="350" y="260.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#172033">While foreground, background and locked, have another participant</text>
+<text x="350" y="279.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#172033">start an incoming call and observe any intended OS surface/push</text>
+<text x="350" y="298.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#172033">behavior.</text>
+</g>
+<g><title>During a joined call switch speaker/headset/Bluetooth, exercise an OS interruption and change Wi-Fi/mobile network.</title>
+<rect x="70.0" y="376" width="560" height="68" rx="10" fill="#f8fafc" stroke="#64748b" stroke-width="1.8"/>
+<text x="350" y="405.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#172033">During a joined call switch speaker/headset/Bluetooth, exercise an</text>
+<text x="350" y="424.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#172033">OS interruption and change Wi-Fi/mobile network.</text>
+</g>
+<g><title>Revoke the device/session while background or locked, then foreground and try to rejoin.</title>
+<rect x="70.0" y="502" width="560" height="68" rx="10" fill="#f8fafc" stroke="#64748b" stroke-width="1.8"/>
+<text x="350" y="531.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#172033">Revoke the device/session while background or locked, then</text>
+<text x="350" y="550.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#172033">foreground and try to rejoin.</text>
+</g>
+<g><title>Compare every expected result; record PASS, FAIL or BLOCKED for this run</title>
+<rect x="70.0" y="628" width="560" height="68" rx="10" fill="#eff6ff" stroke="#2563eb" stroke-width="1.8"/>
+<text x="350" y="657.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#172033">Compare every expected result; record PASS, FAIL or BLOCKED for</text>
+<text x="350" y="676.5" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#172033">this run</text>
+</g>
+</svg>

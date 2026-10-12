@@ -1,0 +1,8 @@
+flowchart TD
+  step1["Stage/finalize receipt in missing-scanner fixture and inspect current status."]
+  step2["Request extraction before clean assessment, with unavailable OCR or unsupported PDF."]
+  step3["Save manual exact draft with ordinary evidence/exception and cancel intake."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> record

@@ -1,0 +1,19 @@
+flowchart TD
+  entry["Record source and current actor"]
+  scope{"Check supported environment and source permissions"}
+  inspect["Inspect exact fields and responsibilities"]
+  commit["Migrate supported fixture and start owned workers"]
+  ack{"Current health and preservation verified?"}
+  retry["Diagnose only owned environment failure"]
+  review["Independent decision or measured validation"]
+  result["Retain actual outcome and scoped evidence"]
+  deny["Block missing prerequisite or deny stale authority"]
+  entry -->|"begin"| scope
+  scope -->|"eligible"| inspect
+  scope -->|"missing or denied"| deny
+  inspect -->|"reviewed"| commit
+  commit -->|"result"| ack
+  ack -->|"unknown or failed"| retry
+  retry -->|"recheck original context"| scope
+  ack -->|"known or verified"| review
+  review -->|"accepted or measured"| result

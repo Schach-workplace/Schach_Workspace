@@ -1,0 +1,6 @@
+flowchart TD
+  step1["Submit each invalid variant through Sign in and POST /api/auth/login."]
+  step2["Request GET /api/companies without an authenticated session."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> record

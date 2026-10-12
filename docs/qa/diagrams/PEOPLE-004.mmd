@@ -1,0 +1,8 @@
+flowchart TD
+  step1["Create preset through Save reviewed preset, then edit its captured version concurrently."]
+  step2["Use Reviewed onboarding with preset and template, choose Review onboarding and inspect Review exact access/task criteria/deadlines/reviewer."]
+  step3["Apply after all choices are reviewed, then inspect created tasks and Inbox."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> record

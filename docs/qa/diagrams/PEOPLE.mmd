@@ -1,0 +1,20 @@
+flowchart TD
+  directory["Load complete current leadership directory"]
+  choose{"Choose membership, onboarding, review or departure"}
+  review["Capture current graph and source versions"]
+  preview["Preview exact access and obligations"]
+  ready{"Complete, authorized and unblocked?"}
+  apply["Apply canonical reviewed batch"]
+  history["Record attestation/history; retire affected epochs"]
+  blocked["Opaque blocker, stale source or denial"]
+  retry["Retry exact unknown attempt or deliberately re-review"]
+  directory --> choose
+  choose --> review
+  review --> preview
+  preview --> ready
+  ready -->|"Yes"| apply
+  ready -->|"No"| blocked
+  apply -->|"ACK known"| history
+  apply -->|"ACK unknown"| retry
+  retry -->|"Original exact attempt"| ready
+  blocked -->|"Fresh authorized review"| review

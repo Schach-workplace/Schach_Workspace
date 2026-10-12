@@ -1,0 +1,10 @@
+flowchart TD
+  step1["Use an isolated pre-expired clean media/message fixture before asynchronous cleanup; request download and task/expense conversion preview."]
+  step2["Run only the fixture owner’s scheduled retention/cleanup acceptance step and refresh chat, structured records and saved projections."]
+  step3["Replay the exact original send identity after content expiry."]
+  step4["Inspect independently published QA business evidence and any authorized exported copy separately."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> step4
+  step4 --> record

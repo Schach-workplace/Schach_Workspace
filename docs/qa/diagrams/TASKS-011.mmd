@@ -1,0 +1,8 @@
+flowchart TD
+  step1["As Viewer V inspect task read detail, then attempt create/update/review; as Outsider O request the same detail."]
+  step2["As authorized editor submit foreign owner/project/dependency and cyclic/self-parent variants."]
+  step3["As Finance F inspect a task linked from company finance but not independently readable."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> record

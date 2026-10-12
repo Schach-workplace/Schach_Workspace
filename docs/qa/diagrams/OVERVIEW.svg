@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1160" height="1088.8" viewBox="0 0 1160 1088.8" role="img" aria-labelledby="flowTitle flowDesc">
+<title id="flowTitle">Overview principal workflow</title>
+<desc id="flowDesc">Arrows show the documented workflow. Denial and missing-prerequisite branches are red.</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#64748b"/></marker></defs>
+<rect width="1160" height="100%" fill="#ffffff"/>
+<text x="38" y="32" font-family="Arial,sans-serif" font-size="21" font-weight="700" fill="#172033">Overview principal workflow</text>
+<text x="38" y="55" font-family="Arial,sans-serif" font-size="12" fill="#5e6b7d">Source-grounded flow | Current permission, version and original retry controls remain binding</text>
+<path d="M 350 154 V 212" fill="none" stroke="#64748b" stroke-width="1.8" marker-end="url(#arrow)"/>
+<path d="M 350 280 V 338" fill="none" stroke="#64748b" stroke-width="1.8" marker-end="url(#arrow)"/>
+<path d="M 350 460.4 V 518.4" fill="none" stroke="#64748b" stroke-width="1.8" marker-end="url(#arrow)"/>
+<text x="360" y="484.4" font-family="Arial,sans-serif" font-size="11" fill="#475569"><title>Task metric</title>Task metric</text>
+<path d="M 70.0 399.2 H 50 V 678.4 H 70.0" fill="none" stroke="#64748b" stroke-width="1.8" marker-end="url(#arrow)"/>
+<text x="90" y="328" font-family="Arial,sans-serif" font-size="11" fill="#475569"><title>Other summary</title>Other summary</text>
+<path d="M 70.0 552.4 H 20 V 831.6 H 70.0" fill="none" stroke="#64748b" stroke-width="1.8" marker-end="url(#arrow)"/>
+<path d="M 350 712.4 V 770.4" fill="none" stroke="#64748b" stroke-width="1.8" marker-end="url(#arrow)"/>
+<path d="M 350 892.8 V 950.8" fill="none" stroke="#64748b" stroke-width="1.8" marker-end="url(#arrow)"/>
+<text x="360" y="916.8" font-family="Arial,sans-serif" font-size="11" fill="#475569"><title>Yes</title>Yes</text>
+<path d="M 630.0 831.6 H 739 V 259.0 H 770.0" fill="none" stroke="#64748b" stroke-width="1.8" marker-end="url(#arrow)"/>
+<text x="490.0" y="760.4" font-family="Arial,sans-serif" font-size="11" fill="#475569"><title>No</title>No</text>
+<g><title>Open Overview</title>
+<rect x="70.0" y="86" width="560" height="68" rx="10" fill="#ecfdf5" stroke="#0f766e" stroke-width="1.8"/>
+<text x="350" y="125.0" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#172033">Open Overview</text>
+</g>
+<g><title>Load authorized workspace rows</title>
+<rect x="70.0" y="212" width="560" height="68" rx="10" fill="#f8fafc" stroke="#64748b" stroke-width="1.8"/>
+<text x="350" y="251.0" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#172033">Load authorized workspace rows</text>
+</g>
+<g><title>Choose metric or attention category</title>
+<polygon points="350,338 630.0,399.2 350,460.4 70.0,399.2" fill="#fff7ed" stroke="#c2410c" stroke-width="1.8"/>
+<text x="350" y="404.2" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#172033">Choose metric or attention category</text>
+</g>
+<g><title>Open corresponding task filters</title>
+<rect x="70.0" y="518.4" width="560" height="68" rx="10" fill="#f8fafc" stroke="#64748b" stroke-width="1.8"/>
+<text x="350" y="557.4" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#172033">Open corresponding task filters</text>
+</g>
+<g><title>Open project, report, finance or goal route</title>
+<rect x="70.0" y="644.4" width="560" height="68" rx="10" fill="#f8fafc" stroke="#64748b" stroke-width="1.8"/>
+<text x="350" y="683.4" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#172033">Open project, report, finance or goal route</text>
+</g>
+<g><title>Destination currently readable?</title>
+<polygon points="350,770.4 630.0,831.6 350,892.8 70.0,831.6" fill="#fff7ed" stroke="#c2410c" stroke-width="1.8"/>
+<text x="350" y="836.6" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#172033">Destination currently readable?</text>
+</g>
+<g><title>Display current authorized detail</title>
+<rect x="70.0" y="950.8" width="560" height="68" rx="10" fill="#eff6ff" stroke="#2563eb" stroke-width="1.8"/>
+<text x="350" y="989.8" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#172033">Display current authorized detail</text>
+</g>
+<g><title>Show unavailable or denial state</title>
+<rect x="770.0" y="218" width="340" height="82" rx="10" fill="#fff1f2" stroke="#be123c" stroke-width="1.8"/>
+<text x="940" y="264.0" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#172033">Show unavailable or denial state</text>
+</g>
+</svg>

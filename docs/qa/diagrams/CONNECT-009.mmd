@@ -1,0 +1,10 @@
+flowchart TD
+  step1["Create a Poll with two distinct fictional options and Member B selected; leave Response deadline blank."]
+  step2["Create a second Event / RSVP for a future time in the company timezone; inspect the submitted dueAt in a sanitized fixture observation."]
+  step3["As Member B vote in the poll and select attending/maybe/declined in the RSVP before its deadline."]
+  step4["In a separately provisioned expired-deadline fixture, attempt a response; also try duplicate poll options and a past deadline on creation."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> step4
+  step4 --> record

@@ -1,0 +1,10 @@
+flowchart TD
+  step1["Check toolchains and pinned frontend dependencies."]
+  step2["Run start-isolated-qa.sh on port 9080."]
+  step3["Read /api/health and sign in."]
+  step4["Check private run directory/config permissions without displaying secrets."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> step4
+  step4 --> record

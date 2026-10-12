@@ -1,0 +1,8 @@
+flowchart TD
+  step1["As Alpha leader directly PATCH Owner A active=false with captured version; inspect preserved assignments and handover status."]
+  step2["Explicitly rejoin Owner A and authenticate anew; request old ready links/raw outputs/private history/reminder capabilities."]
+  step3["Inspect queued Inbox/output delivery and attempt replay of previously scoped capability."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> record

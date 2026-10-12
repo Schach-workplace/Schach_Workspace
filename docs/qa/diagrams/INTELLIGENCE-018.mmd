@@ -1,0 +1,8 @@
+flowchart TD
+  step1["Commit reviewed write then drop acknowledgement;navigate candidate reviews and refresh authority."]
+  step2["After rawexpiry/source readable edit call publication-access then retry identical canonical write."]
+  step3["Try new first write after expiry and old frozen replay after source/destination loss."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> record

@@ -1,0 +1,10 @@
+flowchart TD
+  step1["Open a thread/publication/structured form bound to current root A and keep a separate pending authored reply to unchanged root B."]
+  step2["Have the author edit A, then let source synchronization/refetch finish."]
+  step3["Repeat with removal/expiry of A and use its remembered source target."]
+  step4["Deliver an unrelated message-created event or an unchanged freshly fetched B revision."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> step4
+  step4 --> record

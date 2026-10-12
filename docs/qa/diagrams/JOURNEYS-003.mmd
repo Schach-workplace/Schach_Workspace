@@ -1,0 +1,12 @@
+flowchart TD
+  step1["Create Project P/prerequisite/successor/milestone with captured versions."]
+  step2["Attempt required submission with incomplete prerequisite."]
+  step3["Complete prerequisites and independently accept tasks."]
+  step4["Review milestone independently against current criteria and versions."]
+  step5["Reopen/change a captured task before stale milestone decision; inspect Goal G."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> step4
+  step4 --> step5
+  step5 --> record

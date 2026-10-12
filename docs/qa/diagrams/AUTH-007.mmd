@@ -1,0 +1,6 @@
+flowchart TD
+  step1["Request GET /api/companies/{Birch}/workspace with Owner A’s valid session, adding fabricated role/company headers."]
+  step2["Load GET /api/companies and the company selector."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> record

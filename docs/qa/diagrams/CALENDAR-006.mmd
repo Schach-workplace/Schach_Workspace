@@ -1,0 +1,6 @@
+flowchart TD
+  step1["Delay current range refresh after a scope/filter change and inspect grid and agenda."]
+  step2["Confirm access loss, release the delayed old response and try the prior task link."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> record

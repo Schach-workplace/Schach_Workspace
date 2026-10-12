@@ -1,0 +1,22 @@
+flowchart TD
+  create["Create exact owner, commitment and criteria"]
+  work["Save progress, blockers and evidence"]
+  ready{"Checklist and dependencies complete?"}
+  submit["Owner submits In review"]
+  review["Independent reviewer inspects current version"]
+  decision{"Accept or request changes?"}
+  accepted["Done with immutable acceptance history"]
+  changes["Return In progress with feedback"]
+  recover["Reject stale/denied intent; inspect or exact retry"]
+  create --> work
+  work --> ready
+  ready -->|"No"| work
+  ready -->|"Yes"| submit
+  submit --> review
+  review -->|"Current eligible reviewer"| decision
+  review -->|"Stale / denied"| recover
+  decision -->|"Accept"| accepted
+  decision -->|"Request changes"| changes
+  changes --> work
+  accepted -->|"Explicit reopen"| work
+  recover -->|"Deliberate latest inspection"| review

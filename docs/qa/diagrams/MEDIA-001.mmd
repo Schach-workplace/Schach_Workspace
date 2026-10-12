@@ -1,0 +1,10 @@
+flowchart TD
+  step1["Open Attachments & voice notes, choose a small fictional TXT/PDF/image file and inspect its name/size preview."]
+  step2["Select Send selected media with configured private storage and scanner."]
+  step3["Observe reservation, upload, finalize and message acceptance in sanitized fixture metadata; Member B downloads the attachment."]
+  step4["Cancel a second unsent selection and inspect the conversation again."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> step4
+  step4 --> record

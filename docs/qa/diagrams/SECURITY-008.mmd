@@ -1,0 +1,10 @@
+flowchart TD
+  step1["Member B starts a fresh clean attachment download while currently authorized; record only request status/content size."]
+  step2["In a separate fresh request revoke membership before download and attempt the remembered URL."]
+  step3["In an isolated slow-client variant request media and schedule owner revocation during transfer; record completion/order without assuming chunk fencing."]
+  step4["Compare a previously delivered QA copy and a fresh request after revocation commits."]
+  record["Compare every expected result; record PASS, FAIL or BLOCKED for this run"]
+  step1 --> step2
+  step2 --> step3
+  step3 --> step4
+  step4 --> record
