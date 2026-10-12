@@ -133,8 +133,8 @@ All start **NOT_RUN**. Missing prerequisite = BLOCKED.
 | Step | Action | Expected result |
 | --- | --- | --- |
 | 1 | Provision owned disposable native PostgreSQL/database/schema. | No production/sibling data selected. |
-| 2 | Compare all 58 migration pairs in both trees. | 116 up/down filenames per tree match; old checksums immutable. |
-| 3 | Run current checksummed numbered migration owner. | Reach version 58 with no GORM/numbered PostgreSQL mixing. |
+| 2 | Compare all 59 migration pairs in both trees. | 118 up/down filenames per tree match; old checksums immutable. |
+| 3 | Run current checksummed numbered migration owner. | Reach version 59 with no GORM/numbered PostgreSQL mixing. |
 | 4 | Repeat owner and populated-upgrade regressions on owned fixtures. | Idempotent inventory, typed original records preserved; only owned fixture resources cleaned. |
 
 **Cleanup:** Clear injected faults/editors; retain audited canonical fixture data and private keys until signoff. Stop/reset only verified owned QA resources.

@@ -27,9 +27,9 @@ go test -count=1 ./...
 go test -race -count=1 ./...
 ```
 
-For the **standalone numbered migration owner**, configure `DATABASE_URL` privately for a fresh owned disposable database/schema and run `go run ./cmd/migrate` from `backend/`. It checksums all current versions through 58. Repeating the owner should preserve the ledger and original records. `-adopt-through` is an explicit verified legacy-1/2 adoption procedure; it is not needed for a new fixture. Test populated upgrades and preservation separately as OPERATIONS-003 describes. Never use down migrations on retained real data.
+For the **standalone numbered migration owner**, configure `DATABASE_URL` privately for a fresh owned disposable database/schema and run `go run ./cmd/migrate` from `backend/`. It checksums all current versions through 59. Repeating the owner should preserve the ledger and original records. `-adopt-through` is an explicit verified legacy-1/2 adoption procedure; it is not needed for a new fixture. Test populated upgrades and preservation separately as OPERATIONS-003 describes. Never use down migrations on retained real data.
 
-The 58 up/down pairs are byte-identical across `backend/migrations` and `encore/api/migrations`. Older PGlite finance-release checks cover only their recorded versions 1–2; they do not establish the current full native PostgreSQL path. Older “no reconciliation” finance documentation describes an earlier release; current FINANCE cases use the implemented statement and full-payment association handlers.
+The 59 up/down pairs are byte-identical across `backend/migrations` and `encore/api/migrations`. Older PGlite finance-release checks cover only their recorded versions 1–2; they do not establish the current full native PostgreSQL path. Older “no reconciliation” finance documentation describes an earlier release; current FINANCE cases use the implemented statement and full-payment association handlers.
 
 ## Browser and adapter end-to-end checks
 

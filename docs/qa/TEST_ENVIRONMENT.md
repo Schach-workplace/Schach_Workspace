@@ -77,7 +77,7 @@ a success case for them. Presence/typing indicators are not advertised UI flows.
 ## Database and adapter coverage
 
 SQLite is local evaluation. Production uses the supported numbered PostgreSQL
-migration owner and all versions through 58: 116 up/down filenames in each of
+migration owner and all versions through 59: 118 up/down filenames in each of
 the two byte-identical migration trees. Native PostgreSQL concurrency and the
 actual Encore adapter need their own test runs. PGlite, handler tests, browser
 demo, or ordinary `go build` do not substitute for those results.

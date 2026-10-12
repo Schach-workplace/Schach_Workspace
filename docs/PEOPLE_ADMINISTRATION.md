@@ -10,7 +10,7 @@ The binding uses independent 24-byte random salt, PBKDF2-HMAC-SHA256 with 600,00
 
 Default admission limits are 120 attempts per actor/company and 300 per actor per 15 minutes, with 20 proven mismatches per actor/company, 2 active KDF operations, 8 waiting operations and a 5-second queue timeout. The bounded admission maps fail closed. KDF work happens outside the final mutation locks; current authority and winning retry metadata are rechecked afterward. The same configured keyring must be available on all instances and after restart.
 
-Apply the current full numbered inventory through 58 (People introduced SQL50–56) using the existing migration owner. SQL 1–49 remains unchanged. New paired migrations add positive membership versions/access epochs, company permission epochs and account/session epochs; output epoch bindings and queued communication audience; credential retry metadata; onboarding; access reviews; and departures. Existing account sessions receive coherent positive epochs on upgrade. Do not use schema auto-migration as the production PostgreSQL migration owner.
+Apply the current full numbered inventory through 59 (People introduced SQL50–56) using the existing migration owner. SQL 1–49 remains unchanged. New paired migrations add positive membership versions/access epochs, company permission epochs and account/session epochs; output epoch bindings and queued communication audience; credential retry metadata; onboarding; access reviews; and departures. Existing account sessions receive coherent positive epochs on upgrade. Do not use schema auto-migration as the production PostgreSQL migration owner.
 
 ## API and source contracts
 

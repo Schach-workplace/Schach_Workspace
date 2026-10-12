@@ -10,6 +10,8 @@ export class NativeApiError extends Error {
     public status: number,
     public code: string,
     message: string,
+    // Per-row validation details (e.g. atomic task import), when sent.
+    public rows: { row: number; message: string }[] = [],
   ) {
     super(message);
     this.name = "NativeApiError";
@@ -172,6 +174,7 @@ export class NativeClient {
           response.status,
           value.error?.code ?? "",
           value.error?.message ?? "Company access is unavailable.",
+          Array.isArray(value.error?.rows) ? value.error.rows : [],
         );
       }
       return value as T;

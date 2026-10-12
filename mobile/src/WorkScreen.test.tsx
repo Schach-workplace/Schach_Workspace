@@ -12,6 +12,15 @@ vi.mock("./Execution", () => ({
   NativeImpact: () => null,
   NativeSchedule: () => null,
 }));
+vi.mock("./TaskCsv", () => ({
+  default: ({ tasks, onClose }: { tasks: { title: string }[]; onClose: () => void }) =>
+    createElement(
+      "section",
+      { "aria-label": "Tasks CSV" },
+      `CSV for ${tasks.map((t) => t.title).join("|")}`,
+      createElement("button", { onClick: onClose }, "Close CSV"),
+    ),
+}));
 vi.mock("expo-crypto", () => ({ randomUUID: () => crypto.randomUUID() }));
 vi.mock("expo-router", () => ({ router: { push: vi.fn(), back: vi.fn() } }));
 vi.mock("@react-native-community/datetimepicker", () => ({
@@ -173,6 +182,19 @@ it("keeps creation out of the list and supports search/status filters", async ()
   expect(container.textContent).not.toContain("Finished work");
   await fill("Search work", "unrelated");
   expect(container.textContent).not.toContain("Prepare handover");
+});
+it("opens Tasks CSV with the currently shown tasks for every role", async () => {
+  state.w.work.me.role = "viewer";
+  await act(async () => root.render(createElement(WorkScreen)));
+  expect(container.textContent).not.toContain("New task");
+  await click("Open");
+  await click("Tasks CSV");
+  expect(
+    container.querySelector('section[aria-label="Tasks CSV"]')!.textContent,
+  ).toContain("CSV for Prepare handover");
+  expect(container.textContent).not.toContain("Finished work");
+  await click("Close CSV");
+  expect(container.querySelector('section[aria-label="Tasks CSV"]')).toBeNull();
 });
 it("creates with a company-time shortcut and human local time", async () => {
   await act(async () => root.render(createElement(WorkScreen)));

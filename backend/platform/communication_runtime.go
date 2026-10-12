@@ -88,6 +88,9 @@ func (s *Server) RunCommunicationWorker(ctx context.Context) {
 			if _, e = s.RunCommunicationPush(bounded, time.Now().UTC()); e != nil && ctx.Err() == nil {
 				slog.Error("communication push unavailable")
 			}
+			if _, e = s.RunAttentionPush(bounded, time.Now().UTC()); e != nil && ctx.Err() == nil {
+				slog.Error("attention push unavailable")
+			}
 			scan++
 			if scan%60 == 0 {
 				if _, e = s.RunAttention(bounded, time.Now().UTC(), 100); e != nil && ctx.Err() == nil {

@@ -11,6 +11,22 @@ import type { PlanningView } from "../../shared/planning/types";
 export function weekOf(date: string) {
   return shiftDate(date, -((new Date(date + "T12:00Z").getUTCDay() + 6) % 7));
 }
+// Same params, order and allowed values as the browser PlanningView
+// (`new URLSearchParams(period)`); empty means "all authorized".
+export function workloadQuery(period: {
+  from: string;
+  to: string;
+  ownerId: string;
+  departmentId: string;
+}) {
+  return new URLSearchParams({
+    from: period.from,
+    to: period.to,
+    ownerId: period.ownerId,
+    departmentId: period.departmentId,
+  }).toString();
+}
+const noFilters = { ownerId: "", departmentId: "" };
 const hours = (n: number) => (Math.round(n * 10) / 10).toString() + "h";
 const utilization = (u: number | null) =>
   u === null ? "utilization unavailable" : u + "% utilization";
@@ -22,9 +38,29 @@ export default function WorkloadScreen() {
   );
   const [weeks, setWeeks] = useState(2);
   const [pulled, setPulled] = useState(false);
+  // Filters belong to one company/user/policy scope; any change resets them.
+  const scope = `${w.company}:${w.session?.user.id}:${w.policyEpoch}`;
+  const [filters, setFilters] = useState({ ...noFilters, scope });
+  if (filters.scope !== scope) setFilters({ ...noFilters, scope });
+  const [choosing, setChoosing] = useState<"" | "owner" | "department">("");
+  // Choices come only from the directory the server returned for this role.
+  const owners = (w.work?.people ?? []).filter((p) => p.active);
+  const departments = w.work?.departments ?? [];
+  const owner = owners.find((p) => p.id === filters.ownerId);
+  const department = departments.find((d) => d.id === filters.departmentId);
+  const choose = (next: Partial<typeof noFilters>) => {
+    setFilters((f) => ({ ...f, ...next }));
+    setChoosing("");
+  };
   const to = shiftDate(from, weeks * 7 - 1);
   const summary = useExecutionRead<PlanningView>(
-    "/planning/summary?" + new URLSearchParams({ from, to }),
+    "/planning/summary?" +
+      workloadQuery({
+        from,
+        to,
+        ownerId: owner?.id ?? "",
+        departmentId: department?.id ?? "",
+      }),
   );
   const view = summary.ready ? summary.data : undefined;
   const people = view?.weeks.flatMap((x) => x.people) ?? [];
@@ -127,6 +163,70 @@ export default function WorkloadScreen() {
           onPress={() => setWeeks(weeks === 2 ? 4 : 2)}
         />
       </View>
+      <View style={ui.row}>
+        <Action
+          title={"Owner: " + (owner?.name ?? "All authorized owners")}
+          selected={choosing === "owner"}
+          onPress={() => setChoosing(choosing === "owner" ? "" : "owner")}
+        />
+        <Action
+          title={
+            "Department: " + (department?.name ?? "All authorized departments")
+          }
+          selected={choosing === "department"}
+          onPress={() =>
+            setChoosing(choosing === "department" ? "" : "department")
+          }
+        />
+      </View>
+      {choosing === "owner" && (
+        <View style={[ui.row, { flexWrap: "wrap" }]}>
+          <Action
+            title="All authorized owners"
+            selected={!owner}
+            onPress={() => choose({ ownerId: "" })}
+          />
+          {owners.map((p) => (
+            <Action
+              key={p.id}
+              title={p.name}
+              selected={owner?.id === p.id}
+              onPress={() => choose({ ownerId: p.id })}
+            />
+          ))}
+        </View>
+      )}
+      {choosing === "department" && (
+        <View style={[ui.row, { flexWrap: "wrap" }]}>
+          <Action
+            title="All authorized departments"
+            selected={!department}
+            onPress={() => choose({ departmentId: "" })}
+          />
+          {departments.map((d) => (
+            <Action
+              key={d.id}
+              title={d.name}
+              selected={department?.id === d.id}
+              onPress={() => choose({ departmentId: d.id })}
+            />
+          ))}
+        </View>
+      )}
+      {(owner || department) && (
+        <View style={ui.row}>
+          <Text style={ui.metadata}>
+            {"Filtered: " +
+              [
+                owner && "owner " + owner.name,
+                department && "department " + department.name,
+              ]
+                .filter(Boolean)
+                .join(" · ")}
+          </Text>
+          <Action title="Clear filters" onPress={() => choose(noFilters)} />
+        </View>
+      )}
       <ScrollView
         contentContainerStyle={{ paddingVertical: 12, gap: 8 }}
         refreshControl={

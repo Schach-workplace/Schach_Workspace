@@ -3,13 +3,14 @@ import { act, Children, createElement } from "react";
 import { createRoot } from "react-dom/client";
 import { afterEach, expect, it, vi } from "vitest";
 import OverviewScreen from "./OverviewScreen";
-import WorkloadScreen from "./WorkloadScreen";
+import WorkloadScreen, { workloadQuery } from "./WorkloadScreen";
 const env = vi.hoisted(() => ({
   work: null as any,
   refresh: vi.fn(),
   push: vi.fn(),
   read: {} as any,
   paths: [] as string[],
+  company: "c",
 }));
 function container({ children, accessibilityRole }: any) {
   for (const child of Children.toArray(children))
@@ -20,7 +21,9 @@ function container({ children, accessibilityRole }: any) {
 vi.mock("./Workspace", () => ({
   Page: container,
   useWorkspace: () => ({
-    company: "c",
+    company: env.company,
+    session: { user: { id: "me" } },
+    policyEpoch: 0,
     work: env.work,
     refresh: env.refresh,
   }),
@@ -63,6 +66,7 @@ afterEach(() => {
   env.work = null;
   env.read = {};
   env.paths = [];
+  env.company = "c";
   env.refresh.mockReset();
   env.push.mockReset();
 });
@@ -187,5 +191,72 @@ it("Workload shows loading, error with retry, empty, and data with pull-to-refre
   const before = env.paths.at(-1)!;
   await r.click("Next");
   expect(env.paths.at(-1)).not.toBe(before);
+  await act(async () => r.root.unmount());
+});
+it("Workload builds the same planning summary query as the browser", () => {
+  expect(
+    workloadQuery({
+      from: "2026-10-12",
+      to: "2026-10-25",
+      ownerId: "u",
+      departmentId: "d1",
+    }),
+  ).toBe("from=2026-10-12&to=2026-10-25&ownerId=u&departmentId=d1");
+  expect(
+    workloadQuery({ from: "2026-10-12", to: "2026-10-25", ownerId: "", departmentId: "" }),
+  ).toBe("from=2026-10-12&to=2026-10-25&ownerId=&departmentId=");
+});
+it("Workload filters by visible owner and department, shows them, clears them and resets on company change", async () => {
+  env.work = {
+    ...work("head"),
+    departments: [{ id: "d1", name: "Design" }],
+    people: [
+      { id: "u", name: "Una", active: true },
+      { id: "gone", name: "Former", active: false },
+    ],
+  };
+  env.read = { loading: true, ready: false, retry: vi.fn() };
+  const r = await render(<WorkloadScreen />);
+  const last = () => new URLSearchParams(env.paths.at(-1)!.split("?")[1]);
+  expect(last().get("ownerId")).toBe("");
+  expect(last().get("departmentId")).toBe("");
+  expect(r.host.textContent).not.toContain("Clear filters");
+  await r.click("Owner: All authorized owners");
+  // Only active people from the visible directory are offered.
+  expect(r.host.textContent).not.toContain("Former");
+  await r.click("Una");
+  await r.click("Department: All authorized departments");
+  await r.click("Design");
+  expect(last().get("ownerId")).toBe("u");
+  expect(last().get("departmentId")).toBe("d1");
+  expect(r.host.textContent).toContain("Filtered: owner Una · department Design");
+  await r.click("Clear filters");
+  expect(last().get("ownerId")).toBe("");
+  expect(last().get("departmentId")).toBe("");
+  expect(r.host.textContent).not.toContain("Filtered:");
+  await r.click("Owner: All authorized owners");
+  await r.click("Una");
+  expect(last().get("ownerId")).toBe("u");
+  env.company = "other";
+  await act(async () => r.root.render(<WorkloadScreen />));
+  expect(last().get("ownerId")).toBe("");
+  expect(last().get("departmentId")).toBe("");
+  expect(r.host.textContent).not.toContain("Filtered:");
+  await act(async () => r.root.unmount());
+});
+it("Workload drops a filter that is no longer in the visible directory", async () => {
+  env.work = {
+    ...work("head"),
+    departments: [{ id: "d1", name: "Design" }],
+    people: [{ id: "u", name: "Una", active: true }],
+  };
+  env.read = { loading: true, ready: false, retry: vi.fn() };
+  const r = await render(<WorkloadScreen />);
+  await r.click("Department: All authorized departments");
+  await r.click("Design");
+  expect(env.paths.at(-1)).toContain("departmentId=d1");
+  env.work = { ...env.work, departments: [] };
+  await act(async () => r.root.render(<WorkloadScreen />));
+  expect(env.paths.at(-1)!.endsWith("departmentId=")).toBe(true);
   await act(async () => r.root.unmount());
 });

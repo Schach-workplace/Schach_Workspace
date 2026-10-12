@@ -5,7 +5,10 @@ import {
   type BusinessActorBasis,
 } from "../../shared/business/attempts";
 import { router } from "expo-router";
-import { AuthorizedNotificationTarget } from "./notificationTarget";
+import {
+  AuthorizedNotificationTarget,
+  type AttentionTarget,
+} from "./notificationTarget";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
   createContext,
@@ -493,6 +496,20 @@ function useController() {
           router.push("/(tabs)/inbox");
           return;
         }
+        if ("taskId" in target) {
+          router.push({
+            pathname: "/task/[id]",
+            params: { id: target.taskId, company: target.companyId },
+          });
+          return;
+        }
+        if ("expenseId" in target) {
+          router.push({
+            pathname: "/expense/[id]",
+            params: { id: target.expenseId, company: target.companyId },
+          });
+          return;
+        }
         setSelected(target.conversationId);
         router.push({
           pathname: "/chat/[id]",
@@ -500,6 +517,13 @@ function useController() {
         });
       },
       () => client.generation,
+      // Single-item endpoint re-authorizes the item for the current session.
+      (company, id) =>
+        client
+          .request<{ item: AttentionTarget }>(
+            `/companies/${company}/attention/${encodeURIComponent(id)}`,
+          )
+          .then((r) => r.item),
     );
     const openResponse = (
       response: Notifications.NotificationResponse | null,

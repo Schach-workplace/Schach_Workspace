@@ -9,6 +9,7 @@ import {
 } from "./businessAttempts";
 import { router } from "expo-router";
 import DeadlinePicker from "./DeadlinePicker";
+import TaskCsv from "./TaskCsv";
 import PersonPicker from "./PersonPicker";
 import { useRamInput } from "./ramInput";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -41,6 +42,7 @@ export default function WorkScreen() {
 function WorkView({ w }: { w: ReturnType<typeof useWorkspace> }) {
   const business = useBusinessAttempt<Record<string, unknown>>("task-create");
   const [templates, setTemplates] = useState(false);
+  const [csv, setCsv] = useState(false);
   const [ownedError, setOwnedError] = useRamInput("$work", "ownedError", "");
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState("all");
@@ -266,6 +268,7 @@ function WorkView({ w }: { w: ReturnType<typeof useWorkspace> }) {
             })
           }
         />
+        {!!w.work && <Action title="Tasks CSV" onPress={() => setCsv(true)} />}
         {editable && <Action title="New task" primary onPress={openCreate} />}
       </View>
       <Text style={ui.subtitle}>
@@ -328,6 +331,9 @@ function WorkView({ w }: { w: ReturnType<typeof useWorkspace> }) {
           </View>
         )}
       />
+      {csv && !!w.work && (
+        <TaskCsv tasks={rows} onClose={() => setCsv(false)} />
+      )}
       {templates && editable && (
         <Sheet
           keyboard

@@ -52,3 +52,18 @@ One independent read-only review of the full diff against the binding controls: 
 - Dependency decision: real tab icons would need declaring `expo-symbols`/`@expo/vector-icons`.
 - Not done: pull-to-refresh on Chats and Page-scrolled screens; owner/department filters on mobile Workload; mobile task CSV import/export; `CaptureControl` "Choose attachment" label on task/expense evidence.
 - Environment gates unchanged: physical device (permissions, LiveKit toggles, push delivery), APNS/FCM credentials, iOS prebuild/signing, browser visual inspection of the new layouts. These are code- and unit-test-level changes only.
+
+## Follow-up: remaining items closed (same day)
+
+Scope: the four previously "not done" items.
+
+- Chats pull-to-refresh (`mobile/src/ConnectList.tsx`).
+- Mobile Workload owner/department filters (`ownerId`, `departmentId`, same as web/`planningFilters`), reset on company/user/policy change.
+- Mobile task CSV import/export (`TaskCsv.tsx`, `taskCsvModel.ts`): export is built client-side from visible tasks exactly like web (there is no server export route), with formula-injection escaping and temp-file cleanup; import follows web's frozen `task-import` attempt, preview and explicit confirm; viewers export only.
+- Task/expense deep links from push: new backend attention push worker (`backend/platform/attention_push.go`, migration 59 `attention_pushes`, mirrored in `encore/api/migrations`). Provider payload is only opaque `{eventId, companyId, attentionId}` with the unchanged generic alert text. At send time it re-runs the `GET /attention/:item` authorization (`attentionCandidates` + `attentionSource`), device/session (`validCurrentSession`)/membership/access-epoch checks; recipient-bound report_ready only to its recipient. Authorization and lease commit before the provider call; no transaction or company lock is held during send. Mute and >24h intents retire; quiet hours/snooze defer; provider failures capped at 5 attempts without blocking the batch. Mobile resolves the hint via the authenticated single-item endpoint and opens `/task/[id]` or `/expense/[id]`, otherwise the company Inbox.
+
+Evidence (fresh): backend `go vet` pass; `go test -count=1 ./...` SQLite pass (platform 152.975s); full `./platform/...` on a disposable owned `postgres:18-alpine` container pass (589.765s), plus race on attention push tests (SQLite 35s, PG 45s) per implementer; migration mirrors byte-identical; mobile tsc and expo lint pass, vitest 66 files / 447 pass. The disposable container was stopped (auto-removed). `encore/` `go vet` fails with `undefined: RunScheduled` identically at baseline be59655 (requires Encore codegen) — not a regression; `encore check`/run not executed.
+
+Review: one control review of this delta; HIGH (company lock held during provider send), MEDIUM (unbounded deferral/stale burst), LOW (batch blocked by one failing device; transient error dropped hint; stale SQL58 docs) all fixed with tests.
+
+Deployment note: the retained app on 8080 still runs the earlier private build against a database at migration 58. Running this source against it requires the documented backup-first MigrateONLY procedure for migration 59; not performed. Real FCM/APNs delivery remains an external gate.

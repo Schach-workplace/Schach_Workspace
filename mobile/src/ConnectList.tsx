@@ -1,5 +1,12 @@
 import { useEffect, useEffectEvent, useState, useRef } from "react";
-import { FlatList, Text, TextInput, View, Pressable } from "react-native";
+import {
+  FlatList,
+  RefreshControl,
+  Text,
+  TextInput,
+  View,
+  Pressable,
+} from "react-native";
 import { router } from "expo-router";
 import { client } from "./client";
 import { Page, useWorkspace, type Conversation } from "./Workspace";
@@ -35,6 +42,14 @@ function List() {
   const [creating, setCreating] = useState(false);
   const [search, setSearch] = useState(false);
   const [attention, setAttention] = useState<Record<string, number>>({});
+  const [refreshing, setRefreshing] = useState(false);
+  const alive = useRef(true);
+  useEffect(() => {
+    alive.current = true;
+    return () => {
+      alive.current = false;
+    };
+  }, []);
   const checkAttention = useEffectEvent(
     () =>
       void client
@@ -56,6 +71,20 @@ function List() {
     const timer = setInterval(() => checkAttention(), 15000);
     return () => clearInterval(timer);
   }, [w.company, w.foreground]);
+  // Pull-to-refresh reuses the workspace reload, which re-reads the current
+  // company's conversation pages and drops results after a company/session
+  // change. This list is keyed by company, so a stale completion never lands.
+  async function pullToRefresh() {
+    if (refreshing) return;
+    setRefreshing(true);
+    try {
+      await w.refresh();
+    } catch (e) {
+      if (alive.current) w.setError((e as Error).message);
+    } finally {
+      if (alive.current) setRefreshing(false);
+    }
+  }
   function open(id: string, messageId?: string) {
     w.select(id);
     router.push({
@@ -111,6 +140,9 @@ function List() {
         keyExtractor={(c) => c.id}
         style={{ flex: 1 }}
         keyboardShouldPersistTaps="handled"
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={pullToRefresh} />
+        }
         renderItem={({ item: c }) => (
           <Pressable
             key={c.id}

@@ -90,7 +90,17 @@ func nativePushFromEnvironment() (PushSender, error) {
 	}
 	return p, nil
 }
+
+// nativePushData is the complete provider-visible custom data: opaque ids only,
+// never titles, bodies, amounts, names, item types or source/target ids.
+func nativePushData(hint PushHint) (map[string]string, string) {
+	if hint.AttentionID != "" {
+		return map[string]string{"eventId": hint.EventID, "companyId": hint.CompanyID, "attentionId": hint.AttentionID}, hint.AttentionID
+	}
+	return map[string]string{"eventId": hint.EventID, "companyId": hint.CompanyID, "conversationId": hint.ConversationID}, hint.ConversationID
+}
 func (p *NativePushProviders) Send(ctx context.Context, device CommunicationDevice, hint PushHint) error {
+	data, collapse := nativePushData(hint)
 	var target, bearer string
 	var payload any
 	headers := map[string]string{}
@@ -105,7 +115,7 @@ func (p *NativePushProviders) Send(ctx context.Context, device CommunicationDevi
 		}
 		bearer = token.AccessToken
 		target = "https://fcm.googleapis.com/v1/projects/" + p.FCMProject + "/messages:send"
-		payload = map[string]any{"message": map[string]any{"token": device.PushToken, "notification": map[string]string{"title": "Schach Workspace", "body": "A company update is available."}, "data": map[string]string{"eventId": hint.EventID, "companyId": hint.CompanyID, "conversationId": hint.ConversationID}, "android": map[string]any{"collapse_key": hint.ConversationID, "ttl": "60s", "notification": map[string]string{"channel_id": "schach-updates"}}}}
+		payload = map[string]any{"message": map[string]any{"token": device.PushToken, "notification": map[string]string{"title": "Schach Workspace", "body": "A company update is available."}, "data": data, "android": map[string]any{"collapse_key": collapse, "ttl": "60s", "notification": map[string]string{"channel_id": "schach-updates"}}}}
 	case "apns":
 		if p.APNSKey == nil {
 			return errors.New("APNs delivery is not configured")
@@ -130,20 +140,24 @@ func (p *NativePushProviders) Send(ctx context.Context, device CommunicationDevi
 			host = "https://api.sandbox.push.apple.com"
 		}
 		target = host + "/3/device/" + device.PushToken
-		payload = map[string]any{"aps": map[string]any{"alert": map[string]string{"title": "Schach Workspace", "body": "A company update is available."}}, "eventId": hint.EventID, "companyId": hint.CompanyID, "conversationId": hint.ConversationID}
+		apns := map[string]any{"aps": map[string]any{"alert": map[string]string{"title": "Schach Workspace", "body": "A company update is available."}}}
+		for k, v := range data {
+			apns[k] = v
+		}
+		payload = apns
 		headers["apns-topic"] = p.APNSBundleID
 		headers["apns-push-type"] = "alert"
 		headers["apns-priority"] = "10"
 		headers["apns-expiration"] = fmt.Sprint(time.Now().Unix() + 60)
-		headers["apns-collapse-id"] = hint.ConversationID
+		headers["apns-collapse-id"] = collapse
 	default:
 		return ErrPushDeviceGone
 	}
-	data, e := json.Marshal(payload)
+	body, e := json.Marshal(payload)
 	if e != nil {
 		return e
 	}
-	request, e := http.NewRequestWithContext(ctx, "POST", target, bytes.NewReader(data))
+	request, e := http.NewRequestWithContext(ctx, "POST", target, bytes.NewReader(body))
 	if e != nil {
 		return e
 	}
@@ -157,7 +171,7 @@ func (p *NativePushProviders) Send(ctx context.Context, device CommunicationDevi
 		return errors.New("native push transport unavailable")
 	}
 	defer response.Body.Close()
-	data, _ = io.ReadAll(io.LimitReader(response.Body, 8192))
+	body, _ = io.ReadAll(io.LimitReader(response.Body, 8192))
 	if response.StatusCode >= 200 && response.StatusCode < 300 {
 		return nil
 	}
@@ -165,10 +179,10 @@ func (p *NativePushProviders) Send(ctx context.Context, device CommunicationDevi
 		var failure struct {
 			Reason string `json:"reason"`
 		}
-		if json.Unmarshal(data, &failure) == nil && in(failure.Reason, "BadDeviceToken", "Unregistered", "DeviceTokenNotForTopic") {
+		if json.Unmarshal(body, &failure) == nil && in(failure.Reason, "BadDeviceToken", "Unregistered", "DeviceTokenNotForTopic") {
 			return ErrPushDeviceGone
 		}
-	} else if strings.Contains(string(data), `"UNREGISTERED"`) {
+	} else if strings.Contains(string(body), `"UNREGISTERED"`) {
 		return ErrPushDeviceGone
 	}
 	return errors.New("native push provider rejected the hint")

@@ -157,6 +157,9 @@ func invalidatePeopleOutputs(tx *gorm.DB, cid string, before, after map[string]M
 		if e := tx.Model(&CommunicationPush{}).Where("company_id=? AND user_id=? AND done=false", cid, uid).Updates(map[string]any{"done": true, "lease_token": "", "lease_until": nil}).Error; e != nil {
 			return e
 		}
+		if e := tx.Model(&AttentionPush{}).Where("company_id=? AND user_id=? AND done=false", cid, uid).Updates(map[string]any{"done": true, "lease_token": "", "lease_until": nil}).Error; e != nil {
+			return e
+		}
 		if e := tx.Model(&ReportDeliveryIntent{}).Where("company_id=? AND recipient_id=? AND state='pending'", cid, uid).Update("state", "cancelled").Error; e != nil {
 			return e
 		}

@@ -51,7 +51,7 @@ Saved report configuration saves validate every recipient. Runtime delivery, gen
 
 CSV data can contain spreadsheet formulas and personal information. The frontend exporter quotes cells and neutralizes formula-leading text. Exports use the selected visible task or expense set, with financial-year/status/category/department filters reflected in finance CSV output. Preserve these controls when adding export formats; treat downloaded reports as sensitive once they leave the application, because the app cannot revoke a copied CSV.
 
-Notifications are records for the in-app inbox. Assignment, nudge, comment, or reminder creation does not establish delivery by email, SMS, WhatsApp, Slack, or a mobile push provider. No real outbound notification provider is configured by default.
+Notifications are records for the in-app inbox. Assignment, nudge, comment, or reminder creation does not establish delivery by email, SMS, WhatsApp, Slack, or a mobile push provider. No real outbound notification provider is configured by default. When an operator configures FCM/APNs, native push carries only the generic text "A company update is available." and opaque ids: `{eventId,companyId,conversationId}` for Connect inbox events or `{eventId,companyId,attentionId}` for open Inbox attention items. Provider infrastructure therefore sees which company id and opaque item id a device is notified about and when, but never titles, amounts, names, item types or task/expense ids. Every attention hint is re-authorized at send time exactly as the Inbox listing is, and the app re-fetches the item through the authenticated API before opening the task or expense; see [API contract](API_CONTRACT.md).
 
 ## Deliberate limits
 

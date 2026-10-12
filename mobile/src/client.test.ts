@@ -36,6 +36,33 @@ describe("native authorization boundary", () => {
       "Bearer secret-bearer",
     );
   });
+  it("keeps per-row validation details from an atomic import rejection", async () => {
+    const c = new NativeClient();
+    c.endpoint = "https://workspace.example.in";
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({
+        ok: false,
+        status: 422,
+        json: async () => ({
+          error: {
+            code: "invalid_import",
+            message: "No rows were imported.",
+            rows: [{ row: 2, message: "Bad reviewer." }],
+          },
+        }),
+      }),
+    );
+    const failure = await c
+      .request("/companies/one/tasks/import", "POST", { rows: [] })
+      .catch((e) => e);
+    expect(failure).toMatchObject({
+      status: 422,
+      code: "invalid_import",
+      message: "No rows were imported.",
+      rows: [{ row: 2, message: "Bad reviewer." }],
+    });
+  });
   it("rejects a response whose body finished after a company switch", async () => {
     let resolve: (v: unknown) => void = () => {};
     const c = new NativeClient();

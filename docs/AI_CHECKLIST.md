@@ -63,3 +63,5 @@ Keep historical failure and qualification records. Update current owner/exact HE
 - [x] Fresh web/mobile tsc, lint, vitest; one control review with findings fixed.
 - [ ] Product decisions: self-profile endpoint, offboarding reason, revoked-device rebinding, icon dependency.
 - [ ] Isolated manual QA execution (224 NOT_RUN); device/browser visual verification of new UI.
+- [x] Follow-up: Chats refresh, Workload filters, mobile task CSV, attention push deep links (migration 59) with SQLite+PG evidence and fixed review findings.
+- [ ] Backup-first MigrateONLY 59 + restart before the retained app can run this source.

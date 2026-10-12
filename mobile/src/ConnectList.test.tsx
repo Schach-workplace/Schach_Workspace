@@ -12,9 +12,14 @@ function container({ children }: any) {
 vi.mock("./client", () => ({
   client: { request: async () => ({ conversations: [] }) },
 }));
+const ws = vi.hoisted(() => ({
+  refresh: (() => Promise.resolve()) as () => Promise<void>,
+  setError: (() => {}) as (message: string) => void,
+}));
 vi.mock("./Workspace", () => ({
   Page: container,
   useWorkspace: () => ({
+    refresh: () => ws.refresh(),
     company: "c",
     foreground: true,
     session: { user: { id: "u" } },
@@ -23,7 +28,7 @@ vi.mock("./Workspace", () => ({
       me: { role: "admin" },
       people: [{ id: "v", name: "Sam", active: true, role: "admin" }],
     },
-    setError: vi.fn(),
+    setError: (m: string) => ws.setError(m),
   }),
 }));
 const nav = vi.hoisted(() => ({ push: vi.fn() }));
@@ -40,7 +45,14 @@ vi.mock("react-native", () => ({
   Pressable: container,
   Text: ({ children }: any) => createElement("span", {}, children),
   TextInput: () => null,
-  FlatList: () => null,
+  FlatList: ({ refreshControl }: any) =>
+    createElement("div", {}, refreshControl),
+  RefreshControl: ({ onRefresh, refreshing }: any) =>
+    createElement(
+      "button",
+      { onClick: onRefresh, "data-refreshing": String(refreshing) },
+      "Pull to refresh",
+    ),
 }));
 it("renders direct, group and channel creation without raw native text children", async () => {
   Object.assign(globalThis, { IS_REACT_ACT_ENVIRONMENT: true });
@@ -84,5 +96,37 @@ it("links the read-only Overview and Workload screens for the current company", 
       params: { company: "c" },
     });
   }
+  await act(async () => root.unmount());
+});
+it("pull-to-refresh reloads the conversation list through the workspace and surfaces failures", async () => {
+  Object.assign(globalThis, { IS_REACT_ACT_ENVIRONMENT: true });
+  const host = document.createElement("div");
+  const root = createRoot(host);
+  let finish: () => void = () => {};
+  const refresh = vi.fn(
+    () => new Promise<void>((resolve) => (finish = resolve)),
+  );
+  ws.refresh = refresh;
+  await act(async () => root.render(<ConnectList />));
+  const pull = () =>
+    [...host.querySelectorAll("button")].find(
+      (b) => b.textContent === "Pull to refresh",
+    )!;
+  await act(async () => pull().click());
+  expect(refresh).toHaveBeenCalledTimes(1);
+  expect(pull().dataset.refreshing).toBe("true");
+  // A second pull while one is running does not start another reload.
+  await act(async () => pull().click());
+  expect(refresh).toHaveBeenCalledTimes(1);
+  await act(async () => finish());
+  expect(pull().dataset.refreshing).toBe("false");
+  const setError = vi.fn();
+  ws.setError = setError;
+  ws.refresh = vi.fn(async () => {
+    throw Error("Company access is unavailable.");
+  });
+  await act(async () => pull().click());
+  expect(setError).toHaveBeenCalledWith("Company access is unavailable.");
+  expect(pull().dataset.refreshing).toBe("false");
   await act(async () => root.unmount());
 });

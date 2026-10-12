@@ -1,3 +1,7 @@
+# 2026-10-12 follow-up
+
+Attention push deep links (migration 59), mobile CSV/filters/refresh. SQLite+PG suites pass. Retained 8080 DB still at 58; migration not applied.
+
 # 2026-10-12 UI/UX gap closure
 
 Client-only UI/UX fixes on top of 7db2025 with fresh web (385) and mobile (407) test evidence; see ../../ui-ux-gap-closure-2026-10-12/record.md. Retained app on 8080 untouched and not serving these changes. Manual QA remains NOT_RUN.

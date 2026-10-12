@@ -9,10 +9,13 @@ import (
 	"time"
 )
 
+// PushHint carries only opaque identifiers. Exactly one of ConversationID
+// (communication inbox) or AttentionID (Inbox attention item) is set.
 type PushHint struct {
 	EventID        string `json:"eventId"`
 	CompanyID      string `json:"companyId"`
-	ConversationID string `json:"conversationId"`
+	ConversationID string `json:"conversationId,omitempty"`
+	AttentionID    string `json:"attentionId,omitempty"`
 }
 type PushSender interface {
 	Send(context.Context, CommunicationDevice, PushHint) error
