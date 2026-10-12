@@ -217,7 +217,7 @@ it("exports through a private cache file, shares it as CSV and deletes it", asyn
   await click("Export 1 shown tasks");
   expect(env.share).toHaveBeenCalledOnce();
   const [uri, options] = env.share.mock.calls[0];
-  expect(uri).toMatch(/^cache:\/task-csv-uuid\/schach-tasks-\d{4}-\d{2}-\d{2}\.csv$/);
+  expect(uri).toMatch(/^cache:\/task-csv-uuid\/workspace-tasks-\d{4}-\d{2}-\d{2}\.csv$/);
   expect(options).toMatchObject({ mimeType: "text/csv", UTI: "public.comma-separated-values-text" });
   expect(env.deleted).toContain("cache:/task-csv-uuid");
   expect(Object.keys(env.files)).toEqual([]);

@@ -134,7 +134,7 @@ export default function TaskCsv({
       if (!directory) return;
       const text = exportTasksCSV(tasks, directory);
       await shareCsv(
-        `schach-tasks-${companyDate(new Date(), zone)}.csv`,
+        `workspace-tasks-${companyDate(new Date(), zone)}.csv`,
         text,
         current,
       );
@@ -144,7 +144,7 @@ export default function TaskCsv({
     guarded(async (current) => {
       if (!directory || !editable) return;
       await shareCsv(
-        "schach-task-template.csv",
+        "workspace-task-template.csv",
         createTaskCSVTemplate(directory),
         current,
       );

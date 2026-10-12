@@ -19,7 +19,7 @@ LiveKit/WebRTC needs a development build; Expo Go is insufficient. Native direct
 
 For a standalone Android evaluation after `npm run prebuild`, run `./gradlew assembleRelease -PreactNativeArchitectures=arm64-v8a,x86_64` from the generated `android/` directory. The default generated release configuration uses the Android Debug key. The current [exact-source evaluation manifest](../verification/workspace-improvements-roadmap/final-integration/evidence/final-apk-build.json) binds checkpoint `74e6474`, both native ABIs and embedded `assets/index.android.bundle` (APK SHA-256 `b6418f127e03b8dec0ba2bccb550cf305c807ee95cd2261e489b7924b2e5e3a5`, 98,206,840 bytes). It needs no Metro; authenticated use requires a real trusted Schach HTTPS origin. Release restore rejects retained developer HTTP origins and deletes their SecureStore token; evaluate a fresh release on an isolated device rather than launching it over an existing HTTP fixture session. Binary construction is separate from actual launch/Auth geometry and authenticated protected-TLS acceptance. Organizational signing, identifiers, push credentials and physical acceptance remain mandatory before distribution. Never commit generated keystores or provider secrets.
 
-Enter the actual Schach HTTPS origin at sign-in. Release clients reject HTTP, URL credentials and unsafe endpoint paths; developer HTTP is only for explicit local evaluation. Native bearer sessions use platform secure storage. No bearer credential is placed in a URL. Temporary background cancels old request generations and hides fetched private history/evidence. Foreground return requires fresh identity/membership authorization before redisplay. Same-company conversation/module navigation and normal camera background preserve explicitly authored input and frozen pending sends in scoped RAM only; source quotes are freshly fetched or cleared. Logout, account/server/company change, membership/history revocation and confirmed denial clear affected input and owned captures. Process death loses RAM drafts. Media downloads are temporary unless deliberately shared; copied files cannot be remotely revoked. Do not add private offline persistence without an explicit managed-device design.
+Preview and production builds sign in to the server baked in through `EXPO_PUBLIC_SERVER_URL` (see Private distribution) and hide the server field; development builds without it, or `__DEV__` builds via "Use a different server", enter the HTTPS origin at sign-in. Release clients reject HTTP, URL credentials and unsafe endpoint paths; developer HTTP is only for explicit local evaluation. Native bearer sessions use platform secure storage. No bearer credential is placed in a URL. Temporary background cancels old request generations and hides fetched private history/evidence. Foreground return requires fresh identity/membership authorization before redisplay. Same-company conversation/module navigation and normal camera background preserve explicitly authored input and frozen pending sends in scoped RAM only; source quotes are freshly fetched or cleared. Logout, account/server/company change, membership/history revocation and confirmed denial clear affected input and owned captures. Process death loses RAM drafts. Media downloads are temporary unless deliberately shared; copied files cannot be remotely revoked. Do not add private offline persistence without an explicit managed-device design.
 
 Voice-note preview/send uses Expo audio. Call audio uses LiveKit's native audio session and Android foreground service; camera/screenshare stop on background. The ongoing call is mounted outside the tabs so navigation does not end audio. Live call recording and transcription remain off. Separate local assistance can transcribe one explicitly selected clean attached audio file after opt-in; this does not record calls. OS incoming-call screens, iOS background/lock behavior, Android background notifications and headset/TURN behavior require physical acceptance. The app's call integration is not evidence that those OS gates passed.
 
@@ -28,6 +28,29 @@ Work/expense decision screens freeze the reviewed version and inspect authorized
 See [communication operations](../docs/COMMUNICATION_OPERATIONS.md) for provider credentials and private signaling. Do not expose LiveKit 7880 directly. Register actual APNs/FCM tokens from the organization's build; generic push hints require operator-owned credentials that are absent here.
 
 See the current [milestone 3 device acceptance script](../verification/mobile-milestone-3/device-acceptance.md) for exact history, calendar, picker and capture scenarios. Every physical gate remains unchecked.
+
+## Private distribution
+
+The app ships as the neutral **Workspace** app (`com.schachengineers.workspace`, scheme `workspace`) for every company on one server, `https://work.schachengineers.com`. Config lives in `app.config.ts`; build profiles in `eas.json`.
+
+Accounts and files the owner must provide:
+
+- Apple Developer Program **organization** membership (needs a D-U-N-S number), the App Store Connect app record, and Apple Business Manager for **Custom App** (private) distribution to each company's organization ID.
+- Google Play Console developer account; publish as a **Managed Google Play private app** to each company's managed Google Play organization.
+- Firebase project with an Android app for `com.schachengineers.workspace`: upload its `google-services.json` as an EAS **secret file** environment variable named `GOOGLE_SERVICES_JSON` (for the `preview` and `production` environments). `app.config.ts` sets `android.googleServicesFile` from it only when present. Never commit the file.
+- APNs auth key (`.p8`) for the server; EAS manages the iOS push entitlement and signing credentials. The server's `APNS_BUNDLE_ID` must be `com.schachengineers.workspace` (and `FCM_SERVICE_ACCOUNT_FILE` must come from the same Firebase project). See [communication operations](../docs/COMMUNICATION_OPERATIONS.md).
+- Expo account owning the EAS project (`npx eas-cli@latest init` links it on first use).
+
+Build and submit (build numbers auto-increment remotely; bump `version` in `app.config.ts` for each store release):
+
+```sh
+npx eas-cli@latest build --profile preview --platform all     # internal: Android APK, iOS ad hoc (registered devices)
+npx eas-cli@latest build --profile production --platform all  # Android app bundle, iOS store build
+npx eas-cli@latest submit --profile production --platform ios      # App Store Connect, then assign as Custom App
+npx eas-cli@latest submit --profile production --platform android  # Play Console private app track
+```
+
+Icons and splash are neutral placeholders rendered from `assets/source/*.svg` by `assets/source/render.sh`; replace the SVGs and re-render for the final brand. The splash is configured once `expo-splash-screen` is installed (`npx expo install expo-splash-screen`).
 
 ## Physical acceptance record — not yet executed
 

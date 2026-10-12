@@ -3,10 +3,17 @@ import { useState } from "react";
 import { Redirect } from "expo-router";
 import { Text, TextInput, View } from "react-native";
 import { client } from "../client";
+import { configuredServer, serverHost } from "../serverConfig";
 import { useWorkspace, styles } from "../Workspace";
 export default function Login() {
   const w = useWorkspace();
-  const [endpoint, setEndpoint] = useState(client.endpoint);
+  // Distribution builds sign in to the configured server; only development
+  // builds may type a server (or override the configured one).
+  const configured = configuredServer();
+  const dev = typeof __DEV__ !== "undefined" && __DEV__;
+  const [custom, setCustom] = useState(!configured);
+  const [endpoint, setEndpoint] = useState(client.endpoint || configured);
+  const server = custom ? endpoint : configured;
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [code, setCode] = useState("");
@@ -15,15 +22,28 @@ export default function Login() {
   if (w.session) return <Redirect href="/(tabs)/chats" />;
   return (
     <View style={[styles.root, { paddingTop: 55 }]}>
-      <Text style={styles.heading}>Schach Workspace</Text>
-      <TextInput
-        style={styles.input}
-        accessibilityLabel="Company server"
-        placeholder="https://workspace.example.in"
-        autoCapitalize="none"
-        value={endpoint}
-        onChangeText={setEndpoint}
-      />
+      <Text style={styles.heading}>Workspace</Text>
+      {custom ? (
+        <TextInput
+          style={styles.input}
+          accessibilityLabel="Company server"
+          placeholder="https://workspace.example.in"
+          autoCapitalize="none"
+          value={endpoint}
+          onChangeText={setEndpoint}
+        />
+      ) : (
+        <Text style={serverStyle}>{serverHost(configured)}</Text>
+      )}
+      {!custom && dev && (
+        <Text
+          accessibilityRole="link"
+          style={[serverStyle, { color: "#c2410c" }]}
+          onPress={() => setCustom(true)}
+        >
+          Use a different server
+        </Text>
+      )}
       <TextInput
         style={styles.input}
         accessibilityLabel="Email"
@@ -63,7 +83,7 @@ export default function Login() {
         onPress={() => {
           setBusy(true);
           void w
-            .signIn(endpoint, email, password, code, recovery)
+            .signIn(server, email, password, code, recovery)
             .then(() => {
               setPassword("");
               setCode("");
@@ -77,3 +97,4 @@ export default function Login() {
     </View>
   );
 }
+const serverStyle = { fontSize: 13, color: "#6b6357", marginBottom: 6 };

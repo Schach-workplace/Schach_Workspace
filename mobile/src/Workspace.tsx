@@ -397,7 +397,7 @@ function useController() {
       } else
         throw new Error(
           p.canAskAgain === false
-            ? "Notifications are disabled for Schach Workspace. Enable them in device Settings."
+            ? "Notifications are disabled for Workspace. Enable them in device Settings."
             : "Notifications are disabled on this device.",
         );
     }
@@ -408,7 +408,7 @@ function useController() {
     const result = await client.request<{ id: string }>("/devices", "POST", {
       ...(device || saved ? { deviceId: device || saved } : {}),
       platform: Platform.OS === "ios" ? "ios" : "android",
-      name: "Schach native client",
+      name: "Workspace mobile",
       ...(withPush ? { pushProvider, pushToken } : {}),
     });
     if (currentScope.current.sessionId !== userId) return;
@@ -697,7 +697,7 @@ export function Page({
       }
       style={styles.root}
     >
-      <Text style={styles.heading}>Schach · {w.session?.user.name}</Text>
+      <Text style={styles.heading}>Workspace · {w.session?.user.name}</Text>
       <ScrollView horizontal style={{ maxHeight: 48 }}>
         {w.session?.companies.map((c) => (
           <Button

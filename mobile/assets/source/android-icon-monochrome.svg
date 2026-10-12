@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <!-- Android 13+ themed icon: single colour, alpha defines the shape; the check and the panel gap are cut out. -->
+  <defs>
+    <mask id="gap" maskUnits="userSpaceOnUse" x="0" y="0" width="1024" height="1024"><rect width="1024" height="1024" fill="#fff"/><rect x="224" y="304" width="496" height="496" rx="132" fill="#000"/></mask>
+    <mask id="check" maskUnits="userSpaceOnUse" x="0" y="0" width="1024" height="1024"><rect width="1024" height="1024" fill="#fff"/><polyline points="362,560 446,644 592,486" fill="none" stroke="#000" stroke-width="60" stroke-linecap="round" stroke-linejoin="round"/></mask>
+  </defs>
+  <g transform="translate(512 512) scale(0.72) translate(-512 -512)" fill="#ffffff">
+    <rect x="332" y="252" width="440" height="440" rx="104" mask="url(#gap)"/>
+    <rect x="252" y="332" width="440" height="440" rx="104" mask="url(#check)"/>
+  </g>
+</svg>

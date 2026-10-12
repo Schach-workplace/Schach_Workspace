@@ -92,7 +92,7 @@ export async function requestCallPermissions(kind: string) {
   if (!microphone.granted)
     throw new Error(
       microphone.canAskAgain === false
-        ? "Microphone access is off for Schach Workspace. Enable it in device Settings to join calls."
+        ? "Microphone access is off for Workspace. Enable it in device Settings to join calls."
         : "Microphone permission is required to join a call.",
     );
   if (kind !== "video") return;
@@ -100,7 +100,7 @@ export async function requestCallPermissions(kind: string) {
   if (!camera.granted)
     throw new Error(
       camera.canAskAgain === false
-        ? "Camera access is off for Schach Workspace. Enable it in device Settings to join video calls, or start an audio call instead."
+        ? "Camera access is off for Workspace. Enable it in device Settings to join video calls, or start an audio call instead."
         : "Camera permission is required for video calls. Allow camera access, or start an audio call instead.",
     );
 }

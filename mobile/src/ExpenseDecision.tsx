@@ -259,7 +259,7 @@ function ExpenseDecisionBody({
       {writable && authority && !mine && expense.status === "approved" && (
         <View>
           <Text>
-            Record a completed external payment. Schach does not send money.
+            Record a completed external payment. Workspace does not send money.
           </Text>
           <TextInput
             accessibilityLabel="Paid date"
