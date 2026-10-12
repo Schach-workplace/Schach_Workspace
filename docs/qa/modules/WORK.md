@@ -208,4 +208,3 @@ All start **NOT_RUN**. Missing prerequisite = BLOCKED.
 **Source:** [docs/USER_GUIDE.md](../../../docs/USER_GUIDE.md), [frontend/src/pages/Tasks.tsx](../../../frontend/src/pages/Tasks.tsx), [frontend/src/App.tsx](../../../frontend/src/App.tsx)
 
 **Supporting automation:** [frontend/src/store.scopes.test.tsx](../../../frontend/src/store.scopes.test.tsx), [backend/platform/read_scopes_test.go](../../../backend/platform/read_scopes_test.go)
-

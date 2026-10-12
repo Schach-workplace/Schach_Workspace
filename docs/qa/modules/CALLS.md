@@ -435,4 +435,3 @@ All start **NOT_RUN**. Missing prerequisite = BLOCKED.
 **Source:** [mobile/README.md](../../../mobile/README.md), [docs/COMMUNICATION_OPERATIONS.md](../../../docs/COMMUNICATION_OPERATIONS.md), [mobile/src/Calls.tsx](../../../mobile/src/Calls.tsx), [backend/platform/push_providers.go](../../../backend/platform/push_providers.go), [backend/platform/communication_devices.go](../../../backend/platform/communication_devices.go)
 
 **Supporting automation:** Manual/device/provider gate; no owning automated reference.
-

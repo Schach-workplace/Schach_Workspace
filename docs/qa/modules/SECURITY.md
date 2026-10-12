@@ -432,4 +432,3 @@ All start **NOT_RUN**. Missing prerequisite = BLOCKED.
 **Source:** [backend/platform/server.go](../../../backend/platform/server.go), [backend/platform/auth.go](../../../backend/platform/auth.go), [backend/platform/communication_stream.go](../../../backend/platform/communication_stream.go), [backend/platform/communication_calls.go](../../../backend/platform/communication_calls.go), [docs/SECURITY_AND_LIMITATIONS.md](../../../docs/SECURITY_AND_LIMITATIONS.md), [docs/COMMUNICATION_OPERATIONS.md](../../../docs/COMMUNICATION_OPERATIONS.md)
 
 **Supporting automation:** Manual/device/provider gate; no owning automated reference.
-

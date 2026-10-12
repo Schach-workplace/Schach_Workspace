@@ -385,4 +385,3 @@ All start **NOT_RUN**. Missing prerequisite = BLOCKED.
 **Source:** [docs/API_CONTRACT.md](../../../docs/API_CONTRACT.md), [backend/platform/attention_access.go](../../../backend/platform/attention_access.go), [backend/platform/finance_assistance_attention_test.go](../../../backend/platform/finance_assistance_attention_test.go), [backend/platform/report_export_jobs_test.go](../../../backend/platform/report_export_jobs_test.go)
 
 **Supporting automation:** [backend/platform/finance_assistance_attention_test.go](../../../backend/platform/finance_assistance_attention_test.go), [backend/platform/people_output_lifecycle_test.go](../../../backend/platform/people_output_lifecycle_test.go), [backend/platform/report_export_jobs_test.go](../../../backend/platform/report_export_jobs_test.go)
-

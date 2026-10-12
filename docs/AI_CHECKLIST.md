@@ -52,4 +52,4 @@ Keep historical failure and qualification records. Update current owner/exact HE
 - [x] Editable workflow diagrams and offline visual guide for every module; cross-module journeys.
 - [x] Isolated test setup, fictional fixtures, role/device matrices and team execution/defect/signoff templates.
 - [x] Spreadsheet-ready CSV/workbook, searchable offline HTML and shareable ZIP; validate schemas/references/coverage/rendering.
-- [ ] Commit/push finished documentation and refresh successor index; new manual scenarios remain NOT_RUN.
+- [x] Commit/push finished documentation and refresh successor index; new manual scenarios remain NOT_RUN.

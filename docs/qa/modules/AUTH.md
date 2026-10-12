@@ -376,4 +376,3 @@ All start **NOT_RUN**. Missing prerequisite = BLOCKED.
 **Source:** [docs/API_CONTRACT.md](../../../docs/API_CONTRACT.md), [frontend/src/App.tsx](../../../frontend/src/App.tsx), [frontend/src/store.tsx](../../../frontend/src/store.tsx), [backend/platform/auth.go](../../../backend/platform/auth.go), [frontend/src/components/AuthenticatorSettings.tsx](../../../frontend/src/components/AuthenticatorSettings.tsx)
 
 **Supporting automation:** [backend/platform/communication_devices_test.go](../../../backend/platform/communication_devices_test.go), [mobile/src/AccountScreen.test.tsx](../../../mobile/src/AccountScreen.test.tsx)
-

@@ -455,4 +455,3 @@ All start **NOT_RUN**. Missing prerequisite = BLOCKED.
 **Source:** [docs/USER_GUIDE.md](../../../docs/USER_GUIDE.md), [docs/API_CONTRACT.md](../../../docs/API_CONTRACT.md), [backend/platform/tasks.go](../../../backend/platform/tasks.go), [backend/platform/task_mutations.go](../../../backend/platform/task_mutations.go), [backend/platform/task_evidence.go](../../../backend/platform/task_evidence.go), [backend/platform/deadlines.go](../../../backend/platform/deadlines.go), [frontend/src/pages/Tasks.tsx](../../../frontend/src/pages/Tasks.tsx)
 
 **Supporting automation:** [backend/platform/deadlines_test.go](../../../backend/platform/deadlines_test.go), [mobile/src/DeadlinePicker.test.tsx](../../../mobile/src/DeadlinePicker.test.tsx)
-

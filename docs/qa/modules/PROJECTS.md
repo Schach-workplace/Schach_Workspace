@@ -318,4 +318,3 @@ All start **NOT_RUN**. Missing prerequisite = BLOCKED.
 **Source:** [frontend/src/pages/Projects.tsx](../../../frontend/src/pages/Projects.tsx), [frontend/src/components/ScheduleReview.tsx](../../../frontend/src/components/ScheduleReview.tsx), [backend/platform/task_schedule.go](../../../backend/platform/task_schedule.go)
 
 **Supporting automation:** [backend/platform/task_schedule_test.go](../../../backend/platform/task_schedule_test.go), [frontend/src/pages/Projects.test.tsx](../../../frontend/src/pages/Projects.test.tsx)
-

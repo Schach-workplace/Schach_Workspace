@@ -433,4 +433,3 @@ All start **NOT_RUN**. Missing prerequisite = BLOCKED.
 **Source:** [backend/platform/intelligence_sources.go](../../../backend/platform/intelligence_sources.go), [backend/platform/intelligence_whisper.go](../../../backend/platform/intelligence_whisper.go), [frontend/src/communication/Calls.tsx](../../../frontend/src/communication/Calls.tsx), [mobile/README.md](../../../mobile/README.md), [docs/SECURITY_AND_LIMITATIONS.md](../../../docs/SECURITY_AND_LIMITATIONS.md)
 
 **Supporting automation:** [backend/platform/intelligence_sources_test.go](../../../backend/platform/intelligence_sources_test.go), [backend/platform/intelligence_whisper_test.go](../../../backend/platform/intelligence_whisper_test.go)
-

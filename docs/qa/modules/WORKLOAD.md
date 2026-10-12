@@ -243,4 +243,3 @@ All start **NOT_RUN**. Missing prerequisite = BLOCKED.
 **Source:** [frontend/src/components/PlanningView.tsx](../../../frontend/src/components/PlanningView.tsx), [frontend/src/components/ScheduleReview.tsx](../../../frontend/src/components/ScheduleReview.tsx), [backend/platform/task_schedule.go](../../../backend/platform/task_schedule.go), [backend/platform/planning_suggestions.go](../../../backend/platform/planning_suggestions.go)
 
 **Supporting automation:** [backend/platform/planning_suggestions_test.go](../../../backend/platform/planning_suggestions_test.go), [backend/platform/task_schedule_test.go](../../../backend/platform/task_schedule_test.go)
-

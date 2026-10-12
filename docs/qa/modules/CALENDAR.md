@@ -241,4 +241,3 @@ All start **NOT_RUN**. Missing prerequisite = BLOCKED.
 **Source:** [docs/PLANNING_AND_GOALS.md](../../../docs/PLANNING_AND_GOALS.md), [docs/API_CONTRACT.md](../../../docs/API_CONTRACT.md), [frontend/src/pages/CalendarWorkload.tsx](../../../frontend/src/pages/CalendarWorkload.tsx), [backend/platform/planning_calendar.go](../../../backend/platform/planning_calendar.go)
 
 **Supporting automation:** [frontend/src/pages/CalendarRange.test.tsx](../../../frontend/src/pages/CalendarRange.test.tsx), [backend/platform/planning_calendar_test.go](../../../backend/platform/planning_calendar_test.go)
-

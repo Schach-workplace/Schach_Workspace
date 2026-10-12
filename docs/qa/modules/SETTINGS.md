@@ -314,4 +314,3 @@ All start **NOT_RUN**. Missing prerequisite = BLOCKED.
 **Source:** [frontend/src/components/AttentionPreferences.tsx](../../../frontend/src/components/AttentionPreferences.tsx), [frontend/src/data/attention.ts](../../../frontend/src/data/attention.ts), [backend/platform/attention_preferences.go](../../../backend/platform/attention_preferences.go)
 
 **Supporting automation:** [frontend/src/components/AttentionPreferences.test.tsx](../../../frontend/src/components/AttentionPreferences.test.tsx)
-

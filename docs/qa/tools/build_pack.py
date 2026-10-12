@@ -193,7 +193,7 @@ def markdown_module(m):
         text += '[Scenario flow](../diagrams/' + c['id'] + '.svg) · [Editable source](../diagrams/' + c['id'] + '.mmd)\n\n'
         text += '**Source:** ' + ', '.join(source_link(r) for r in c['source_refs']) + '\n\n'
         text += '**Supporting automation:** ' + (', '.join(source_link(r) for r in c['automation_refs']) or 'Manual/device/provider gate; no owning automated reference.') + '\n\n'
-    (QA / 'modules' / (m['id'] + '.md')).write_text(text)
+    (QA / 'modules' / (m['id'] + '.md')).write_text(text.rstrip() + '\n')
 
 
 def csv_files(modules, cases):

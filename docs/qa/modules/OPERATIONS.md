@@ -369,4 +369,3 @@ All start **NOT_RUN**. Missing prerequisite = BLOCKED.
 **Source:** [docs/OPERATIONS.md](../../../docs/OPERATIONS.md), [docs/COMMUNICATION_OPERATIONS.md](../../../docs/COMMUNICATION_OPERATIONS.md), [docs/intelligence-local.md](../../../docs/intelligence-local.md)
 
 **Supporting automation:** [verification/runtime/data_read_load.sh](../../../verification/runtime/data_read_load.sh), [backend/platform/communication_load_test.go](../../../backend/platform/communication_load_test.go)
-

@@ -839,4 +839,3 @@ All start **NOT_RUN**. Missing prerequisite = BLOCKED.
 **Source:** [docs/API_CONTRACT.md](../../../docs/API_CONTRACT.md), [docs/intelligence-local.md](../../../docs/intelligence-local.md), [docs/SECURITY_AND_LIMITATIONS.md](../../../docs/SECURITY_AND_LIMITATIONS.md), [backend/platform/intelligence_publication.go](../../../backend/platform/intelligence_publication.go)
 
 **Supporting automation:** [backend/platform/intelligence_publication_test.go](../../../backend/platform/intelligence_publication_test.go), [backend/platform/intelligence_fix1_test.go](../../../backend/platform/intelligence_fix1_test.go)
-

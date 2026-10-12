@@ -476,4 +476,3 @@ All start **NOT_RUN**. Missing prerequisite = BLOCKED.
 **Source:** [backend/platform/communication_calls.go](../../../backend/platform/communication_calls.go), [backend/platform/call_provider.go](../../../backend/platform/call_provider.go), [docs/COMMUNICATION_OPERATIONS.md](../../../docs/COMMUNICATION_OPERATIONS.md)
 
 **Supporting automation:** [backend/platform/communication_calls_test.go](../../../backend/platform/communication_calls_test.go), [verification/runtime/livekit-browser.mjs](../../../verification/runtime/livekit-browser.mjs)
-

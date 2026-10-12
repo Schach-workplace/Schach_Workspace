@@ -1,0 +1,36 @@
+{
+  "status": "PASS",
+  "scope": "Extracted QA-only ZIP offline guide portability; no application cases executed",
+  "cases": 224,
+  "guides": 21,
+  "checks": [
+    "Search by case ID",
+    "Module REPORTS filter:18",
+    "DEVICE gate filter:16",
+    "P0 filter:147",
+    "Empty results and clear",
+    "Scenario SVG loads",
+    "Paired action/result table",
+    "No renderer exceptions",
+    "No external page requests"
+  ],
+  "phoneWidths": [
+    {
+      "width": 320,
+      "overflow": false
+    },
+    {
+      "width": 375,
+      "overflow": false
+    },
+    {
+      "width": 430,
+      "overflow": false
+    }
+  ],
+  "diagramScreenshots": [
+    "AUTH",
+    "FINANCE",
+    "JOURNEYS-009"
+  ]
+}

@@ -743,4 +743,3 @@ All start **NOT_RUN**. Missing prerequisite = BLOCKED.
 **Source:** [docs/API_CONTRACT.md](../../../docs/API_CONTRACT.md), [docs/FINANCE_GUIDE.md](../../../docs/FINANCE_GUIDE.md), [docs/SECURITY_AND_LIMITATIONS.md](../../../docs/SECURITY_AND_LIMITATIONS.md), [backend/platform/finance_reconciliation.go](../../../backend/platform/finance_reconciliation.go), [backend/platform/finance_reconciliation_history.go](../../../backend/platform/finance_reconciliation_history.go)
 
 **Supporting automation:** [backend/platform/finance_reconciliation_test.go](../../../backend/platform/finance_reconciliation_test.go), [backend/platform/finance_assistance_concurrency_test.go](../../../backend/platform/finance_assistance_concurrency_test.go)
-

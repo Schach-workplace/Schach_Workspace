@@ -507,4 +507,3 @@ All start **NOT_RUN**. Missing prerequisite = BLOCKED.
 **Source:** [mobile/src/Media.tsx](../../../mobile/src/Media.tsx), [backend/platform/communication_media.go](../../../backend/platform/communication_media.go), [mobile/README.md](../../../mobile/README.md), [docs/SECURITY_AND_LIMITATIONS.md](../../../docs/SECURITY_AND_LIMITATIONS.md)
 
 **Supporting automation:** [backend/platform/communication_media_test.go](../../../backend/platform/communication_media_test.go)
-

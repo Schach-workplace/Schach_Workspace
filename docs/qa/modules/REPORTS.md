@@ -740,4 +740,3 @@ All start **NOT_RUN**. Missing prerequisite = BLOCKED.
 **Source:** [docs/API_CONTRACT.md](../../../docs/API_CONTRACT.md), [docs/reports-storage.md](../../../docs/reports-storage.md), [docs/SECURITY_AND_LIMITATIONS.md](../../../docs/SECURITY_AND_LIMITATIONS.md), [backend/platform/report_artifacts.go](../../../backend/platform/report_artifacts.go), [backend/platform/report_runtime.go](../../../backend/platform/report_runtime.go)
 
 **Supporting automation:** [backend/platform/report_schedules_test.go](../../../backend/platform/report_schedules_test.go), [backend/platform/report_export_jobs_test.go](../../../backend/platform/report_export_jobs_test.go)
-

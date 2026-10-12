@@ -505,4 +505,3 @@ All start **NOT_RUN**. Missing prerequisite = BLOCKED.
 **Source:** [frontend/src/communication/WorkflowTools.tsx](../../../frontend/src/communication/WorkflowTools.tsx), [backend/platform/communication_requests.go](../../../backend/platform/communication_requests.go), [backend/platform/communication_conversion.go](../../../backend/platform/communication_conversion.go)
 
 **Supporting automation:** [backend/platform/communication_finance_test.go](../../../backend/platform/communication_finance_test.go), [backend/platform/communication_conversion_test.go](../../../backend/platform/communication_conversion_test.go)
-

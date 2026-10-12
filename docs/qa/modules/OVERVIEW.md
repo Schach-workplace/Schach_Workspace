@@ -207,4 +207,3 @@ All start **NOT_RUN**. Missing prerequisite = BLOCKED.
 **Source:** [docs/USER_GUIDE.md](../../../docs/USER_GUIDE.md), [frontend/src/pages/Overview.tsx](../../../frontend/src/pages/Overview.tsx), [frontend/src/App.tsx](../../../frontend/src/App.tsx), [frontend/src/store.tsx](../../../frontend/src/store.tsx)
 
 **Supporting automation:** [frontend/src/access.ui.test.tsx](../../../frontend/src/access.ui.test.tsx), [backend/platform/read_scopes_test.go](../../../backend/platform/read_scopes_test.go), [backend/platform/finance_test.go](../../../backend/platform/finance_test.go)
-

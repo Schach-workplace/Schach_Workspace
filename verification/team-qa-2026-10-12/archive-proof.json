@@ -1,12 +1,13 @@
 {
   "status": "PASS",
   "applicationSourceBaseline": "191526bd2fda1970809529ab1d30b7cd54508512",
-  "archive": "/home/brahma/Projects/Schach_Workspace-team-QA-20261012-final.zip",
+  "archive": "/home/brahma/Projects/Schach_Workspace-team-QA-20261012-ready.zip",
   "files": 549,
   "entries": 550,
-  "bytes": 1344023,
-  "sha256": "3e625879650a6f28b13fb6e754e850318c9ae67e937d1655fe7bfae65ae26e59",
+  "bytes": 1344111,
+  "sha256": "7c573edc1bfe21efeb179b29877a4e5912279445c0f275daebdfc3c3c36ea056",
   "eachManifestHashVerified": true,
+  "matchesCurrentQAFiles": true,
   "manualScenariosExecuted": 0,
   "scope": "QA documentation only; no app/runtime/database/provider mutation"
 }
