@@ -40,7 +40,7 @@ Modules: Connect (chat and calls), Overview, My work, Tasks, Projects, Calendar,
 ## 3. Live state at handoff (re-verify)
 
 **Git baseline at the start of the 2026-10-14 continuation** (re-verify live refs):
-- `main` = `improve/workspace-improvements` = `origin/main` = `origin/improve/workspace-improvements` = **`318446b`**. Both trees and remotes were clean/aligned before this continuation. The neutral-web change and artifact checks below are complete; final local main fast-forward/private push are the remaining publication steps. Read live HEAD rather than treating this baseline as the latest commit.
+- `main` = `improve/workspace-improvements` = `origin/main` = `origin/improve/workspace-improvements` = **`318446b`**. Both trees and remotes were clean/aligned before this continuation. The neutral-web product commit is `8b8e8df`, fast-forwarded to main and non-force pushed to both private branches. Final handoff metadata follows it; use live Git for the exact latest HEAD. Read live HEAD rather than treating this baseline as the latest commit.
 - Two user stashes exist: `m10-paused-for-m9-round5-20261011` and `m10-paused-for-m9-n2-20261011`. **Preserve them; never drop or pop them.**
 - Never force-push. Pushes to the private repo are authorised for development work.
 
@@ -181,7 +181,7 @@ Demo logins (fictional; QA/demo only): `founder@`, `ceo@`, `finance@`, `head@`, 
 
 ## 11. Current continuation checkpoint — 14 October 2026
 
-Owner-approved neutral web branding is implemented and reviewed. Source base318446b; final commit/publication state must be checked with live Git. Changed product files: frontend/src/App.tsx, styles/branding.css, index.html, public/favicon.svg and workspace-mark.svg. Offline title/compiled preview updated through scripts/make-preview.mjs. No backend/native API, business handler, schema, provider, 8080 runtime or real company data change.
+Owner-approved neutral web branding is implemented and reviewed. Source base318446b; product commit `8b8e8dff0969f67df119437d6cc8a01aa3e1111a` is merged/pushed on both branches. Subsequent handoff-only metadata has the same product behavior; check live Git for its latest HEAD. Changed product files: frontend/src/App.tsx, styles/branding.css, index.html, public/favicon.svg and workspace-mark.svg. Offline title/compiled preview updated through scripts/make-preview.mjs. No backend/native API, business handler, schema, provider, 8080 runtime or real company data change.
 
 Evidence: [neutral-web record](../verification/web-neutral-2026-10-14/record.md) and [result](../verification/web-neutral-2026-10-14/result.json). Baseline/current full web85files393tests PASS, tsc PASS, changed-web Prettier PASS, normal/demo builds PASS with documented warnings. Actual login/Overview screenshots1440/390/320, collapsed desktop1440 and open phone navigation390/320 have zero recorded overflow/exceptions; root inspected the images. One independent read-only preservation review Spec/Quality PASS, no findings. New native/device/backend suites were not repeated for unchanged source.
 
@@ -191,7 +191,7 @@ Read-only production `/api/health` returned200/ok through trusted HTTPS. Owner r
 
 ### Next action
 
-1. Complete authorized local main fast-forward and non-force private feature/main push after final diff checks; no production restart/update. Then record the product commit and publication receipt here.
+1. Git publication is complete for product commit `8b8e8df`; keep the final handoff metadata aligned with both branches. No production update or8080restart was performed.
 2. Begin a fresh isolated P0 manual QA run; record execution outside generated docs/qa. Include unseen populated report/onboarding/access/departure/assistance states. Do not confuse this bounded browser/preview evidence with the224manual case run.
 3. Owner creates a company-owned Expo account/project for the first Android preview APK; Apple Developer organisation/D-U-N-S in parallel for iPhone previews. No cloud build until accounts/authorised access are ready. Native push/calls require actual physical-phone tests.
 4. Discuss profile editing, offboarding reason and workload threshold before implementing them. Mobile visual pass and deployment auth/MFA/recovery/calls/push/restore/capacity gates remain open.

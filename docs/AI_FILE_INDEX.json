@@ -1,5 +1,5 @@
 {
-  "updatedUtc": "2026-10-14T14:04:50.128881+00:00",
+  "updatedUtc": "2026-10-14T14:06:46.088780+00:00",
   "qualification": "Durable recovery metadata; reviewed source/evidence separately qualified. No pending runtime/push claim.",
   "handoff": "docs/HANDOFF.md",
   "checklist": "docs/AI_CHECKLIST.md",
@@ -10,7 +10,7 @@
     "sourceWriters": "all yielded",
     "reviewer": "yielded"
   },
-  "currentPhase": "Neutral web identity verified; final Git publication pending. Owner reports server configured; native accounts absent; profile/offboarding/threshold deferred. ManualQA/device/provider/restore gates remain open.",
+  "currentPhase": "Neutral web product 8b8e8df verified/merged/pushed; handoff records the current product receipt; inspect live Git for metadata HEAD. Owner reports server configured and HTTPS health passes; native accounts absent; profile/offboarding/threshold deferred; manualQA/device/provider/restore gates remain open.",
   "verifiedProductHead": "ebc994dc6c2be442db595e468a716139b56ed721",
   "verifiedFixHead": "dff8ddc045b7bec32b41ac3e4f8847938c4f3de3",
   "reviewDisposition": "verification/workspace-improvements-roadmap/release-cutover/scoped-review-disposition.json",
@@ -2863,50 +2863,12 @@
       "verification/workspace-improvements-roadmap/rulings.md"
     ]
   },
-  "inventoryGitHead": "318446b6cff72d3051b0c01c9e9bf51f42ee2645",
+  "inventoryGitHead": "8b8e8dff0969f67df119437d6cc8a01aa3e1111a",
   "liveChangedOrUntrackedPaths": [
     "docs/AI_FILE_INDEX.json",
     "docs/HANDOFF.md",
-    "docs/deploy/MOBILE_APPS.md",
-    "docs/qa/tools/validate_pack.py",
-    "docs/qa/validation-structure.json",
-    "frontend/index.html",
-    "frontend/public/favicon.svg",
-    "frontend/public/workspace-mark.svg",
-    "frontend/scripts/verify-preview.mjs",
-    "frontend/src/App.tsx",
-    "frontend/src/styles/branding.css",
-    "preview.html",
-    "scripts/make-preview.mjs",
-    "verification/preview-result.json",
-    "verification/web-neutral-2026-10-14/after-login/login-1440.png",
-    "verification/web-neutral-2026-10-14/after-login/login-320.png",
-    "verification/web-neutral-2026-10-14/after-login/login-390.png",
-    "verification/web-neutral-2026-10-14/after-login/report.json",
-    "verification/web-neutral-2026-10-14/after-shell/overview-1440.png",
-    "verification/web-neutral-2026-10-14/after-shell/overview-320.png",
-    "verification/web-neutral-2026-10-14/after-shell/overview-390.png",
-    "verification/web-neutral-2026-10-14/after-shell/report.json",
-    "verification/web-neutral-2026-10-14/baseline-verify-preview.txt",
-    "verification/web-neutral-2026-10-14/before-login/login-1440.png",
-    "verification/web-neutral-2026-10-14/before-login/login-320.png",
-    "verification/web-neutral-2026-10-14/before-login/login-390.png",
-    "verification/web-neutral-2026-10-14/before-login/report.json",
-    "verification/web-neutral-2026-10-14/before-shell/overview-1440.png",
-    "verification/web-neutral-2026-10-14/before-shell/overview-390.png",
-    "verification/web-neutral-2026-10-14/before-shell/report.json",
-    "verification/web-neutral-2026-10-14/collapsed/overview_button_aria-label_Collapse_sidebar_-1440.png",
-    "verification/web-neutral-2026-10-14/collapsed/report.json",
-    "verification/web-neutral-2026-10-14/format-baseline.txt",
-    "verification/web-neutral-2026-10-14/format-current.txt",
-    "verification/web-neutral-2026-10-14/phone-menu/overview_button_aria-label_Open_navigation_-320.png",
-    "verification/web-neutral-2026-10-14/phone-menu/overview_button_aria-label_Open_navigation_-390.png",
-    "verification/web-neutral-2026-10-14/phone-menu/report.json",
-    "verification/web-neutral-2026-10-14/qa-validator-green.txt",
-    "verification/web-neutral-2026-10-14/qa-validator-red.txt",
     "verification/web-neutral-2026-10-14/record.md",
-    "verification/web-neutral-2026-10-14/result.json",
-    "verification/web-neutral-2026-10-14/verify-preview-green.txt"
+    "verification/web-neutral-2026-10-14/result.json"
   ],
   "inventoryQualification": "Durable tracked/current path existence only. Acceptance and artifact provenance remain separately recorded; private archive references are historical recovery, not current source paths.",
   "currentRuntime": {
@@ -2923,5 +2885,7 @@
     "sourceHead": "748a5b676c7f6d56c448a091c5102e8c63fcc3b7",
     "sha256": "7fa5be2b1bfd83c1d4665a1222edae88bdfb082c2cd9c70770085485a3a68b85",
     "qualification": "Source ZIP at748a; later metadata and complete sanitized proof logs in Git."
-  }
+  },
+  "currentWebNeutralProductHead": "8b8e8dff0969f67df119437d6cc8a01aa3e1111a",
+  "currentWebNeutralEvidence": "verification/web-neutral-2026-10-14/record.md"
 }
