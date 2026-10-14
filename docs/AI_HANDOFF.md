@@ -1,5 +1,7 @@
 # Schach Workspace AI handoff
 
+> **Current handoff: read [HANDOFF.md](HANDOFF.md) first.** The sections below are earlier history and background.
+
 Updated UTC 2026-10-11T23:22:05.037463+00:00. Read this document, [AI_CHECKLIST.md](AI_CHECKLIST.md), [AI_FILE_INDEX.json](AI_FILE_INDEX.json), then the [durable release ledger](../verification/workspace-improvements-roadmap/release-cutover/release-ledger.md). Update all four at each material boundary and before a context limit. Verify live Git/process state before acting; historical PIDs are not permission to signal a process.
 
 ## Current state and next action
