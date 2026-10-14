@@ -91,7 +91,13 @@ for env in [{'SCHACH_QA_PORT':'8080'},{'SCHACH_QA_PORT':'invalid'}]:
     assert result.returncode == 2
 left = {p.name:p.read_bytes() for p in (REPO/'backend/migrations').glob('*.sql')}
 right = {p.name:p.read_bytes() for p in (REPO/'encore/api/migrations').glob('*.sql')}
-assert left == right and len(left) == 116
+assert left and left == right, 'Migration trees must be nonempty and byte-identical'
+migration_versions = sorted({int(name.split('_', 1)[0]) for name in left})
+assert migration_versions == list(range(1, migration_versions[-1] + 1)), 'Migration versions must be contiguous'
+for version in migration_versions:
+    names = [name for name in left if int(name.split('_', 1)[0]) == version]
+    assert len(names) == 2 and {name.rsplit('.', 2)[-2] for name in names} == {'up', 'down'}, (version, names)
+    assert len({name.rsplit('.', 2)[0] for name in names}) == 1, (version, names)
 pdf = (QA/'WORKFLOW_GUIDE.pdf').read_bytes()
 assert pdf.startswith(b'%PDF-') and len(pdf)>10000
 report = {'status':'PASS','scope':'Documentation structure and artifacts only; not application/team acceptance',
@@ -102,7 +108,7 @@ report = {'status':'PASS','scope':'Documentation structure and artifacts only; n
                     '245 SVG XML files and matching editable Mermaid files','Module guides cover all cases',
                     'CSV rows/results and all NOT_RUN statuses','Seven-sheet OOXML, formulas, dropdowns and frozen headers',
                     'No broken local Markdown/HTML links','Python and Bash syntax',
-                    'Launcher rejects retained port and invalid port before work','116 byte-identical SQL files per tree','PDF signature'],
+                    'Launcher rejects retained port and invalid port before work',f'{len(left)} byte-identical SQL files per tree; paired contiguous versions 1–{migration_versions[-1]}','PDF signature'],
           'qualifications':['Full launcher/app/manual cases not executed by this validator',
                             'Mermaid grammar generated/structurally checked; external Mermaid parser not run',
                             'Physical/provider/production gates remain unobserved']}

@@ -16,6 +16,39 @@ This guide takes the **Workspace** phone app from source code to private distrib
 
 ---
 
+## Fastest testing path while accounts are being set up
+
+Owner status on 14 October 2026: the server configuration is reported complete;
+Expo/EAS and Apple Developer accounts are not ready. This is an owner report,
+not an independently verified production/device test. A subsequent read-only
+HTTPS `/api/health` check returned JSON200/ok; calls, push and production
+authentication remain unverified.
+
+1. **Use the existing HTTPS web app now** on Android and iPhone. It can be added
+   as a home-screen shortcut. This remains a browser experience: it does not
+   qualify native push, incoming/background calls or device acceptance.
+2. **Android first:** create a company-owned Expo account and link the project
+   following Part 1. Then use the existing `preview` profile to generate an APK
+   and share it directly with a small test group. Play Console and Managed Google
+   Play can follow for the intended private production distribution. Firebase
+   is needed for Android push testing; its absence does not block an initial
+   APK without push configuration.
+3. **iPhone in parallel:** start Apple Developer organisation enrolment and the
+   D-U-N-S prerequisite. Once membership is active, use Part 3.4 to register the
+   few test phones and make an ad hoc preview build. Apple Business Manager
+   remains the intended production distribution. TestFlight is an alternative
+   once App Store Connect is ready, particularly when managing device lists is
+   inconvenient.
+
+This recommendation follows [Expo's internal distribution guide](https://docs.expo.dev/build/internal-distribution/),
+[build setup requirements](https://docs.expo.dev/build/setup/)
+and [Apple organisation enrolment requirements](https://developer.apple.com/programs/enroll/): Android APKs
+can install directly, while ad hoc iOS builds require paid Apple Developer
+membership and registered devices. No phone build, account creation, store
+submission or deployment was performed by this change.
+
+---
+
 ## Part 0: Accounts and lead times (start today)
 
 | Account | Cost | Lead time | Needed for |

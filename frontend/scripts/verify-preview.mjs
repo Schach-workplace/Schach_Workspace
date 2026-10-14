@@ -90,7 +90,7 @@ try {
   connectNav.click();
   await until(() => window.document.body.textContent.includes('Connect requires the shared server'));
   check('Offline Connect states its actual shared-server requirement', true);
-  const assistance = [...window.document.querySelectorAll('button')].find(button => button.textContent.trim() === 'Local assistance history');
+  const assistance = window.document.querySelector('button[aria-label="Local assistance history"]');
   assert.ok(assistance, 'Manual assistance entry exists');
   assistance.click();
   await until(() => window.document.body.textContent.includes('Local inference is unavailable in demo mode. Continue manually.'));

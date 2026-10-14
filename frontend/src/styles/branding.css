@@ -1,0 +1,46 @@
+/* Neutral product identity, shared with the native Workspace mark. */
+.login-brand.workspace-brand {
+  gap: 14px;
+}
+.login-brand.workspace-brand img {
+  width: 44px;
+  height: 44px;
+}
+.login-brand.workspace-brand > span {
+  display: block;
+  border: 0;
+  padding: 0;
+  font-family: Chivo, sans-serif;
+  font-size: 26px;
+  font-weight: 600;
+  letter-spacing: -0.6px;
+  color: #fff;
+}
+.sidebar .sidebar-brand.workspace-brand {
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+}
+.sidebar .sidebar-brand.workspace-brand img {
+  display: block;
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+}
+.sidebar-brand.workspace-brand > span {
+  margin: 0;
+  font-family: Chivo, sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+  color: #fff;
+}
+.sidebar .sidebar-brand.workspace-brand::before {
+  content: none;
+  display: none;
+}
+.brand-symbol.workspace-mark {
+  background: transparent;
+  object-fit: contain;
+}

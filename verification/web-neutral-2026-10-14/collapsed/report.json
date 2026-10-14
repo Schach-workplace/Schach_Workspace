@@ -1,0 +1,11 @@
+{
+  "report": [
+    {
+      "view": "overview!button[aria-label=\"Collapse sidebar\"]",
+      "width": 1440,
+      "height": 2037,
+      "horizontalOverflow": false
+    }
+  ],
+  "errors": []
+}

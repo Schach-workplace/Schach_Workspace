@@ -1,0 +1,98 @@
+{
+  "status": "PASS_WITH_QUALIFICATIONS",
+  "baseline": "318446b6cff72d3051b0c01c9e9bf51f42ee2645",
+  "scope": "Approved neutral web branding, current migration inventory and stale preview selector; no backend/native product change",
+  "webTests": {
+    "files": 85,
+    "tests": 393,
+    "baseline": "PASS",
+    "current": "PASS"
+  },
+  "typecheck": "PASS",
+  "formatChangedWebFiles": "PASS",
+  "normalBuild": "PASS",
+  "demoBuild": "PASS_WITH_EXISTING_SINGLE_CHUNK_WARNING",
+  "compiledPreview": {
+    "checks": 14,
+    "status": "PASS",
+    "bytes": 2089731,
+    "networkRequests": 0,
+    "qualification": "Happy DOM; not physical device or actual production authentication"
+  },
+  "migrationInventory": {
+    "filesPerTree": 118,
+    "versions": 59,
+    "byteIdentical": true,
+    "oldValidator": "RED: expected116",
+    "currentValidator": "GREEN: paired contiguous inventory"
+  },
+  "browser": {
+    "environment": "http://127.0.0.1:5174 against owned fictional9080 fixture",
+    "loginWidths": [
+      1440,
+      390,
+      320
+    ],
+    "overviewWidths": [
+      1440,
+      390,
+      320
+    ],
+    "collapsedSidebarWidths": [
+      1440
+    ],
+    "openPhoneNavigationWidths": [
+      390,
+      320
+    ],
+    "overflow": false,
+    "runtimeExceptions": 0,
+    "screenshotsVisuallyInspected": true
+  },
+  "productionReadOnlyHealth": {
+    "url": "https://work.schachengineers.com/api/health",
+    "status": 200,
+    "jsonOk": true,
+    "trustedTLS": true,
+    "callsPushAuthVerified": false
+  },
+  "ownerDecisions": {
+    "webBranding": "Neutral Workspace",
+    "serverConfiguration": "Owner reports configured",
+    "profileOffboardingThreshold": "Deferred for discussion",
+    "expoAppleAccounts": "Not ready; recommend Android APK first, iPhone ad hoc after membership"
+  },
+  "manualScenarios": "All224 NOT_RUN; these checks are separate bounded runtime/artifact evidence",
+  "processesStarted": "Only own short-lived Chromium checks; cleaned by exact owned process groups. Existing8080/9080/5174/9400 preserved.",
+  "review": {
+    "spec": "PASS",
+    "quality": "PASS",
+    "critical": 0,
+    "important": 0,
+    "minor": 0
+  },
+  "qualifications": [
+    "Preview old selector fails on unchanged318 baseline too; corrected accessible-name harness selector",
+    "Normal outDir warning, demo size warning and experimental VM warning retained",
+    "No deployment, cloud builds, store/account creation, real-device runs, private inference or provider configuration performed",
+    "No broad backend/native suite repeated for unchanged backend/native source"
+  ],
+  "fullWebFormatCheck": {
+    "status": "FAIL_PREEXISTING",
+    "currentAndBaselineWarningsIdentical": true,
+    "files": [
+      "src/communication/api.ts",
+      "src/communication/Calls.test.tsx",
+      "src/components/CommitmentFields.tsx",
+      "src/components/MessageTaskConversion.test.tsx",
+      "src/data/deadlines.test.ts",
+      "src/data/deadlines.ts",
+      "src/data/imports.test.ts",
+      "src/data/imports.ts",
+      "src/data/metrics.ts",
+      "src/finance.ui.test.tsx"
+    ],
+    "changedWebFiles": "PASS",
+    "qualification": "No frontend ESLint script exists; package format:check is the formatting gate. No unrelated mass formatting."
+  }
+}

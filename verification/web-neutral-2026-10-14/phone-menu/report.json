@@ -1,0 +1,17 @@
+{
+  "report": [
+    {
+      "view": "overview!button[aria-label=\"Open navigation\"]",
+      "width": 390,
+      "height": 3105,
+      "horizontalOverflow": false
+    },
+    {
+      "view": "overview!button[aria-label=\"Open navigation\"]",
+      "width": 320,
+      "height": 3166,
+      "horizontalOverflow": false
+    }
+  ],
+  "errors": []
+}

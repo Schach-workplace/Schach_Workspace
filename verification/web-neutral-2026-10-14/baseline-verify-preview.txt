@@ -1,0 +1,23 @@
+
+> schach-workspace-frontend@1.1.0 verify:preview
+> node --experimental-vm-modules scripts/verify-preview.mjs
+
+(node:2840742) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Manual assistance entry exists
+    at file://<owned-private-evidence>/baseline-source/frontend/scripts/verify-preview.mjs:94:10
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at process.processTimers (node:internal/timers:538:9) {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: undefined,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+
+Node.js v24.14.0

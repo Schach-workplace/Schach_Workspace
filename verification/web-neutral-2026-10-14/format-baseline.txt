@@ -1,0 +1,16 @@
+
+> schach-workspace-frontend@1.1.0 format:check
+> prettier --check "src/**/*.{ts,tsx,css}" "*.{json,ts,html}"
+
+Checking formatting...
+[warn] src/communication/api.ts
+[warn] src/communication/Calls.test.tsx
+[warn] src/components/CommitmentFields.tsx
+[warn] src/components/MessageTaskConversion.test.tsx
+[warn] src/data/deadlines.test.ts
+[warn] src/data/deadlines.ts
+[warn] src/data/imports.test.ts
+[warn] src/data/imports.ts
+[warn] src/data/metrics.ts
+[warn] src/finance.ui.test.tsx
+[warn] Code style issues found in 10 files. Run Prettier with --write to fix.

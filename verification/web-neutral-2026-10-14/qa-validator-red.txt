@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "<owned-private-evidence>/original-validator.py", line 94, in <module>
+    assert left == right and len(left) == 116
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

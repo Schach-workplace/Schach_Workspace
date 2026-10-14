@@ -20,8 +20,8 @@ Modules: Connect (chat and calls), Overview, My work, Tasks, Projects, Calendar,
 | Repository | https://github.com/Schach-workplace/Schach_Workspace (private) |
 | Local checkout | `/home/brahma/Projects/Schach_Workspace` (branch `main`) |
 | Feature worktree | `/home/brahma/Projects/Schach_Workspace/.worktrees/workspace-improvements` (branch `improve/workspace-improvements`). **Do work here**, then fast-forward `main`. |
-| Target deployment | `https://work.schachengineers.com` (self-hosted, India). Not yet deployed as of this handoff, as far as this agent knows. **Ask the owner.** |
-| Phone app | Published privately as **Workspace**, app ID `com.schachengineers.workspace`. Not yet built. |
+| Target deployment | `https://work.schachengineers.com` (self-hosted, India). Owner reports configured on 14 October 2026; read-only trusted-HTTPS API health returned JSON200/ok. Authentication/calls/push/deployment settings have not been independently qualified. |
+| Phone app | Intended private distribution as **Workspace**, app ID `com.schachengineers.workspace`. No new phone build; Expo/Apple accounts are not ready. |
 
 ---
 
@@ -39,8 +39,8 @@ Modules: Connect (chat and calls), Overview, My work, Tasks, Projects, Calendar,
 
 ## 3. Live state at handoff (re-verify)
 
-**Git** (as of 2026-10-14):
-- `main` = `improve/workspace-improvements` = `origin/main` = `origin/improve/workspace-improvements` = **`083ed57`**. Clean tree.
+**Git baseline at the start of the 2026-10-14 continuation** (re-verify live refs):
+- `main` = `improve/workspace-improvements` = `origin/main` = `origin/improve/workspace-improvements` = **`318446b`**. Both trees and remotes were clean/aligned before this continuation. The neutral-web change and artifact checks below are complete; final local main fast-forward/private push are the remaining publication steps. Read live HEAD rather than treating this baseline as the latest commit.
 - Two user stashes exist: `m10-paused-for-m9-round5-20261011` and `m10-paused-for-m9-n2-20261011`. **Preserve them; never drop or pop them.**
 - Never force-push. Pushes to the private repo are authorised for development work.
 
@@ -90,9 +90,9 @@ Demo logins (fictional; QA/demo only): `founder@`, `ceo@`, `finance@`, `head@`, 
 | `c179547` | **Web visual redesign** of all 13 views and their pop-ups to the house style (new scoped CSS in `frontend/src/styles/*.css`), verified with before/after headless screenshots at 1440/390 and a behaviour-preservation review. |
 | `e02ae3f` | Deployment: `compose.production.yaml` (People onboarding keyring, finance-intake and report storage) and Dockerfile creating `/app/intakes` and `/app/reports` (owned, 0700). Image build verified. |
 | `083ed57` | Mobile: neutral **Workspace** branding, app ID, scheme `workspace`, `app.config.ts` (replaces `app.json`, optional `GOOGLE_SERVICES_JSON`), `eas.json` profiles, built-in server, placeholder icon/splash (`expo-splash-screen`), Expo patch alignment. |
-| (this commit) | This handoff; `docs/deploy/*` guides; `verification/runtime/ui_screenshots.mjs`; UI agent brief. |
+| `318446b` | This handoff; `docs/deploy/*` guides; `verification/runtime/ui_screenshots.mjs`; UI agent brief. |
 
-**Baseline checks at `083ed57`:**
+**Recorded baseline checks at `083ed57` (historical; current web checks below):**
 
 | Check | Result |
 |---|---|
@@ -107,18 +107,18 @@ Demo logins (fictional; QA/demo only): `founder@`, `ceo@`, `finance@`, `head@`, 
 
 ## 6. Open items and pending owner decisions
 
-**Waiting on the owner:**
-1. **Web branding:** the phone app is neutral, but the **web app** sign-in still shows the Schach Engineers logo and "Built for teams that build". Should it go neutral too (multiple companies)? Asked; no answer yet.
-2. **Self-service profile edit:** needs a new backend endpoint (none exists). The UI was deliberately not added.
-3. **Offboarding reason:** the handler takes no reason. The contract was corrected to match. Adding one means a handler and UI change.
+**Owner decisions and remaining prerequisites:**
+1. **Web branding:** owner approved neutral Workspace branding on 14 October 2026; implemented in this continuation. Native orange panels/check mark reused; sign-in/sidebar/loading/favicon/title/footer neutral. Company names are unchanged.
+2. **Self-service profile edit:** owner deferred for discussion; needs a new backend endpoint (none exists). No implementation started.
+3. **Offboarding reason:** owner deferred for discussion; the handler takes no reason. Adding one means a handler and UI change. Existing contract preserved.
 4. **Revoked web device rebinding (review L3):** reusing a stored device id reactivates the same user's revoked row. Sessions stay revoked. Optional backend hardening.
-5. **Workload "near capacity" threshold:** 85% was chosen for display; confirm it.
+5. **Workload "near capacity" threshold:** owner deferred for discussion; existing 85% display threshold preserved.
 6. **iOS export compliance** (`ITSAppUsesNonExemptEncryption`): left unset; owner's legal call (HTTPS-only, normally exempt).
-7. **Store prerequisites:** D-U-N-S, Apple Developer org, Apple Business Manager, Play Console, Managed Google Play enterprise, Firebase, APNs `.p8`, Expo account (`eas init`), privacy policy URL, and a **fictional reviewer account** on production.
+7. **Store prerequisites:** owner confirms Expo/EAS and Apple Developer accounts are not ready. Fastest immediate route: current HTTPS web app on both phones. Native recommendation: company-owned Expo setup → Android preview APK; Apple organisation/D-U-N-S enrolment in parallel → registered-phone ad hoc iOS preview. Intended private stores remain unchanged. Other readiness remains unknown: D-U-N-S, Apple Developer org, Apple Business Manager, Play Console, Managed Google Play enterprise, Firebase, APNs `.p8`, Expo account (`eas init`), privacy policy URL, and a **fictional reviewer account** on production.
 
-**Deployment and runtime work (when the owner deploys):**
-- The owner reported **"Calling is not configured"** from phones. LiveKit env vars are empty. Steps: `deploy/livekit.yaml` from the example, `LIVEKIT_API_KEY`/`SECRET` in `.env`, open 7881/tcp and 7882/udp, add `-f deploy/compose.livekit.yaml`. A **TURN** relay will likely be needed for mobile data. Calls have never been tested on real devices or a real server. Full steps: `SERVER_DEPLOYMENT.md` section 10a.
-- Push: server needs `FCM_SERVICE_ACCOUNT_FILE` and `APNS_*` (`APNS_BUNDLE_ID=com.schachengineers.workspace`). See `MOBILE_APPS.md` Part 5.
+**Deployment and runtime acceptance:**
+- Earlier owner report was **"Calling is not configured"**. On 14 October the owner reports the server configuration is now complete. Do not assume empty LiveKit variables or reconfigure their server. Read-only HTTPS health passes; real LiveKit/TURN and push/auth are still unverified. If further setup is actually needed, see `deploy/livekit.yaml` from the example, `LIVEKIT_API_KEY`/`SECRET` in `.env`, open 7881/tcp and 7882/udp, add `-f deploy/compose.livekit.yaml`. A **TURN** relay will likely be needed for mobile data. Calls have never been tested on real devices or a real server. Full steps: `SERVER_DEPLOYMENT.md` section 10a.
+- Push acceptance is still pending. Required configuration includes `FCM_SERVICE_ACCOUNT_FILE` and `APNS_*` (`APNS_BUNDLE_ID=com.schachengineers.workspace`). See `MOBILE_APPS.md` Part 5.
 - Backups and one **restore drill** before real use.
 
 **Engineering follow-ups (not started):**
@@ -179,9 +179,19 @@ Demo logins (fictional; QA/demo only): `founder@`, `ceo@`, `finance@`, `head@`, 
 
 ---
 
-## 11. Suggested next actions
+## 11. Current continuation checkpoint — 14 October 2026
 
-1. Confirm with the owner: deployment status of `work.schachengineers.com`, the web-branding decision (6.1), and whether to stop the 9080/5174 fixtures.
-2. If deployed: help configure LiveKit (+TURN) and push credentials, then run `MOBILE_APPS.md` Part 4 on real phones and record the results.
-3. Build `preview` mobile apps once the owner has an Expo account and Firebase file. Triage real-device findings.
-4. Begin the isolated manual QA pack (P0 first) in a fresh fixture; keep run results outside `docs/qa/`.
+Owner-approved neutral web branding is implemented and reviewed. Source base318446b; final commit/publication state must be checked with live Git. Changed product files: frontend/src/App.tsx, styles/branding.css, index.html, public/favicon.svg and workspace-mark.svg. Offline title/compiled preview updated through scripts/make-preview.mjs. No backend/native API, business handler, schema, provider, 8080 runtime or real company data change.
+
+Evidence: [neutral-web record](../verification/web-neutral-2026-10-14/record.md) and [result](../verification/web-neutral-2026-10-14/result.json). Baseline/current full web85files393tests PASS, tsc PASS, changed-web Prettier PASS, normal/demo builds PASS with documented warnings. Actual login/Overview screenshots1440/390/320, collapsed desktop1440 and open phone navigation390/320 have zero recorded overflow/exceptions; root inspected the images. One independent read-only preservation review Spec/Quality PASS, no findings. New native/device/backend suites were not repeated for unchanged source.
+
+Failures and classification: QA validator hard-coded116files failed against actual118 mirrored files through59; corrected to validate nonempty identical paired contiguous inventory (RED/GREEN). Preview harness failed its stale visible-text selector both on this source and a separately compiled unchanged318 baseline; corrected to the existing icon's accessible label, then14compiled checks PASS/no external requests. These are tooling/harness issues, not application regressions. Full frontend format:check still fails on the same10pre-existing files as unchanged318; changed web files pass and no unrelated mass formatting was done. Single-chunk demo-size, private normal-outDir and VM experimental warnings retained. All224 manual scenarios remain NOT_RUN.
+
+Read-only production `/api/health` returned200/ok through trusted HTTPS. Owner reports configuration complete; no deployment, credential inspection, production login, calls/push or business mutations performed. No phone/cloud/store build/account creation performed. Existing8080PID3048810, QA9080PID1182821, Vite5174PID1176363 and unrelated Encore9400PID2548856 were verified and left running; recheck identity before any action. Only own short-lived Chromium process groups were started/stopped. Private builds/logs and baseline source are under ~/.local/state/schach-web-neutral-20261014/run-gktohwro; sanitized screenshots/check outputs are in Git.
+
+### Next action
+
+1. Complete authorized local main fast-forward and non-force private feature/main push after final diff checks; no production restart/update. Then record the product commit and publication receipt here.
+2. Begin a fresh isolated P0 manual QA run; record execution outside generated docs/qa. Include unseen populated report/onboarding/access/departure/assistance states. Do not confuse this bounded browser/preview evidence with the224manual case run.
+3. Owner creates a company-owned Expo account/project for the first Android preview APK; Apple Developer organisation/D-U-N-S in parallel for iPhone previews. No cloud build until accounts/authorised access are ready. Native push/calls require actual physical-phone tests.
+4. Discuss profile editing, offboarding reason and workload threshold before implementing them. Mobile visual pass and deployment auth/MFA/recovery/calls/push/restore/capacity gates remain open.

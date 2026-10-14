@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="208 208 608 608">
+  <!-- Workspace mark adapted from the existing native icon, cropped for the web. -->
+  <defs><mask id="gap" maskUnits="userSpaceOnUse" x="0" y="0" width="1024" height="1024"><rect width="1024" height="1024" fill="#fff"/><rect x="224" y="304" width="496" height="496" rx="132" fill="#000"/></mask></defs>
+  <rect x="332" y="252" width="440" height="440" rx="104" fill="#fdba74" mask="url(#gap)"/><rect x="252" y="332" width="440" height="440" rx="104" fill="#f97316"/><polyline points="362,560 446,644 592,486" fill="none" stroke="#ffffff" stroke-width="60" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

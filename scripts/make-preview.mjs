@@ -35,6 +35,6 @@ await inlineDirectory(dist);
 html=html.replace(scripts[0][0],()=>`<script type="module">${js.replace(/<\/script/gi,'<\\/script')}</script>`);
 html=html.replace('</head>',()=>`<style>${css}</style></head>`);
 html=html.replace(/<link\b[^>]*\brel="(?:modulepreload|manifest)"[^>]*>/g,'');
-html=html.replace(/<title>.*?<\/title>/,'<title>Schach Workspace — Interactive Demo</title>');
+html=html.replace(/<title>.*?<\/title>/,'<title>Workspace — Interactive Demo</title>');
 await writeFile(path.join(root,'preview.html'),html);
 console.log(`Created preview.html (${Buffer.byteLength(html).toLocaleString()} bytes). All required scripts, styles, fonts and branding are embedded.`);

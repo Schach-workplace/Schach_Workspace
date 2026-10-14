@@ -1,0 +1,23 @@
+{
+  "report": [
+    {
+      "view": "login",
+      "width": 1440,
+      "height": 900,
+      "horizontalOverflow": false
+    },
+    {
+      "view": "login",
+      "width": 390,
+      "height": 844,
+      "horizontalOverflow": false
+    },
+    {
+      "view": "login",
+      "width": 320,
+      "height": 844,
+      "horizontalOverflow": false
+    }
+  ],
+  "errors": []
+}

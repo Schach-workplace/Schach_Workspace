@@ -38,6 +38,7 @@ import {
 } from 'lucide-react';
 import { useWorkspace } from './store';
 import './styles/shell.css';
+import './styles/branding.css';
 import type { TaskFilters, View } from './types';
 import { Avatar, cx, ErrorMessage } from './components/UI';
 import TaskDrawer from './components/TaskDrawer';
@@ -145,12 +146,12 @@ function Login() {
   return (
     <div className="login-page">
       <section className="login-story">
-        <div className="login-brand">
-          <img src="/schach-logo.webp" alt="Schach Engineers" />
-          <span>WORKSPACE</span>
+        <div className="login-brand workspace-brand">
+          <img src="/workspace-mark.svg" alt="" aria-hidden="true" />
+          <span>Workspace</span>
         </div>
         <div className="login-story-content">
-          <span className="eyebrow">BUILT FOR TEAMS THAT BUILD.</span>
+          <span className="eyebrow">YOUR TEAM. YOUR WORK. ONE PLACE.</span>
           <h1>
             Every commitment.
             <br />A clear way forward.
@@ -195,15 +196,18 @@ function Login() {
           </div>
         </div>
         <div className="login-footer">
-          SCHACH WORKSPACE<span>Clarity creates momentum.</span>
+          WORKSPACE<span>Clarity creates momentum.</span>
         </div>
       </section>
       <section className="login-form-section">
         <div className="login-mobile-brand">
-          <span className="brand-symbol">S</span>
-          <strong>
-            schach<span>workspace</span>
-          </strong>
+          <img
+            className="brand-symbol workspace-mark"
+            src="/workspace-mark.svg"
+            alt=""
+            aria-hidden="true"
+          />
+          <strong>Workspace</strong>
         </div>
         <div className="login-form-wrap">
           {store.mode === 'demo' && (
@@ -442,7 +446,12 @@ function WorkspaceApp() {
   if (!session)
     return store.loading ? (
       <div className="app-loading">
-        <span className="brand-symbol">S</span>
+        <img
+          className="brand-symbol workspace-mark"
+          src="/workspace-mark.svg"
+          alt=""
+          aria-hidden="true"
+        />
         <LoaderCircle className="spin" size={22} />
         <h2>Opening your workspace…</h2>
       </div>
@@ -452,7 +461,12 @@ function WorkspaceApp() {
   if (!data)
     return (
       <div className="app-loading">
-        <span className="brand-symbol">S</span>
+        <img
+          className="brand-symbol workspace-mark"
+          src="/workspace-mark.svg"
+          alt=""
+          aria-hidden="true"
+        />
         {store.loading ? (
           <>
             <LoaderCircle className="spin" size={22} />
@@ -486,9 +500,9 @@ function WorkspaceApp() {
   );
   const sidebarContent = (
     <>
-      <div className="sidebar-brand">
-        <img src="/schach-logo.webp" alt="Schach Engineers" />
-        <span>WORKSPACE</span>
+      <div className="sidebar-brand workspace-brand">
+        <img src="/workspace-mark.svg" alt="" aria-hidden="true" />
+        <span>Workspace</span>
       </div>
       <div className="workspace-switch">
         <label>
@@ -833,7 +847,7 @@ function WorkspaceApp() {
           {view === 'inbox' && <InboxPage onTask={openTask} onExpense={openExpense} />}
           {view === 'settings' && <SettingsPage />}
           <footer className="workspace-footer">
-            <span>Schach Workspace</span>
+            <span>Workspace</span>
             <span>
               {store.mode === 'demo' ? 'Fictional demo data' : 'Connected workspace'}
               <i />
