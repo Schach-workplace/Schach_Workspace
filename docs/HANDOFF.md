@@ -199,7 +199,7 @@ Read-only production `/api/health` returned200/ok through trusted HTTPS. Owner r
 
 ## 12. Native guides checkpoint — 15 October 2026
 
-**Request:** push to main and include end-to-end Android/iOS testing and deployment guides, planning around the already-deployed web. Initial Git was clean/aligned on main, feature and both remote branches at `72c949c475c310dca6f856c322093442720acc05`. Work stays in the existing feature worktree; publication is a fast-forward and non-force push of both branches. Use live Git refs for this documentation checkpoint's exact commit; the product behavior remains `8b8e8df`.
+**Request:** push to main and include end-to-end Android/iOS testing and deployment guides, planning around the already-deployed web. Initial Git was clean/aligned on main, feature and both remote branches at `72c949c475c310dca6f856c322093442720acc05`. Guide commit `5d2c7470474f8395a9a00f8826841652962c92b6` was fast-forwarded into main and atomically non-force pushed to both branches; matching remote refs and clean trees were verified. Final publication metadata follows that guide commit; use live Git for its latest HEAD. Product behavior remains `8b8e8df`.
 
 **Changed files:** README.md, docs/deploy/MOBILE_APPS.md and new [native rollout](deploy/NATIVE_TESTING_ROLLOUT.md), [Android](deploy/ANDROID_TESTING.md) and [iOS/Mac](deploy/IOS_TESTING.md) guides; this handoff, docs/AI_FILE_INDEX.json and [documentation verification](../verification/native-guides-2026-10-15/record.md). The index inventory names the pre-commit source head and verifies paths only, not runtime acceptance.
 

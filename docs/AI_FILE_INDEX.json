@@ -1,5 +1,5 @@
 {
-  "updatedUtc": "2026-10-15T10:42:43.519009+00:00",
+  "updatedUtc": "2026-10-15T10:43:46.492112+00:00",
   "qualification": "Durable recovery metadata; reviewed source/evidence separately qualified. No pending runtime/push claim.",
   "handoff": "docs/HANDOFF.md",
   "checklist": "docs/AI_CHECKLIST.md",
@@ -10,7 +10,7 @@
     "sourceWriters": "all yielded",
     "reviewer": "yielded"
   },
-  "currentPhase": "Native Android/iOS testing and private deployment guides added for existing deployed HTTPS backend; no application/server/build/provider actions. Documentation reviewed and validated; accounts and real-device acceptance remain pending. Inspect live Git for publication refs.",
+  "currentPhase": "Native guides5d2c747 verified/fast-forwarded/pushed on main and feature; publication metadata follows. Existing web/backend left running. Accounts and physical-device/provider/private-store acceptance remain pending; inspect live Git for final HEAD.",
   "verifiedProductHead": "ebc994dc6c2be442db595e468a716139b56ed721",
   "verifiedFixHead": "dff8ddc045b7bec32b41ac3e4f8847938c4f3de3",
   "reviewDisposition": "verification/workspace-improvements-roadmap/release-cutover/scoped-review-disposition.json",
@@ -2869,18 +2869,11 @@
       "verification/workspace-improvements-roadmap/rulings.md"
     ]
   },
-  "inventoryGitHead": "72c949c475c310dca6f856c322093442720acc05",
+  "inventoryGitHead": "5d2c7470474f8395a9a00f8826841652962c92b6",
   "liveChangedOrUntrackedPaths": [
-    "README.md",
     "docs/AI_FILE_INDEX.json",
     "docs/HANDOFF.md",
-    "docs/deploy/ANDROID_TESTING.md",
-    "docs/deploy/IOS_TESTING.md",
-    "docs/deploy/MOBILE_APPS.md",
-    "docs/deploy/NATIVE_TESTING_ROLLOUT.md",
-    "verification/native-guides-2026-10-15/check_docs.py",
-    "verification/native-guides-2026-10-15/record.md",
-    "verification/native-guides-2026-10-15/result.json"
+    "verification/native-guides-2026-10-15/record.md"
   ],
   "inventoryQualification": "Durable tracked/current path existence only. Acceptance and artifact provenance remain separately recorded; private archive references are historical recovery, not current source paths.",
   "currentRuntime": {
@@ -2906,6 +2899,7 @@
     "ios": "docs/deploy/IOS_TESTING.md",
     "verification": "verification/native-guides-2026-10-15/record.md",
     "sourceBaseline": "72c949c475c310dca6f856c322093442720acc05",
-    "qualification": "Instructions and documentation checks only, not signed builds/device/provider acceptance."
+    "qualification": "Instructions and documentation checks only, not signed builds/device/provider acceptance.",
+    "guidesCommit": "5d2c7470474f8395a9a00f8826841652962c92b6"
   }
 }
