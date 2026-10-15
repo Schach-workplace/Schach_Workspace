@@ -16,6 +16,8 @@ The package contains a React application, a Go/GORM backend, an Encore Go adapte
 
 ## Start here
 
+**For the already-deployed web server:** follow the [native testing and rollout plan](docs/deploy/NATIVE_TESTING_ROLLOUT.md), [Android APK/private Play guide](docs/deploy/ANDROID_TESTING.md) and [iPhone installation from your Mac/TestFlight guide](docs/deploy/IOS_TESTING.md). These connect to the existing HTTPS backend; they do not repeat server setup. Signing accounts and real-device acceptance remain required.
+
 ### 1. Explore the interface immediately
 
 Open **`preview.html`** from the extracted ZIP in a current desktop browser. It is a self-contained, interactive demonstration: no Node, Go, database or internet connection is needed. Sample data is fictional. Changes stay in that browser. Uploads stay in that browser's storage.

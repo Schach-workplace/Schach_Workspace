@@ -1,0 +1,17 @@
+{
+  "status": "PASS",
+  "markdownFiles": 7,
+  "relativeLinksAndAnchors": 101,
+  "newGuideShellBlocksSyntaxChecked": 18,
+  "sourceProfileAndPushContract": "PASS",
+  "manualScenariosStillNotRun": 224,
+  "applicationSourceUnchangedFrom": "72c949c",
+  "qualification": "Documentation artifacts only; no cloud/native build, device or provider acceptance.",
+  "freshMobileChecks": {
+    "typecheck": "PASS",
+    "lint": "PASS",
+    "combinedExitCode": 0
+  },
+  "independentDocumentationReview": "Spec and Quality PASS after two corrections; no critical/important findings remain",
+  "nativeBuildsAndDeviceTests": "NOT_RUN"
+}

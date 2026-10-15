@@ -1,5 +1,5 @@
 {
-  "updatedUtc": "2026-10-14T14:06:46.088780+00:00",
+  "updatedUtc": "2026-10-15T10:42:43.519009+00:00",
   "qualification": "Durable recovery metadata; reviewed source/evidence separately qualified. No pending runtime/push claim.",
   "handoff": "docs/HANDOFF.md",
   "checklist": "docs/AI_CHECKLIST.md",
@@ -10,7 +10,7 @@
     "sourceWriters": "all yielded",
     "reviewer": "yielded"
   },
-  "currentPhase": "Neutral web product 8b8e8df verified/merged/pushed; handoff records the current product receipt; inspect live Git for metadata HEAD. Owner reports server configured and HTTPS health passes; native accounts absent; profile/offboarding/threshold deferred; manualQA/device/provider/restore gates remain open.",
+  "currentPhase": "Native Android/iOS testing and private deployment guides added for existing deployed HTTPS backend; no application/server/build/provider actions. Documentation reviewed and validated; accounts and real-device acceptance remain pending. Inspect live Git for publication refs.",
   "verifiedProductHead": "ebc994dc6c2be442db595e468a716139b56ed721",
   "verifiedFixHead": "dff8ddc045b7bec32b41ac3e4f8847938c4f3de3",
   "reviewDisposition": "verification/workspace-improvements-roadmap/release-cutover/scoped-review-disposition.json",
@@ -465,7 +465,10 @@
       "docs/THIRD_PARTY_NOTICES.md",
       "docs/USER_GUIDE.md",
       "docs/VERIFICATION.md",
+      "docs/deploy/ANDROID_TESTING.md",
+      "docs/deploy/IOS_TESTING.md",
       "docs/deploy/MOBILE_APPS.md",
+      "docs/deploy/NATIVE_TESTING_ROLLOUT.md",
       "docs/deploy/SERVER_DEPLOYMENT.md",
       "docs/intelligence-local.md",
       "docs/qa/AUTOMATED_CHECKS.md",
@@ -1676,6 +1679,9 @@
       "verification/mobile-milestone-3/check-native-config.py",
       "verification/mobile-milestone-3/device-acceptance.md",
       "verification/mobile-milestone-3/runtime-results.json",
+      "verification/native-guides-2026-10-15/check_docs.py",
+      "verification/native-guides-2026-10-15/record.md",
+      "verification/native-guides-2026-10-15/result.json",
       "verification/postgres-compat/README.md",
       "verification/postgres-compat/check.mjs",
       "verification/postgres-compat/finance-checks.mjs",
@@ -2863,12 +2869,18 @@
       "verification/workspace-improvements-roadmap/rulings.md"
     ]
   },
-  "inventoryGitHead": "8b8e8dff0969f67df119437d6cc8a01aa3e1111a",
+  "inventoryGitHead": "72c949c475c310dca6f856c322093442720acc05",
   "liveChangedOrUntrackedPaths": [
+    "README.md",
     "docs/AI_FILE_INDEX.json",
     "docs/HANDOFF.md",
-    "verification/web-neutral-2026-10-14/record.md",
-    "verification/web-neutral-2026-10-14/result.json"
+    "docs/deploy/ANDROID_TESTING.md",
+    "docs/deploy/IOS_TESTING.md",
+    "docs/deploy/MOBILE_APPS.md",
+    "docs/deploy/NATIVE_TESTING_ROLLOUT.md",
+    "verification/native-guides-2026-10-15/check_docs.py",
+    "verification/native-guides-2026-10-15/record.md",
+    "verification/native-guides-2026-10-15/result.json"
   ],
   "inventoryQualification": "Durable tracked/current path existence only. Acceptance and artifact provenance remain separately recorded; private archive references are historical recovery, not current source paths.",
   "currentRuntime": {
@@ -2887,5 +2899,13 @@
     "qualification": "Source ZIP at748a; later metadata and complete sanitized proof logs in Git."
   },
   "currentWebNeutralProductHead": "8b8e8dff0969f67df119437d6cc8a01aa3e1111a",
-  "currentWebNeutralEvidence": "verification/web-neutral-2026-10-14/record.md"
+  "currentWebNeutralEvidence": "verification/web-neutral-2026-10-14/record.md",
+  "currentNativeGuides": {
+    "entry": "docs/deploy/NATIVE_TESTING_ROLLOUT.md",
+    "android": "docs/deploy/ANDROID_TESTING.md",
+    "ios": "docs/deploy/IOS_TESTING.md",
+    "verification": "verification/native-guides-2026-10-15/record.md",
+    "sourceBaseline": "72c949c475c310dca6f856c322093442720acc05",
+    "qualification": "Instructions and documentation checks only, not signed builds/device/provider acceptance."
+  }
 }

@@ -1,4 +1,4 @@
-# Handoff: Schach Workspace / "Workspace" (2026-10-14)
+# Handoff: Schach Workspace / "Workspace" (2026-10-15)
 
 Start here. This is the current, self-contained handoff for the next agent. It supersedes the dense history at the top of [AI_HANDOFF.md](AI_HANDOFF.md), which stays as background. **Before acting, verify live state yourself** (section 3). Never treat a process ID or commit written here as permission to act.
 
@@ -29,7 +29,7 @@ Modules: Connect (chat and calls), Overview, My work, Tasks, Projects, Calendar,
 
 1. This file.
 2. [deploy/SERVER_DEPLOYMENT.md](deploy/SERVER_DEPLOYMENT.md): production server guide (admin password is a placeholder).
-3. [deploy/MOBILE_APPS.md](deploy/MOBILE_APPS.md): Android/iOS private distribution guide.
+3. [deploy/NATIVE_TESTING_ROLLOUT.md](deploy/NATIVE_TESTING_ROLLOUT.md): start here for the already-deployed web/backend; then [Android](deploy/ANDROID_TESTING.md), [iPhone from Mac](deploy/IOS_TESTING.md), and [private-store reference](deploy/MOBILE_APPS.md).
 4. [../verification/ui-ux-gap-closure-2026-10-12/record.md](../verification/ui-ux-gap-closure-2026-10-12/record.md) and [visual-redesign.md](../verification/ui-ux-gap-closure-2026-10-12/visual-redesign.md): what changed on 2026-10-12/13 and the evidence for it.
 5. [SECURITY_AND_LIMITATIONS.md](SECURITY_AND_LIMITATIONS.md), [API_CONTRACT.md](API_CONTRACT.md), [OPERATIONS.md](OPERATIONS.md), [PEOPLE_ADMINISTRATION.md](PEOPLE_ADMINISTRATION.md), [COMMUNICATION_OPERATIONS.md](COMMUNICATION_OPERATIONS.md), [FINANCE_GUIDE.md](FINANCE_GUIDE.md).
 6. [`mobile/AGENTS.md`](../mobile/AGENTS.md): **mandatory before touching `mobile/`.** Use Expo SDK 57 docs, never memory; `npx expo install` only; never hand-edit `mobile/ios` or `mobile/android`.
@@ -172,7 +172,7 @@ Demo logins (fictional; QA/demo only): `founder@`, `ceo@`, `finance@`, `head@`, 
 | Path | What |
 |---|---|
 | `/home/brahma/Projects/DEPLOY-work.schachengineers.com.md` | Server guide **with the real admin password**. Private; don't copy into Git. |
-| `/home/brahma/Projects/MOBILE-APPS-Android-iOS.md` | Same as `docs/deploy/MOBILE_APPS.md` |
+| `/home/brahma/Projects/MOBILE-APPS-Android-iOS.md` | Earlier external copy; use current `docs/deploy/` guides in Git |
 | `/home/brahma/Projects/Schach_Workspace-*.zip` | Earlier release and QA archives (preserve) |
 | `~/.local/state/schach-workspace-cutover-20261012-uoxlpfcw/` | Private recovery archive and current 8080 build (preserve; mode 0700) |
 | `~/.local/state/schach-qa/run-SfPVPvry/` | Disposable QA fixture (deletable once its server is stopped) |
@@ -193,5 +193,22 @@ Read-only production `/api/health` returned200/ok through trusted HTTPS. Owner r
 
 1. Git publication is complete for product commit `8b8e8df`; keep the final handoff metadata aligned with both branches. No production update or8080restart was performed.
 2. Begin a fresh isolated P0 manual QA run; record execution outside generated docs/qa. Include unseen populated report/onboarding/access/departure/assistance states. Do not confuse this bounded browser/preview evidence with the224manual case run.
-3. Owner creates a company-owned Expo account/project for the first Android preview APK; Apple Developer organisation/D-U-N-S in parallel for iPhone previews. No cloud build until accounts/authorised access are ready. Native push/calls require actual physical-phone tests.
+3. Follow the 15 October native-guides checkpoint below. Owner creates a company-owned Expo account/project for the first Android preview APK; Apple Developer organisation/D-U-N-S in parallel. The owner has a Mac, but its model/macOS and iPhone OS are unknown. Full unchanged iOS app requires a paid team supporting push; free Personal Team is not a reliable signing route. No cloud build until accounts/authorised access are ready. Native push/calls require actual physical-phone tests.
 4. Discuss profile editing, offboarding reason and workload threshold before implementing them. Mobile visual pass and deployment auth/MFA/recovery/calls/push/restore/capacity gates remain open.
+
+
+## 12. Native guides checkpoint — 15 October 2026
+
+**Request:** push to main and include end-to-end Android/iOS testing and deployment guides, planning around the already-deployed web. Initial Git was clean/aligned on main, feature and both remote branches at `72c949c475c310dca6f856c322093442720acc05`. Work stays in the existing feature worktree; publication is a fast-forward and non-force push of both branches. Use live Git refs for this documentation checkpoint's exact commit; the product behavior remains `8b8e8df`.
+
+**Changed files:** README.md, docs/deploy/MOBILE_APPS.md and new [native rollout](deploy/NATIVE_TESTING_ROLLOUT.md), [Android](deploy/ANDROID_TESTING.md) and [iOS/Mac](deploy/IOS_TESTING.md) guides; this handoff, docs/AI_FILE_INDEX.json and [documentation verification](../verification/native-guides-2026-10-15/record.md). The index inventory names the pre-commit source head and verifies paths only, not runtime acceptance.
+
+The guides cover company-owned account/project association (dynamic app config), clean source/quality checks, Android standalone APK installation, Mac/Xcode USB development install and Metro, iOS ad hoc registration/TestFlight, direct FCM/APNs, signing/update continuity, private store release, the existing 224-case pack and a native acceptance sequence, staged rollout/rollback and sanitized evidence. They distinguish local fictional QA from narrow production pilot integration. Existing server bootstrap is explicitly not repeated. A new server release is separate work if actual API compatibility fails.
+
+Important verified source constraints: preview/production build in the live HTTPS origin; current iOS notification plugin injects a push entitlement so free Personal Team can fail signing; the backend has one process-wide APNS_SANDBOX setting and cannot mix sandbox/production device tokens. Do not flip live APNs for local debug tests. Android APK/Play signatures can differ. iOS background/system incoming-call behavior remains a device gate. No promise of CallKit/PushKit support, provider delivery, store approval or account timing is made.
+
+**Evidence and limits:** see the verification record for exact documentation checks and fresh mobile typecheck/lint results. Application code, package locks, schemas, native config/profiles and generated native projects are unchanged. No APK/IPA/cloud build, account creation, store submission, production authentication/business mutation or server deployment was performed. All 224 distributed manual scenarios remain NOT_RUN. Historical suites/failures in section11 remain qualified there, including the unchanged frontend-format baseline failure and unexecuted Encore runtime check.
+
+**Environment:** existing8080PID3048810, QA9080PID1182821, Vite5174PID1176363 and unrelated Encore9400PID2548856 were observed listening and left alone; no runtime restart/kill or database action. Two stashes and other worktrees preserved. Recheck process identity before future actions. Only a bounded read-only documentation reviewer and short-lived documentation/tooling checks were started for this checkpoint.
+
+**Exact next action:** owner prepares company Expo project and paid Apple organisation signing, records Mac/Xcode/iPhone compatibility, and supplies authorised build access through normal secure login. Follow Android section2/3 for the first standalone APK and iOS section2–5 for the Mac/registered-phone route. Execute applicable isolated P0/native acceptance tests with fictional users, then coordinate a narrow live pilot against the actual deployed API. Push/calls/store/device/restore/capacity remain open until observed. Profile editing, offboarding reason and the85% threshold remain deferred. Do not deploy/reseed the web server merely because new client documentation was pushed.

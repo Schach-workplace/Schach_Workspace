@@ -10,9 +10,9 @@ This guide takes the **Workspace** phone app from source code to private distrib
 | App ID (Android package and iOS bundle ID) | `com.schachengineers.workspace` |
 | Server built into the app | `https://work.schachengineers.com` |
 | Source | `mobile/` in https://github.com/Schach-workplace/Schach_Workspace, commit `083ed57` or later |
-| Build service | Expo EAS (cloud builds, so no Mac is required) |
+| Build service | Expo EAS cloud builds; local Mac/Xcode route also available for iPhone development |
 
-> **Do the server first.** Follow `DEPLOY-work.schachengineers.com.md` until `https://work.schachengineers.com/api/health` returns `{"ok":true}`. The app can't sign in until the server is live on HTTPS.
+> **The owner confirms the web/backend is already deployed.** Start with the [native rollout and acceptance plan](NATIVE_TESTING_ROLLOUT.md), then the [Android testing/deployment guide](ANDROID_TESTING.md) or [iPhone/Mac testing/deployment guide](IOS_TESTING.md). Do not repeat bootstrap, seed data, regenerate keys or redeploy the server to install a phone client. This document is the supporting account/private-store reference. For a genuinely new server only, use [SERVER_DEPLOYMENT.md](SERVER_DEPLOYMENT.md).
 
 ---
 
@@ -49,31 +49,35 @@ submission or deployment was performed by this change.
 
 ---
 
-## Part 0: Accounts and lead times (start today)
+## Part 0: Accounts (prepare in parallel)
 
-| Account | Cost | Lead time | Needed for |
-|---|---|---|---|
-| **D-U-N-S number** for Schach Engineers | Free | **1–2 weeks** | Apple organisation account and Apple Business Manager |
-| **Apple Developer Program** (Organisation) | US$99/year | 1–3 days after D-U-N-S | Building and signing the iPhone app |
-| **Apple Business Manager** | Free | A few days of verification | Private Custom App distribution to your staff |
-| **Google Play Console** (Organisation) | US$25 once | 1–3 days of identity verification | Building and publishing the Android app |
-| **Managed Google Play** enterprise | Free | Same day | Private Android distribution (see 2.6) |
-| **Firebase** project | Free | Minutes | Android push notifications |
-| **Expo** account | Free | Minutes | Cloud builds and submission (EAS) |
+| Account | Needed for |
+|---|---|
+| **D-U-N-S number** for Schach Engineers | Apple organisation account and Apple Business Manager |
+| **Apple Developer Program** (Organisation) | Signing the unchanged iPhone app with push capability |
+| **Apple Business Manager** | Private Custom App distribution to staff |
+| **Google Play Console** (Organisation) | Chosen Play Console publication route; not needed for a direct APK |
+| **Managed Google Play** enterprise | Private Android distribution (see 2.6) |
+| **Firebase** project | Android push notifications |
+| **Expo** account/project | Cloud builds and submission (EAS); not required for the local Expo CLI/Mac route |
+
+Check current provider fees, verification requirements and regional availability at enrolment. Approval/build/review times are not guaranteed. Start Apple enrolment while preparing the Android APK; keep the existing web app available meanwhile.
 
 Use a shared company mailbox (for example `techops@schachengineers.com`) for every account, not a personal email, and turn on two-factor sign-in everywhere.
 
 ---
 
-## Part 1: One-time project setup (any computer with Node.js 20+)
+## Part 1: One-time project setup (Node.js 22.13.x+ for SDK 57)
 
 ```bash
 git clone https://github.com/Schach-workplace/Schach_Workspace.git
 cd Schach_Workspace/mobile
 npm ci
 npx eas-cli@latest login            # your Expo account
-npx eas-cli@latest init             # links mobile/ to a new EAS project; commit the projectId it adds
+npx eas-cli@latest init             # select/create the company project; see dynamic-config note below
 ```
+
+`app.config.ts` is dynamic. If EAS cannot insert the project association, follow the [actual-project UUID snippet](ANDROID_TESTING.md#2-prepare-the-computer-and-expo-project), review and commit it; do not replace the existing config or app identity. Link the shared Android/iOS project once.
 
 Check the configuration:
 
@@ -92,7 +96,7 @@ The build profiles are already in `mobile/eas.json`:
 | `preview` | Test phones before release | Built in | `.apk` (installable directly) | Ad hoc build for registered iPhones |
 | `production` | Store / private distribution | Built in | `.aab` (Play) | App Store Connect build |
 
-Version numbers are managed by EAS and increase automatically on each production build.
+Developer-facing build numbers (`android.versionCode` / `ios.buildNumber`) are managed remotely by EAS and increase on production builds. The user-facing `version` is currently `1.0.0` in `app.config.ts`; operators must update and commit it for a new store version. See [Expo version management](https://docs.expo.dev/build-reference/app-versions/).
 
 ---
 
@@ -172,9 +176,11 @@ A **private app** is visible only to your organisation inside Managed Google Pla
 4. Complete a release on the **Production** track. For private apps it only reaches your organisation.
 5. In your Workspace Admin console or EMM, **approve** the Workspace app and assign it to users or groups. Staff then see it in the **Work** Play Store on their managed devices or work profiles.
 
-> If staff use personal phones without a work profile, the **internal testing track (2.5)** or a **closed testing track** with email lists is simpler and still private.
+> Internal/closed test tracks can provide interim tester access on personal phones, but they are not the intended permanent private enterprise channel. Agree the managed work-profile/EMM arrangement before staff rollout. See [Google private publication](https://support.google.com/googleplay/work/answer/6145139).
 
 ### 2.7 Android updates later
+
+For a new user-facing release, update/commit `version` in `mobile/app.config.ts` before building. EAS increments the production versionCode, not the marketing version. Preserve signing and verify the selected artifact/track before promotion.
 
 ```bash
 git pull
@@ -188,7 +194,7 @@ Then promote the release in Play Console (Internal testing → Production) or ap
 
 ## Part 3: iPhone (iOS)
 
-No Mac is needed: EAS builds and signs in the cloud.
+EAS builds/signs in the cloud, so that route does not need a Mac. The owner also has a Mac: follow [IOS_TESTING.md](IOS_TESTING.md) for USB installation, Xcode requirements and the Personal Team push-signing limitation. Paid Apple membership is needed for the unchanged app's capabilities; it does not follow merely from owning a Mac.
 
 ### 3.1 Apple Developer account
 
@@ -201,8 +207,8 @@ No Mac is needed: EAS builds and signs in the cloud.
 2. Name it "Workspace APNs" and tick **Apple Push Notifications service (APNs)**. Continue, then download the **`.p8`** file. **You can only download it once.**
 3. Note the **Key ID** and your **Team ID**.
 4. On your server:
-   - Copy the `.p8` to `/opt/schach/secrets/apns.p8` (`chmod 600`) and mount it read-only into the app container.
-   - Set `APNS_AUTH_KEY_FILE` to that path, plus `APNS_KEY_ID`, `APNS_TEAM_ID`, `APNS_BUNDLE_ID=com.schachengineers.workspace` and `APNS_SANDBOX=false`. Use `APNS_SANDBOX=true` only while testing development builds.
+   - If configuration is missing, the operator can store the `.p8` at `/opt/schach/secrets/apns.p8` (`chmod 600`) and mount it read-only into the app container. Preserve existing keys/configuration when already present.
+   - `APNS_AUTH_KEY_FILE` must name the **container-visible** path, with `APNS_KEY_ID`, `APNS_TEAM_ID`, `APNS_BUNDLE_ID=com.schachengineers.workspace` and the matching APNs environment. **The backend has one process-wide `APNS_SANDBOX` switch; it cannot mix sandbox and production tokens. Do not switch the live server for a debug phone.** Inspect the signed app entitlement and use a matching production-signed preview/TestFlight build, or a separate sandbox test backend: [iOS push checks](IOS_TESTING.md#6-apns-and-calls-match-the-actual-signed-build).
 
 ### 3.3 App Store Connect: create the app record
 
@@ -241,7 +247,7 @@ npx eas-cli@latest build --profile production --platform ios
 npx eas-cli@latest submit --profile production --platform ios
 ```
 
-On the first `submit`, let EAS create and store an **App Store Connect API key** (or run `npx eas-cli@latest credentials --platform ios` beforehand). The build appears in App Store Connect → **TestFlight** after Apple's processing (10–30 minutes).
+On submission, configure the correct company **App Store Connect API key** through EAS credentials if not already ready. Select the specific qualified build. It appears in App Store Connect → **TestFlight** after Apple's processing; completion time is not guaranteed.
 
 **Export compliance:** when App Store Connect asks about encryption, the app only uses standard HTTPS/TLS and the operating system's encryption. This normally qualifies as **exempt**. Confirm with your own legal judgement.
 
@@ -262,12 +268,14 @@ Go to App Store Connect → **TestFlight**.
    - A **reviewer account**: a fictional test user and company on `work.schachengineers.com` with sample data.
    - Notes for the reviewer: "Business app for company staff. Accounts are created by the company administrator. Calls use the microphone/camera; background audio keeps an active call connected."
 4. Add screenshots (6.7" and 6.1" iPhone; iPad if `supportsTablet` stays on), the privacy policy URL, the support URL and the **App Privacy** answers (same data as the Android Data safety form).
-5. **Submit for review.** Custom Apps still go through App Review, usually 1–3 days.
+5. **Submit for review.** Custom Apps still go through App Review; no approval time is guaranteed.
 6. After approval, in **Apple Business Manager → Apps and Books**, the app appears under Custom Apps. **Get licences** (free) and either:
    - **with an MDM:** assign the app to devices or users and it installs automatically; or
    - **without an MDM:** choose **Redemption codes**, download the codes, and send one to each employee. They open the code link on their iPhone, and the App Store installs Workspace.
 
 ### 3.8 iOS updates later
+
+Before building a subsequent store version, update and commit `version` in `mobile/app.config.ts` (currently `1.0.0`) to the chosen next marketing version, rerun checks and create the matching version in App Store Connect. EAS production auto-increment only advances `ios.buildNumber`; it does not make a new marketing version. A replacement beta build for the same unreleased version can keep that marketing version with a new build number.
 
 ```bash
 git pull
@@ -280,6 +288,8 @@ In App Store Connect, add the new build to a new version and **Submit for review
 ---
 
 ## Part 4: Test plan before rollout
+
+Use the complete [native acceptance matrix and staged release gates](NATIVE_TESTING_ROLLOUT.md#4-end-to-end-acceptance-matrix) alongside the [224-case team QA pack](../qa/README.md). The short list below is only a smoke test. Background/incoming calls and notification lifecycle states are acceptance targets, not verified device claims.
 
 Run on **at least one Android phone and one iPhone**, on both **Wi-Fi and mobile data**. Record results (phone model, OS version, build number, pass/fail) in a copy of `docs/qa/execution-log.csv` kept outside `docs/qa/`.
 
@@ -305,7 +315,7 @@ Fix anything found, rebuild, and retest before inviting everyone.
 
 ## Part 5: Server settings that must match the apps
 
-These go in `/opt/schach/.env` on the server, with the key files mounted read-only into the app container:
+The existing server is owner-reported configured. **Have the operator check readiness first; do not replay these optional setup examples on a working production deployment.** If a provider is missing, schedule its configuration separately, preserve all existing Compose overlays/secrets and follow [SERVER_DEPLOYMENT.md](SERVER_DEPLOYMENT.md). These values go in `/opt/schach/.env`, with keys mounted read-only into the app container:
 
 ```bash
 # Android push (Firebase service account JSON, mounted into the container)
