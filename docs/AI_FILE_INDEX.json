@@ -1,5 +1,5 @@
 {
-  "updatedUtc": "2026-10-15T10:43:46.492112+00:00",
+  "updatedUtc": "2026-10-15T13:27:58.268950+00:00",
   "qualification": "Durable recovery metadata; reviewed source/evidence separately qualified. No pending runtime/push claim.",
   "handoff": "docs/HANDOFF.md",
   "checklist": "docs/AI_CHECKLIST.md",
@@ -10,7 +10,7 @@
     "sourceWriters": "all yielded",
     "reviewer": "yielded"
   },
-  "currentPhase": "Native guides5d2c747 verified/fast-forwarded/pushed on main and feature; publication metadata follows. Existing web/backend left running. Accounts and physical-device/provider/private-store acceptance remain pending; inspect live Git for final HEAD.",
+  "currentPhase": "Expo dynamic app config linked to supplied team project; actual local resolver and read-only authenticated project:info pass; fresh mobile450tests/typecheck/lint and independent review pass. Zero-cost/Linux-Windows constraint persists; no cloud build/device test/server action. Inspect live Git for publication HEAD.",
   "verifiedProductHead": "ebc994dc6c2be442db595e468a716139b56ed721",
   "verifiedFixHead": "dff8ddc045b7bec32b41ac3e4f8847938c4f3de3",
   "reviewDisposition": "verification/workspace-improvements-roadmap/release-cutover/scoped-review-disposition.json",
@@ -1648,6 +1648,8 @@
       "verification/connect-ux-2026-10-10/phone.png",
       "verification/connect-ux-2026-10-10/result.json",
       "verification/connect-ux-2026-10-10/review.md",
+      "verification/expo-project-link-2026-10-15/record.md",
+      "verification/expo-project-link-2026-10-15/result.json",
       "verification/finance-result.json",
       "verification/finance_flow.py",
       "verification/http-result.json",
@@ -2869,11 +2871,13 @@
       "verification/workspace-improvements-roadmap/rulings.md"
     ]
   },
-  "inventoryGitHead": "5d2c7470474f8395a9a00f8826841652962c92b6",
+  "inventoryGitHead": "290546598a0245fcd57c617275ff60755f577e3c",
   "liveChangedOrUntrackedPaths": [
     "docs/AI_FILE_INDEX.json",
     "docs/HANDOFF.md",
-    "verification/native-guides-2026-10-15/record.md"
+    "mobile/app.config.ts",
+    "verification/expo-project-link-2026-10-15/record.md",
+    "verification/expo-project-link-2026-10-15/result.json"
   ],
   "inventoryQualification": "Durable tracked/current path existence only. Acceptance and artifact provenance remain separately recorded; private archive references are historical recovery, not current source paths.",
   "currentRuntime": {
@@ -2901,5 +2905,12 @@
     "sourceBaseline": "72c949c475c310dca6f856c322093442720acc05",
     "qualification": "Instructions and documentation checks only, not signed builds/device/provider acceptance.",
     "guidesCommit": "5d2c7470474f8395a9a00f8826841652962c92b6"
+  },
+  "currentExpoProjectLink": {
+    "owner": "nishantjaiswals-team",
+    "projectId": "84ab66ee-3a5a-487b-8612-12fac0454b1c",
+    "verification": "verification/expo-project-link-2026-10-15/record.md",
+    "sourceBaseline": "290546598a0245fcd57c617275ff60755f577e3c",
+    "nextAction": "Read-only project:info from main/mobile; do not repeat init or start paid iOS build."
   }
 }

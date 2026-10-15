@@ -1,0 +1,34 @@
+{
+  "date": "2026-10-15",
+  "sourceBaseline": "290546598a0245fcd57c617275ff60755f577e3c",
+  "before": {
+    "actualExpoConfigExpectedProjectCheck": "FAIL as expected",
+    "exitCode": 1,
+    "owner": null,
+    "projectId": null
+  },
+  "after": {
+    "actualExpoConfigAndIdentityChecks": "PASS",
+    "exitCode": 0,
+    "owner": "nishantjaiswals-team",
+    "projectId": "84ab66ee-3a5a-487b-8612-12fac0454b1c"
+  },
+  "readOnlyEasProjectInfo": {
+    "cliVersion": "24.14.0",
+    "exitCode": 0,
+    "fullName": "@nishantjaiswals-team/workspace",
+    "id": "84ab66ee-3a5a-487b-8612-12fac0454b1c",
+    "warnings": "CLI transitive dependency deprecations; not a clean security audit"
+  },
+  "mobile": {
+    "typecheck": "PASS",
+    "lint": "PASS",
+    "testExitCode": 0,
+    "testFiles": 67,
+    "tests": 450
+  },
+  "review": "Independent Spec/Quality PASS; no critical/important findings",
+  "cloudBuild": "NOT_RUN",
+  "deviceInstall": "NOT_RUN",
+  "qualification": "Expo project association only. No build, signing, provider or device acceptance claim."
+}

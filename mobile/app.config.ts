@@ -41,6 +41,14 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
   name: "Workspace",
   slug: "workspace",
+  owner: "nishantjaiswals-team",
+  extra: {
+    ...config.extra,
+    eas: {
+      ...config.extra?.eas,
+      projectId: "84ab66ee-3a5a-487b-8612-12fac0454b1c",
+    },
+  },
   version: "1.0.0",
   orientation: "portrait",
   icon: "./assets/icon.png",
