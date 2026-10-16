@@ -1,10 +1,8 @@
 import { initializeReportTemps } from "../reportClient";
 import { useEffect } from "react";
 import { Stack } from "expo-router";
-import { registerGlobals } from "@livekit/react-native";
 import { WorkspaceProvider } from "../Workspace";
-import { ActiveCall } from "../Calls";
-registerGlobals();
+import { ActiveCall } from "../CallRuntime";
 export default function Layout() {
   useEffect(() => {
     void initializeReportTemps().catch(() => {});

@@ -16,6 +16,8 @@ The package contains a React application, a Go/GORM backend, an Encore Go adapte
 
 ## Start here
 
+**Free iPhone testing from Linux:** use the [Expo Go native-screen guide](docs/deploy/EXPO_GO_IPHONE.md). It runs tasks, finance and chat inside Expo Go, with calls and push unavailable; it needs no Apple membership or EAS build.
+
 **For the already-deployed web server:** follow the [native testing and rollout plan](docs/deploy/NATIVE_TESTING_ROLLOUT.md), [Android APK/private Play guide](docs/deploy/ANDROID_TESTING.md) and [iPhone installation from your Mac/TestFlight guide](docs/deploy/IOS_TESTING.md). These connect to the existing HTTPS backend; they do not repeat server setup. Signing accounts and real-device acceptance remain required.
 
 ### 1. Explore the interface immediately

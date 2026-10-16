@@ -30,7 +30,8 @@ import {
   View,
 } from "react-native";
 import * as SecureStore from "expo-secure-store";
-import * as Notifications from "expo-notifications";
+import type * as NotificationTypes from "expo-notifications";
+import { isRunningInExpoGo } from "expo";
 import {
   readWorkPages,
   nativeEventScope,
@@ -136,6 +137,7 @@ export interface CallConnection {
   call: { id: string; kind: string; version: number };
 }
 function useController() {
+  const expoGo = isRunningInExpoGo();
   const [recordEpoch, setRecordEpoch] = useState(0);
   const [attentionEpoch, setAttentionEpoch] = useState(0);
   const [executionEpoch, setExecutionEpoch] = useState(0);
@@ -375,8 +377,10 @@ function useController() {
    */
   async function registerDevice(
     push = false,
-    rotated?: Notifications.DevicePushToken,
+    rotated?: NotificationTypes.DevicePushToken,
   ) {
+    if (expoGo && (push || rotated))
+      throw new Error("Push notifications are unavailable in Expo Go.");
     let pushProvider = "",
       pushToken = "",
       withPush = false;
@@ -384,6 +388,7 @@ function useController() {
       withPush = true;
       pushToken = String(rotated.data);
     } else if (push) {
+      const Notifications = await import("expo-notifications");
       const p = await Notifications.requestPermissionsAsync();
       if (p.granted) {
         if (Platform.OS === "android")
@@ -462,95 +467,123 @@ function useController() {
           .catch((e) => setError(e.message));
       }
     });
-    // Foreground hints are body-free ("A company update is available."), so
-    // they may be presented while the app is open.
-    Notifications.setNotificationHandler({
-      handleNotification: async () => ({
-        shouldShowBanner: true,
-        shouldShowList: true,
-        shouldPlaySound: false,
-        shouldSetBadge: false,
-      }),
-    });
-    const received = Notifications.addNotificationReceivedListener(() => {
-      if (client.token) void restoreEvent();
-    });
-    const tokenChange = Notifications.addPushTokenListener((token) => {
-      const user = currentScope.current.sessionId;
-      if (client.token && user && pushOptIn.current === user)
-        void registerEvent(false, token).catch((e) => setError(e.message));
-    });
-    const notificationTarget = new AuthorizedNotificationTarget(
-      () => client.request<Session>("/auth/session"),
-      (company, id) =>
-        client.request(`/companies/${company}/conversations/${id}`),
-      (target) => {
-        if (
-          target.companyId &&
-          currentScope.current.company !== target.companyId
-        ) {
-          // Same path as a manual switch: ends any call from the old company.
-          enterCompanyEvent(target.companyId);
-        }
-        if ("inbox" in target) {
-          router.push("/(tabs)/inbox");
-          return;
-        }
-        if ("taskId" in target) {
-          router.push({
-            pathname: "/task/[id]",
-            params: { id: target.taskId, company: target.companyId },
+    let disposed = false;
+    let stopNotifications = () => {};
+    if (!expoGo) {
+      void import("expo-notifications")
+        .then((Notifications) => {
+          if (disposed) return;
+          // Foreground hints are body-free ("A company update is available."), so
+          // they may be presented while the app is open.
+          Notifications.setNotificationHandler({
+            handleNotification: async () => ({
+              shouldShowBanner: true,
+              shouldShowList: true,
+              shouldPlaySound: false,
+              shouldSetBadge: false,
+            }),
           });
-          return;
-        }
-        if ("expenseId" in target) {
-          router.push({
-            pathname: "/expense/[id]",
-            params: { id: target.expenseId, company: target.companyId },
+          const received = Notifications.addNotificationReceivedListener(() => {
+            if (client.token) void restoreEvent();
           });
-          return;
-        }
-        setSelected(target.conversationId);
-        router.push({
-          pathname: "/chat/[id]",
-          params: { id: target.conversationId, company: target.companyId },
+          const tokenChange = Notifications.addPushTokenListener((token) => {
+            const user = currentScope.current.sessionId;
+            if (client.token && user && pushOptIn.current === user)
+              void registerEvent(false, token).catch((e) =>
+                setError(e.message),
+              );
+          });
+          const notificationTarget = new AuthorizedNotificationTarget(
+            () => client.request<Session>("/auth/session"),
+            (company, id) =>
+              client.request(`/companies/${company}/conversations/${id}`),
+            (target) => {
+              if (
+                target.companyId &&
+                currentScope.current.company !== target.companyId
+              ) {
+                // Same path as a manual switch: ends any call from the old company.
+                enterCompanyEvent(target.companyId);
+              }
+              if ("inbox" in target) {
+                router.push("/(tabs)/inbox");
+                return;
+              }
+              if ("taskId" in target) {
+                router.push({
+                  pathname: "/task/[id]",
+                  params: { id: target.taskId, company: target.companyId },
+                });
+                return;
+              }
+              if ("expenseId" in target) {
+                router.push({
+                  pathname: "/expense/[id]",
+                  params: { id: target.expenseId, company: target.companyId },
+                });
+                return;
+              }
+              setSelected(target.conversationId);
+              router.push({
+                pathname: "/chat/[id]",
+                params: {
+                  id: target.conversationId,
+                  company: target.companyId,
+                },
+              });
+            },
+            () => client.generation,
+            // Single-item endpoint re-authorizes the item for the current session.
+            (company, id) =>
+              client
+                .request<{ item: AttentionTarget }>(
+                  `/companies/${company}/attention/${encodeURIComponent(id)}`,
+                )
+                .then((r) => r.item),
+          );
+          const openResponse = (
+            response: NotificationTypes.NotificationResponse | null,
+          ) => {
+            if (!disposed && response && client.token)
+              void notificationTarget
+                .open(
+                  response.notification.request.content.data,
+                  response.notification.request.identifier,
+                )
+                .catch((e) => {
+                  if (!disposed) setError(e.message);
+                });
+          };
+          const response =
+            Notifications.addNotificationResponseReceivedListener(openResponse);
+          void restored
+            .then(() =>
+              disposed
+                ? null
+                : Notifications.getLastNotificationResponseAsync(),
+            )
+            .then(openResponse)
+            .catch((e) => {
+              if (!disposed) setError(e.message);
+            });
+          stopNotifications = () => {
+            received.remove();
+            tokenChange.remove();
+            response.remove();
+            Notifications.setNotificationHandler(null);
+          };
+        })
+        .catch((e) => {
+          if (!disposed) setError(e.message);
         });
-      },
-      () => client.generation,
-      // Single-item endpoint re-authorizes the item for the current session.
-      (company, id) =>
-        client
-          .request<{ item: AttentionTarget }>(
-            `/companies/${company}/attention/${encodeURIComponent(id)}`,
-          )
-          .then((r) => r.item),
-    );
-    const openResponse = (
-      response: Notifications.NotificationResponse | null,
-    ) => {
-      if (response && client.token)
-        void notificationTarget
-          .open(
-            response.notification.request.content.data,
-            response.notification.request.identifier,
-          )
-          .catch((e) => setError(e.message));
-    };
-    const response =
-      Notifications.addNotificationResponseReceivedListener(openResponse);
-    void restored
-      .then(() => Notifications.getLastNotificationResponseAsync())
-      .then(openResponse)
-      .catch((e) => setError(e.message));
+    }
     return () => {
+      disposed = true;
       client.onPolicyChange = undefined;
       subscription.remove();
-      received.remove();
-      tokenChange.remove();
-      response.remove();
-      Notifications.setNotificationHandler(null);
+      stopNotifications();
     };
-  }, []);
+  }, [expoGo]);
   useEffect(() => {
     if (pushOptIn.current !== sessionId) pushOptIn.current = null;
     if (sessionId)

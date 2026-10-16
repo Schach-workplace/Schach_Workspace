@@ -6,6 +6,7 @@ import {
   useLayoutEffect,
 } from "react";
 import { Text, TextInput, View } from "react-native";
+import { isRunningInExpoGo } from "expo";
 import { Page, useWorkspace, styles } from "./Workspace";
 import { Action } from "./ConnectUI";
 import { client } from "./client";
@@ -67,43 +68,52 @@ export default function AccountScreen() {
   return (
     <Page>
       <Text style={styles.heading}>Account</Text>
-      <Action
-        title="Enable private notification hints"
-        onPress={() =>
-          void w.registerDevice(true).catch((e) => w.setError(e.message))
-        }
-      />
-      <Action
-        title={muted ? "Unmute this company" : "Mute this company"}
-        onPress={() =>
-          void guardedRequest(
-            `/companies/${w.company}/devices/${w.device}/preferences`,
-            "POST",
-            {
-              muted: !muted,
-              timezone: w.work?.company.timezone ?? "Asia/Kolkata",
-              quietStart,
-              quietEnd,
-            },
-          )
-            .then(() => setMuted((v) => !v))
-            .catch((e) => w.setError(e.message))
-        }
-      />
-      <TextInput
-        style={styles.input}
-        accessibilityLabel="Quiet hours start"
-        placeholder="Quiet hours start HH:MM"
-        value={quietStart}
-        onChangeText={setQuietStart}
-      />
-      <TextInput
-        style={styles.input}
-        accessibilityLabel="Quiet hours end"
-        placeholder="Quiet hours end HH:MM"
-        value={quietEnd}
-        onChangeText={setQuietEnd}
-      />
+      {isRunningInExpoGo() ? (
+        <Text>
+          Push notifications are unavailable in Expo Go. Inbox updates still
+          refresh while Workspace is open.
+        </Text>
+      ) : (
+        <>
+          <Action
+            title="Enable private notification hints"
+            onPress={() =>
+              void w.registerDevice(true).catch((e) => w.setError(e.message))
+            }
+          />
+          <Action
+            title={muted ? "Unmute this company" : "Mute this company"}
+            onPress={() =>
+              void guardedRequest(
+                `/companies/${w.company}/devices/${w.device}/preferences`,
+                "POST",
+                {
+                  muted: !muted,
+                  timezone: w.work?.company.timezone ?? "Asia/Kolkata",
+                  quietStart,
+                  quietEnd,
+                },
+              )
+                .then(() => setMuted((v) => !v))
+                .catch((e) => w.setError(e.message))
+            }
+          />
+          <TextInput
+            style={styles.input}
+            accessibilityLabel="Quiet hours start"
+            placeholder="Quiet hours start HH:MM"
+            value={quietStart}
+            onChangeText={setQuietStart}
+          />
+          <TextInput
+            style={styles.input}
+            accessibilityLabel="Quiet hours end"
+            placeholder="Quiet hours end HH:MM"
+            value={quietEnd}
+            onChangeText={setQuietEnd}
+          />
+        </>
+      )}
       <Text>
         Private content is fetched after checking current access and is not
         retained for offline use. Exported files are independent copies.

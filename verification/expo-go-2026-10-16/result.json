@@ -1,0 +1,57 @@
+{
+  "manifestHTTP": 200,
+  "iosBundleHTTP": 200,
+  "bundleBytes": 6748548,
+  "name": "Workspace",
+  "sdkVersion": "57.0.0",
+  "platform": "ios",
+  "launchAsset": "Expo Router iOS Metro bundle",
+  "configuredServer": "https://work.schachengineers.com",
+  "qualification": "Actual Metro compile/manifest only, not physical iPhone execution.",
+  "iosDevelopmentBundleSHA256": "bb25556b107e86e027f8dcc0b9c17c5b7268f4b648e9f611c8c9d75889d19e22",
+  "date": "2026-10-16",
+  "sourceBaseline": "4095f0347d5ab45e1575e5267d8ce7f8d24d261e",
+  "baseline": {
+    "files": 67,
+    "tests": 450,
+    "status": "PASS"
+  },
+  "newTestsRed": {
+    "startup": 3,
+    "pushAndAccount": 2
+  },
+  "current": {
+    "files": 68,
+    "tests": 455,
+    "status": "PASS",
+    "typecheck": "PASS",
+    "lint": "PASS",
+    "doctor": "21/21 PASS"
+  },
+  "review": "Independent Spec/Quality PASS; no critical/important findings",
+  "nativeExports": "Android/iOS Hermes PASS,34 assets; not native binaries",
+  "npmAuditWarnings": {
+    "moderate": 12,
+    "high": 20,
+    "total": 32,
+    "qualification": "Unresolved, not waived or assessed safe"
+  },
+  "physicalIPhone": "NOT_RUN",
+  "callAndPushInExpoGo": "Intentionally unavailable, not passed",
+  "testedProductFilesSHA256": {
+    "mobile/src/CallRuntime.tsx": "a158349e63af3b7b37cc63ec448a631cc8b916e171ee9ce2903d965f71339d28",
+    "mobile/src/app/_layout.tsx": "0e528e584e60b9b333d9ab8a82e86372204a06752b209fa0c6e3e185767784b8",
+    "mobile/src/app/(tabs)/calls.tsx": "54fcfd6f7c6ad1616449fd3a74e813e0684236a9a88e50aba7f64c403afe93cf",
+    "mobile/src/Workspace.tsx": "a879258b58f3f5f6b7cb5d3e58490c45d1de1f856469c407b0ed3d4ca7752d61",
+    "mobile/src/AccountScreen.tsx": "fa63e97b7ef28199f0fb4c59b61985d9413e639326876d34b47a71af4dc97e1f",
+    "mobile/package.json": "ac19eb48658e9bbf3ccf1ef6e27c176913d1c5764f38fb25f793185733730856",
+    "mobile/package-lock.json": "d2457e96700a3fe5c5f9b9a1bea58dc774f160e0316f95747d83f68462596b17",
+    "mobile/scripts/start-expo-go.mjs": "f46dfc0fa97ddef707a0f29f89e57080cc3a8aaea5466e69d2ad87031aabb4bb"
+  },
+  "documentationChecks": {
+    "markdownFiles": 9,
+    "relativeFileLinks": 108,
+    "shellSyntax": "PASS",
+    "manualScenariosStillNotRun": 224
+  }
+}

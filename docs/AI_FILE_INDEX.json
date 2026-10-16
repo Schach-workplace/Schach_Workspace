@@ -1,5 +1,5 @@
 {
-  "updatedUtc": "2026-10-15T13:27:58.268950+00:00",
+  "updatedUtc": "2026-10-16T07:47:20.344488+00:00",
   "qualification": "Durable recovery metadata; reviewed source/evidence separately qualified. No pending runtime/push claim.",
   "handoff": "docs/HANDOFF.md",
   "checklist": "docs/AI_CHECKLIST.md",
@@ -10,7 +10,7 @@
     "sourceWriters": "all yielded",
     "reviewer": "yielded"
   },
-  "currentPhase": "Expo dynamic app config linked to supplied team project; actual local resolver and read-only authenticated project:info pass; fresh mobile450tests/typecheck/lint and independent review pass. Zero-cost/Linux-Windows constraint persists; no cloud build/device test/server action. Inspect live Git for publication HEAD.",
+  "currentPhase": "Owner-approved free Expo Go core-screen mode implemented/reviewed: mobile455tests,typecheck/lint,doctor21/21,actualiOSMetro and Android/iOSHermes exports pass. Calls/push unavailable inside Expo Go, retained in native builds. PhysicaliPhone acceptance pending. Inspect live Git/process state for publication and Metro readiness.",
   "verifiedProductHead": "ebc994dc6c2be442db595e468a716139b56ed721",
   "verifiedFixHead": "dff8ddc045b7bec32b41ac3e4f8847938c4f3de3",
   "reviewDisposition": "verification/workspace-improvements-roadmap/release-cutover/scoped-review-disposition.json",
@@ -466,6 +466,7 @@
       "docs/USER_GUIDE.md",
       "docs/VERIFICATION.md",
       "docs/deploy/ANDROID_TESTING.md",
+      "docs/deploy/EXPO_GO_IPHONE.md",
       "docs/deploy/IOS_TESTING.md",
       "docs/deploy/MOBILE_APPS.md",
       "docs/deploy/NATIVE_TESTING_ROLLOUT.md",
@@ -1035,6 +1036,7 @@
       "docs/superpowers/plans/2026-10-11-planning-outcomes.md",
       "docs/superpowers/plans/2026-10-11-task-project-execution.md",
       "docs/superpowers/plans/2026-10-11-unified-attention.md",
+      "docs/superpowers/plans/2026-10-16-expo-go-testing.md",
       "docs/superpowers/specs/2026-10-10-finance-design.md",
       "docs/superpowers/specs/2026-10-10-workspace-improvements.md"
     ],
@@ -1409,12 +1411,14 @@
       "mobile/package-lock.json",
       "mobile/package.json",
       "mobile/plugins/withCallService.js",
+      "mobile/scripts/start-expo-go.mjs",
       "mobile/src/AccessReview.tsx",
       "mobile/src/AccountScreen.test.tsx",
       "mobile/src/AccountScreen.tsx",
       "mobile/src/AttentionInbox.test.tsx",
       "mobile/src/AttentionInbox.tsx",
       "mobile/src/AttentionRoutes.test.tsx",
+      "mobile/src/CallRuntime.tsx",
       "mobile/src/Calls.test.tsx",
       "mobile/src/Calls.tsx",
       "mobile/src/CaptureControl.test.tsx",
@@ -1433,6 +1437,7 @@
       "mobile/src/Execution.tsx",
       "mobile/src/ExpenseDecision.tsx",
       "mobile/src/ExpenseReceiptAssistance.tsx",
+      "mobile/src/ExpoGoStartup.test.tsx",
       "mobile/src/FinanceAssistanceScreen.test.tsx",
       "mobile/src/FinanceAssistanceScreen.tsx",
       "mobile/src/FinanceDraftForm.test.tsx",
@@ -1598,6 +1603,7 @@
       "mobile/src/taskCollaboration.ts",
       "mobile/src/taskCsvModel.test.ts",
       "mobile/src/taskCsvModel.ts",
+      "mobile/src/testSetup.ts",
       "mobile/src/workDates.test.ts",
       "mobile/src/workDates.ts",
       "mobile/tsconfig.json",
@@ -1648,6 +1654,8 @@
       "verification/connect-ux-2026-10-10/phone.png",
       "verification/connect-ux-2026-10-10/result.json",
       "verification/connect-ux-2026-10-10/review.md",
+      "verification/expo-go-2026-10-16/record.md",
+      "verification/expo-go-2026-10-16/result.json",
       "verification/expo-project-link-2026-10-15/record.md",
       "verification/expo-project-link-2026-10-15/result.json",
       "verification/finance-result.json",
@@ -2871,13 +2879,32 @@
       "verification/workspace-improvements-roadmap/rulings.md"
     ]
   },
-  "inventoryGitHead": "290546598a0245fcd57c617275ff60755f577e3c",
+  "inventoryGitHead": "4095f0347d5ab45e1575e5267d8ce7f8d24d261e",
   "liveChangedOrUntrackedPaths": [
+    "README.md",
     "docs/AI_FILE_INDEX.json",
     "docs/HANDOFF.md",
-    "mobile/app.config.ts",
-    "verification/expo-project-link-2026-10-15/record.md",
-    "verification/expo-project-link-2026-10-15/result.json"
+    "docs/deploy/EXPO_GO_IPHONE.md",
+    "docs/deploy/IOS_TESTING.md",
+    "docs/deploy/MOBILE_APPS.md",
+    "docs/deploy/NATIVE_TESTING_ROLLOUT.md",
+    "docs/superpowers/plans/2026-10-16-expo-go-testing.md",
+    "mobile/README.md",
+    "mobile/package-lock.json",
+    "mobile/package.json",
+    "mobile/scripts/start-expo-go.mjs",
+    "mobile/src/AccountScreen.test.tsx",
+    "mobile/src/AccountScreen.tsx",
+    "mobile/src/CallRuntime.tsx",
+    "mobile/src/ExpoGoStartup.test.tsx",
+    "mobile/src/Workspace.tsx",
+    "mobile/src/WorkspacePush.test.tsx",
+    "mobile/src/app/(tabs)/calls.tsx",
+    "mobile/src/app/_layout.tsx",
+    "mobile/src/testSetup.ts",
+    "mobile/vitest.config.mts",
+    "verification/expo-go-2026-10-16/record.md",
+    "verification/expo-go-2026-10-16/result.json"
   ],
   "inventoryQualification": "Durable tracked/current path existence only. Acceptance and artifact provenance remain separately recorded; private archive references are historical recovery, not current source paths.",
   "currentRuntime": {
@@ -2912,5 +2939,13 @@
     "verification": "verification/expo-project-link-2026-10-15/record.md",
     "sourceBaseline": "290546598a0245fcd57c617275ff60755f577e3c",
     "nextAction": "Read-only project:info from main/mobile; do not repeat init or start paid iOS build."
+  },
+  "currentExpoGoMode": {
+    "entry": "docs/deploy/EXPO_GO_IPHONE.md",
+    "plan": "docs/superpowers/plans/2026-10-16-expo-go-testing.md",
+    "verification": "verification/expo-go-2026-10-16/record.md",
+    "sourceBaseline": "4095f0347d5ab45e1575e5267d8ce7f8d24d261e",
+    "nextAction": "Use main/mobile npm run start:go, same trusted LAN, scan in iPhone Expo Go; no Apple device registration/build.",
+    "qualification": "Actual Metro/source tests only; physical device unverified. Native calls/push intentionally unavailable in Expo Go."
   }
 }

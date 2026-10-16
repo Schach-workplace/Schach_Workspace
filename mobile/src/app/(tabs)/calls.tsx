@@ -1,6 +1,6 @@
 import { useFocusEffect } from "expo-router";
 import { useCallback, useState } from "react";
-import Calls from "../../Calls";
+import Calls from "../../CallRuntime";
 import { Page } from "../../Workspace";
 export default function CallScreen() {
   const [focused, setFocused] = useState(false);

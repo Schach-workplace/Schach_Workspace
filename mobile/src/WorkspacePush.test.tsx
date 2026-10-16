@@ -5,6 +5,9 @@ import { afterEach, expect, it, vi } from "vitest";
 import { WorkspaceProvider, Page, useWorkspace } from "./Workspace";
 import { client } from "./client";
 const env = vi.hoisted(() => ({
+  go: false,
+  subscriptions: 0,
+  notificationModuleLoads: 0,
   handler: null as any,
   tokenListener: (_t: any) => {},
   responseListener: (_r: any) => {},
@@ -12,6 +15,7 @@ const env = vi.hoisted(() => ({
   requested: 0,
   push: [] as unknown[],
 }));
+vi.mock("expo", () => ({ isRunningInExpoGo: () => env.go }));
 vi.mock("expo-secure-store", () => ({
   getItemAsync: async () => null,
   setItemAsync: async () => {},
@@ -25,30 +29,38 @@ vi.mock("./capture", () => ({
 vi.mock("react-native-safe-area-context", () => ({
   SafeAreaView: ({ children }: any) => createElement("div", {}, children),
 }));
-vi.mock("expo-router", () => ({ router: { push: (v: unknown) => env.push.push(v) } }));
-vi.mock("expo-notifications", () => ({
-  AndroidImportance: { DEFAULT: 3 },
-  getLastNotificationResponseAsync: async () => null,
-  addNotificationReceivedListener: () => ({ remove() {} }),
-  addNotificationResponseReceivedListener: (fn: any) => {
-    env.responseListener = fn;
-    return { remove() {} };
-  },
-  addPushTokenListener: (fn: any) => {
-    env.tokenListener = fn;
-    return { remove() {} };
-  },
-  setNotificationHandler: (h: any) => {
-    env.handler = h;
-  },
-  getPermissionsAsync: async () => ({ granted: env.granted }),
-  requestPermissionsAsync: async () => {
-    env.requested++;
-    return { granted: env.granted };
-  },
-  setNotificationChannelAsync: async () => null,
-  getDevicePushTokenAsync: async () => ({ type: "android", data: "token-1" }),
+vi.mock("expo-router", () => ({
+  router: { push: (v: unknown) => env.push.push(v) },
 }));
+vi.mock("expo-notifications", () => {
+  env.notificationModuleLoads++;
+  return {
+    AndroidImportance: { DEFAULT: 3 },
+    getLastNotificationResponseAsync: async () => null,
+    addNotificationReceivedListener: () => {
+      env.subscriptions++;
+      return { remove() {} };
+    },
+    addNotificationResponseReceivedListener: (fn: any) => {
+      env.responseListener = fn;
+      return { remove() {} };
+    },
+    addPushTokenListener: (fn: any) => {
+      env.tokenListener = fn;
+      return { remove() {} };
+    },
+    setNotificationHandler: (h: any) => {
+      env.handler = h;
+    },
+    getPermissionsAsync: async () => ({ granted: env.granted }),
+    requestPermissionsAsync: async () => {
+      env.requested++;
+      return { granted: env.granted };
+    },
+    setNotificationChannelAsync: async () => null,
+    getDevicePushTokenAsync: async () => ({ type: "android", data: "token-1" }),
+  };
+});
 vi.mock("react-native", () => ({
   AppState: {
     currentState: "active",
@@ -136,20 +148,54 @@ afterEach(() => {
   env.push.length = 0;
   env.granted = true;
   env.requested = 0;
+  env.go = false;
+  env.subscriptions = 0;
   failPoll = false;
 });
 Object.assign(globalThis, { IS_REACT_ACT_ENVIRONMENT: true });
+it("Expo Go keeps authenticated device registration but never subscribes or opts into native push", async () => {
+  env.go = true;
+  env.handler = null;
+  mockServer();
+  const { root } = await mount();
+  try {
+    expect(w.session?.user.id).toBe("u");
+    expect(devices).toHaveLength(1);
+    expect(devices[0]).not.toHaveProperty("pushToken");
+    expect(env.handler).toBeNull();
+    expect(env.subscriptions).toBe(0);
+    expect(env.notificationModuleLoads).toBe(0);
+    await expect(w.registerDevice(true)).rejects.toThrow(
+      "Push notifications are unavailable in Expo Go",
+    );
+    expect(env.requested).toBe(0);
+    expect(devices).toHaveLength(1);
+    // The free runtime must keep the existing identity/company lifecycle.
+    await act(async () => w.switchCompany("d"));
+    expect(w.company).toBe("d");
+    await act(async () => w.signOut());
+    expect(w.session).toBeNull();
+    expect(w.work).toBeNull();
+  } finally {
+    await act(async () => root.unmount());
+  }
+});
 it("shows foreground hints and never attaches a push token at sign-in, even when permission was already granted", async () => {
   mockServer();
   const { root } = await mount();
   const behavior = await env.handler.handleNotification({});
-  expect(behavior).toMatchObject({ shouldShowBanner: true, shouldShowList: true });
+  expect(behavior).toMatchObject({
+    shouldShowBanner: true,
+    shouldShowList: true,
+  });
   expect(env.requested).toBe(0);
   expect(devices).toHaveLength(1);
   expect(devices[0]).not.toHaveProperty("pushToken");
   expect(devices[0]).not.toHaveProperty("pushProvider");
   // A rotated OS token must not opt this user in either.
-  await act(async () => env.tokenListener({ type: "android", data: "token-2" }));
+  await act(async () =>
+    env.tokenListener({ type: "android", data: "token-2" }),
+  );
   expect(devices).toHaveLength(1);
   await act(async () => root.unmount());
   expect(env.handler).toBeNull();
@@ -159,8 +205,13 @@ it("re-registers rotated tokens only after this user explicitly enabled push in 
   const { root } = await mount();
   await act(async () => w.registerDevice(true));
   expect(env.requested).toBe(1);
-  expect(devices.at(-1)).toMatchObject({ pushProvider: "fcm", pushToken: "token-1" });
-  await act(async () => env.tokenListener({ type: "android", data: "token-2" }));
+  expect(devices.at(-1)).toMatchObject({
+    pushProvider: "fcm",
+    pushToken: "token-1",
+  });
+  await act(async () =>
+    env.tokenListener({ type: "android", data: "token-2" }),
+  );
   expect(devices.at(-1)).toMatchObject({
     deviceId: "device",
     pushProvider: "fcm",
@@ -168,7 +219,9 @@ it("re-registers rotated tokens only after this user explicitly enabled push in 
   });
   const count = devices.length;
   await act(async () => w.signOut());
-  await act(async () => env.tokenListener({ type: "android", data: "token-3" }));
+  await act(async () =>
+    env.tokenListener({ type: "android", data: "token-3" }),
+  );
   expect(devices).toHaveLength(count);
   await act(async () => root.unmount());
 });
@@ -182,7 +235,9 @@ it("a notification that switches company ends the active call like a manual comp
       notification: {
         request: {
           identifier: "n2",
-          content: { data: { eventId: "e2", companyId: "d", conversationId: "x" } },
+          content: {
+            data: { eventId: "e2", companyId: "d", conversationId: "x" },
+          },
         },
       },
     }),
@@ -200,7 +255,9 @@ it("a notification for the current company keeps the active call", async () => {
       notification: {
         request: {
           identifier: "n3",
-          content: { data: { eventId: "e3", companyId: "c", conversationId: "x" } },
+          content: {
+            data: { eventId: "e3", companyId: "c", conversationId: "x" },
+          },
         },
       },
     }),
@@ -236,12 +293,16 @@ it("error banner is dismissible, clears on company switch and after a recovered 
   const { container, root } = await mount();
   const alert = () => container.querySelector('[role="alert"]');
   const selected = () =>
-    container.querySelector('[aria-selected="true"]')?.getAttribute("aria-label");
+    container
+      .querySelector('[aria-selected="true"]')
+      ?.getAttribute("aria-label");
   expect(selected()).toBe("Alpha");
   await act(async () => w.setError("Upload failed"));
   expect(alert()?.textContent).toBe("Upload failed");
   await act(async () =>
-    (container.querySelector('[aria-label="Dismiss error"]') as HTMLElement).click(),
+    (
+      container.querySelector('[aria-label="Dismiss error"]') as HTMLElement
+    ).click(),
   );
   expect(alert()).toBeNull();
   await act(async () => w.setError("Stale company error"));

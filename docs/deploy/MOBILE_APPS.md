@@ -16,6 +16,8 @@ This guide takes the **Workspace** phone app from source code to private distrib
 
 ---
 
+For free iPhone testing from Linux without Apple membership, the owner now accepts [Expo Go core-screen testing](EXPO_GO_IPHONE.md), with calls/push unavailable. It opens inside Expo Go and needs Metro, so it does not replace signed standalone distribution.
+
 ## Fastest testing path while accounts are being set up
 
 Owner status on 14 October 2026: the server configuration is reported complete;

@@ -2,6 +2,8 @@
 
 Updated 15 October 2026. Follow the [shared native rollout plan](NATIVE_TESTING_ROLLOUT.md). Your Mac/iMac can build and install the app on your iPhone while the backend stays at the already-deployed **https://work.schachengineers.com**. You do not need to run the web server on the Mac.
 
+For **free native-screen testing from Linux**, follow [EXPO_GO_IPHONE.md](EXPO_GO_IPHONE.md). The owner accepted calls/push being unavailable inside Expo Go; no separate signed Workspace app is installed. The signing requirements below apply to custom native builds.
+
 ## 1. Check what is ready
 
 | Route | Accounts/tooling | Computer needed after installation? | Use |

@@ -4,6 +4,8 @@ Updated 15 October 2026. Start here, then follow the [Android guide](ANDROID_TES
 
 The owner confirms the web application is already deployed at **https://work.schachengineers.com**. Native clients connect to that same backend; they do not need another copy of the web application. **Do not repeat server bootstrap, demo seeding, database creation or key generation.** A Git push does not update the running server. Coordinate a separate, backed-up server release only if a reproducible API incompatibility requires one.
 
+For the owner-approved **free Expo Go core-screen route from Linux**, start with [EXPO_GO_IPHONE.md](EXPO_GO_IPHONE.md). Calls/push are unavailable in that mode. The signed standalone release gates below remain in force for full native builds.
+
 ## 1. Route and dependencies
 
 | Order | Deliverable | Prerequisites | Exit condition |

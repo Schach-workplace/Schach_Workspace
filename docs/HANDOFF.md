@@ -1,4 +1,4 @@
-# Handoff: Schach Workspace / "Workspace" (2026-10-15)
+# Handoff: Schach Workspace / "Workspace" (2026-10-16)
 
 Start here. This is the current, self-contained handoff for the next agent. It supersedes the dense history at the top of [AI_HANDOFF.md](AI_HANDOFF.md), which stays as background. **Before acting, verify live state yourself** (section 3). Never treat a process ID or commit written here as permission to act.
 
@@ -21,7 +21,7 @@ Modules: Connect (chat and calls), Overview, My work, Tasks, Projects, Calendar,
 | Local checkout | `/home/brahma/Projects/Schach_Workspace` (branch `main`) |
 | Feature worktree | `/home/brahma/Projects/Schach_Workspace/.worktrees/workspace-improvements` (branch `improve/workspace-improvements`). **Do work here**, then fast-forward `main`. |
 | Target deployment | `https://work.schachengineers.com` (self-hosted, India). Owner reports configured on 14 October 2026; read-only trusted-HTTPS API health returned JSON200/ok. Authentication/calls/push/deployment settings have not been independently qualified. |
-| Phone app | Intended private distribution as **Workspace**, app ID `com.schachengineers.workspace`. No new phone build; Expo team project linked on15October (section13); paid Apple membership and devices remain gated. |
+| Phone app | Intended private distribution as **Workspace**, app ID `com.schachengineers.workspace`. Expo team linked; free Expo Go core-screen mode added16October (section14), physical phone execution pending. No standalone phone build; signed-native release gates remain. |
 
 ---
 
@@ -29,7 +29,7 @@ Modules: Connect (chat and calls), Overview, My work, Tasks, Projects, Calendar,
 
 1. This file.
 2. [deploy/SERVER_DEPLOYMENT.md](deploy/SERVER_DEPLOYMENT.md): production server guide (admin password is a placeholder).
-3. [deploy/NATIVE_TESTING_ROLLOUT.md](deploy/NATIVE_TESTING_ROLLOUT.md): start here for the already-deployed web/backend; then [Android](deploy/ANDROID_TESTING.md), [iPhone from Mac](deploy/IOS_TESTING.md), and [private-store reference](deploy/MOBILE_APPS.md).
+3. [deploy/EXPO_GO_IPHONE.md](deploy/EXPO_GO_IPHONE.md): owner-approved free Linux-to-iPhone native-screen testing inside Expo Go, with calls/push unavailable. For signed standalone release, read [deploy/NATIVE_TESTING_ROLLOUT.md](deploy/NATIVE_TESTING_ROLLOUT.md): start here for the already-deployed web/backend; then [Android](deploy/ANDROID_TESTING.md), [iPhone from Mac](deploy/IOS_TESTING.md), and [private-store reference](deploy/MOBILE_APPS.md).
 4. [../verification/ui-ux-gap-closure-2026-10-12/record.md](../verification/ui-ux-gap-closure-2026-10-12/record.md) and [visual-redesign.md](../verification/ui-ux-gap-closure-2026-10-12/visual-redesign.md): what changed on 2026-10-12/13 and the evidence for it.
 5. [SECURITY_AND_LIMITATIONS.md](SECURITY_AND_LIMITATIONS.md), [API_CONTRACT.md](API_CONTRACT.md), [OPERATIONS.md](OPERATIONS.md), [PEOPLE_ADMINISTRATION.md](PEOPLE_ADMINISTRATION.md), [COMMUNICATION_OPERATIONS.md](COMMUNICATION_OPERATIONS.md), [FINANCE_GUIDE.md](FINANCE_GUIDE.md).
 6. [`mobile/AGENTS.md`](../mobile/AGENTS.md): **mandatory before touching `mobile/`.** Use Expo SDK 57 docs, never memory; `npx expo install` only; never hand-edit `mobile/ios` or `mobile/android`.
@@ -223,3 +223,18 @@ EAS could create the projects but could not edit dynamic app.config.ts. Added th
 Files: mobile/app.config.ts, this handoff/index and [verification record](../verification/expo-project-link-2026-10-15/record.md)/result. Fresh mobile quality checks and independent read-only review are qualified in that record. No new cloud build, paid service action, provider/server/configuration change, production mutation, generated native project edit, UI or business-handler change. All224 manual scenarios remain NOT_RUN. Preserve running processes, two stashes and worktrees.
 
 Next action: main checkout/mobile → `npx eas-cli@latest project:info`. Native iPhone ad hoc installation still requires paid Apple membership; do not start that build or assume Expo project creation removed this gate. For immediate zero-cost iPhone use: existing HTTPS site in Safari → Add to Home Screen. Local native Android testing is an option if the owner has an Android phone and sets up its build tools. Future paid/native rollout remains the guides' conditional path; do not redeploy the web.
+
+
+## 14. Free Expo Go core-screen checkpoint — 16 October 2026
+
+**Current owner decision:** Linux/Windows only, zero additional account/build fees. The owner explicitly accepts calls/push being unavailable and has confirmed **native screens inside Expo Go are fine**. This supersedes their earlier demand for calls/push and a standalone icon. Do not keep instructing them to buy Apple membership or retry `eas device:create` for this mode. Full standalone distribution remains a separate conditional path. Apple login eventually succeeded in owner logs, but no eligible developer team was returned; no Apple membership is established. Expo project association remains the existing team UUID.
+
+**Implemented:** runtime-specific CallRuntime boundary prevents evaluating LiveKit/Calls in Expo Go, root/tab route use it; type-only Notifications import/native-only async setup and disposal, explicit Go push denial with token-free device registration retained; Account unavailable copy retains security/device controls. Existing core native screens/API controls stay in use. `cd mobile && npm ci && npm run start:go` starts actual Expo Go on LAN and defaults the API origin to the already deployed HTTPS server. No separate Workspace icon and Metro must remain reachable. Native custom builds keep calls/push.
+
+**Files/evidence:** [launch guide](deploy/EXPO_GO_IPHONE.md), mobile/src/CallRuntime.tsx, Workspace.tsx, AccountScreen.tsx, root/Calls route, focused tests, testSetup/vitest config, scripts/start-expo-go.mjs, package/lock, linked READMEs/deploy guides and [plan](superpowers/plans/2026-10-16-expo-go-testing.md). [Verification](../verification/expo-go-2026-10-16/record.md) and result bind actual checks/source hashes. Baseline4095f03:67files450tests PASS. New startup/push/UI cases observed RED then GREEN; final68files455tests, typecheck/lint PASS; doctor21/21. Actual iOS Metro manifest/bundle200 and both Android/iOS Hermes exports PASS; not physical-device acceptance. One independent source/behavior review Spec/QualityPASS, no critical/important findings.
+
+**Dependency/failure classification:** main and feature both reproduced doctor20/21 due to6pre-existing SDK57 patch mismatches; aligned installed packages via npx expo install --fix without a major SDK/RN change. npm reports32unresolved vulnerabilities12moderate20high, not waived; no force fix/security clearance. Initial command-CWD issues and launcher offline/LAN conflict corrected. Missing-effect dependency warning fixed; final lint clean. Offline manifest asset-schema abort and color-environment export warnings remain qualified in the record. All224 distributed manual scenarios stay NOT_RUN.
+
+**Processes/data:** temporary verification Metro19016 was started/stopped through its own session; private files under ~/.local/state/schach-expo-go-20261016 (0700). No APK/IPA/EAS build, Apple/provider account action, real API login/data mutation, generated native edit or server redeployment. Existing Encore9400PID53856 was observed and left alone;8080/9080/5174 were not listening. Recheck identity/live state rather than old PIDs. Preserve both stashes and other worktrees.
+
+**Next action:** owner installs compatible SDK57 Expo Go on the iPhone, uses same trusted LAN, opens the QR from the main checkout's start:go command, verifies work.schachengineers.com and signs in with an authorized test account. Execute the new phone checklist, especially auth/company revocation, attachments/voice-note/share/keyboard/UI. Calls/push are skipped by design. Physical phone launch is still unverified. A ready main Metro session, if retained, is recorded below; otherwise run the launcher. Leave production web and provider configuration untouched.
