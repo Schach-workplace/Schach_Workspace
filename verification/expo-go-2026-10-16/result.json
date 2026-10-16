@@ -74,5 +74,17 @@
     "loadingPageRequiresPlatform": true,
     "physicalIPhone": "NOT_RUN",
     "qualification": "Owned main Metro left running; address and PID are observed, recheck after restart"
+  },
+  "accountFollowUp": {
+    "cliUsername": "nishantjaiswal0",
+    "verification": "npx expo whoami",
+    "previousOwnedMetroStopped": 113183,
+    "currentMetroPID": 217158,
+    "terminalSession": 87967,
+    "port": 8081,
+    "manifestHTTP": 200,
+    "loadingPageHTTP": 200,
+    "physicalIPhone": "Launch still unconfirmed",
+    "networkDiagnosis": "UFW BLOCK logged for inbound TCP8081; owner supplied narrow allow command"
   }
 }

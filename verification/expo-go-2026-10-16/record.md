@@ -47,3 +47,7 @@ Source is published through the feature branch, fast-forward main and non-force 
 ## Published main ready session
 
 Product `e62d354` was atomically non-force pushed to main and the feature branch after fast-forward. Main `npm ci` passed (same32 unresolved audit warnings), then its own Metro was started on8081. Online main iOS manifest/bundle returned200/200,6,747,356bytes; configured HTTPS origin present. LAN manifest and PNG icon returned200; `/_expo/loading?platform=ios` returned200 and shows Expo Go. The earlier online asset-schema abort did not recur. The loading page requires platform detection: our probe without a platform header/query returned500 and corrected explicit query returned200. This is a probe-input issue. Main bundle/source and owned PID details are in result/handoff; raw output remains private. Metro remains running for the owner, not an executed physical-phone result.
+
+## Account/network follow-up
+
+16October: LAN connection attempts were directly logged as UFW BLOCK for TCP8081; IP/listener/local HTTP remained correct. Owner was given a narrow local-network firewall command; the agent did not execute a privileged firewall mutation. User later reached the iOS Expo Go account check and signed CLI into their chosen `nishantjaiswal0`; fresh `npx expo whoami` confirmed it. Restarted only the owned Metro via terminal Ctrl+C; replacement PID217158/session87967 listens8081, Using Expo Go, LAN iOS manifest and explicit-platform loading page200/200. No application change or physical-phone success claim.
