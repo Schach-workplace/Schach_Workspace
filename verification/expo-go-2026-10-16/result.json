@@ -53,5 +53,26 @@
     "relativeFileLinks": 108,
     "shellSyntax": "PASS",
     "manualScenariosStillNotRun": 224
+  },
+  "publication": {
+    "productCommit": "e62d354",
+    "method": "Fast-forward main and atomic non-force push of both branches",
+    "status": "PASS"
+  },
+  "mainReadySession": {
+    "pid": 113183,
+    "port": 8081,
+    "command": "node mobile/node_modules/expo/bin/cli start --go --port 8081",
+    "lanURL": "exp://192.168.0.9:8081",
+    "manifestHTTP": 200,
+    "iosBundleHTTP": 200,
+    "bundleBytes": 6747356,
+    "bundleSHA256": "62f99d8a1dffcb4f7fdf7fb0481ba07bd371df1d531fbc3734db1114b73f2b22",
+    "lanManifestHTTP": 200,
+    "iconHTTP": 200,
+    "loadingPageHTTP": 200,
+    "loadingPageRequiresPlatform": true,
+    "physicalIPhone": "NOT_RUN",
+    "qualification": "Owned main Metro left running; address and PID are observed, recheck after restart"
   }
 }

@@ -19,7 +19,7 @@
 - [x] Run focused tests, mobile typecheck/lint and full suite. Fix regressions before integration.
 - [x] Verify actual iOS Metro bundle/start metadata using owned temporary outputs and a free test port; no physical-device success claim. Inspect rendered unavailable states through the component harness.
 - [x] Document Linux/iPhone instructions, limitations and next device checks; update canonical handoff/index and verification evidence.
-- [ ] Obtain one bounded independent behavior/security review of the combined diff, fix findings, commit, fast-forward main and non-force push both branches. Preserve stashes/worktrees and existing servers.
+- [x] Obtain one bounded independent behavior/security review of the combined diff, fix findings, commit, fast-forward main and non-force push both branches. Preserve stashes/worktrees and existing servers.
 
 ## Acceptance focus
 
@@ -30,3 +30,7 @@ Expo Go has no call SDK startup evaluation, permission/token calls or notificati
 - Current main and feature both reproduce doctor20/21 with the same six pre-existing SDK57 patch mismatches. Align those six packages through `npx expo install --fix` so the new Expo Go launch has current compatible patches; no SDK/RN major change or new native package. Cost if wrong: native patch regression, covered by fresh full tests, typecheck/lint, doctor and actual iOS Metro compilation. This is a scoped exception to the initial no-version-change preference.
 - New launcher verification exposed Expo's mutually exclusive `--offline`/`--lan` flags. Rely on Expo's default LAN host while forwarding explicit user options, preserving offline/localhost testing. No tunnel is started.
 - Initial focused-test command used the repository root instead of mobile/ and collected no files; rerun from mobile/ passed. This was a command-working-directory issue, not a product failure.
+
+## Publication and ready session
+
+Product commit `e62d354` was fast-forwarded into main and atomically pushed to both branches. Main mobile dependencies were freshly installed with `npm ci`. Main Metro was started on8081 in Expo Go mode; manifest/iOS bundle and LAN icon returned200. The canonical handoff records the owned process and next phone action. Physical iPhone execution is still NOT_RUN.
