@@ -1,0 +1,11 @@
+test_capture_failure_cannot_turn_successful_operation_into_pass (test_native_results.NativeResultTests.test_capture_failure_cannot_turn_successful_operation_into_pass) ... ok
+test_complete_success_requires_every_operation_and_capture (test_native_results.NativeResultTests.test_complete_success_requires_every_operation_and_capture) ... ok
+test_failed_operation_survives_failed_capture_and_cleanup (test_native_results.NativeResultTests.test_failed_operation_survives_failed_capture_and_cleanup) ... ok
+test_fatal_driver_error_cannot_pass_complete_matrix (test_native_results.NativeResultTests.test_fatal_driver_error_cannot_pass_complete_matrix) ... ok
+test_final_hierarchy_failure_stays_failed (test_native_results.NativeResultTests.test_final_hierarchy_failure_stays_failed) ... ok
+test_missing_duplicate_and_unexpected_cases_fail_coverage (test_native_results.NativeResultTests.test_missing_duplicate_and_unexpected_cases_fail_coverage) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.000s
+
+OK

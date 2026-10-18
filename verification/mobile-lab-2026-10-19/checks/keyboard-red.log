@@ -1,0 +1,30 @@
+
+ RUN  v5.0.3 /home/brahma/Projects/Schach_Workspace/.worktrees/workspace-improvements/mobile
+
+stdout | src/KeyboardFrame.test.tsx > remeasures Android overlap after native navigation moves the frame
+LAB_ANDROID_GEOMETRY {"y":185,"height":584,"screenY":548}
+LAB_ANDROID_PAGE {"pageY":234,"h":584}
+
+ ❯ src/KeyboardFrame.test.tsx (4 tests | 1 failed) 30ms
+   × remeasures Android overlap after native navigation moves the frame 7ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/KeyboardFrame.test.tsx > remeasures Android overlap after native navigation moves the frame
+AssertionError: expected null not to be null
+ ❯ src/KeyboardFrame.test.tsx:89:70
+     87|     env.handlers.get("keyboardDidShow")?.({ endCoordinates: { screenY:…
+     88|   );
+     89|   expect(host.querySelector('[style*="padding-bottom: 270px"]')).not.t…
+       |                                                                      ^
+     90|   await act(async () => env.handlers.get("keyboardDidHide")?.({}));
+     91|   expect(host.querySelector('[style*="padding-bottom: 0px"]')).not.toB…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 3 passed (4)
+   Start at  01:14:07
+   Duration  355ms (environment 49%, transform 21%, import 14%, tests 11%, setup 4%, worker 1%)
+

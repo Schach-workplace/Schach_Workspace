@@ -1,0 +1,5 @@
+ios-small complete 49 PASS 0 FAIL
+ios-large complete 18 PASS 0 FAIL
+android-pixel complete 49 PASS 0 FAIL
+android-galaxy complete 18 PASS 0 FAIL
+{"passed":134,"failed":0,"errors":0,"external":0}

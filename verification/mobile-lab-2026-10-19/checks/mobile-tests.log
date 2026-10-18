@@ -1,0 +1,16 @@
+
+> mobile@1.0.0 test
+> vitest run --maxWorkers=3
+
+
+ RUN  v5.0.3 /home/brahma/Projects/Schach_Workspace/.worktrees/workspace-improvements/mobile
+
+
+ Test Files  81 passed (81)
+      Tests  515 passed (515)
+   Start at  01:15:15
+   Duration  63.97s (tests 85%, environment 8%, transform 3%, import 2%, setup 1%)
+
+    Isolate  81 workers spawned · ~180ms startup each (spawn + environment, per file)
+             at least ~4.68s faster with isolate: false — reuses workers across files instead of one per file
+

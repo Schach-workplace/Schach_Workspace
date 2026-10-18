@@ -1,0 +1,34 @@
+
+> mobile@1.0.0 test
+> vitest run --maxWorkers=2 src/OverviewWorkload.test.tsx
+
+
+ RUN  v5.0.3 /home/brahma/Projects/Schach_Workspace/.worktrees/workspace-improvements/mobile
+
+ ❯ src/OverviewWorkload.test.tsx (11 tests | 1 failed) 85ms
+   × Workload initializes its week after the company timezone resolves across midnight 30ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/OverviewWorkload.test.tsx > Workload initializes its week after the company timezone resolves across midnight
+AssertionError: expected '2026-10-12' to be '2026-10-19' // Object.is equality
+
+Expected: "2026-10-19"
+Received: "2026-10-12"
+
+ ❯ src/OverviewWorkload.test.tsx:90:78
+     88|     env.work = { ...work("head"), company: { timezone: "Asia/Kolkata" …
+     89|     await act(async () => r.root.render(<WorkloadScreen />));
+     90|     expect(new URLSearchParams(env.paths.at(-1)!.split("?")[1]).get("f…
+       |                                                                              ^
+     91|     expect(r.host.textContent).toContain("Read-only · 2026-10-19 – 202…
+     92|   } finally { await act(async () => r.root.unmount()); }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 10 passed (11)
+   Start at  00:27:37
+   Duration  448ms (environment 38%, tests 23%, transform 21%, import 14%, setup 2%, worker 1%)
+
