@@ -63,5 +63,29 @@
     "guardRemoved": "RED:two requests",
     "sourceRestored": "GREEN:7login tests",
     "productChanged": false
+  },
+  "mergedMain": {
+    "sourceHead": "642b17618558fb9bf64952127b5d394b91a736bc",
+    "files": 70,
+    "tests": 472,
+    "status": "PASS",
+    "durationSeconds": 66.04
+  },
+  "publication": {
+    "method": "Fast-forward main, atomic non-force push of both branches",
+    "sourceHead": "642b17618558fb9bf64952127b5d394b91a736bc",
+    "status": "PASS",
+    "qualification": "Later metadata-only commit may follow; inspect live Git"
+  },
+  "processes": {
+    "ownedFictionalPreview": "STOPPED via own terminal;port5186absence verified",
+    "unrelatedEncore": "9400PID2489241 left alone",
+    "newPersistentAppProcess": false
+  },
+  "githubPushDependencyAlerts": {
+    "high": 2,
+    "moderate": 2,
+    "total": 4,
+    "status": "Unresolved notification, not audited/remediated in UI task"
   }
 }

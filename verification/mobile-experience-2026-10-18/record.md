@@ -31,3 +31,11 @@ Tooling correction before publication: Vite emitted an unignored .vite dependenc
 ## Independent review disposition
 
 Fresh-context read-only review: no Critical/Important findings; ready-to-merge source verdict. Two Minor verification findings fixed and confirmed by the same reviewer: screenshot exit now checks element overflow as well as document width; rapid-submit test now calls the captured handler twice before render. A removed-guard mutation produced two requests and RED; exact product source restored,7login tests GREEN. Fresh typecheck/lint PASS;12layout cases pass under tightened capture. All9 product hashes still match the full472-test/export source. See review.md for scope/exclusions.
+
+## Integration and remaining work
+
+Clean main fast-forwarded to642b176; full merged-main mobile suite70files472tests PASS66.04s. Both main and improve/workspace-improvements atomically non-force pushed successfully. Feature/worktree and both user stashes preserved. GitHub's push response reported4existing dependency alerts (2high,2moderate); no new dependency audit or remediation claim. These counts have a different scope from historical npm findings and are not equivalent. Keep dependency triage in rollout gates.
+
+Own fictional preview5186PID3935968/session57339 stopped via its own terminal; subsequent listener check confirmed5186absent. Unrelated Encore9400PID2489241 left alone;8080/8081not listening, no attempt to start/reset them. Temporary exports/logs remain under /tmp with no actual company data. No new persistent app process, cloud build, signed binary, production deployment or phone/provider acceptance.
+
+M1 is complete in source/automated/layout evidence. M2Work/Inbox next; M3Connect, M4finance/reports, M5remaining modules, M6physical pilot and M7–M9growth/knowledge/integration work remain pending. Additional15and existing224manual instructions stay NOT_RUN. Final metadata may follow642b176; product hashes identify the checked source.

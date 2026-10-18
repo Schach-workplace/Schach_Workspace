@@ -76,7 +76,7 @@ M2–M9 each receives its own detailed implementation plan before code. This doc
 - [x] Implement grouped full-width rows and search; keep route authorities/guards intact.
 - [x] Render actual components with synthetic fictional props in React Native Web. Capture and inspect320/390/430 layouts, long labels, enlarged text, sign-in/error, directory/search-empty and company frame. Record browser-proxy limits explicitly. No screenshots of live company data.
 - [x] Run full `npm test -- --maxWorkers=2 --pool=threads`, typecheck/lint, native Android/iOS JS exports, changed-file formatting and diff checks. Classify environment/tooling failures separately.
-- [ ] Independent whole-diff review for behavior/privacy regressions, fix findings, update handoff/index/QA phone checklist; commit, fast-forward main and non-force push both branches if Git/network access permits. Preserve stashes/worktrees/processes. Device checks remain pending.
+- [x] Independent whole-diff review for behavior/privacy regressions, fix findings, update handoff/index/QA phone checklist; commit, fast-forward main and non-force push both branches if Git/network access permits. Preserve stashes/worktrees/processes. Device checks remain pending.
 
 ## Later milestone implementation briefs
 
@@ -160,3 +160,7 @@ These are scoped backlog decisions and acceptance requirements. Each milestone m
 ## Measuring value
 
 Record observed baseline task completion and errors for sign-in, find module, create task, review work, send attachment and submit receipt. Compare the same fictional scenarios after each relevant milestone. Interview employees about priority clarity and growth expectations. Set numeric targets only after baseline measurement; do not present a proposed target as an achieved result or use activity counts as employee-quality scores.
+
+## Completed M1 checkpoint
+
+Tasks1–3 implemented, independently reviewed and integrated. Product/source checkpoint642b176 was fast-forwarded into main and atomically non-force pushed to both branches. Merged main70files472tests PASS66.04s. Typecheck/lint, native iOS/Android Hermes JS exports and12fictional layout probes PASS. Both minor review verification findings fixed/confirmed. Physical15additional/224existing QA cases remain NOT_RUN. The owned preview was stopped; no server deployment or provider action. M2Work/Inbox is the next implementation milestone; M3–M9 remain pending. Subsequent publication metadata changes no product code; use live Git for latest HEAD.
