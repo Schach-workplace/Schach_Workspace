@@ -58,7 +58,7 @@ export default function Layout() {
           backgroundColor: colors.surface,
           borderTopColor: colors.border,
         },
-        tabBarLabelStyle: { fontSize: 12, fontWeight: "600" },
+        tabBarLabelStyle: { fontSize: 13, fontWeight: "600" },
         tabBarItemStyle: { minHeight: 48 },
       }}
     >

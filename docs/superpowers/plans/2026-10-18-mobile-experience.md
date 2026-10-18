@@ -71,12 +71,84 @@ M2–M9 each receives its own detailed implementation plan before code. This doc
 
 **Interfaces:** `ModuleDirectory({workReady,role,onOpen,onAccount})` renders grouped searchable destinations; `onOpen(path)` is adapted to current company-qualified router calls in More. Account stays account-scoped. Search resets through a company/user/policy key.
 
-- [ ] Test all retained destinations plus Calendar/Workload/authorized Overview, purpose/heading search, empty/clear search, viewer Finance omission, missing-work omission, Account/history availability, actor/company/policy search reset, exact route destinations.
-- [ ] Run `npx vitest run src/ModuleNavigation.test.tsx --maxWorkers=2 --pool=threads`; observe failures before implementation.
-- [ ] Implement grouped full-width rows and search; keep route authorities/guards intact.
-- [ ] Render actual components with synthetic fictional props in React Native Web. Capture and inspect320/390/430 layouts, long labels, enlarged text, sign-in/error, directory/search-empty and company frame. Record browser-proxy limits explicitly. No screenshots of live company data.
-- [ ] Run full `npm test -- --maxWorkers=2 --pool=threads`, typecheck/lint, native Android/iOS JS exports, changed-file formatting and diff checks. Classify environment/tooling failures separately.
+- [x] Test all retained destinations plus Calendar/Workload/authorized Overview, purpose/heading search, empty/clear search, viewer Finance omission, missing-work omission, Account/history availability, actor/company/policy search reset, exact route destinations.
+- [x] Run `npx vitest run src/ModuleNavigation.test.tsx --maxWorkers=2 --pool=threads`; observe failures before implementation.
+- [x] Implement grouped full-width rows and search; keep route authorities/guards intact.
+- [x] Render actual components with synthetic fictional props in React Native Web. Capture and inspect320/390/430 layouts, long labels, enlarged text, sign-in/error, directory/search-empty and company frame. Record browser-proxy limits explicitly. No screenshots of live company data.
+- [x] Run full `npm test -- --maxWorkers=2 --pool=threads`, typecheck/lint, native Android/iOS JS exports, changed-file formatting and diff checks. Classify environment/tooling failures separately.
 - [ ] Independent whole-diff review for behavior/privacy regressions, fix findings, update handoff/index/QA phone checklist; commit, fast-forward main and non-force push both branches if Git/network access permits. Preserve stashes/worktrees/processes. Device checks remain pending.
+
+## Later milestone implementation briefs
+
+These are scoped backlog decisions and acceptance requirements. Each milestone must first map its current UI/API interfaces into a smaller executable plan. They are not permission to change deferred business policies or to replace existing controls.
+
+### M2 — Work and Inbox
+
+- Inventory WorkScreen, TaskDetailScreen, TaskCollaboration, AttentionInbox and DeadlinePicker states using a fictional member and independent reviewer. Capture baseline steps for finding a task, submitting evidence, reviewing and resolving a blocker.
+- Split long task details into readable summary, expected result/evidence, collaboration and history sections; prioritize one current action from existing server state. Keep original and revised timed deadlines visible with company timezone.
+- Improve task creation with labeled owner/reviewer/project/date fields and clear validation. Unknown requests expose retry/recovery of the original frozen intent, not an editable duplicate submission.
+- Use existing Inbox filters and current-authority deep links to distinguish needs-my-decision from informational updates. Mark-read batching, if added, has its own captured intent and never batches approvals.
+- Add explainable Today filters from authorized recorded work; show why an item appears and allow user choice. Estimates and workload projections remain estimates, not predicted individual performance.
+- Acceptance: unit/API source contracts plus real keyboard/Back/scroll checks; exact-time late acceptance; owner self-review denial; viewer write denial; lost acknowledgement/retry; company switch and revocation. Compare workflow steps/errors against baseline.
+
+### M3 — Connect
+
+- Capture list/search, new DM reuse, channel/group creation, history/thread, attachment, voice note, saved message and publication journeys before changing layout. Retain existing DM semantics and no conversation-name field for one-to-one chat.
+- Make recent/unread state and conversation type clear; keep the composer and attachment actions reachable with the keyboard. Draft scope remains account/company/conversation/thread and clears under current revocation rules.
+- Show upload/permission/retry outcomes from the original request; use progress labels and explicit next actions. No background retry sends a new duplicate message or resurrects access.
+- Give search results and saved items readable context without bypassing membership/history intervals. Readable sources can produce selected-source assistance only after explicit consent.
+- Publication remains its own reviewed step: exact selected source revision, resulting title and broader audience, explicit confirmation, reset on re-preview and existing-task outcome.
+- Acceptance: small-phone composition, denial/recovery, rejoined-history boundary, private member revocation, duplicate send and publication retries. Native calls/push are qualified separately; no recording or automatic transcription.
+
+### M4 — Finance and reports
+
+- Separate capture, draft review, submission and independent decision visually using existing FinanceScreen, assistance/detail components and ExpenseDecision. Do not change approval authority.
+- Keep decimal input tied to exact integer minor-unit parsing and show currency/department/category/date clearly. Progressive fields must remain reachable after validation failure or keyboard dismissal.
+- Present receipt assistance and duplicates as candidates with review context; preserve originals, conflicts, unsupported-format explanations and exact captured request bodies.
+- Make reconciliation/statement recovery readable on a phone, including unmatched state and an explicit selected association before confirmation.
+- Turn report tables into phone-oriented summaries with drill-down rows, retaining exact denominators, filters, historical snapshot labels, original commitments and current output authorization. Exports retain formula protection and recipient expiry/revocation.
+- Acceptance: exact amounts/rounding, immutable creator cannot approve/pay, budget override reason,409 recovery, frozen unknown approval/payment, report snapshot consistency, export cancellation and source revocation. No banking/GST/payroll claim.
+
+### M5 — Remaining native modules
+
+- Projects: clear owner/status/milestone hierarchy and current task links; no new project permissions.
+- Calendar/Workload/Planning: visible company timezone, agenda-first drill-down and honest unknown/zero estimates/capacity. Learning/leave-aware calendars require an explicit capacity-policy design;85% remains unchanged.
+- Goals: readable baseline/target/current measurement and evidence history; task completion never writes an outcome. Conflict recovery preserves reviewed observation/correction semantics.
+- People: grouped membership/onboarding/access/departure steps with a readable grants/effects preview and explicit final confirmation. Career levels never enter permission-role choices.
+- Account: make MFA, device revocation, sign-out and notification preferences easy to find. Preserve Expo Go unavailable copy and configured-server behavior. Profile editing/offboarding reasons remain deferred.
+- Acceptance: large text, missing/empty data, multi-company roles, guarded busy sheets, per-source stale/conflict states, audience disclosures and the applicable existing QA cases.
+
+### M6 — Device pilot and release evidence
+
+- Use the additional15-case DEVICE_CHECKLIST and applicable existing224-case pack in run copies. Record actual OS/model/build/server release and repeatable steps; never edit distributed templates into a success claim.
+- Qualify supported small/large iPhones and small/edge-to-edge Androids, portrait/landscape, font/display settings, VoiceOver/TalkBack, password managers, keyboards, back gestures, background/resume and permission denial.
+- Measure actual common-action completion, error/recovery rate, cold/warm launch and slow-network behavior on named devices. Set performance budgets from observed baselines and realistic hardware.
+- Expo Go proves core-screen testing only. Signed Android/iOS builds, LiveKit/TURN media and APNs/FCM background delivery retain separate credentials/build/provider gates and owner-controlled release access.
+- Run focused independent-role business/security journeys on fictional staging; validate deployed API compatibility. Keep restore, capacity and dependency remediation findings in release signoff. No production redeployment merely to ship new documentation.
+
+### M7 — Employee development pilot
+
+- First confirm one job family, observable competencies, role levels, employee/manager/mentor responsibilities, evidence audiences and assessment correction policy with the owner and pilot employees.
+- Write separate company-scoped career-role, competency/rubric version, development-plan, learning-assignment, assessment and evidence-link contracts. Map new DTOs into mirrored migrations and canonical APIs before UI work.
+- Start with one or two employee-chosen development goals, a supported real assignment, shared feedback and a reviewed skill observation. Course completion is a learning record, not automatic competence or promotion.
+- Add manager/mentor follow-up views with employee-visible expectations. Sensitive reflections require an explicitly designed private audience; broad administration cannot silently access private notes or chats.
+- Acceptance: tenant/source isolation, role/authority distinction, employee correction, evidence freshness/revocation, independently reviewed assessment and optimistic retry behavior. Measure clarity/usefulness and opportunity access; no public employee rankings or auto potential scores.
+
+### M8 — Maintained knowledge and focused assistance
+
+- Define company-owned guidance with title, owner, version, intended audience, review date and publication state. A project lesson is a proposed record until reviewed.
+- Surface guidance at the point of work and search current authorized records. Keep stale/unavailable-source states explicit; do not silently expose private derived content through an index.
+- Extend existing intelligence source adapters only after their schema/limits/permission lifecycle is designed. Default to deterministic facts, allow explicit source selection/consent and cite sources. No automatic background DM processing or cloud fallback.
+- Evaluate retrieval usefulness, grounded claims, correction/abstention, provider capacity and cost on fictional fixtures before enabling pilot use. New languages/formats need actual accuracy and permission tests; existing PDF/Hindi limits remain until implemented.
+- Acceptance: current permission checks at generation/read/publication, queued output revocation, source change/expiry, prompt-injection resistance, bounded compute and safe failure. Suggestions cannot establish outcomes or make personnel/financial decisions.
+
+### M9 — Targeted integrations and policy extensions
+
+- Select the first integration from measured duplicate entry or retrieval demand. Document source of truth, field ownership, consent/audience, credential storage, operator ownership and deletion/revocation before implementation.
+- Use current canonical writes and an outbox/job boundary for delivery; stable original idempotency keys, audit metadata and reconciliation must survive retries and provider failures.
+- Calendar/email/document/accounting adapters are separate increments. Do not send messages to others as part of research or testing without explicit authorization. Use fictional sandboxes.
+- Finance approval stages, thresholds and delegation require explicit policy design with independent creator exclusion, revoked/departed approver handling and current-version previews.
+- Acceptance: token rotation/revocation, cross-company references, duplicate webhook/replay, ordering, partial failure and reconciliation. Measure administrative time saved and operating burden before expansion.
 
 ## Physical acceptance checklist (NOT_RUN until observed)
 

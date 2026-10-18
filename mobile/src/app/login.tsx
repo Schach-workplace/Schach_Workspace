@@ -34,6 +34,8 @@ export default function Login() {
           accessibilityLabel="Company server"
           placeholder="https://workspace.example.in"
           autoCapitalize="none"
+          autoCorrect={false}
+          editable={!busy}
           value={endpoint}
           onChangeText={setEndpoint}
         />
@@ -41,13 +43,11 @@ export default function Login() {
         <Text style={serverStyle}>{serverHost(configured)}</Text>
       )}
       {!custom && dev && (
-        <Text
-          accessibilityRole="link"
-          style={[serverStyle, { color: "#c2410c" }]}
+        <Action
+          title="Use a different server"
+          disabled={busy}
           onPress={() => setCustom(true)}
-        >
-          Use a different server
-        </Text>
+        />
       )}
       <View>
         <Text style={s.label}>Email</Text>

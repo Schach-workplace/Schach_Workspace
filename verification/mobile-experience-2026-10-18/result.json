@@ -1,0 +1,55 @@
+{
+  "date": "2026-10-18",
+  "baseline": "6a3cf6c896199b771412cad86bb34ef679b48ad6",
+  "scope": "M1 mobile foundation Tasks1-3; remaining roadmap stages pending",
+  "baselineTests": {
+    "files": 68,
+    "tests": 455,
+    "status": "PASS"
+  },
+  "mobile": {
+    "files": 70,
+    "tests": 472,
+    "fullSuite": "PASS",
+    "typecheck": "PASS",
+    "lint": "PASS",
+    "focusedFiles": 6,
+    "focusedTests": 31
+  },
+  "nativeJavaScriptExports": {
+    "ios": "PASS",
+    "android": "PASS",
+    "assets": 34,
+    "qualification": "Hermes JavaScript exports only; no signed binary or phone execution"
+  },
+  "visual": {
+    "cases": 12,
+    "widths": [
+      320,
+      390,
+      430
+    ],
+    "runtimeErrors": 0,
+    "externalRequests": 0,
+    "uncontainedHorizontalOverflow": 0,
+    "qualification": "Actual changed RN components in explicit fictional RN Web fixture; CSS enlarged-text proxy; no native tab/keyboard/device proof"
+  },
+  "manual": {
+    "newFocusedCases": 15,
+    "newStatus": "NOT_RUN",
+    "existingDistributedScenarios": 224,
+    "existingStatus": "NOT_RUN"
+  },
+  "review": "PENDING independent source review before integration",
+  "testedProductSHA256": {
+    "mobile/src/mobileTheme.ts": "0fd875218102e9ba20bad7fe04e5401e2a2ef1035a22a98f76b0098691b96b50",
+    "mobile/src/WorkspaceFrame.tsx": "72acb51c9e1ff0c249129c406f40ca26e640fc9f47ba9283be906304db9e25d2",
+    "mobile/src/Workspace.tsx": "ff3dd49443652a24c5f264f435909625abdc0291619d163d7b1adb118239e589",
+    "mobile/src/ConnectUI.tsx": "12d3807bbbb0cc20b13d76154042c99faf56b8896a1c8bda2120deb93aaa78ee",
+    "mobile/src/LoginFrame.tsx": "66e2b153a75e5a236348887a869f43397a262b0e457e93a712850c3501c1318d",
+    "mobile/src/app/login.tsx": "828a253ee6656b3be8e9273d76695b144f8d662aff2d1a5d82295c568ebeac36",
+    "mobile/src/app/(tabs)/_layout.tsx": "31a7d3909b4b8a4f89c24579e0240e6b7c5bf20911cb4bfe9626a5d2cf5d00bd",
+    "mobile/src/ModuleDirectory.tsx": "2a2cfae96e858ff3c503c042fbf4e7b20e3a070c5d6e0e28eea2335934fd595c",
+    "mobile/src/app/(tabs)/more.tsx": "2f49330707fe906683955c409997347d93720c875972a72c2259e824e0e1d649"
+  }
+}

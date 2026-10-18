@@ -1,0 +1,133 @@
+{
+  "qualification": "Actual RN Web components with explicit fictional fixture; CSS enlarged-text proxy, not physical iOS/Android acceptance",
+  "results": [
+    {
+      "name": "login",
+      "width": 320,
+      "layout": {
+        "documentWidth": 320,
+        "bodyWidth": 320,
+        "visibleText": "W\nWorkspace\nYour work, conversations and company in one place.\nfictional.example.invalid\nEmail\nPassword\nShow password\nUse authenticator or recovery code\nSign in",
+        "overflow": []
+      }
+    },
+    {
+      "name": "login",
+      "width": 390,
+      "layout": {
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "visibleText": "W\nWorkspace\nYour work, conversations and company in one place.\nfictional.example.invalid\nEmail\nPassword\nShow password\nUse authenticator or recovery code\nSign in",
+        "overflow": []
+      }
+    },
+    {
+      "name": "login",
+      "width": 430,
+      "layout": {
+        "documentWidth": 430,
+        "bodyWidth": 430,
+        "visibleText": "W\nWorkspace\nYour work, conversations and company in one place.\nfictional.example.invalid\nEmail\nPassword\nShow password\nUse authenticator or recovery code\nSign in",
+        "overflow": []
+      }
+    },
+    {
+      "name": "login-error",
+      "width": 390,
+      "layout": {
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "visibleText": "W\nWorkspace\nYour work, conversations and company in one place.\nfictional.example.invalid\nEmail\nPassword\nShow password\nUse authenticator or recovery code\nSign in\nFictional connection failure. Check your connection and try again.",
+        "overflow": []
+      }
+    },
+    {
+      "name": "login-verification",
+      "width": 320,
+      "layout": {
+        "documentWidth": 320,
+        "bodyWidth": 320,
+        "visibleText": "W\nWorkspace\nYour work, conversations and company in one place.\nfictional.example.invalid\nEmail\nPassword\nShow password\nAdditional verification\nIf your account uses two-step verification, enter an authenticator code or a recovery code.\nAuthenticator co",
+        "overflow": []
+      }
+    },
+    {
+      "name": "modules",
+      "width": 320,
+      "layout": {
+        "documentWidth": 320,
+        "bodyWidth": 320,
+        "search": "",
+        "visibleText": "Workspace\nFictional member\n✓ Fictional North\nFictional South\nExplore your workspace\nFind the tools you need for your next step.\nPlan & deliver\nOverview\nCompany delivery and work needing attention\n›\nProjects\nInitiatives, milestones and related tasks\n›",
+        "overflow": []
+      }
+    },
+    {
+      "name": "modules",
+      "width": 390,
+      "layout": {
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "search": "",
+        "visibleText": "Workspace\nFictional member\n✓ Fictional North\nFictional South\nExplore your workspace\nFind the tools you need for your next step.\nPlan & deliver\nOverview\nCompany delivery and work needing attention\n›\nProjects\nInitiatives, milestones and related tasks\n›",
+        "overflow": []
+      }
+    },
+    {
+      "name": "modules",
+      "width": 430,
+      "layout": {
+        "documentWidth": 430,
+        "bodyWidth": 430,
+        "search": "",
+        "visibleText": "Workspace\nFictional member\n✓ Fictional North\nFictional South\nExplore your workspace\nFind the tools you need for your next step.\nPlan & deliver\nOverview\nCompany delivery and work needing attention\n›\nProjects\nInitiatives, milestones and related tasks\n›",
+        "overflow": []
+      }
+    },
+    {
+      "name": "modules-long",
+      "width": 320,
+      "layout": {
+        "documentWidth": 320,
+        "bodyWidth": 320,
+        "search": "",
+        "visibleText": "Workspace\nFictional Member With A Longer Display Name\n✓ Fictional Northern Engineering and Employee Development Company\nFictional South\nExplore your workspace\nFind the tools you need for your next step.\nPlan & deliver\nOverview\nCompany delivery and wo",
+        "overflow": []
+      }
+    },
+    {
+      "name": "modules-large",
+      "width": 320,
+      "layout": {
+        "documentWidth": 320,
+        "bodyWidth": 320,
+        "search": "",
+        "visibleText": "Workspace\nFictional Member With A Longer Display Name\n✓ Fictional Northern Engineering and Employee Development Company\nFictional South\nExplore your workspace\nFind the tools you need for your next step.\nPlan & deliver\nOverview\nCompany delivery and wo",
+        "overflow": []
+      }
+    },
+    {
+      "name": "modules-empty",
+      "width": 390,
+      "layout": {
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "search": "no-such-fictional-module",
+        "visibleText": "Workspace\nFictional member\n✓ Fictional North\nFictional South\nExplore your workspace\nFind the tools you need for your next step.\nClear search\nNo matching modules\nTry another word or clear your search.",
+        "overflow": []
+      }
+    },
+    {
+      "name": "frame",
+      "width": 390,
+      "layout": {
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "visibleText": "Workspace\nFictional member\n✓ Fictional North\nFictional South\nYour current work\nThis read-only layout fixture uses fictional content. No business data is fetched.",
+        "overflow": []
+      }
+    }
+  ],
+  "errors": [],
+  "blockedExternalRequests": []
+}

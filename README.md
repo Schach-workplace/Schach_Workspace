@@ -215,3 +215,5 @@ The ten [dependency-ordered roadmap milestones](docs/superpowers/plans/2026-10-1
 ## Team end-to-end QA pack
 
 [Open the team QA guide](docs/qa/README.md): 224 proposed scenarios, guides for all modules, editable workflow diagrams, a searchable offline guide, Excel/CSV execution templates and a printable workflow PDF. Every manual case starts NOT_RUN; use the isolated fictional test environment and role matrix before testing. Historical automated evidence remains separate in docs/VERIFICATION.md.
+
+The next mobile-first improvement cycle is tracked in [the detailed plan](docs/superpowers/plans/2026-10-18-mobile-experience.md), with [native component layout evidence and device checks](verification/mobile-experience-2026-10-18/README.md).
