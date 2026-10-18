@@ -49,6 +49,7 @@ vi.mock("react-native", () => ({
     },
   },
   Platform: { OS: "android" },
+  Keyboard: { metrics: () => undefined, addListener: () => ({ remove() {} }) },
   StyleSheet: { create: (s: any) => s },
   Alert: { alert: vi.fn() },
   View: ({ children }: any) => createElement("div", {}, children),

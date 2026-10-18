@@ -1,0 +1,74 @@
+{
+  "qualification": "Final reviewed product/test/harness source. No native iOS or deployed build claim.",
+  "baseline": "206df7ce8bf674d901c376e3016faf4fcdc50cf5",
+  "files": [
+    {
+      "path": "mobile/src/IntelligenceLifetime.test.tsx",
+      "sha256": "95bbac50152c8154f9326d5537de2bb26ae0a573fe4a30f7b91338ba4bc8918f"
+    },
+    {
+      "path": "mobile/src/KeyboardFrame.test.tsx",
+      "sha256": "6b2d1c7e1ba7762d61b0c1801a648ea459882b057a9a01a66245133f7e5f9cac"
+    },
+    {
+      "path": "mobile/src/KeyboardFrame.tsx",
+      "sha256": "2ce4bb6bcc70180d6e4b820f0a4621c8bbfd0ee3e5bb3252e8184c276da71086"
+    },
+    {
+      "path": "mobile/src/NativeConversation.test.tsx",
+      "sha256": "ddf7485d0fa55700b8c87bf08605ecf46236bf3132c0655f53d63323847ccc3b"
+    },
+    {
+      "path": "mobile/src/OverviewWorkload.test.tsx",
+      "sha256": "2c37d2a1b39241c95ed011c37af0dc7bb8f27c339e6a088ea9cccd6d37310250"
+    },
+    {
+      "path": "mobile/src/WorkloadScreen.tsx",
+      "sha256": "983b942fc65b4eba5fb82bef298a577e5ae7de692f8078ecdf3490342529e133"
+    },
+    {
+      "path": "verification/mobile-lab-2026-10-19/browser-matrix.mjs",
+      "sha256": "149aa717239b0ead60ccc5d1ef8dfb8d1b4a8f6a1456838d04b2d8172e10bd57"
+    },
+    {
+      "path": "verification/mobile-lab-2026-10-19/create-avd.py",
+      "sha256": "e50771f74b63133d7310b284940f785448968f4369f4c771db2d9bfd48d0b255"
+    },
+    {
+      "path": "verification/mobile-lab-2026-10-19/native-controls.py",
+      "sha256": "80e63d51f6644cdca52fe760c58093809255e0b241b8d2a21e9e8c9eec9d28a1"
+    },
+    {
+      "path": "verification/mobile-lab-2026-10-19/native-fixture.py",
+      "sha256": "bd7577cfd760917b6602f123049574f28aff6bbb1e2f74b8113099f89f86e9eb"
+    },
+    {
+      "path": "verification/mobile-lab-2026-10-19/native-interactions.py",
+      "sha256": "8dd2ad476d34f83cb0e7cac5078e5225fc42fc607c46e202568eb23784895d8e"
+    },
+    {
+      "path": "verification/mobile-lab-2026-10-19/native-screens.py",
+      "sha256": "454dfea4263048f9e9b2e5fd6e0c67bdfd0557ceb41f0e52224272c4454d1f98"
+    },
+    {
+      "path": "verification/mobile-lab-2026-10-19/native_results.py",
+      "sha256": "5c051937c6be49abd37f9b0fadef3fc257436620bd7944f9cdbacfadbd2de027"
+    },
+    {
+      "path": "verification/mobile-lab-2026-10-19/setup-webkit-compat.py",
+      "sha256": "fbf30ea40a3bbdbfe1e12d818a6f2482adfec859998c50ef80c65c916b3164eb"
+    },
+    {
+      "path": "verification/mobile-lab-2026-10-19/start-android.py",
+      "sha256": "22160c91d7b092fafa32275785db8c060d884485af826f773758f35787cf7408"
+    },
+    {
+      "path": "verification/mobile-lab-2026-10-19/test_native_results.py",
+      "sha256": "84f4a29d27327c4cdff4df7f23bbc2fb935e84e8e02fd63de67fe835fc9225bc"
+    },
+    {
+      "path": "verification/mobile-lab-2026-10-19/web-api-matrix.mjs",
+      "sha256": "e572408e23042b840772e6f2a3eb0f1c5fecc85a60bbe480229cf8b90f1d50a3"
+    }
+  ]
+}

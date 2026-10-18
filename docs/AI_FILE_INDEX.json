@@ -1,16 +1,16 @@
 {
-  "updatedUtc": "2026-10-18T17:55:24.549915+00:00",
+  "updatedUtc": "2026-10-18T19:59:36.109828+00:00",
   "qualification": "Durable recovery metadata; reviewed source/evidence separately qualified. No pending runtime/push claim.",
   "handoff": "docs/HANDOFF.md",
   "checklist": "docs/AI_CHECKLIST.md",
-  "activeLedger": "verification/mobile-experience-2026-10-18/record.md",
+  "activeLedger": "verification/mobile-lab-2026-10-19/record.md",
   "currentResumeFile": "docs/HANDOFF.md",
   "currentOwners": {
     "controller": "/root",
-    "sourceWriters": "all yielded",
-    "reviewer": "independent reviewer complete;bothminorfixesconfirmed"
+    "sourceWriters": "complete",
+    "reviewer": "independent mobile_lab_final_review complete; Important accounting findings fixed/confirmed"
   },
-  "currentPhase": "M1mobile foundation completed/reviewed, fast-forwarded main and both branches atomically pushed at source642b176. Merged main70files472tests/typecheck/lint/nativeJSexports/12fictional layouts PASS. No new persistent app process; physical15new/224existing cases NOT_RUN. M2Work/Inbox next; M3\u2013M9pending. Newer metadata may follow; inspect live Git.",
+  "currentPhase": "Mobile lab complete and independently reviewed: Android36/ExpoGo57 native19screens/11interactions current cases PASS with retained retries; WebKit/Chromium134component+30actualwebAPI checks PASS;515mobile tests/types/lint/nativeJSexports PASS. Publication checkpoint in HANDOFF17. Native iOS/physical/provider gates and MOBILE-LAB-RESUME-01 remain open.",
   "verifiedProductHead": "ebc994dc6c2be442db595e468a716139b56ed721",
   "verifiedFixHead": "dff8ddc045b7bec32b41ac3e4f8847938c4f3de3",
   "reviewDisposition": "verification/workspace-improvements-roadmap/release-cutover/scoped-review-disposition.json",
@@ -3162,5 +3162,15 @@
     "result": "verification/mobile-experience-2026-10-18/result.json",
     "deviceChecklist": "verification/mobile-experience-2026-10-18/DEVICE_CHECKLIST.md",
     "qualification": "M1source complete/reviewed/published; remaining M2\u2013M9and physical device/provider acceptance pending"
+  },
+  "mobileLab": {
+    "guide": "verification/mobile-lab-2026-10-19/README.md",
+    "record": "verification/mobile-lab-2026-10-19/record.md",
+    "plan": "docs/superpowers/plans/2026-10-19-mobile-lab.md",
+    "environment": "verification/mobile-lab-2026-10-19/environment.json",
+    "results": "verification/mobile-lab-2026-10-19/result.json",
+    "sourceHashes": "verification/mobile-lab-2026-10-19/source-hashes.json",
+    "nativeIOS": "NOT_RUN; WebKit browser profiles only",
+    "processes": "docs/HANDOFF.md section17"
   }
 }

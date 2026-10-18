@@ -1,0 +1,157 @@
+{
+  "capturedUtc": "2026-10-18T19:19:24.483074+00:00",
+  "baselineCommit": "206df7ce8bf674d901c376e3016faf4fcdc50cf5",
+  "qualification": "Host-installed isolated public testing tools. Native Android in Expo Go; browser WebKit profiles are not native iOS. No cloud or physical device.",
+  "android": {
+    "root": "/tmp/workspace-mobile-lab-20261019",
+    "avd": "workspace-qa-api36-20261019",
+    "serial": "emulator-5578",
+    "adbPort": 5039,
+    "emulatorConsolePort": 5578,
+    "api": 36,
+    "acceleration": "KVM API12, actual host /dev/kvm",
+    "expoGo": "57.0.9",
+    "emulator": "37.2.12 build16428233",
+    "platformTools": "37.0.1",
+    "image": "android-36;google_apis;x86_64 revision7 extension17"
+  },
+  "browsers": {
+    "playwright": "1.63.0",
+    "webkit": "26.6 revision2359",
+    "webkitRoot": "/tmp/workspace-mobile-browsers/webkit-2359",
+    "chromiumPath": "/usr/bin/chromium",
+    "deviceScaleFactor": 1
+  },
+  "downloads": [
+    {
+      "file": "cmdline.zip",
+      "url": "https://dl.google.com/android/repository/commandlinetools-linux-16111833_latest.zip",
+      "bytes": 181052239,
+      "sha256": "0877a1d048fe4a24efe2eff536ca4223f7adeb58648bb81909d33c446918cfa8"
+    },
+    {
+      "file": "expo-go-57.apk",
+      "url": "https://github.com/expo/expo-go-releases/releases/download/Expo-Go-57.0.9/Expo-Go-57.0.9.apk",
+      "bytes": 208916626,
+      "sha256": "14c18828a3d04e43922245920bd941b978fd1c7a5aec88a0188032f0bb4972ce"
+    },
+    {
+      "file": "OpenJDK21U-jre_x64_linux_hotspot_21.0.12.1_1.tar.gz",
+      "url": "https://github.com/adoptium/temurin21-binaries/releases/download/jdk-21.0.12.1%2B1/OpenJDK21U-jre_x64_linux_hotspot_21.0.12.1_1.tar.gz",
+      "sha256": "2413149700df0f7d440500a84a8f764c535f21e5a5e87d38328b64eec2c5b500"
+    }
+  ],
+  "ports": {
+    "fictionalAPI": 9092,
+    "metro": 19019,
+    "foundation": 5186,
+    "nativeComponents": 5187
+  },
+  "temporaryToolsMayBeClearedByReboot": true,
+  "webkitCompatibility": [
+    {
+      "Package": "libicu74",
+      "Version": "74.2-1ubuntu3",
+      "Filename": "pool/main/i/icu/libicu74_74.2-1ubuntu3_amd64.deb",
+      "SHA256": "d29c97a21a3e3254731cfac186e4d4e611e5e67d2c9a0430f6acfbd9acaefa2e"
+    },
+    {
+      "Package": "libxml2",
+      "Version": "2.9.14+dfsg-1.3ubuntu3",
+      "Filename": "pool/main/libx/libxml2/libxml2_2.9.14+dfsg-1.3ubuntu3_amd64.deb",
+      "SHA256": "8c4efd7abe155df3cf0f9b64d659f2d866215785f8e8c44234fbb341d58cc967"
+    },
+    {
+      "Package": "libflite1",
+      "Version": "2.2-6build3",
+      "Filename": "pool/universe/f/flite/libflite1_2.2-6build3_amd64.deb",
+      "SHA256": "367f1d0da5cd38759a0515eafc27aa133b2d7bf99308cac34831df0212e96b75"
+    }
+  ],
+  "browserProfiles": [
+    {
+      "name": "ios-small",
+      "engine": "webkit",
+      "engineVersion": "26.6",
+      "device": "iPhone SE (3rd gen)",
+      "options": {
+        "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 18_5 like Mac OS X) AppleWebKit/603.1.30 (KHTML, like Gecko) Version/26.6 Mobile/19E241 Safari/602.1",
+        "viewport": {
+          "width": 375,
+          "height": 667
+        },
+        "deviceScaleFactor": 1,
+        "isMobile": true,
+        "hasTouch": true,
+        "locale": "en-IN",
+        "timezoneId": "Asia/Kolkata",
+        "reducedMotion": "reduce"
+      }
+    },
+    {
+      "name": "ios-large",
+      "engine": "webkit",
+      "engineVersion": "26.6",
+      "device": "iPhone 15 Pro Max",
+      "options": {
+        "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.6 Mobile/15E148 Safari/604.1",
+        "viewport": {
+          "width": 430,
+          "height": 739
+        },
+        "screen": {
+          "width": 430,
+          "height": 932
+        },
+        "deviceScaleFactor": 1,
+        "isMobile": true,
+        "hasTouch": true,
+        "locale": "en-IN",
+        "timezoneId": "Asia/Kolkata",
+        "reducedMotion": "reduce"
+      }
+    },
+    {
+      "name": "android-pixel",
+      "engine": "chromium",
+      "engineVersion": "152.0.7977.82",
+      "device": "Pixel 5",
+      "options": {
+        "userAgent": "Mozilla/5.0 (Linux; Android 11; Pixel 5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.8010.12 Mobile Safari/537.36",
+        "viewport": {
+          "width": 393,
+          "height": 727
+        },
+        "screen": {
+          "width": 393,
+          "height": 851
+        },
+        "deviceScaleFactor": 1,
+        "isMobile": true,
+        "hasTouch": true,
+        "locale": "en-IN",
+        "timezoneId": "Asia/Kolkata",
+        "reducedMotion": "reduce"
+      }
+    },
+    {
+      "name": "android-galaxy",
+      "engine": "chromium",
+      "engineVersion": "152.0.7977.82",
+      "device": "Galaxy S24",
+      "options": {
+        "userAgent": "Mozilla/5.0 (Linux; Android 14; SM-S921U) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.8010.12 Mobile Safari/537.36",
+        "viewport": {
+          "width": 360,
+          "height": 780
+        },
+        "deviceScaleFactor": 1,
+        "isMobile": true,
+        "hasTouch": true,
+        "locale": "en-IN",
+        "timezoneId": "Asia/Kolkata",
+        "reducedMotion": "reduce"
+      }
+    }
+  ]
+}

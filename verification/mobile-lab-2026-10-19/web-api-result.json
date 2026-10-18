@@ -1,0 +1,334 @@
+{
+  "qualification": "Real compiled web and fictional API under mobile browser emulation. No native iOS/Android or provider acceptance.",
+  "cases": [
+    {
+      "engine": "webkit",
+      "name": "Fictional actual API sign-in",
+      "status": "PASS"
+    },
+    {
+      "engine": "webkit",
+      "view": "connect",
+      "status": "PASS",
+      "heading": "SCHACH ENGINEERS\nConnect\n\nCompany conversations and accountable work.\n\nYour conversations\n\nPeople, teams and company channels\n\nAll\nUnread\nChats\nChannels\nAR\nAdit",
+      "width": {
+        "viewport": 375,
+        "document": 375
+      }
+    },
+    {
+      "engine": "webkit",
+      "view": "overview",
+      "status": "PASS",
+      "heading": "WELCOME BACK, ROHAN\nYour business, in focus.\n\nThe commitments, decisions and people moving your company forward.\n\nCreate task\nCompany overview\nMonday 19 October",
+      "width": {
+        "viewport": 375,
+        "document": 375
+      }
+    },
+    {
+      "engine": "webkit",
+      "view": "my-work",
+      "status": "PASS",
+      "heading": "SCHACH ENGINEERS\nMy work\n\nYour priorities, commitments and reviews. All in one place.\n\nCreate task\nYOUR FOCUS\nSmall steps. Meaningful progress.\n\nYour next prior",
+      "width": {
+        "viewport": 375,
+        "document": 375
+      }
+    },
+    {
+      "engine": "webkit",
+      "view": "tasks",
+      "status": "PASS",
+      "heading": "SCHACH ENGINEERS\nAll tasks\n\nClear ownership. Visible progress. Nothing lost in the follow-up.\n\nList\nBoard\nNew task\nFilters\n42 total tasks\nSort by\nApprove baseli",
+      "width": {
+        "viewport": 375,
+        "document": 375
+      }
+    },
+    {
+      "engine": "webkit",
+      "view": "projects",
+      "status": "PASS",
+      "heading": "SCHACH ENGINEERS\nProjects\n\nBring people and work together around a shared outcome.\n\nNew project\nActive\nManufacturing\nFactory performance\n\nImprove first-pass qua",
+      "width": {
+        "viewport": 375,
+        "document": 375
+      }
+    },
+    {
+      "engine": "webkit",
+      "view": "calendar",
+      "status": "PASS",
+      "heading": "SCHACH ENGINEERS\nCalendar\n\nSee what is coming. Plan the work before the deadline.\n\nCreate task\nOctober 2026\nToday\nMonth\nWeek\nOpen work only\nDeadlines in Asia/Ko",
+      "width": {
+        "viewport": 375,
+        "document": 375
+      }
+    },
+    {
+      "engine": "webkit",
+      "view": "workload",
+      "status": "PASS",
+      "heading": "SCHACH ENGINEERS\nWorkload\n\nBalance commitments with the capacity to deliver them.\n\nPlanning authorized work\n\nRemaining estimates of authorized work against reco",
+      "width": {
+        "viewport": 375,
+        "document": 375
+      }
+    },
+    {
+      "engine": "webkit",
+      "view": "goals",
+      "status": "PASS",
+      "heading": "SCHACH ENGINEERS\nGoals\n\nKeep your team's effort connected to measurable results.\n\nMeasured outcomes\nDevelopment plans\nKnowledge\nMeasured outcomes\n\nEach goal tra",
+      "width": {
+        "viewport": 375,
+        "document": 375
+      }
+    },
+    {
+      "engine": "webkit",
+      "view": "finance",
+      "status": "PASS",
+      "heading": "SCHACH ENGINEERS\nBudgets & expenses\n\nPlan department budgets, review spending and keep every decision accountable.\n\nFINANCIAL YEAR\nFY 2027–28\nFY 2026–27\nFY 2025",
+      "width": {
+        "viewport": 375,
+        "document": 375
+      }
+    },
+    {
+      "engine": "webkit",
+      "view": "reports",
+      "status": "PASS",
+      "heading": "SCHACH ENGINEERS\nDelivery reports\n\nUnderstand the commitments kept, changed and still in progress.\n\nCurrent state\nHistorical reports\nSaved reports\n\nCurrent-stat",
+      "width": {
+        "viewport": 375,
+        "document": 375
+      }
+    },
+    {
+      "engine": "webkit",
+      "view": "people",
+      "status": "PASS",
+      "heading": "SCHACH ENGINEERS\nPeople & organisation\n\nKnow who owns the work, who leads the team and where support is needed.\n\n17\nActive people\n6\nDepartments\n7\nHeads & manage",
+      "width": {
+        "viewport": 375,
+        "document": 375
+      }
+    },
+    {
+      "engine": "webkit",
+      "view": "inbox",
+      "status": "PASS",
+      "heading": "SCHACH ENGINEERS\nInbox\n\nThe updates that need you, without another status meeting.\n\nAction required\n\nResolve this Inbox item; this does not approve the work. Re",
+      "width": {
+        "viewport": 375,
+        "document": 375
+      }
+    },
+    {
+      "engine": "webkit",
+      "view": "settings",
+      "status": "PASS",
+      "heading": "SCHACH ENGINEERS\nWorkspace settings\n\nManage your company, your account and the way work flows.\n\nCompany\nMy account\nWorkflow\nCompany details\n\nYour current worksp",
+      "width": {
+        "viewport": 375,
+        "document": 375
+      }
+    },
+    {
+      "engine": "webkit",
+      "name": "calendar-export",
+      "status": "PASS",
+      "bytes": 7737
+    },
+    {
+      "engine": "chromium",
+      "name": "Fictional actual API sign-in",
+      "status": "PASS"
+    },
+    {
+      "engine": "chromium",
+      "view": "connect",
+      "status": "PASS",
+      "heading": "SCHACH ENGINEERS\nConnect\n\nCompany conversations and accountable work.\n\nYour conversations\n\nPeople, teams and company channels\n\nAll\nUnread\nChats\nChannels\nAR\nAdit",
+      "width": {
+        "viewport": 393,
+        "document": 393
+      }
+    },
+    {
+      "engine": "chromium",
+      "view": "overview",
+      "status": "PASS",
+      "heading": "WELCOME BACK, ROHAN\nYour business, in focus.\n\nThe commitments, decisions and people moving your company forward.\n\nCreate task\nCompany overview\nMonday, 19 Octobe",
+      "width": {
+        "viewport": 393,
+        "document": 393
+      }
+    },
+    {
+      "engine": "chromium",
+      "view": "my-work",
+      "status": "PASS",
+      "heading": "SCHACH ENGINEERS\nMy work\n\nYour priorities, commitments and reviews. All in one place.\n\nCreate task\nYOUR FOCUS\nSmall steps. Meaningful progress.\n\nYour next prior",
+      "width": {
+        "viewport": 393,
+        "document": 393
+      }
+    },
+    {
+      "engine": "chromium",
+      "view": "tasks",
+      "status": "PASS",
+      "heading": "SCHACH ENGINEERS\nAll tasks\n\nClear ownership. Visible progress. Nothing lost in the follow-up.\n\nList\nBoard\nNew task\nAll statuses\nOpen tasks\nBacklog\nTo do\nIn prog",
+      "width": {
+        "viewport": 393,
+        "document": 393
+      }
+    },
+    {
+      "engine": "chromium",
+      "view": "projects",
+      "status": "PASS",
+      "heading": "SCHACH ENGINEERS\nProjects\n\nBring people and work together around a shared outcome.\n\nAll departments\nEngineering\nFinance\nManufacturing\nPeople & Admin\nProcurement",
+      "width": {
+        "viewport": 393,
+        "document": 393
+      }
+    },
+    {
+      "engine": "chromium",
+      "view": "calendar",
+      "status": "PASS",
+      "heading": "SCHACH ENGINEERS\nCalendar\n\nSee what is coming. Plan the work before the deadline.\n\nCreate task\nOctober 2026\nToday\nMonth\nWeek\nAll departments\nEngineering\nFinance",
+      "width": {
+        "viewport": 393,
+        "document": 393
+      }
+    },
+    {
+      "engine": "chromium",
+      "view": "workload",
+      "status": "PASS",
+      "heading": "SCHACH ENGINEERS\nWorkload\n\nBalance commitments with the capacity to deliver them.\n\nPlanning authorized work\n\nRemaining estimates of authorized work against reco",
+      "width": {
+        "viewport": 393,
+        "document": 393
+      }
+    },
+    {
+      "engine": "chromium",
+      "view": "goals",
+      "status": "PASS",
+      "heading": "SCHACH ENGINEERS\nGoals\n\nKeep your team's effort connected to measurable results.\n\nMeasured outcomes\nDevelopment plans\nKnowledge\nMeasured outcomes\n\nEach goal tra",
+      "width": {
+        "viewport": 393,
+        "document": 393
+      }
+    },
+    {
+      "engine": "chromium",
+      "view": "finance",
+      "status": "PASS",
+      "heading": "SCHACH ENGINEERS\nBudgets & expenses\n\nPlan department budgets, review spending and keep every decision accountable.\n\nFINANCIAL YEAR\nFY 2027–28\nFY 2026–27\nFY 2025",
+      "width": {
+        "viewport": 393,
+        "document": 393
+      }
+    },
+    {
+      "engine": "chromium",
+      "view": "reports",
+      "status": "PASS",
+      "heading": "SCHACH ENGINEERS\nDelivery reports\n\nUnderstand the commitments kept, changed and still in progress.\n\nCurrent state\nHistorical reports\nSaved reports\n\nCurrent-stat",
+      "width": {
+        "viewport": 393,
+        "document": 393
+      }
+    },
+    {
+      "engine": "chromium",
+      "view": "people",
+      "status": "PASS",
+      "heading": "SCHACH ENGINEERS\nPeople & organisation\n\nKnow who owns the work, who leads the team and where support is needed.\n\n17\nActive people\n6\nDepartments\n7\nHeads & manage",
+      "width": {
+        "viewport": 393,
+        "document": 393
+      }
+    },
+    {
+      "engine": "chromium",
+      "view": "inbox",
+      "status": "PASS",
+      "heading": "SCHACH ENGINEERS\nInbox\n\nThe updates that need you, without another status meeting.\n\nAction required\n\nResolve this Inbox item; this does not approve the work. Re",
+      "width": {
+        "viewport": 393,
+        "document": 393
+      }
+    },
+    {
+      "engine": "chromium",
+      "view": "settings",
+      "status": "PASS",
+      "heading": "SCHACH ENGINEERS\nWorkspace settings\n\nManage your company, your account and the way work flows.\n\nCompany\nMy account\nWorkflow\nCompany details\n\nYour current worksp",
+      "width": {
+        "viewport": 393,
+        "document": 393
+      }
+    },
+    {
+      "engine": "chromium",
+      "name": "calendar-export",
+      "status": "PASS",
+      "bytes": 7737
+    }
+  ],
+  "errors": [],
+  "expectedAnonymousDenials": [
+    {
+      "engine": "webkit",
+      "path": "/api/auth/session",
+      "status": 401
+    },
+    {
+      "engine": "chromium",
+      "path": "/api/auth/session",
+      "status": 401
+    }
+  ],
+  "consoleDiagnostics": [
+    {
+      "engine": "webkit",
+      "current": "sign-in",
+      "error": "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+      "location": {
+        "url": "http://127.0.0.1:9092/api/auth/session",
+        "line": 0,
+        "column": 0,
+        "lineNumber": 0,
+        "columnNumber": 0
+      }
+    },
+    {
+      "engine": "chromium",
+      "current": "sign-in",
+      "error": "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+      "location": {
+        "url": "http://127.0.0.1:9092/api/auth/session",
+        "line": 0,
+        "column": 0,
+        "lineNumber": 0,
+        "columnNumber": 0
+      }
+    }
+  ],
+  "external": [],
+  "summary": {
+    "passed": 30,
+    "failed": 0,
+    "errors": 0,
+    "external": 0
+  },
+  "status": "PASS"
+}

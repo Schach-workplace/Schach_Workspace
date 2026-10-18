@@ -109,6 +109,7 @@ vi.mock("./ConnectUI", () => ({
 }));
 vi.mock("react-native", () => ({
   Platform: { OS: "android" },
+  Keyboard: { metrics: () => undefined, addListener: () => ({ remove() {} }) },
   FlatList: forwardRef(function List(props: any, ref) {
     const { data, renderItem, ListHeaderComponent } = props;
     useLayoutEffect(() => {

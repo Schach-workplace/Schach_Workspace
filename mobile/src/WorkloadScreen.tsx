@@ -34,7 +34,15 @@ const utilization = (u: number | null) =>
 export default function WorkloadScreen() {
   const w = useWorkspace();
   const zone = w.work?.company.timezone ?? "UTC";
-  const [from, setFrom] = useState(() => weekOf(companyDate(new Date(), zone)));
+  const currentWeek = weekOf(companyDate(new Date(), zone));
+  // Do not freeze the UTC fallback while current company data is still loading.
+  // Once initialized, retain the inspected range through transient clears and
+  // preserve any week the person explicitly selected before loading completed.
+  const [chosenFrom, setFrom] = useState<string | null>(() =>
+    w.work ? currentWeek : null,
+  );
+  const from = chosenFrom ?? currentWeek;
+  if (chosenFrom === null && w.work) setFrom(currentWeek);
   const [weeks, setWeeks] = useState(2);
   const [pulled, setPulled] = useState(false);
   // Filters belong to one company/user/policy scope; any change resets them.

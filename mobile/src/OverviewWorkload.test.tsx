@@ -71,12 +71,64 @@ vi.mock("react-native", () => ({
   RefreshControl: () => null,
 }));
 afterEach(() => {
+  vi.useRealTimers();
   env.work = null;
   env.read = {};
   env.paths = [];
   env.company = "c";
   env.refresh.mockReset();
   env.push.mockReset();
+});
+it("Workload initializes its week after the company timezone resolves across midnight", async () => {
+  vi.useFakeTimers({ toFake: ["Date"] });
+  vi.setSystemTime(new Date("2026-10-18T18:55:00Z"));
+  env.read = { ready: false, loading: true, retry: vi.fn() };
+  const r = await render(<WorkloadScreen />);
+  try {
+    env.work = { ...work("head"), company: { timezone: "Asia/Kolkata" } };
+    await act(async () => r.root.render(<WorkloadScreen />));
+    expect(
+      new URLSearchParams(env.paths.at(-1)!.split("?")[1]).get("from"),
+    ).toBe("2026-10-19");
+    expect(r.host.textContent).toContain("Read-only · 2026-10-19 – 2026-11-01");
+  } finally {
+    await act(async () => r.root.unmount());
+  }
+});
+it("Workload retains its initialized company week during a temporary workspace clear", async () => {
+  vi.useFakeTimers({ toFake: ["Date"] });
+  vi.setSystemTime(new Date("2026-10-18T18:55:00Z"));
+  env.read = { ready: false, loading: true, retry: vi.fn() };
+  env.work = { ...work("head"), company: { timezone: "Asia/Kolkata" } };
+  const r = await render(<WorkloadScreen />);
+  try {
+    env.work = null;
+    await act(async () => r.root.render(<WorkloadScreen />));
+    expect(
+      new URLSearchParams(env.paths.at(-1)!.split("?")[1]).get("from"),
+    ).toBe("2026-10-19");
+  } finally {
+    await act(async () => r.root.unmount());
+  }
+});
+it("Workload preserves an explicitly selected week when timezone loading completes", async () => {
+  vi.useFakeTimers({ toFake: ["Date"] });
+  vi.setSystemTime(new Date("2026-10-18T18:55:00Z"));
+  env.read = { ready: false, loading: true, retry: vi.fn() };
+  const r = await render(<WorkloadScreen />);
+  try {
+    await r.click("Next");
+    const selected = new URLSearchParams(env.paths.at(-1)!.split("?")[1]).get(
+      "from",
+    );
+    env.work = { ...work("head"), company: { timezone: "Asia/Kolkata" } };
+    await act(async () => r.root.render(<WorkloadScreen />));
+    expect(
+      new URLSearchParams(env.paths.at(-1)!.split("?")[1]).get("from"),
+    ).toBe(selected);
+  } finally {
+    await act(async () => r.root.unmount());
+  }
 });
 async function render(node: any) {
   Object.assign(globalThis, { IS_REACT_ACT_ENVIRONMENT: true });

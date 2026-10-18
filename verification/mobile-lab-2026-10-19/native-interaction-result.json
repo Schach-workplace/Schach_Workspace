@@ -1,0 +1,93 @@
+{
+  "qualification": "Actual current Expo Go57 on owned Android36 emulator, fictional9092 API. Not iOS, physical hardware or native call/push qualification.",
+  "cases": [
+    {
+      "name": "task-navigation-back",
+      "status": "PASS"
+    },
+    {
+      "name": "task-keyboard",
+      "status": "PASS"
+    },
+    {
+      "name": "private-message-keyboard-send",
+      "status": "PASS"
+    },
+    {
+      "name": "knowledge-form-disclosure",
+      "status": "PASS"
+    },
+    {
+      "name": "more-search-navigation-back",
+      "status": "PASS"
+    },
+    {
+      "name": "large-font-work",
+      "status": "PASS"
+    },
+    {
+      "name": "large-font-workload",
+      "status": "PASS"
+    },
+    {
+      "name": "large-font-more",
+      "status": "PASS"
+    },
+    {
+      "name": "large-font-chat",
+      "status": "PASS"
+    },
+    {
+      "name": "growth-form-disclosure",
+      "status": "PASS",
+      "priorAttempt": {
+        "name": "growth-form-disclosure",
+        "status": "FAIL",
+        "error": "Control unreachable by native scrolling: Save development plan"
+      }
+    },
+    {
+      "name": "company-qualified-private-route",
+      "status": "PASS",
+      "priorAttempt": {
+        "name": "company-qualified-private-route",
+        "status": "FAIL",
+        "error": "Native control not found: Message"
+      }
+    }
+  ],
+  "coverage": {
+    "expected": [
+      "task-navigation-back",
+      "task-keyboard",
+      "private-message-keyboard-send",
+      "growth-form-disclosure",
+      "knowledge-form-disclosure",
+      "more-search-navigation-back",
+      "large-font-work",
+      "large-font-workload",
+      "large-font-more",
+      "large-font-chat",
+      "company-qualified-private-route"
+    ],
+    "actual": [
+      "task-navigation-back",
+      "task-keyboard",
+      "private-message-keyboard-send",
+      "knowledge-form-disclosure",
+      "more-search-navigation-back",
+      "large-font-work",
+      "large-font-workload",
+      "large-font-more",
+      "large-font-chat",
+      "growth-form-disclosure",
+      "company-qualified-private-route"
+    ],
+    "complete": true
+  },
+  "summary": {
+    "passed": 11,
+    "failed": 0
+  },
+  "status": "PASS"
+}

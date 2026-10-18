@@ -1,0 +1,91 @@
+{
+  "capturedUtc": "2026-10-18T19:59:36.109828+00:00",
+  "baselineCommit": "206df7ce8bf674d901c376e3016faf4fcdc50cf5",
+  "status": "PASS_WITH_LIMITATIONS",
+  "qualification": "Bounded local lab acceptance only. Browser iPhone profiles are not native iOS. Scoped native retries retain prior failures. Original manual QA and provider/device gates unchanged.",
+  "groups": {
+    "components": {
+      "artifact": "browser-result.json",
+      "status": "PASS",
+      "summary": {
+        "passed": 134,
+        "failed": 0,
+        "errors": 0,
+        "external": 0
+      }
+    },
+    "actualWebAPI": {
+      "artifact": "web-api-result.json",
+      "status": "PASS",
+      "summary": {
+        "passed": 30,
+        "failed": 0,
+        "errors": 0,
+        "external": 0
+      }
+    },
+    "nativeAndroidScreens": {
+      "artifact": "native-result.json",
+      "status": "PASS",
+      "summary": {
+        "passed": 19,
+        "failed": 0
+      }
+    },
+    "nativeAndroidInteractions": {
+      "artifact": "native-interaction-result.json",
+      "status": "PASS",
+      "summary": {
+        "passed": 11,
+        "failed": 0
+      }
+    },
+    "postFixChatBrowser": {
+      "artifact": "browser-chat-result.json",
+      "status": "PASS",
+      "summary": {
+        "passed": 8,
+        "failed": 0,
+        "errors": 0,
+        "external": 0
+      }
+    }
+  },
+  "quality": {
+    "mobileFiles": 81,
+    "mobileTests": 515,
+    "mobileStatus": "PASS",
+    "durationSeconds": 63.97,
+    "typecheck": "PASS",
+    "lint": "PASS",
+    "nativeJSExports": ["android", "ios"],
+    "driverAccountingTests": 6
+  },
+  "fixed": [
+    "Workload timezone initialization before company data",
+    "Android composer Send covered by keyboard due to coordinate mismatch"
+  ],
+  "openObservedBehavior": [
+    {
+      "id": "MOBILE-LAB-RESUME-01",
+      "status": "OPEN_UNQUALIFIED",
+      "description": "Development sheet disappeared during an external-deeplink/refresh flow; normal in-app More \u2192 Development form flow passed. No permission guard weakened; exact root cause and cold/resume/deeplink acceptance remain unverified.",
+      "evidence": "regressions/android-growth-interrupted-after-external-link.png",
+      "likelyInvestigation": [
+        "mobile/src/GrowthScreen.tsx GrowthHome key",
+        "mobile/src/Workspace.tsx foreground/reauthorization",
+        "mobile/src/app/_layout.tsx native route readiness"
+      ]
+    }
+  ],
+  "notRun": [
+    "native iOS/physical iPhone",
+    "physical Android and other API/device sizes",
+    "VoiceOver/TalkBack",
+    "real custom calls/push/background delivery",
+    "hardware safe areas and OS sharing",
+    "signed distribution",
+    "performance/load",
+    "original224/M1phone15/supplemental39 manual procedures"
+  ]
+}
