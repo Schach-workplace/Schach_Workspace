@@ -199,7 +199,9 @@ try {
   if (
     errors.length ||
     external.length ||
-    results.some((r) => r.layout.documentWidth > r.width + 1)
+    results.some(
+      (r) => r.layout.documentWidth > r.width + 1 || r.layout.overflow.length,
+    )
   )
     process.exitCode = 1;
 } finally {

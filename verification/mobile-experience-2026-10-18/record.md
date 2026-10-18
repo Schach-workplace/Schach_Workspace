@@ -27,3 +27,7 @@ Current layout evidence:12 scenarios,320/390/430 widths, no runtime errors/exter
 Only owned fictional preview5186PID3935968/session57339 remains during review and will be stopped afterward. Observed pre-integration:8080/8081/9080/5174 not listening, unrelated Encore9400PID2489241 left alone. Two stashes and existing worktrees preserved. No production operation, real login or owner account change. Independent review and branch publication are pending at this source checkpoint.
 
 Tooling correction before publication: Vite emitted an unignored .vite dependency cache into the preview folder. Formatting identified generated JS, and the unpublished source checkpoint accidentally included it. The cache is now explicitly ignored and removed from the unpublished commit; only preview source/evidence is intended for publication. No product source or test result changed.
+
+## Independent review disposition
+
+Fresh-context read-only review: no Critical/Important findings; ready-to-merge source verdict. Two Minor verification findings fixed and confirmed by the same reviewer: screenshot exit now checks element overflow as well as document width; rapid-submit test now calls the captured handler twice before render. A removed-guard mutation produced two requests and RED; exact product source restored,7login tests GREEN. Fresh typecheck/lint PASS;12layout cases pass under tightened capture. All9 product hashes still match the full472-test/export source. See review.md for scope/exclusions.

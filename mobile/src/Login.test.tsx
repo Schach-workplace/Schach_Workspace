@@ -8,6 +8,7 @@ const env = vi.hoisted(() => ({
   endpoint: "",
   error: "",
   setError: vi.fn(),
+  actions: new Map<string, () => void>(),
 }));
 vi.mock("./Workspace", () => ({
   useWorkspace: () => ({
@@ -27,8 +28,10 @@ vi.mock("./client", () => ({
 }));
 vi.mock("./ConnectUI", () => ({
   ui: {},
-  Action: ({ title, onPress, disabled }: any) =>
-    createElement("button", { onClick: onPress, disabled }, title),
+  Action: ({ title, onPress, disabled }: any) => {
+    env.actions.set(title, onPress);
+    return createElement("button", { onClick: onPress, disabled }, title);
+  },
 }));
 vi.mock("react-native-safe-area-context", () => ({
   SafeAreaView: ({ children }: any) => createElement("main", {}, children),
@@ -68,6 +71,7 @@ beforeEach(() => {
   Object.assign(globalThis, { IS_REACT_ACT_ENVIRONMENT: true });
   env.signIn.mockReset().mockResolvedValue(undefined);
   env.setError.mockReset();
+  env.actions.clear();
   env.error = "";
   env.endpoint = "";
   vi.stubGlobal("__DEV__", false);
@@ -198,7 +202,12 @@ it("keeps one pending sign-in and clears secrets after the original MFA/recovery
     ["Recovery code", "fictional-recovery"],
   ])
     await fill(c, label, value);
-  await press("Sign in");
+  const submit = env.actions.get("Sign in")!;
+  await act(async () => {
+    submit();
+    submit();
+  });
+  expect(env.signIn).toHaveBeenCalledOnce();
   expect(env.signIn).toHaveBeenCalledWith(
     "https://work.schachengineers.com",
     "fictional@example.invalid",
