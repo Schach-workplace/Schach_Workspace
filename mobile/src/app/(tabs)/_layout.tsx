@@ -2,6 +2,7 @@ import { Redirect, Tabs } from "expo-router";
 import { ActivityIndicator, Text, type ColorValue } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useWorkspace } from "../../Workspace";
+import { colors } from "../../mobileTheme";
 import { tabBadge, unreadNotificationCount } from "../../tabBadges";
 // Text glyphs (forced to text presentation with U+FE0E) follow the tab tint
 // without adding an icon dependency.
@@ -48,7 +49,18 @@ export default function Layout() {
   return (
     <Tabs
       key={w.session.user.id + ":" + w.company + ":" + w.policyEpoch}
-      screenOptions={{ headerShown: false, tabBarHideOnKeyboard: true }}
+      screenOptions={{
+        headerShown: false,
+        tabBarHideOnKeyboard: true,
+        tabBarActiveTintColor: colors.accent,
+        tabBarInactiveTintColor: colors.secondary,
+        tabBarStyle: {
+          backgroundColor: colors.surface,
+          borderTopColor: colors.border,
+        },
+        tabBarLabelStyle: { fontSize: 12, fontWeight: "600" },
+        tabBarItemStyle: { minHeight: 48 },
+      }}
     >
       <Tabs.Screen
         name="chats"

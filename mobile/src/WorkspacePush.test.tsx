@@ -81,6 +81,23 @@ vi.mock("react-native", () => ({
       },
       title,
     ),
+  Pressable: ({
+    children,
+    onPress,
+    disabled,
+    accessibilityLabel,
+    accessibilityState,
+  }: any) =>
+    createElement(
+      "button",
+      {
+        onClick: onPress,
+        disabled,
+        "aria-label": accessibilityLabel,
+        "aria-selected": accessibilityState?.selected,
+      },
+      children,
+    ),
   ScrollView: ({ children }: any) => createElement("div", {}, children),
 }));
 let w: ReturnType<typeof useWorkspace>;

@@ -56,14 +56,14 @@ M2–M9 each receives its own detailed implementation plan before code. This doc
 
 ## Task 2: Comfortable sign-in and consistent tabs
 
-**Files:** create `mobile/src/LoginFrame.tsx`; modify `mobile/src/app/login.tsx`, `mobile/src/Login.test.tsx`, `mobile/src/app/(tabs)/_layout.tsx`; create `mobile/src/TabAppearance.test.tsx` as needed.
+**Files:** create `mobile/src/LoginFrame.tsx`; modify `mobile/src/app/login.tsx`, `mobile/src/Login.test.tsx`, `mobile/src/app/(tabs)/_layout.tsx`; create `mobile/src/LoginFrame.test.tsx`.
 
 **Interfaces:** `LoginFrame({children})` supplies safe-area keyboard-aware scroll and neutral heading. Existing signIn(server,email,password,code,recovery) stays authoritative. Existing tab names and access-remount key are retained; visual options use Task1 tokens.
 
-- [ ] Test visible labels, keyboard-safe scroll settings, password visibility, autofill hints, exactly one pending submission, error then retry, correct MFA/recovery arguments, secret clearing on success and unchanged configured-server/development behavior.
-- [ ] Run `npx vitest run src/Login.test.tsx src/TabAppearance.test.tsx --maxWorkers=2 --pool=threads`; observe new assertions fail.
-- [ ] Implement the frame, labeled fields and pending guard. Keep MFA/recovery available, preserve error handling and configured origin. Style tabs without fixed height; keep badges and accessibility labels.
-- [ ] Rerun focused tests and existing Expo Go startup/push tests. Commit after checks.
+- [x] Test visible labels, keyboard-safe scroll settings, password visibility, autofill hints, exactly one pending submission, error then retry, correct MFA/recovery arguments, secret clearing on success and unchanged configured-server/development behavior.
+- [x] Run `npx vitest run src/Login.test.tsx src/LoginFrame.test.tsx --maxWorkers=2 --pool=threads`; observe new assertions fail.
+- [x] Implement the frame, labeled fields and pending guard. Keep MFA/recovery available, preserve error handling and configured origin. Style tabs without fixed height; keep badges and accessibility labels.
+- [x] Rerun focused tests and existing Expo Go startup/push tests. Commit after checks.
 
 ## Task 3: Findable modules and visual verification
 

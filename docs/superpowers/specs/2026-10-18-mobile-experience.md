@@ -34,7 +34,7 @@ Implement the shared mobile foundation, sign-in, company chrome, tab appearance 
 
 ### Sign-in contract
 
-Use a safe-area, keyboard-aware scrolling layout, visible Email/Password/Authenticator code/Recovery code labels, password visibility control and platform autofill metadata. MFA fields remain available, with their existing server semantics. Configured production server remains visible and noneditable; only development retains the server override. Server validation, session restoration and successful-secret clearing stay in the existing handler. Prevent duplicate in-flight submissions. Do not persist credentials or add telemetry containing input values.
+Use a safe-area, keyboard-aware scrolling layout, visible Email/Password/Authenticator code/Recovery code labels, password visibility control and platform autofill metadata. MFA fields remain available behind an explicit "Use authenticator or recovery code" action, with their existing server semantics. They stay visible once opened and both alternatives remain usable. Configured production server remains visible and noneditable; only development retains the server override. Server validation, session restoration and successful-secret clearing stay in the existing handler. Prevent duplicate in-flight submissions. Do not persist credentials or add telemetry containing input values.
 
 ### Company frame contract
 
