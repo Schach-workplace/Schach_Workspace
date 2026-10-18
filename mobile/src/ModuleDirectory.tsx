@@ -11,6 +11,8 @@ export type ModulePath =
   | "/workload"
   | "/planning"
   | "/goals"
+  | "/growth"
+  | "/knowledge"
   | "/reports"
   | "/finance"
   | "/requests"
@@ -23,6 +25,18 @@ interface Entry {
   group: string;
 }
 const workEntries: Entry[] = [
+  {
+    title: "Knowledge",
+    description: "Reviewed guidance, lessons and selected-source citations",
+    path: "/knowledge",
+    group: "Learn & grow",
+  },
+  {
+    title: "Development",
+    description: "Career competencies, learning plans and mentor feedback",
+    path: "/growth",
+    group: "Learn & grow",
+  },
   {
     title: "Overview",
     description: "Company delivery and work needing attention",

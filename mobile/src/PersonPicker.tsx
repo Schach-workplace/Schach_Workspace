@@ -7,6 +7,7 @@ export default function PersonPicker({
   value,
   excludeIds = [],
   allowNone = false,
+  includeViewers = false,
   onChange,
   label = "Person",
   disabled = false,
@@ -17,6 +18,7 @@ export default function PersonPicker({
   value: string;
   excludeIds?: string[];
   allowNone?: boolean;
+  includeViewers?: boolean;
   onChange: (id: string) => void;
   label?: string;
   disabled?: boolean;
@@ -25,7 +27,9 @@ export default function PersonPicker({
 }) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
-  const available = authorized ? selectablePeople(people, excludeIds) : [];
+  const available = authorized
+    ? selectablePeople(people, excludeIds, "", includeViewers)
+    : [];
   const selected = available.find((p) => p.id === value);
   const valid = !!selected;
   const invalidate = useEffectEvent(() => onChange(""));
@@ -67,7 +71,11 @@ export default function PersonPicker({
             />
           )}
           <FlatList
-            data={authorized ? selectablePeople(people, excludeIds, query) : []}
+            data={
+              authorized
+                ? selectablePeople(people, excludeIds, query, includeViewers)
+                : []
+            }
             keyExtractor={(p) => p.id}
             keyboardShouldPersistTaps="handled"
             ListEmptyComponent={<Text>No authorized people match.</Text>}

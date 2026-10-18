@@ -1,3 +1,4 @@
+import { ScreenHeading, mobileUI } from "./MobileUI";
 import PeopleMembershipEditor from "./PeopleMembershipEditor";
 import { useState } from "react";
 import { Text, View } from "react-native";
@@ -17,16 +18,19 @@ export default function PeopleScreen({ userId }: { userId?: string }) {
   const current = w.foreground && !!w.work;
   return (
     <Page>
-      <Text accessibilityRole="header">People</Text>
+      <ScreenHeading
+        title="People"
+        description="Company directory and access"
+      />
       {current && (
         <>
           {userId ? (
             person ? (
               <>
-                <Text>
+                <Text style={mobileUI.sectionTitle}>
                   {person.name} · {person.role}
                 </Text>
-                <Text>
+                <Text style={mobileUI.secondary}>
                   {person.email} · {person.title}
                 </Text>
                 {admin && (
@@ -104,7 +108,7 @@ export default function PeopleScreen({ userId }: { userId?: string }) {
                     .includes(search.toLowerCase()),
                 )
                 .map((p) => (
-                  <View key={p.id}>
+                  <View key={p.id} style={mobileUI.surface}>
                     <Action
                       title={
                         p.name +

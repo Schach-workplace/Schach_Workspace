@@ -1,3 +1,4 @@
+import { ScreenHeading, mobileUI } from "./MobileUI";
 import IntelligenceLauncher from "./IntelligenceLauncher";
 import { useState } from "react";
 import { FlatList, Text, View } from "react-native";
@@ -129,7 +130,10 @@ export default function PlanningScreen() {
             }}
           >
             <Action title="‹ Back" onPress={() => router.back()} />
-            <Text style={ui.title}>Planning authorized work</Text>
+            <ScreenHeading
+              title="Planning authorized work"
+              description="Inspect capacity, then review a selected schedule."
+            />
             <IntelligenceLauncher
               label="Explain selected planning facts"
               operation="report_explanation"
@@ -226,7 +230,7 @@ export default function PlanningScreen() {
                   )}
                 </View>
                 {view.weeks.map((week) => (
-                  <View key={week.from} style={{ gap: 8 }}>
+                  <View key={week.from} style={mobileUI.surface}>
                     <Text style={ui.title}>
                       {week.from} – {week.to}
                     </Text>
@@ -237,7 +241,7 @@ export default function PlanningScreen() {
                       Visible effort: {week.remainingHours} h
                     </Text>
                     {week.people.map((p) => (
-                      <View key={p.id}>
+                      <View key={p.id} style={mobileUI.recordBody}>
                         <Text>
                           {p.name} · Recorded capacity {p.recordedCapacity} h ·
                           Remaining {p.remainingHours} h ·{" "}
@@ -267,7 +271,7 @@ export default function PlanningScreen() {
                 ))}
                 {warnings.ready &&
                   warnings.data?.warnings.map((warning, i) => (
-                    <View key={i}>
+                    <View key={i} style={mobileUI.surface}>
                       <Text>{warning.description}</Text>
                       <Action
                         title="Inspect warning work"
@@ -284,11 +288,15 @@ export default function PlanningScreen() {
                 {summary.error ?? "Checking current planning sources…"}
               </Text>
             )}
-            {drill && <Text style={ui.title}>Authorized task drill</Text>}
+            {drill && (
+              <Text accessibilityRole="header" style={mobileUI.sectionTitle}>
+                Authorized task drill
+              </Text>
+            )}
           </View>
         }
         renderItem={({ item: t }) => (
-          <View style={{ gap: 8, paddingVertical: 12 }}>
+          <View style={mobileUI.surface}>
             <Action
               title={t.title}
               onPress={() =>

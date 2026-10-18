@@ -196,6 +196,10 @@ export function useExecutionRead<T>(path: string, enabled = true, body?: unknown
       user,
       path.startsWith('/reports/') ? path.split('/rows')[0] : path,
     );
+    const knowledge = path.match(/^\/knowledge\/([^/?]+)$/);
+    if (knowledge) clearFormPrefix(company, user, '$knowledge:' + knowledge[1] + ':');
+    const growth = path.match(/^\/growth\/plans\/([^/?]+)$/);
+    if (growth) clearFormPrefix(company, user, '$growth:' + growth[1] + ':');
     const goal = path.match(/^\/goals\/([^/?]+)$/);
     if (goal)
       for (const prefix of [

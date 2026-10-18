@@ -125,6 +125,20 @@ export function useExecutionRead<T>(
               w.session?.user.id ?? "",
               path.includes("/evidence-preview?") ? path : path.split("?")[0],
             );
+          const knowledge = path.match(/^\/knowledge\/([^/?]+)$/);
+          if (knowledge)
+            clearFormPrefix(
+              w.company,
+              w.session?.user.id ?? "",
+              "$knowledge:" + knowledge[1] + ":",
+            );
+          const growth = path.match(/^\/growth\/plans\/([^/?]+)$/);
+          if (growth)
+            clearFormPrefix(
+              w.company,
+              w.session?.user.id ?? "",
+              "$growth:" + growth[1] + ":",
+            );
           const goal = path.match(/^\/goals\/([^/?]+)$/);
           if (goal)
             for (const prefix of [

@@ -1,5 +1,12 @@
+import { ScreenHeading, mobileUI } from "./MobileUI";
 import { useRef, useState, useEffect } from "react";
-import { Pressable, RefreshControl, ScrollView, Text, View } from "react-native";
+import {
+  Pressable,
+  RefreshControl,
+  ScrollView,
+  Text,
+  View,
+} from "react-native";
 import { router } from "expo-router";
 import { Page, useWorkspace } from "./Workspace";
 import { ui } from "./ConnectUI";
@@ -45,7 +52,7 @@ export default function OverviewScreen() {
       );
     if (!overviewAvailable(source.me.role))
       return (
-        <View style={ui.section}>
+        <View style={mobileUI.surface}>
           <Text style={ui.body}>
             The company overview is available to leadership roles. Your own
             commitments are in Work.
@@ -62,7 +69,10 @@ export default function OverviewScreen() {
           {v.cards.map((c) => (
             <View
               key={c.title}
-              style={[ui.bubble, { minWidth: 150, flexGrow: 1 }]}
+              style={[
+                ui.bubble,
+                { minWidth: 0, flexBasis: 150, flexGrow: 1, maxWidth: "100%" },
+              ]}
               accessible
               accessibilityLabel={`${c.title}: ${c.value}. ${c.detail}`}
             >
@@ -72,8 +82,10 @@ export default function OverviewScreen() {
             </View>
           ))}
         </View>
-        <View style={ui.section}>
-          <Text style={ui.name}>Needs attention</Text>
+        <View style={mobileUI.surface}>
+          <Text accessibilityRole="header" style={mobileUI.sectionTitle}>
+            Needs attention
+          </Text>
           <Text style={ui.subtitle}>
             {v.attention.length} distinct tasks need a decision, support or a
             new plan.
@@ -83,7 +95,7 @@ export default function OverviewScreen() {
               key={t.id}
               accessibilityRole="button"
               accessibilityLabel={`Open task ${t.title}`}
-              style={ui.conversation}
+              style={mobileUI.record}
               onPress={() =>
                 router.push({
                   pathname: "/task/[id]",
@@ -104,8 +116,10 @@ export default function OverviewScreen() {
             <Text style={ui.subtitle}>Nothing needs attention right now.</Text>
           )}
         </View>
-        <View style={ui.section}>
-          <Text style={ui.name}>Delivery pulse</Text>
+        <View style={mobileUI.surface}>
+          <Text accessibilityRole="header" style={mobileUI.sectionTitle}>
+            Delivery pulse
+          </Text>
           <Text style={ui.subtitle}>Accepted work · last 7 days</Text>
           {v.pulse.map((d) => (
             <View
@@ -127,10 +141,12 @@ export default function OverviewScreen() {
             </View>
           ))}
         </View>
-        <View style={ui.section}>
-          <Text style={ui.name}>Across departments</Text>
+        <View style={mobileUI.surface}>
+          <Text accessibilityRole="header" style={mobileUI.sectionTitle}>
+            Across departments
+          </Text>
           {v.departments.map((d) => (
-            <View key={d.id} style={ui.conversation}>
+            <View key={d.id} style={mobileUI.record}>
               <View style={{ flex: 1 }}>
                 <Text style={ui.body}>{d.name}</Text>
                 <Text style={ui.metadata}>
@@ -144,10 +160,12 @@ export default function OverviewScreen() {
             <Text style={ui.subtitle}>No departments are visible yet.</Text>
           )}
         </View>
-        <View style={ui.section}>
-          <Text style={ui.name}>Project health</Text>
+        <View style={mobileUI.surface}>
+          <Text accessibilityRole="header" style={mobileUI.sectionTitle}>
+            Project health
+          </Text>
           {v.projects.map((p) => (
-            <View key={p.id} style={ui.conversation}>
+            <View key={p.id} style={mobileUI.record}>
               <View style={{ flex: 1 }}>
                 <Text style={ui.body}>{p.name}</Text>
                 <Text style={ui.metadata}>
@@ -162,10 +180,12 @@ export default function OverviewScreen() {
             <Text style={ui.subtitle}>No active projects.</Text>
           )}
         </View>
-        <View style={ui.section}>
-          <Text style={ui.name}>Latest activity</Text>
+        <View style={mobileUI.surface}>
+          <Text accessibilityRole="header" style={mobileUI.sectionTitle}>
+            Latest activity
+          </Text>
           {v.activities.map((a) => (
-            <View key={a.id} style={ui.conversation}>
+            <View key={a.id} style={mobileUI.record}>
               <View style={{ flex: 1 }}>
                 <Text style={ui.body}>
                   {person(a.userId)} {a.action.replace(/_/g, " ")}
@@ -184,14 +204,10 @@ export default function OverviewScreen() {
   };
   return (
     <Page scroll={false}>
-      <View style={ui.header}>
-        <View style={{ flexShrink: 1 }}>
-          <Text style={ui.title}>Overview</Text>
-          <Text style={ui.subtitle}>
-            Read-only · current role and company scope
-          </Text>
-        </View>
-      </View>
+      <ScreenHeading
+        title="Overview"
+        description="Read-only · current role and company scope"
+      />
       {!!error && (
         <Text style={ui.error} accessibilityRole="alert">
           {error}

@@ -45,6 +45,7 @@ vi.mock("./ConnectUI", () => ({
     createElement("section", { "aria-label": title }, children),
 }));
 vi.mock("react-native", () => ({
+  StyleSheet: { create: (value: unknown) => value },
   Platform: { OS: "android" },
   FlatList: ({ data, renderItem }: any) =>
     createElement("div", {}, ...data.map((item: any) => renderItem({ item }))),

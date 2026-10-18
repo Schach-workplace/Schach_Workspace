@@ -217,3 +217,6 @@ The ten [dependency-ordered roadmap milestones](docs/superpowers/plans/2026-10-1
 [Open the team QA guide](docs/qa/README.md): 224 proposed scenarios, guides for all modules, editable workflow diagrams, a searchable offline guide, Excel/CSV execution templates and a printable workflow PDF. Every manual case starts NOT_RUN; use the isolated fictional test environment and role matrix before testing. Historical automated evidence remains separate in docs/VERIFICATION.md.
 
 The next mobile-first improvement cycle is tracked in [the detailed plan](docs/superpowers/plans/2026-10-18-mobile-experience.md), with [native component layout evidence and device checks](verification/mobile-experience-2026-10-18/README.md).
+
+
+The [premium continuation plan](docs/superpowers/plans/2026-10-18-premium-mobile-execution.md) adds shared native presentation, engineering/office/field Development plans, reviewed Knowledge with literal citations, and explicitly reviewed local ICS/CSV/Markdown exports. See [verification and remaining device gates](verification/mobile-premium-2026-10-18/record.md) and the [39-case supplemental QA guide](docs/qa/PREMIUM_MOBILE_GROWTH.md). New backend features require a coordinated release with migrations60–61; an already-deployed website does not imply those routes have been released.

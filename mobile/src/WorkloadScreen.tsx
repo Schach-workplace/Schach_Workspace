@@ -1,3 +1,4 @@
+import { ScreenHeading, mobileUI } from "./MobileUI";
 import { useState } from "react";
 import { RefreshControl, ScrollView, Text, View } from "react-native";
 import { Page, useWorkspace } from "./Workspace";
@@ -33,9 +34,7 @@ const utilization = (u: number | null) =>
 export default function WorkloadScreen() {
   const w = useWorkspace();
   const zone = w.work?.company.timezone ?? "UTC";
-  const [from, setFrom] = useState(() =>
-    weekOf(companyDate(new Date(), zone)),
-  );
+  const [from, setFrom] = useState(() => weekOf(companyDate(new Date(), zone)));
   const [weeks, setWeeks] = useState(2);
   const [pulled, setPulled] = useState(false);
   // Filters belong to one company/user/policy scope; any change resets them.
@@ -67,7 +66,7 @@ export default function WorkloadScreen() {
   const content = () => {
     if (summary.denied)
       return (
-        <View style={ui.section}>
+        <View style={mobileUI.surface}>
           <Text style={ui.error} accessibilityRole="alert">
             {"Access denied: your current role cannot view workload for this scope. " +
               (summary.error ?? "")}
@@ -76,7 +75,7 @@ export default function WorkloadScreen() {
       );
     if (summary.error)
       return (
-        <View style={ui.section}>
+        <View style={mobileUI.surface}>
           <Text style={ui.error} accessibilityRole="alert">
             {summary.error}
           </Text>
@@ -102,8 +101,8 @@ export default function WorkloadScreen() {
           {`${view.coverage.visibleTasks} visible tasks · ${hours(view.coverage.uniqueSelectedRemainingHours)} remaining · ${view.coverage.undated} undated · ${view.coverage.recordedZeroEstimate} without estimate · ${view.coverage.missingOwner} without owner`}
         </Text>
         {view.weeks.map((week) => (
-          <View key={week.from} style={ui.section}>
-            <Text style={ui.name}>
+          <View key={week.from} style={mobileUI.surface}>
+            <Text accessibilityRole="header" style={mobileUI.sectionTitle}>
               {`Week ${week.selectedFrom} – ${week.selectedTo}${week.partial ? " (partial)" : ""}`}
             </Text>
             <Text style={ui.subtitle}>
@@ -112,7 +111,7 @@ export default function WorkloadScreen() {
             {week.people.map((p) => (
               <View
                 key={p.id}
-                style={ui.conversation}
+                style={mobileUI.record}
                 accessible
                 accessibilityLabel={`${p.name}: ${hours(p.remainingHours)} remaining, ${utilization(p.utilization)}`}
               >
@@ -143,14 +142,10 @@ export default function WorkloadScreen() {
   };
   return (
     <Page scroll={false}>
-      <View style={ui.header}>
-        <View style={{ flexShrink: 1 }}>
-          <Text style={ui.title}>Workload</Text>
-          <Text style={ui.subtitle}>
-            {`Read-only · ${from} – ${to}`}
-          </Text>
-        </View>
-      </View>
+      <ScreenHeading
+        title="Workload"
+        description={`Read-only · ${from} – ${to}`}
+      />
       <View style={ui.row}>
         <Action title="Previous" onPress={() => setFrom(shiftDate(from, -7))} />
         <Action

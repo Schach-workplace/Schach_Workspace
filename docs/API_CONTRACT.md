@@ -219,3 +219,24 @@ Structured recipient/reviewer choices use current company membership, active pri
 Explicit definition creation, update, and schedule saves validate every selected recipient's current active, nonsuspended company membership and distinct IDs. Runtime generation, scheduled occurrences, output reads, and delivery independently authorize each actual recipient; another configured recipient's departure or suspension does not disable healthy recipients. The departed or suspended recipient receives no new output or ready-link access. Definition revision, explicit recipient removal, schedule version, artifact expiry, owner eligibility, and complete included-source authorization still invalidate the affected outputs.
 
 Ready report delivery creates a recipient-bound, current-membership-epoch Inbox item available through the ordinary `/attention` list. The link contains only company/job IDs and is projected only while its ready artifact and full report sources remain authorized. Report-ready items cannot be routed or escalated to another person.
+
+
+## Development, Knowledge and reviewed file exports (18 October 2026)
+
+These routes require the matching backend release and migrations60–61; existing deployed web availability does not prove these endpoints are deployed. All paths below are relative to `/api/companies/{companyId}` and require current authenticated membership. Types live in `shared/growth/types.ts` and `shared/knowledge/types.ts`. Career roles never change permission roles.
+
+| Method/path | Contract and authority |
+| --- | --- |
+| GET `/growth/catalog` | Engineering, office and field templates; competencies, career roles and learning suggestions. Suggestions establish no attainment. |
+| GET `/growth/plans`, GET `/growth/plans/{id}` | Current employee owner or named active mentor only; leadership has no additional access. List uses limit/cursor and current visible/version basis. Detail includes plan, immutable reviews, canEdit/canReview. |
+| POST `/growth/plans`, PATCH `/growth/plans/{id}` | Self-owned non-viewer create; owner-only edit. retryKey; PATCH expectedVersion. Narrative evidence is deliberately authored; no private-chat/task ingestion. Mentor must be a distinct active company non-viewer. |
+| POST `/growth/plans/{id}/reviews` | Current named independent mentor, expectedVersion/retryKey, feedback and nextStep. Immutable review increments the plan version; no rating, promotion, task acceptance or goal observation. |
+| GET `/knowledge`, GET `/knowledge/{id}` | Query/pilot and cursor pages. Draft/archived: owner/reviewer only. Published: current selected readers or company audience, with current source/reviewer and company-local review date. |
+| POST `/knowledge`, PATCH `/knowledge/{id}` | Owner-authored draft/archive, title/body/pilot/reviewerId/audience/readerIds/reviewDueDate; retryKey and expectedVersion for edit. Editing a published source resets publication review. |
+| POST `/knowledge/{id}/review` | **Singular review.** Distinct current reviewer submits publish/return, reason, expectedVersion/retryKey. No direct author publication. |
+| POST `/knowledge/answers` | Read-only {articleIds,question};1–8 distinct current published sources, question≤1000 characters. Whole selection denied if any source is unavailable. Literal text matching returns bounded excerpts/versioned citations or abstention. No model/network/provider/action. |
+| POST `/finance/expense-export` | Read-only {expenses:[{id,expectedVersion}]} with1–100 distinct sources and strict single JSON object≤32KiB. Current finance/source authorization and every version checked atomically; any stale source409 or denied source rejects the whole export. Returns rows with amountMinor as an exact decimal integer **string**. No approval/payment/event. |
+
+Development/Knowledge mutations use existing canonical retry machinery: frozen original company/target/key/body; stale new writes409; replay never republishes or recreates. Current authority precedes replay. Mentor/audience changes participate in the company permission epoch so scoped caches/drafts are invalidated. A cursor is not an enduring permission.
+
+Client file adapters are local exports, not provider synchronization: RFC5545 .ics for the explicitly reviewed authorized date range; exact-minor CSV for selected current expenses; plain-text Markdown guidance. Exports re-read current sources and compare reviewed versions before download/share. Calendar timed instants are UTC with no invented date conversion; non-zero subsecond loss is refused. ICS text escaping/UTF8 folding and CSV quoting/formula-prefix protection apply. Users explicitly confirm fields and that independent file copies cannot be recalled. No recipients, private messages, receipts or automatic sends are added.

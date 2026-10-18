@@ -1,3 +1,5 @@
+import CalendarExport from "./CalendarExport";
+import { ScreenHeading, mobileUI } from "./MobileUI";
 import { useState } from "react";
 import { FlatList, RefreshControl, Text, View } from "react-native";
 import { router } from "expo-router";
@@ -15,6 +17,7 @@ import {
 export default function DeadlineAgenda() {
   const w = useWorkspace();
   const zone = w.work?.company.timezone || "Asia/Kolkata";
+  const [exporting, setExporting] = useState(false);
   const [from, setFrom] = useState(() => companyDate(new Date(), zone));
   const to = shiftDate(from, AGENDA_DAYS - 1);
   const agenda = useExecutionRead<AgendaView>(agendaPath(from, to));
@@ -33,7 +36,7 @@ export default function DeadlineAgenda() {
     <Page scroll={false}>
       <View style={ui.row}>
         <Action title="‹ Back" onPress={() => router.back()} />
-        <Text style={ui.title}>Deadline agenda</Text>
+        <ScreenHeading title="Deadline agenda" />
       </View>
       <Text style={ui.subtitle}>
         Open authorized work · {from} to {to} · {zone}
@@ -52,10 +55,29 @@ export default function DeadlineAgenda() {
           onPress={() => setFrom((d) => shiftDate(d, AGENDA_DAYS))}
         />
       </View>
-      {agenda.loading && <Text>Loading current deadlines…</Text>}
-      {!!agenda.error && (
-        <Text accessibilityRole="alert">{agenda.error}</Text>
+      <Action
+        title="Export calendar"
+        disabled={!complete}
+        onPress={() => setExporting(true)}
+      />
+      {exporting && (
+        <CalendarExport
+          key={
+            w.company +
+            ":" +
+            w.session?.user.id +
+            ":" +
+            w.policyEpoch +
+            ":" +
+            from
+          }
+          from={from}
+          to={to}
+          onClose={() => setExporting(false)}
+        />
       )}
+      {agenda.loading && <Text>Loading current deadlines…</Text>}
+      {!!agenda.error && <Text accessibilityRole="alert">{agenda.error}</Text>}
       {agenda.ready && !complete && (
         <Text accessibilityRole="alert">
           The calendar is incomplete. Retry before relying on it.
@@ -74,8 +96,8 @@ export default function DeadlineAgenda() {
           />
         }
         renderItem={({ item: g }) => (
-          <View style={{ paddingVertical: 10, gap: 6 }}>
-            <Text style={ui.name}>
+          <View style={mobileUI.surface}>
+            <Text accessibilityRole="header" style={mobileUI.sectionTitle}>
               {day(g.date)} · {g.rows.length}{" "}
               {g.rows.length === 1 ? "deadline" : "deadlines"}
             </Text>

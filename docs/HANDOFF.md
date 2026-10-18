@@ -261,3 +261,53 @@ Task1 adds shared theme,48x48 actions/52-height inputs and a presentational Work
 **Final M1 publication:** reviewed/source checkpoint642b176 was fast-forwarded into clean main, tested on main (70files472tests PASS66.04s), and atomically non-force pushed to main and improve/workspace-improvements. Subsequent metadata carries the same nine product hashes; use live Git for latest HEAD. Both stashes/worktrees preserved. Own fictional preview5186 stopped through its own terminal; no app8080/8081 listener was started/reset. Unrelated Encore9400PID2489241 left untouched. GitHub push reported4existing dependency alerts (2high,2moderate); no new audit/clearance. Physical15additional and224existing cases remain NOT_RUN.
 
 **Exact next action:** read the M2 brief in the current plan, inspect WorkScreen/TaskDetailScreen/TaskCollaboration/AttentionInbox/DeadlinePicker and capture current fictional task/review flows. Write M2's scoped executable plan, then improve Work/Inbox priorities, task hierarchy, labeled progressive forms and error/unknown retry states with the original handlers. Keep frozen attempts, source/company authority, independent decisions and original timed deadlines. Execute the new physical checklist when the owner has supported phones; native keyboard/tabs/providers are still unqualified. Continue UI work before M7growth; no server/bootstrap/provider or deferred-policy change. The mobile app can be started locally through mobile/npm run start:go; no Metro is left running by this task.
+
+## 16. Premium mobile continuation — 18 October 2026
+
+This section is the current checkpoint; earlier sections are historical. Source started at `8b0f2c052d0469f3f22ab18283aca1c37413e941` in the existing `improve/workspace-improvements` worktree. The owner requested the remaining mobile-first roadmap, all three engineering/office/field pilots, and the nine UI design skills. The skills are installed from pinned upstream commit `0874a27`; [provenance](../verification/mobile-premium-2026-10-18/skills.json). Existing Expo SDK 57, permanent app identity, packages and lockfiles remain unchanged.
+
+### Implemented and verified locally
+
+- Shared native headings, cards, selectable horizontal filters, readable empty/error states and scrolling headers across Work, task detail, Inbox, Connect, Finance, Reports, Overview, Projects, Calendar, Workload, Planning, Goals, People and Account. Work Focus uses recorded status/owner/deadline facts, not employee scoring.
+- Development plans for all three pilots, with career-role catalogs, employee-owned objectives, learning actions, authored evidence and independent mentor feedback. Career roles grant no application permissions. Current owner/mentor authorization has no leadership bypass.
+- Knowledge drafts, independent publication, explicit company/selected readers, civil review dates and current-source versioned citations/abstention. Retrieval is literal text matching, not semantic AI or an action executor. No private conversation/task ingestion or external model.
+- Reviewed local calendar ICS, exact-minor expense CSV and guidance Markdown exports. Explicit fields/audience/copy consent, fresh authority/version checks and lifecycle guards precede output. No automatic third-party sends, payment, approval or external synchronization.
+- Mirrored migrations 60/61, source contracts, operational/security notes and [39 supplemental manual scenarios with three flows](qa/PREMIUM_MOBILE_GROWTH.md). The existing 224-case pack is preserved.
+
+Changed files are located through [AI_FILE_INDEX.json](AI_FILE_INDEX.json) and the [94-entry source/test hash manifest](../verification/mobile-premium-2026-10-18/source-hashes.json). Domain files are `backend/platform/development*`, `knowledge*`, `finance_export*`; shared types/adapters under `shared/growth`, `shared/knowledge`, `shared/integrations`; web `GrowthHub`, `KnowledgeHub`, `CalendarExport`, `ExpenseExport`; native `MobileUI`, `GrowthScreen`, `KnowledgeScreen`, `CalendarExport`, `FinanceExport`, `ReviewedFileExport`, `shareDocument` and the existing module screens. The [execution plan](superpowers/plans/2026-10-18-premium-mobile-execution.md) and [verification record](../verification/mobile-premium-2026-10-18/record.md) contain the scope and acceptance boundaries.
+
+### Evidence and corrected failures
+
+| Check | Observed result |
+| --- | --- |
+| Mobile | 81 files / 509 tests PASS, 68.50s; typecheck and lint PASS |
+| Web | 89 files / 430 tests PASS, 8.98s; typecheck, API/demo builds PASS |
+| Offline preview | 14 checks PASS; demo chunk-size/VM warnings retained |
+| Native JavaScript | Android and iOS Hermes exports PASS, 34 assets; no signed/device claim |
+| SQLite | 426 top-level PASS, 35 SKIP; 593 passes including subcases, 150.121s |
+| PostgreSQL 18 | 449 top-level PASS, 12 SKIP; 632 passes including subcases, 558.946s |
+| Migrations | 61 contiguous up/down pairs mirror; numbered upgrade/checksum-repeat tests pass |
+| Actual isolated Encore | Nine gates PASS: compiler/migrations, 91 TCP API assertions, private cron refusal, socket revocation, bootstrap and restart/session/message persistence, generated-wrapper SDK check |
+| Layout | 52 actual RN Web fictional cases, no recorded errors/external requests/uncontained overflow/heading clipping; root inspected PNGs |
+| Browser/API | Six actual compiled-web checks PASS: all three growth pilots, independent publication, current citation and 390px fit |
+| Source hygiene | 87 changed source/harness files pass Prettier; 166 changed Markdown links resolve; diff check PASS |
+
+Optional provider/load and database-inapplicable skips are explicit in the record. The full historical frontend formatting baseline is not declared clean. No new dependency audit/security clearance is claimed.
+
+Independent mobile/backend reviews preceded a whole-branch integration review. Three Important client findings were fixed: plural Knowledge review route, calendar consent revival after backgrounding, and persisted full drafts adopting newer source versions. Regression tests exercised RED/GREEN, real RAM-hook remounts, frozen original retry context and deliberate latest-source reset. One scoped re-review passes with no remaining blockers. [Review](../verification/mobile-premium-2026-10-18/review.md); [corrections](../verification/mobile-premium-2026-10-18/review-fixes.md).
+
+Other failures are classified in the record: actual enlarged-text overlap/raw native empty-text rendering fixed; invalid synthetic expense fixture replaced with real authorized API fixtures; cross-company Knowledge test strengthened with eligible actors in both companies and a tenant-predicate mutation RED; socket/cache restrictions resolved with owned execution/cache. Old Encore harness requests silently updated goal values and expected old cookies after role changes. The corrected harness asserts independent observations and session revocation; application controls were not weakened. Direct SDK-only compilation without generated wrappers fails `RunScheduled`, while actual Encore generation/runtime passes. New browser harness setup/selector/remount failures are separate from the final six passing workflows.
+
+### Environment and cleanup
+
+Own fictional QA server 9091 (PID 1470171, session 97339) and RN Web preview 5187 (PID 1385335, session 35398) were stopped through their own Ctrl+C after evidence. No app/Metro 8080/8081 is left running by this task. Own PostgreSQL container `schach-premium-20261018-verify` on 19418 was stopped after the full pass. Encore harnesses removed only their owned namespaces' database containers. Unrelated Encore 9400 PID 2489241 and pre-existing sqldb containers were preserved; recheck live identities before future actions.
+
+Private fictional QA data remains at `~/.local/state/schach-qa/run-CDusVBsc`; logs/artifacts are under `/tmp/workspace-premium-*`. Do not treat those as retained production data. Both stashes and other worktrees remain. No production deployment/login/business mutation, account/provider reconfiguration, paid build, generated native edit or private credential-file access was performed.
+
+### Remaining acceptance and exact next action
+
+All 224 original manual cases, 15 M1 phone cases and 39 supplemental cases remain **NOT_RUN**. Execute physical iOS/Android font scale, keyboard, screen reader, back/safe-area, OS sharing and performance checks. Signed distribution and actual configured calls/push remain separate gates; Expo Go deliberately lacks this app's native calls/push. Coordinated server/client release with SQL 60–61 requires separate authorization and compatibility verification against the already-deployed web. Do not bootstrap/reseed production as a phone-start shortcut.
+
+All three learning pilots still need employee/mentor evaluation. Growth cursor-basis and Knowledge filtering inspect collections and need representative load measurements. External connectors require named providers, source-of-truth, secure credential ownership and outbox/reconciliation decisions. Profile editing, offboarding reason, the 85% threshold and staged finance policy remain deferred. A known UX refinement is preserving the scoped Goals subtab through publication's permission-epoch reauthorization; currently it returns to Measured outcomes, and reopening Knowledge shows the committed source. Preserve revocation when improving navigation.
+
+Exact next action at this checkpoint: commit reviewed source/evidence, fast-forward clean main and non-force push both branches under standing owner authorization, then record actual commit/remote identity. Preserve both stashes and worktrees. Owner phone testing can use `cd mobile && npm run start:go`; new backend modules require the matching separately released API. Do not repeat completed implementation tasks or treat source completion as device/production acceptance.

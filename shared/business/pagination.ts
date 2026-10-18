@@ -7,6 +7,8 @@ export function mergeExecutionPage(
     "items",
     "jobs",
     "goals",
+    "plans",
+    "articles",
     "measurements",
     "tasks",
     "options",

@@ -9,11 +9,12 @@ export function selectablePeople(
   people: SelectablePerson[],
   excludeIds: string[] = [],
   query = "",
+  includeViewers = false,
 ) {
   return people.filter(
     (p) =>
       p.active &&
-      p.role !== "viewer" &&
+      (includeViewers || p.role !== "viewer") &&
       !excludeIds.includes(p.id) &&
       p.name.toLocaleLowerCase().includes(query.trim().toLocaleLowerCase()),
   );

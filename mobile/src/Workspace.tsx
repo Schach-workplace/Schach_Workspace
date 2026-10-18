@@ -1,3 +1,4 @@
+import { colors, metrics, typeScale } from "./mobileTheme";
 import {
   clearAllBusinessAttempts,
   filterBusinessAttemptsForGraph,
@@ -733,17 +734,21 @@ export function Page({
 }
 
 export const styles = StyleSheet.create({
-  root: { flex: 1, padding: 18, backgroundColor: "#faf9f6" },
+  root: { flex: 1, padding: metrics.gutter, backgroundColor: colors.canvas },
   heading: {
-    fontSize: 22,
+    fontSize: typeScale.heading,
     fontWeight: "700",
-    color: "#29251e",
-    marginVertical: 14,
+    color: colors.text,
+    marginVertical: 16,
   },
   input: {
     borderWidth: 1,
-    borderColor: "#ddd5c8",
-    borderRadius: 8,
+    borderColor: colors.border,
+    borderRadius: metrics.radius,
+    minHeight: metrics.input,
+    fontSize: typeScale.body,
+    color: colors.text,
+    backgroundColor: colors.surface,
     padding: 12,
     marginVertical: 8,
   },
@@ -757,9 +762,11 @@ export const styles = StyleSheet.create({
     marginBottom: 8,
   },
   message: {
-    backgroundColor: "#fff",
-    padding: 14,
-    borderRadius: 8,
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.border,
+    padding: 16,
+    borderRadius: 16,
     marginVertical: 5,
   },
 });

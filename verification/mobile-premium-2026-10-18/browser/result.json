@@ -1,0 +1,17 @@
+{
+  "status": "passed",
+  "scope": "Actual current compiled web and standalone API on fictional disposable data; no physical/native/provider claim",
+  "checks": [
+    "Actual API creates engineering, office and field plans plus independently reviewable Knowledge draft",
+    "Compiled Growth UI renders all three real API pilot plans",
+    "Author cannot access independent publication action",
+    "Actual compiled independent reviewer publishes through singular canonical /review route",
+    "Real current published source produces the correct versioned literal citation",
+    "Compiled new web journeys fit390px without document overflow"
+  ],
+  "errors": [],
+  "external": [],
+  "notes": [
+    "Publication permission-epoch refresh returns Goals to Measured outcomes; the flow deliberately reopens Knowledge after checking the committed current source."
+  ]
+}

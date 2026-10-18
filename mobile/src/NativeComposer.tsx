@@ -160,7 +160,7 @@ export default function NativeComposer({
           onPress={() => void send()}
         />
       </View>
-      {error && (
+      {!!error && (
         <Text accessibilityRole="alert" style={ui.error}>
           {error}
           {pending && " Your message is waiting for confirmation."}

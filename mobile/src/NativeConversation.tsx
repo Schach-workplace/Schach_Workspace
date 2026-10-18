@@ -1,3 +1,4 @@
+import { ConversationTools, connectStyle } from "./ConnectPresentation";
 import IntelligenceLauncher from "./IntelligenceLauncher";
 import KeyboardFrame from "./KeyboardFrame";
 import {
@@ -605,7 +606,7 @@ export default function NativeConversation() {
       />
 
       <KeyboardFrame>
-        <View style={ui.header}>
+        <View style={[ui.header, connectStyle.chatHeader]}>
           <Action title="‹ Back" onPress={() => router.back()} />
           <View style={{ flex: 1 }}>
             <Text style={ui.title} numberOfLines={1}>
@@ -623,17 +624,15 @@ export default function NativeConversation() {
           )}
         </View>
         {conversation && (
-          <View style={[ui.row, { justifyContent: "space-between" }]}>
-            <Action title="Search & pins" onPress={() => setSearch(true)} />
-            <Action title="Records" onPress={() => setRecords(true)} />
-            <Action
-              title="Audio / video"
-              disabled={disabled}
-              onPress={() => router.push("/(tabs)/calls")}
-            />
-          </View>
+          <ConversationTools
+            disabled={disabled}
+            onSearch={() => setSearch(true)}
+            onRecords={() => setRecords(true)}
+            onMentions={() => setShowMentions(true)}
+            onCall={() => router.push("/(tabs)/calls")}
+          />
         )}
-        {error && (
+        {!!error && (
           <Text accessibilityRole="alert" style={ui.error}>
             {error}
           </Text>
@@ -645,7 +644,7 @@ export default function NativeConversation() {
             data={messages}
             keyExtractor={(m) => m.id}
             style={ui.history}
-            contentContainerStyle={ui.historyBody}
+            contentContainerStyle={[ui.historyBody, connectStyle.history]}
             maintainVisibleContentPosition={{ minIndexForVisible: 0 }}
             keyboardShouldPersistTaps="handled"
             viewabilityConfig={{ itemVisiblePercentThreshold: 60 }}
@@ -753,7 +752,7 @@ export default function NativeConversation() {
                       })}
                     </Text>
                   )}
-                  <View style={ui.message}>
+                  <View style={[ui.message, connectStyle.message]}>
                     <PersonAvatar name={name} />
                     <View style={{ flex: 1 }}>
                       <View style={ui.row}>
@@ -775,9 +774,13 @@ export default function NativeConversation() {
                         }
                         disabled={m.removed}
                         onLongPress={() => setActions(m)}
-                        style={[ui.bubble, own && ui.ownBubble]}
+                        style={[
+                          ui.bubble,
+                          connectStyle.bubble,
+                          own && ui.ownBubble,
+                        ]}
                       >
-                        {m.replyToId && (
+                        {!!m.replyToId && (
                           <Text style={ui.subtitle}>↳ In a thread</Text>
                         )}
                         <Text style={ui.body}>
@@ -829,46 +832,46 @@ export default function NativeConversation() {
             }}
           />
         )}
-        <Action
-          title="Mentions in loaded history"
-          onPress={() => setShowMentions(true)}
-        />
 
-        {conversation &&
-          (disabled ? (
-            <Text style={[ui.subtitle, ui.composer]}>
-              {conversation.archived
-                ? "This conversation is archived. Reopen it in details to send messages."
-                : "You have read-only access."}
-            </Text>
-          ) : (
-            <NativeComposer
-              scope={draftScope}
-              disabled={disabled}
-              reply={reply}
-              onClearReply={() => chooseReply(null)}
-              members={members}
-              names={names}
-              canMentionAll={["owner", "moderator"].includes(mine?.role ?? "")}
-              onMedia={() => setMedia(true)}
-              onSend={async (input) => {
-                const ownership = owner.current;
-                const result = await client.request<{ message: Message }>(
-                  root + "/messages",
-                  "POST",
-                  input,
-                );
-                if (
-                  !current() ||
-                  ownership !== owner.current ||
-                  result.message.conversationId !== w.selected
-                )
-                  return;
-                await engine.current?.merge([result.message]);
-                await history();
-              }}
-            />
-          ))}
+        <View style={connectStyle.composer}>
+          {conversation &&
+            (disabled ? (
+              <Text style={[ui.subtitle, ui.composer]}>
+                {conversation.archived
+                  ? "This conversation is archived. Reopen it in details to send messages."
+                  : "You have read-only access."}
+              </Text>
+            ) : (
+              <NativeComposer
+                scope={draftScope}
+                disabled={disabled}
+                reply={reply}
+                onClearReply={() => chooseReply(null)}
+                members={members}
+                names={names}
+                canMentionAll={["owner", "moderator"].includes(
+                  mine?.role ?? "",
+                )}
+                onMedia={() => setMedia(true)}
+                onSend={async (input) => {
+                  const ownership = owner.current;
+                  const result = await client.request<{ message: Message }>(
+                    root + "/messages",
+                    "POST",
+                    input,
+                  );
+                  if (
+                    !current() ||
+                    ownership !== owner.current ||
+                    result.message.conversationId !== w.selected
+                  )
+                    return;
+                  await engine.current?.merge([result.message]);
+                  await history();
+                }}
+              />
+            ))}
+        </View>
       </KeyboardFrame>
       {showMentions && (
         <Sheet

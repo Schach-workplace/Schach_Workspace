@@ -22,6 +22,7 @@ vi.mock("./ConnectUI", () => ({
     createElement("button", { onClick: onPress }, title),
 }));
 vi.mock("react-native", () => ({
+  StyleSheet: { create: (value: unknown) => value },
   View: ({ children }: any) => createElement("div", {}, children),
   Text: ({ children }: any) => createElement("span", {}, children),
   TextInput: ({ accessibilityLabel }: any) =>

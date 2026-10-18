@@ -188,9 +188,10 @@ def run_flow(args, bridge, checks):
     check('Membership in one company grants no access to another')
     due = (dt.date.today() + dt.timedelta(days=14)).isoformat()
     pid = founder.call('POST', root + '/projects', {'name': 'Verification delivery', 'description': 'Integration flow', 'ownerId': identity['head']['id'], 'departmentId': did, 'dueDate': due, 'color': '#F97316', 'status': 'active'}, expected=200)[0]['id']
-    goal = founder.call('POST', root + '/goals', {'name': 'Delivery acceptance', 'ownerId': identity['head']['id'], 'departmentId': did, 'description': 'Measurable outcome', 'baseline': 0, 'target': 100, 'current': 20, 'unit': '%', 'dueDate': due, 'taskIds': []}, expected=200)[0]['id']
-    founder.call('PATCH', root + '/goals/' + goal, {'current': 30})
-    check('Project and measurable goal creation and updates persist')
+    measured_at = dt.datetime.now(dt.timezone.utc).isoformat()
+    goal = founder.call('POST', root + '/goals', {'retryKey': str(uuid.uuid4()), 'name': 'Delivery acceptance', 'ownerId': identity['head']['id'], 'departmentId': did, 'description': 'Measurable outcome', 'baseline': 0, 'target': 100, 'initialMeasurement': {'value': 20, 'effectiveAt': measured_at, 'reason': 'Independent fictional baseline observation'}, 'unit': '%', 'dueDate': due, 'taskIds': []}, expected=200)[0]['id']
+    measured = founder.call('POST', root + '/goals/' + goal + '/measurements', {'retryKey': str(uuid.uuid4()), 'expectedVersion': 1, 'value': 30, 'effectiveAt': dt.datetime.now(dt.timezone.utc).isoformat(), 'reason': 'Independent fictional follow-up observation'}, expected=200)[0]
+    check('Project and independent measured goal observations persist', measured['goalVersion'] == 2 and measured['current'] == 30)
     template = {'title': 'Acceptance evidence flow', 'description': 'A clear outcome', 'ownerId': identity['member']['id'], 'reviewerId': identity['head']['id'], 'departmentId': did, 'projectId': pid, 'priority': 'high', 'status': 'todo', 'dueDate': due, 'startDate': '', 'estimatedHours': 8, 'tags': ['QA'], 'checklist': [{'id': 'criterion', 'text': 'Evidence is verified', 'done': False}], 'dependencies': [], 'collaborators': [], 'recurrence': 'none', 'requiresApproval': True, 'parentId': ''}
     tid = head.call('POST', root + '/tasks', template, expected=200)[0]['id']
     check('Department head can assign a task to a junior')

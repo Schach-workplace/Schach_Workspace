@@ -1,0 +1,22 @@
+{
+  "status": "passed",
+  "checkedAt": "2026-10-18T17:42:25.045Z",
+  "checks": 14,
+  "details": [
+    "No external script or stylesheet is needed",
+    "CSS assets are embedded",
+    "Exactly one compiled application is embedded",
+    "Compiled application mounts the leadership overview",
+    "Brand images are embedded",
+    "Compiled finance view renders company totals and department budgets",
+    "Department drilldown shows its real allocation and expense records",
+    "Both demonstration companies are available",
+    "Company switch and task navigation use the second company data",
+    "Second company financial records stay separate in the compiled preview",
+    "Offline Connect states its actual shared-server requirement",
+    "Offline assistance preserves the explicit local-provider-unavailable manual flow",
+    "No external module or fetch was attempted, including caught failures",
+    "No application error was reported during the compiled flow"
+  ],
+  "scope": "Compiled self-contained artifact executed in Happy DOM. Asset completeness and DOM interactions only; no real browser, device, screenshot or layout verification."
+}

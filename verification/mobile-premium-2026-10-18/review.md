@@ -1,0 +1,53 @@
+# Final independent source review
+
+Reviewed the uncommitted workspace-improvements source against baseline `8b0f2c0`, execution plan Tasks 1–8 and HANDOFF section 16. Read the prior mobile, growth backend, knowledge backend (including final corrected tenant-test verdict), finance adapter and web integration reports. Primary new review scope: native/web Growth, Knowledge and exports; shared attempt routing/pagination; execution denial purges; source-version and lifecycle integration. No production/live database, Encore, provider or external/private API access; no product edits or commits.
+
+**Spec verdict: CHANGES REQUIRED for client integration.** The implemented scope preserves the inspected authority boundaries, but the three Important findings below prevent final client acceptance.
+
+**Quality verdict: CHANGES REQUIRED. Critical: none found. Important: three.** These findings were sent to the parent during review; this report records the inspected state before correction. No style-only expansion is requested.
+
+## Important findings
+
+1. **Web guidance publication uses a nonexistent route.** `frontend/src/components/KnowledgeHub.tsx:539` submits `POST /knowledge/{id}/reviews`. The actual server route is singular `/review` (`backend/platform/knowledge.go:20`), matching the shared canonical registry and native client. Both publication and return-for-revision fail with 404 from the web UI. The current web test at `KnowledgeHub.test.tsx:173` asserts the same incorrect plural route, so the green mocked test does not establish integration. Change the client/test to the canonical singular route and assert canonical target recognition along with the concrete request.
+
+2. **Calendar export permits an old async request/consent to revive after backgrounding.** `frontend/src/components/CalendarExport.tsx:59` only registers mount cleanup; `:79–89` checks current visibility but no monotonic visibility generation. Start a deferred download while visible, transition hidden→visible, and resolve the original response: the same company/user/readBasis/path makes `valid()` true again and a file is downloaded. The direct `executionRead` request is outside React Query cancellation. `reviewed` also survives backgrounding, allowing old consent to become active again when the same data reloads. The guard omits `authorizing`, so an ongoing workspace authorization refresh is not independently treated as invalidation. Add a visibility/authorization generation guard and consent reset, and verify deferred hidden→visible output suppression plus fresh consent after restoration. ExpenseExport already demonstrates a suitable lifecycle pattern.
+
+3. **Persisted edit/review drafts are not bound to their original source version.** Native Growth stores a full draft in RAM (`mobile/src/GrowthScreen.tsx:297`) but sends `expectedVersion: plan.version` from the current detail prop (`:335`). Web Growth does the same (`frontend/src/components/GrowthHub.tsx:237,264`); native Knowledge does the same (`mobile/src/KnowledgeScreen.tsx:405`). Web Knowledge's `useState(initialArticle)` (`frontend/src/components/KnowledgeHub.tsx:320`) protects only the current mount, while its authored draft survives remounts. Reproduction: start editing version 1, change one field, close the editor, update another source field in another session to version 2, reopen and save. The persisted version-1 full draft is now submitted with expectedVersion 2, bypassing the intended stale-write 409 and overwriting the other session's update. The 15-second detail polling also unmounts editors while `q.ready` is false and can cause the same adoption. Bind source version to the authored draft when writing begins, retain it across remounts, and only rebase via an explicit latest-source review/reset. Retire matching draft and basis on confirmed success so old edits do not reappear in later forms.
+
+   The same context binding is needed for review drafts and retry disclosure: native Knowledge review derives source/audience from the current article; Growth mentor review derives expectedVersion from the current plan. Web Knowledge Review calls `useExecutionInput(form, 'reviewSource', initialArticle)` at `:530` but never calls its setter. The hook explicitly persists only setter writes, so that source is not retained across remounts. Freeze the original reviewed source/audience with the draft, and show it when retrying an unknown original submission. Add regressions using the real RAM draft hooks: edit/review v1 → unmount → load v2 → remount; confirm stale content cannot be submitted as v2 and unknown retries retain original version, target and audience. Current component tests either omit these transitions or mock persistence with plain useState.
+
+## Other integration conclusions
+
+- No new Critical authorization bypass was found. Current company/actor reads, explicit publication, participant-only growth access and independent knowledge reviewer decisions remain backend-authorized. Career-role strings are not permission-role updates.
+- Shared canonical registration correctly includes growth create/edit/review and Knowledge create/edit/singular review. Plan/article arrays are included in execution pagination merging. New source denial handlers clear matching scoped authored forms and attempts.
+- Expense export uses current scoped reads for every selected ID and expected version; no partial selection is returned. Exact integer money strings survive serialization without mixed-currency arithmetic. CSV quoting/formula controls and calendar escaping/folding are implemented in shared adapters. Timed deadlines use absolute instants and fractional-second loss is refused.
+- Native exports re-read current source data, compare source/version signatures and use the execution guard before handing the file to the share helper. The helper rechecks the guard after asynchronous share availability, uses a private random cache directory and cleans it afterward. No third-party send or provider synchronization was added.
+- The reviewed mobile presentation changes preserve existing explicit source/business actions, company-qualified navigation, exact money/deadline labels and list scrolling. The earlier independent mobile report supplies additional focused preservation evidence; this review did not reinterpret screenshots as native-device proof.
+
+## Independently observed verification
+
+- Web focused GrowthHub, KnowledgeHub, CalendarExport, ExpenseExport: **4 files / 26 tests PASS** (2026-10-18, 525 ms).
+- Mobile focused GrowthScreen, KnowledgeScreen, ReviewedFileExport, CalendarExport, calendar serialization and expense CSV: **6 files / 16 tests PASS** (385 ms).
+- `git diff --check`: **PASS**.
+
+These successful tests do not cover the reported failures. Route mismatch and draft/lifecycle findings follow directly from inspected source and hook behavior; no claim of running newly added reproductions is made. Parent owns the final broad SQLite/PostgreSQL, web/mobile type/lint/full tests, exports and screenshot recapture. Their progress reports are not independently rerun evidence in this report. Physical iOS/Android, provider and signed-distribution checks remain NOT_RUN unless separately observed.
+
+## One scoped final re-review — corrections accepted
+
+Re-reviewed only the three Important findings above, the corresponding source/tests described in `final-fixes.md`, and the two specifically requested verification-harness corrections. This disposition supersedes the initial outstanding-findings verdict.
+
+**Scoped spec verdict: PASS. Scoped quality verdict: PASS. Critical: none; Important: none outstanding; Minor: none added. No remaining blocker from this review.**
+
+1. **Canonical review route resolved.** Web Knowledge now sends `/knowledge/{id}/review`. Both publish and return decisions are exercised; the tests assert the submitted path is accepted by the shared canonical target registry and the old plural path is rejected.
+2. **Calendar lifecycle resolved.** The export owns a monotonic generation invalidated by backgrounding, unmount, owner and authorization changes. Output checks the captured generation, owner, live authorization and visibility. Consent resets on those transitions and source-basis changes. The deferred-response tests explicitly cross hidden→visible and authorizing→restored, reject the old output, then require new consent before a fresh successful download.
+3. **Persisted original source binding resolved.** Native/web Growth and Knowledge edit/review forms store the original source snapshot and authored fields together in one RAM envelope; Growth includes its raw learning text. Writes and submission retain the envelope, expectedVersion comes from that retained source, and unknown retry payload/target/key remain authoritative. Review disclosure uses the original source and audience. Matching envelopes retire via the acknowledged-commit callback before refresh can unmount the form, with a matching retirement after returned success. Explicit discard resets the envelope against the latest authorized detail. Real RAM-hook regressions cover v1 authorship → unmount → v2 detail → remount; native tests additionally exercise real execution/business-attempt hooks, unchanged original retry keys/bodies, successful retirement and explicit v2 reset under a new identity. These tests now cover the original failure mechanism rather than plain-useState persistence substitutes.
+
+The narrow harness corrections align with existing application contracts: `http_flow.py` creates and appends independent goal observations using initialMeasurement and expectedVersion, then checks goalVersion/current; `finance_flow.py` first requires 401 for the invalidated role-change session, authenticates a new session to verify reduced finance scope, and expects 401 from the later revoked membership cookie. Existing `finalizeMembershipConsequences` revokes sessions for membership scope changes. Neither correction loosens application authority or changes production handlers.
+
+Independently rerun on the corrected source:
+
+- Web GrowthHub/KnowledgeHub/CalendarExport: **3 files / 26 tests PASS**, 663 ms.
+- Native GrowthScreen/KnowledgeScreen: **2 files / 12 tests PASS**, 428 ms.
+- `git diff --check`: **PASS**.
+
+The reported full web/mobile suites, type/lint checks, 52 fictional recaptures and nine Encore runtime gates remain parent/implementer evidence; this scoped review does not claim to rerun them. Physical-device, provider and signed-distribution limits remain unchanged. No product edits, commits or additional broad review were performed.

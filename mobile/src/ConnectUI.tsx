@@ -141,6 +141,7 @@ export const ui = StyleSheet.create({
   action: {
     minHeight: metrics.touch,
     minWidth: metrics.touch,
+    flexShrink: 1,
     justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: 13,
@@ -149,6 +150,8 @@ export const ui = StyleSheet.create({
   actionText: {
     fontSize: typeScale.support,
     fontWeight: "600",
+    flexShrink: 1,
+    textAlign: "center",
     color: colors.secondary,
   },
   primary: { backgroundColor: colors.accent },

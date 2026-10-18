@@ -5,8 +5,11 @@ import { expect, it, vi } from "vitest";
 import ConnectList from "./ConnectList";
 function container({ children }: any) {
   for (const child of Children.toArray(children))
-    if ((typeof child === "string" && child !== "") || typeof child === "number")
-      throw Error("Raw native container text: "+JSON.stringify(child));
+    if (
+      (typeof child === "string" && child !== "") ||
+      typeof child === "number"
+    )
+      throw Error("Raw native container text: " + JSON.stringify(child));
   return createElement("div", {}, children);
 }
 vi.mock("./client", () => ({
@@ -14,6 +17,8 @@ vi.mock("./client", () => ({
 }));
 const ws = vi.hoisted(() => ({
   refresh: (() => Promise.resolve()) as () => Promise<void>,
+  conversations: [] as any[],
+  selected: vi.fn(),
   setError: (() => {}) as (message: string) => void,
 }));
 vi.mock("./Workspace", () => ({
@@ -23,7 +28,8 @@ vi.mock("./Workspace", () => ({
     company: "c",
     foreground: true,
     session: { user: { id: "u" } },
-    conversations: [],
+    conversations: ws.conversations,
+    select: ws.selected,
     work: {
       me: { role: "admin" },
       people: [{ id: "v", name: "Sam", active: true, role: "admin" }],
@@ -42,11 +48,34 @@ vi.mock("./ConnectUI", () => ({
 }));
 vi.mock("react-native", () => ({
   View: container,
-  Pressable: container,
+  Pressable: ({ children, onPress, accessibilityLabel }: any) =>
+    createElement(
+      "button",
+      { onClick: onPress, "aria-label": accessibilityLabel },
+      children,
+    ),
   Text: ({ children }: any) => createElement("span", {}, children),
-  TextInput: () => null,
-  FlatList: ({ refreshControl }: any) =>
-    createElement("div", {}, refreshControl),
+  TextInput: ({ accessibilityLabel, value, onChangeText }: any) =>
+    createElement("input", {
+      "aria-label": accessibilityLabel,
+      value,
+      onChange: (e: any) => onChangeText(e.target.value),
+    }),
+  FlatList: ({
+    refreshControl,
+    data,
+    renderItem,
+    ListHeaderComponent,
+    ListFooterComponent,
+  }: any) =>
+    createElement(
+      "div",
+      { "data-list": "conversations" },
+      refreshControl,
+      ListHeaderComponent,
+      ...data.map((item: any) => renderItem({ item })),
+      ListFooterComponent,
+    ),
   RefreshControl: ({ onRefresh, refreshing }: any) =>
     createElement(
       "button",
@@ -129,4 +158,49 @@ it("pull-to-refresh reloads the conversation list through the workspace and surf
   expect(setError).toHaveBeenCalledWith("Company access is unavailable.");
   expect(pull().dataset.refreshing).toBe("false");
   await act(async () => root.unmount());
+});
+
+it("recovers from an empty filter and opens the current company's conversation", async () => {
+  Object.assign(globalThis, { IS_REACT_ACT_ENVIRONMENT: true });
+  ws.conversations = [{ id: "private-dm", kind: "dm", peerId: "v" }];
+  const host = document.createElement("div");
+  const root = createRoot(host);
+  await act(async () => root.render(<ConnectList />));
+  const button = (title: string) =>
+    [...host.querySelectorAll("button")].find((b) => b.textContent === title)!;
+  await act(async () => button("Unread").click());
+  expect(host.textContent).toContain("No matching conversations");
+  expect(host.textContent).toContain(
+    "Try another name or show all conversations.",
+  );
+  await act(async () => button("Clear filters").click());
+  expect(host.textContent).not.toContain("No matching conversations");
+  const dm = host.querySelector(
+    'button[aria-label="Sam"]',
+  )! as HTMLButtonElement;
+  expect(dm).toBeTruthy();
+  await act(async () => dm.click());
+  expect(ws.selected).toHaveBeenLastCalledWith("private-dm");
+  expect(nav.push).toHaveBeenLastCalledWith({
+    pathname: "/chat/[id]",
+    params: { id: "private-dm", company: "c", messageId: undefined },
+  });
+  await act(async () => root.unmount());
+  ws.conversations = [];
+});
+
+it("keeps discovery controls and secondary navigation inside the scrollable conversation list", async () => {
+  Object.assign(globalThis, { IS_REACT_ACT_ENVIRONMENT: true });
+  const host = document.createElement("div"),
+    root = createRoot(host);
+  try {
+    await act(async () => root.render(<ConnectList />));
+    const list = host.querySelector('[data-list="conversations"]')!;
+    expect(
+      list.querySelector('input[aria-label="Filter conversations"]'),
+    ).toBeTruthy();
+    expect(list.textContent).toContain("Search & saved messages");
+  } finally {
+    await act(async () => root.unmount());
+  }
 });

@@ -47,6 +47,7 @@ vi.mock("./ConnectUI", () => ({
     createElement("section", { "aria-label": title }, children),
 }));
 vi.mock("react-native", () => ({
+  StyleSheet: { create: (value: unknown) => value },
   Text: ({ children }: any) => createElement("span", {}, children),
   View: ({ children, style }: any) => createElement("div", { style }, children),
   TextInput: ({

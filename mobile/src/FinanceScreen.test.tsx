@@ -3,6 +3,9 @@ import { act, createElement } from "react";
 import { createRoot } from "react-dom/client";
 import { it, expect, vi } from "vitest";
 import FinanceScreen from "./FinanceScreen";
+vi.mock("./FinanceExport", () => ({
+  default: () => createElement("div", {}, "Reviewed expense export"),
+}));
 const h = vi.hoisted(() => ({
   foreground: true,
   company: "owned-company",
@@ -34,12 +37,36 @@ vi.mock("./FinanceDraftForm", () => ({
 }));
 vi.mock("expo-router", () => ({ router: { push: h.push } }));
 vi.mock("react-native", () => ({
+  StyleSheet: { create: (x: unknown) => x },
+  ScrollView: ({ children }: any) => createElement("div", {}, children),
+  Pressable: ({
+    children,
+    onPress,
+    accessibilityLabel,
+    accessibilityState,
+  }: any) =>
+    createElement(
+      "button",
+      {
+        onClick: onPress,
+        "aria-label": accessibilityLabel,
+        "aria-pressed": accessibilityState?.selected,
+      },
+      children,
+    ),
   View: ({ children }: any) => createElement("div", {}, children),
   Text: ({ children }: any) => createElement("span", {}, children),
-  FlatList: ({ data, renderItem }: any) =>
+  FlatList: ({
+    data,
+    renderItem,
+    ListHeaderComponent,
+    ListEmptyComponent,
+  }: any) =>
     createElement(
       "div",
       {},
+      ListHeaderComponent,
+      !data.length && ListEmptyComponent,
       data.map((item: any) =>
         createElement("div", { key: item.id }, renderItem({ item })),
       ),
@@ -75,4 +102,41 @@ it("keeps real manual finance/exact money and company route, withholds fetched e
   expect(node.textContent).toContain("Checking current finance access");
   await act(async () => root.unmount());
   h.foreground = true;
+});
+
+it("filters visible exact-money records and explains an empty status without any financial mutation", async () => {
+  Object.assign(globalThis, { IS_REACT_ACT_ENVIRONMENT: true });
+  const node = document.createElement("div"),
+    root = createRoot(node);
+  h.push.mockClear();
+  try {
+    await act(async () => root.render(createElement(FinanceScreen)));
+    expect(node.textContent).toContain("1 matching authorized expenses");
+    await act(async () =>
+      [...node.querySelectorAll("button")]
+        .find((b) => b.getAttribute("aria-label") === "paid")!
+        .click(),
+    );
+    expect(node.textContent).not.toContain("₹1,300.50");
+    expect(node.textContent).toContain("No expenses in this view");
+    expect(h.push).not.toHaveBeenCalled();
+    await act(async () =>
+      [...node.querySelectorAll("button")]
+        .find(
+          (b) => b.getAttribute("aria-label") === "All authorized expenses",
+        )!
+        .click(),
+    );
+    await act(async () =>
+      [...node.querySelectorAll("button")]
+        .find((b) => b.getAttribute("aria-label") === "Inspect Human draft")!
+        .click(),
+    );
+    expect(h.push).toHaveBeenLastCalledWith({
+      pathname: "/expense/[id]",
+      params: { id: "e", company: "owned-company" },
+    });
+  } finally {
+    await act(async () => root.unmount());
+  }
 });

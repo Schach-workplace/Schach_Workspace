@@ -1,3 +1,5 @@
+import KnowledgeHub from '../components/KnowledgeHub';
+import GrowthHub from '../components/GrowthHub';
 import IntelligenceLauncher from '../components/IntelligenceLauncher';
 import MeasuredGoals from '../components/MeasuredGoals';
 import { useEffect, useState } from 'react';
@@ -44,7 +46,41 @@ import {
 import { TaskTable } from './Tasks';
 
 export function GoalsPage({ onTask }: { onTask: (id: string) => void }) {
-  return <MeasuredGoals onTask={onTask} />;
+  const [tab, setTab] = useState('outcomes');
+  return (
+    <div>
+      <div className="segmented" role="group" aria-label="Goals and development">
+        <button
+          className={tab === 'outcomes' ? 'active' : ''}
+          aria-pressed={tab === 'outcomes'}
+          onClick={() => setTab('outcomes')}
+        >
+          Measured outcomes
+        </button>
+        <button
+          className={tab === 'growth' ? 'active' : ''}
+          aria-pressed={tab === 'growth'}
+          onClick={() => setTab('growth')}
+        >
+          Development plans
+        </button>
+        <button
+          className={tab === 'knowledge' ? 'active' : ''}
+          aria-pressed={tab === 'knowledge'}
+          onClick={() => setTab('knowledge')}
+        >
+          Knowledge
+        </button>
+      </div>
+      {tab === 'outcomes' ? (
+        <MeasuredGoals onTask={onTask} />
+      ) : tab === 'growth' ? (
+        <GrowthHub />
+      ) : (
+        <KnowledgeHub />
+      )}
+    </div>
+  );
 }
 
 function CurrentReportsPage({ onTask }: { onTask: (id: string) => void }) {

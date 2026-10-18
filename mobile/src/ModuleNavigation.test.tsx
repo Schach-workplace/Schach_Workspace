@@ -82,6 +82,8 @@ it("retains every existing destination and makes calendar/workload findable with
     ["People", "/people"],
     ["Planning", "/planning"],
     ["Goals", "/goals"],
+    ["Development", "/growth"],
+    ["Knowledge", "/knowledge"],
     ["Projects", "/projects"],
     ["Reports", "/reports"],
     ["Requests", "/requests"],

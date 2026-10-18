@@ -1,3 +1,4 @@
+import { Surface, SectionHeading, mobileUI } from "./MobileUI";
 import IntelligenceLauncher from "./IntelligenceLauncher";
 import { NativeImpact, NativeSchedule, NativeTemplates } from "./Execution";
 import { readNativeDetail } from "./readScopes";
@@ -205,18 +206,23 @@ export default function TaskDetailScreen({ id }: { id: string }) {
         }
       />
       <Action title="‹ Back" disabled={busy} onPress={() => router.back()} />
-      {error && <Text accessibilityRole="alert">{error}</Text>}
+      {!!error && <Text accessibilityRole="alert">{error}</Text>}
       {loading || !task ? (
         <Text>
           {loading ? "Checking current task access…" : "Task unavailable."}
         </Text>
       ) : (
         <View>
-          <Text style={ui.title}>{task.title}</Text>
-          <Text>
-            {task.status.replaceAll("_", " ")} · {dateLabel(task)}
-          </Text>
-          <Text>{task.description}</Text>
+          <Surface>
+            <Text style={mobileUI.eyebrow}>Current task</Text>
+            <Text accessibilityRole="header" style={ui.title}>
+              {task.title}
+            </Text>
+            <Text>
+              {task.status.replaceAll("_", " ")} · {dateLabel(task)}
+            </Text>
+            <Text style={ui.body}>{task.description}</Text>
+          </Surface>
           {task.projectId && (
             <Action
               title="Open current project"
@@ -275,6 +281,10 @@ export default function TaskDetailScreen({ id }: { id: string }) {
               )}
             </Sheet>
           )}
+          <SectionHeading
+            title="Commitment and evidence"
+            description="Current status and original promises remain separate."
+          />
           <Text style={ui.subtitle}>
             Original commitment:{" "}
             {task.originalDueAt ||

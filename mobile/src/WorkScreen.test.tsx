@@ -13,7 +13,13 @@ vi.mock("./Execution", () => ({
   NativeSchedule: () => null,
 }));
 vi.mock("./TaskCsv", () => ({
-  default: ({ tasks, onClose }: { tasks: { title: string }[]; onClose: () => void }) =>
+  default: ({
+    tasks,
+    onClose,
+  }: {
+    tasks: { title: string }[];
+    onClose: () => void;
+  }) =>
     createElement(
       "section",
       { "aria-label": "Tasks CSV" },
@@ -64,11 +70,35 @@ vi.mock("./ConnectUI", () => ({
     ),
 }));
 vi.mock("react-native", () => ({
-  FlatList: ({ data, renderItem, refreshControl }: any) =>
+  ScrollView: ({ children }: any) => createElement("div", {}, children),
+  Pressable: ({
+    children,
+    onPress,
+    accessibilityLabel,
+    accessibilityState,
+  }: any) =>
+    createElement(
+      "button",
+      {
+        onClick: onPress,
+        "aria-label": accessibilityLabel,
+        "aria-pressed": accessibilityState?.selected,
+      },
+      children,
+    ),
+  FlatList: ({
+    data,
+    renderItem,
+    refreshControl,
+    ListHeaderComponent,
+    ListEmptyComponent,
+  }: any) =>
     createElement(
       "div",
       {},
       refreshControl,
+      ListHeaderComponent,
+      !data.length && ListEmptyComponent,
       ...data.map((item: any, index: number) => renderItem({ item, index })),
     ),
   RefreshControl: ({ onRefresh, refreshing }: any) =>
@@ -107,7 +137,10 @@ let root: Root, container: HTMLDivElement;
 const click = async (title: string) =>
   act(async () =>
     Array.from(container.querySelectorAll("button"))
-      .find((b) => b.textContent === title)!
+      .find(
+        (b) =>
+          b.textContent === title || b.getAttribute("aria-label") === title,
+      )!
       .click(),
   );
 const fill = async (label: string, value: string) =>
@@ -188,6 +221,7 @@ it("opens Tasks CSV with the currently shown tasks for every role", async () => 
   await act(async () => root.render(createElement(WorkScreen)));
   expect(container.textContent).not.toContain("New task");
   await click("Open");
+  await click("Work tools");
   await click("Tasks CSV");
   expect(
     container.querySelector('section[aria-label="Tasks CSV"]')!.textContent,
@@ -530,9 +564,36 @@ it("pulls the task list to refresh through the workspace task reload", async () 
 it("opens the read-only deadline agenda for the current company", async () => {
   const { router } = await import("expo-router");
   await act(async () => root.render(<WorkScreen />));
+  await click("Work tools");
   await click("Deadline agenda");
   expect(router.push).toHaveBeenCalledWith({
     pathname: "/calendar",
     params: { company: "company" },
   });
+});
+
+it("keeps task content and filters in the virtualized scroll, with tools behind an explicit action", async () => {
+  await act(async () => root.render(createElement(WorkScreen)));
+  expect(container.textContent).toContain("2 matching authorized tasks");
+  expect(container.textContent).not.toContain("Planning authorized work");
+  await click("Work tools");
+  expect(container.textContent).toContain("Planning authorized work");
+  await click("Close");
+  const open = container.querySelector(
+    '[aria-label="Open: Prepare handover"]',
+  ) as HTMLButtonElement;
+  expect(open).toBeTruthy();
+  await act(async () => open.click());
+  const { router } = await import("expo-router");
+  expect(router.push).toHaveBeenLastCalledWith({
+    pathname: "/task/[id]",
+    params: { id: "open", company: "company" },
+  });
+});
+it("explains Focus from recorded facts without granting a review or exposing completed work", async () => {
+  await act(async () => root.render(<WorkScreen />));
+  await click("Focus");
+  expect(container.textContent).toContain("Your open work");
+  expect(container.textContent).toContain("not employee ratings");
+  expect(container.textContent).not.toContain("Finished work");
 });

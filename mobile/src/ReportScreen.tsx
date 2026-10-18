@@ -5,7 +5,15 @@ import { useState } from "react";
 import { FlatList, Text, View } from "react-native";
 import { router } from "expo-router";
 import { Page, useWorkspace } from "./Workspace";
-import { Action, ui } from "./ConnectUI";
+import {
+  ScreenHeading,
+  FilterBar,
+  Surface,
+  RecordCard,
+  EmptyState,
+  mobileUI,
+} from "./MobileUI";
+import { Action } from "./ConnectUI";
 import HistoricalReports from "./HistoricalReports";
 import SavedReports from "./SavedReports";
 export default function ReportScreen({
@@ -20,24 +28,18 @@ export default function ReportScreen({
   const [snapshot, setSnapshot] = useState(id && kind !== "job" ? id : "");
   return (
     <Page scroll={false} safeBottom>
-      <View style={ui.row}>
-        <Action title="‹ Back" onPress={() => router.back()} />
-        <Action
-          title="Current state"
-          selected={basis === "current"}
-          onPress={() => setBasis("current")}
-        />
-        <Action
-          title="Historical reports"
-          selected={basis === "history"}
-          onPress={() => setBasis("history")}
-        />
-        <Action
-          title="Saved reports"
-          selected={basis === "saved"}
-          onPress={() => setBasis("saved")}
-        />
-      </View>
+      <Action title="‹ Back" onPress={() => router.back()} />
+      <ScreenHeading title="Reports" />
+      <FilterBar
+        label="Report basis"
+        value={basis}
+        options={[
+          { value: "current", label: "Current state" },
+          { value: "history", label: "Historical reports" },
+          { value: "saved", label: "Saved reports" },
+        ]}
+        onChange={setBasis}
+      />
       {basis === "history" ? (
         <HistoricalReports
           key={snapshot || id || "new"}
@@ -55,19 +57,31 @@ export default function ReportScreen({
         <FlatList
           data={w.foreground ? (w.work?.tasks ?? []) : []}
           keyExtractor={(t) => t.id}
+          contentContainerStyle={mobileUI.listContent}
+          ListEmptyComponent={
+            <EmptyState
+              title="No currently visible tasks"
+              description="Current access and task changes determine this view."
+            />
+          }
           ListHeaderComponent={
             <View>
+              <Surface>
+                <Text style={mobileUI.sectionTitle}>Current visibility</Text>
+                <Text style={mobileUI.secondary}>
+                  Current-state report · {w.work?.company.timezone} · later task
+                  changes can change these values. {w.work?.tasks.length ?? 0}{" "}
+                  currently authorized tasks.
+                </Text>
+              </Surface>
               <CurrentReportAssistance />
-              <Text>
-                Current-state report · {w.work?.company.timezone} · later task
-                changes can change these values. {w.work?.tasks.length ?? 0}{" "}
-                currently authorized tasks.
-              </Text>
             </View>
           }
           renderItem={({ item: t }) => (
-            <Action
-              title={t.title + " · " + t.status}
+            <RecordCard
+              title={t.title}
+              status={t.status}
+              label={t.title + " · " + t.status}
               onPress={() =>
                 router.push({
                   pathname: "/task/[id]",

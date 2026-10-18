@@ -1,3 +1,4 @@
+import { ScreenHeading, mobileUI } from "./MobileUI";
 import {
   useState,
   useEffect,
@@ -67,154 +68,175 @@ export default function AccountScreen() {
     );
   return (
     <Page>
-      <Text style={styles.heading}>Account</Text>
-      {isRunningInExpoGo() ? (
-        <Text>
-          Push notifications are unavailable in Expo Go. Inbox updates still
-          refresh while Workspace is open.
-        </Text>
-      ) : (
-        <>
-          <Action
-            title="Enable private notification hints"
-            onPress={() =>
-              void w.registerDevice(true).catch((e) => w.setError(e.message))
-            }
-          />
-          <Action
-            title={muted ? "Unmute this company" : "Mute this company"}
-            onPress={() =>
-              void guardedRequest(
-                `/companies/${w.company}/devices/${w.device}/preferences`,
-                "POST",
-                {
-                  muted: !muted,
-                  timezone: w.work?.company.timezone ?? "Asia/Kolkata",
-                  quietStart,
-                  quietEnd,
-                },
-              )
-                .then(() => setMuted((v) => !v))
-                .catch((e) => w.setError(e.message))
-            }
-          />
-          <TextInput
-            style={styles.input}
-            accessibilityLabel="Quiet hours start"
-            placeholder="Quiet hours start HH:MM"
-            value={quietStart}
-            onChangeText={setQuietStart}
-          />
-          <TextInput
-            style={styles.input}
-            accessibilityLabel="Quiet hours end"
-            placeholder="Quiet hours end HH:MM"
-            value={quietEnd}
-            onChangeText={setQuietEnd}
-          />
-        </>
-      )}
-      <Text>
-        Private content is fetched after checking current access and is not
-        retained for offline use. Exported files are independent copies.
-      </Text>
-      <Action
-        title="List my registered devices"
-        onPress={() =>
-          void guardedRequest<{ devices: typeof devices }>("/devices")
-            .then((v) => setDevices(v.devices))
-            .catch((e) => w.setError(e.message))
-        }
+      <ScreenHeading
+        title="Account"
+        description="Notifications, devices and account security"
       />
-      {devices.map((d) => (
-        <View key={d.id}>
+      <View style={mobileUI.surface}>
+        <Text accessibilityRole="header" style={mobileUI.sectionTitle}>
+          Notifications
+        </Text>
+        {isRunningInExpoGo() ? (
           <Text>
-            {d.name} · {d.platform} · {d.active ? "Active" : "Revoked"}
+            Push notifications are unavailable in Expo Go. Inbox updates still
+            refresh while Workspace is open.
           </Text>
-          {d.active && (
+        ) : (
+          <>
             <Action
-              title="Revoke this device session in every company"
+              title="Enable private notification hints"
               onPress={() =>
-                void guardedRequest("/devices/" + d.id + "/revoke", "POST", {})
-                  .then(() => {
-                    if (d.id === w.device) return w.signOut();
-                    setDevices((rows) =>
-                      rows.map((row) =>
-                        row.id === d.id ? { ...row, active: false } : row,
-                      ),
-                    );
+                void w.registerDevice(true).catch((e) => w.setError(e.message))
+              }
+            />
+            <Action
+              title={muted ? "Unmute this company" : "Mute this company"}
+              onPress={() =>
+                void guardedRequest(
+                  `/companies/${w.company}/devices/${w.device}/preferences`,
+                  "POST",
+                  {
+                    muted: !muted,
+                    timezone: w.work?.company.timezone ?? "Asia/Kolkata",
+                    quietStart,
+                    quietEnd,
+                  },
+                )
+                  .then(() => setMuted((v) => !v))
+                  .catch((e) => w.setError(e.message))
+              }
+            />
+            <TextInput
+              style={styles.input}
+              accessibilityLabel="Quiet hours start"
+              placeholder="Quiet hours start HH:MM"
+              value={quietStart}
+              onChangeText={setQuietStart}
+            />
+            <TextInput
+              style={styles.input}
+              accessibilityLabel="Quiet hours end"
+              placeholder="Quiet hours end HH:MM"
+              value={quietEnd}
+              onChangeText={setQuietEnd}
+            />
+          </>
+        )}
+      </View>
+      <View style={mobileUI.surface}>
+        <Text accessibilityRole="header" style={mobileUI.sectionTitle}>
+          Privacy and devices
+        </Text>
+        <Text style={mobileUI.secondary}>
+          Private content is fetched after checking current access and is not
+          retained for offline use. Exported files are independent copies.
+        </Text>
+        <Action
+          title="List my registered devices"
+          onPress={() =>
+            void guardedRequest<{ devices: typeof devices }>("/devices")
+              .then((v) => setDevices(v.devices))
+              .catch((e) => w.setError(e.message))
+          }
+        />
+        {devices.map((d) => (
+          <View key={d.id}>
+            <Text>
+              {d.name} · {d.platform} · {d.active ? "Active" : "Revoked"}
+            </Text>
+            {d.active && (
+              <Action
+                title="Revoke this device session in every company"
+                onPress={() =>
+                  void guardedRequest(
+                    "/devices/" + d.id + "/revoke",
+                    "POST",
+                    {},
+                  )
+                    .then(() => {
+                      if (d.id === w.device) return w.signOut();
+                      setDevices((rows) =>
+                        rows.map((row) =>
+                          row.id === d.id ? { ...row, active: false } : row,
+                        ),
+                      );
+                    })
+                    .catch((e) => w.setError(e.message))
+                }
+              />
+            )}
+          </View>
+        ))}
+      </View>
+      <View style={mobileUI.surface}>
+        <Text accessibilityRole="header" style={mobileUI.sectionTitle}>
+          Authenticator protection
+        </Text>
+        <TextInput
+          style={styles.input}
+          accessibilityLabel="Current password for authenticator"
+          secureTextEntry
+          value={password}
+          onChangeText={setPassword}
+        />
+        <Action
+          title="Set up authenticator"
+          onPress={() =>
+            void guardedRequest<{ secret: string }>("/auth/mfa/setup", "POST", {
+              password,
+            })
+              .then((v) => {
+                setSecret(v.secret);
+                setPassword("");
+              })
+              .catch((e) => w.setError(e.message))
+          }
+        />
+        {!!secret && (
+          <View>
+            <Text selectable>{secret}</Text>
+            <Text>
+              Add this secret to your authenticator, then enter a current code.
+            </Text>
+            <TextInput
+              style={styles.input}
+              accessibilityLabel="Authenticator confirmation code"
+              value={code}
+              onChangeText={setCode}
+            />
+            <Action
+              title="Confirm authenticator"
+              onPress={() =>
+                void guardedRequest<{ recoveryCodes: string[] }>(
+                  "/auth/mfa/confirm",
+                  "POST",
+                  { code },
+                )
+                  .then((v) => {
+                    setRecovery(v.recoveryCodes);
+                    setSecret("");
+                    setCode("");
                   })
                   .catch((e) => w.setError(e.message))
               }
             />
-          )}
-        </View>
-      ))}
-      <Text>Authenticator protection</Text>
-      <TextInput
-        style={styles.input}
-        accessibilityLabel="Current password for authenticator"
-        secureTextEntry
-        value={password}
-        onChangeText={setPassword}
-      />
-      <Action
-        title="Set up authenticator"
-        onPress={() =>
-          void guardedRequest<{ secret: string }>("/auth/mfa/setup", "POST", {
-            password,
-          })
-            .then((v) => {
-              setSecret(v.secret);
-              setPassword("");
-            })
-            .catch((e) => w.setError(e.message))
-        }
-      />
-      {secret && (
-        <View>
-          <Text selectable>{secret}</Text>
-          <Text>
-            Add this secret to your authenticator, then enter a current code.
-          </Text>
-          <TextInput
-            style={styles.input}
-            accessibilityLabel="Authenticator confirmation code"
-            value={code}
-            onChangeText={setCode}
-          />
-          <Action
-            title="Confirm authenticator"
-            onPress={() =>
-              void guardedRequest<{ recoveryCodes: string[] }>(
-                "/auth/mfa/confirm",
-                "POST",
-                { code },
-              )
-                .then((v) => {
-                  setRecovery(v.recoveryCodes);
-                  setSecret("");
-                  setCode("");
-                })
-                .catch((e) => w.setError(e.message))
-            }
-          />
-        </View>
-      )}
-      {recovery.length > 0 && (
-        <View>
-          <Text>Store these single-use recovery codes privately.</Text>
-          {recovery.map((c) => (
-            <Text selectable key={c}>
-              {c}
-            </Text>
-          ))}
-          <Action
-            title="I stored my recovery codes"
-            onPress={() => setRecovery([])}
-          />
-        </View>
-      )}
+          </View>
+        )}
+        {recovery.length > 0 && (
+          <View>
+            <Text>Store these single-use recovery codes privately.</Text>
+            {recovery.map((c) => (
+              <Text selectable key={c}>
+                {c}
+              </Text>
+            ))}
+            <Action
+              title="I stored my recovery codes"
+              onPress={() => setRecovery([])}
+            />
+          </View>
+        )}
+      </View>
       <Action
         title="Sign out"
         onPress={() => void w.signOut().catch((e) => w.setError(e.message))}

@@ -14,7 +14,10 @@ const env = vi.hoisted(() => ({
 }));
 function container({ children, accessibilityRole }: any) {
   for (const child of Children.toArray(children))
-    if ((typeof child === "string" && child !== "") || typeof child === "number")
+    if (
+      (typeof child === "string" && child !== "") ||
+      typeof child === "number"
+    )
       throw Error("Raw native container text: " + JSON.stringify(child));
   return createElement("div", { role: accessibilityRole }, children);
 }
@@ -41,9 +44,14 @@ vi.mock("./ConnectUI", () => ({
     createElement("button", { onClick: onPress }, title),
 }));
 vi.mock("react-native", () => ({
+  StyleSheet: { create: (value: unknown) => value },
   View: container,
   Pressable: ({ children, onPress, accessibilityLabel }: any) =>
-    createElement("button", { onClick: onPress, "aria-label": accessibilityLabel }, children),
+    createElement(
+      "button",
+      { onClick: onPress, "aria-label": accessibilityLabel },
+      children,
+    ),
   Text: ({ children, accessibilityRole }: any) =>
     createElement("span", { role: accessibilityRole }, children),
   ScrollView: ({ children, refreshControl }: any) =>
@@ -78,7 +86,10 @@ async function render(node: any) {
   const click = (label: string) =>
     act(async () =>
       [...host.querySelectorAll("button")]
-        .find((b) => b.textContent === label || b.getAttribute("aria-label") === label)!
+        .find(
+          (b) =>
+            b.textContent === label || b.getAttribute("aria-label") === label,
+        )!
         .click(),
     );
   return { host, root, click };
@@ -105,7 +116,15 @@ it("Overview shows loading, then read-only cards and empty states", async () => 
 });
 it("Overview links attention to task detail and refreshes through the workspace reauthorization", async () => {
   env.work = work("ceo", [
-    { id: "t1", title: "Late drawing", status: "blocked", ownerId: "u", deadlineMode: "all_day", dueDate: "", dueAt: "" },
+    {
+      id: "t1",
+      title: "Late drawing",
+      status: "blocked",
+      ownerId: "u",
+      deadlineMode: "all_day",
+      dueDate: "",
+      dueAt: "",
+    },
   ]);
   env.refresh.mockRejectedValueOnce(Error("Network unavailable"));
   const r = await render(<OverviewScreen />);
@@ -123,7 +142,15 @@ it("Overview links attention to task detail and refreshes through the workspace 
 });
 it("Overview mirrors the browser and withholds the company overview from members", async () => {
   env.work = work("member", [
-    { id: "t1", title: "Hidden", status: "blocked", ownerId: "u", deadlineMode: "all_day", dueDate: "", dueAt: "" },
+    {
+      id: "t1",
+      title: "Hidden",
+      status: "blocked",
+      ownerId: "u",
+      deadlineMode: "all_day",
+      dueDate: "",
+      dueAt: "",
+    },
   ]);
   const r = await render(<OverviewScreen />);
   expect(r.host.textContent).toContain("available to leadership roles");
@@ -132,13 +159,23 @@ it("Overview mirrors the browser and withholds the company overview from members
 });
 it("Workload reads only the planning summary and surfaces a 403 denial", async () => {
   env.work = work("member");
-  env.read = { denied: true, error: "Forbidden", ready: false, loading: false, retry: vi.fn() };
+  env.read = {
+    denied: true,
+    error: "Forbidden",
+    ready: false,
+    loading: false,
+    retry: vi.fn(),
+  };
   const r = await render(<WorkloadScreen />);
-  expect(env.paths.every((p) => p.startsWith("/planning/summary?from="))).toBe(true);
+  expect(env.paths.every((p) => p.startsWith("/planning/summary?from="))).toBe(
+    true,
+  );
   expect(r.host.querySelector('[role="alert"]')!.textContent).toContain(
     "Access denied",
   );
-  expect(r.host.querySelector('[role="alert"]')!.textContent).toContain("Forbidden");
+  expect(r.host.querySelector('[role="alert"]')!.textContent).toContain(
+    "Forbidden",
+  );
   await act(async () => r.root.unmount());
 });
 it("Workload shows loading, error with retry, empty, and data with pull-to-refresh", async () => {
@@ -160,7 +197,16 @@ it("Workload shows loading, error with retry, empty, and data with pull-to-refre
     projectionBasis: "b",
     filters: { from: "", to: "" },
     weeks: [],
-    coverage: { uniqueSelectedRemainingHours: 0, weeklyExposureHours: 0, undated: 0, invalidInterval: 0, recordedZeroEstimate: 0, missingOwner: 0, invalidNumeric: 0, visibleTasks: 0 },
+    coverage: {
+      uniqueSelectedRemainingHours: 0,
+      weeklyExposureHours: 0,
+      undated: 0,
+      invalidInterval: 0,
+      recordedZeroEstimate: 0,
+      missingOwner: 0,
+      invalidNumeric: 0,
+      visibleTasks: 0,
+    },
   };
   env.read = { ready: true, data: empty, retry };
   await act(async () => r.root.render(<WorkloadScreen />));
@@ -170,14 +216,34 @@ it("Workload shows loading, error with retry, empty, and data with pull-to-refre
     retry,
     data: {
       ...empty,
-      coverage: { ...empty.coverage, visibleTasks: 2, uniqueSelectedRemainingHours: 12 },
+      coverage: {
+        ...empty.coverage,
+        visibleTasks: 2,
+        uniqueSelectedRemainingHours: 12,
+      },
       weeks: [
         {
-          from: "2026-10-12", to: "2026-10-18", selectedFrom: "2026-10-12", selectedTo: "2026-10-18",
-          partial: false, remainingHours: 12, positiveCapacityHours: 40, positiveCapacityEffort: 12,
-          utilization: 30, excludedCapacityRows: 0, drill: { category: "scheduled" },
+          from: "2026-10-12",
+          to: "2026-10-18",
+          selectedFrom: "2026-10-12",
+          selectedTo: "2026-10-18",
+          partial: false,
+          remainingHours: 12,
+          positiveCapacityHours: 40,
+          positiveCapacityEffort: 12,
+          utilization: 30,
+          excludedCapacityRows: 0,
+          drill: { category: "scheduled" },
           people: [
-            { id: "u", name: "Una", recordedCapacity: 40, capacityState: "recorded_positive", remainingHours: 12, utilization: 30, drill: { category: "scheduled" } },
+            {
+              id: "u",
+              name: "Una",
+              recordedCapacity: 40,
+              capacityState: "recorded_positive",
+              remainingHours: 12,
+              utilization: 30,
+              drill: { category: "scheduled" },
+            },
           ],
         },
       ],
@@ -185,7 +251,9 @@ it("Workload shows loading, error with retry, empty, and data with pull-to-refre
   };
   await act(async () => r.root.render(<WorkloadScreen />));
   expect(r.host.textContent).toContain("Una");
-  expect(r.host.textContent).toContain("12h remaining · 40h capacity · 30% utilization");
+  expect(r.host.textContent).toContain(
+    "12h remaining · 40h capacity · 30% utilization",
+  );
   await r.click("pull to refresh");
   expect(retry).toHaveBeenCalledTimes(2);
   const before = env.paths.at(-1)!;
@@ -203,7 +271,12 @@ it("Workload builds the same planning summary query as the browser", () => {
     }),
   ).toBe("from=2026-10-12&to=2026-10-25&ownerId=u&departmentId=d1");
   expect(
-    workloadQuery({ from: "2026-10-12", to: "2026-10-25", ownerId: "", departmentId: "" }),
+    workloadQuery({
+      from: "2026-10-12",
+      to: "2026-10-25",
+      ownerId: "",
+      departmentId: "",
+    }),
   ).toBe("from=2026-10-12&to=2026-10-25&ownerId=&departmentId=");
 });
 it("Workload filters by visible owner and department, shows them, clears them and resets on company change", async () => {
@@ -229,7 +302,9 @@ it("Workload filters by visible owner and department, shows them, clears them an
   await r.click("Design");
   expect(last().get("ownerId")).toBe("u");
   expect(last().get("departmentId")).toBe("d1");
-  expect(r.host.textContent).toContain("Filtered: owner Una · department Design");
+  expect(r.host.textContent).toContain(
+    "Filtered: owner Una · department Design",
+  );
   await r.click("Clear filters");
   expect(last().get("ownerId")).toBe("");
   expect(last().get("departmentId")).toBe("");

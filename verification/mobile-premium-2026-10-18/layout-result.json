@@ -1,0 +1,580 @@
+{
+  "qualification": "Actual RN Web components with explicit fictional fixture; CSS enlarged-text proxy, not physical iOS/Android acceptance",
+  "results": [
+    {
+      "name": "work",
+      "width": 320,
+      "layout": {
+        "documentWidth": 320,
+        "bodyWidth": 320,
+        "visibleText": "Workspace\nFictional member\n✓ Fictional North\nFictional South\nWork\nNew task\nYour commitments and authorized team work · Asia/Kolkata\nTask status\nAll\nFocus\nOpen\nAwaiting review\n3 matching authorized tasks\nWork tools\nin progress\nPrepare engineering hand",
+        "overflow": [],
+        "headingClipping": []
+      }
+    },
+    {
+      "name": "work",
+      "width": 390,
+      "layout": {
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "visibleText": "Workspace\nFictional member\n✓ Fictional North\nFictional South\nWork\nNew task\nYour commitments and authorized team work · Asia/Kolkata\nTask status\nAll\nFocus\nOpen\nAwaiting review\n3 matching authorized tasks\nWork tools\nin progress\nPrepare engineering hand",
+        "overflow": [],
+        "headingClipping": []
+      }
+    },
+    {
+      "name": "work",
+      "width": 430,
+      "layout": {
+        "documentWidth": 430,
+        "bodyWidth": 430,
+        "visibleText": "Workspace\nFictional member\n✓ Fictional North\nFictional South\nWork\nNew task\nYour commitments and authorized team work · Asia/Kolkata\nTask status\nAll\nFocus\nOpen\nAwaiting review\n3 matching authorized tasks\nWork tools\nin progress\nPrepare engineering hand",
+        "overflow": [],
+        "headingClipping": []
+      }
+    },
+    {
+      "name": "finance",
+      "width": 320,
+      "layout": {
+        "documentWidth": 320,
+        "bodyWidth": 320,
+        "visibleText": "Workspace\nFictional member\n✓ Fictional North\nFictional South\nFinance\nCreate expense draft\nTrack expenses from draft to payment.\nReceipt extraction, duplicates and statements\nExpense status\nAll authorized expenses\ndraft\nsubmitted\napproved\npaid\nrejecte",
+        "overflow": [],
+        "headingClipping": []
+      }
+    },
+    {
+      "name": "finance",
+      "width": 390,
+      "layout": {
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "visibleText": "Workspace\nFictional member\n✓ Fictional North\nFictional South\nFinance\nCreate expense draft\nTrack expenses from draft to payment.\nReceipt extraction, duplicates and statements\nExpense status\nAll authorized expenses\ndraft\nsubmitted\napproved\npaid\nrejecte",
+        "overflow": [],
+        "headingClipping": []
+      }
+    },
+    {
+      "name": "finance",
+      "width": 430,
+      "layout": {
+        "documentWidth": 430,
+        "bodyWidth": 430,
+        "visibleText": "Workspace\nFictional member\n✓ Fictional North\nFictional South\nFinance\nCreate expense draft\nTrack expenses from draft to payment.\nReceipt extraction, duplicates and statements\nExpense status\nAll authorized expenses\ndraft\nsubmitted\napproved\npaid\nrejecte",
+        "overflow": [],
+        "headingClipping": []
+      }
+    },
+    {
+      "name": "reports",
+      "width": 320,
+      "layout": {
+        "documentWidth": 320,
+        "bodyWidth": 320,
+        "visibleText": "Workspace\nFictional member\n✓ Fictional North\nFictional South\n‹ Back\nReports\nReport basis\nCurrent state\nHistorical reports\nSaved reports\nCurrent visibility\nCurrent-state report · Asia/Kolkata · later task changes can change these values. 3 currently a",
+        "overflow": [],
+        "headingClipping": []
+      }
+    },
+    {
+      "name": "reports",
+      "width": 390,
+      "layout": {
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "visibleText": "Workspace\nFictional member\n✓ Fictional North\nFictional South\n‹ Back\nReports\nReport basis\nCurrent state\nHistorical reports\nSaved reports\nCurrent visibility\nCurrent-state report · Asia/Kolkata · later task changes can change these values. 3 currently a",
+        "overflow": [],
+        "headingClipping": []
+      }
+    },
+    {
+      "name": "reports",
+      "width": 430,
+      "layout": {
+        "documentWidth": 430,
+        "bodyWidth": 430,
+        "visibleText": "Workspace\nFictional member\n✓ Fictional North\nFictional South\n‹ Back\nReports\nReport basis\nCurrent state\nHistorical reports\nSaved reports\nCurrent visibility\nCurrent-state report · Asia/Kolkata · later task changes can change these values. 3 currently a",
+        "overflow": [],
+        "headingClipping": []
+      }
+    },
+    {
+      "name": "inbox",
+      "width": 320,
+      "layout": {
+        "documentWidth": 320,
+        "bodyWidth": 320,
+        "visibleText": "Workspace\nFictional member\n✓ Fictional North\nFictional South\nInbox\nDecisions and updates, clearly separated.\nInbox view\nAction required\nUpdates\nAction required\nResolving an Inbox item does not approve its business decision.\nPending business decisions",
+        "overflow": [],
+        "headingClipping": []
+      }
+    },
+    {
+      "name": "inbox",
+      "width": 390,
+      "layout": {
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "visibleText": "Workspace\nFictional member\n✓ Fictional North\nFictional South\nInbox\nDecisions and updates, clearly separated.\nInbox view\nAction required\nUpdates\nAction required\nResolving an Inbox item does not approve its business decision.\nPending business decisions",
+        "overflow": [],
+        "headingClipping": []
+      }
+    },
+    {
+      "name": "inbox",
+      "width": 430,
+      "layout": {
+        "documentWidth": 430,
+        "bodyWidth": 430,
+        "visibleText": "Workspace\nFictional member\n✓ Fictional North\nFictional South\nInbox\nDecisions and updates, clearly separated.\nInbox view\nAction required\nUpdates\nAction required\nResolving an Inbox item does not approve its business decision.\nPending business decisions",
+        "overflow": [],
+        "headingClipping": []
+      }
+    },
+    {
+      "name": "connect",
+      "width": 320,
+      "layout": {
+        "documentWidth": 320,
+        "bodyWidth": 320,
+        "visibleText": "Workspace\nFictional member\n✓ Fictional North\nFictional South\nConnect\nPeople, teams and company channels\n＋ New\nAll\nUnread\nChats\nChannels\nConversations · 3\n2 with unread messages\nFC\nFictional colleague\nDirect message\n3\nDR\nDrawing review team\nPrivate gr",
+        "overflow": [],
+        "headingClipping": []
+      }
+    },
+    {
+      "name": "connect",
+      "width": 390,
+      "layout": {
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "visibleText": "Workspace\nFictional member\n✓ Fictional North\nFictional South\nConnect\nPeople, teams and company channels\n＋ New\nAll\nUnread\nChats\nChannels\nConversations · 3\n2 with unread messages\nFC\nFictional colleague\nDirect message\n3\nDR\nDrawing review team\nPrivate gr",
+        "overflow": [],
+        "headingClipping": []
+      }
+    },
+    {
+      "name": "connect",
+      "width": 430,
+      "layout": {
+        "documentWidth": 430,
+        "bodyWidth": 430,
+        "visibleText": "Workspace\nFictional member\n✓ Fictional North\nFictional South\nConnect\nPeople, teams and company channels\n＋ New\nAll\nUnread\nChats\nChannels\nConversations · 3\n2 with unread messages\nFC\nFictional colleague\nDirect message\n3\nDR\nDrawing review team\nPrivate gr",
+        "overflow": [],
+        "headingClipping": []
+      }
+    },
+    {
+      "name": "work-empty",
+      "width": 390,
+      "layout": {
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "visibleText": "Workspace\nFictional member\n✓ Fictional North\nFictional South\nWork\nNew task\nYour commitments and authorized team work · Asia/Kolkata\nTask status\nAll\nFocus\nOpen\nAwaiting review\n0 matching authorized tasks\nWork tools\nNo work matches these filters.\nTry a",
+        "overflow": [],
+        "headingClipping": []
+      }
+    },
+    {
+      "name": "finance-empty",
+      "width": 390,
+      "layout": {
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "visibleText": "Workspace\nFictional member\n✓ Fictional North\nFictional South\nFinance\nCreate expense draft\nTrack expenses from draft to payment.\nReceipt extraction, duplicates and statements\nExpense status\nAll authorized expenses\ndraft\nsubmitted\napproved\npaid\nrejecte",
+        "overflow": [],
+        "headingClipping": []
+      }
+    },
+    {
+      "name": "connect-empty",
+      "width": 390,
+      "layout": {
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "visibleText": "Workspace\nFictional member\n✓ Fictional North\nFictional South\nConnect\nPeople, teams and company channels\n＋ New\nAll\nUnread\nChats\nChannels\nConversations · 0\n0 with unread messages\nStart a conversation\nMessage a person or bring your team together.\nMessag",
+        "overflow": [],
+        "headingClipping": []
+      }
+    },
+    {
+      "name": "inbox-empty",
+      "width": 390,
+      "layout": {
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "visibleText": "Workspace\nFictional member\n✓ Fictional North\nFictional South\nInbox\nDecisions and updates, clearly separated.\nInbox view\nAction required\nUpdates\nAction required\nResolving an Inbox item does not approve its business decision.\nPending business decisions",
+        "overflow": [],
+        "headingClipping": []
+      }
+    },
+    {
+      "name": "reports-empty",
+      "width": 390,
+      "layout": {
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "visibleText": "Workspace\nFictional member\n✓ Fictional North\nFictional South\n‹ Back\nReports\nReport basis\nCurrent state\nHistorical reports\nSaved reports\nCurrent visibility\nCurrent-state report · Asia/Kolkata · later task changes can change these values. 0 currently a",
+        "overflow": [],
+        "headingClipping": []
+      }
+    },
+    {
+      "name": "growth-empty",
+      "width": 390,
+      "layout": {
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "visibleText": "Workspace\nFictional member\n✓ Fictional North\nFictional South\nDevelopment\nNew development plan\nYour learning, evidence and mentor conversations.\nCareer roles describe development. They never change application permissions, task acceptance or measured ",
+        "overflow": [],
+        "headingClipping": []
+      }
+    },
+    {
+      "name": "knowledge-empty",
+      "width": 390,
+      "layout": {
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "visibleText": "Workspace\nFictional member\n✓ Fictional North\nFictional South\nKnowledge\nNew guidance\nReviewed guidance for engineering, office and field work.\nSearch guidance\nOnly current published guidance is used for answers. Select up to eight sources. Answers quo",
+        "overflow": [],
+        "headingClipping": []
+      }
+    },
+    {
+      "name": "work-large",
+      "width": 320,
+      "layout": {
+        "documentWidth": 320,
+        "bodyWidth": 320,
+        "visibleText": "Workspace\nFictional member\n✓ Fictional North\nFictional South\nWork\nNew task\nYour commitments and authorized team work · Asia/Kolkata\nTask status\nAll\nFocus\nOpen\nAwaiting review\n3 matching authorized tasks\nWork tools\nin progress\nPrepare the engineering ",
+        "overflow": [],
+        "headingClipping": []
+      }
+    },
+    {
+      "name": "finance-large",
+      "width": 320,
+      "layout": {
+        "documentWidth": 320,
+        "bodyWidth": 320,
+        "visibleText": "Workspace\nFictional member\n✓ Fictional North\nFictional South\nFinance\nCreate expense draft\nTrack expenses from draft to payment.\nReceipt extraction, duplicates and statements\nExpense status\nAll authorized expenses\ndraft\nsubmitted\napproved\npaid\nrejecte",
+        "overflow": [],
+        "headingClipping": []
+      }
+    },
+    {
+      "name": "connect-large",
+      "width": 320,
+      "layout": {
+        "documentWidth": 320,
+        "bodyWidth": 320,
+        "visibleText": "Workspace\nFictional member\n✓ Fictional North\nFictional South\nConnect\nPeople, teams and company channels\n＋ New\nAll\nUnread\nChats\nChannels\nConversations · 3\n2 with unread messages\nFC\nFictional colleague with an unusually long display name\nDirect message",
+        "overflow": [],
+        "headingClipping": []
+      }
+    },
+    {
+      "name": "inbox-large",
+      "width": 320,
+      "layout": {
+        "documentWidth": 320,
+        "bodyWidth": 320,
+        "visibleText": "Workspace\nFictional member\n✓ Fictional North\nFictional South\nInbox\nDecisions and updates, clearly separated.\nInbox view\nAction required\nUpdates\nAction required\nResolving an Inbox item does not approve its business decision.\nPending business decisions",
+        "overflow": [],
+        "headingClipping": []
+      }
+    },
+    {
+      "name": "reports-large",
+      "width": 320,
+      "layout": {
+        "documentWidth": 320,
+        "bodyWidth": 320,
+        "visibleText": "Workspace\nFictional member\n✓ Fictional North\nFictional South\n‹ Back\nReports\nReport basis\nCurrent state\nHistorical reports\nSaved reports\nCurrent visibility\nCurrent-state report · Asia/Kolkata · later task changes can change these values. 3 currently a",
+        "overflow": [],
+        "headingClipping": []
+      }
+    },
+    {
+      "name": "growth-large",
+      "width": 320,
+      "layout": {
+        "documentWidth": 320,
+        "bodyWidth": 320,
+        "visibleText": "Workspace\nFictional member\n✓ Fictional North\nFictional South\nDevelopment\nNew development plan\nYour learning, evidence and mentor conversations.\nCareer roles describe development. They never change application permissions, task acceptance or measured ",
+        "overflow": [],
+        "headingClipping": []
+      }
+    },
+    {
+      "name": "knowledge-large",
+      "width": 320,
+      "layout": {
+        "documentWidth": 320,
+        "bodyWidth": 320,
+        "visibleText": "Workspace\nFictional member\n✓ Fictional North\nFictional South\nKnowledge\nNew guidance\nReviewed guidance for engineering, office and field work.\nSearch guidance\nOnly current published guidance is used for answers. Select up to eight sources. Answers quo",
+        "overflow": [],
+        "headingClipping": []
+      }
+    },
+    {
+      "name": "chat",
+      "width": 390,
+      "layout": {
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "visibleText": "Workspace\nFictional member\n✓ Fictional North\nFictional South\nFictional preview: secondary native workflow\n‹ Back\nFictional drawing review\nPrivate · 2 participants\nDetails\nConversation tools\nShow ＋\nOct 18\nFC\nFictional colleague\n03:30 PM\nPlease review ",
+        "overflow": [],
+        "headingClipping": []
+      }
+    },
+    {
+      "name": "overview",
+      "width": 390,
+      "layout": {
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "visibleText": "Workspace\nFictional member\n✓ Fictional North\nFictional South\nOverview\nRead-only · current role and company scope\nOpen commitments\n3\nAcross 1 active projects\nOverdue tasks\n0\nAll current deadlines are clear\nAwaiting review\n1\nReady for a decision\nOn-tim",
+        "overflow": [],
+        "headingClipping": []
+      }
+    },
+    {
+      "name": "workload",
+      "width": 390,
+      "layout": {
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "visibleText": "Workspace\nFictional member\n✓ Fictional North\nFictional South\nWorkload\nRead-only · 2026-10-12 – 2026-10-25\nPrevious\nThis week\nNext\n4 weeks\nOwner: All authorized owners\nDepartment: All authorized departments\nVisible remaining effort, not an employee ra",
+        "overflow": [],
+        "headingClipping": []
+      }
+    },
+    {
+      "name": "planning",
+      "width": 390,
+      "layout": {
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "visibleText": "Workspace\nFictional member\n✓ Fictional North\nFictional South\n‹ Back\nPlanning authorized work\nInspect capacity, then review a selected schedule.\nFictional preview: secondary native workflow\nFictional preview: secondary native workflow\nFictional previe",
+        "overflow": [],
+        "headingClipping": []
+      }
+    },
+    {
+      "name": "agenda",
+      "width": 390,
+      "layout": {
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "visibleText": "Workspace\nFictional member\n✓ Fictional North\nFictional South\n‹ Back\nDeadline agenda\nOpen authorized work · 2026-10-18 to 2026-11-14 · Asia/Kolkata\nEarlier\nToday\nLater\nExport calendar\nMon, 19 Oct · 1 deadline\nAll day · Review site inspection evidence ",
+        "overflow": [],
+        "headingClipping": []
+      }
+    },
+    {
+      "name": "goals",
+      "width": 390,
+      "layout": {
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "visibleText": "Workspace\nFictional member\n✓ Fictional North\nFictional South\n‹ Back\nNew measured goal\nMeasured outcomes\nTask progress never changes independent measurements. Raw values remain visible; attainment is bounded.\nReduce handover defects\nCurrent: 4.8 defec",
+        "overflow": [],
+        "headingClipping": []
+      }
+    },
+    {
+      "name": "people",
+      "width": 390,
+      "layout": {
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "visibleText": "Workspace\nFictional member\n✓ Fictional North\nFictional South\nPeople\nCompany directory and access\nSearch people\nFictional member · manager\nFictional colleague · member",
+        "overflow": [],
+        "headingClipping": []
+      }
+    },
+    {
+      "name": "account",
+      "width": 390,
+      "layout": {
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "visibleText": "Workspace\nFictional member\n✓ Fictional North\nFictional South\nAccount\nNotifications, devices and account security\nNotifications\nPush notifications are unavailable in Expo Go. Inbox updates still refresh while Workspace is open.\nPrivacy and devices\nPri",
+        "overflow": [],
+        "headingClipping": []
+      }
+    },
+    {
+      "name": "project",
+      "width": 390,
+      "layout": {
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "visibleText": "Workspace\nFictional member\n✓ Fictional North\nFictional South\n‹ Back\nFictional Project\nA clearly owned handover initiative.\nAuthorized tasks: 1/3 accepted · 33%\nTask owner policy: actor\nEdit project task defaults\nReview project schedule\nHuman project ",
+        "overflow": [],
+        "headingClipping": []
+      }
+    },
+    {
+      "name": "growth",
+      "width": 390,
+      "layout": {
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "visibleText": "Workspace\nFictional member\n✓ Fictional North\nFictional South\nDevelopment\nNew development plan\nYour learning, evidence and mentor conversations.\nCareer roles describe development. They never change application permissions, task acceptance or measured ",
+        "overflow": [],
+        "headingClipping": []
+      }
+    },
+    {
+      "name": "knowledge",
+      "width": 390,
+      "layout": {
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "visibleText": "Workspace\nFictional member\n✓ Fictional North\nFictional South\nKnowledge\nNew guidance\nReviewed guidance for engineering, office and field work.\nSearch guidance\nOnly current published guidance is used for answers. Select up to eight sources. Answers quo",
+        "overflow": [],
+        "headingClipping": []
+      }
+    },
+    {
+      "name": "chat-large",
+      "width": 320,
+      "layout": {
+        "documentWidth": 320,
+        "bodyWidth": 320,
+        "visibleText": "Workspace\nFictional member\n✓ Fictional North\nFictional South\nFictional preview: secondary native workflow\n‹ Back\nFictional drawing review\nPrivate · 2 participants\nDetails\nConversation tools\nShow ＋\nOct 18\nFC\nFictional colleague with an unusually long ",
+        "overflow": [],
+        "headingClipping": []
+      }
+    },
+    {
+      "name": "overview-large",
+      "width": 320,
+      "layout": {
+        "documentWidth": 320,
+        "bodyWidth": 320,
+        "visibleText": "Workspace\nFictional member\n✓ Fictional North\nFictional South\nOverview\nRead-only · current role and company scope\nOpen commitments\n3\nAcross 1 active projects\nOverdue tasks\n0\nAll current deadlines are clear\nAwaiting review\n1\nReady for a decision\nOn-tim",
+        "overflow": [],
+        "headingClipping": []
+      }
+    },
+    {
+      "name": "workload-large",
+      "width": 320,
+      "layout": {
+        "documentWidth": 320,
+        "bodyWidth": 320,
+        "visibleText": "Workspace\nFictional member\n✓ Fictional North\nFictional South\nWorkload\nRead-only · 2026-10-12 – 2026-10-25\nPrevious\nThis week\nNext\n4 weeks\nOwner: All authorized owners\nDepartment: All authorized departments\nVisible remaining effort, not an employee ra",
+        "overflow": [],
+        "headingClipping": []
+      }
+    },
+    {
+      "name": "planning-large",
+      "width": 320,
+      "layout": {
+        "documentWidth": 320,
+        "bodyWidth": 320,
+        "visibleText": "Workspace\nFictional member\n✓ Fictional North\nFictional South\n‹ Back\nPlanning authorized work\nInspect capacity, then review a selected schedule.\nFictional preview: secondary native workflow\nFictional preview: secondary native workflow\nFictional previe",
+        "overflow": [],
+        "headingClipping": []
+      }
+    },
+    {
+      "name": "agenda-large",
+      "width": 320,
+      "layout": {
+        "documentWidth": 320,
+        "bodyWidth": 320,
+        "visibleText": "Workspace\nFictional member\n✓ Fictional North\nFictional South\n‹ Back\nDeadline agenda\nOpen authorized work · 2026-10-18 to 2026-11-14 · Asia/Kolkata\nEarlier\nToday\nLater\nExport calendar\nMon, 19 Oct · 1 deadline\nAll day · Review site inspection evidence ",
+        "overflow": [],
+        "headingClipping": []
+      }
+    },
+    {
+      "name": "goals-large",
+      "width": 320,
+      "layout": {
+        "documentWidth": 320,
+        "bodyWidth": 320,
+        "visibleText": "Workspace\nFictional member\n✓ Fictional North\nFictional South\n‹ Back\nNew measured goal\nMeasured outcomes\nTask progress never changes independent measurements. Raw values remain visible; attainment is bounded.\nReduce handover defects\nCurrent: 4.8 defec",
+        "overflow": [],
+        "headingClipping": []
+      }
+    },
+    {
+      "name": "people-large",
+      "width": 320,
+      "layout": {
+        "documentWidth": 320,
+        "bodyWidth": 320,
+        "visibleText": "Workspace\nFictional member\n✓ Fictional North\nFictional South\nPeople\nCompany directory and access\nSearch people\nFictional member · manager\nFictional colleague with an unusually long display name · member",
+        "overflow": [],
+        "headingClipping": []
+      }
+    },
+    {
+      "name": "account-large",
+      "width": 320,
+      "layout": {
+        "documentWidth": 320,
+        "bodyWidth": 320,
+        "visibleText": "Workspace\nFictional member\n✓ Fictional North\nFictional South\nAccount\nNotifications, devices and account security\nNotifications\nPush notifications are unavailable in Expo Go. Inbox updates still refresh while Workspace is open.\nPrivacy and devices\nPri",
+        "overflow": [],
+        "headingClipping": []
+      }
+    },
+    {
+      "name": "project-large",
+      "width": 320,
+      "layout": {
+        "documentWidth": 320,
+        "bodyWidth": 320,
+        "visibleText": "Workspace\nFictional member\n✓ Fictional North\nFictional South\n‹ Back\nFictional Project\nA clearly owned handover initiative.\nAuthorized tasks: 1/3 accepted · 33%\nTask owner policy: actor\nEdit project task defaults\nReview project schedule\nHuman project ",
+        "overflow": [],
+        "headingClipping": []
+      }
+    },
+    {
+      "name": "work-short",
+      "width": 320,
+      "layout": {
+        "documentWidth": 320,
+        "bodyWidth": 320,
+        "visibleText": "Workspace\nFictional member\n✓ Fictional North\nFictional South\nWork\nNew task\nYour commitments and authorized team work · Asia/Kolkata\nTask status\nAll\nFocus\nOpen\nAwaiting review\n3 matching authorized tasks\nWork tools\nin progress\nPrepare engineering hand",
+        "overflow": [],
+        "headingClipping": []
+      }
+    },
+    {
+      "name": "connect-short",
+      "width": 320,
+      "layout": {
+        "documentWidth": 320,
+        "bodyWidth": 320,
+        "visibleText": "Workspace\nFictional member\n✓ Fictional North\nFictional South\nConnect\nPeople, teams and company channels\n＋ New\nAll\nUnread\nChats\nChannels\nConversations · 3\n2 with unread messages\nFC\nFictional colleague\nDirect message\n3\nDR\nDrawing review team\nPrivate gr",
+        "overflow": [],
+        "headingClipping": []
+      }
+    },
+    {
+      "name": "chat-tools",
+      "width": 390,
+      "layout": {
+        "documentWidth": 390,
+        "bodyWidth": 390,
+        "visibleText": "Workspace\nFictional member\n✓ Fictional North\nFictional South\nFictional preview: secondary native workflow\n‹ Back\nFictional drawing review\nPrivate · 2 participants\nDetails\nConversation tools\nHide −\nSearch & pins\nRecords\nAudio / video\nMentions in loade",
+        "overflow": [],
+        "headingClipping": []
+      }
+    }
+  ],
+  "errors": [],
+  "cancelledInterceptions": [],
+  "blockedExternalRequests": []
+}

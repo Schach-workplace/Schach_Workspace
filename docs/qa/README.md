@@ -78,3 +78,6 @@ python3 docs/qa/tools/validate_pack.py
 ```
 
 Rendering the PDF requires Chromium; opening the workbook for interoperability checks requires a spreadsheet application. Generated HTML, Markdown, CSV, XLSX, SVG and Mermaid contain the same case IDs. Regeneration resets distributed templates to NOT_RUN; keep actual team execution copies outside this generated directory. Never overwrite a completed run with the template.
+
+
+The [18 October premium mobile, Development and Knowledge supplement](PREMIUM_MOBILE_GROWTH.md) adds39 proposed cases and three workflow diagrams for the new source. Its manual cases also start NOT_RUN; it does not silently change this pack’s original224 statuses.

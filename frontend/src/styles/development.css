@@ -1,0 +1,114 @@
+.development-hub {
+  display: grid;
+  gap: 20px;
+  padding: 20px 0;
+  color: var(--text-primary, #172235);
+}
+.development-heading {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+.development-heading h2 {
+  margin: 4px 0 8px;
+  font-size: 26px;
+}
+.development-heading p,
+.development-card p {
+  color: var(--text-secondary, #526079);
+  line-height: 1.6;
+}
+.development-notice {
+  border: 1px solid var(--border, #dce2eb);
+  background: var(--surface, #f4f6fa);
+  border-radius: 14px;
+  padding: 16px 20px;
+  line-height: 1.6;
+}
+.development-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 290px), 1fr));
+  gap: 16px;
+}
+.development-card {
+  background: var(--surface, #fff);
+  border: 1px solid var(--border, #dce2eb);
+  border-radius: 16px;
+  padding: 20px;
+  margin: 8px 0;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.development-card h3 {
+  font-size: 18px;
+  margin: 8px 0 12px;
+}
+.development-link {
+  text-align: left;
+  color: inherit;
+  cursor: pointer;
+}
+.development-link:focus-visible {
+  outline: 3px solid #b64b0b;
+  outline-offset: 3px;
+}
+.development-form {
+  display: grid;
+  gap: 18px;
+}
+.development-form label:not(.development-check) {
+  display: grid;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+}
+.development-form input:not([type='checkbox']),
+.development-form textarea,
+.development-form select {
+  width: 100%;
+  min-width: 0;
+  min-height: 48px;
+  border: 1px solid #dce2eb;
+  background: #fff;
+  color: #172235;
+  border-radius: 10px;
+  padding: 12px;
+  font: inherit;
+  font-weight: 400;
+  box-sizing: border-box;
+}
+.development-form textarea {
+  min-height: 108px;
+  resize: vertical;
+}
+.development-check {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 48px;
+}
+.development-form fieldset {
+  border: 1px solid #dce2eb;
+  border-radius: 12px;
+  padding: 12px;
+  min-width: 0;
+}
+.development-prose {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.development-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+@media (max-width: 480px) {
+  .development-card {
+    padding: 16px;
+  }
+  .development-heading > button {
+    width: 100%;
+  }
+}

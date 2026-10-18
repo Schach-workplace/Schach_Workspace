@@ -72,6 +72,23 @@ vi.mock("./PersonPicker", () => ({
 }));
 vi.mock("./DeadlinePicker", () => ({ default: () => null }));
 vi.mock("react-native", () => ({
+  StyleSheet: { create: (x: unknown) => x },
+  ScrollView: ({ children }: any) => createElement("div", {}, children),
+  Pressable: ({
+    children,
+    onPress,
+    accessibilityLabel,
+    accessibilityState,
+  }: any) =>
+    createElement(
+      "button",
+      {
+        onClick: onPress,
+        "aria-label": accessibilityLabel,
+        "aria-pressed": accessibilityState?.selected,
+      },
+      children,
+    ),
   Text: ({ children, accessibilityRole }: any) =>
     createElement("span", { role: accessibilityRole }, children),
   View: ({ children }: any) => {

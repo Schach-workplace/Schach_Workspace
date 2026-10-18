@@ -1,3 +1,4 @@
+import { connectStyle } from "./ConnectPresentation";
 import { useEffect, useEffectEvent, useState, useRef } from "react";
 import {
   FlatList,
@@ -104,38 +105,58 @@ function List() {
   );
   return (
     <Page scroll={false}>
-      <View style={ui.header}>
-        <View>
-          <Text style={ui.title}>Connect</Text>
-          <Text style={ui.subtitle}>People, teams and company channels</Text>
-        </View>
-        {w.work?.me.role !== "viewer" && (
-          <Action title="＋ New" onPress={() => setCreating(true)} />
-        )}
-      </View>
-      <TextInput
-        style={ui.input}
-        accessibilityLabel="Filter conversations"
-        placeholder="Find a conversation…"
-        value={q}
-        onChangeText={setQ}
-      />
-      <View style={ui.row}>
-        {[
-          ["all", "All"],
-          ["unread", "Unread"],
-          ["chats", "Chats"],
-          ["channels", "Channels"],
-        ].map(([key, title]) => (
-          <Action
-            key={key}
-            title={title}
-            selected={filter === key}
-            onPress={() => setFilter(key)}
-          />
-        ))}
-      </View>
       <FlatList
+        ListHeaderComponent={
+          <View>
+            <View style={ui.header}>
+              <View style={connectStyle.heading}>
+                <Text style={connectStyle.title}>Connect</Text>
+                <Text style={ui.subtitle}>
+                  People, teams and company channels
+                </Text>
+              </View>
+              {w.work?.me.role !== "viewer" && (
+                <Action title="＋ New" onPress={() => setCreating(true)} />
+              )}
+            </View>
+            <TextInput
+              style={[ui.input, connectStyle.search]}
+              accessibilityLabel="Filter conversations"
+              placeholder="Find a conversation…"
+              value={q}
+              onChangeText={setQ}
+            />
+            <View style={connectStyle.filters}>
+              {[
+                ["all", "All"],
+                ["unread", "Unread"],
+                ["chats", "Chats"],
+                ["channels", "Channels"],
+              ].map(([key, title]) => (
+                <Action
+                  key={key}
+                  title={title}
+                  selected={filter === key}
+                  onPress={() => setFilter(key)}
+                />
+              ))}
+            </View>
+            <View style={connectStyle.summary}>
+              <Text style={connectStyle.sectionTitle}>
+                {filter === "unread"
+                  ? "Unread conversations"
+                  : q
+                    ? "Search results"
+                    : "Conversations"}{" "}
+                · {rows.length}
+              </Text>
+              <Text style={connectStyle.support}>
+                {Object.values(attention).filter((n) => n > 0).length} with
+                unread messages
+              </Text>
+            </View>
+          </View>
+        }
         data={rows}
         keyExtractor={(c) => c.id}
         style={{ flex: 1 }}
@@ -147,9 +168,18 @@ function List() {
           <Pressable
             key={c.id}
             accessibilityRole="button"
-            accessibilityLabel={conversationName(c, w.work?.people ?? [])}
+            accessibilityLabel={
+              conversationName(c, w.work?.people ?? []) +
+              ((attention[c.id] ?? 0) > 0
+                ? `, ${attention[c.id]} unread messages`
+                : "")
+            }
             onPress={() => open(c.id)}
-            style={ui.conversation}
+            style={[
+              ui.conversation,
+              connectStyle.conversation,
+              (attention[c.id] ?? 0) > 0 && connectStyle.unread,
+            ]}
           >
             <PersonAvatar
               name={
@@ -158,7 +188,7 @@ function List() {
                   : conversationName(c, w.work?.people ?? [])
               }
             />
-            <View style={{ flex: 1 }}>
+            <View style={connectStyle.conversationText}>
               <Text style={ui.name}>
                 {conversationName(c, w.work?.people ?? [])}
               </Text>
@@ -189,8 +219,19 @@ function List() {
                     : "Start a conversation"}
                 </Text>
                 <Text style={ui.subtitle}>
-                  Message a person or bring your team together.
+                  {q || filter !== "all"
+                    ? "Try another name or show all conversations."
+                    : "Message a person or bring your team together."}
                 </Text>
+                {(q || filter !== "all") && (
+                  <Action
+                    title="Clear filters"
+                    onPress={() => {
+                      setQ("");
+                      setFilter("all");
+                    }}
+                  />
+                )}
                 {w.work?.me.role !== "viewer" && (
                   <Action
                     primary
@@ -206,37 +247,37 @@ function List() {
                 onPress={w.loadMoreConversations}
               />
             )}
+            <View style={connectStyle.navigation}>
+              <Action
+                title="Search & saved messages"
+                onPress={() => setSearch(true)}
+              />
+              {w.work && w.work.me.role !== "member" && (
+                <Action
+                  title="Overview"
+                  onPress={() =>
+                    router.push({
+                      pathname: "/overview",
+                      params: { company: w.company },
+                    })
+                  }
+                />
+              )}
+              {w.work && (
+                <Action
+                  title="Workload"
+                  onPress={() =>
+                    router.push({
+                      pathname: "/workload",
+                      params: { company: w.company },
+                    })
+                  }
+                />
+              )}
+            </View>
           </View>
         }
       />
-      <View style={ui.header}>
-        <Action
-          title="Search & saved messages"
-          onPress={() => setSearch(true)}
-        />
-        {w.work && w.work.me.role !== "member" && (
-          <Action
-            title="Overview"
-            onPress={() =>
-              router.push({
-                pathname: "/overview",
-                params: { company: w.company },
-              })
-            }
-          />
-        )}
-        {w.work && (
-          <Action
-            title="Workload"
-            onPress={() =>
-              router.push({
-                pathname: "/workload",
-                params: { company: w.company },
-              })
-            }
-          />
-        )}
-      </View>
       {creating && (
         <NewChat
           onClose={() => setCreating(false)}

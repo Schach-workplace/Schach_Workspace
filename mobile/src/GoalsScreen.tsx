@@ -1,3 +1,4 @@
+import { ScreenHeading, mobileUI } from "./MobileUI";
 import { useState } from "react";
 import { FlatList, Text, View } from "react-native";
 import { router } from "expo-router";
@@ -20,8 +21,8 @@ export default function GoalsScreen() {
           <Action title="New measured goal" onPress={() => setCreating(true)} />
         )}
       </View>
-      <Text style={ui.title}>Measured outcomes</Text>
-      <Text>
+      <ScreenHeading title="Measured outcomes" />
+      <Text style={mobileUI.secondary}>
         Task progress never changes independent measurements. Raw values remain
         visible; attainment is bounded.
       </Text>
@@ -37,8 +38,10 @@ export default function GoalsScreen() {
           </Text>
         }
         renderItem={({ item: g }) => (
-          <View style={{ gap: 8, paddingVertical: 12 }}>
-            <Text style={ui.title}>{g.name}</Text>
+          <View style={mobileUI.surface}>
+            <Text accessibilityRole="header" style={mobileUI.sectionTitle}>
+              {g.name}
+            </Text>
             <Text>
               Current: {g.current} {g.unit} · Baseline: {g.baseline} · Target:{" "}
               {g.target}

@@ -1,8 +1,9 @@
+import { ScreenHeading, mobileUI } from "./MobileUI";
 import { useEffect, useEffectEvent, useState } from "react";
 import { Text, View } from "react-native";
 import { router } from "expo-router";
 import { Page, useWorkspace, type WorkTask } from "./Workspace";
-import { Action, Sheet, ui } from "./ConnectUI";
+import { Action, Sheet } from "./ConnectUI";
 import PersonPicker from "./PersonPicker";
 import { clearConversationDrafts } from "./conversationDrafts";
 import { useRamInput } from "./ramInput";
@@ -38,9 +39,11 @@ export default function ProjectScreen({ id }: { id: string }) {
       <Action title="‹ Back" onPress={() => router.back()} />
       <ExecutionStatus query={q} />
       {q.data && (
-        <View>
-          <Text style={ui.title}>{q.data.project.name}</Text>
-          <Text>{q.data.project.description}</Text>
+        <View style={mobileUI.surface}>
+          <ScreenHeading
+            title={q.data.project.name}
+            description={q.data.project.description}
+          />
           <Text>
             Authorized tasks: {q.data.summary.accepted}/{q.data.summary.total}{" "}
             accepted ·{" "}
@@ -274,7 +277,7 @@ function NativeMilestones({
   );
   return (
     <View>
-      <Text style={ui.title}>Human project milestones</Text>
+      <ScreenHeading title="Human project milestones" />
       <Text>
         Independent milestone acceptance leaves task acceptance and goal
         measurements in their own workflows.
@@ -686,7 +689,7 @@ function MilestoneDetail({
       <ExecutionStatus query={q} />
       {m && (
         <>
-          <Text style={ui.title}>{m.title}</Text>
+          <ScreenHeading title={m.title} />
           <Text>
             {m.state.replaceAll("_", " ")} · Criteria version{" "}
             {m.criteriaVersion}
@@ -699,7 +702,7 @@ function MilestoneDetail({
             <Text accessibilityRole="alert">{m.basisNotice}</Text>
           )}
           {m.criteria.map((c) => (
-            <View key={c.id}>
+            <View key={c.id} style={mobileUI.surface}>
               <Text>{c.text}</Text>
               {m.canSubmit && !action.attempt && (
                 <ExecutionField
@@ -833,7 +836,7 @@ function MilestoneDetail({
             />
           )}
           {m.acceptances.map((a) => (
-            <View key={a.id}>
+            <View key={a.id} style={mobileUI.surface}>
               <Text>
                 Historical acceptance: {a.createdAt} · Criteria version{" "}
                 {a.criteriaVersion} · Project version {a.projectVersion}

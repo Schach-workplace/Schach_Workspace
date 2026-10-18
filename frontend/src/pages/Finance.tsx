@@ -1,3 +1,4 @@
+import ExpenseExportButton from '../components/ExpenseExport';
 import FinanceAssistance from '../components/FinanceAssistance';
 import { useEffect, useRef, useState } from 'react';
 import {
@@ -894,6 +895,13 @@ export function FinancePage({
             <Download size={15} />
             Export expenses
           </button>
+          <ExpenseExportButton
+            expenses={filtered.map((expense) => ({
+              id: expense.id,
+              version: expense.version ?? 1,
+              title: expense.title,
+            }))}
+          />
         </div>
         <div className="finance-ledger-filters" role="group" aria-label="Expense filters">
           <div className="search-input">

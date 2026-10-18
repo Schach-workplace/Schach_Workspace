@@ -1,3 +1,4 @@
+import CalendarExportButton from '../components/CalendarExport';
 import { useExecutionRead } from '../data/execution';
 import type { CalendarTask, CalendarView } from '../data/planning';
 import { useExecutionInput } from '../data/executionInput';
@@ -195,6 +196,11 @@ export function CalendarPage({ onTask }: { onTask: (id: string) => void }) {
           Open work only
         </label>
         <span className="timezone-note">Deadlines in {calendarZone}</span>
+        <CalendarExportButton
+          path={'/planning/calendar?' + calendarQuery}
+          from={first}
+          to={days[days.length - 1]}
+        />
       </div>
       {demo && (
         <p className="notice calendar-note">

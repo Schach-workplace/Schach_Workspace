@@ -1,3 +1,4 @@
+import { workFocusReasons } from "./workFocus";
 import { NativeTemplates, NativeProjectChoice } from "./Execution";
 import {
   useBusinessAttempt,
@@ -17,6 +18,13 @@ import { FlatList, RefreshControl, Text, TextInput, View } from "react-native";
 import { Page, useWorkspace, type WorkTask } from "./Workspace";
 import { Action, Sheet, ui } from "./ConnectUI";
 import { client } from "./client";
+import {
+  ScreenHeading,
+  FilterBar,
+  RecordCard,
+  EmptyState,
+  mobileUI,
+} from "./MobileUI";
 import {
   companyDate,
   DeadlineChoiceError,
@@ -43,6 +51,7 @@ function WorkView({ w }: { w: ReturnType<typeof useWorkspace> }) {
   const business = useBusinessAttempt<Record<string, unknown>>("task-create");
   const [templates, setTemplates] = useState(false);
   const [csv, setCsv] = useState(false);
+  const [tools, setTools] = useState(false);
   const [ownedError, setOwnedError] = useRamInput("$work", "ownedError", "");
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState("all");
@@ -107,9 +116,11 @@ function WorkView({ w }: { w: ReturnType<typeof useWorkspace> }) {
   const rows = (w.work?.tasks || []).filter(
     (t) =>
       (filter === "all" ||
-        (filter === "open"
-          ? !["done", "cancelled"].includes(t.status)
-          : t.status === "in_review")) &&
+        (filter === "focus"
+          ? workFocusReasons(t, w.session?.user.id ?? "", zone).length > 0
+          : filter === "open"
+            ? !["done", "cancelled"].includes(t.status)
+            : t.status === "in_review")) &&
       (!query || t.title.toLowerCase().includes(query.toLowerCase())),
   );
   const deadline = useMemo(() => {
@@ -242,95 +253,130 @@ function WorkView({ w }: { w: ReturnType<typeof useWorkspace> }) {
   }
   return (
     <Page scroll={false}>
-      <View style={ui.row}>
-        <Text style={ui.title}>Work</Text>
-        <Action
-          title="Planning authorized work"
-          onPress={() =>
-            router.push({
-              pathname: "/planning",
-              params: { company: w.company },
-            })
-          }
-        />
-        <Action
-          title="Measured outcomes"
-          onPress={() =>
-            router.push({ pathname: "/goals", params: { company: w.company } })
-          }
-        />
-        <Action
-          title="Deadline agenda"
-          onPress={() =>
-            router.push({
-              pathname: "/calendar",
-              params: { company: w.company },
-            })
-          }
-        />
-        {!!w.work && <Action title="Tasks CSV" onPress={() => setCsv(true)} />}
-        {editable && <Action title="New task" primary onPress={openCreate} />}
-      </View>
-      <Text style={ui.subtitle}>
-        Your commitments and authorized team work · {zone}
-      </Text>
-      <TextInput
-        accessibilityLabel="Search work"
-        placeholder="Search work"
-        value={query}
-        onChangeText={setQuery}
-        style={ui.input}
-      />
-      <View style={[ui.row, { flexWrap: "wrap" }]}>
-        {[
-          ["all", "All"],
-          ["open", "Open"],
-          ["review", "Awaiting review"],
-        ].map(([id, name]) => (
-          <Action
-            key={id}
-            title={name}
-            selected={filter === id}
-            onPress={() => setFilter(id)}
-          />
-        ))}
-      </View>
-      {!rows.length && (
-        <Text style={ui.subtitle}>No work matches these filters.</Text>
-      )}
       <FlatList
         data={rows}
         keyExtractor={(t) => t.id}
+        contentContainerStyle={mobileUI.listContent}
+        keyboardShouldPersistTaps="handled"
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={pullToRefresh} />
         }
-        renderItem={({ item: t }) => (
-          <View
-            key={t.id}
-            style={{
-              paddingVertical: 14,
-              borderBottomWidth: 1,
-              borderBottomColor: "#e9ebef",
-              gap: 8,
-            }}
-          >
-            <Text style={ui.name}>{t.title}</Text>
-            <Text style={ui.subtitle}>
-              {t.status.replaceAll("_", " ")} · {dateLabel(t)}
-            </Text>
-            <Action
-              title={"Open: " + t.title}
-              onPress={() => {
-                setError("");
-                router.push({
-                  pathname: "/task/[id]",
-                  params: { id: t.id, company: w.company },
-                });
-              }}
+        ListHeaderComponent={
+          <View>
+            <ScreenHeading
+              title="Work"
+              description={
+                "Your commitments and authorized team work · " + zone
+              }
+              action={
+                editable ? (
+                  <Action title="New task" primary onPress={openCreate} />
+                ) : undefined
+              }
             />
+            <TextInput
+              accessibilityLabel="Search work"
+              placeholder="Search work"
+              value={query}
+              onChangeText={setQuery}
+              style={ui.input}
+            />
+            <FilterBar
+              label="Task status"
+              value={filter}
+              options={[
+                { value: "all", label: "All" },
+                { value: "focus", label: "Focus" },
+                { value: "open", label: "Open" },
+                { value: "review", label: "Awaiting review" },
+              ]}
+              onChange={setFilter}
+            />
+            {filter === "focus" && (
+              <Text style={ui.subtitle}>
+                Your open work, blocked or review items, and deadlines due or
+                passed in company time. These are recorded facts, not employee
+                ratings.
+              </Text>
+            )}
+            <View style={ui.row}>
+              <Text style={ui.subtitle}>
+                {rows.length} matching authorized tasks
+              </Text>
+              <Action title="Work tools" onPress={() => setTools(true)} />
+            </View>
           </View>
+        }
+        ListEmptyComponent={
+          <EmptyState
+            title="No work matches these filters."
+            description="Try another status or change your search."
+          />
+        }
+        renderItem={({ item: t }) => (
+          <RecordCard
+            title={t.title}
+            label={"Open: " + t.title}
+            status={t.status}
+            detail={[
+              dateLabel(t),
+              ...(filter === "focus"
+                ? workFocusReasons(t, w.session?.user.id ?? "", zone)
+                : []),
+            ].join(" · ")}
+            onPress={() => {
+              setError("");
+              router.push({
+                pathname: "/task/[id]",
+                params: { id: t.id, company: w.company },
+              });
+            }}
+          />
         )}
       />
+      {tools && (
+        <Sheet title="Work tools" onClose={() => setTools(false)}>
+          <Action
+            title="Planning authorized work"
+            onPress={() => {
+              setTools(false);
+              router.push({
+                pathname: "/planning",
+                params: { company: w.company },
+              });
+            }}
+          />
+          <Action
+            title="Measured outcomes"
+            onPress={() => {
+              setTools(false);
+              router.push({
+                pathname: "/goals",
+                params: { company: w.company },
+              });
+            }}
+          />
+          <Action
+            title="Deadline agenda"
+            onPress={() => {
+              setTools(false);
+              router.push({
+                pathname: "/calendar",
+                params: { company: w.company },
+              });
+            }}
+          />
+          {!!w.work && (
+            <Action
+              title="Tasks CSV"
+              onPress={() => {
+                setTools(false);
+                setCsv(true);
+              }}
+            />
+          )}
+        </Sheet>
+      )}
       {csv && !!w.work && (
         <TaskCsv tasks={rows} onClose={() => setCsv(false)} />
       )}

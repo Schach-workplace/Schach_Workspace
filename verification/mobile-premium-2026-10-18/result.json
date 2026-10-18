@@ -1,0 +1,119 @@
+{
+  "baseline": "8b0f2c052d0469f3f22ab18283aca1c37413e941",
+  "date": "2026-10-18",
+  "state": "local source verification PASS; physical/provider/deployment gates pending",
+  "checks": {
+    "web": {
+      "files": 89,
+      "tests": 430,
+      "status": "PASS"
+    },
+    "mobile": {
+      "files": 81,
+      "tests": 509,
+      "status": "PASS"
+    },
+    "mobile_typecheck": "PASS",
+    "mobile_lint": "PASS",
+    "web_typecheck": "PASS",
+    "web_build": "PASS",
+    "web_demo_build": "PASS with single-chunk size warning",
+    "offline_preview": {
+      "checks": 14,
+      "status": "PASS"
+    },
+    "native_hermes_exports": {
+      "ios": "PASS",
+      "android": "PASS",
+      "qualification": "JavaScript artifacts, not signed binaries or physical device results"
+    },
+    "backend_sqlite": {
+      "top_level_pass": 426,
+      "top_level_skip": 35,
+      "pass_including_subcases": 593,
+      "seconds": 150.121,
+      "status": "PASS"
+    },
+    "backend_postgresql": {
+      "top_level_pass": 449,
+      "top_level_skip": 12,
+      "pass_including_subcases": 632,
+      "seconds": 558.946,
+      "status": "PASS"
+    },
+    "migration_mirror": {
+      "pairs": 61,
+      "status": "PASS"
+    },
+    "encore_runtime": {
+      "status": "passed",
+      "checks": [
+        "Actual Encore analyzer/check succeeds",
+        "Direct and spoofed cron invocations rejected",
+        "Workspace/finance API scenarios pass over native Encore TCP",
+        "Real Encore WebSocket through reverse proxy: origin/hints/removal",
+        "Non-demo bootstrap refuses weak password",
+        "Strong bootstrap succeeds; account and session survive restart without password reset",
+        "Populated demo database survives restart",
+        "Acknowledged message and retry ID survive actual Encore process restart",
+        "Generated-wrapper SDK compilation succeeds"
+      ],
+      "limitations": [
+        "Managed cron, production TLS/private ingress and deployed proxy are separate deployment gates."
+      ],
+      "ownedDatabaseContainersRemoved": 3
+    },
+    "component_layouts": {
+      "cases": 52,
+      "status": "PASS",
+      "qualification": "Actual RN Web components with fictional adapters; no native-device acceptance"
+    },
+    "independent_scoped_review": "PASS, all three Important findings resolved",
+    "browser_api_integration": {
+      "status": "passed",
+      "scope": "Actual current compiled web and standalone API on fictional disposable data; no physical/native/provider claim",
+      "checks": [
+        "Actual API creates engineering, office and field plans plus independently reviewable Knowledge draft",
+        "Compiled Growth UI renders all three real API pilot plans",
+        "Author cannot access independent publication action",
+        "Actual compiled independent reviewer publishes through singular canonical /review route",
+        "Real current published source produces the correct versioned literal citation",
+        "Compiled new web journeys fit390px without document overflow"
+      ],
+      "errors": [],
+      "external": [],
+      "notes": [
+        "Publication permission-epoch refresh returns Goals to Measured outcomes; the flow deliberately reopens Knowledge after checking the committed current source."
+      ]
+    },
+    "changed_source_format": {
+      "files": 87,
+      "status": "PASS"
+    },
+    "changed_relative_markdown_links": {
+      "checked": 166,
+      "broken": 0
+    },
+    "changed_product_and_test_hashes": 94
+  },
+  "manual": {
+    "original_qa_cases": 224,
+    "m1_phone_cases": 15,
+    "supplemental_cases": 39,
+    "status": "NOT_RUN"
+  },
+  "production_deployment": "NOT_RUN",
+  "provider_connector_or_delivery_acceptance": "NOT_RUN",
+  "signed_native_builds": "NOT_RUN",
+  "physical_iphone_android": "NOT_RUN",
+  "known_ux_limits": [
+    "Publication permission-epoch reauthorization remounts Goals to Measured outcomes; current publication remains available after reopening Knowledge."
+  ],
+  "runtime_cleanup": {
+    "own_qa_9091": "stopped via own session",
+    "own_preview_5187": "stopped via own session",
+    "own_postgresql_19418": "stopped named disposable container",
+    "unrelated_encore_9400": "preserved PID2489241",
+    "production": "untouched"
+  }
+}

@@ -1,5 +1,5 @@
 // @vitest-environment happy-dom
-import { act, createElement, useState } from "react";
+import { act, createElement, useState, Children } from "react";
 import { createRoot } from "react-dom/client";
 import { afterEach, expect, it, vi } from "vitest";
 import NativeComposer from "./NativeComposer";
@@ -49,7 +49,13 @@ vi.mock("react-native", () => ({
   },
   Platform: { OS: "android" },
   StyleSheet: { create: (s: any) => s },
-  View: ({ children }: any) => createElement("div", {}, children),
+  View: ({ children }: any) => {
+    if (Children.toArray(children).some((child) => typeof child === "string"))
+      throw Error(
+        "Native View cannot render a raw string, including an empty error.",
+      );
+    return createElement("div", {}, children);
+  },
   Text: ({ children }: any) => createElement("span", {}, children),
   ScrollView: ({ children }: any) => createElement("div", {}, children),
   Button: ({ title, onPress }: any) =>

@@ -1,3 +1,10 @@
+import {
+  ScreenHeading,
+  FilterBar,
+  Surface,
+  EmptyState,
+  mobileUI,
+} from "./MobileUI";
 import { useEffect, useRef, useState, useEffectEvent } from "react";
 import { Text, TextInput, View } from "react-native";
 import { router } from "expo-router";
@@ -194,21 +201,22 @@ export default function AttentionInbox({
   }
   return (
     <View>
-      <View>
-        <Action
-          title="Action required"
-          selected={tab === "actions"}
-          onPress={() => setTab("actions")}
-        />
-        <Action
-          title="Updates"
-          selected={tab === "updates"}
-          onPress={() => {
-            setTab("updates");
-            setSelected(null);
-          }}
-        />
-      </View>
+      <ScreenHeading
+        title="Inbox"
+        description="Decisions and updates, clearly separated."
+      />
+      <FilterBar
+        label="Inbox view"
+        value={tab}
+        options={[
+          { value: "actions", label: "Action required" },
+          { value: "updates", label: "Updates" },
+        ]}
+        onChange={(v) => {
+          setTab(v as typeof tab);
+          setSelected(null);
+        }}
+      />
       {tab === "updates" ? (
         <View>
           <Text>
@@ -244,7 +252,7 @@ export default function AttentionInbox({
         </View>
       ) : (
         <View>
-          <Text style={styles.heading}>Action required</Text>
+          <Text style={mobileUI.sectionTitle}>Action required</Text>
           <Text>
             Resolving an Inbox item does not approve its business decision.
           </Text>
@@ -257,23 +265,19 @@ export default function AttentionInbox({
               setDecisions(!decisions);
             }}
           />
-          {["open", "resolved", "all"].map((s) => (
-            <Action
-              key={s}
-              title={
-                s === "open"
-                  ? "Open items"
-                  : s === "resolved"
-                    ? "Resolved items"
-                    : "All items"
-              }
-              selected={state === s}
-              onPress={() => {
-                setState(s);
-                setSelected(null);
-              }}
-            />
-          ))}
+          <FilterBar
+            label="Item status"
+            value={state}
+            options={[
+              { value: "open", label: "Open items" },
+              { value: "resolved", label: "Resolved items" },
+              { value: "all", label: "All items" },
+            ]}
+            onChange={(v) => {
+              setState(v);
+              setSelected(null);
+            }}
+          />
           {!items && <Text>{error || "Checking current attention…"}</Text>}
           {!!error && (
             <Action
@@ -282,9 +286,12 @@ export default function AttentionInbox({
             />
           )}
           {items?.map((i) => (
-            <View key={i.id} style={styles.message}>
-              <Text>{i.title}</Text>
-              <Text>{i.summary}</Text>
+            <Surface key={i.id}>
+              <Text style={mobileUI.eyebrow}>
+                {i.canDecide ? "Decision available" : "Attention item"}
+              </Text>
+              <Text style={mobileUI.recordTitle}>{i.title}</Text>
+              <Text style={mobileUI.secondary}>{i.summary}</Text>
               <Text>
                 {i.ownerName} · {i.state}
                 {i.snoozedUntil
@@ -318,9 +325,14 @@ export default function AttentionInbox({
                   }
                 />
               ))}
-            </View>
+            </Surface>
           ))}
-          {items?.length === 0 && <Text>No current items in this view.</Text>}
+          {items?.length === 0 && (
+            <EmptyState
+              title="No current items in this view."
+              description="Change the status or check Updates for conversation activity."
+            />
+          )}
           {item && selected && (
             <AttentionAction
               key={

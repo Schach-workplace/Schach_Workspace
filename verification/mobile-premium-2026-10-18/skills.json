@@ -1,0 +1,52 @@
+{
+  "repository": "https://github.com/wshobson/agents",
+  "commit": "0874a27b17a22e2b7c2e2bcd725768e0803cad06",
+  "installed": [
+    {
+      "name": "accessibility-compliance",
+      "path": "/home/brahma/.codex/skills/accessibility-compliance/SKILL.md",
+      "sha256": "3ad0fbcb0a69b69e70652641a8eeb59f168cceb4bc9d9b9c8b47154072b9e1a2"
+    },
+    {
+      "name": "design-system-patterns",
+      "path": "/home/brahma/.codex/skills/design-system-patterns/SKILL.md",
+      "sha256": "618355f0e6c6ba8ca5d231035c9da18302fe6894aedce565743e9181b6c928ee"
+    },
+    {
+      "name": "interaction-design",
+      "path": "/home/brahma/.codex/skills/interaction-design/SKILL.md",
+      "sha256": "87f2765ed1deeef3f1c06f9e4338ff103c391c6c4adcdffc885f3516b7c34ff2"
+    },
+    {
+      "name": "mobile-android-design",
+      "path": "/home/brahma/.codex/skills/mobile-android-design/SKILL.md",
+      "sha256": "0a209a1c45585ce0056548cc2f0fd352b7fde5980a3b5dd397a9daf5dff19fe7"
+    },
+    {
+      "name": "mobile-ios-design",
+      "path": "/home/brahma/.codex/skills/mobile-ios-design/SKILL.md",
+      "sha256": "2b3b2405aee645a345d137ce93bd86bac65d33da4ad40c4b6f007bf4a51b6c96"
+    },
+    {
+      "name": "react-native-design",
+      "path": "/home/brahma/.codex/skills/react-native-design/SKILL.md",
+      "sha256": "71eacfb8d4a62142e135e8b1934ffb540b0d2703d6b6b273d4c0f255bb1aa68d"
+    },
+    {
+      "name": "responsive-design",
+      "path": "/home/brahma/.codex/skills/responsive-design/SKILL.md",
+      "sha256": "c8bd56f8fc0f122c4ff392b02617f0e6bb4a353b2d0189235c6ee77cdcfe8690"
+    },
+    {
+      "name": "visual-design-foundations",
+      "path": "/home/brahma/.codex/skills/visual-design-foundations/SKILL.md",
+      "sha256": "0c6970d14f5d5df55c63d1be995205d140489e2d0c39896657fabee6f6a5df84"
+    },
+    {
+      "name": "web-component-design",
+      "path": "/home/brahma/.codex/skills/web-component-design/SKILL.md",
+      "sha256": "a7978f5e9e3fa7129cf3eb8d607cedece4e207011321893d9a3c5dd92cf32603"
+    }
+  ],
+  "note": "Installed via official skill-installer; applies design principles, not outdated framework sample versions. Restart/next turn for automatic discovery."
+}

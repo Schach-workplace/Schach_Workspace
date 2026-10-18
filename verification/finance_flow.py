@@ -492,15 +492,17 @@ def run_flow(bridge, checks):
     check('Financial payment and override details do not leak into broad task activity feeds',
           not any('QA-BANK-0001' in event['detail'] or override in event['detail'] for event in task_activities))
     founder.call('PATCH', root + '/people/' + identities['finance'], {'role': 'member'})
+    deny(finance, 'GET', root + '/workspace', statuses=(401,))
+    finance = client(f'finance-{suffix}@finance-verification.demo')
     reduced = workspace(finance)
     deny(finance, 'POST', root + '/budgets', budget_template, (403,))
     check('Role changes immediately narrow financial read scope and revoke financial management writes',
           reduced['financeScope'] == 'personal' and reduced['budgets'] == []
           and all(row['createdBy'] == identities['finance'] for row in reduced['expenses']))
     founder.call('PATCH', root + '/people/' + identities['finance'], {'active': False})
-    deny(finance, 'GET', root + '/workspace', statuses=(403,))
+    deny(finance, 'GET', root + '/workspace', statuses=(401,))
     deny(finance, 'POST', root + '/expenses/' + eid + '/transition',
-         {'version': expense(eid)['version'], 'action': 'pay', **paid_fields('REVOKED')}, (403,))
+         {'version': expense(eid)['version'], 'action': 'pay', **paid_fields('REVOKED')}, (401,))
     check('Revoked membership cannot read finance or execute a mutation using its existing cookie')
     check('Receipt and payment history survive category archival and actor role changes',
           expense(eid)['status'] == 'paid' and len(expense(eid)['receipts']) == 2

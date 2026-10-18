@@ -213,11 +213,16 @@ export function canonicalBusinessTarget(
 ): boolean {
   if (method === "PATCH")
     return (
+      /^\/growth\/plans\/[^/?]+$/.test(path) ||
+      /^\/knowledge\/[^/?]+$/.test(path) ||
       /^\/(goals|task-templates|project-milestones|people\/presets)\/[^/?]+$/.test(
         path,
-      ) || /^\/goals\/[^/?]+\/reminder-preference$/.test(path)
+      ) ||
+      /^\/goals\/[^/?]+\/reminder-preference$/.test(path)
     );
   return (
+    /^\/growth\/plans(?:\/[^/?]+\/reviews)?$/.test(path) ||
+    /^\/knowledge(?:\/[^/?]+\/review)?$/.test(path) ||
     path === "/tasks" ||
     path === "/intelligence/jobs" ||
     /^\/conversations\/[^/?]+\/(task-conversions|expense-conversions|requests)$/.test(
