@@ -9,7 +9,7 @@ import {
   AuthorizedNotificationTarget,
   type AttentionTarget,
 } from "./notificationTarget";
-import { SafeAreaView } from "react-native-safe-area-context";
+import WorkspaceFrame from "./WorkspaceFrame";
 import {
   createContext,
   useContext,
@@ -20,15 +20,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import {
-  AppState,
-  Button,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { AppState, Platform, StyleSheet } from "react-native";
 import * as SecureStore from "expo-secure-store";
 import type * as NotificationTypes from "expo-notifications";
 import { isRunningInExpoGo } from "expo";
@@ -722,62 +714,24 @@ export function Page({
 }) {
   const w = useWorkspace();
   return (
-    <SafeAreaView
-      edges={
-        safeBottom
-          ? ["top", "left", "right", "bottom"]
-          : ["top", "left", "right"]
-      }
-      style={styles.root}
+    <WorkspaceFrame
+      userName={w.session?.user.name}
+      companies={w.session?.companies ?? []}
+      company={w.company}
+      scopeKey={w.company + ":" + w.session?.user.id}
+      foreground={w.foreground}
+      scroll={scroll}
+      safeBottom={safeBottom}
+      preserveMounted={preserveMounted}
+      error={w.error}
+      onSwitchCompany={w.switchCompany}
+      onDismissError={() => w.setError("")}
     >
-      <Text style={styles.heading}>Workspace · {w.session?.user.name}</Text>
-      <ScrollView horizontal style={{ maxHeight: 48 }}>
-        {w.session?.companies.map((c) => (
-          <Button
-            key={c.id}
-            title={c.name + (w.company === c.id ? " ✓" : "")}
-            accessibilityLabel={c.name}
-            accessibilityState={{ selected: w.company === c.id }}
-            onPress={() => w.switchCompany(c.id)}
-          />
-        ))}
-      </ScrollView>
-      {!!w.error && (
-        <View style={styles.error}>
-          <Text accessibilityRole="alert" style={{ flex: 1 }}>
-            {w.error}
-          </Text>
-          <Button
-            title="Dismiss"
-            accessibilityLabel="Dismiss error"
-            onPress={() => w.setError("")}
-          />
-        </View>
-      )}
-      {w.foreground || preserveMounted ? (
-        scroll ? (
-          <ScrollView key={w.company + ":" + w.session?.user.id}>
-            {children}
-          </ScrollView>
-        ) : (
-          <View
-            style={{ flex: 1, opacity: w.foreground ? 1 : 0 }}
-            pointerEvents={w.foreground ? "auto" : "none"}
-            accessibilityElementsHidden={!w.foreground}
-            importantForAccessibility={
-              w.foreground ? "auto" : "no-hide-descendants"
-            }
-            key={w.company + ":" + w.session?.user.id}
-          >
-            {children}
-          </View>
-        )
-      ) : (
-        <Text>Return to the app to check current company access.</Text>
-      )}
-    </SafeAreaView>
+      {children}
+    </WorkspaceFrame>
   );
 }
+
 export const styles = StyleSheet.create({
   root: { flex: 1, padding: 18, backgroundColor: "#faf9f6" },
   heading: {

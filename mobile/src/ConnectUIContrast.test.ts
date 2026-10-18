@@ -24,6 +24,11 @@ function contrast(a: string, b: string) {
 const color = (s: unknown) => (s as { color: string }).color.toLowerCase();
 const size = (s: unknown) => (s as { fontSize: number }).fontSize;
 describe("Connect UI text meets WCAG AA on its light surfaces", () => {
+  it("provides shared phone action and input target sizes", () => {
+    expect(ui.action.minHeight).toBeGreaterThanOrEqual(48);
+    expect(ui.action.minWidth).toBeGreaterThanOrEqual(48);
+    expect(ui.input.minHeight).toBeGreaterThanOrEqual(52);
+  });
   const pairs: [string, unknown, string[]][] = [
     ["subtitle", ui.subtitle, ["#ffffff", "#faf9f6"]],
     ["actionText", ui.actionText, ["#ffffff", "#faf9f6"]],

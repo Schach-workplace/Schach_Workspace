@@ -1,4 +1,5 @@
 import KeyboardFrame from "./KeyboardFrame";
+import { colors, metrics, typeScale } from "./mobileTheme";
 import type { ReactNode } from "react";
 import {
   Modal,
@@ -122,21 +123,35 @@ export const ui = StyleSheet.create({
     justifyContent: "space-between",
     gap: 8,
     paddingVertical: 12,
+    flexWrap: "wrap",
     borderBottomWidth: 1,
     borderBottomColor: "#e9ebef",
   },
-  title: { fontSize: 19, fontWeight: "700", color: "#354052", flexShrink: 1 },
-  subtitle: { fontSize: 13, color: "#56637a", lineHeight: 19 },
+  title: {
+    fontSize: typeScale.title,
+    fontWeight: "700",
+    color: colors.text,
+    flexShrink: 1,
+  },
+  subtitle: {
+    fontSize: typeScale.support,
+    color: colors.secondary,
+    lineHeight: 21,
+  },
   action: {
-    minHeight: 44,
-    minWidth: 44,
+    minHeight: metrics.touch,
+    minWidth: metrics.touch,
     justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: 13,
     borderRadius: 8,
   },
-  actionText: { fontSize: 14, fontWeight: "600", color: "#4f5d72" },
-  primary: { backgroundColor: "#b9520c" },
+  actionText: {
+    fontSize: typeScale.support,
+    fontWeight: "600",
+    color: colors.secondary,
+  },
+  primary: { backgroundColor: colors.accent },
   selected: { backgroundColor: "#fff1e5" },
   row: {
     flexDirection: "row",
@@ -162,7 +177,7 @@ export const ui = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: "#f0f1f4",
   },
-  name: { fontSize: 14, fontWeight: "600", color: "#475367" },
+  name: { fontSize: typeScale.body, fontWeight: "600", color: colors.text },
   empty: {
     flex: 1,
     justifyContent: "center",
@@ -171,13 +186,14 @@ export const ui = StyleSheet.create({
     gap: 13,
   },
   input: {
+    minHeight: metrics.input,
     borderWidth: 1,
     borderColor: "#e4e8ee",
     backgroundColor: "#fcfcfd",
     borderRadius: 10,
     padding: 12,
-    fontSize: 14,
-    color: "#455269",
+    fontSize: typeScale.body,
+    color: colors.text,
     marginVertical: 8,
   },
   composer: {
@@ -197,7 +213,7 @@ export const ui = StyleSheet.create({
     marginTop: 6,
   },
   ownBubble: { backgroundColor: "#fff2e8" },
-  body: { fontSize: 14, lineHeight: 22, color: "#4b576b" },
+  body: { fontSize: typeScale.body, lineHeight: 24, color: colors.text },
   metadata: { fontSize: 13, color: "#5f6b7d" },
   error: {
     color: "#9a3f35",
