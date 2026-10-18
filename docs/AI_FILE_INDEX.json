@@ -1,5 +1,5 @@
 {
-  "updatedUtc": "2026-10-18T19:59:36.109828+00:00",
+  "updatedUtc": "2026-10-18T20:03:02.700341+00:00",
   "qualification": "Durable recovery metadata; reviewed source/evidence separately qualified. No pending runtime/push claim.",
   "handoff": "docs/HANDOFF.md",
   "checklist": "docs/AI_CHECKLIST.md",
@@ -10,9 +10,9 @@
     "sourceWriters": "complete",
     "reviewer": "independent mobile_lab_final_review complete; Important accounting findings fixed/confirmed"
   },
-  "currentPhase": "Mobile lab complete and independently reviewed: Android36/ExpoGo57 native19screens/11interactions current cases PASS with retained retries; WebKit/Chromium134component+30actualwebAPI checks PASS;515mobile tests/types/lint/nativeJSexports PASS. Publication checkpoint in HANDOFF17. Native iOS/physical/provider gates and MOBILE-LAB-RESUME-01 remain open.",
-  "verifiedProductHead": "ebc994dc6c2be442db595e468a716139b56ed721",
-  "verifiedFixHead": "dff8ddc045b7bec32b41ac3e4f8847938c4f3de3",
+  "currentPhase": "Mobile lab complete and independently reviewed: Android36/ExpoGo57 native19screens/11interactions current cases PASS with retained retries; WebKit/Chromium134component+30actualwebAPI checks PASS;515mobile tests/types/lint/nativeJSexports PASS. Product/evidence b6db1cf fast-forwarded into main and atomically non-force pushed to both branches; merged main515tests/types/lint PASS. Publication checkpoint in HANDOFF17. Native iOS/physical/provider gates and MOBILE-LAB-RESUME-01 remain open.",
+  "verifiedProductHead": "b6db1cf7023320ba453200f8d7b28ca8ef9777b1",
+  "verifiedFixHead": "b6db1cf7023320ba453200f8d7b28ca8ef9777b1",
   "reviewDisposition": "verification/workspace-improvements-roadmap/release-cutover/scoped-review-disposition.json",
   "privateRecovery": {
     "root": "/home/brahma/.local/state/schach-workspace-cutover-20261012-uoxlpfcw",
@@ -3171,6 +3171,7 @@
     "results": "verification/mobile-lab-2026-10-19/result.json",
     "sourceHashes": "verification/mobile-lab-2026-10-19/source-hashes.json",
     "nativeIOS": "NOT_RUN; WebKit browser profiles only",
-    "processes": "docs/HANDOFF.md section17"
+    "processes": "docs/HANDOFF.md section17",
+    "publishedProductCommit": "b6db1cf7023320ba453200f8d7b28ca8ef9777b1"
   }
 }

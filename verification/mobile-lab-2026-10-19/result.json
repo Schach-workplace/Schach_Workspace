@@ -87,5 +87,25 @@
     "signed distribution",
     "performance/load",
     "original224/M1phone15/supplemental39 manual procedures"
-  ]
+  ],
+  "publication": {
+    "productCommit": "b6db1cf7023320ba453200f8d7b28ca8ef9777b1",
+    "mainFastForward": true,
+    "atomicNonForcePushBothBranches": true,
+    "confirmedUtc": "2026-10-18T20:03:02.700341+00:00",
+    "mergedMain": {
+      "sourceHashesMatched": 17,
+      "mobileFiles": 81,
+      "mobileTests": 515,
+      "durationSeconds": 64.71,
+      "typecheck": "PASS",
+      "lint": "PASS",
+      "driverAccountingTests": 6
+    },
+    "existingGitHubDependencyAlerts": {
+      "high": 2,
+      "moderate": 2,
+      "status": "UNRESOLVED"
+    }
+  }
 }

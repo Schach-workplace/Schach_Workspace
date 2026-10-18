@@ -68,3 +68,9 @@ See HANDOFF section17 for live process identities. Tool downloads/AVD total abou
 Final native reruns, quality checks and independent review are complete. Source hashes are recorded in source-hashes.json. The owned fictional lab remains ready; see HANDOFF17 for exact identities. Publish by fast-forward/non-force-push under existing authorization; native iOS, physical/provider acceptance and MOBILE-LAB-RESUME-01 remain open. No production redeployment is implied.
 
 Primary references: [Expo57](https://docs.expo.dev/versions/v57.0.0/), [Expo keyboard handling](https://docs.expo.dev/guides/keyboard-handling/), [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/), [iOS Simulator](https://docs.expo.dev/workflow/ios-simulator/), [Playwright browser emulation](https://playwright.dev/docs/emulation), [Playwright engines](https://playwright.dev/docs/browsers).
+
+## Publication checkpoint
+
+Product/evidence commit `b6db1cf7023320ba453200f8d7b28ca8ef9777b1` was fast-forwarded into clean main and atomically non-force pushed to main and improve/workspace-improvements. Merged main matches all17reviewed source hashes and again passed81files/515mobile tests in64.71s, typecheck/lint and6driver tests. [Main test log](checks/main-mobile-tests.log), [main types](checks/main-mobile-types.log), [main lint](checks/main-mobile-lint.log). GitHub reported the unchanged four dependency alerts (two high/two moderate). This following metadata update adds the checkpoint and tool-recreation instructions; it changes no application source. Live Git gives the latest metadata HEAD.
+
+HTTP9092/5186/5187 and Metro19019/status each returned200 at final ownership check; own ADB5039/emulator5578 and unrelated Encore9400 still listen. No production redeployment or personal runtime action was performed.

@@ -54,6 +54,26 @@ The full component matrix has134cases. `LAB_SCREEN_FILTER=workload` runs six sco
 
 On another machine install Playwright1.63 in a separate test-tools directory, set PLAYWRIGHT_MODULE to that package's index.mjs and install its WebKit/Chromium browsers. The app's package files do not need modification. On this Arch host, `setup-webkit-compat.py` extracted checksum-verified public Ubuntu24 ICU74/XML2/Flite libraries into the isolated browser directory, never system libraries or maintainer scripts. Set WORKSPACE_WEBKIT_BUILD if using a different isolated WebKit build path.
 
+## Recreate Android tools after a temporary-directory cleanup
+
+Use the official command-line-tools ZIP, Temurin21 JRE archive and Expo Go APK recorded in environment.json; verify their recorded hashes before extraction/install. Extract the Google tools so the executable is `sdk/cmdline-tools/latest/bin/sdkmanager`, and the JRE into `java/<extracted-JRE-directory>` within WORKSPACE_MOBILE_LAB. This is tool installation, not a generated app ios/android project.
+
+Set JAVA_HOME to that extracted JRE and these isolated directories before invoking the SDK manager:
+
+```sh
+export WORKSPACE_MOBILE_LAB=/tmp/workspace-mobile-lab-20261019
+export JAVA_HOME="$WORKSPACE_MOBILE_LAB/java/<extracted-JRE-directory>"
+export ANDROID_HOME="$WORKSPACE_MOBILE_LAB/sdk"
+export ANDROID_SDK_ROOT="$ANDROID_HOME"
+export ANDROID_USER_HOME="$WORKSPACE_MOBILE_LAB/android-user"
+export ANDROID_EMULATOR_HOME="$ANDROID_USER_HOME"
+export ANDROID_AVD_HOME="$WORKSPACE_MOBILE_LAB/avd"
+mkdir -p "$ANDROID_USER_HOME" "$ANDROID_AVD_HOME"
+"$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --sdk_root="$ANDROID_HOME" 'platform-tools' 'emulator' 'system-images;android-36;google_apis;x86_64'
+```
+
+Review/respond to the SDK licence prompts yourself. These are the package IDs actually installed in this lab; future SDK-manager downloads can resolve newer package revisions, so record the new installed versions and requalify them rather than claiming an identical pinned environment. Use create-avd.py/start-android.py only after successful installation. Host KVM access is required by this launcher's explicit `-accel on`; do not claim a native VM run if acceleration/boot fails.
+
 ## Actual Android app
 
 On the existing installed lab, create the owned AVD only if it does not already exist, then launch it:
