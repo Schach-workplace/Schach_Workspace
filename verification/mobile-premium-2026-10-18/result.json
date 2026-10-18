@@ -94,7 +94,24 @@
       "checked": 166,
       "broken": 0
     },
-    "changed_product_and_test_hashes": 94
+    "changed_product_and_test_hashes": 94,
+    "merged_main": {
+      "mobile": {
+        "files": 81,
+        "tests": 509,
+        "seconds": 63.15,
+        "status": "PASS"
+      },
+      "web": {
+        "files": 89,
+        "tests": 430,
+        "seconds": 6.42,
+        "status": "PASS"
+      },
+      "both_typechecks": "PASS",
+      "mobile_lint": "PASS",
+      "source_hashes_match": 94
+    }
   },
   "manual": {
     "original_qa_cases": 224,
@@ -115,5 +132,20 @@
     "own_postgresql_19418": "stopped named disposable container",
     "unrelated_encore_9400": "preserved PID2489241",
     "production": "untouched"
+  },
+  "publication": {
+    "source_commit": "d2671e114cb35260345623ecc7e71b252192f2b4",
+    "source_fast_forwarded_to_main": true,
+    "source_atomically_pushed_branches": [
+      "main",
+      "improve/workspace-improvements"
+    ],
+    "metadata_head": "Use live git; documentation-only updates preserve product hashes"
+  },
+  "dependency_alerts": {
+    "reported_by": "GitHub on push",
+    "high": 2,
+    "moderate": 2,
+    "status": "unresolved"
   }
 }

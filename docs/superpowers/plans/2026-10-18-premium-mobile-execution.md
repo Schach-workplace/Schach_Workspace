@@ -45,7 +45,7 @@ All pilot audiences requested; begin credential-free calendar export and documen
 - [x] 2 Connect.
 - [x] 3 Finance/Reports.
 - [x] 4 Remaining journeys.
-- [x] 5 Local verification/review and publication preparation; physical cases separately pending.
+- [x] 5 Local verification/review/publication; physical cases separately pending.
 - [x] 6 All three growth pilots.
 - [x] 7 Knowledge/assistance.
 - [x] 8 Integrations and rollout documentation.
@@ -63,3 +63,5 @@ Tasks1–4and6–8are implemented and locally verified; details/source reference
 - [ ] External-provider connectors and staged finance policy after actual provider/policy/credential decisions.
 
 Observed UX refinement: a publication permission-epoch refresh currently remounts Goals to Measured outcomes; reopening Knowledge shows the committed source. Preserve revocation if improving this navigation continuity later.
+
+Publication: source commit `d2671e1` is fast-forwarded/pushed on both branches. Fresh merged-main suites pass 509 mobile and 430 web tests. Live handoff records the next physical/rollout action and remaining gates.

@@ -50,3 +50,6 @@ Use the existing mobile/frontend package scripts; backend go test ./... with own
 
 
 Final local cleanup: own QA9091 and RNWebpreview5187 stopped through their own sessions. No8080/8081 app is started by this source checkpoint. 87changed source/harness files pass formatting;166 changed Markdown links resolve;94product/test inputs are hashed. The final Encore result removed its3owned databases; earlier failed attempts also cleaned only their owned resources. Two stashes/other worktrees and unrelated Encore9400PID2489241 preserved. Publication identity follows after actual Git operations.
+
+
+Publication: source/evidence commit `d2671e114cb35260345623ecc7e71b252192f2b4` was fast-forwarded into clean main and atomically non-force pushed to both main and improve/workspace-improvements. On merged main, native81files509tests PASS63.15s with typecheck/lint PASS; web89files430tests PASS6.42s with typecheck PASS. All94recorded product/test hashes match main. Metadata updates preserve those product bytes. GitHub reports4existing dependency alerts (2high,2moderate), unresolved. Production/device/provider gates remain unchanged.
